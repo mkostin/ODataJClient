@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2013 Microsoft Open Technologies, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>
+
+  <groupId>com.msopentech.odatajclient</groupId>
+  <artifactId>odatajclient</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <name>Client OData libray for Java</name>
+  <description>Java client API for OData 3.0 services</description>
+
+  <url>https://github.com/MSOpenTech/ODataJClient</url>
+  
+  <inceptionYear>2013</inceptionYear>
+  
+  <organization>
+    <name>MS OpenTech</name>
+    <url>http://msopentech.com/</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/MSOpenTech/ODataJClient.git</url>
+    <connection>scm:git@github.com:MSOpenTech/ODataJClient.git</connection>
+    <developerConnection>scm:git@github.com:MSOpenTech/ODataJClient.git</developerConnection>
+  </scm>
+
+  <prerequisites>
+    <maven>[3.0.3,)</maven>
+  </prerequisites>
+  
+  <properties>    
+    <targetJdk>1.6</targetJdk>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.1</version>
+          <configuration>
+            <source>${targetJdk}</source>
+            <target>${targetJdk}</target>
+            <showWarnings>true</showWarnings>
+            <showDeprecation>true</showDeprecation>
+            <!--<compilerArgument>-Xlint:unchecked</compilerArgument>-->
+          </configuration>
+        </plugin>
+      </plugins> 
+    </pluginManagement>
+    
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>0.9</version>
+        <configuration>
+          <excludes>
+            <exclude>nbactions.xml</exclude>
+            <exclude>nb-configuration.xml</exclude>
+            <exclude>**/META-INF/services/**</exclude>
+            <exclude>**/META-INF/MANIFEST.MF</exclude>
+            <exclude>**/*.css</exclude>
+            <exclude>**/*.js</exclude>
+            <exclude>**/*.csv</exclude>
+            <exclude>**/archetype-resources/**</exclude>
+            <exclude>**/goal.txt</exclude>
+            <exclude>**/rat.txt</exclude>
+            <exclude>**/build-copy-javadoc-files.xml</exclude>
+            <exclude>**/maven-eclipse.xml</exclude>
+            <exclude>**/*.iml</exclude>
+            <exclude>**/*.log</exclude>
+            <exclude>.externalToolBuilders/**</exclude>
+            <exclude>.git/**</exclude>
+            <exclude>.idea/**</exclude>
+            <exclude>**/.*</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <!-- Put NOTICE and LICENSE files in all javadoc artifacts -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <id>copy-javadoc-legal-files</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/apidocs/META-INF</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>..</directory>
+                  <includes>
+                    <include>LICENSE</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ianal-maven-plugin</artifactId>
+        <version>1.0-alpha-1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>verify-legal-files</goal>
+            </goals>
+            <configuration>
+              <!-- Fail the build if any artifacts are missing legal files -->
+              <strict>true</strict>
+              <requiredFiles>
+                <requiredFile>LICENSE</requiredFile>
+              </requiredFiles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <modules>
+    <module>engine</module>
+    <module>spi</module>
+    <module>proxy</module>
+  </modules>
+  
+</project>
