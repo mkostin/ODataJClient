@@ -35,7 +35,11 @@ import java.util.UUID;
 public enum EdmType {
 
     /**
-     * An array of bytes up to 64 KB in size.
+     * The absence of a value.
+     */
+    Null(void.class),
+    /**
+     * An array of bytes.
      */
     Binary(Byte[].class),
     /**
@@ -43,11 +47,17 @@ public enum EdmType {
      */
     Boolean(Boolean.class),
     /**
-     * A 64-bit value expressed as Coordinated Universal Time (UTC).
-     * The supported range begins from 12:00 midnight, January 1, 1601 A.D. (C.E.), UTC.
-     * The range ends at December 31, 9999.
+     * Unsigned 8-bit integer value.
      */
-    DateTime(Date.class),
+    Byte(Byte.class),
+    /**
+     * A 64-bit value expressed as Coordinated Universal Time (UTC).
+     */
+    DateTime(Date.class, "yyyy-mm-ddThh:mm[:ss[.fffffff]]"),
+    /**
+     * Numeric values with fixed precision and scale.
+     */
+    Decimal(Float.class, "[0-9]+.[0-9]+M|m"),
     /**
      * A 64-bit double-precision floating point value.
      */
@@ -57,6 +67,10 @@ public enum EdmType {
      */
     Guid(UUID.class),
     /**
+     * A 16-bit integer value.
+     */
+    Int16(Integer.class),
+    /**
      * A 32-bit integer value.
      */
     Int32(Integer.class),
@@ -65,19 +79,47 @@ public enum EdmType {
      */
     Int64(Long.class),
     /**
+     * A signed 8-bit integer value.
+     */
+    SByte(Byte.class),
+    /**
+     * A floating point number with 7 digits precision.
+     */
+    Single(Float.class, "[0-9]+.[0-9]+f"),
+    /**
      * A UTF-16-encoded value.
      * String values may be up to 64 KB in size.
      */
-    String(String.class);
+    String(String.class),
+    /**
+     * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
+     */
+    Time(Date.class, "hh:mm[:ss[.fffffff]]"),
+    /**
+     * Date and time as an Offset in minutes from GMT.
+     */
+    DateTimeOffset(Date.class, "yyyy-mm-ddThh:mm[:ss[.fffffff]]Z");
 
     private final Class<?> clazz;
 
+    private final String pattern;
+
     private EdmType(final Class<?> clazz) {
         this.clazz = clazz;
+        this.pattern = null;
     }
 
-    public Class<?> getJavaClass() {
+    private EdmType(final Class<?> clazz, final String pattern) {
+        this.clazz = clazz;
+        this.pattern = pattern;
+    }
+
+    public Class<?> getJavaType() {
         return this.clazz;
+    }
+
+    public String getPattern() {
+        return pattern;
     }
 
     @Override
