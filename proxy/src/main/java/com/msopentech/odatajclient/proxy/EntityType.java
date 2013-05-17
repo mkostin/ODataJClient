@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,4 +29,12 @@ import java.lang.annotation.Target;
 public @interface EntityType {
 
     String value();
+
+    Class<?> baseType() default Serializable.class;
+
+    boolean isAbstract() default false;
+
+    boolean openType() default false;
+
+    boolean hasStream() default false;
 }
