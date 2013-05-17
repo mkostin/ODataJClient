@@ -30,6 +30,13 @@
   <artifactId>odatajclient-spi</artifactId>
   <packaging>jar</packaging>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.msopentech.odatajclient</groupId>
+      <artifactId>odatajclient-engine</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
   <build>
     <resources>
       <resource>

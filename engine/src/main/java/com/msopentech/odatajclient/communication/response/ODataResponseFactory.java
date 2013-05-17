@@ -13,7 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.spi;
+package com.msopentech.odatajclient.communication.response;
 
-public class ODataJClient {
+/**
+ * ODataResponse factory.
+ */
+public class ODataResponseFactory {
+
+    /**
+     * Get a response object instance for a CUD request.
+     *
+     * @return response object.
+     */
+    public static ODataResponse getODataCUDResponse() {
+        return new ODataCUDResponse();
+    }
+
+    /**
+     * Get a response object instance for a query request.
+     *
+     * @return response object.
+     */
+    public static ODataResponse getODataQueryResponse() {
+        return new ODataQueryResponse();
+    }
 }
