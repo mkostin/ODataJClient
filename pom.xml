@@ -52,7 +52,9 @@
     <maven>[3.0.3,)</maven>
   </prerequisites>
   
-  <properties>    
+  <properties>
+    <yworks.uml.path>${basedir}/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
+
     <targetJdk>1.6</targetJdk>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -102,6 +104,7 @@
             <exclude>.git/**</exclude>
             <exclude>.idea/**</exclude>
             <exclude>**/.*</exclude>
+            <exclude>yworks*/**</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -162,6 +165,36 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>javadoc</id>
+      
+      <build>
+        <defaultGoal>clean verify javadoc:aggregate</defaultGoal>
+        
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9</version>
+            <configuration>
+              <!-- Doclet -->
+              <doclet>ydoc.doclets.YStandard</doclet>
+              <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
+              <additionalparam>-umlautogen -umlfileformat SVG</additionalparam>
+
+              <!-- bootclasspath required by Sun's JVM -->
+              <bootclasspath>${sun.boot.class.path}</bootclasspath>
+              <!-- General Javadoc settings -->
+              <doctitle>${project.name} (${project.version})</doctitle>
+              <verbose>true</verbose>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <modules>
     <module>engine</module>
