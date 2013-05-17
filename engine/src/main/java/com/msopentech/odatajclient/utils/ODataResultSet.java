@@ -15,6 +15,5 @@
  */
 package com.msopentech.odatajclient.utils;
 
-public interface ODataResultSet {
-    
+public interface ODataResultSet<T> extends Iterable<T> {
 }

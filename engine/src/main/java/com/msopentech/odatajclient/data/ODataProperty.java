@@ -16,4 +16,21 @@
 package com.msopentech.odatajclient.data;
 
 public class ODataProperty {
+
+    final String name;
+
+    final String value;
+
+    public ODataProperty(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

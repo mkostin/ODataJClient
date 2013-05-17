@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.data;
 import java.io.InputStream;
 
 /**
- * OData URI/QueryQuery builder.
+ * OData URI/Query builder.
  */
 public class ODataURI {
 
@@ -45,6 +45,12 @@ public class ODataURI {
         public String toString() {
             return option;
         }
+    }
+
+    private final String baseURI;
+
+    public ODataURI(final String baseURI) {
+        this.baseURI = baseURI;
     }
 
     /**
@@ -87,8 +93,17 @@ public class ODataURI {
      * @return current ODataURI object.
      */
     public ODataURI expand(final String entityName) {
-        // add expand query option here ...
         return addQueryOption(QueryOption.EXPAND, entityName);
+    }
+
+    /**
+     * Add select query option.
+     *
+     * @param select select query option value.
+     * @return current ODataURI object.
+     */
+    public ODataURI select(final String select) {
+        return addQueryOption(QueryOption.SELECT, select);
     }
 
     /**
