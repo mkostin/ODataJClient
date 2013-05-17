@@ -15,5 +15,5 @@
  */
 package com.msopentech.odatajclient.data;
 
-public class Property {
+public class ODataProperty {
 }

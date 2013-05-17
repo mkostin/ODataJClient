@@ -15,5 +15,20 @@
  */
 package com.msopentech.odatajclient.communication.response;
 
-class ODataCUDResponse extends ODataResponse{
+import com.msopentech.odatajclient.utils.ODataResultSet;
+
+class ODataCUDResponse extends ODataResponse {
+
+    /**
+     * Get modified/deleted/created object reference or modified/created object itself.
+     * The returned value depends from the request header
+     * <code>Prefer</code> value:
+     * 'return-content' for modified/created entity; 'return-no-content' (default value) for no content.
+     *
+     * @return modified/created/deleted object reference or modified/created object.
+     */
+    @Override
+    public ODataResultSet getBody() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

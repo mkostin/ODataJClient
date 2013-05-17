@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.utils;
 
-import com.msopentech.odatajclient.data.Entity;
-import com.msopentech.odatajclient.data.Property;
+import com.msopentech.odatajclient.data.ODataEntity;
+import com.msopentech.odatajclient.data.ODataProperty;
 import com.msopentech.odatajclient.types.ODataFormat;
 import java.io.InputStream;
 
@@ -38,7 +38,7 @@ public class ODataSerializer {
      * @param format serialization format.
      * @return the serialized entity.
      */
-    public InputStream serialize(final Entity entity) {
+    public InputStream serialize(final ODataEntity entity) {
         return null;
     }
 
@@ -49,7 +49,7 @@ public class ODataSerializer {
      * @param format format of the source.
      * @return the deserialized entity.
      */
-    public Entity deserializeEntity(final InputStream source) {
+    public ODataEntity deserializeEntity(final InputStream source) {
         return null;
     }
 
@@ -60,7 +60,7 @@ public class ODataSerializer {
      * @param format format of the source.
      * @return the deserialized property.
      */
-    public Property deserializeProperty(final InputStream source) {
+    public ODataProperty deserializeProperty(final InputStream source) {
         return null;
     }
 }

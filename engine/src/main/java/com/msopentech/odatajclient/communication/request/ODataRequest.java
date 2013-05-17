@@ -22,6 +22,9 @@ import java.util.Map;
 
 public abstract class ODataRequest {
 
+    /**
+     * Supported HTTP methods.
+     */
     public enum Method {
 
         GET,

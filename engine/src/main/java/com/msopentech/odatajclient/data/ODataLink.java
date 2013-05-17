@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.data;
 
-public abstract class Link extends AbstractEntity {
+public abstract class ODataLink extends AbstractEntity {
 
-    public Link(final String title, final ODataURI link) {
+    public ODataLink(final String title, final ODataURI link) {
         super(title);
         this.link = link;
     }

@@ -16,8 +16,14 @@
 package com.msopentech.odatajclient.communication.response;
 
 import com.msopentech.odatajclient.communication.header.ODataHeader;
+import com.msopentech.odatajclient.utils.ODataResultSet;
+import java.util.Map;
 
 public abstract class ODataResponse {
+
+    protected int statusCode;
+
+    protected String statusMessage;
 
     protected ODataHeader header;
 
@@ -26,23 +32,41 @@ public abstract class ODataResponse {
         this.header = new ODataHeader();
     }
 
-    public void setETag(final String value) {
+    protected void setETag(final String value) {
         header.setHeader(ODataHeader.HeaderName.etag.toString(), value);
     }
 
-    public void setLocation(final String value) {
+    protected void setLocation(final String value) {
         header.setHeader(ODataHeader.HeaderName.location.toString(), value);
     }
 
-    public void setDataServiceId(final String value) {
+    protected void setDataServiceId(final String value) {
         header.setHeader(ODataHeader.HeaderName.dataServiceId.toString(), value);
     }
 
-    public void setPreferredApplied(final String value) {
+    protected void setPreferredApplied(final String value) {
         header.setHeader(ODataHeader.HeaderName.preferenceApplied.toString(), value);
     }
 
-    public void setRetryAfter(final String value) {
+    protected void setRetryAfter(final String value) {
         header.setHeader(ODataHeader.HeaderName.retryAfter.toString(), value);
     }
+
+    public Map<String, String> getHeaders() {
+        return header.getHeaders();
+    }
+
+    public String getHeader(final String name) {
+        return header.getHeader(name);
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public abstract ODataResultSet getBody();
 }

@@ -16,16 +16,31 @@
 package com.msopentech.odatajclient.communication.response;
 
 import com.msopentech.odatajclient.utils.ODataResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
-class ODataQueryResponse extends ODataResponse {
+class ODataChangesetResponse extends ODataResponse {
+
+    private final List<ODataResponse> changeset = new ArrayList<ODataResponse>();
 
     /**
-     * Get query result objects.
-     * @return query result objects.
+     * Add a CUD response to the changeset.
+     *
+     * @param response CUD response to be added.
+     * @return the current changeset request instance.
+     */
+    protected ODataChangesetResponse addResponse(final ODataCUDResponse response) {
+        changeset.add(response);
+        return this;
+    }
+
+    /**
+     * Get all responses related to the specific changeset.
+     *
+     * @return a result set of ODataResponse instances.
      */
     @Override
     public ODataResultSet getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
 }

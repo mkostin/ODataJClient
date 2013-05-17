@@ -15,16 +15,16 @@
  */
 package com.msopentech.odatajclient.communication.request;
 
-import com.msopentech.odatajclient.data.Query;
+import com.msopentech.odatajclient.data.ODataURI;
 import java.io.InputStream;
 
 public class ODataQueryRequest extends ODataRequest {
 
-    ODataQueryRequest(final Query query) {
+    ODataQueryRequest(final ODataURI query) {
         // set method ...
         super(Method.GET);
         // set uri ...
-        this.uri = query.getODataURI();
+        this.uri = query;
     }
 
     /**

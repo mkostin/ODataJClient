@@ -16,8 +16,8 @@
 package com.msopentech.odatajclient.communication.request;
 
 import com.msopentech.odatajclient.data.AbstractEntity;
-import com.msopentech.odatajclient.data.Entity;
-import com.msopentech.odatajclient.data.Link;
+import com.msopentech.odatajclient.data.ODataEntity;
+import com.msopentech.odatajclient.data.ODataLink;
 import com.msopentech.odatajclient.data.ODataURI;
 import com.msopentech.odatajclient.utils.ODataSerializer;
 import java.io.InputStream;
@@ -38,10 +38,10 @@ public class ODataCreateRequest extends ODataRequest {
      */
     @Override
     public InputStream getBody() {
-        if (entity instanceof Link) {
+        if (entity instanceof ODataLink) {
             return entity.getLink().toStream();
         } else {
-            return new ODataSerializer(header.getFormat()).serialize((Entity) entity);
+            return new ODataSerializer(header.getFormat()).serialize((ODataEntity) entity);
         }
     }
 }

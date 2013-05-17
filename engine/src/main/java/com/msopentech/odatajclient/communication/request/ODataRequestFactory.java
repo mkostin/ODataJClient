@@ -16,10 +16,8 @@
 package com.msopentech.odatajclient.communication.request;
 
 import com.msopentech.odatajclient.data.AbstractEntity;
-import com.msopentech.odatajclient.data.Entity;
+import com.msopentech.odatajclient.data.ODataEntity;
 import com.msopentech.odatajclient.data.ODataURI;
-import com.msopentech.odatajclient.data.Query;
-
 
 /**
  * ODataRequest factory.
@@ -31,7 +29,7 @@ public class ODataRequestFactory {
      *
      * @param targetURI entity set or link attribute URI.
      * @param entity entity or relationships to be created.
-     * @return create request object.
+     * @return ODataCreateRequest instance.
      */
     public static <T extends AbstractEntity> ODataRequest getCreateRequest(final ODataURI targetURI, final T entity) {
         return new ODataCreateRequest(targetURI, entity);
@@ -40,7 +38,8 @@ public class ODataRequestFactory {
     /**
      * Get a delete request object instance.Use this kind of request for either entities and links.
      *
-     * @return delete request object.
+     * @param targetURI edit link of the object to be removed.
+     * @return ODataDeleteRequest instance.
      */
     public static ODataRequest getDeleteRequest(final ODataURI targetURI) {
         return new ODataDeleteRequest(targetURI);
@@ -49,18 +48,41 @@ public class ODataRequestFactory {
     /**
      * Get an update request object instance.
      *
-     * @return update request object.
+     * @param targetURI edit link of the object to be updated.
+     * @param entity changes to be applied.
+     * @param type type of upate to be performed.
+     * @return ODataUpdateRequest instance.
      */
-    public static ODataRequest getUpdateRequest(final ODataURI targetURI, final Entity entity, final UpdateType type) {
+    public static ODataRequest getUpdateRequest(final ODataURI targetURI, final ODataEntity entity,
+            final UpdateType type) {
         return new ODataUpdateRequest(targetURI, entity, type);
     }
 
     /**
      * Get a query request object instance.
      *
-     * @return
+     * @param query query to be performed.
+     * @return ODataQueryRequest instance.
      */
-    public static ODataRequest getQueryRequest(final Query query) {
+    public static ODataRequest getQueryRequest(final ODataURI query) {
         return new ODataQueryRequest(query);
+    }
+
+    /**
+     * Get a batch request object instance.
+     *
+     * @return ODataBatchRequest instance.
+     */
+    public static ODataRequest getBatchRequest() {
+        return new ODataBatchRequest();
+    }
+
+    /**
+     * Geat a changeset request instance. This request can be submitted only embedded in batch request.
+     *
+     * @return ODataChangesetRequest instance.
+     */
+    public ODataRequest getChangesetRequest() {
+        return new ODataChangesetRequest();
     }
 }

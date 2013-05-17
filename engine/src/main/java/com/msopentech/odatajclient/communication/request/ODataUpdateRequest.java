@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.communication.request;
 
-import com.msopentech.odatajclient.data.Entity;
+import com.msopentech.odatajclient.data.ODataEntity;
 import com.msopentech.odatajclient.data.ODataURI;
 import com.msopentech.odatajclient.types.ODataFormat;
 import com.msopentech.odatajclient.utils.ODataSerializer;
@@ -23,9 +23,9 @@ import java.io.InputStream;
 
 public class ODataUpdateRequest extends ODataRequest {
 
-    private final Entity entity;
+    private final ODataEntity entity;
 
-    ODataUpdateRequest(final ODataURI uri, final Entity entity, final UpdateType type) {
+    ODataUpdateRequest(final ODataURI uri, final ODataEntity entity, final UpdateType type) {
         // set method ...
         super(type.getMethod());
         // set request body ...

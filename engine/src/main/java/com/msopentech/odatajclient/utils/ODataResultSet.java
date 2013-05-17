@@ -15,6 +15,6 @@
  */
 package com.msopentech.odatajclient.utils;
 
-public interface ResultSet {
+public interface ODataResultSet {
     
 }

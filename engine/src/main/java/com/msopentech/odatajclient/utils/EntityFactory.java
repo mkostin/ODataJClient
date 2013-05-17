@@ -15,26 +15,26 @@
  */
 package com.msopentech.odatajclient.utils;
 
-import com.msopentech.odatajclient.data.Entity;
-import com.msopentech.odatajclient.data.Link;
+import com.msopentech.odatajclient.data.ODataEntity;
+import com.msopentech.odatajclient.data.ODataLink;
 import com.msopentech.odatajclient.data.ODataURI;
 import java.util.Date;
 
 public class EntityFactory {
 
-    public static Entity newEntity(final String title) {
+    public static ODataEntity newEntity(final String title) {
         return new EntityImpl(title);
     }
 
-    static Entity newEntity(final String title, final ODataURI link, final Date updated) {
+    static ODataEntity newEntity(final String title, final ODataURI link, final Date updated) {
         return new EntityImpl(title, link);
     }
 
-    public static Link newLink(final String title, final ODataURI link) {
+    public static ODataLink newLink(final String title, final ODataURI link) {
         return new LinkImpl(title, link);
     }
 
-    private static class EntityImpl extends Entity {
+    private static class EntityImpl extends ODataEntity {
 
         public EntityImpl(final String title) {
             super(title);
@@ -46,7 +46,7 @@ public class EntityFactory {
         }
     }
 
-    private static class LinkImpl extends Link {
+    private static class LinkImpl extends ODataLink {
 
         public LinkImpl(final String title, final ODataURI link) {
             super(title, link);

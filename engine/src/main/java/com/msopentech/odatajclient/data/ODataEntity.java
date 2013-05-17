@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public abstract class Entity extends AbstractEntity {
+public abstract class ODataEntity extends AbstractEntity {
 
     private String id;
 
@@ -29,19 +29,19 @@ public abstract class Entity extends AbstractEntity {
 
     private String author;
 
-    private final List<Property> properties = new ArrayList<Property>();
+    private final List<ODataProperty> properties = new ArrayList<ODataProperty>();
 
     private final List<AbstractEntity> links = new ArrayList<AbstractEntity>();
 
-    public Entity(final String title) {
+    public ODataEntity(final String title) {
         super(title);
     }
 
-    public List<Property> getProperties() {
+    public List<ODataProperty> getProperties() {
         return properties;
     }
 
-    public void addProperty(final Property property) {
+    public void addProperty(final ODataProperty property) {
         if (!properties.contains(property)) {
             properties.add(property);
         }

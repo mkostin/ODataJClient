@@ -17,8 +17,21 @@ package com.msopentech.odatajclient.spi;
 
 import com.msopentech.odatajclient.communication.request.ODataRequest;
 import com.msopentech.odatajclient.communication.response.ODataResponse;
+import java.io.InputStream;
 
 public interface ODataClient {
 
+    /**
+     * Execute the given request.
+     * @param request OData request to be executed.
+     * @return OData response.
+     */
     ODataResponse execute(final ODataRequest request);
+
+    /**
+     * Execute the given request.
+     * @param request OData request to be executed.
+     * @return full access to the response stream.
+     */
+    InputStream rowExecute(final ODataRequest request);
 }

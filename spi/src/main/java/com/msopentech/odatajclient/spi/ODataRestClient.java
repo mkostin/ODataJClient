@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.spi;
 
 import com.msopentech.odatajclient.communication.request.ODataRequest;
 import com.msopentech.odatajclient.communication.response.ODataResponse;
+import java.io.InputStream;
 
 /**
  * RESTFul OData client implementation.
@@ -27,13 +28,18 @@ public class ODataRestClient implements ODataClient {
     }
 
     /**
-     * Execute the given request.
-     *
-     * @param request Request.
-     * @return Response.
+     * {@inheritDoc}
      */
     @Override
     public ODataResponse execute(final ODataRequest request) {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InputStream rowExecute(ODataRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
