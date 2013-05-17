@@ -19,7 +19,6 @@ import com.msopentech.odatajclient.data.AbstractEntity;
 import com.msopentech.odatajclient.data.Entity;
 import com.msopentech.odatajclient.data.Link;
 import com.msopentech.odatajclient.data.ODataURI;
-import com.msopentech.odatajclient.types.ODataFormat;
 import com.msopentech.odatajclient.utils.ODataSerializer;
 import java.io.InputStream;
 

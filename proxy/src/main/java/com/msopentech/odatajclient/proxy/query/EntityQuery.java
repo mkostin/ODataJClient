@@ -52,7 +52,7 @@ public interface EntityQuery<T extends Serializable> extends Query {
     EntityQuery<T> setOrderBy(String orderBy);
 
     /**
-     * Execute a <tt>$select</tt> query that returns a single typed result.
+     * Execute a <tt>$filter</tt> query that returns a single typed result.
      *
      * @return the result
      * @throws NoResultException if there is no result
@@ -62,7 +62,7 @@ public interface EntityQuery<T extends Serializable> extends Query {
     T getSingleResult() throws NoResultException, NonUniqueResultException;
 
     /**
-     * Execute a <tt>$select</tt> query and return the query results as a typed List.
+     * Execute a <tt>$filter</tt> query and return the query results as a typed List.
      *
      * @return a list of the results
      */

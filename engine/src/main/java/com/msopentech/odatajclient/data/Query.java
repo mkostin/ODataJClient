@@ -45,10 +45,6 @@ public class Query {
         }
     }
 
-    public Query() {
-        // visibility to the package only
-    }
-
     /**
      * Add the specified option to the query.
      *

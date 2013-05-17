@@ -19,7 +19,6 @@ import com.msopentech.odatajclient.communication.header.ODataHeader;
 import com.msopentech.odatajclient.data.ODataURI;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Set;
 
 public abstract class ODataRequest {
 
@@ -50,7 +49,7 @@ public abstract class ODataRequest {
         return uri;
     }
 
-    public Set<Map.Entry<String, String>> getHeaders() {
+    public Map<String, String> getHeaders() {
         return header.getHeaders();
     }
 

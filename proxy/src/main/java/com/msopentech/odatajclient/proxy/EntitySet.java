@@ -22,7 +22,7 @@ import java.io.Serializable;
 /**
  * Interface for CRUD operations on an EntitySet.
  */
-public interface EntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
+public abstract interface EntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
 
     /**
      * Returns the entity at the specified position in this entity set.

@@ -78,7 +78,7 @@ public interface Query extends Serializable {
     String getOrderBy();
 
     /**
-     * Execute a <tt>$select</tt> query that returns a single untyped result.
+     * Execute a <tt>$filter</tt> query that returns a single untyped result.
      *
      * @return the result
      * @throws NoResultException if there is no result
@@ -87,7 +87,7 @@ public interface Query extends Serializable {
     Serializable getSingleResult() throws NoResultException, NonUniqueResultException;
 
     /**
-     * Execute a <tt>$select</tt> query and return the query results as an untyped List.
+     * Execute a <tt>$filter</tt> query and return the query results as an untyped List.
      *
      * @return a list of the results
      */

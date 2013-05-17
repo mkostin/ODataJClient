@@ -16,9 +16,9 @@
 package com.msopentech.odatajclient.communication.header;
 
 import com.msopentech.odatajclient.types.ODataFormat;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class ODataHeader {
 
@@ -68,8 +68,8 @@ public class ODataHeader {
         return this;
     }
 
-    public Set<Map.Entry<String, String>> getHeaders() {
-        return headers.entrySet();
+    public Map<String, String> getHeaders() {
+        return Collections.unmodifiableMap(headers);
     }
 
     public String getHeader(final String name) {

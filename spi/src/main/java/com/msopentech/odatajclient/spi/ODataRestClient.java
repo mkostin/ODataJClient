@@ -17,10 +17,9 @@ package com.msopentech.odatajclient.spi;
 
 import com.msopentech.odatajclient.communication.request.ODataRequest;
 import com.msopentech.odatajclient.communication.response.ODataResponse;
-import com.msopentech.odatajclient.types.ODataFormat;
 
 /**
- * RESTFull OData client implementation.
+ * RESTFul OData client implementation.
  */
 public class ODataRestClient implements ODataClient {
 
