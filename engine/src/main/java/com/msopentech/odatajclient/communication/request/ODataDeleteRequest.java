@@ -18,8 +18,18 @@ package com.msopentech.odatajclient.communication.request;
 import com.msopentech.odatajclient.data.ODataURI;
 import java.io.InputStream;
 
+/**
+ * This class implements an OData delete request.
+ * Get instance by using ODataRequestFactory.
+ *
+ * @see ODataRequestFactory#getDeleteRequest(com.msopentech.odatajclient.data.ODataURI).
+ */
 public class ODataDeleteRequest extends ODataRequest {
 
+    /**
+     * Constructor.
+     * @param uri uri of the entity to be deleted.
+     */
     ODataDeleteRequest(final ODataURI uri) {
         // set method ...
         super(Method.DELETE);

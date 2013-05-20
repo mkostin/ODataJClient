@@ -21,20 +21,29 @@ import java.util.List;
 
 /**
  * This class implements a batch request.
+ * Get instance by using ODataRequestFactory.
+ *
+ * @see ODataRequestFactory#getBatchRequest().
  */
 public class ODataBatchRequest extends ODataRequest {
 
+    /**
+     * Batch request content.
+     */
     private final List<ODataRequest> batch = new ArrayList<ODataRequest>();
 
+    /**
+     * Constructor.
+     */
     ODataBatchRequest() {
         super(Method.POST);
     }
 
     /**
-     * Add a retrieve operation request.
+     * Adds a retrieve operation request.
      *
      * @param request retrieve operation request to be added.
-     * @return the current request.
+     * @return the current updated request.
      */
     public ODataBatchRequest addRequest(final ODataQueryRequest request) {
         batch.add(request);
@@ -42,10 +51,10 @@ public class ODataBatchRequest extends ODataRequest {
     }
 
     /**
-     * Add a changeset.
+     * Add a changeset to the batch.
      *
      * @param request changeset to be added.
-     * @return the current request.
+     * @return the current updated request.
      */
     public ODataBatchRequest addRequest(final ODataChangesetRequest request) {
         batch.add(request);

@@ -19,15 +19,28 @@ import com.msopentech.odatajclient.utils.ODataResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class implements a response to a changeset request.
+ *
+ * @see ODataResponseFactory#getChangesetResponse()
+ * @see com.msopentech.odatajclient.communication.request.ODataChangesetRequest
+ */
 class ODataChangesetResponse extends ODataResponse {
 
+    /**
+     * Changeset response content.
+     */
     private final List<ODataResponse> changeset = new ArrayList<ODataResponse>();
 
     /**
-     * Add a CUD response to the changeset.
+     * Adds a CUD response to the changeset.
+     * <p>
+     * Each CUD response is about a Create/Update/Delete request submitted embedded into a changeset of a batch request.
      *
      * @param response CUD response to be added.
      * @return the current changeset request instance.
+     *
+     * @see ODataCUDResponse.
      */
     protected ODataChangesetResponse addResponse(final ODataCUDResponse response) {
         changeset.add(response);

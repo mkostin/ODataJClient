@@ -18,8 +18,18 @@ package com.msopentech.odatajclient.communication.request;
 import com.msopentech.odatajclient.data.ODataURI;
 import java.io.InputStream;
 
+/**
+ * This class implements an OData query request.
+ * Get instance by using ODataRequestFactory.
+ *
+ * @see ODataRequestFactory#getQueryRequest(com.msopentech.odatajclient.data.ODataURI).
+ */
 public class ODataQueryRequest extends ODataRequest {
 
+    /**
+     * Constructor.
+     * @param query query URI. 
+     */
     ODataQueryRequest(final ODataURI query) {
         // set method ...
         super(Method.GET);

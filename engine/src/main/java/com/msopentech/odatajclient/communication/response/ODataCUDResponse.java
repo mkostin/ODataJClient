@@ -17,15 +17,28 @@ package com.msopentech.odatajclient.communication.response;
 
 import com.msopentech.odatajclient.utils.ODataResultSet;
 
+/**
+ * This class implements the response to an Odata Create/Update/Delete request.
+ *
+ * @see ODataResponseFactory#getODataCUDResponse()
+ * @see com.msopentech.odatajclient.communication.request.ODataCreateRequest
+ * @see com.msopentech.odatajclient.communication.request.ODataUpdateRequest
+ * @see com.msopentech.odatajclient.communication.request.ODataDeleteRequest
+ */
 class ODataCUDResponse extends ODataResponse {
 
     /**
-     * Get modified/deleted/created object reference or modified/created object itself.
-     * The returned value depends from the request header
-     * <code>Prefer</code> value:
-     * 'return-content' for modified/created entity; 'return-no-content' (default value) for no content.
+     * Gets created/update/deleted object reference or created/updfated object itself.
+     * <p>
+     * The returned value depends on the header
+     * <code>Prefer</code> header value:
+     * <ul>
+     * <li><code>return-content</code> for full access to the created/updated entity;</li>
+     * <li><code>return-no-content</code> for no content (default value).</li>
+     * </ul>
      *
-     * @return modified/created/deleted object reference or modified/created object.
+     * @return created/updated/deleted object reference or created/updated object.
+     * @see com.msopentech.odatajclient.communication.header.ODataHeader.
      */
     @Override
     public ODataResultSet getBody() {

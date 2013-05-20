@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.data.ODataEntity;
 import com.msopentech.odatajclient.data.ODataURI;
 
 /**
- * ODataRequest factory.
+ * OData request factory class.
  */
 public class ODataRequestFactory {
 

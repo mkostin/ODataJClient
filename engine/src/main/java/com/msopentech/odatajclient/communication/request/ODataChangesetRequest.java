@@ -20,15 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class implements a changeset of a bach request.
+ * This class implements a single changeset of a bach request.
+ * Get instance by using ODataRequestFactory.
+ *
+ * @see ODataRequestFactory#getChangesetRequest().I
  */
 public class ODataChangesetRequest extends ODataRequest {
 
+    /**
+     * Changeset content.
+     */
     public final List<ODataRequest> changeset = new ArrayList<ODataRequest>();
 
     /**
      * Contructor.
-     *
+     * <p>
      * A changeset request doesn't specify any HTTP method.
      */
     ODataChangesetRequest() {
@@ -40,7 +46,7 @@ public class ODataChangesetRequest extends ODataRequest {
      * Add a create request to the changeset.
      *
      * @param request create request to be added.
-     * @return the current changeset request.
+     * @return the current updated changeset request.
      */
     public ODataChangesetRequest addRequest(final ODataCreateRequest request) {
         changeset.add(request);
@@ -51,7 +57,7 @@ public class ODataChangesetRequest extends ODataRequest {
      * Add an update request to the changeset.
      *
      * @param request update request to be added.
-     * @return the current changeset request.
+     * @return the current updated changeset request.
      */
     public ODataChangesetRequest addRequest(final ODataUpdateRequest request) {
         changeset.add(request);
@@ -62,7 +68,7 @@ public class ODataChangesetRequest extends ODataRequest {
      * Add a delete request to the changeset.
      *
      * @param request delete request to be added.
-     * @return the current changeset request.
+     * @return the current updated changeset request.
      */
     public ODataChangesetRequest addRequest(final ODataDeleteRequest request) {
         changeset.add(request);

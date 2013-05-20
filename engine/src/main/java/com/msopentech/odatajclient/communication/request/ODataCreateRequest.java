@@ -22,10 +22,26 @@ import com.msopentech.odatajclient.data.ODataURI;
 import com.msopentech.odatajclient.utils.ODataSerializer;
 import java.io.InputStream;
 
+/**
+ * This class implements an OData create request.
+ * Get instance by using ODataRequestFactory.
+ *
+ * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.data.ODataURI,
+ * com.msopentech.odatajclient.data.AbstractEntity).
+ */
 public class ODataCreateRequest extends ODataRequest {
 
+    /**
+     * Entity to be created.
+     */
     private final AbstractEntity entity;
 
+    /**
+     * Constructor.
+     *
+     * @param targetURI entity set URI.
+     * @param entity entity to be created.
+     */
     ODataCreateRequest(final ODataURI targetURI, final AbstractEntity entity) {
         // set method ...
         super(Method.POST);

@@ -19,18 +19,34 @@ import com.msopentech.odatajclient.utils.ODataResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class implements a response to a batch request.
+ *
+ * @see ODataResponseFactory#getBatchResponse()
+ * @see com.msopentech.odatajclient.communication.request.ODataBatchRequest
+ */
 public class ODataBatchResponse extends ODataResponse {
 
+    /**
+     * Batch response content.
+     */
     private final List<ODataResponse> batch = new ArrayList<ODataResponse>();
 
+    /**
+     * Constructor.
+     */
     ODataBatchResponse() {
     }
 
     /**
-     * Add a query response to the batch response.
+     * Adds a query response to the batch response.
+     * <p>
+     * Each query response is about a query request submitted embedded into a batch request.
      *
      * @param response query response to be added.
      * @return the current batch response.
+     *
+     * @see ODataQueryResponse.
      */
     protected ODataBatchResponse addResponse(final ODataQueryResponse response) {
         batch.add(response);

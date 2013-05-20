@@ -19,14 +19,29 @@ import com.msopentech.odatajclient.communication.header.ODataHeader;
 import com.msopentech.odatajclient.utils.ODataResultSet;
 import java.util.Map;
 
+/**
+ * Abstract representation of an OData response.
+ */
 public abstract class ODataResponse {
 
+    /**
+     * Response status code.
+     */
     protected int statusCode;
 
+    /**
+     * Response status message.
+     */
     protected String statusMessage;
 
+    /**
+     * Response header.
+     */
     protected ODataHeader header;
 
+    /**
+     * Constructor.
+     */
     public ODataResponse() {
         // initialize a default header from configuration
         this.header = new ODataHeader();
