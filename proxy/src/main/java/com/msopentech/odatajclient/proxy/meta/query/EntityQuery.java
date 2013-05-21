@@ -26,9 +26,17 @@ import java.util.List;
 public interface EntityQuery<T extends Serializable> extends Query {
 
     /**
+     * Returns the entity at the specified position in this entity set.
+     *
+     * @param index index of the entity to return
+     * @return the entity at the specified position in this entity set
+     * @throws IndexOutOfBoundsException if the index is out of range
+     * (<tt>index &lt; 0 || index &gt;= count()</tt>)
+     */
+    T get(int index) throws IndexOutOfBoundsException;
+
+    /**
      * {@inheritDoc}
-     * <b>Note:</b> Invoking this method has no effect on <tt>$select</tt> since by contract this interface will only
-     * return entities (e.g. <tt>$select=*</tt>).
      */
     @Override
     EntityQuery<T> setSelect(String select);

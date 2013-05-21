@@ -25,16 +25,6 @@ import java.io.Serializable;
 public abstract interface EntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
 
     /**
-     * Returns the entity at the specified position in this entity set.
-     *
-     * @param index index of the entity to return
-     * @return the entity at the specified position in this entity set
-     * @throws IndexOutOfBoundsException if the index is out of range
-     * (<tt>index &lt; 0 || index &gt;= count()</tt>)
-     */
-    T get(int index) throws IndexOutOfBoundsException;
-
-    /**
      * Returns whether an entity with the given id exists.
      *
      * @param key must not be null
@@ -77,9 +67,10 @@ public abstract interface EntitySet<T extends Serializable, KEY extends Serializ
      * Create an instance of <tt>TypedQuery</tt>.
      *
      * @param entityClass the type of the query result
+     * @param <E> the type of the query result
      * @return the new query instance
      */
-    EntityQuery<T> createQuery(Class<T> entityClass);
+    <E extends Serializable> EntityQuery<E> createQuery(Class<E> entityClass);
 
     /**
      * Saves a given entity.
