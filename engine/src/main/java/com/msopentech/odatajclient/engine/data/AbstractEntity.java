@@ -15,20 +15,46 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-public abstract class AbstractEntity {
+import java.io.Serializable;
 
+/**
+ * Abstract representation of entities and navigation links.
+ */
+public abstract class AbstractEntity implements Serializable {
+
+    /**
+     * OData entity edit link.
+     */
     protected ODataURI link;
 
+    /**
+     * OData entity title.
+     */
     private final String title;
 
+    /**
+     * Constructor.
+     *
+     * @param title OData entity title.
+     */
     public AbstractEntity(final String title) {
         this.title = title;
     }
 
+    /**
+     * Returns OData entity edit link.
+     *
+     * @return entity edit link.
+     */
     public ODataURI getLink() {
         return link;
     }
 
+    /**
+     * Returns OData entity title.
+     *
+     * @return entity title.
+     */
     public String getTitle() {
         return title;
     }

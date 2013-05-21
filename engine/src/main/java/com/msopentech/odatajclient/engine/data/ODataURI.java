@@ -16,11 +16,12 @@
 package com.msopentech.odatajclient.engine.data;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * OData URI/Query builder.
  */
-public class ODataURI {
+public class ODataURI implements Serializable {
 
     /**
      * Query options.

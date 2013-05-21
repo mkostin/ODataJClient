@@ -15,21 +15,48 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-public class ODataProperty {
+import java.io.Serializable;
 
+/**
+ * OData entity property.
+ */
+public class ODataProperty implements Serializable {
+
+    /**
+     * Property name.
+     */
     final String name;
 
+    /**
+     * Property value.
+     */
     final String value;
 
+    /**
+     * Constructor.
+     *
+     * @param name property name.
+     * @param value property value.
+     */
     public ODataProperty(String name, String value) {
         this.name = name;
         this.value = value;
     }
 
+    /**
+     * Returns property name.
+     *
+     * @return property name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns property value.
+     *
+     * @return property value.
+     */
     public String getValue() {
         return value;
     }
