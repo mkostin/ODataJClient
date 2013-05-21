@@ -45,7 +45,7 @@ public class InvokeUsageTest {
     public void invokeBindableAction() {
         // provide the target URI
         final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        targetURI.append("Product(0)");
+        targetURI.append("Product(0)/UpdateProductRating");
 
         Map<String, Object> parameters = Collections.<String, Object>singletonMap("rating", 2);
 
