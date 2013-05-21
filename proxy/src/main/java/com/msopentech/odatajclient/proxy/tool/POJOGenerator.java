@@ -26,13 +26,13 @@ public class POJOGenerator {
 
     private final URL metadataURL;
 
-    private final String packageName;
+    private final String basePackage;
 
     private final File baseDirectory;
 
-    public POJOGenerator(final URL metadataURL, final String packageName, final File baseDirectory) {
+    public POJOGenerator(final URL metadataURL, final String basePackage, final File baseDirectory) {
         this.metadataURL = metadataURL;
-        this.packageName = packageName;
+        this.basePackage = basePackage;
         this.baseDirectory = baseDirectory;
     }
 
@@ -41,7 +41,7 @@ public class POJOGenerator {
 
     public static void main(final String[] args) {
         if (args.length != 3) {
-            throw new IllegalArgumentException("Usage: <metadata URL> <packageName> <base directory path>");
+            throw new IllegalArgumentException("Usage: <metadata URL> <basePackage> <base directory path>");
         }
 
         final URL metadataURL;
@@ -51,14 +51,14 @@ public class POJOGenerator {
             throw new IllegalArgumentException("Invalid URL: " + args[0]);
         }
 
-        final String packageName = args[1];
+        final String basePackage = args[1];
 
         final File baseDirectory = new File(args[2]);
         if (!baseDirectory.isDirectory()) {
             throw new IllegalArgumentException("Not existing, or not directory: " + args[2]);
         }
 
-        POJOGenerator generator = new POJOGenerator(metadataURL, packageName, baseDirectory);
+        POJOGenerator generator = new POJOGenerator(metadataURL, basePackage, baseDirectory);
         generator.generate();
     }
 }

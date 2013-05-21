@@ -33,6 +33,7 @@ public abstract class ODataRequest {
      */
     public enum Method {
 
+        NONE,
         GET,
         POST,
         DELETE,
