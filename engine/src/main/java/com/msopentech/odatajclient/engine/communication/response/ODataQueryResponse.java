@@ -13,27 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy;
+package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.types.EdmType;
-import com.msopentech.odatajclient.engine.types.ParameterMode;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.msopentech.odatajclient.engine.utils.ODataResultSet;
 
 /**
- * Function import parameter information.
+ * This class implements a response to a specific query request.
  *
- * @see FunctionImport
+ * @see ODataResponseFactory#getODataQueryResponse()
+ * @see com.msopentech.odatajclient.communication.request.ODataQueryRequest
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-public @interface Parameter {
+class ODataQueryResponse extends ODataResponse {
 
-    String name();
-
-    EdmType type() default EdmType.String;
-
-    ParameterMode mode() default ParameterMode.In;
+    /**
+     * Gets query result objects.
+     *
+     * @return query result objects.
+     */
+    @Override
+    public ODataResultSet getBody() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

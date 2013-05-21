@@ -13,27 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy;
-
-import com.msopentech.odatajclient.engine.types.EdmType;
-import com.msopentech.odatajclient.engine.types.ParameterMode;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.msopentech.odatajclient.engine.types;
 
 /**
- * Function import parameter information.
- *
- * @see FunctionImport
+ * Exchanged data format.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-public @interface Parameter {
+public enum ODataFormat {
 
-    String name();
+    /**
+     * JSON format.
+     */
+    JSON("application/json"),
+    /**
+     * Atom format.
+     */
+    ATOM("application/atom+xml"),
+    /**
+     * Atom format.
+     */
+    XML("application/xml");
 
-    EdmType type() default EdmType.String;
+    private final String format;
 
-    ParameterMode mode() default ParameterMode.In;
+    ODataFormat(final String format) {
+        this.format = format;
+    }
+
+    @Override
+    public String toString() {
+        return format;
+    }
 }

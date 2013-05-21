@@ -198,7 +198,6 @@
 
   <modules>
     <module>engine</module>
-    <module>spi</module>
     <module>proxy</module>
   </modules>
   
