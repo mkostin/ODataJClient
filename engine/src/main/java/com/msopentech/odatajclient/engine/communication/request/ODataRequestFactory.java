@@ -84,7 +84,7 @@ public class ODataRequestFactory {
      *
      * @return ODataChangesetRequest instance.
      */
-    public ODataRequest getChangesetRequest() {
+    public static ODataRequest getChangesetRequest() {
         return new ODataChangesetRequest();
     }
 
@@ -95,7 +95,7 @@ public class ODataRequestFactory {
      * @param parameters required input parameters.
      * @return ODataInvokeRequest instance.
      */
-    public ODataRequest getInvokeActionRequest(final ODataURI uri, final Map<String, Object> parameters) {
+    public static ODataRequest getInvokeActionRequest(final ODataURI uri, final Map<String, Object> parameters) {
         return new ODataInvokeRequest(Method.POST, uri, OperationType.ACTION, parameters);
     }
 
@@ -105,7 +105,7 @@ public class ODataRequestFactory {
      * @param uri URI that identifies the function.
      * @return ODataInvokeRequest instance.
      */
-    public ODataRequest getInvokeFunctionRequest(final ODataURI uri) {
+    public static ODataRequest getInvokeFunctionRequest(final ODataURI uri) {
         return new ODataInvokeRequest(Method.GET, uri, OperationType.FUNCTION);
     }
 
@@ -117,7 +117,7 @@ public class ODataRequestFactory {
      * @param parameters required input parameters.
      * @return ODataInvokeRequest instance.
      */
-    public ODataRequest getInvokeLegacyRequest(
+    public static ODataRequest getInvokeLegacyRequest(
             final Method method, final ODataURI uri, final Map<String, Object> parameters) {
         return new ODataInvokeRequest(method, uri, OperationType.LEGACY, parameters);
     }
