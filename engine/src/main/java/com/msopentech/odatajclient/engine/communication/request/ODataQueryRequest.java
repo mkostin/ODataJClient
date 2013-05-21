@@ -31,7 +31,7 @@ public class ODataQueryRequest extends ODataRequest {
      * @param query query URI. 
      */
     ODataQueryRequest(final ODataURI query) {
-        // set method ...
+        // set method .... If cofigured X-HTTP-METHOD header will be used.
         super(Method.GET);
         // set uri ...
         this.uri = query;

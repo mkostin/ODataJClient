@@ -44,6 +44,10 @@ public abstract class ODataRequest {
 
     /**
      * OData request method.
+     * <p>
+     * If configured a X-HTTP-METHOD header will be used.
+     * In this case the actual method will be
+     * <code>POST</code>.
      */
     final protected Method method;
 
@@ -60,7 +64,7 @@ public abstract class ODataRequest {
     /**
      * Constructor.
      *
-     * @param method HTTP request method.
+     * @param method HTTP request method. If cofigured X-HTTP-METHOD header will be used.
      */
     protected ODataRequest(final Method method) {
         this.method = method;
@@ -101,9 +105,10 @@ public abstract class ODataRequest {
      * <code>MaxDataServiceVersion</code> OData request header.
      *
      * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#maxDataServiceVersion
      */
     public void setMaxDataServiceVersion(final String value) {
-        header.setHeader(ODataHeader.HeaderName.maxDataServiceVersion.toString(), value);
+        header.setHeader(ODataHeader.HeaderName.maxDataServiceVersion, value);
     }
 
     /**
@@ -111,9 +116,10 @@ public abstract class ODataRequest {
      * <code>MinDataServiceVersion</code> OData request header.
      *
      * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#minDataServiceVersion
      */
     public void setMinDataServiceVersion(final String value) {
-        header.setHeader(ODataHeader.HeaderName.minDataServiceVersion.toString(), value);
+        header.setHeader(ODataHeader.HeaderName.minDataServiceVersion, value);
     }
 
     /**
@@ -121,9 +127,10 @@ public abstract class ODataRequest {
      * <code>Accept</code> OData request header.
      *
      * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#accept
      */
     public void setAccept(final String value) {
-        header.setHeader(ODataHeader.HeaderName.accept.toString(), value);
+        header.setHeader(ODataHeader.HeaderName.accept, value);
     }
 
     /**
@@ -131,9 +138,10 @@ public abstract class ODataRequest {
      * <code>If-Match</code> OData request header.
      *
      * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifMatch
      */
     public void setIfMatch(final String value) {
-        header.setHeader(ODataHeader.HeaderName.ifMatch.toString(), value);
+        header.setHeader(ODataHeader.HeaderName.ifMatch, value);
     }
 
     /**
@@ -141,19 +149,32 @@ public abstract class ODataRequest {
      * <code>If-None-Match</code> OData request header.
      *
      * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifNoneMatch
      */
     public void setIfNoneMatch(final String value) {
-        header.setHeader(ODataHeader.HeaderName.ifNoneMatch.toString(), value);
+        header.setHeader(ODataHeader.HeaderName.ifNoneMatch, value);
     }
 
     /**
      * Adds
-     * <code>Preferred</code> OData request header.
+     * <code>Prefer</code> OData request header.
      *
      * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#prefer
      */
-    public void setPreferred(final String value) {
-        header.setHeader(ODataHeader.HeaderName.preferred.toString(), value);
+    public void setPrefer(final String value) {
+        header.setHeader(ODataHeader.HeaderName.prefer, value);
+    }
+
+    /**
+     * Adds
+     * <code>X-HTTP-METHOD</code> OData request header.
+     *
+     * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#xHttpMethod
+     */
+    public void setCHTTPMethod(final String value) {
+        header.setHeader(ODataHeader.HeaderName.xHttpMethod, value);
     }
 
     /**

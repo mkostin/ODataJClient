@@ -47,24 +47,59 @@ public abstract class ODataResponse {
         this.header = new ODataHeader();
     }
 
+    /**
+     * Adds
+     * <code>ETag</code> OData request header.
+     *
+     * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#etag
+     */
     protected void setETag(final String value) {
-        header.setHeader(ODataHeader.HeaderName.etag.toString(), value);
+        header.setHeader(ODataHeader.HeaderName.etag, value);
     }
 
+    /**
+     * Adds
+     * <code>Location</code> OData request header.
+     *
+     * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#location
+     */
     protected void setLocation(final String value) {
-        header.setHeader(ODataHeader.HeaderName.location.toString(), value);
+        header.setHeader(ODataHeader.HeaderName.location, value);
     }
 
+    /**
+     * Adds
+     * <code>DataServiceId</code> OData request header.
+     *
+     * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#dataServiceId
+     */
     protected void setDataServiceId(final String value) {
-        header.setHeader(ODataHeader.HeaderName.dataServiceId.toString(), value);
+        header.setHeader(ODataHeader.HeaderName.dataServiceId, value);
     }
 
-    protected void setPreferredApplied(final String value) {
-        header.setHeader(ODataHeader.HeaderName.preferenceApplied.toString(), value);
+    /**
+     * Adds
+     * <code>Preference-Applied</code> OData request header.
+     *
+     * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#preferenceApplied
+     */
+    protected void setPreferenceApplied(final String value) {
+        header.setHeader(ODataHeader.HeaderName.preferenceApplied, value);
     }
 
+    /**
+     * Adds
+     * <code>Retry-After</code> OData request header.
+     *
+     * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#retryAfter
+     */
     protected void setRetryAfter(final String value) {
-        header.setHeader(ODataHeader.HeaderName.retryAfter.toString(), value);
+        header.setHeader(ODataHeader.HeaderName.retryAfter, value);
     }
 
     public Map<String, String> getHeaders() {

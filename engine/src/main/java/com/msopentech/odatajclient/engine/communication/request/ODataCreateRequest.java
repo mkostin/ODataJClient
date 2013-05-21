@@ -43,7 +43,7 @@ public class ODataCreateRequest extends ODataRequest {
      * @param entity entity to be created.
      */
     ODataCreateRequest(final ODataURI targetURI, final AbstractEntity entity) {
-        // set method ...
+        // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
         // set request body
         this.entity = entity;

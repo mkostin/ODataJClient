@@ -42,7 +42,7 @@ public class ODataUpdateRequest extends ODataRequest {
      * @param type update type.
      */
     ODataUpdateRequest(final ODataURI uri, final ODataEntity entity, final UpdateType type) {
-        // set method ...
+        // set method .... If cofigured X-HTTP-METHOD header will be used.
         super(type.getMethod());
         // set request body ...
         this.entity = entity;

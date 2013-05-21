@@ -44,7 +44,7 @@ public class ODataInvokeRequest extends ODataRequest {
     /**
      * Constructor.
      *
-     * @param method HTTP method of the request.
+     * @param method HTTP method of the request. If cofigured X-HTTP-METHOD header will be used.
      * @param uri URI that identifies the operation.
      * @param type requested operation type.
      */

@@ -27,11 +27,7 @@ public enum ODataFormat {
     /**
      * Atom format.
      */
-    ATOM("application/atom+xml"),
-    /**
-     * Atom format.
-     */
-    XML("application/xml");
+    ATOM("application/atom+xml");
 
     private final String format;
 
