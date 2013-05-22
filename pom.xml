@@ -105,6 +105,7 @@
             <exclude>.idea/**</exclude>
             <exclude>**/.*</exclude>
             <exclude>yworks*/**</exclude>
+            <exclude>docs/**</exclude>
           </excludes>
         </configuration>
         <executions>
