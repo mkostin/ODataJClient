@@ -18,6 +18,7 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import com.msopentech.odatajclient.proxy.meta.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.meta.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.meta.query.Query;
 import com.msopentech.odatajclient.proxy.odatademo.Category;
@@ -31,8 +32,10 @@ import java.util.List;
 
 public class ProxyUsageTest {
 
+    private EntityContainerFactory entityContainerFactory;
+
     public void entityQuery() {
-        DemoService demoService = null; // an instance of DemoService is provided by the context
+        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
 
         // Typed query for products with price < 10.00
         EntityQuery<Product> productQuery = demoService.getProducts().createQuery(Product.class);
@@ -53,7 +56,7 @@ public class ProxyUsageTest {
     }
 
     public void untypedQuery() {
-        DemoService demoService = null; // an instance of DemoService is provided by the context
+        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
 
         // Untyped query for names of products with price < 10.00
         Query query = demoService.getProducts().createQuery();
@@ -64,40 +67,40 @@ public class ProxyUsageTest {
 
         // ... do something with match
     }
-    
+
     public void get() {
-        DemoService demoService = null; // an instance of DemoService is provided by the context
+        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
 
         // Take the product with key value 3
         Product product3 = demoService.getProducts().get(3);
     }
-    
+
     public void create() {
-        DemoService demoService = null; // an instance of DemoService is provided by the context
+        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
 
         // create Category (local)
         Category category = new Category();
-        category.setName("a category name");        
+        category.setName("a category name");
         category = demoService.getCategories().save(category);
-        
+
         // create Product (local)
         Product product = new Product();
         product.setName("a name");
         product.setDescription("a description");
         product.setPrice(11F);
-        product.setReleaseDate(new Date());        
+        product.setReleaseDate(new Date());
         product = demoService.getProducts().save(product);
-        
+
         // link product and category
         product.setCategory(category);
         category.setProducts(Collections.singletonList(product));
-        
+
         // any flush() will generate actual operations on the OData service
         demoService.getProducts().flush();
     }
-    
+
     public void invoke() {
-        DemoService demoService = null; // an instance of DemoService is provided by the context
+        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
 
         // invoke GetProductsByRating
         Collection<Product> products = demoService.getProductsByRating(15);
