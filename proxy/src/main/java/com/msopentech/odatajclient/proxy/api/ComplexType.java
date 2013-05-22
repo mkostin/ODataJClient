@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta.types;
+package com.msopentech.odatajclient.proxy.api;
+
+import java.io.Serializable;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Mode to be used for optimistic concurrency checks.
- *
- * @see com.msopentech.odatajclient.proxy.meta.Property
+ * Mark POJO as EDM complex type.
  */
-public enum ConcurrencyMode {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Inherited
+public @interface ComplexType {
 
-    None,
-    Fixed;
+    String value();
 
+    Class<?> baseType() default Serializable.class;
+
+    boolean isAbstract() default false;
 }

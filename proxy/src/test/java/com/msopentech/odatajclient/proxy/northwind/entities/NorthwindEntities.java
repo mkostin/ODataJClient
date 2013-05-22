@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.meta.EntityContainer;
+import com.msopentech.odatajclient.proxy.api.EntityContainer;
 
 @EntityContainer(name = "NorthwindEntities", isDefaultEntityContainer = true)
 public interface NorthwindEntities {

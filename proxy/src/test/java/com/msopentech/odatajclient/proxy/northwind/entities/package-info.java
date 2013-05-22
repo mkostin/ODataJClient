@@ -16,4 +16,4 @@
 @Namespace("ODataWeb.Northwind.Model")
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.meta.Namespace;
+import com.msopentech.odatajclient.proxy.api.Namespace;

@@ -13,15 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta.types;
+package com.msopentech.odatajclient.proxy.api;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Specifies the content type of the value of the property being mapped via a customizable feed mapping.
+ * Mark POJO as EDM entity container.
  */
-public enum EdmContentKind {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface EntityContainer {
 
-    text,
-    html,
-    xhtml;
+    String name();
 
+    boolean isDefaultEntityContainer() default false;
+
+    String baseType() default "";
 }

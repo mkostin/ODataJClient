@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.msopentech.odatajclient.proxy.api.query;
 
 /**
- * Annotate navigation property with information about referential constraint.
- * @see NavigationProperty
+ * Thrown when <tt>Query.getSingleResult()</tt> or <tt>EntityQuery.getSingleResult()</tt> is executed on a query
+ * and there is no result to return.
+ * @see Query#getSingleResult()
+ * @see EntityQuery#getSingleResult()
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ReferentialConstraint {
+public class NoResultException extends RuntimeException {
 
-    Class<?> principalRole();
+    private static final long serialVersionUID = -6643642637364303053L;
 
-    String[] principalPropertyRefs();
+    public NoResultException() {
+        super();
+    }
 
-    Class<?> dependentRole();
-
-    String[] dependentPropertyRefs();
+    public NoResultException(final String message) {
+        super(message);
+    }
 }

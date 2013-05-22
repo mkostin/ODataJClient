@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta;
-
-import com.msopentech.odatajclient.proxy.meta.types.EdmSimpleType;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.msopentech.odatajclient.proxy.api.types;
 
 /**
- * Mark Java enum as EDM enum type.
+ * Mode to be used for optimistic concurrency checks.
+ *
+ * @see com.msopentech.odatajclient.proxy.meta.Property
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface EnumType {
+public enum ConcurrencyMode {
 
-    String value();
+    None,
+    Fixed;
 
-    EdmSimpleType underlyingType() default EdmSimpleType.Int32;
-
-    boolean isFlags() default false;
 }

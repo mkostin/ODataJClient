@@ -15,10 +15,10 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.model;
 
-import com.msopentech.odatajclient.proxy.meta.EntityType;
-import com.msopentech.odatajclient.proxy.meta.Key;
-import com.msopentech.odatajclient.proxy.meta.NavigationProperty;
-import com.msopentech.odatajclient.proxy.meta.Property;
+import com.msopentech.odatajclient.proxy.api.EntityType;
+import com.msopentech.odatajclient.proxy.api.Key;
+import com.msopentech.odatajclient.proxy.api.NavigationProperty;
+import com.msopentech.odatajclient.proxy.api.Property;
 
 import java.io.Serializable;
 import java.util.List;

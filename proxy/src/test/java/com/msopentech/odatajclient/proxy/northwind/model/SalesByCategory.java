@@ -18,10 +18,10 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.model;
 
-import com.msopentech.odatajclient.proxy.meta.EntityType;
-import com.msopentech.odatajclient.proxy.meta.Key;
-import com.msopentech.odatajclient.proxy.meta.KeyClass;
-import com.msopentech.odatajclient.proxy.meta.Property;
+import com.msopentech.odatajclient.proxy.api.EntityType;
+import com.msopentech.odatajclient.proxy.api.Key;
+import com.msopentech.odatajclient.proxy.api.KeyClass;
+import com.msopentech.odatajclient.proxy.api.Property;
 import java.io.Serializable;
 
 @EntityType("Sales_by_Category")

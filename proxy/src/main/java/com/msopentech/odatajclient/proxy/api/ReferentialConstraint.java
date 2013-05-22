@@ -13,17 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta.types;
+package com.msopentech.odatajclient.proxy.api;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Mode for function import parameters.
- *
- * @see com.msopentech.odatajclient.proxy.meta.Parameter
+ * Annotate navigation property with information about referential constraint.
+ * @see NavigationProperty
  */
-public enum ParameterMode {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface ReferentialConstraint {
 
-    In,
-    Out,
-    InOut;
+    Class<?> principalRole();
 
+    String[] principalPropertyRefs();
+
+    Class<?> dependentRole();
+
+    String[] dependentPropertyRefs();
 }

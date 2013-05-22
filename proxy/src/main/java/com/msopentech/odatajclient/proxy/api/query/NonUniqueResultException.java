@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta.types;
+package com.msopentech.odatajclient.proxy.api.query;
 
 /**
- * Kind of collection for given property.
+ * Thrown when <tt>Query.getSingleResult()</tt> or <tt>EntityQuery.getSingleResult()</tt> is executed on a query and
+ * there is more than one result from the query.
  *
- * @see com.msopentech.odatajclient.proxy.meta.Property
+ * @see Query#getSingleResult()
+ * @see EntityQuery#getSingleResult()
  */
-public enum CollectionKind {
+public class NonUniqueResultException extends RuntimeException {
 
-    None,
-    List,
-    Bag;
+    private static final long serialVersionUID = 4444551737338550185L;
 
+    public NonUniqueResultException() {
+        super();
+    }
+
+    public NonUniqueResultException(final String message) {
+        super(message);
+    }
 }

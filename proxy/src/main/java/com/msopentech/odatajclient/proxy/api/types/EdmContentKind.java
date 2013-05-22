@@ -13,24 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta.query;
+package com.msopentech.odatajclient.proxy.api.types;
 
 /**
- * Thrown when <tt>Query.getSingleResult()</tt> or <tt>EntityQuery.getSingleResult()</tt> is executed on a query and
- * there is more than one result from the query.
- *
- * @see Query#getSingleResult()
- * @see EntityQuery#getSingleResult()
+ * Specifies the content type of the value of the property being mapped via a customizable feed mapping.
  */
-public class NonUniqueResultException extends RuntimeException {
+public enum EdmContentKind {
 
-    private static final long serialVersionUID = 4444551737338550185L;
+    text,
+    html,
+    xhtml;
 
-    public NonUniqueResultException() {
-        super();
-    }
-
-    public NonUniqueResultException(final String message) {
-        super(message);
-    }
 }

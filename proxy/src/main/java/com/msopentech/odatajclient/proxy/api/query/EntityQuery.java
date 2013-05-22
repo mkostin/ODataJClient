@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta.query;
+package com.msopentech.odatajclient.proxy.api.query;
 
 import java.io.Serializable;
 import java.util.List;

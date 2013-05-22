@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.meta.EntitySet;
-import com.msopentech.odatajclient.proxy.meta.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.EntitySet;
+import com.msopentech.odatajclient.proxy.api.EntitySetName;
 import com.msopentech.odatajclient.proxy.northwind.model.CurrentProductList;
 
 @EntitySetName("Current_Product_Lists")

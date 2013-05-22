@@ -13,30 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta;
+package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.proxy.meta.types.OnAction;
+import com.msopentech.odatajclient.proxy.api.types.ParameterMode;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Bind POJO field to EDM navigation property.
+ * Function import parameter information.
+ *
+ * @see FunctionImport
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface NavigationProperty {
+@Target(ElementType.PARAMETER)
+public @interface Parameter {
 
     String name();
 
-    String relationship();
+    String type();
 
-    String fromRole();
+    ParameterMode mode() default ParameterMode.In;
 
-    String toRole();
+    int maxLenght() default Integer.MAX_VALUE;
 
-    boolean containsTarget() default false;
+    int precision() default 0;
 
-    OnAction onDelete() default OnAction.None;
+    int scale() default 0;
 }

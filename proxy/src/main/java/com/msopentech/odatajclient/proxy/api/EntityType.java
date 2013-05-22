@@ -13,51 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta;
+package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.proxy.meta.types.CollectionKind;
-import com.msopentech.odatajclient.proxy.meta.types.ConcurrencyMode;
-import com.msopentech.odatajclient.proxy.meta.types.EdmContentKind;
+import com.msopentech.odatajclient.proxy.api.types.EdmContentKind;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Bind POJO field to EDM property.
+ * Mark POJO as EDM entity type.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Property {
+@Target(ElementType.TYPE)
+@Inherited
+public @interface EntityType {
 
-    String name();
+    String value();
 
-    String type();
+    String baseType() default "";
 
-    boolean nullable() default true;
+    boolean isAbstract() default false;
 
-    String defaultValue() default "";
+    boolean openType() default false;
 
-    int maxLenght() default Integer.MAX_VALUE;
+    boolean hasStream() default false;
 
-    boolean fixedLenght() default false;
-
-    int precision() default 0;
-
-    int scale() default 0;
-
-    boolean unicode() default true;
-
-    String collation() default "";
-
-    int srid() default 0;
-
-    CollectionKind collectionKind() default CollectionKind.None;
-    
-    ConcurrencyMode concurrencyMode() default ConcurrencyMode.None;
-
-    String mimeType() default "";
-    
     /* -- Feed Customization annotations -- */
     String fcSourcePath() default "";
 

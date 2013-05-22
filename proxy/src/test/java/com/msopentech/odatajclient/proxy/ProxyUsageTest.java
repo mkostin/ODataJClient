@@ -18,9 +18,9 @@
  */
 package com.msopentech.odatajclient.proxy;
 
-import com.msopentech.odatajclient.proxy.meta.EntityContainerFactory;
-import com.msopentech.odatajclient.proxy.meta.query.EntityQuery;
-import com.msopentech.odatajclient.proxy.meta.query.Query;
+import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
+import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
+import com.msopentech.odatajclient.proxy.api.query.Query;
 import com.msopentech.odatajclient.proxy.odatademo.Category;
 import com.msopentech.odatajclient.proxy.odatademo.DemoService;
 import com.msopentech.odatajclient.proxy.odatademo.Product;

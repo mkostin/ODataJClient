@@ -15,10 +15,10 @@
  */
 package com.msopentech.odatajclient.proxy.odatademo;
 
-import com.msopentech.odatajclient.proxy.meta.EntityContainer;
-import com.msopentech.odatajclient.proxy.meta.FunctionImport;
-import com.msopentech.odatajclient.proxy.meta.Parameter;
-import com.msopentech.odatajclient.proxy.meta.types.ParameterMode;
+import com.msopentech.odatajclient.proxy.api.EntityContainer;
+import com.msopentech.odatajclient.proxy.api.FunctionImport;
+import com.msopentech.odatajclient.proxy.api.Parameter;
+import com.msopentech.odatajclient.proxy.api.types.ParameterMode;
 import java.util.Collection;
 
 @EntityContainer(name = "DemoService", isDefaultEntityContainer = true)

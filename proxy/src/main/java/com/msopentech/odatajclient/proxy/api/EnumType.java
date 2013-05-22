@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta.types;
+package com.msopentech.odatajclient.proxy.api;
+
+import com.msopentech.odatajclient.proxy.api.types.EdmSimpleType;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * What to be performed on specific action (delete, for example).
- *
- * @see com.msopentech.odatajclient.proxy.meta.NavigationProperty
+ * Mark Java enum as EDM enum type.
  */
-public enum OnAction {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface EnumType {
 
-    None,
-    Cascade;
+    String value();
 
+    EdmSimpleType underlyingType() default EdmSimpleType.Int32;
+
+    boolean isFlags() default false;
 }

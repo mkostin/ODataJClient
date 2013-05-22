@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.meta.query;
+package com.msopentech.odatajclient.proxy.api;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Thrown when <tt>Query.getSingleResult()</tt> or <tt>EntityQuery.getSingleResult()</tt> is executed on a query
- * and there is no result to return.
- * @see Query#getSingleResult()
- * @see EntityQuery#getSingleResult()
+ * Mark POJO field (property) as key.
+ *
+ * @see Property
  */
-public class NoResultException extends RuntimeException {
-
-    private static final long serialVersionUID = -6643642637364303053L;
-
-    public NoResultException() {
-        super();
-    }
-
-    public NoResultException(final String message) {
-        super(message);
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Key {
 }
