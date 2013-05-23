@@ -16,8 +16,8 @@
 package com.msopentech.odatajclient.engine.communication.header;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * ODataHeader wraps OData request/response headers.
@@ -160,10 +160,10 @@ public class ODataHeader {
     /**
      * OData request/response heder key/value pairs.
      */
-    private final Map<String, String> headers = new HashMap<String, String>();
+    private final Map<String, String> headers = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 
     /**
-     * Add the specified (custom) header.
+     * Add the specified (custom) header (header name is case-insensitive).
      *
      * @param name header key.
      * @param value header value.
@@ -188,6 +188,8 @@ public class ODataHeader {
 
     /**
      * Gets the value of the header identified by the given name.
+     * <p>
+     * Please note that header name is case-insensitive.
      *
      * @param name name of the header to be retrieved.
      * @return header value.
@@ -198,6 +200,8 @@ public class ODataHeader {
 
     /**
      * Gets header names.
+     * <p>
+     * Please note that header name is case-insensitive.
      *
      * @return header names.
      */
