@@ -24,6 +24,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.data.ODataEntityAtomExtensions;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.utils.EntityFactory;
 
@@ -38,8 +39,12 @@ public class CUDUsageTest {
 
         // build the new object
         final ODataEntity newEntity = EntityFactory.newEntity("Java Code");
-        newEntity.setSummary("OData client Java framework");
-        // entity.set......
+        // newEntity.set ...
+
+        // just for example, add atom extensions
+        ODataEntityAtomExtensions atomExtensions = new ODataEntityAtomExtensions();
+        atomExtensions.setSummary("OData client Java framework");
+        newEntity.setAtomExtensions(atomExtensions);
 
         // create your request
         final ODataRequest request = ODataRequestFactory.getCreateRequest(targetURI, newEntity);

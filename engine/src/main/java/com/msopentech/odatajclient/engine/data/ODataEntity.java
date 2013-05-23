@@ -16,30 +16,14 @@
 package com.msopentech.odatajclient.engine.data;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public abstract class ODataEntity extends AbstractEntity {
 
     /**
-     * Atom entry ID.
+     * Atom extensions (optional info).
      */
-    private String id;
-
-    /**
-     * Last update date and time.
-     */
-    private Date updated;
-
-    /**
-     * OData entity description.
-     */
-    private String summary;
-
-    /**
-     * Author.
-     */
-    private String author;
+    private ODataEntityAtomExtensions atomExtensions;
 
     /**
      * OData entity properties.
@@ -101,65 +85,20 @@ public abstract class ODataEntity extends AbstractEntity {
     }
 
     /**
-     * Returns Atom entry ID.
+     * Gets Atom extensions.
      *
-     * @return OData entity ID.
+     * @return Atom extensions.
      */
-    public String getId() {
-        return id;
+    public ODataEntityAtomExtensions getAtomExtensions() {
+        return atomExtensions;
     }
 
     /**
-     * Sets the given Atom entry ID.
+     * Sets atom extensions (optional).
      *
-     * @param id ID.
+     * @param atomExtensions Atom extensions to be specified.
      */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * Returns OData entity description (Atom entry summary).
-     *
-     * @return OData entity description.
-     */
-    public String getSummary() {
-        return summary;
-    }
-
-    /**
-     * Set the given description (Atom entry summary).
-     *
-     * @param summary description.
-     */
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    /**
-     * Returns OData entity author (Atom entry author).
-     *
-     * @return OData entity author.
-     */
-    public String getAuthor() {
-        return author;
-    }
-
-    /**
-     * Set the given author (Atom entry author).
-     *
-     * @param author author.
-     */
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    /**
-     * Returns OData entity last update date and time.
-     *
-     * @return OData entity last update date and time.
-     */
-    public Date getUpdated() {
-        return updated;
+    public void setAtomExtensions(ODataEntityAtomExtensions atomExtensions) {
+        this.atomExtensions = atomExtensions;
     }
 }
