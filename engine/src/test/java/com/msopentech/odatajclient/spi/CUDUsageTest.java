@@ -26,6 +26,7 @@ import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntityAtomExtensions;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
+import com.msopentech.odatajclient.engine.types.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.EntityFactory;
 
 public class CUDUsageTest {
@@ -91,7 +92,7 @@ public class CUDUsageTest {
 
         // build the new object to change Rating value
         final ODataEntity changes = EntityFactory.newEntity("Java Code");
-        ODataProperty rating = new ODataProperty("Rating", "3");
+        changes.addProperty(new ODataProperty("Rating", 3, EdmSimpleType.Int32));
 
         // create your request
         final ODataRequest request = ODataRequestFactory.getUpdateRequest(targetURI, changes, UpdateType.PATCH);
