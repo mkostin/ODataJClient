@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
-import java.util.Map;
+import java.util.Collection;
 
 /**
  * Abstract representation of an OData request.
@@ -83,12 +83,12 @@ public abstract class ODataRequest {
     }
 
     /**
-     * Gets all OData request headers.
+     * Gets all OData request header names.
      *
-     * @return unmodifiable map containing all request headers.
+     * @return all request header names.
      */
-    public Map<String, String> getHeaders() {
-        return header.getHeaders();
+    public Collection<String> getHeaderNames() {
+        return header.getHeaderNames();
     }
 
     /**

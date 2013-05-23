@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.header;
 
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -210,15 +210,6 @@ public class ODataHeader {
     }
 
     /**
-     * Gets all headers.
-     *
-     * @return unmodifiable map containing all headers.
-     */
-    public Map<String, String> getHeaders() {
-        return Collections.unmodifiableMap(headers);
-    }
-
-    /**
      * Gets the value of the header identified by the given name.
      *
      * @param name name of the header to be retrieved.
@@ -226,5 +217,14 @@ public class ODataHeader {
      */
     public String getHeader(final String name) {
         return headers.get(name);
+    }
+
+    /**
+     * Gets header names.
+     *
+     * @return header names.
+     */
+    public Collection<String> getHeaderNames() {
+        return headers.keySet();
     }
 }
