@@ -30,7 +30,7 @@ public class ODataBatchRequest extends ODataRequest {
     /**
      * Batch request content.
      */
-    private final List<ODataRequest> batch = new ArrayList<ODataRequest>();
+    private final List<ODataBatchItem> batch = new ArrayList<ODataBatchItem>();
 
     /**
      * Constructor.
@@ -46,7 +46,7 @@ public class ODataBatchRequest extends ODataRequest {
      * @return the current updated request.
      */
     public ODataBatchRequest addRequest(final ODataQueryRequest request) {
-        batch.add(request);
+        batch.add(new ODataRetrieve(request));
         return this;
     }
 
@@ -56,7 +56,7 @@ public class ODataBatchRequest extends ODataRequest {
      * @param request changeset to be added.
      * @return the current updated request.
      */
-    public ODataBatchRequest addRequest(final ODataChangesetRequest request) {
+    public ODataBatchRequest addRequest(final ODataChangeset request) {
         batch.add(request);
         return this;
     }

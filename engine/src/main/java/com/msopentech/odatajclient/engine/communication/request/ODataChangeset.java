@@ -15,31 +15,18 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * This class implements a single changeset of a bach request.
+ * Changeset wrapper for the corresponding batch item.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getChangesetRequest().I
+ * @see ODataRequestFactory#getChangesetRequest()
  */
-public class ODataChangesetRequest extends ODataRequest {
+public class ODataChangeset extends ODataBatchItem {
 
     /**
-     * Changeset content.
+     * Constructor.
      */
-    public final List<ODataRequest> changeset = new ArrayList<ODataRequest>();
-
-    /**
-     * Contructor.
-     * <p>
-     * A changeset request doesn't specify any HTTP method.
-     */
-    ODataChangesetRequest() {
-        // changeset doesn't require method specification ...
-        super(Method.POST);
+    ODataChangeset() {
     }
 
     /**
@@ -48,8 +35,8 @@ public class ODataChangesetRequest extends ODataRequest {
      * @param request create request to be added.
      * @return the current updated changeset request.
      */
-    public ODataChangesetRequest addRequest(final ODataCreateRequest request) {
-        changeset.add(request);
+    public ODataChangeset addRequest(final ODataCreateRequest request) {
+        requests.add(request);
         return this;
     }
 
@@ -59,8 +46,8 @@ public class ODataChangesetRequest extends ODataRequest {
      * @param request update request to be added.
      * @return the current updated changeset request.
      */
-    public ODataChangesetRequest addRequest(final ODataUpdateRequest request) {
-        changeset.add(request);
+    public ODataChangeset addRequest(final ODataUpdateRequest request) {
+        requests.add(request);
         return this;
     }
 
@@ -70,16 +57,8 @@ public class ODataChangesetRequest extends ODataRequest {
      * @param request delete request to be added.
      * @return the current updated changeset request.
      */
-    public ODataChangesetRequest addRequest(final ODataDeleteRequest request) {
-        changeset.add(request);
+    public ODataChangeset addRequest(final ODataDeleteRequest request) {
+        requests.add(request);
         return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public InputStream getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

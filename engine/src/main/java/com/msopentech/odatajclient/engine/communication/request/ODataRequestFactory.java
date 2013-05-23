@@ -75,17 +75,28 @@ public class ODataRequestFactory {
      *
      * @return ODataBatchRequest instance.
      */
-    public static ODataRequest getBatchRequest() {
+    public static ODataBatchRequest getBatchRequest() {
         return new ODataBatchRequest();
     }
 
     /**
-     * Gets a changeset request instance. This request can be submitted only embedded in batch request.
+     * Gets a changeset batch item instance.
+     * A changeset can be submitted embedded into a batch request only.
      *
-     * @return ODataChangesetRequest instance.
+     * @return ODataChangeset instance.
      */
-    public static ODataRequest getChangesetRequest() {
-        return new ODataChangesetRequest();
+    public static ODataChangeset getChangesetBatchItem() {
+        return new ODataChangeset();
+    }
+
+    /**
+     * Gets a retrieve batch item instance.
+     * A retrieve item can be submitted embedded into a batch request only.
+     *
+     * @return ODataRetrieve instance.
+     */
+    public static ODataRetrieve getRetrieveBatchItem() {
+        return new ODataRetrieve(null);
     }
 
     /**
