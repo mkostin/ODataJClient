@@ -19,7 +19,7 @@ import com.msopentech.odatajclient.engine.data.AbstractEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataURI;
-import com.msopentech.odatajclient.engine.utils.ODataSerializer;
+import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 
 /**
@@ -57,7 +57,7 @@ public class ODataCreateRequest extends ODataRequest {
         if (entity instanceof ODataLink) {
             return entity.getLink().toStream();
         } else {
-            return new ODataSerializer(getFormat()).serialize((ODataEntity) entity);
+            return new ODataWriter(getFormat()).serialize((ODataEntity) entity);
         }
     }
 }

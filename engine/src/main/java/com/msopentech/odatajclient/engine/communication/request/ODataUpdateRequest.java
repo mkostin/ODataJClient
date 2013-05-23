@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURI;
-import com.msopentech.odatajclient.engine.utils.ODataSerializer;
+import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 
 /**
@@ -55,6 +55,6 @@ public class ODataUpdateRequest extends ODataRequest {
      */
     @Override
     public InputStream getBody() {
-        return new ODataSerializer(getFormat()).serialize(entity);
+        return new ODataWriter(getFormat()).serialize(entity);
     }
 }
