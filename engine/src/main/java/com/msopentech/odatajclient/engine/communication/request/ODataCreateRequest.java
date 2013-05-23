@@ -57,7 +57,7 @@ public class ODataCreateRequest extends ODataRequest {
         if (entity instanceof ODataLink) {
             return entity.getLink().toStream();
         } else {
-            return new ODataSerializer(header.getFormat()).serialize((ODataEntity) entity);
+            return new ODataSerializer(getFormat()).serialize((ODataEntity) entity);
         }
     }
 }

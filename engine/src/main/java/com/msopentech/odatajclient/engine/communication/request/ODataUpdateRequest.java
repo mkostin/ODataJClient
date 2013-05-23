@@ -55,6 +55,6 @@ public class ODataUpdateRequest extends ODataRequest {
      */
     @Override
     public InputStream getBody() {
-        return new ODataSerializer(header.getFormat()).serialize(entity);
+        return new ODataSerializer(getFormat()).serialize(entity);
     }
 }

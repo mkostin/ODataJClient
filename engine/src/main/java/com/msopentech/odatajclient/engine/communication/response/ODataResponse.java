@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.communication.response;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.utils.ODataResultSet;
-import java.util.Map;
+import java.util.Collection;
 
 /**
  * Abstract representation of an OData response.
@@ -102,8 +102,8 @@ public abstract class ODataResponse {
         header.setHeader(ODataHeader.HeaderName.retryAfter, value);
     }
 
-    public Map<String, String> getHeaders() {
-        return header.getHeaders();
+    public Collection<String> getHeaderNames() {
+        return header.getHeaderNames();
     }
 
     public String getHeader(final String name) {

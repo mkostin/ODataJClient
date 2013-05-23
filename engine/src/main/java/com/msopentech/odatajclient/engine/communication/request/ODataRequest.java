@@ -17,6 +17,8 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.data.ODataURI;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -42,6 +44,11 @@ public abstract class ODataRequest {
         MERGE
 
     }
+
+    /**
+     * OData resource representation format.
+     */
+    private ODataFormat format;
 
     /**
      * OData request method.
@@ -71,6 +78,28 @@ public abstract class ODataRequest {
         this.method = method;
         // initialize a default header from configuration
         this.header = new ODataHeader();
+        // take format from configuration
+        this.format = new Configuration().getFormat();
+    }
+
+    /**
+     * Returns resource representation format.
+     *
+     * @return the configured format (<code>Atom</code> will be the default value unless differently specified).
+     */
+    public ODataFormat getFormat() {
+        return format;
+    }
+
+    /**
+     * Override configured request format.
+     *
+     * @param format request format.
+     *
+     * @see ODataFormat
+     */
+    public void setFormat(final ODataFormat format) {
+        this.format = format;
     }
 
     /**

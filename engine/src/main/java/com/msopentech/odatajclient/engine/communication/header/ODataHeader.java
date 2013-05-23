@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.header;
 
-import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -159,31 +158,9 @@ public class ODataHeader {
     }
 
     /**
-     * OData resource representation format.
-     */
-    private final ODataFormat format;
-
-    /**
      * OData request/response heder key/value pairs.
      */
     private final Map<String, String> headers = new HashMap<String, String>();
-
-    /**
-     * Constructor.
-     */
-    public ODataHeader() {
-        // initialize header from configuration or by using defaul parameters
-        this.format = ODataFormat.ATOM;
-    }
-
-    /**
-     * Returns resource representation format.
-     *
-     * @return the configured format (<code>Atom</code> will be the default value unless differently specified).
-     */
-    public ODataFormat getFormat() {
-        return format;
-    }
 
     /**
      * Add the specified (custom) header.
