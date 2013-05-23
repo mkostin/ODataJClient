@@ -23,6 +23,8 @@ import java.io.Serializable;
  */
 public class ODataProperty implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Property name.
      */
@@ -31,7 +33,7 @@ public class ODataProperty implements Serializable {
     /**
      * Property value.
      */
-    final Serializable value;
+    final ODataPropertyValue value;
 
     /**
      * Value type.
@@ -45,7 +47,7 @@ public class ODataProperty implements Serializable {
      * @param value property value.
      * @param type property value type.
      */
-    public ODataProperty(final String name, final Serializable value, final EdmSimpleType type) {
+    public ODataProperty(final String name, final ODataPropertyValue value, final EdmSimpleType type) {
         this.name = name;
         this.value = value;
         this.type = type;
@@ -65,7 +67,7 @@ public class ODataProperty implements Serializable {
      *
      * @return property value.
      */
-    public Serializable getValue() {
+    public ODataPropertyValue getValue() {
         return value;
     }
 }
