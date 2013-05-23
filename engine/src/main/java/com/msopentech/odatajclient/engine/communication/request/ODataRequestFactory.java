@@ -33,7 +33,8 @@ public class ODataRequestFactory {
      * @param entity entity or relationships to be created.
      * @return ODataCreateRequest instance.
      */
-    public static <T extends AbstractEntity> ODataRequest getCreateRequest(final ODataURI targetURI, final T entity) {
+    public static <T extends AbstractEntity> ODataCreateRequest getCreateRequest(final ODataURI targetURI,
+            final T entity) {
         return new ODataCreateRequest(targetURI, entity);
     }
 
@@ -43,7 +44,7 @@ public class ODataRequestFactory {
      * @param targetURI edit link of the object to be removed.
      * @return ODataDeleteRequest instance.
      */
-    public static ODataRequest getDeleteRequest(final ODataURI targetURI) {
+    public static ODataDeleteRequest getDeleteRequest(final ODataURI targetURI) {
         return new ODataDeleteRequest(targetURI);
     }
 
@@ -55,7 +56,7 @@ public class ODataRequestFactory {
      * @param type type of upate to be performed.
      * @return ODataUpdateRequest instance.
      */
-    public static ODataRequest getUpdateRequest(final ODataURI targetURI, final ODataEntity entity,
+    public static ODataUpdateRequest getUpdateRequest(final ODataURI targetURI, final ODataEntity entity,
             final UpdateType type) {
         return new ODataUpdateRequest(targetURI, entity, type);
     }
@@ -66,7 +67,7 @@ public class ODataRequestFactory {
      * @param query query to be performed.
      * @return ODataQueryRequest instance.
      */
-    public static ODataRequest getQueryRequest(final ODataURI query) {
+    public static ODataQueryRequest getQueryRequest(final ODataURI query) {
         return new ODataQueryRequest(query);
     }
 
@@ -106,7 +107,7 @@ public class ODataRequestFactory {
      * @param parameters required input parameters.
      * @return ODataInvokeRequest instance.
      */
-    public static ODataRequest getInvokeActionRequest(final ODataURI uri, final Map<String, Object> parameters) {
+    public static ODataInvokeRequest getInvokeActionRequest(final ODataURI uri, final Map<String, Object> parameters) {
         return new ODataInvokeRequest(Method.POST, uri, OperationType.ACTION, parameters);
     }
 
@@ -116,7 +117,7 @@ public class ODataRequestFactory {
      * @param uri URI that identifies the function.
      * @return ODataInvokeRequest instance.
      */
-    public static ODataRequest getInvokeFunctionRequest(final ODataURI uri) {
+    public static ODataInvokeRequest getInvokeFunctionRequest(final ODataURI uri) {
         return new ODataInvokeRequest(Method.GET, uri, OperationType.FUNCTION);
     }
 
@@ -128,7 +129,7 @@ public class ODataRequestFactory {
      * @param parameters required input parameters.
      * @return ODataInvokeRequest instance.
      */
-    public static ODataRequest getInvokeLegacyRequest(
+    public static ODataInvokeRequest getInvokeLegacyRequest(
             final Method method, final ODataURI uri, final Map<String, Object> parameters) {
         return new ODataInvokeRequest(method, uri, OperationType.LEGACY, parameters);
     }
