@@ -31,7 +31,7 @@ public class InvokeUsageTest {
     public void invokeFunction() {
         // provide the target URI
         final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        targetURI.append("GetProductsByRating?rating=4");
+        targetURI.append("GetProductsByRating").addQueryParameter("rating", "4");
 
         // create your request
         final ODataRequest request = ODataRequestFactory.getInvokeFunctionRequest(targetURI);

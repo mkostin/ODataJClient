@@ -17,6 +17,8 @@ package com.msopentech.odatajclient.engine.data;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * OData URI/Query builder.
@@ -111,6 +113,11 @@ public class ODataURI implements Serializable {
     private final String serviceRoot;
 
     /**
+     * Case-insensitive map of query parameters.
+     */
+    private final Map<String, String> queryParameters = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+
+    /**
      * Contructor.
      *
      * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
@@ -118,6 +125,18 @@ public class ODataURI implements Serializable {
      */
     public ODataURI(final String serviceRoot) {
         this.serviceRoot = serviceRoot;
+    }
+
+    /**
+     * Add query parameter.
+     *
+     * @param name parameter name.
+     * @param value parameter value.
+     * @return current ODataURI object.
+     */
+    public ODataURI addQueryParameter(final String name, final String value) {
+        queryParameters.put(name, value);
+        return this;
     }
 
     /**
