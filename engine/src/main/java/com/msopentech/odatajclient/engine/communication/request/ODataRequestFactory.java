@@ -16,8 +16,8 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
-import com.msopentech.odatajclient.engine.data.AbstractEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.util.Map;
 
@@ -27,19 +27,64 @@ import java.util.Map;
 public class ODataRequestFactory {
 
     /**
-     * Gets a create request object instance. Use this kind of request for either entities and links.
+     * Gets a create request object instance.
+     * <p>
+     * Use this kind of request to create a new entity.
      *
      * @param targetURI entity set or link attribute URI.
      * @param entity entity or relationships to be created.
      * @return ODataCreateRequest instance.
      */
-    public static <T extends AbstractEntity> ODataCreateRequest getCreateRequest(final ODataURI targetURI,
-            final T entity) {
+    public static ODataCreateRequest getCreateRequest(final ODataURI targetURI, final ODataEntity entity) {
         return new ODataCreateRequest(targetURI, entity);
     }
 
     /**
-     * Gets a delete request object instance.Use this kind of request for either entities and links.
+     * Gets an add link request object instance.
+     * <p>
+     * Use this kind of request to create a navigation link between existing entities.
+     *
+     * @param targetURI navigation property's link collection.
+     * @param entityToBeAdded navigation link to be added.
+     * @return ODataAddLinkRequest instance.
+     */
+    public static ODataAddLinkRequest getAddLinkRequest(final ODataURI targetURI, final ODataLink entityToBeAdded) {
+        return new ODataAddLinkRequest(targetURI, entityToBeAdded);
+    }
+
+    /**
+     * Gets a remove link request object instance.
+     * <p>
+     * Use this kind of request to remove a navigation link between existing entities.
+     *
+     * @param linkToBeRemoved navigation link to be removed.
+     * @return ODataRemovedLinkRequest instance.
+     */
+    public static ODataRemoveLinkRequest getRemoveLinkRequest(final ODataURI linkToBeRemoved) {
+        return new ODataRemoveLinkRequest(linkToBeRemoved);
+    }
+
+    /**
+     * Gets a link update request object instance.
+     * <p>
+     * Use this kind of request to update a navigation link between existing entities.
+     * <p>
+     * In case of the old navigation link doesn't exist the new one will be added as well.
+     *
+     * @param targetURI navigation property's link collection.
+     * @param linkToBeRemoved navigation link to be removed.
+     * @param entityToBeAdded URL that identifies the entity to be linked.
+     * @return ODataSetLinkRequest instance.
+     */
+    public static ODataSetLinkRequest getSetLinkRequest(
+            final ODataURI targetURI, final ODataURI linkToBeRemoved, final ODataLink entityToBeAdded) {
+        return new ODataSetLinkRequest(targetURI, linkToBeRemoved, entityToBeAdded);
+    }
+
+    /**
+     * Gets a delete request object instance.
+     * <p>
+     * Use this kind of request to delete an entity.
      *
      * @param targetURI edit link of the object to be removed.
      * @return ODataDeleteRequest instance.

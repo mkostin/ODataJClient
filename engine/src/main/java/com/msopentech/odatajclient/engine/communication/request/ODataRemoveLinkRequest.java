@@ -15,36 +15,27 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURI;
-import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 
 /**
- * This class implements an OData create request.
+ * This class implements an remove navigation link OData request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * com.msopentech.odatajclient.engine.data.ODataEntity)
+ * @see ODataRequestFactory#getRemoveLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataCreateRequest extends ODataRequest {
-
-    /**
-     * Entity to be created.
-     */
-    private final ODataEntity entity;
+public class ODataRemoveLinkRequest extends ODataRequest {
 
     /**
      * Constructor.
      *
-     * @param targetURI entity set URI.
-     * @param entity entity to be created.
+     * @param linkToBeRemoved navigation link to be removed.
      */
-    ODataCreateRequest(final ODataURI targetURI, final ODataEntity entity) {
+    ODataRemoveLinkRequest(final ODataURI linkToBeRemoved) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST);
-        // set request body
-        this.entity = entity;
+        super(Method.DELETE);
+        // set target uri
+        this.uri = linkToBeRemoved;
     }
 
     /**
@@ -52,6 +43,6 @@ public class ODataCreateRequest extends ODataRequest {
      */
     @Override
     public InputStream getBody() {
-        return new ODataWriter(getFormat()).serialize((ODataEntity) entity);
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

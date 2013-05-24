@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.spi;
 
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.ODataRestClient;
+import com.msopentech.odatajclient.engine.communication.request.ODataAddLinkRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -27,6 +28,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataUpdateReque
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.response.ODataCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
@@ -97,13 +99,10 @@ public class CUDUsageTest {
         final ODataLink newLink = EntityFactory.newLink("Supplier", targetURI);
 
         // create your request
-        final ODataCreateRequest request = ODataRequestFactory.getCreateRequest(sourceURI, newLink);
+        final ODataAddLinkRequest request = ODataRequestFactory.getAddLinkRequest(sourceURI, newLink);
 
         // execute the request
-        ODataCreateResponse res = client.<ODataCreateResponse>execute(request);
-
-        // retrieve updated entity
-        ODataEntity updated = res.getBody();
+        ODataLinkOperationResponse res = client.<ODataLinkOperationResponse>execute(request);
 
         // retrieve and process execution results
         int statusCode = res.getStatusCode();

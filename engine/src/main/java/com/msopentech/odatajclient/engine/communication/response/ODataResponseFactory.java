@@ -91,4 +91,13 @@ public class ODataResponseFactory {
     public static ODataRetrieve getRetrieveBatchItem(final ODataQueryResponse response) {
         return new ODataRetrieve(response);
     }
+
+    /**
+     * Gets a response object instance for a link operation request.
+     *
+     * @return response object.
+     */
+    public static ODataLinkOperationResponse getODataLinkOperationResponse() {
+        return new ODataLinkOperationResponse();
+    }
 }
