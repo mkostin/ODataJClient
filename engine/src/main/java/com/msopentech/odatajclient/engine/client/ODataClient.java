@@ -26,12 +26,12 @@ public interface ODataClient {
      * @param request OData request to be executed.
      * @return OData response.
      */
-    ODataResponse execute(final ODataRequest request);
+    <T extends ODataResponse> T execute(final ODataRequest request);
 
     /**
      * Execute the given request.
      * @param request OData request to be executed.
      * @return full access to the response stream.
      */
-    InputStream rowExecute(final ODataRequest request);
+    InputStream rawExecute(final ODataRequest request);
 }

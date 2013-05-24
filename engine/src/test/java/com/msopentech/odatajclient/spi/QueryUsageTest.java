@@ -36,7 +36,7 @@ public class QueryUsageTest {
         final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri);
 
         // execute request
-        final ODataQueryResponse res = (ODataQueryResponse) client.execute(request);
+        final ODataQueryResponse res = client.<ODataQueryResponse>execute(request);
 
         // retrieve and process the query result
         for (ODataEntity entity : res.<ODataEntity>getBody()) {

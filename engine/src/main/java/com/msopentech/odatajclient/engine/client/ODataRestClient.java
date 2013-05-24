@@ -39,7 +39,7 @@ public class ODataRestClient implements ODataClient {
      * {@inheritDoc}
      */
     @Override
-    public InputStream rowExecute(ODataRequest request) {
+    public InputStream rawExecute(ODataRequest request) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
