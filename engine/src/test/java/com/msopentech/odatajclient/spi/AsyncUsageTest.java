@@ -33,7 +33,7 @@ public class AsyncUsageTest {
     public void asyncCreateTest() {
         // provide the target URI
         final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        targetURI.append("Products");
+        targetURI.appendEntitySetSegment("Products");
 
         // build the new object
         final ODataEntity newEntity = EntityFactory.newEntity("Java Code");
