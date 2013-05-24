@@ -21,17 +21,19 @@ import com.msopentech.odatajclient.engine.utils.ODataResultSet;
  * This class implements a response to a specific query request.
  *
  * @see ODataResponseFactory#getODataQueryResponse()
- * @see com.msopentech.odatajclient.communication.request.ODataQueryRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest
  */
-class ODataQueryResponse extends ODataResponse {
+public class ODataQueryResponse extends ODataResponse {
+
+    ODataQueryResponse() {
+    }
 
     /**
      * Gets query result objects.
      *
      * @return query result objects.
      */
-    @Override
-    public ODataResultSet getBody() {
+    public <T> ODataResultSet<T> getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

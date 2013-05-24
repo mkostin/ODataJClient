@@ -22,7 +22,7 @@ import java.io.InputStream;
  * This class implements an OData delete request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getDeleteRequest(com.msopentech.odatajclient.data.ODataURI).
+ * @see ODataRequestFactory#getDeleteRequest(com.msopentech.odatajclient.engine.data.ODataURI) 
  */
 public class ODataDeleteRequest extends ODataRequest {
 

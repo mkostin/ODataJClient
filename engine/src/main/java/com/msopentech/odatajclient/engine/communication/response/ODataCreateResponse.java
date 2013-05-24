@@ -15,25 +15,25 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.utils.ODataResultSet;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
 
 /**
- * This class implements a response to a specific invoke request.
+ * This class implements the response to an Odata Create/Update/Delete request.
  *
- * @see ODataResponseFactory#getODataIvokeResponse()
- * @see com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest
+ * @see ODataResponseFactory#getODataCreateResponse()
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataCreateRequest
  */
-public class ODataInvokeResponse extends ODataResponse {
+public class ODataCreateResponse extends ODataResponse {
 
-    ODataInvokeResponse() {
+    ODataCreateResponse() {
     }
 
     /**
-     * Gets operation return value if exists.
+     * Gets created object.
      *
-     * @return operation return value.
+     * @return created object.
      */
-    public ODataResultSet getBody() {
+    public ODataEntity getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

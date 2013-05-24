@@ -15,25 +15,33 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.utils.ODataResultSet;
+import com.msopentech.odatajclient.engine.communication.request.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class implements a response to a specific invoke request.
+ * Abstract representation of a response item about a batch request.
+ * Get instance by using ODataResponseFactory.
  *
- * @see ODataResponseFactory#getODataIvokeResponse()
- * @see com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest
+ * @see ODataRequestFactory#getChangesetBatchItem()
+ * @see ODataRequestFactory#getRetrieveBatchItem()
  */
-public class ODataInvokeResponse extends ODataResponse {
+public abstract class ODataBatchResponseItem {
 
-    ODataInvokeResponse() {
+    /**
+     * Batch item response.
+     */
+    protected final List<ODataResponse> responses = new ArrayList<ODataResponse>();
+
+    ODataBatchResponseItem() {
     }
 
     /**
-     * Gets operation return value if exists.
+     * Return all responses encapsulated into the batch item.
      *
-     * @return operation return value.
+     * @return item responses.
      */
-    public ODataResultSet getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<ODataResponse> getResponse() {
+        return responses;
     }
 }

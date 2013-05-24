@@ -15,6 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+/**
+ * OData operation type.
+ */
 public enum OperationType {
 
     FUNCTION,

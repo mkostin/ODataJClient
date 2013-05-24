@@ -59,7 +59,7 @@ public class ODataReader {
      * @return entity de-serialized.
      * @throws NoSuchEntityFound in case of no entity has been found into the input stream.
      */
-    public ODataEntity serialize(final InputStream input) {
+    public ODataEntity deserializeEntity(final InputStream input) {
         return null;
     }
 }

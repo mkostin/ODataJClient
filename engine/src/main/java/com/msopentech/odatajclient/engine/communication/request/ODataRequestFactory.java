@@ -96,8 +96,8 @@ public class ODataRequestFactory {
      *
      * @return ODataRetrieve instance.
      */
-    public static ODataRetrieve getRetrieveBatchItem() {
-        return new ODataRetrieve(null);
+    public static ODataRetrieve getRetrieveBatchItem(final ODataQueryRequest request) {
+        return new ODataRetrieve(request);
     }
 
     /**

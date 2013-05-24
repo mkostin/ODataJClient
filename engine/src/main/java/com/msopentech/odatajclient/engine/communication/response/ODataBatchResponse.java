@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.utils.ODataResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,14 +22,14 @@ import java.util.List;
  * This class implements a response to a batch request.
  *
  * @see ODataResponseFactory#getBatchResponse()
- * @see com.msopentech.odatajclient.communication.request.ODataBatchRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest
  */
 public class ODataBatchResponse extends ODataResponse {
 
     /**
-     * Batch response content.
+     * Batch request content.
      */
-    private final List<ODataResponse> batch = new ArrayList<ODataResponse>();
+    private final List<ODataBatchResponseItem> batch = new ArrayList<ODataBatchResponseItem>();
 
     /**
      * Constructor.
@@ -48,29 +47,28 @@ public class ODataBatchResponse extends ODataResponse {
      *
      * @see ODataQueryResponse.
      */
-    protected ODataBatchResponse addResponse(final ODataQueryResponse response) {
-        batch.add(response);
+    protected ODataBatchResponse addItem(final ODataQueryResponse response) {
+        batch.add(ODataResponseFactory.getRetrieveBatchItem(response));
         return this;
     }
 
     /**
-     * Add a changeset response to the batch response.
+     * Add a changeset to the batch response.
      *
-     * @param response changeset response to be added.
+     * @param item changeset to be added.
      * @return the current batch response.
      */
-    protected ODataBatchResponse addResponse(final ODataChangesetResponse response) {
-        batch.add(response);
+    protected ODataBatchResponse addResponse(final ODataChangeset item) {
+        batch.add(item);
         return this;
     }
 
     /**
-     * Get all responses related to the batch request.
+     * Get all the batch response items.
      *
      * @return a result set of ODataResponse instances.
      */
-    @Override
-    public ODataResultSet getBody() {
+    public List<ODataBatchResponseItem> getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

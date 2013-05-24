@@ -21,12 +21,30 @@ package com.msopentech.odatajclient.engine.communication.response;
 public class ODataResponseFactory {
 
     /**
-     * Gets a response object instance for a CUD request.
+     * Gets a response object instance for a create request.
      *
      * @return response object.
      */
-    public static ODataResponse getODataCUDResponse() {
-        return new ODataCUDResponse();
+    public static ODataCreateResponse getODataCreateResponse() {
+        return new ODataCreateResponse();
+    }
+
+    /**
+     * Gets a response object instance for an update request.
+     *
+     * @return response object.
+     */
+    public static ODataUpdateResponse getODataUpdateResponse() {
+        return new ODataUpdateResponse();
+    }
+
+    /**
+     * Gets a response object instance for a delete request.
+     *
+     * @return response object.
+     */
+    public static ODataDeleteResponse getODataDeleteResponse() {
+        return new ODataDeleteResponse();
     }
 
     /**
@@ -57,11 +75,20 @@ public class ODataResponseFactory {
     }
 
     /**
-     * Gets a response object instance for a specific changeset of a batch request.
+     * Gets a changeset batch item instance.
      *
-     * @return response obejct.
+     * @return ODataChangeset instance.
      */
-    public static ODataChangesetResponse getChangesetResponse() {
-        return new ODataChangesetResponse();
+    public static ODataChangeset getChangesetBatchItem() {
+        return new ODataChangeset();
+    }
+
+    /**
+     * Gets a retrieve batch item instance.
+     *
+     * @return ODataRetrieve instance.
+     */
+    public static ODataRetrieve getRetrieveBatchItem(final ODataQueryResponse response) {
+        return new ODataRetrieve(response);
     }
 }

@@ -23,11 +23,11 @@ import java.util.Map;
  * This class implements an OData invoke operation request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getInvokeActionRequest(com.msopentech.odatajclient.data.ODataURI, java.util.Map)
- * @see ODataRequestFactory#getInvokeFunctionRequest(com.msopentech.odatajclient.data.ODataURI)
+ * @see ODataRequestFactory#getInvokeActionRequest(com.msopentech.odatajclient.engine.data.ODataURI, java.util.Map)
+ * @see ODataRequestFactory#getInvokeFunctionRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  * @see ODataRequestFactory#getInvokeLegacyRequest(
- * com.msopentech.odatajclient.communication.request.ODataRequest.Method,
- * com.msopentech.odatajclient.data.ODataURI, java.util.Map)
+ * com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method,
+ * com.msopentech.odatajclient.engine.data.ODataURI, java.util.Map)
  */
 public class ODataInvokeRequest extends ODataRequest {
 

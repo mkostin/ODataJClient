@@ -22,8 +22,8 @@ import java.util.TreeMap;
 /**
  * ODataHeader wraps OData request/response headers.
  *
- * @see com.msopentech.odatajclient.communication.request.ODataRequest
- * @see com.msopentech.odatajclient.communication.response.ODataResponse
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataRequest
+ * @see com.msopentech.odatajclient.engine.communication.response.ODataResponse
  */
 public class ODataHeader {
 

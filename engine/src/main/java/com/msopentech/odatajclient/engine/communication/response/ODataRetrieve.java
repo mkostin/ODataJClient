@@ -15,25 +15,19 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.utils.ODataResultSet;
-
 /**
- * This class implements a response to a specific invoke request.
+ * Retrieve response wrapper for the correspondng batch item.
+ * Get instance by using ODataResponseFactory.
  *
- * @see ODataResponseFactory#getODataIvokeResponse()
- * @see com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest
+ * @see ODataResponseFactory#getRetrieveBatchItem(
+ * com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse)
  */
-public class ODataInvokeResponse extends ODataResponse {
-
-    ODataInvokeResponse() {
-    }
+public class ODataRetrieve extends ODataBatchResponseItem {
 
     /**
-     * Gets operation return value if exists.
-     *
-     * @return operation return value.
+     * Constructor.
      */
-    public ODataResultSet getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    ODataRetrieve(final ODataQueryResponse response) {
+        responses.add(response);
     }
 }

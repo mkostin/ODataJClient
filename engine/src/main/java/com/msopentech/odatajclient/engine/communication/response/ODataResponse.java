@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.response;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
-import com.msopentech.odatajclient.engine.utils.ODataResultSet;
 import java.util.Collection;
 
 /**
@@ -117,6 +116,4 @@ public abstract class ODataResponse {
     public String getStatusMessage() {
         return statusMessage;
     }
-
-    public abstract ODataResultSet getBody();
 }

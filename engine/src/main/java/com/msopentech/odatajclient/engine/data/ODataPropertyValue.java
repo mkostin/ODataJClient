@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.data;
 
 /**
- * Abstract representation of an OData property value.
+ * Abstract representation of an OData entity property value.
  */
 public abstract class ODataPropertyValue {
     

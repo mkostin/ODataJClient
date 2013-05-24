@@ -24,8 +24,9 @@ import java.io.InputStream;
  * This class implements an OData update request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getUpdateRequest(com.msopentech.odatajclient.data.ODataURI,
- * com.msopentech.odatajclient.data.ODataEntity, com.msopentech.odatajclient.communication.request.UpdateType).
+ * @see ODataRequestFactory#getUpdateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
+ * com.msopentech.odatajclient.engine.data.ODataEntity,
+ * com.msopentech.odatajclient.engine.communication.request.UpdateType)
  */
 public class ODataUpdateRequest extends ODataRequest {
 

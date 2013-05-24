@@ -17,6 +17,9 @@ package com.msopentech.odatajclient.engine.data;
 
 import java.util.Date;
 
+/**
+ * Atom entry extensions.
+ */
 public class ODataEntityAtomExtensions {
 
     /**

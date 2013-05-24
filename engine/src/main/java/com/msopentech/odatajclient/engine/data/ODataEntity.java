@@ -18,6 +18,9 @@ package com.msopentech.odatajclient.engine.data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * OData entity.
+ */
 public abstract class ODataEntity extends AbstractEntity {
 
     /**

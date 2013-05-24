@@ -15,6 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+/**
+ * OData navigation link.
+ */
 public abstract class ODataLink extends AbstractEntity {
 
     public ODataLink(final String title, final ODataURI link) {

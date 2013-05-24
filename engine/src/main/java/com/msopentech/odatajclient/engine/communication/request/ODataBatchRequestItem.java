@@ -25,7 +25,7 @@ import java.util.List;
  * @see ODataRequestFactory#getChangesetBatchItem()
  * @see ODataRequestFactory#getRetrieveBatchItem()
  */
-public abstract class ODataBatchItem {
+public abstract class ODataBatchRequestItem {
 
     /**
      * Batch item requests.

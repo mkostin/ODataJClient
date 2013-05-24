@@ -26,8 +26,8 @@ import java.io.InputStream;
  * This class implements an OData create request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.data.ODataURI,
- * com.msopentech.odatajclient.data.AbstractEntity).
+ * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
+ * com.msopentech.odatajclient.engine.data.AbstractEntity)
  */
 public class ODataCreateRequest extends ODataRequest {
 

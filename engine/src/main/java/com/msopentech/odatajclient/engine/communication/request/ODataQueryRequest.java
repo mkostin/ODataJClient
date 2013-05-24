@@ -22,7 +22,7 @@ import java.io.InputStream;
  * This class implements an OData query request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getQueryRequest(com.msopentech.odatajclient.data.ODataURI).
+ * @see ODataRequestFactory#getQueryRequest(com.msopentech.odatajclient.engine.data.ODataURI) 
  */
 public class ODataQueryRequest extends ODataRequest {
 

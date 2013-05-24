@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.response;
 
 /**
  * Changeset wrapper for the corresponding batch item.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using ODataResponseFactory.
  *
- * @see ODataRequestFactory#getChangesetRequest()
+ * @see ODataResponseFactory#getChangesetBatchItem()
  */
-public class ODataChangeset extends ODataBatchRequestItem {
+public class ODataChangeset extends ODataBatchResponseItem {
 
     /**
      * Constructor.
@@ -30,35 +30,35 @@ public class ODataChangeset extends ODataBatchRequestItem {
     }
 
     /**
-     * Add a create request to the changeset.
+     * Add a create response to the changeset.
      *
-     * @param request create request to be added.
+     * @param response create response to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addRequest(final ODataCreateRequest request) {
-        requests.add(request);
+    public ODataChangeset addRespnse(final ODataCreateResponse response) {
+        responses.add(response);
         return this;
     }
 
     /**
-     * Add an update request to the changeset.
+     * Add an update response to the changeset.
      *
-     * @param request update request to be added.
+     * @param response update response to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addRequest(final ODataUpdateRequest request) {
-        requests.add(request);
+    public ODataChangeset addRespnse(final ODataUpdateResponse response) {
+        responses.add(response);
         return this;
     }
 
     /**
-     * Add a delete request to the changeset.
+     * Add a delete response to the changeset.
      *
-     * @param request delete request to be added.
+     * @param response delete request to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addRequest(final ODataDeleteRequest request) {
-        requests.add(request);
+    public ODataChangeset addRespnse(final ODataDeleteResponse response) {
+        responses.add(response);
         return this;
     }
 }

@@ -15,5 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+/**
+ * OData retrieve (operation invoking as well) result set.
+ */
 public interface ODataResultSet<T> extends Iterable<T> {
 }
