@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * Abstract representation of entities and navigation links.
  */
-public abstract class AbstractEntity implements Serializable {
+public abstract class ODataItem implements Serializable {
 
     private static final long serialVersionUID = 1961061310337516113L;
 
@@ -39,7 +39,7 @@ public abstract class AbstractEntity implements Serializable {
      *
      * @param title OData entity title.
      */
-    public AbstractEntity(final String title) {
+    public ODataItem(final String title) {
         this.title = title;
     }
 

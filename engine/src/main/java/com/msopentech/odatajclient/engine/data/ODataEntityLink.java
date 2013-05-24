@@ -16,14 +16,13 @@
 package com.msopentech.odatajclient.engine.data;
 
 /**
- * Generic OData link.
+ * OData navigation link.
  */
-public abstract class ODataLink extends ODataItem {
+public abstract class ODataEntityLink extends ODataLink {
 
-    private static final long serialVersionUID = -3625922586547616628L;
+    private static final long serialVersionUID = 1L;
 
-    public ODataLink(final String title, final ODataURI link) {
-        super(title);
-        this.link = link;
+    public ODataEntityLink(String title, ODataURI link) {
+        super(title, link);
     }
 }

@@ -96,7 +96,7 @@ public class CUDUsageTest {
         targetURI.append("Suppliers(5)");
 
         // build the new link
-        final ODataLink newLink = EntityFactory.newLink("Supplier", targetURI);
+        final ODataLink newLink = EntityFactory.newEntityLink("Supplier", targetURI);
 
         // create your request
         final ODataAddLinkRequest request = ODataRequestFactory.getAddLinkRequest(sourceURI, newLink);

@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * OData entity.
  */
-public abstract class ODataEntity extends AbstractEntity {
+public abstract class ODataEntity extends ODataItem {
 
     private static final long serialVersionUID = 8360640095932811034L;
 
@@ -38,7 +38,7 @@ public abstract class ODataEntity extends AbstractEntity {
     /**
      * OData entity navigation links.
      */
-    private final List<AbstractEntity> links = new ArrayList<AbstractEntity>();
+    private final List<ODataItem> links = new ArrayList<ODataItem>();
 
     /**
      * Constructor.
@@ -74,7 +74,7 @@ public abstract class ODataEntity extends AbstractEntity {
      *
      * @return OData entity navigation links.
      */
-    public List<AbstractEntity> getLinks() {
+    public List<ODataItem> getLinks() {
         return links;
     }
 
@@ -83,7 +83,7 @@ public abstract class ODataEntity extends AbstractEntity {
      *
      * @param entity navigation link to be added.
      */
-    public void addLink(final AbstractEntity entity) {
+    public void addLink(final ODataItem entity) {
         if (!links.contains(entity)) {
             links.add(entity);
         }
