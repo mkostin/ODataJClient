@@ -91,4 +91,13 @@ public class ODataResponseFactory {
     public static ODataRetrieve getRetrieveBatchItem(final ODataQueryResponse response) {
         return new ODataRetrieve(response);
     }
+
+    /**
+     * Gets a response object instance for a metadata request.
+     * 
+     * @return ODataMetadataResponse instance.
+     */
+    public static ODataMetadataResponse getMetadataResponse() {
+        return new ODataMetadataResponse();
+    }
 }

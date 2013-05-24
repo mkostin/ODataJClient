@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.utils;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
 import java.util.Collection;
@@ -36,7 +37,7 @@ public class ODataReader {
      *
      * @param format OData format.
      */
-    public ODataReader(ODataFormat format) {
+    public ODataReader(final ODataFormat format) {
         this.format = format;
     }
 
@@ -59,7 +60,18 @@ public class ODataReader {
      * @return entity de-serialized.
      * @throws NoSuchEntityFound in case of no entity has been found into the input stream.
      */
-    public ODataEntity deserializeEntity(final InputStream input) {
+    public ODataEntity deserializeEntity(final InputStream input)
+            throws NoSuchEntityFound {
+        return null;
+    }
+
+    /**
+     * Parses a stream into metadata representation.
+     * 
+     * @param input stream to de-serialize.
+     * @return metadata representation.
+     */
+    public ODataMetadata deserializeMetadata(final InputStream inputStream) {
         return null;
     }
 }

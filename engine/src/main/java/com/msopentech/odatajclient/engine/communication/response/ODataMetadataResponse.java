@@ -13,33 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client;
+package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
-import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
-import java.io.InputStream;
+import com.msopentech.odatajclient.engine.data.ODataMetadata;
 
 /**
- * RESTFul OData client implementation.
+ * This class implements a response to a metadata request.
+ *
+ * @see ODataResponseFactory#getMetadataResponse()
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataMetadataRequest
  */
-public class ODataRestClient implements ODataClient {
+public class ODataMetadataResponse extends ODataResponse {
 
-    public ODataRestClient() {
+    ODataMetadataResponse() {
     }
 
     /**
-     * {@inheritDoc}
+     * Gets query result objects.
+     *
+     * @return query result objects.
      */
-    @Override
-    public <T extends ODataResponse> T execute(final ODataRequest request) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public InputStream rawExecute(final ODataRequest request) {
+    public ODataMetadata getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

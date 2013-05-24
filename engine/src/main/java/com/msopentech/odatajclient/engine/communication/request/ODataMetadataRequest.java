@@ -13,33 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client;
+package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
-import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
 
 /**
- * RESTFul OData client implementation.
+ * This class implements an OData metadata request.
+ * Get instance by using ODataRequestFactory.
+ *
+ * @see ODataRequestFactory#getMetadataRequest(java.lang.String)
  */
-public class ODataRestClient implements ODataClient {
+public class ODataMetadataRequest extends ODataRequest {
 
-    public ODataRestClient() {
+    /**
+     * Constructor.
+     *
+     * @param query query URI.
+     */
+    ODataMetadataRequest(final ODataURI query) {
+        // set method .... If cofigured X-HTTP-METHOD header will be used.
+        super(Method.GET);
+        // set uri ...
+        this.uri = query;
     }
 
     /**
-     * {@inheritDoc}
+     * Unsupported operation.
      */
     @Override
-    public <T extends ODataResponse> T execute(final ODataRequest request) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public InputStream rawExecute(final ODataRequest request) {
+    public InputStream getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
