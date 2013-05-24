@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.client;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.InputStream;
+import java.util.concurrent.Future;
 
 /**
  * RESTFul OData client implementation.
@@ -40,6 +41,22 @@ public class ODataRestClient implements ODataClient {
      */
     @Override
     public InputStream rawExecute(final ODataRequest request) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T extends ODataResponse> Future<T> asyncExecute(ODataRequest request) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Future<InputStream> asyncRawExecute(ODataRequest request) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

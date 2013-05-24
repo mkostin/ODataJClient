@@ -94,10 +94,19 @@ public class ODataResponseFactory {
 
     /**
      * Gets a response object instance for a metadata request.
-     * 
+     *
      * @return ODataMetadataResponse instance.
      */
     public static ODataMetadataResponse getMetadataResponse() {
         return new ODataMetadataResponse();
+    }
+
+    /**
+     * Gets a response object instance for a link operation request.
+     *
+     * @return response object.
+     */
+    public static ODataLinkOperationResponse getODataLinkOperationResponse() {
+        return new ODataLinkOperationResponse();
     }
 }

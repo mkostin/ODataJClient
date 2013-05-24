@@ -15,36 +15,37 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataURI;
-import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 
 /**
- * This class implements an OData create request.
+ * This class implements an create link OData request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * com.msopentech.odatajclient.engine.data.ODataEntity)
+ * @see ODataRequestFactory#getAddLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI,
+ * com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataCreateRequest extends ODataRequest {
+public class ODataAddLinkRequest extends ODataRequest {
 
     /**
-     * Entity to be created.
+     * OData entity to be linked.
      */
-    private final ODataEntity entity;
+    private final ODataLink entityToBeAdded;
 
     /**
      * Constructor.
      *
      * @param targetURI entity set URI.
-     * @param entity entity to be created.
+     * @param entityToBeAdded entity to be linked.
      */
-    ODataCreateRequest(final ODataURI targetURI, final ODataEntity entity) {
+    ODataAddLinkRequest(final ODataURI targetURI, final ODataLink entityToBeAdded) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
+        // set target uri
+        this.uri = targetURI;
         // set request body
-        this.entity = entity;
+        this.entityToBeAdded = entityToBeAdded;
     }
 
     /**
@@ -52,6 +53,6 @@ public class ODataCreateRequest extends ODataRequest {
      */
     @Override
     public InputStream getBody() {
-        return new ODataWriter(getFormat()).serialize((ODataEntity) entity);
+        return entityToBeAdded.getLink().toStream();
     }
 }

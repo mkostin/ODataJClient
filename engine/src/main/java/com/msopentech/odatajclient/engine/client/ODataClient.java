@@ -18,20 +18,39 @@ package com.msopentech.odatajclient.engine.client;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.InputStream;
+import java.util.concurrent.Future;
 
 public interface ODataClient {
 
     /**
      * Execute the given request.
+     *
      * @param request OData request to be executed.
      * @return OData response.
      */
     <T extends ODataResponse> T execute(final ODataRequest request);
 
     /**
+     * Asynchronous execution of the given request.
+     *
+     * @param request OData request to be executed.
+     * @return result of the asynchronous computation.
+     */
+    <T extends ODataResponse> Future<T> asyncExecute(final ODataRequest request);
+
+    /**
      * Execute the given request.
+     *
      * @param request OData request to be executed.
      * @return full access to the response stream.
      */
     InputStream rawExecute(final ODataRequest request);
+
+    /**
+     * Async execution of the given request.
+     *
+     * @param request OData request to be executed.
+     * @return result of the asynchronous computation.
+     */
+    Future<InputStream> asyncRawExecute(final ODataRequest request);
 }

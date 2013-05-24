@@ -17,10 +17,11 @@ package com.msopentech.odatajclient.spi;
 
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.ODataRestClient;
+import com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest;
 import com.msopentech.odatajclient.engine.data.ODataURI;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
 import java.util.Collections;
 import java.util.Map;
 
@@ -34,10 +35,14 @@ public class InvokeUsageTest {
         targetURI.append("GetProductsByRating").addQueryParameter("rating", "4");
 
         // create your request
-        final ODataRequest request = ODataRequestFactory.getInvokeFunctionRequest(targetURI);
+        final ODataInvokeRequest request = ODataRequestFactory.getInvokeFunctionRequest(targetURI);
 
         // execute the request
-        ODataResponse res = client.execute(request);
+        ODataInvokeResponse res = client.<ODataInvokeResponse>execute(request);
+
+        for (ODataEntity result : res.<ODataEntity>getBody()) {
+            // process retrieved entity ...
+        }
 
         // .....
     }
@@ -50,10 +55,10 @@ public class InvokeUsageTest {
         Map<String, Object> parameters = Collections.<String, Object>singletonMap("rating", 2);
 
         // create your request
-        final ODataRequest request = ODataRequestFactory.getInvokeActionRequest(targetURI, parameters);
+        final ODataInvokeRequest request = ODataRequestFactory.getInvokeActionRequest(targetURI, parameters);
 
         // execute the request
-        ODataResponse res = client.execute(request);
+        ODataInvokeResponse res = client.<ODataInvokeResponse>execute(request);
 
         // .....
     }
