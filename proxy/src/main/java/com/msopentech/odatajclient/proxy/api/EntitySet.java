@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.proxy.api.query.Query;
 import java.io.Serializable;
 
 /**
- * Interface for CRUD operations on an EntitySet.
+ * Interface for synchronous CRUD operations on an EntitySet.
  */
 public abstract interface EntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
 
@@ -31,7 +31,7 @@ public abstract interface EntitySet<T extends Serializable, KEY extends Serializ
      * @return true if an entity with the given id exists, false otherwise
      * @throws IllegalArgumentException in case the given key is null
      */
-    boolean exists(KEY key) throws IllegalArgumentException;
+    Boolean exists(KEY key) throws IllegalArgumentException;
 
     /**
      * Retrieves an entity by its key.
@@ -47,7 +47,7 @@ public abstract interface EntitySet<T extends Serializable, KEY extends Serializ
      *
      * @return the number of entities
      */
-    long count();
+    Long count();
 
     /**
      * Returns all instances of the type.

@@ -78,22 +78,6 @@ public interface Query extends Serializable {
     String getOrderBy();
 
     /**
-     * Execute a <tt>$filter</tt> query that returns a single untyped result.
-     *
-     * @return the result
-     * @throws NoResultException if there is no result
-     * @throws NonUniqueResultException if more than one result
-     */
-    Serializable getSingleResult() throws NoResultException, NonUniqueResultException;
-
-    /**
-     * Execute a <tt>$filter</tt> query and return the query results as an untyped List.
-     *
-     * @return a list of the results
-     */
-    List<? extends Serializable> getResultList();
-
-    /**
      * Set the maximum number of results to retrieve (<tt>$top</tt>).
      *
      * @param maxResult maximum number of results to retrieve
@@ -127,4 +111,20 @@ public interface Query extends Serializable {
      * @return position of the first result
      */
     int getFirstResult();
+
+    /**
+     * Execute a <tt>$filter</tt> query that returns a single untyped result.
+     *
+     * @return the result
+     * @throws NoResultException if there is no result
+     * @throws NonUniqueResultException if more than one result
+     */
+    Serializable getSingleResult() throws NoResultException, NonUniqueResultException;
+
+    /**
+     * Execute a <tt>$filter</tt> query and return the query results as an untyped List.
+     *
+     * @return a list of the results
+     */
+    List<? extends Serializable> getResultList();
 }
