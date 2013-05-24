@@ -72,7 +72,7 @@ public abstract class ODataRequest {
     /**
      * Constructor.
      *
-     * @param method HTTP request method. If cofigured X-HTTP-METHOD header will be used.
+     * @param method HTTP request method. If configured X-HTTP-METHOD header will be used.
      */
     protected ODataRequest(final Method method) {
         this.method = method;
@@ -107,7 +107,7 @@ public abstract class ODataRequest {
      *
      * @return OData request target URI.
      */
-    public ODataURI getUri() {
+    public ODataURI getURI() {
         return uri;
     }
 

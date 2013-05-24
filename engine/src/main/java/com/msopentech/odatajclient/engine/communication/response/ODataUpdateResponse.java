@@ -18,12 +18,12 @@ package com.msopentech.odatajclient.engine.communication.response;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 
 /**
- * This class implements the response to an Odata update request.
+ * This class implements the response to an OData update request.
  *
  * @see ODataResponseFactory#getODataUpdateResponse()
  * @see com.msopentech.odatajclient.communication.request.ODataUpdateRequest
  */
-class ODataUpdateResponse extends ODataResponse {
+public class ODataUpdateResponse extends ODataResponse {
 
     ODataUpdateResponse() {
     }

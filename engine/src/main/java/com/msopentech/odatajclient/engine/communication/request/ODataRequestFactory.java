@@ -53,7 +53,7 @@ public class ODataRequestFactory {
      *
      * @param targetURI edit link of the object to be updated.
      * @param entity changes to be applied.
-     * @param type type of upate to be performed.
+     * @param type type of update to be performed.
      * @return ODataUpdateRequest instance.
      */
     public static ODataUpdateRequest getUpdateRequest(final ODataURI targetURI, final ODataEntity entity,
