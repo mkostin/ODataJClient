@@ -17,13 +17,17 @@ package com.msopentech.odatajclient.spi;
 
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.ODataRestClient;
+import com.msopentech.odatajclient.engine.communication.request.ODataCreateRequest;
+import com.msopentech.odatajclient.engine.communication.request.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataURI;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.ODataUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataCreateResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntityAtomExtensions;
@@ -57,7 +61,6 @@ public class CUDUsageTest {
         preferredColors.add(new ODataPrimitiveValue("yellow"));
 
         newEntity.addProperty(new ODataProperty("PreferredColors", preferredColors, EdmSimpleType.String));
-
         // newEntity.set ...
 
         // just for example, add atom extensions
@@ -66,10 +69,13 @@ public class CUDUsageTest {
         newEntity.setAtomExtensions(atomExtensions);
 
         // create your request
-        final ODataRequest request = ODataRequestFactory.getCreateRequest(targetURI, newEntity);
+        final ODataCreateRequest request = ODataRequestFactory.getCreateRequest(targetURI, newEntity);
 
         // execute the request
-        ODataResponse res = client.execute(request);
+        ODataCreateResponse res = client.<ODataCreateResponse>execute(request);
+
+        // retrieve created entity
+        ODataEntity created = res.getBody();
 
         // retrieve and process execution results
         int statusCode = res.getStatusCode();
@@ -91,10 +97,13 @@ public class CUDUsageTest {
         final ODataLink newLink = EntityFactory.newLink("Supplier", targetURI);
 
         // create your request
-        final ODataRequest request = ODataRequestFactory.getCreateRequest(sourceURI, newLink);
+        final ODataCreateRequest request = ODataRequestFactory.getCreateRequest(sourceURI, newLink);
 
         // execute the request
-        ODataResponse res = client.execute(request);
+        ODataCreateResponse res = client.<ODataCreateResponse>execute(request);
+
+        // retrieve updated entity
+        ODataEntity updated = res.getBody();
 
         // retrieve and process execution results
         int statusCode = res.getStatusCode();
@@ -113,14 +122,18 @@ public class CUDUsageTest {
         changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3), EdmSimpleType.Int32));
 
         // create your request
-        final ODataRequest request = ODataRequestFactory.getUpdateRequest(targetURI, changes, UpdateType.PATCH);
+        final ODataUpdateRequest request = ODataRequestFactory.getUpdateRequest(targetURI, changes, UpdateType.PATCH);
 
         // execute the request
-        ODataResponse res = client.execute(request);
+        ODataUpdateResponse res = client.<ODataUpdateResponse>execute(request);
+
+        // retrieve update object if returned
+        ODataEntity updated = res.getBody();
 
         // retrieve and process execution results
         int statusCode = res.getStatusCode();
         String statusMessage = res.getStatusMessage();
+
 
         // .....
     }
@@ -131,10 +144,10 @@ public class CUDUsageTest {
         targetURI.append("Products(2)");
 
         // create your request
-        final ODataRequest request = ODataRequestFactory.getDeleteRequest(targetURI);
+        final ODataDeleteRequest request = ODataRequestFactory.getDeleteRequest(targetURI);
 
         // execute the request
-        ODataResponse res = client.execute(request);
+        ODataDeleteResponse res = client.<ODataDeleteResponse>execute(request);
 
         // retrieve and process execution results
         int statusCode = res.getStatusCode();
