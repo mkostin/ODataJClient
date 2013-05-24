@@ -181,12 +181,12 @@ public class ODataRequestFactory {
 
     /**
      * Gets a metadata request instance.
-     * 
+     *
      * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
      * data service.
      * @return ODataMetadataRequest instance.
      */
     public static ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
-        return new ODataMetadataRequest(new ODataURI(serviceRoot).append("$metadata"));
+        return new ODataMetadataRequest(new ODataURI(serviceRoot).appendMetadataSegment());
     }
 }

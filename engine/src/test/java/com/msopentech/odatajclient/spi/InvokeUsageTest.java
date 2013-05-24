@@ -32,7 +32,7 @@ public class InvokeUsageTest {
     public void invokeFunction() {
         // provide the target URI
         final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        targetURI.append("GetProductsByRating").addQueryParameter("rating", "4");
+        targetURI.appendFunctionSegment("GetProductsByRating").addQueryParameter("rating", "4");
 
         // create your request
         final ODataInvokeRequest request = ODataRequestFactory.getInvokeFunctionRequest(targetURI);
@@ -50,7 +50,7 @@ public class InvokeUsageTest {
     public void invokeBindableAction() {
         // provide the target URI
         final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        targetURI.append("Product(0)/UpdateProductRating");
+        targetURI.appendEntityTypeSegment("Product(0)").appendActionSegment("UpdateProductRating");
 
         Map<String, Object> parameters = Collections.<String, Object>singletonMap("rating", 2);
 

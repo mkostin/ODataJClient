@@ -17,6 +17,8 @@ package com.msopentech.odatajclient.engine.data;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -26,6 +28,22 @@ import java.util.TreeMap;
 public class ODataURI implements Serializable {
 
     private static final long serialVersionUID = -3267515371720408124L;
+
+    private enum SegmentType {
+
+        ENTITYSET,
+        ENTITYTYPE,
+        KEY,
+        NAVIGATION,
+        STRUNCTURAL,
+        VALUE,
+        FUNCTION,
+        LEGACY,
+        ACTION,
+        METADATA,
+        SERVICEROOT
+
+    }
 
     /**
      * Query options.
@@ -109,10 +127,7 @@ public class ODataURI implements Serializable {
         }
     }
 
-    /**
-     * Service root absolute URL.
-     */
-    private final String serviceRoot;
+    final List<Segment> segments;
 
     /**
      * Case-insensitive map of query parameters.
@@ -126,7 +141,8 @@ public class ODataURI implements Serializable {
      * data service.
      */
     public ODataURI(final String serviceRoot) {
-        this.serviceRoot = serviceRoot;
+        segments = new ArrayList<Segment>();
+        segments.add(new Segment(SegmentType.SERVICEROOT, serviceRoot));
     }
 
     /**
@@ -165,12 +181,112 @@ public class ODataURI implements Serializable {
     }
 
     /**
-     * Extend the URI with the specified segment.
+     * Append EntitySet segment to the URI.
      *
-     * @param segment segment to be appended.
-     * @return current query object.
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
      */
-    public ODataURI append(final String segment) {
+    public ODataURI appendEntitySetSegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.SERVICEROOT, segmentValue));
+        return this;
+    }
+
+    /**
+     * Append EntityType segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURI appendEntityTypeSegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.ENTITYTYPE, segmentValue));
+        return this;
+    }
+
+    /**
+     * Append key segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURI appendKeySegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.KEY, segmentValue));
+        return this;
+    }
+
+    /**
+     * Append navigation link segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURI appendNavigationLinkSegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.NAVIGATION, segmentValue));
+        return this;
+    }
+
+    /**
+     * Append structural segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURI appendStructuralSegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.STRUNCTURAL, segmentValue));
+        return this;
+    }
+
+    /**
+     * Append value segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURI appendValueSegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.VALUE, segmentValue));
+        return this;
+    }
+
+    /**
+     * Append function segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURI appendFunctionSegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.FUNCTION, segmentValue));
+        return this;
+    }
+
+    /**
+     * Append legacy operation segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURI appendLegacySegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.LEGACY, segmentValue));
+        return this;
+    }
+
+    /**
+     * Append action segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURI appendActionSegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.ACTION, segmentValue));
+        return this;
+    }
+
+    /**
+     * Append metadata segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURI appendMetadataSegment() {
+        segments.add(new Segment(SegmentType.METADATA, "$metadata"));
         return this;
     }
 
@@ -289,5 +405,14 @@ public class ODataURI implements Serializable {
      */
     public InputStream toStream() {
         return null;
+    }
+
+    private static class Segment {
+
+        private final SegmentType type;
+
+        public Segment(final SegmentType type, final String value) {
+            this.type = type;
+        }
     }
 }

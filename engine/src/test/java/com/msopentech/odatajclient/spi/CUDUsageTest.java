@@ -45,7 +45,7 @@ public class CUDUsageTest {
     public void createTest() {
         // provide the target URI
         final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        targetURI.append("Products");
+        targetURI.appendEntitySetSegment("Products");
 
         // build the new object
         final ODataEntity newEntity = EntityFactory.newEntity("Java Code");
@@ -89,11 +89,11 @@ public class CUDUsageTest {
     public void createLinkTest() {
         // provide the source URI
         final ODataURI sourceURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        sourceURI.append("Products(1)");
+        sourceURI.appendEntityTypeSegment("Products(1)");
 
         // provide the target URI
         final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        targetURI.append("Suppliers(5)");
+        targetURI.appendEntityTypeSegment("Suppliers(5)");
 
         // build the new link
         final ODataLink newLink = EntityFactory.newEntityLink("Supplier", targetURI);
@@ -114,7 +114,7 @@ public class CUDUsageTest {
     public void updateTest() {
         // provide the target URI
         final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        targetURI.append("Products(2)");
+        targetURI.appendEntityTypeSegment("Products(2)");
 
         // build the new object to change Rating value
         final ODataEntity changes = EntityFactory.newEntity("Java Code");
@@ -140,7 +140,7 @@ public class CUDUsageTest {
     public void deleteTest() {
         // provide the target URI
         final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        targetURI.append("Products(2)");
+        targetURI.appendEntityTypeSegment("Products(2)");
 
         // create your request
         final ODataDeleteRequest request = ODataRequestFactory.getDeleteRequest(targetURI);

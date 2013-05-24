@@ -35,7 +35,7 @@ public class RawUsageTest {
     public void usageFullDeSerialization() {
         // prepare URI
         final ODataURI uri = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        uri.append("Products").expand("Supplier").select("Rating,Supplier/Name");
+        uri.appendEntitySetSegment("Products").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
         final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri);
@@ -70,7 +70,7 @@ public class RawUsageTest {
     public void usageStepByStepDeSerialization() {
         // prepare URI
         final ODataURI uri = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        uri.append("Products").expand("Supplier").select("Rating,Supplier/Name");
+        uri.appendEntitySetSegment("Products").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
         final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri);

@@ -30,7 +30,7 @@ public class QueryUsageTest {
     public void usageTest() {
         // prepare URI
         final ODataURI uri = new ODataURI("http://services.odata.org/OData/Odata.svc");
-        uri.append("Products(0)").expand("Supplier").select("Rating,Supplier/Name");
+        uri.appendEntityTypeSegment("Products(0)").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
         final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri);
