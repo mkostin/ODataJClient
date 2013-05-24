@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.types;
+package com.msopentech.odatajclient.engine.data.metadata;
 
 /**
- * What to be performed on specific action (delete, for example).
- *
- * @see com.msopentech.odatajclient.proxy.meta.NavigationProperty
+ * Metadata elements: <tt>&lt;Principal/&gt;</tt>
  */
-public enum OnAction {
+public class Principal extends ReferentialConstraintRole {
 
-    None,
-    Cascade;
+    private static final long serialVersionUID = 4420534622861949623L;
 
 }

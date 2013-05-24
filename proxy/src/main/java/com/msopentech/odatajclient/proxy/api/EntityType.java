@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.proxy.api.types.EdmContentKind;
+import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

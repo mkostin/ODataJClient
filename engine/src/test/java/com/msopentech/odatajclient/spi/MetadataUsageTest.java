@@ -20,7 +20,9 @@ import com.msopentech.odatajclient.engine.client.ODataRestClient;
 import com.msopentech.odatajclient.engine.communication.request.ODataMetadataRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataMetadataResponse;
-import com.msopentech.odatajclient.engine.data.ODataMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.EntityType;
+import com.msopentech.odatajclient.engine.data.metadata.ODataMetadata;
 
 public class MetadataUsageTest {
 
@@ -34,6 +36,13 @@ public class MetadataUsageTest {
         // execute request
         final ODataMetadataResponse res = client.<ODataMetadataResponse>execute(request);
 
+        // get access to metadata object
         ODataMetadata metadata = res.getBody();
+
+        // (sample) access EntityType
+        EntityType entityType = metadata.getSchema(0).getEntityTypes().get(1);
+
+        // (sample) access EntityContainer
+        EntityContainer entityContainer = metadata.getSchema(0).getEntityContainers().get(0);
     }
 }

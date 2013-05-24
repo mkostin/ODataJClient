@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.types;
+package com.msopentech.odatajclient.engine.data.metadata;
+
+import org.w3c.dom.Element;
 
 /**
- * Kind of collection for given property.
- *
- * @see com.msopentech.odatajclient.proxy.meta.Property
+ * Metadata elements: <tt>&lt;AnnotationElement/&gt;</tt>
  */
-public enum CollectionKind {
-
-    None,
-    List,
-    Bag;
-
+public interface AnnotationElement extends Element {
 }

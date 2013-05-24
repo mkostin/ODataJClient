@@ -19,7 +19,7 @@ import com.msopentech.odatajclient.proxy.api.EntityType;
 import com.msopentech.odatajclient.proxy.api.Key;
 import com.msopentech.odatajclient.proxy.api.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.Property;
-import com.msopentech.odatajclient.proxy.api.types.EdmContentKind;
+import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import java.io.Serializable;
 import java.util.List;
 

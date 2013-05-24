@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.types;
+package com.msopentech.odatajclient.engine.data.metadata;
 
 /**
- * Specifies the content type of the value of the property being mapped via a customizable feed mapping.
+ * Metadata elements: <tt>&lt;Dependent/&gt;</tt>
  */
-public enum EdmContentKind {
+public class Dependent extends ReferentialConstraintRole {
 
-    text,
-    html,
-    xhtml;
+    private static final long serialVersionUID = 4420534622861949623L;
 
 }

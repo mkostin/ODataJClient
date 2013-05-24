@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.types;
+package com.msopentech.odatajclient.engine.data.metadata;
 
-/**
- * Mode for function import parameters.
- *
- * @see com.msopentech.odatajclient.proxy.meta.Parameter
- */
-public enum ParameterMode {
+import java.io.Serializable;
+import java.util.List;
 
-    In,
-    Out,
-    InOut;
+public abstract class AbstractTypeValueAnnotations implements Serializable {
 
+    private static final long serialVersionUID = -1292588853124168762L;
+
+    protected List<TypeAnnotation> typeAnnotations;
+
+    protected List<ValueAnnotation> valueAnnotations;
+
+    public List<TypeAnnotation> getTypeAnnotations() {
+        return typeAnnotations;
+    }
+
+    public List<ValueAnnotation> getValueAnnotations() {
+        return valueAnnotations;
+    }
 }

@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.data.ODataMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.ODataMetadata;
 
 /**
  * This class implements a response to a metadata request.

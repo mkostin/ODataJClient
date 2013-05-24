@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data;
+package com.msopentech.odatajclient.engine.data.metadata;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Entry point for access information about metadata.
  */
-public abstract class ODataMetadata implements Serializable {
+public class ODataMetadata implements Serializable {
 
     private static final long serialVersionUID = -1214173426671503187L;
 
+    private List<Schema> schemas;
+
+    public Schema getSchema(int index) {
+        return schemas.get(index);
+    }
+
+    public List<Schema> getSchemas() {
+        return schemas;
+    }
 }

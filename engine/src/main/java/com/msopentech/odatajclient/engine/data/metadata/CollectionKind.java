@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.types;
+package com.msopentech.odatajclient.engine.data.metadata;
 
 /**
- * Mode to be used for optimistic concurrency checks.
+ * Kind of collection for given property.
  *
  * @see com.msopentech.odatajclient.proxy.meta.Property
  */
-public enum ConcurrencyMode {
+public enum CollectionKind {
 
     None,
-    Fixed;
+    List,
+    Bag;
 
 }

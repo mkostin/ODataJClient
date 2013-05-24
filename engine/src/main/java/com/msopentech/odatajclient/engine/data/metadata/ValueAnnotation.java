@@ -13,30 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
-
-import com.msopentech.odatajclient.engine.data.metadata.OnAction;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.msopentech.odatajclient.engine.data.metadata;
 
 /**
- * Bind POJO field to EDM navigation property.
+ * Metadata elements: <tt>&lt;ValueAnnotation/&gt;</tt>
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface NavigationProperty {
+public class ValueAnnotation extends AbstractValue {
 
-    String name();
+    private static final long serialVersionUID = -111761738994645760L;
 
-    String relationship();
+    private String term;
 
-    String fromRole();
+    private String qualifier;
 
-    String toRole();
+    public String getTerm() {
+        return term;
+    }
 
-    boolean containsTarget() default false;
-
-    OnAction onDelete() default OnAction.None;
+    public String getQualifier() {
+        return qualifier;
+    }
 }
