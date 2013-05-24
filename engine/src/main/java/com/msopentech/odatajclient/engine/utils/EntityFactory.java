@@ -36,6 +36,8 @@ public class EntityFactory {
 
     private static class EntityImpl extends ODataEntity {
 
+        private static final long serialVersionUID = 1632243717538685102L;
+
         public EntityImpl(final String title) {
             super(title);
         }
@@ -47,6 +49,8 @@ public class EntityFactory {
     }
 
     private static class LinkImpl extends ODataLink {
+
+        private static final long serialVersionUID = -2533925527313767001L;
 
         public LinkImpl(final String title, final ODataURI link) {
             super(title, link);

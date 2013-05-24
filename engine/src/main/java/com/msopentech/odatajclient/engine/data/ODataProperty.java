@@ -23,7 +23,7 @@ import java.io.Serializable;
  */
 public class ODataProperty implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 926939448778950450L;
 
     /**
      * Property name.

@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 /**
- * Retrieve request wrapper for the correspondng batch item.
+ * Retrieve request wrapper for the corresponding batch item.
  * Get instance by using ODataRequestFactory.
  *
  * @see ODataRequestFactory#getRetrieveBatchItem()

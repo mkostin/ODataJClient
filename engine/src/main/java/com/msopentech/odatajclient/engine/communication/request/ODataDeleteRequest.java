@@ -28,7 +28,7 @@ public class ODataDeleteRequest extends ODataRequest {
 
     /**
      * Constructor.
-     * @param uri uri of the entity to be deleted.
+     * @param uri URI of the entity to be deleted.
      */
     ODataDeleteRequest(final ODataURI uri) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.

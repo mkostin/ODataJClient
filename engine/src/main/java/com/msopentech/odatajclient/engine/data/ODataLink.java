@@ -20,6 +20,8 @@ package com.msopentech.odatajclient.engine.data;
  */
 public abstract class ODataLink extends AbstractEntity {
 
+    private static final long serialVersionUID = -3625922586547616628L;
+
     public ODataLink(final String title, final ODataURI link) {
         super(title);
         this.link = link;

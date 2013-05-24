@@ -33,7 +33,7 @@ public class ODataInvokeResponse extends ODataResponse {
      *
      * @return operation return value.
      */
-    public ODataResultSet getBody() {
+    public <T> ODataResultSet<T> getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

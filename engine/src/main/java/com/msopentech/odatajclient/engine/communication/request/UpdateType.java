@@ -26,11 +26,11 @@ public enum UpdateType {
     REPLACE(ODataRequest.Method.PUT),
     /**
      * Differential update with whole entity as input (non-standard).
-     * Differences will be retrived by the server itself.
+     * Differences will be retrieved by the server itself.
      */
     MERGE(ODataRequest.Method.MERGE),
     /**
-     * Differential update with only specified input propertie values to be replaced.
+     * Differential update with only specified input property values to be replaced.
      */
     PATCH(ODataRequest.Method.PATCH);
 

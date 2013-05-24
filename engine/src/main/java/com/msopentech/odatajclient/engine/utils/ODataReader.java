@@ -25,7 +25,7 @@ import java.util.Collection;
  * <p>
  * Use this class to de-serialize an OData response body.
  * <p>
- * This class provids method helpers to de-serialize an entire feed, a set of entities and a single entity as well.
+ * This class provides method helpers to de-serialize an entire feed, a set of entities and a single entity as well.
  */
 public class ODataReader {
 

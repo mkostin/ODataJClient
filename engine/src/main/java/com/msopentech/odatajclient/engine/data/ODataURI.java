@@ -25,6 +25,8 @@ import java.util.TreeMap;
  */
 public class ODataURI implements Serializable {
 
+    private static final long serialVersionUID = -3267515371720408124L;
+
     /**
      * Query options.
      */
@@ -118,7 +120,7 @@ public class ODataURI implements Serializable {
     private final Map<String, String> queryParameters = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 
     /**
-     * Contructor.
+     * Constructor.
      *
      * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
      * data service.

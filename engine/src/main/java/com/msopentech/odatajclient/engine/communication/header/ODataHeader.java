@@ -158,7 +158,7 @@ public class ODataHeader {
     }
 
     /**
-     * OData request/response heder key/value pairs.
+     * OData request/response header key/value pairs.
      */
     private final Map<String, String> headers = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 

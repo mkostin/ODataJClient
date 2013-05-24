@@ -26,7 +26,7 @@ import java.util.Collections;
  * <p>
  * Use this class to serialize an OData request body.
  * <p>
- * This class provids method helpers to serialize a set of entities and a single entity as well.
+ * This class provides method helpers to serialize a set of entities and a single entity as well.
  */
 public class ODataWriter {
 
