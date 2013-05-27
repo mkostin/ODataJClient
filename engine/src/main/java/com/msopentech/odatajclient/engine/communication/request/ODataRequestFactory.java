@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Met
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataURI;
+import com.msopentech.odatajclient.engine.data.ODataValue;
 import java.util.Map;
 
 /**
@@ -31,12 +32,25 @@ public class ODataRequestFactory {
      * <p>
      * Use this kind of request to create a new entity.
      *
-     * @param targetURI entity set or link attribute URI.
-     * @param entity entity or relationships to be created.
+     * @param targetURI entity set URI.
+     * @param entity entity to be created.
      * @return ODataCreateRequest instance.
      */
     public static ODataCreateRequest getCreateRequest(final ODataURI targetURI, final ODataEntity entity) {
         return new ODataCreateRequest(targetURI, entity);
+    }
+
+    /**
+     * Gets a create request object instance.
+     * <p>
+     * Use this kind of request to create a new value (e.g. http://Northwind.svc/Customer(1)/Picture/$value).
+     *
+     * @param targetURI entity set or entity or entity property URI.
+     * @param value value to be created.
+     * @return ODataCreatePrimitiveRequest instance.
+     */
+    public static ODataCreatePrimitiveRequest getCreatePrimitiveRequest(final ODataURI targetURI, final ODataValue value) {
+        return new ODataCreatePrimitiveRequest(targetURI, value);
     }
 
     /**
@@ -152,7 +166,7 @@ public class ODataRequestFactory {
      * @param parameters required input parameters.
      * @return ODataInvokeRequest instance.
      */
-    public static ODataInvokeRequest getInvokeActionRequest(final ODataURI uri, final Map<String, Object> parameters) {
+    public static ODataInvokeRequest getInvokeActionRequest(final ODataURI uri, final Map<String, ODataValue> parameters) {
         return new ODataInvokeRequest(Method.POST, uri, OperationType.ACTION, parameters);
     }
 
@@ -175,7 +189,7 @@ public class ODataRequestFactory {
      * @return ODataInvokeRequest instance.
      */
     public static ODataInvokeRequest getInvokeLegacyRequest(
-            final Method method, final ODataURI uri, final Map<String, Object> parameters) {
+            final Method method, final ODataURI uri, final Map<String, ODataValue> parameters) {
         return new ODataInvokeRequest(method, uri, OperationType.LEGACY, parameters);
     }
 
