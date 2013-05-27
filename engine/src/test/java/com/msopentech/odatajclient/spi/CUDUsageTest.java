@@ -133,7 +133,6 @@ public class CUDUsageTest {
         int statusCode = res.getStatusCode();
         String statusMessage = res.getStatusMessage();
 
-
         // .....
     }
 
