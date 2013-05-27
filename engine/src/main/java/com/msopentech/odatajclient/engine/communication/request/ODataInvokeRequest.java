@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataPropertyValue;
+import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class ODataInvokeRequest extends ODataRequest {
     /**
      * Parameters to be submitted into the request body.
      */
-    private final Map<String, ODataPropertyValue> parameters;
+    private final Map<String, ODataValue> parameters;
 
     /**
      * Constructor.
@@ -71,7 +71,7 @@ public class ODataInvokeRequest extends ODataRequest {
             final Method method,
             final ODataURI uri,
             final OperationType type,
-            final Map<String, ODataPropertyValue> parameters) {
+            final Map<String, ODataValue> parameters) {
         super(method);
         this.uri = uri;
         this.type = type;

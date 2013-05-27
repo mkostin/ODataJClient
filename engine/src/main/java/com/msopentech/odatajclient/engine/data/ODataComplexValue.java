@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * OData complex property value.
  */
-public class ODataComplexValue extends ODataPropertyValue implements Iterable<Map.Entry<String, ODataPrimitiveValue>> {
+public class ODataComplexValue extends ODataValue implements Iterable<Map.Entry<String, ODataPrimitiveValue>> {
 
     final Map<String, ODataPrimitiveValue> values = new HashMap<String, ODataPrimitiveValue>();
 

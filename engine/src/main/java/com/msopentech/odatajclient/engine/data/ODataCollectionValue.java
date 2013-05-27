@@ -22,9 +22,9 @@ import java.util.Set;
 /**
  * OData collection property value.
  */
-public class ODataCollectionValue extends ODataPropertyValue implements Iterable<ODataPropertyValue> {
+public class ODataCollectionValue extends ODataValue implements Iterable<ODataValue> {
 
-    final Set<ODataPropertyValue> values = new HashSet<ODataPropertyValue>();
+    final Set<ODataValue> values = new HashSet<ODataValue>();
 
     /**
      * Adds value to the collection.
@@ -41,7 +41,7 @@ public class ODataCollectionValue extends ODataPropertyValue implements Iterable
      * @return value iterator.
      */
     @Override
-    public Iterator<ODataPropertyValue> iterator() {
+    public Iterator<ODataValue> iterator() {
         return values.iterator();
     }
 }

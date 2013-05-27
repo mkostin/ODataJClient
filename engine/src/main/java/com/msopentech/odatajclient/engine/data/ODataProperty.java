@@ -33,7 +33,7 @@ public class ODataProperty implements Serializable {
     /**
      * Property value.
      */
-    final ODataPropertyValue value;
+    final ODataValue value;
 
     /**
      * Value type.
@@ -47,7 +47,7 @@ public class ODataProperty implements Serializable {
      * @param value property value.
      * @param type property value type.
      */
-    public ODataProperty(final String name, final ODataPropertyValue value, final EdmSimpleType type) {
+    public ODataProperty(final String name, final ODataValue value, final EdmSimpleType type) {
         this.name = name;
         this.value = value;
         this.type = type;
@@ -67,7 +67,7 @@ public class ODataProperty implements Serializable {
      *
      * @return property value.
      */
-    public ODataPropertyValue getValue() {
+    public ODataValue getValue() {
         return value;
     }
 }

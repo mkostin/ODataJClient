@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * OData primitive property value.
  */
-public class ODataPrimitiveValue extends ODataPropertyValue {
+public class ODataPrimitiveValue extends ODataValue {
 
     /**
      * Actual value.
