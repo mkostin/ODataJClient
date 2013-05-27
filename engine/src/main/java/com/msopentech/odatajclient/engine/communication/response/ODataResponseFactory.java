@@ -21,12 +21,30 @@ package com.msopentech.odatajclient.engine.communication.response;
 public class ODataResponseFactory {
 
     /**
-     * Gets a response object instance for a create request.
+     * Gets a response object instance for an entity create request.
      *
      * @return response object.
      */
     public static ODataCreateResponse getCreateResponse() {
         return new ODataCreateResponse();
+    }
+
+    /**
+     * Gets a response object instance for a media entity create request.
+     *
+     * @return response object.
+     */
+    public static ODataMediaEntityCreateResponse getMediaEntityCreateResponse() {
+        return new ODataMediaEntityCreateResponse();
+    }
+
+    /**
+     * Gets a response object instance for a media entity update request.
+     *
+     * @return response object.
+     */
+    public static ODataMediaEntityUpdateResponse getMediaEntityUpdateResponse() {
+        return new ODataMediaEntityUpdateResponse();
     }
 
     /**

@@ -15,25 +15,25 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.data.ODataEntity;
+import java.io.InputStream;
 
 /**
- * This class implements the response to an Odata entity create request.
+ * This class implements the response to an Odata media entity update request.
  *
- * @see ODataResponseFactory#getCreateResponse()
- * @see com.msopentech.odatajclient.engine.communication.request.ODataCreateRequest
+ * @see ODataResponseFactory#getMediaEntityUpdateResponse() ()
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityUpdateRequest
  */
-public class ODataCreateResponse extends ODataResponse {
+public class ODataMediaEntityUpdateResponse extends ODataResponse {
 
-    ODataCreateResponse() {
+    ODataMediaEntityUpdateResponse() {
     }
 
     /**
-     * Gets created object.
+     * Gets updated object.
      *
-     * @return created object.
+     * @return updated object.
      */
-    public ODataEntity getBody() {
+    public InputStream getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

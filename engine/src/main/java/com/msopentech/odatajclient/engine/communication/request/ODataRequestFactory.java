@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.data.ODataValue;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -39,6 +40,34 @@ public class ODataRequestFactory {
      */
     public static ODataCreateRequest getCreateRequest(final ODataURI targetURI, final ODataEntity entity) {
         return new ODataCreateRequest(targetURI, entity);
+    }
+
+    /**
+     * Gets a media entity create request object instance.
+     * <p>
+     * Use this kind of request to create a new media entity.
+     *
+     * @param targetURI entity set URI.
+     * @param entity entity blob to be created.
+     * @return ODataMediaEntityCreateRequest instance.
+     */
+    public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(
+            final ODataURI targetURI, final InputStream entity) {
+        return new ODataMediaEntityCreateRequest(targetURI, entity);
+    }
+
+    /**
+     * Gets a media entity update request object instance.
+     * <p>
+     * Use this kind of request to update a media entity.
+     *
+     * @param editURI media entity edit link URI.
+     * @param entity entity blob to be updated.
+     * @return ODataMediaEntityUpdateRequest instance.
+     */
+    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(
+            final ODataURI editURI, final InputStream entity) {
+        return new ODataMediaEntityUpdateRequest(editURI, entity);
     }
 
     /**
