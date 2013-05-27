@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.response;
+package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataURI;
 
 /**
- * This class implements the response to an Odata Create/Update/Delete request.
+ * This class implements an OData query request returning a single result item.
+ * Get instance by using ODataRequestFactory.
  *
- * @see ODataResponseFactory#getCreateResponse()
- * @see com.msopentech.odatajclient.engine.communication.request.ODataCreateRequest
+ * @see ODataRequestFactory#getSingleResultRequest(com.msopentech.odatajclient.engine.data.ODataURI) 
  */
-public class ODataCreateResponse extends ODataResponse {
-
-    ODataCreateResponse() {
-    }
+public class ODataSingleResultRequest extends ODataQueryRequest {
 
     /**
-     * Gets created object.
-     *
-     * @return created object.
+     * {@inheritDoc}
      */
-    public ODataEntity getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    ODataSingleResultRequest(ODataURI query) {
+        super(query);
     }
 }

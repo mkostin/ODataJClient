@@ -25,7 +25,7 @@ public class ODataResponseFactory {
      *
      * @return response object.
      */
-    public static ODataCreateResponse getODataCreateResponse() {
+    public static ODataCreateResponse getCreateResponse() {
         return new ODataCreateResponse();
     }
 
@@ -34,7 +34,7 @@ public class ODataResponseFactory {
      *
      * @return response object.
      */
-    public static ODataUpdateResponse getODataUpdateResponse() {
+    public static ODataUpdateResponse getUpdateResponse() {
         return new ODataUpdateResponse();
     }
 
@@ -43,7 +43,7 @@ public class ODataResponseFactory {
      *
      * @return response object.
      */
-    public static ODataDeleteResponse getODataDeleteResponse() {
+    public static ODataDeleteResponse getDeleteResponse() {
         return new ODataDeleteResponse();
     }
 
@@ -52,8 +52,17 @@ public class ODataResponseFactory {
      *
      * @return response object.
      */
-    public static ODataResponse getODataQueryResponse() {
+    public static ODataQueryResponse getQueryResponse() {
         return new ODataQueryResponse();
+    }
+
+    /**
+     * Gets a response object instance for a query request returning a single result item.
+     *
+     * @return response object.
+     */
+    public static ODataSingleResultResponse getSingleResultResponse() {
+        return new ODataSingleResultResponse();
     }
 
     /**
@@ -61,7 +70,7 @@ public class ODataResponseFactory {
      *
      * @return response object.
      */
-    public static ODataResponse getODataInvokeResponse() {
+    public static ODataInvokeResponse getInvokeResponse() {
         return new ODataInvokeResponse();
     }
 
@@ -106,7 +115,7 @@ public class ODataResponseFactory {
      *
      * @return response object.
      */
-    public static ODataLinkOperationResponse getODataLinkOperationResponse() {
+    public static ODataLinkOperationResponse getLinkOperationResponse() {
         return new ODataLinkOperationResponse();
     }
 }

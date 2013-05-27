@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 /**
  * This class implements the response to an OData update request.
  *
- * @see ODataResponseFactory#getODataUpdateResponse()
+ * @see ODataResponseFactory#getUpdateResponse()
  * @see com.msopentech.odatajclient.communication.request.ODataUpdateRequest
  */
 public class ODataUpdateResponse extends ODataResponse {

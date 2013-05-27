@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.engine.utils.ODataResultSet;
 /**
  * This class implements a response to a specific invoke request.
  *
- * @see ODataResponseFactory#getODataIvokeResponse()
+ * @see ODataResponseFactory#getIvokeResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest
  */
 public class ODataInvokeResponse extends ODataResponse {

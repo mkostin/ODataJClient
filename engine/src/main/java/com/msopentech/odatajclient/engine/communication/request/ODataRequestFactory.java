@@ -131,6 +131,16 @@ public class ODataRequestFactory {
     }
 
     /**
+     * Gets a query request returning a single result item.
+     *
+     * @param query query to be performed.
+     * @return ODataQueryRequest instance.
+     */
+    public static ODataSingleResultRequest getSingleResultRequest(final ODataURI query) {
+        return new ODataSingleResultRequest(query);
+    }
+
+    /**
      * Gets a batch request object instance.
      *
      * @return ODataBatchRequest instance.

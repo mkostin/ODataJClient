@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.communication.response;
 /**
  * This class implements the response to an OData link operation request.
  *
- * @see ODataResponseFactory#getODataLinkOperationResponse()
+ * @see ODataResponseFactory#getLinkOperationResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataAddLinkRequest
  * @see com.msopentech.odatajclient.engine.communication.request.ODataRemoveLinkRequest
  * @see com.msopentech.odatajclient.engine.communication.request.ODataSetLinkRequest

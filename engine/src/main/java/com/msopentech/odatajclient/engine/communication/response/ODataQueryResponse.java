@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.engine.utils.ODataResultSet;
 /**
  * This class implements a response to a specific query request.
  *
- * @see ODataResponseFactory#getODataQueryResponse()
+ * @see ODataResponseFactory#getQueryResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest
  */
 public class ODataQueryResponse extends ODataResponse {
