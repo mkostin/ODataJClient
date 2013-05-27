@@ -35,11 +35,11 @@ public class Configuration {
 
     /**
      * Get configured OData format.
-     * If this configuration parameter doesn't exist the ATOM format will be used as default.
+     * If this configuration parameter doesn't exist the JSON format will be used as default.
      *
-     * @return configured OData format if exists; ATOM format otherwise.
+     * @return configured OData format if exists; JSON format otherwise.
      */
     public ODataFormat getFormat() {
-        return ODataFormat.valueOf(getProperty("format", "ATOM"));
+        return ODataFormat.valueOf(getProperty("format", "JSON"));
     }
 }
