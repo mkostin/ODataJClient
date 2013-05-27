@@ -20,13 +20,13 @@ import com.msopentech.odatajclient.engine.client.ODataRestClient;
 import com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.NoSuchEntityFound;
 import com.msopentech.odatajclient.engine.utils.ODataReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 
 public class RawUsageTest {
 
@@ -47,10 +47,10 @@ public class RawUsageTest {
             // let's suppose to want to deserialize, one shot, an entire atom feed
             ODataReader reader = new ODataReader(ODataFormat.ATOM);
 
-            Collection<ODataEntity> entityes = reader.deserialize(is);
+            final ODataFeed feed = reader.deserialize(is);
 
             // retrieve and process the query result
-            for (ODataEntity entity : entityes) {
+            for (ODataEntity entity : feed.getEntities()) {
                 // .................
             }
 

@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.utils;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
@@ -42,6 +43,16 @@ public class ODataWriter {
      */
     public ODataWriter(ODataFormat format) {
         this.format = format;
+    }
+
+    /**
+     * Serializes an entire feed.
+     *
+     * @param feed entities to be serialized.
+     * @return stream of serialized object.
+     */
+    public InputStream serialize(final ODataFeed feed) {
+        return null;
     }
 
     /**
@@ -73,7 +84,7 @@ public class ODataWriter {
     public InputStream serialize(final ODataProperty property) {
         return null;
     }
-    
+
     /**
      * Serializes a single OData entity property value.
      *

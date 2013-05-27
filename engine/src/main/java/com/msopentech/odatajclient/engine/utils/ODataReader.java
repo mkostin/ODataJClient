@@ -16,11 +16,11 @@
 package com.msopentech.odatajclient.engine.utils;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.ODataMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
-import java.util.Collection;
 
 /**
  * OData reader.
@@ -43,13 +43,13 @@ public class ODataReader {
     }
 
     /**
-     * De-Serializes a stream into a collection of OData entities.
+     * De-Serializes a stream into an OData feed.
      *
      * @param input stream to de-serialize.
-     * @return collection of entities de-serialized.
-     * @throws NoSuchEntityFound in case of no entity has been found into the input stream.
+     * @return de-serialized feed.
+     * @throws NoSuchEntityFound in case of the feed has not been found into the input stream.
      */
-    public Collection<ODataEntity> deserialize(final InputStream input)
+    public ODataFeed deserialize(final InputStream input)
             throws NoSuchEntityFound {
         return null;
     }
