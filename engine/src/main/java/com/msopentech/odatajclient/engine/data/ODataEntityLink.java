@@ -22,7 +22,12 @@ public abstract class ODataEntityLink extends ODataLink {
 
     private static final long serialVersionUID = 1L;
 
-    public ODataEntityLink(String title, ODataURI link) {
-        super(title, link);
+    /**
+     * Constructor.
+     * @param name OData navigation link property name.
+     * @param link link value.
+     */
+    public ODataEntityLink(final String name, final ODataURI link) {
+        super(name, link);
     }
 }

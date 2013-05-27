@@ -43,10 +43,10 @@ public abstract class ODataEntity extends ODataItem {
     /**
      * Constructor.
      *
-     * @param title OData entity title.
+     * @param name OData entity name.
      */
-    public ODataEntity(final String title) {
-        super(title);
+    public ODataEntity(final String name) {
+        super(name);
     }
 
     /**

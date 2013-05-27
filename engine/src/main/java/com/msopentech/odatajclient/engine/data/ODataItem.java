@@ -30,17 +30,17 @@ public abstract class ODataItem implements Serializable {
     protected ODataURI link;
 
     /**
-     * OData entity title.
+     * OData entity name.
      */
-    private final String title;
+    private final String name;
 
     /**
      * Constructor.
      *
-     * @param title OData entity title.
+     * @param name OData entity name.
      */
-    public ODataItem(final String title) {
-        this.title = title;
+    public ODataItem(final String name) {
+        this.name = name;
     }
 
     /**
@@ -53,11 +53,11 @@ public abstract class ODataItem implements Serializable {
     }
 
     /**
-     * Returns OData entity title.
+     * Returns OData entity name.
      *
-     * @return entity title.
+     * @return entity name.
      */
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 }

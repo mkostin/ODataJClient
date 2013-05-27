@@ -22,8 +22,14 @@ public abstract class ODataLink extends ODataItem {
 
     private static final long serialVersionUID = -3625922586547616628L;
 
-    public ODataLink(final String title, final ODataURI link) {
-        super(title);
+    /**
+     * Constructor.
+     *
+     * @param name link property name.
+     * @param link link value.
+     */
+    public ODataLink(final String name, final ODataURI link) {
+        super(name);
         this.link = link;
     }
 }
