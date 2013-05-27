@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.communication.response;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public abstract class ODataBatchResponseItem {
      *
      * @return item responses.
      */
-    public List<ODataResponse> getResponse() {
-        return responses;
+    public Iterator<ODataResponse> getResponse() {
+        return responses.iterator();
     }
 }
