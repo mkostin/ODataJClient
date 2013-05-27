@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.response;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -68,7 +69,7 @@ public class ODataBatchResponse extends ODataResponse {
      *
      * @return a result set of ODataResponse instances.
      */
-    public List<ODataBatchResponseItem> getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Iterator<ODataBatchResponseItem> getBody() {
+        return batch.iterator();
     }
 }
