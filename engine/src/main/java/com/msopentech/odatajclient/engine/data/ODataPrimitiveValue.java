@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.types.EdmSimpleType;
 import java.io.Serializable;
 
 /**
@@ -28,11 +29,18 @@ public class ODataPrimitiveValue extends ODataValue {
     final Serializable value;
 
     /**
+     * Value type.
+     */
+    final EdmSimpleType type;
+
+    /**
      * Constructor.
      *
      * @param value actual value.
+     * @param type primitive value type.
      */
-    public ODataPrimitiveValue(final Serializable value) {
+    public ODataPrimitiveValue(final Serializable value, final EdmSimpleType type) {
         this.value = value;
+        this.type = type;
     }
 }

@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.types.EdmSimpleType;
 import java.io.Serializable;
 
 /**
@@ -36,21 +35,14 @@ public class ODataProperty implements Serializable {
     final ODataValue value;
 
     /**
-     * Value type.
-     */
-    final EdmSimpleType type;
-
-    /**
      * Constructor.
      *
      * @param name property name.
      * @param value property value.
-     * @param type property value type.
      */
-    public ODataProperty(final String name, final ODataValue value, final EdmSimpleType type) {
+    public ODataProperty(final String name, final ODataValue value) {
         this.name = name;
         this.value = value;
-        this.type = type;
     }
 
     /**

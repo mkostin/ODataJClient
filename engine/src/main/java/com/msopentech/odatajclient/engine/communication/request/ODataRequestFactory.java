@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import java.util.Map;
@@ -49,7 +50,8 @@ public class ODataRequestFactory {
      * @param value value to be created.
      * @return ODataCreatePrimitiveRequest instance.
      */
-    public static ODataCreatePrimitiveRequest getCreatePrimitiveRequest(final ODataURI targetURI, final ODataValue value) {
+    public static ODataCreatePrimitiveRequest getCreatePrimitiveRequest(
+            final ODataURI targetURI, final ODataPrimitiveValue value) {
         return new ODataCreatePrimitiveRequest(targetURI, value);
     }
 

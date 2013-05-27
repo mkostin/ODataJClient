@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.utils.ODataWriter;
@@ -40,7 +41,7 @@ public class ODataCreatePrimitiveRequest extends ODataRequest {
      * @param targetURI entity set or entity or entity property URI.
      * @param value value to be created.
      */
-    ODataCreatePrimitiveRequest(final ODataURI targetURI, final ODataValue value) {
+    ODataCreatePrimitiveRequest(final ODataURI targetURI, final ODataPrimitiveValue value) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
         // set request body

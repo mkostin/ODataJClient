@@ -52,17 +52,17 @@ public class CUDUsageTest {
 
         // Add a complex property
         final ODataComplexValue addressValue = new ODataComplexValue();
-        addressValue.add("city", new ODataPrimitiveValue("XXX"));
-        addressValue.add("street", new ODataPrimitiveValue("YYY"));
+        addressValue.add(new ODataProperty("city", new ODataPrimitiveValue("XXX", EdmSimpleType.String)));
+        addressValue.add(new ODataProperty("street", new ODataPrimitiveValue("YYY", EdmSimpleType.String)));
 
-        newEntity.addProperty(new ODataProperty("Address", addressValue, EdmSimpleType.String));
+        newEntity.addProperty(new ODataProperty("Address", addressValue));
 
         // Add a collection property
         final ODataCollectionValue preferredColors = new ODataCollectionValue();
-        preferredColors.add(new ODataPrimitiveValue("red"));
-        preferredColors.add(new ODataPrimitiveValue("yellow"));
+        preferredColors.add(new ODataPrimitiveValue("red", EdmSimpleType.String));
+        preferredColors.add(new ODataPrimitiveValue("yellow", EdmSimpleType.String));
 
-        newEntity.addProperty(new ODataProperty("PreferredColors", preferredColors, EdmSimpleType.String));
+        newEntity.addProperty(new ODataProperty("PreferredColors", preferredColors));
         // newEntity.set ...
 
         // just for example, add atom extensions
@@ -118,7 +118,7 @@ public class CUDUsageTest {
 
         // build the new object to change Rating value
         final ODataEntity changes = EntityFactory.newEntity("Java Code");
-        changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3), EdmSimpleType.Int32));
+        changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EdmSimpleType.Int32)));
 
         // create your request
         final ODataUpdateRequest request = ODataRequestFactory.getUpdateRequest(targetURI, changes, UpdateType.PATCH);

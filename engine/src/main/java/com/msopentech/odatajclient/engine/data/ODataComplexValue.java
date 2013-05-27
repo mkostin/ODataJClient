@@ -22,36 +22,39 @@ import java.util.Map;
 /**
  * OData complex property value.
  */
-public class ODataComplexValue extends ODataValue implements Iterable<Map.Entry<String, ODataPrimitiveValue>> {
-
-    final Map<String, ODataPrimitiveValue> values = new HashMap<String, ODataPrimitiveValue>();
+public class ODataComplexValue extends ODataValue implements Iterable<ODataProperty> {
 
     /**
-     * Adds field value to the complex type.
-     *
-     * @param name name of the field to be added.
-     * @param value value of the field to be added.
+     * Complex type fields.
      */
-    public void add(final String name, final ODataPrimitiveValue value) {
+    final Map<String, ODataProperty> fields = new HashMap<String, ODataProperty>();
+
+    /**
+     * Adds field to the complex type.
+     *
+     * @param field field to be added.
+     */
+    public void add(final ODataProperty field) {
+        fields.put(field.getName(), field);
     }
 
     /**
-     * Gets field value.
+     * Gets field.
      *
-     * @param name field name.
-     * @return field value.
+     * @param name name of the field to be retrieved.
+     * @return requested field.
      */
-    public ODataPrimitiveValue get(final String name) {
-        return values.get(name);
+    public ODataProperty get(final String name) {
+        return fields.get(name);
     }
 
     /**
-     * Complex property field iterator.
+     * Complex property fields iterator.
      *
-     * @return field iterator.
+     * @return fields iterator.
      */
     @Override
-    public Iterator<Map.Entry<String, ODataPrimitiveValue>> iterator() {
-        return values.entrySet().iterator();
+    public Iterator<ODataProperty> iterator() {
+        return fields.values().iterator();
     }
 }
