@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.utils;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.metadata.ODataMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
 
@@ -84,7 +84,7 @@ public class ODataReader {
      * @param input stream to de-serialize.
      * @return metadata representation.
      */
-    public ODataMetadata deserializeMetadata(final InputStream inputStream) {
+    public EdmMetadata deserializeMetadata(final InputStream inputStream) {
         return null;
     }
 }

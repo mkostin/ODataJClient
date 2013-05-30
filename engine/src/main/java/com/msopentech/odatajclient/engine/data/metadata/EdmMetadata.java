@@ -19,9 +19,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Entry point for access information about metadata.
+ * Entry point for access information about EDM metadata.
  */
-public class ODataMetadata implements Serializable {
+public class EdmMetadata implements Serializable {
 
     private static final long serialVersionUID = -1214173426671503187L;
 

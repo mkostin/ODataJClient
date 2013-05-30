@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.data.metadata.ODataMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 
 /**
  * This class implements a response to a metadata request.
@@ -33,7 +33,7 @@ public class ODataMetadataResponse extends ODataResponse {
      *
      * @return query result objects.
      */
-    public ODataMetadata getBody() {
+    public EdmMetadata getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
