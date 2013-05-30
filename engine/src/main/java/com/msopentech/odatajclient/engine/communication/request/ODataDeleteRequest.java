@@ -22,26 +22,13 @@ import java.io.InputStream;
  * This class implements an OData delete request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getDeleteRequest(com.msopentech.odatajclient.engine.data.ODataURI) 
+ * @see ODataRequestFactory#getDeleteRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataDeleteRequest extends ODataRequest {
-
-    /**
-     * Constructor.
-     * @param uri URI of the entity to be deleted.
-     */
-    ODataDeleteRequest(final ODataURI uri) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.DELETE);
-        // set uri ...
-        this.uri = uri;
-    }
+public interface ODataDeleteRequest extends ODataRequest {
 
     /**
      * Unsupported operation.
      */
     @Override
-    public InputStream getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    InputStream getBody();
 }

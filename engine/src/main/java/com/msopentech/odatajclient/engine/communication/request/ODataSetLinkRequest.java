@@ -28,59 +28,25 @@ import java.io.InputStream;
  * @see ODataRequestFactory#getSetLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataURI, com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataSetLinkRequest extends ODataRequest {
-
-    /**
-     * Link to be removed.
-     */
-    private final ODataURI linkToBeRemoved;
-
-    /**
-     * Entity to be linked.
-     */
-    private final ODataLink entityToBeAdded;
-
-    /**
-     * Constructor.
-     *
-     * @param targetURI entity URI.
-     * @param linkToBeRemoved link to be removed.
-     * @param entityToBeAdded entity to be linked.
-     */
-    ODataSetLinkRequest(final ODataURI targetURI, final ODataURI linkToBeRemoved, final ODataLink entityToBeAdded) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST);
-        // set target uri
-        this.uri = targetURI;
-        // set request body
-        this.entityToBeAdded = entityToBeAdded;
-        // set link to be removed
-        this.linkToBeRemoved = linkToBeRemoved;
-    }
+public interface ODataSetLinkRequest extends ODataRequest {
 
     /**
      * Gets the body for the remove link request.
      *
      * @return link to be removed.
      */
-    public InputStream getLinkToBeRemoved() {
-        return linkToBeRemoved.toStream();
-    }
+    InputStream getLinkToBeRemoved();
 
     /**
      * Gets the body for the add link request.
      *
      * @return link to be created.
      */
-    public InputStream getEntityToBeAdded() {
-        return entityToBeAdded.getLink().toStream();
-    }
+    InputStream getEntityToBeAdded();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    InputStream getBody();
 }

@@ -15,105 +15,39 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import java.util.Collection;
 
 /**
  * Abstract representation of an OData response.
  */
-public abstract class ODataResponse {
+public interface ODataResponse {
 
     /**
-     * Response status code.
-     */
-    protected int statusCode;
-
-    /**
-     * Response status message.
-     */
-    protected String statusMessage;
-
-    /**
-     * Response header.
-     */
-    protected ODataHeader header;
-
-    /**
-     * Constructor.
-     */
-    public ODataResponse() {
-        // initialize a default header from configuration
-        this.header = new ODataHeader();
-    }
-
-    /**
-     * Adds
-     * <code>ETag</code> OData request header.
+     * Gets header names.
      *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#etag
+     * @return response header names.
      */
-    protected void setETag(final String value) {
-        header.setHeader(ODataHeader.HeaderName.etag, value);
-    }
+    Collection<String> getHeaderNames();
 
     /**
-     * Adds
-     * <code>Location</code> OData request header.
+     * Gets header value of the given header.
      *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#location
+     * @param name header to be retrieved.
+     * @return response header value.
      */
-    protected void setLocation(final String value) {
-        header.setHeader(ODataHeader.HeaderName.location, value);
-    }
+    String getHeader(final String name);
 
     /**
-     * Adds
-     * <code>DataServiceId</code> OData request header.
+     * Gets status code.
      *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#dataServiceId
+     * @return status code.
      */
-    protected void setDataServiceId(final String value) {
-        header.setHeader(ODataHeader.HeaderName.dataServiceId, value);
-    }
+    int getStatusCode();
 
     /**
-     * Adds
-     * <code>Preference-Applied</code> OData request header.
+     * Gets status message.
      *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#preferenceApplied
+     * @return status message.
      */
-    protected void setPreferenceApplied(final String value) {
-        header.setHeader(ODataHeader.HeaderName.preferenceApplied, value);
-    }
-
-    /**
-     * Adds
-     * <code>Retry-After</code> OData request header.
-     *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#retryAfter
-     */
-    protected void setRetryAfter(final String value) {
-        header.setHeader(ODataHeader.HeaderName.retryAfter, value);
-    }
-
-    public Collection<String> getHeaderNames() {
-        return header.getHeaderNames();
-    }
-
-    public String getHeader(final String name) {
-        return header.getHeader(name);
-    }
-
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public String getStatusMessage() {
-        return statusMessage;
-    }
+    String getStatusMessage();
 }

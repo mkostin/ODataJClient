@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
 
 /**
@@ -24,25 +23,11 @@ import java.io.InputStream;
  *
  * @see ODataRequestFactory#getMetadataRequest(java.lang.String)
  */
-public class ODataMetadataRequest extends ODataRequest {
-
-    /**
-     * Constructor.
-     *
-     * @param query query URI.
-     */
-    ODataMetadataRequest(final ODataURI query) {
-        // set method .... If cofigured X-HTTP-METHOD header will be used.
-        super(Method.GET);
-        // set uri ...
-        this.uri = query;
-    }
+public interface ODataMetadataRequest extends ODataRequest {
 
     /**
      * Unsupported operation.
      */
     @Override
-    public InputStream getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    InputStream getBody();
 }

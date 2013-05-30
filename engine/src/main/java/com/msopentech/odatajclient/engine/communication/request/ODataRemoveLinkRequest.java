@@ -24,25 +24,11 @@ import java.io.InputStream;
  *
  * @see ODataRequestFactory#getRemoveLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataRemoveLinkRequest extends ODataRequest {
-
-    /**
-     * Constructor.
-     *
-     * @param linkToBeRemoved navigation link to be removed.
-     */
-    ODataRemoveLinkRequest(final ODataURI linkToBeRemoved) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.DELETE);
-        // set target uri
-        this.uri = linkToBeRemoved;
-    }
+public interface ODataRemoveLinkRequest extends ODataRequest {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    InputStream getBody();
 }

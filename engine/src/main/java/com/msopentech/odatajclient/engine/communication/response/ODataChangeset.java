@@ -18,47 +18,6 @@ package com.msopentech.odatajclient.engine.communication.response;
 /**
  * Changeset wrapper for the corresponding batch item.
  * Get instance by using ODataResponseFactory.
- *
- * @see ODataResponseFactory#getChangesetBatchItem()
  */
-public class ODataChangeset extends ODataBatchResponseItem {
-
-    /**
-     * Constructor.
-     */
-    ODataChangeset() {
-    }
-
-    /**
-     * Add a create response to the changeset.
-     *
-     * @param response create response to be added.
-     * @return the current updated changeset.
-     */
-    public ODataChangeset addResponse(final ODataCreateEntityResponse response) {
-        super.addResponse(response);
-        return this;
-    }
-
-    /**
-     * Add an update response to the changeset.
-     *
-     * @param response update response to be added.
-     * @return the current updated changeset.
-     */
-    public ODataChangeset addResponse(final ODataUpdateEntityResponse response) {
-        super.addResponse(response);
-        return this;
-    }
-
-    /**
-     * Add a delete response to the changeset.
-     *
-     * @param response delete request to be added.
-     * @return the current updated changeset.
-     */
-    public ODataChangeset addResponse(final ODataDeleteResponse response) {
-        super.addResponse(response);
-        return this;
-    }
+public interface ODataChangeset extends ODataBatchResponseItem {
 }

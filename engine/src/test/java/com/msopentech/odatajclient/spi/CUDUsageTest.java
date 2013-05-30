@@ -23,7 +23,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataDeleteReque
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataURI;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.response.ODataCreateEntityResponse;

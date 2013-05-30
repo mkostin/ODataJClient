@@ -16,8 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class implements a batch request.
@@ -25,19 +23,7 @@ import java.util.List;
  *
  * @see ODataRequestFactory#getBatchRequest().
  */
-public class ODataBatchRequest extends ODataRequest {
-
-    /**
-     * Batch request content.
-     */
-    private final List<ODataBatchRequestItem> batch = new ArrayList<ODataBatchRequestItem>();
-
-    /**
-     * Constructor.
-     */
-    ODataBatchRequest() {
-        super(Method.POST);
-    }
+public interface ODataBatchRequest extends ODataRequest {
 
     /**
      * Adds a retrieve operation request.
@@ -45,10 +31,7 @@ public class ODataBatchRequest extends ODataRequest {
      * @param item retrieve operation request to be added.
      * @return the current updated request.
      */
-    public ODataBatchRequest addItem(final ODataQueryRequest item) {
-        batch.add(ODataRequestFactory.getRetrieveBatchItem(item));
-        return this;
-    }
+    ODataBatchRequest addItem(final ODataQueryRequest item);
 
     /**
      * Add a changeset to the batch.
@@ -56,16 +39,11 @@ public class ODataBatchRequest extends ODataRequest {
      * @param item changeset to be added.
      * @return the current updated request.
      */
-    public ODataBatchRequest addItem(final ODataChangeset item) {
-        batch.add(item);
-        return this;
-    }
+    ODataBatchRequest addItem(final ODataChangeset item);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public InputStream getBody();
 }

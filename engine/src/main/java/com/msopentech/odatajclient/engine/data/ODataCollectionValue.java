@@ -27,11 +27,20 @@ public class ODataCollectionValue extends ODataValue implements Iterable<ODataVa
     final Set<ODataValue> values = new HashSet<ODataValue>();
 
     /**
-     * Adds value to the collection.
+     * Adds primitive value to the collection.
      *
      * @param value value to be added.
      */
     public void add(final ODataPrimitiveValue value) {
+        values.add(value);
+    }
+    
+    /**
+     * Adds complex value to the collection.
+     *
+     * @param value value to be added.
+     */
+    public void add(final ODataComplexValue value) {
         values.add(value);
     }
 

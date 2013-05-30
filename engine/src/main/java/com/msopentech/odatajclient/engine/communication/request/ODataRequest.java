@@ -15,10 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -28,7 +26,7 @@ import java.util.Collection;
  *
  * @see ODataRequestFactory.
  */
-public abstract class ODataRequest {
+public interface ODataRequest {
 
     /**
      * Supported HTTP methods.
@@ -46,50 +44,11 @@ public abstract class ODataRequest {
     }
 
     /**
-     * OData resource representation format.
-     */
-    private ODataFormat format;
-
-    /**
-     * OData request method.
-     * <p>
-     * If configured a X-HTTP-METHOD header will be used.
-     * In this case the actual method will be
-     * <code>POST</code>.
-     */
-    final protected Method method;
-
-    /**
-     * OData request header.
-     */
-    protected ODataHeader header;
-
-    /**
-     * Target URI.
-     */
-    protected ODataURI uri;
-
-    /**
-     * Constructor.
-     *
-     * @param method HTTP request method. If configured X-HTTP-METHOD header will be used.
-     */
-    protected ODataRequest(final Method method) {
-        this.method = method;
-        // initialize a default header from configuration
-        this.header = new ODataHeader();
-        // take format from configuration
-        this.format = new Configuration().getFormat();
-    }
-
-    /**
      * Returns resource representation format.
      *
      * @return the configured format (<code>Atom</code> will be the default value unless differently specified).
      */
-    public ODataFormat getFormat() {
-        return format;
-    }
+    ODataFormat getFormat();
 
     /**
      * Override configured request format.
@@ -98,27 +57,21 @@ public abstract class ODataRequest {
      *
      * @see ODataFormat
      */
-    public void setFormat(final ODataFormat format) {
-        this.format = format;
-    }
+    void setFormat(final ODataFormat format);
 
     /**
      * Returns OData request target URI.
      *
      * @return OData request target URI.
      */
-    public ODataURI getURI() {
-        return uri;
-    }
+    ODataURI getURI();
 
     /**
      * Gets all OData request header names.
      *
      * @return all request header names.
      */
-    public Collection<String> getHeaderNames() {
-        return header.getHeaderNames();
-    }
+    Collection<String> getHeaderNames();
 
     /**
      * Gets the value of the OData request header identified by the given name.
@@ -126,9 +79,7 @@ public abstract class ODataRequest {
      * @param name name of the OData request header to be retrieved.
      * @return header value.
      */
-    public String getHeader(final String name) {
-        return header.getHeader(name);
-    }
+    String getHeader(final String name);
 
     /**
      * Adds
@@ -137,9 +88,7 @@ public abstract class ODataRequest {
      * @param value header value.
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#maxDataServiceVersion
      */
-    public void setMaxDataServiceVersion(final String value) {
-        header.setHeader(ODataHeader.HeaderName.maxDataServiceVersion, value);
-    }
+    void setMaxDataServiceVersion(final String value);
 
     /**
      * Adds
@@ -148,9 +97,7 @@ public abstract class ODataRequest {
      * @param value header value.
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#minDataServiceVersion
      */
-    public void setMinDataServiceVersion(final String value) {
-        header.setHeader(ODataHeader.HeaderName.minDataServiceVersion, value);
-    }
+    void setMinDataServiceVersion(final String value);
 
     /**
      * Adds
@@ -159,9 +106,7 @@ public abstract class ODataRequest {
      * @param value header value.
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#accept
      */
-    public void setAccept(final String value) {
-        header.setHeader(ODataHeader.HeaderName.accept, value);
-    }
+    void setAccept(final String value);
 
     /**
      * Adds
@@ -170,9 +115,7 @@ public abstract class ODataRequest {
      * @param value header value.
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifMatch
      */
-    public void setIfMatch(final String value) {
-        header.setHeader(ODataHeader.HeaderName.ifMatch, value);
-    }
+    void setIfMatch(final String value);
 
     /**
      * Adds
@@ -181,9 +124,7 @@ public abstract class ODataRequest {
      * @param value header value.
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifNoneMatch
      */
-    public void setIfNoneMatch(final String value) {
-        header.setHeader(ODataHeader.HeaderName.ifNoneMatch, value);
-    }
+    void setIfNoneMatch(final String value);
 
     /**
      * Adds
@@ -192,9 +133,7 @@ public abstract class ODataRequest {
      * @param value header value.
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#prefer
      */
-    public void setPrefer(final String value) {
-        header.setHeader(ODataHeader.HeaderName.prefer, value);
-    }
+    void setPrefer(final String value);
 
     /**
      * Adds
@@ -203,9 +142,7 @@ public abstract class ODataRequest {
      * @param value header value.
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#xHttpMethod
      */
-    public void setCHTTPMethod(final String value) {
-        header.setHeader(ODataHeader.HeaderName.xHttpMethod, value);
-    }
+    void setCHTTPMethod(final String value);
 
     /**
      * Adds a custom OData request header.
@@ -213,14 +150,12 @@ public abstract class ODataRequest {
      * @param name header name.
      * @param value header value.
      */
-    public void addCustomHeader(final String name, final String value) {
-        header.setHeader(name, value);
-    }
+    void addCustomHeader(final String name, final String value);
 
     /**
      * Gets request body.
      *
      * @return request body stream.
      */
-    public abstract InputStream getBody();
+    public InputStream getBody();
 }

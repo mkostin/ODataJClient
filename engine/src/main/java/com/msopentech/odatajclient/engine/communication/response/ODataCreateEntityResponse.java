@@ -20,20 +20,14 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 /**
  * This class implements the response to an Odata entity create request.
  *
- * @see ODataResponseFactory#getCreateResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataCreateEntityRequest
  */
-public class ODataCreateEntityResponse extends ODataResponse {
-
-    ODataCreateEntityResponse() {
-    }
+public interface ODataCreateEntityResponse extends ODataResponse {
 
     /**
      * Gets created object.
      *
      * @return created object.
      */
-    public ODataEntity getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    ODataEntity getBody();
 }

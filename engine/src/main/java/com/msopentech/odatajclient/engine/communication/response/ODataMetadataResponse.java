@@ -20,20 +20,14 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 /**
  * This class implements a response to a metadata request.
  *
- * @see ODataResponseFactory#getMetadataResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataMetadataRequest
  */
-public class ODataMetadataResponse extends ODataResponse {
-
-    ODataMetadataResponse() {
-    }
+public interface ODataMetadataResponse extends ODataResponse {
 
     /**
      * Gets query result objects.
      *
      * @return query result objects.
      */
-    public EdmMetadata getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    EdmMetadata getBody();
 }

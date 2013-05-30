@@ -20,20 +20,14 @@ import com.msopentech.odatajclient.engine.utils.ODataResultSet;
 /**
  * This class implements a response to a specific invoke request.
  *
- * @see ODataResponseFactory#getIvokeResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest
  */
-public class ODataInvokeResponse extends ODataResponse {
-
-    ODataInvokeResponse() {
-    }
+public interface ODataInvokeResponse extends ODataResponse {
 
     /**
      * Gets operation return value if exists.
      *
      * @return operation return value.
      */
-    public <T> ODataResultSet<T> getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    <T> ODataResultSet<T> getBody();
 }

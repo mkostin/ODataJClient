@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURI;
-import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 
 /**
@@ -28,34 +27,11 @@ import java.io.InputStream;
  * com.msopentech.odatajclient.engine.data.ODataEntity,
  * com.msopentech.odatajclient.engine.communication.request.UpdateType)
  */
-public class ODataUpdateEntityRequest extends ODataRequest {
-
-    /**
-     * Changes to be applied.
-     */
-    private final ODataEntity entity;
-
-    /**
-     * Constructor.
-     *
-     * @param uri URI of the entity to be updated.
-     * @param entity changes to be applied.
-     * @param type update type.
-     */
-    ODataUpdateEntityRequest(final ODataURI uri, final ODataEntity entity, final UpdateType type) {
-        // set method .... If cofigured X-HTTP-METHOD header will be used.
-        super(type.getMethod());
-        // set request body ...
-        this.entity = entity;
-        // set uri ...
-        this.uri = uri;
-    }
+public interface ODataUpdateEntityRequest extends ODataRequest {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        return new ODataWriter(getFormat()).serialize(entity);
-    }
+    InputStream getBody();
 }

@@ -21,12 +21,5 @@ package com.msopentech.odatajclient.engine.communication.request;
  *
  * @see ODataRequestFactory#getRetrieveBatchItem()
  */
-public class ODataRetrieve extends ODataBatchRequestItem {
-
-    /**
-     * Constructor.
-     */
-    ODataRetrieve(final ODataQueryRequest request) {
-        requests.add(request);
-    }
+public interface ODataRetrieve extends ODataBatchRequestItem {
 }

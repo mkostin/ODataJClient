@@ -15,61 +15,19 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * This class implements a response to a batch request.
  *
- * @see ODataResponseFactory#getBatchResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest
  */
-public class ODataBatchResponse extends ODataResponse {
-
-    /**
-     * Batch request content.
-     */
-    private final List<ODataBatchResponseItem> batch = new ArrayList<ODataBatchResponseItem>();
-
-    /**
-     * Constructor.
-     */
-    ODataBatchResponse() {
-    }
-
-    /**
-     * Adds a query response to the batch response.
-     * <p>
-     * Each query response is about a query request submitted embedded into a batch request.
-     *
-     * @param response query response to be added.
-     * @return the current batch response.
-     *
-     * @see ODataQueryResponse.
-     */
-    public ODataBatchResponse addItem(final ODataQueryResponse response) {
-        batch.add(ODataResponseFactory.getRetrieveBatchItem(response));
-        return this;
-    }
-
-    /**
-     * Add a changeset to the batch response.
-     *
-     * @param item changeset to be added.
-     * @return the current batch response.
-     */
-    public ODataBatchResponse addResponse(final ODataChangeset item) {
-        batch.add(item);
-        return this;
-    }
+public interface ODataBatchResponse extends ODataResponse {
 
     /**
      * Get all the batch response items.
      *
      * @return a result set of ODataResponse instances.
      */
-    public Iterator<ODataBatchResponseItem> getBody() {
-        return batch.iterator();
-    }
+    Iterator<ODataBatchResponseItem> getBody();
 }

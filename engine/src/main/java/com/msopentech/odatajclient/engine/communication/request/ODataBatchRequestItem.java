@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,19 +24,12 @@ import java.util.List;
  * @see ODataRequestFactory#getChangesetBatchItem()
  * @see ODataRequestFactory#getRetrieveBatchItem()
  */
-public abstract class ODataBatchRequestItem {
-
-    /**
-     * Batch item requests.
-     */
-    protected final List<ODataRequest> requests = new ArrayList<ODataRequest>();
+public interface ODataBatchRequestItem {
 
     /**
      * Return all requests encapsulated into the batch item.
      *
      * @return item requests.
      */
-    public List<ODataRequest> getRequests() {
-        return requests;
-    }
+    List<ODataRequest> getRequests();
 }

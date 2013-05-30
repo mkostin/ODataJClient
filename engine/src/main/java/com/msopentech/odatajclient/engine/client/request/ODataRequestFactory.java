@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.client.request;
 
+import com.msopentech.odatajclient.engine.communication.request.*;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -39,7 +40,7 @@ public class ODataRequestFactory {
      * @return ODataCreateEntityRequest instance.
      */
     public static ODataCreateEntityRequest getCreateEntityRequest(final ODataURI targetURI, final ODataEntity entity) {
-        return new ODataCreateEntityRequest(targetURI, entity);
+        return new ODataCreateEntityRequestImpl(targetURI, entity);
     }
 
     /**
@@ -53,7 +54,7 @@ public class ODataRequestFactory {
      */
     public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(
             final ODataURI targetURI, final InputStream entity) {
-        return new ODataMediaEntityCreateRequest(targetURI, entity);
+        return new ODataMediaEntityCreateRequestImpl(targetURI, entity);
     }
 
     /**
@@ -67,7 +68,7 @@ public class ODataRequestFactory {
      */
     public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(
             final ODataURI editURI, final InputStream entity) {
-        return new ODataMediaEntityUpdateRequest(editURI, entity);
+        return new ODataMediaEntityUpdateRequestImpl(editURI, entity);
     }
 
     /**
@@ -81,7 +82,7 @@ public class ODataRequestFactory {
      */
     public static ODataCreatePrimitiveRequest getCreatePrimitiveRequest(
             final ODataURI targetURI, final ODataPrimitiveValue value) {
-        return new ODataCreatePrimitiveRequest(targetURI, value);
+        return new ODataCreatePrimitiveRequestImpl(targetURI, value);
     }
 
     /**
@@ -94,7 +95,7 @@ public class ODataRequestFactory {
      * @return ODataAddLinkRequest instance.
      */
     public static ODataAddLinkRequest getAddLinkRequest(final ODataURI targetURI, final ODataLink entityToBeAdded) {
-        return new ODataAddLinkRequest(targetURI, entityToBeAdded);
+        return new ODataAddLinkRequestImpl(targetURI, entityToBeAdded);
     }
 
     /**
@@ -106,7 +107,7 @@ public class ODataRequestFactory {
      * @return ODataRemovedLinkRequest instance.
      */
     public static ODataRemoveLinkRequest getRemoveLinkRequest(final ODataURI linkToBeRemoved) {
-        return new ODataRemoveLinkRequest(linkToBeRemoved);
+        return new ODataRemoveLinkRequestImpl(linkToBeRemoved);
     }
 
     /**
@@ -123,7 +124,7 @@ public class ODataRequestFactory {
      */
     public static ODataSetLinkRequest getSetLinkRequest(
             final ODataURI targetURI, final ODataURI linkToBeRemoved, final ODataLink entityToBeAdded) {
-        return new ODataSetLinkRequest(targetURI, linkToBeRemoved, entityToBeAdded);
+        return new ODataSetLinkRequestImpl(targetURI, linkToBeRemoved, entityToBeAdded);
     }
 
     /**
@@ -135,7 +136,7 @@ public class ODataRequestFactory {
      * @return ODataDeleteRequest instance.
      */
     public static ODataDeleteRequest getDeleteRequest(final ODataURI targetURI) {
-        return new ODataDeleteRequest(targetURI);
+        return new ODataDeleteRequestImpl(targetURI);
     }
 
     /**
@@ -148,7 +149,7 @@ public class ODataRequestFactory {
      */
     public static ODataUpdateEntityRequest getUpdateEntityRequest(final ODataURI targetURI, final ODataEntity entity,
             final UpdateType type) {
-        return new ODataUpdateEntityRequest(targetURI, entity, type);
+        return new ODataUpdateEntityRequestImpl(targetURI, entity, type);
     }
 
     /**
@@ -158,7 +159,7 @@ public class ODataRequestFactory {
      * @return ODataQueryRequest instance.
      */
     public static ODataQueryRequest getQueryRequest(final ODataURI query) {
-        return new ODataQueryRequest(query);
+        return new ODataQueryRequestImpl(query);
     }
 
     /**
@@ -168,7 +169,7 @@ public class ODataRequestFactory {
      * @return ODataQueryRequest instance.
      */
     public static ODataSingleResultRequest getSingleResultRequest(final ODataURI query) {
-        return new ODataSingleResultRequest(query);
+        return new ODataSingleResultRequestImpl(query);
     }
 
     /**
@@ -177,7 +178,7 @@ public class ODataRequestFactory {
      * @return ODataBatchRequest instance.
      */
     public static ODataBatchRequest getBatchRequest() {
-        return new ODataBatchRequest();
+        return new ODataBatchRequestImpl();
     }
 
     /**
@@ -187,7 +188,7 @@ public class ODataRequestFactory {
      * @return ODataChangeset instance.
      */
     public static ODataChangeset getChangesetBatchItem() {
-        return new ODataChangeset();
+        return new ODataChangesetImpl();
     }
 
     /**
@@ -197,7 +198,7 @@ public class ODataRequestFactory {
      * @return ODataRetrieve instance.
      */
     public static ODataRetrieve getRetrieveBatchItem(final ODataQueryRequest request) {
-        return new ODataRetrieve(request);
+        return new ODataRetrieveImpl(request);
     }
 
     /**
@@ -208,7 +209,7 @@ public class ODataRequestFactory {
      * @return ODataInvokeRequest instance.
      */
     public static ODataInvokeRequest getInvokeActionRequest(final ODataURI uri, final Map<String, ODataValue> parameters) {
-        return new ODataInvokeRequest(Method.POST, uri, OperationType.ACTION, parameters);
+        return new ODataInvokeRequestImpl(Method.POST, uri, OperationType.ACTION, parameters);
     }
 
     /**
@@ -218,7 +219,7 @@ public class ODataRequestFactory {
      * @return ODataInvokeRequest instance.
      */
     public static ODataInvokeRequest getInvokeFunctionRequest(final ODataURI uri) {
-        return new ODataInvokeRequest(Method.GET, uri, OperationType.FUNCTION);
+        return new ODataInvokeRequestImpl(Method.GET, uri, OperationType.FUNCTION);
     }
 
     /**
@@ -231,7 +232,7 @@ public class ODataRequestFactory {
      */
     public static ODataInvokeRequest getInvokeLegacyRequest(
             final Method method, final ODataURI uri, final Map<String, ODataValue> parameters) {
-        return new ODataInvokeRequest(method, uri, OperationType.LEGACY, parameters);
+        return new ODataInvokeRequestImpl(method, uri, OperationType.LEGACY, parameters);
     }
 
     /**
@@ -242,6 +243,6 @@ public class ODataRequestFactory {
      * @return ODataMetadataRequest instance.
      */
     public static ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
-        return new ODataMetadataRequest(new ODataURI(serviceRoot).appendMetadataSegment());
+        return new ODataMetadataRequestImpl(new ODataURI(serviceRoot).appendMetadataSegment());
     }
 }

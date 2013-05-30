@@ -21,14 +21,7 @@ import com.msopentech.odatajclient.engine.data.ODataURI;
  * This class implements an OData query request returning a single result item.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getSingleResultRequest(com.msopentech.odatajclient.engine.data.ODataURI) 
+ * @see ODataRequestFactory#getSingleResultRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataSingleResultRequest extends ODataQueryRequest {
-
-    /**
-     * {@inheritDoc}
-     */
-    ODataSingleResultRequest(ODataURI query) {
-        super(query);
-    }
+public interface ODataSingleResultRequest extends ODataQueryRequest {
 }

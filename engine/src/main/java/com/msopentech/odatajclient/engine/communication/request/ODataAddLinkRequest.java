@@ -26,33 +26,11 @@ import java.io.InputStream;
  * @see ODataRequestFactory#getAddLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataAddLinkRequest extends ODataRequest {
-
-    /**
-     * OData entity to be linked.
-     */
-    private final ODataLink entityToBeAdded;
-
-    /**
-     * Constructor.
-     *
-     * @param targetURI entity set URI.
-     * @param entityToBeAdded entity to be linked.
-     */
-    ODataAddLinkRequest(final ODataURI targetURI, final ODataLink entityToBeAdded) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST);
-        // set target uri
-        this.uri = targetURI;
-        // set request body
-        this.entityToBeAdded = entityToBeAdded;
-    }
+public interface ODataAddLinkRequest extends ODataRequest {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        return entityToBeAdded.getLink().toStream();
-    }
+    public InputStream getBody();
 }

@@ -15,10 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 
 /**
@@ -28,31 +26,11 @@ import java.io.InputStream;
  * @see ODataRequestFactory#getCreatePrimitiveRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataValue)
  */
-public class ODataCreatePrimitiveRequest extends ODataRequest {
-
-    /**
-     * Value to be created.
-     */
-    private final ODataValue value;
-
-    /**
-     * Constructor.
-     *
-     * @param targetURI entity set or entity or entity property URI.
-     * @param value value to be created.
-     */
-    ODataCreatePrimitiveRequest(final ODataURI targetURI, final ODataPrimitiveValue value) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST);
-        // set request body
-        this.value = value;
-    }
+public interface ODataCreatePrimitiveRequest extends ODataRequest {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        return new ODataWriter(getFormat()).serialize(value);
-    }
+    InputStream getBody();
 }

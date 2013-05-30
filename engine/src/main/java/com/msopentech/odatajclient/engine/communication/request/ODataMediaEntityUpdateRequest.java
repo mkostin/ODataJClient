@@ -25,30 +25,11 @@ import java.io.InputStream;
  * @see ODataRequestFactory#getMediaEntityUpdateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * java.io.InputStream)
  */
-public class ODataMediaEntityUpdateRequest extends ODataRequest {
-
-    /**
-     * Median entity blob to be updated.
-     */
-    private final InputStream media;
-
-    /**
-     * Constructor.
-     *
-     * @param editURI edit URI of the entity to be updated.
-     * @param media media entity blob to be created.
-     */
-    public ODataMediaEntityUpdateRequest(final ODataURI editURI, final InputStream media) {
-        super(Method.PUT);
-        this.media = media;
-        this.uri = editURI;
-    }
+public interface ODataMediaEntityUpdateRequest extends ODataRequest {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        return media;
-    }
+    InputStream getBody();
 }

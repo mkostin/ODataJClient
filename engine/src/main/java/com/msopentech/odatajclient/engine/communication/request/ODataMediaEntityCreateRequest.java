@@ -25,30 +25,11 @@ import java.io.InputStream;
  * @see ODataRequestFactory#getMediaEntityCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * java.io.InputStream)
  */
-public class ODataMediaEntityCreateRequest extends ODataRequest {
-
-    /**
-     * Median entity to be created.
-     */
-    private final InputStream media;
-
-    /**
-     * Constructor.
-     *
-     * @param targetURI target entity set.
-     * @param media media entity blob to be created.
-     */
-    public ODataMediaEntityCreateRequest(final ODataURI targetURI, final InputStream media) {
-        super(Method.POST);
-        this.media = media;
-        this.uri = targetURI;
-    }
+public interface ODataMediaEntityCreateRequest extends ODataRequest {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        return media;
-    }
+    InputStream getBody();
 }

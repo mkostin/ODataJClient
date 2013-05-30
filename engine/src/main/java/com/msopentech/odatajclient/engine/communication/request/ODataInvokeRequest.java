@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
 import java.util.Map;
@@ -30,59 +29,11 @@ import java.util.Map;
  * com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method,
  * com.msopentech.odatajclient.engine.data.ODataURI, java.util.Map)
  */
-public class ODataInvokeRequest extends ODataRequest {
-
-    /**
-     * Operation type.
-     */
-    private final OperationType type;
-
-    /**
-     * Parameters to be submitted into the request body.
-     */
-    private final Map<String, ODataValue> parameters;
-
-    /**
-     * Constructor.
-     *
-     * @param method HTTP method of the request. If configured X-HTTP-METHOD header will be used.
-     * @param uri URI that identifies the operation.
-     * @param type requested operation type.
-     */
-    ODataInvokeRequest(
-            final Method method,
-            final ODataURI uri,
-            final OperationType type) {
-        super(method);
-        this.uri = uri;
-        this.type = type;
-        this.parameters = null;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param method HTTP method of the request.
-     * @param uri URI that identifies the operation.
-     * @param type requested operation type.
-     * @param parameters operation parameters.
-     */
-    public ODataInvokeRequest(
-            final Method method,
-            final ODataURI uri,
-            final OperationType type,
-            final Map<String, ODataValue> parameters) {
-        super(method);
-        this.uri = uri;
-        this.type = type;
-        this.parameters = parameters;
-    }
+public interface ODataInvokeRequest extends ODataRequest {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    InputStream getBody();
 }

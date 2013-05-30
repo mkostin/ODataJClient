@@ -22,26 +22,13 @@ import java.io.InputStream;
  * This class implements an OData query request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getQueryRequest(com.msopentech.odatajclient.engine.data.ODataURI) 
+ * @see ODataRequestFactory#getQueryRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataQueryRequest extends ODataRequest {
-
-    /**
-     * Constructor.
-     * @param query query URI. 
-     */
-    ODataQueryRequest(final ODataURI query) {
-        // set method .... If cofigured X-HTTP-METHOD header will be used.
-        super(Method.GET);
-        // set uri ...
-        this.uri = query;
-    }
+public interface ODataQueryRequest extends ODataRequest {
 
     /**
      * Unsupported operation.
      */
     @Override
-    public InputStream getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    InputStream getBody();
 }

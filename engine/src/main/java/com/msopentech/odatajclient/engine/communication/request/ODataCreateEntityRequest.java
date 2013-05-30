@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURI;
-import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 
 /**
@@ -27,31 +26,11 @@ import java.io.InputStream;
  * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataEntity)
  */
-public class ODataCreateEntityRequest extends ODataRequest {
-
-    /**
-     * Entity to be created.
-     */
-    private final ODataEntity entity;
-
-    /**
-     * Constructor.
-     *
-     * @param targetURI entity set URI.
-     * @param entity entity to be created.
-     */
-    ODataCreateEntityRequest(final ODataURI targetURI, final ODataEntity entity) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST);
-        // set request body
-        this.entity = entity;
-    }
+public interface ODataCreateEntityRequest extends ODataRequest {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream getBody() {
-        return new ODataWriter(getFormat()).serialize((ODataEntity) entity);
-    }
+    InputStream getBody();
 }

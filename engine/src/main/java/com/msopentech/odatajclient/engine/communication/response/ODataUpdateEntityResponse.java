@@ -15,14 +15,19 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
+import com.msopentech.odatajclient.engine.data.ODataEntity;
+
 /**
  * This class implements the response to an OData update request.
  *
- * @see ODataResponseFactory#getUpdateResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest
  */
-public class ODataUpdateEntityResponse extends ODataResponse {
+public interface ODataUpdateEntityResponse extends ODataResponse {
 
-    ODataUpdateEntityResponse() {
-    }
+    /**
+     * Gets updated object.
+     *
+     * @return updated object.
+     */
+    ODataEntity getBody();
 }

@@ -20,20 +20,14 @@ import java.io.InputStream;
 /**
  * This class implements the response to an Odata media entity update request.
  *
- * @see ODataResponseFactory#getMediaEntityUpdateResponse() ()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityUpdateRequest
  */
-public class ODataMediaEntityUpdateResponse extends ODataResponse {
-
-    ODataMediaEntityUpdateResponse() {
-    }
+public interface ODataMediaEntityUpdateResponse extends ODataResponse {
 
     /**
      * Gets updated object.
      *
      * @return updated object.
      */
-    public InputStream getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    InputStream getBody();
 }

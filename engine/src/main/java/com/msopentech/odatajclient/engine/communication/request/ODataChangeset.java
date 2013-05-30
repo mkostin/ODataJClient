@@ -21,13 +21,7 @@ package com.msopentech.odatajclient.engine.communication.request;
  *
  * @see ODataRequestFactory#getChangesetRequest()
  */
-public class ODataChangeset extends ODataBatchRequestItem {
-
-    /**
-     * Constructor.
-     */
-    ODataChangeset() {
-    }
+public interface ODataChangeset extends ODataBatchRequestItem {
 
     /**
      * Add a create request to the changeset.
@@ -35,10 +29,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
      * @param request create request to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addRequest(final ODataCreateEntityRequest request) {
-        requests.add(request);
-        return this;
-    }
+    ODataChangeset addRequest(final ODataCreateEntityRequest request);
 
     /**
      * Add an update request to the changeset.
@@ -46,10 +37,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
      * @param request update request to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addRequest(final ODataUpdateEntityRequest request) {
-        requests.add(request);
-        return this;
-    }
+    ODataChangeset addRequest(final ODataUpdateEntityRequest request);
 
     /**
      * Add a delete request to the changeset.
@@ -57,8 +45,5 @@ public class ODataChangeset extends ODataBatchRequestItem {
      * @param request delete request to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addRequest(final ODataDeleteRequest request) {
-        requests.add(request);
-        return this;
-    }
+    ODataChangeset addRequest(final ODataDeleteRequest request);
 }

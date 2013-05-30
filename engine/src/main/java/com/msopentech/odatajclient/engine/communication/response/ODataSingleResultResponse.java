@@ -18,20 +18,14 @@ package com.msopentech.odatajclient.engine.communication.response;
 /**
  * This class implements a response to a specific query request returning a single result item.
  *
- * @see ODataResponseFactory#getSingleResultResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataSingleResultRequest
  */
-public class ODataSingleResultResponse extends ODataResponse {
-
-    ODataSingleResultResponse() {
-    }
+public interface ODataSingleResultResponse extends ODataResponse {
 
     /**
      * Gets query result object.
      *
      * @return query result objects.
      */
-    public <T> T getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    <T> T getBody();
 }

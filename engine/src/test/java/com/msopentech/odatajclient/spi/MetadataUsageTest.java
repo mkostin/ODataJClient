@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.spi;
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.ODataRestClient;
 import com.msopentech.odatajclient.engine.communication.request.ODataMetadataRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataMetadataResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.EntityType;
