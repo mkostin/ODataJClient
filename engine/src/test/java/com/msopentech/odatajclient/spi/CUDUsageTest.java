@@ -18,18 +18,18 @@ package com.msopentech.odatajclient.spi;
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.ODataRestClient;
 import com.msopentech.odatajclient.engine.communication.request.ODataAddLinkRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataCreateRequest;
+import com.msopentech.odatajclient.engine.communication.request.ODataCreateEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.ODataUpdateRequest;
+import com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.response.ODataCreateResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataCreateEntityResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
-import com.msopentech.odatajclient.engine.communication.response.ODataUpdateResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataUpdateEntityResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntityAtomExtensions;
@@ -71,10 +71,10 @@ public class CUDUsageTest {
         newEntity.setAtomExtensions(atomExtensions);
 
         // create your request
-        final ODataCreateRequest request = ODataRequestFactory.getCreateRequest(targetURI, newEntity);
+        final ODataCreateEntityRequest request = ODataRequestFactory.getCreateEntityRequest(targetURI, newEntity);
 
         // execute the request
-        ODataCreateResponse res = client.<ODataCreateResponse>execute(request);
+        ODataCreateEntityResponse res = client.<ODataCreateEntityResponse>execute(request);
 
         // retrieve created entity
         ODataEntity created = res.getBody();
@@ -121,10 +121,10 @@ public class CUDUsageTest {
         changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EdmSimpleType.Int32)));
 
         // create your request
-        final ODataUpdateRequest request = ODataRequestFactory.getUpdateRequest(targetURI, changes, UpdateType.PATCH);
+        final ODataUpdateEntityRequest request = ODataRequestFactory.getUpdateEntityRequest(targetURI, changes, UpdateType.PATCH);
 
         // execute the request
-        ODataUpdateResponse res = client.<ODataUpdateResponse>execute(request);
+        ODataUpdateEntityResponse res = client.<ODataUpdateEntityResponse>execute(request);
 
         // retrieve update object if returned
         ODataEntity updated = res.getBody();

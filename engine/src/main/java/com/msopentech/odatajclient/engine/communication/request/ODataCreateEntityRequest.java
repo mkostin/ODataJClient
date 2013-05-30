@@ -21,34 +21,30 @@ import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 
 /**
- * This class implements an OData update request.
+ * This class implements an OData create request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getUpdateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * com.msopentech.odatajclient.engine.data.ODataEntity,
- * com.msopentech.odatajclient.engine.communication.request.UpdateType)
+ * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
+ * com.msopentech.odatajclient.engine.data.ODataEntity)
  */
-public class ODataUpdateRequest extends ODataRequest {
+public class ODataCreateEntityRequest extends ODataRequest {
 
     /**
-     * Changes to be applied.
+     * Entity to be created.
      */
     private final ODataEntity entity;
 
     /**
      * Constructor.
      *
-     * @param uri URI of the entity to be updated.
-     * @param entity changes to be applied.
-     * @param type update type.
+     * @param targetURI entity set URI.
+     * @param entity entity to be created.
      */
-    ODataUpdateRequest(final ODataURI uri, final ODataEntity entity, final UpdateType type) {
-        // set method .... If cofigured X-HTTP-METHOD header will be used.
-        super(type.getMethod());
-        // set request body ...
+    ODataCreateEntityRequest(final ODataURI targetURI, final ODataEntity entity) {
+        // set method ... . If cofigured X-HTTP-METHOD header will be used.
+        super(Method.POST);
+        // set request body
         this.entity = entity;
-        // set uri ...
-        this.uri = uri;
     }
 
     /**
@@ -56,6 +52,6 @@ public class ODataUpdateRequest extends ODataRequest {
      */
     @Override
     public InputStream getBody() {
-        return new ODataWriter(getFormat()).serialize(entity);
+        return new ODataWriter(getFormat()).serialize((ODataEntity) entity);
     }
 }

@@ -35,7 +35,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
      * @param request create request to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addRequest(final ODataCreateRequest request) {
+    public ODataChangeset addRequest(final ODataCreateEntityRequest request) {
         requests.add(request);
         return this;
     }
@@ -46,7 +46,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
      * @param request update request to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addRequest(final ODataUpdateRequest request) {
+    public ODataChangeset addRequest(final ODataUpdateEntityRequest request) {
         requests.add(request);
         return this;
     }

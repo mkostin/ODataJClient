@@ -25,8 +25,8 @@ public class ODataResponseFactory {
      *
      * @return response object.
      */
-    public static ODataCreateResponse getCreateResponse() {
-        return new ODataCreateResponse();
+    public static ODataCreateEntityResponse getCreateResponse() {
+        return new ODataCreateEntityResponse();
     }
 
     /**
@@ -52,8 +52,8 @@ public class ODataResponseFactory {
      *
      * @return response object.
      */
-    public static ODataUpdateResponse getUpdateResponse() {
-        return new ODataUpdateResponse();
+    public static ODataUpdateEntityResponse getUpdateResponse() {
+        return new ODataUpdateEntityResponse();
     }
 
     /**

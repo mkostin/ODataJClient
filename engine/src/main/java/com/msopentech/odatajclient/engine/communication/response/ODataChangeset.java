@@ -35,7 +35,7 @@ public class ODataChangeset extends ODataBatchResponseItem {
      * @param response create response to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addResponse(final ODataCreateResponse response) {
+    public ODataChangeset addResponse(final ODataCreateEntityResponse response) {
         responses.add(response);
         return this;
     }
@@ -46,7 +46,7 @@ public class ODataChangeset extends ODataBatchResponseItem {
      * @param response update response to be added.
      * @return the current updated changeset.
      */
-    public ODataChangeset addResponse(final ODataUpdateResponse response) {
+    public ODataChangeset addResponse(final ODataUpdateEntityResponse response) {
         responses.add(response);
         return this;
     }

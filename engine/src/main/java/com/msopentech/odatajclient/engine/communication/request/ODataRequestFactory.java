@@ -36,10 +36,10 @@ public class ODataRequestFactory {
      *
      * @param targetURI entity set URI.
      * @param entity entity to be created.
-     * @return ODataCreateRequest instance.
+     * @return ODataCreateEntityRequest instance.
      */
-    public static ODataCreateRequest getCreateRequest(final ODataURI targetURI, final ODataEntity entity) {
-        return new ODataCreateRequest(targetURI, entity);
+    public static ODataCreateEntityRequest getCreateEntityRequest(final ODataURI targetURI, final ODataEntity entity) {
+        return new ODataCreateEntityRequest(targetURI, entity);
     }
 
     /**
@@ -129,7 +129,7 @@ public class ODataRequestFactory {
     /**
      * Gets a delete request object instance.
      * <p>
-     * Use this kind of request to delete an entity.
+     * Use this kind of request to delete an entity and media entity as well.
      *
      * @param targetURI edit link of the object to be removed.
      * @return ODataDeleteRequest instance.
@@ -144,11 +144,11 @@ public class ODataRequestFactory {
      * @param targetURI edit link of the object to be updated.
      * @param entity changes to be applied.
      * @param type type of update to be performed.
-     * @return ODataUpdateRequest instance.
+     * @return ODataUpdateEntityRequest instance.
      */
-    public static ODataUpdateRequest getUpdateRequest(final ODataURI targetURI, final ODataEntity entity,
+    public static ODataUpdateEntityRequest getUpdateEntityRequest(final ODataURI targetURI, final ODataEntity entity,
             final UpdateType type) {
-        return new ODataUpdateRequest(targetURI, entity, type);
+        return new ODataUpdateEntityRequest(targetURI, entity, type);
     }
 
     /**

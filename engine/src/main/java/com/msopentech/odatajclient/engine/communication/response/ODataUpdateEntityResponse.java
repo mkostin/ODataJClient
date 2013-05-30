@@ -18,20 +18,28 @@ package com.msopentech.odatajclient.engine.communication.response;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 
 /**
- * This class implements the response to an Odata entity create request.
+ * This class implements the response to an OData update request.
  *
- * @see ODataResponseFactory#getCreateResponse()
- * @see com.msopentech.odatajclient.engine.communication.request.ODataCreateRequest
+ * @see ODataResponseFactory#getUpdateResponse()
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest
  */
-public class ODataCreateResponse extends ODataResponse {
+public class ODataUpdateEntityResponse extends ODataResponse {
 
-    ODataCreateResponse() {
+    ODataUpdateEntityResponse() {
     }
 
     /**
-     * Gets created object.
+     * Gets updated object.
+     * <p>
+     * The returned value depends on the
+     * <code>Prefer</code> header attribute value:
+     * <ul>
+     * <li><code>return-content</code> for full access to the updated entity;</li>
+     * <li><code>return-no-content</code> for no content.</li>
+     * </ul>
      *
-     * @return created object.
+     * @return updated object reference or updated object.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#prefer
      */
     public ODataEntity getBody() {
         throw new UnsupportedOperationException("Not supported yet.");

@@ -21,7 +21,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataCreateResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataCreateEntityResponse;
 import com.msopentech.odatajclient.engine.utils.EntityFactory;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -40,10 +40,10 @@ public class AsyncUsageTest {
         // newEntity.set ...
 
         // create your request
-        final ODataRequest request = ODataRequestFactory.getCreateRequest(targetURI, newEntity);
+        final ODataRequest request = ODataRequestFactory.getCreateEntityRequest(targetURI, newEntity);
 
         // execute the request
-        final Future<ODataCreateResponse> res = client.<ODataCreateResponse>asyncExecute(request);
+        final Future<ODataCreateEntityResponse> res = client.<ODataCreateEntityResponse>asyncExecute(request);
 
         if (res.isDone()) {
             try {
