@@ -48,7 +48,7 @@ public class ODataBatchResponse extends ODataResponse {
      *
      * @see ODataQueryResponse.
      */
-    protected ODataBatchResponse addItem(final ODataQueryResponse response) {
+    public ODataBatchResponse addItem(final ODataQueryResponse response) {
         batch.add(ODataResponseFactory.getRetrieveBatchItem(response));
         return this;
     }
@@ -59,7 +59,7 @@ public class ODataBatchResponse extends ODataResponse {
      * @param item changeset to be added.
      * @return the current batch response.
      */
-    protected ODataBatchResponse addResponse(final ODataChangeset item) {
+    public ODataBatchResponse addResponse(final ODataChangeset item) {
         batch.add(item);
         return this;
     }

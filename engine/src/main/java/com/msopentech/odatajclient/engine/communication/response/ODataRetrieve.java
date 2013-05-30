@@ -28,6 +28,6 @@ public class ODataRetrieve extends ODataBatchResponseItem {
      * Constructor.
      */
     ODataRetrieve(final ODataQueryResponse response) {
-        responses.add(response);
+        super.addResponse(response);
     }
 }

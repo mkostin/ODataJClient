@@ -32,9 +32,18 @@ public abstract class ODataBatchResponseItem {
     /**
      * Batch item response.
      */
-    protected final List<ODataResponse> responses = new ArrayList<ODataResponse>();
+    private final List<ODataResponse> responses = new ArrayList<ODataResponse>();
 
     ODataBatchResponseItem() {
+    }
+
+    /**
+     * Add a new response (for internal usage only).
+     *
+     * @param response response to be added.
+     */
+    protected final void addResponse(final ODataResponse response) {
+        responses.add(response);
     }
 
     /**
