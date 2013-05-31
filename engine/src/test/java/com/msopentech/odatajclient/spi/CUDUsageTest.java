@@ -51,14 +51,14 @@ public class CUDUsageTest {
         final ODataEntity newEntity = EntityFactory.newEntity("Java Code");
 
         // Add a complex property
-        final ODataComplexValue addressValue = new ODataComplexValue();
+        final ODataComplexValue addressValue = new ODataComplexValue("Address");
         addressValue.add(new ODataProperty("city", new ODataPrimitiveValue("XXX", EdmSimpleType.String)));
         addressValue.add(new ODataProperty("street", new ODataPrimitiveValue("YYY", EdmSimpleType.String)));
 
         newEntity.addProperty(new ODataProperty("Address", addressValue));
 
         // Add a collection property
-        final ODataCollectionValue preferredColors = new ODataCollectionValue();
+        final ODataCollectionValue preferredColors = new ODataCollectionValue("Colors");
         preferredColors.add(new ODataPrimitiveValue("red", EdmSimpleType.String));
         preferredColors.add(new ODataPrimitiveValue("yellow", EdmSimpleType.String));
 

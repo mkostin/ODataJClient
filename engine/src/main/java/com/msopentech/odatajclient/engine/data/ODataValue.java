@@ -19,5 +19,4 @@ package com.msopentech.odatajclient.engine.data;
  * Abstract representation of an OData entity property value.
  */
 public abstract class ODataValue {
-    
 }

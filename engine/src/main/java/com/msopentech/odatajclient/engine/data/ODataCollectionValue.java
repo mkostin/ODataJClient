@@ -24,7 +24,24 @@ import java.util.Set;
  */
 public class ODataCollectionValue extends ODataValue implements Iterable<ODataValue> {
 
+    /**
+     * Type name;
+     */
+    final String typeName;
+
+    /**
+     * Values.
+     */
     final Set<ODataValue> values = new HashSet<ODataValue>();
+
+    /**
+     * Constructor.
+     *
+     * @param typeName type name.
+     */
+    public ODataCollectionValue(String typeName) {
+        this.typeName = typeName;
+    }
 
     /**
      * Adds primitive value to the collection.
@@ -34,7 +51,7 @@ public class ODataCollectionValue extends ODataValue implements Iterable<ODataVa
     public void add(final ODataPrimitiveValue value) {
         values.add(value);
     }
-    
+
     /**
      * Adds complex value to the collection.
      *
@@ -52,5 +69,14 @@ public class ODataCollectionValue extends ODataValue implements Iterable<ODataVa
     @Override
     public Iterator<ODataValue> iterator() {
         return values.iterator();
+    }
+
+    /**
+     * Gets value type name.
+     *
+     * @return value type name.
+     */
+    public String getTypeName() {
+        return typeName;
     }
 }

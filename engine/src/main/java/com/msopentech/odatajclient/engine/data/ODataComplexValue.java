@@ -25,9 +25,23 @@ import java.util.Map;
 public class ODataComplexValue extends ODataValue implements Iterable<ODataProperty> {
 
     /**
+     * Type name.
+     */
+    final String typeName;
+
+    /**
      * Complex type fields.
      */
     final Map<String, ODataProperty> fields = new HashMap<String, ODataProperty>();
+
+    /**
+     * Constructor.
+     *
+     * @param typeName type name.
+     */
+    public ODataComplexValue(final String typeName) {
+        this.typeName = typeName;
+    }
 
     /**
      * Adds field to the complex type.
@@ -56,5 +70,14 @@ public class ODataComplexValue extends ODataValue implements Iterable<ODataPrope
     @Override
     public Iterator<ODataProperty> iterator() {
         return fields.values().iterator();
+    }
+
+    /**
+     * Gest value type name.
+     *
+     * @return value type name.
+     */
+    public String getTypeName() {
+        return typeName;
     }
 }

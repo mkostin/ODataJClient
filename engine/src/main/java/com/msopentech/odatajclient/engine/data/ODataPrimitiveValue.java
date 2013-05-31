@@ -31,16 +31,36 @@ public class ODataPrimitiveValue extends ODataValue {
     /**
      * Value type.
      */
-    final EdmSimpleType type;
+    final EdmSimpleType typeName;
 
     /**
      * Constructor.
      *
      * @param value actual value.
-     * @param type primitive value type.
+     * @param typeName primitive value type.
      */
-    public ODataPrimitiveValue(final Serializable value, final EdmSimpleType type) {
+    public ODataPrimitiveValue(final Serializable value, final EdmSimpleType typeName) {
         this.value = value;
-        this.type = type;
+        this.typeName = typeName;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param value actual value.
+     * @param typeName primitive value type.
+     */
+    public ODataPrimitiveValue(final Serializable value, final String typeName) {
+        this.value = value;
+        this.typeName = EdmSimpleType.valueOf(typeName);
+    }
+
+    /**
+     * Gets type name.
+     *
+     * @return type name.
+     */
+    public String getTypeName() {
+        return typeName.name();
     }
 }
