@@ -21,7 +21,7 @@
   <parent>
     <groupId>com.msopentech.odatajclient</groupId>
     <artifactId>odatajclient</artifactId>
-    <version>M1-SNAPSHOT</version>
+    <version>M1</version>
   </parent>
 
   <name>Client OData libray for Java: Proxy </name>
