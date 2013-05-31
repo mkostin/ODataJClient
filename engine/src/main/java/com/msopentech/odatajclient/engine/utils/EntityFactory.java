@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.utils;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataEntityLink;
+import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import java.net.URI;
@@ -37,7 +37,7 @@ public class EntityFactory {
         return new LinkImpl(name, link);
     }
 
-    public static ODataEntityLink newEntityLink(final String name, final URI link) {
+    public static ODataLink newEntityLink(final String name, final URI link) {
         return new EntityLinkImpl(name, link);
     }
 
@@ -81,7 +81,7 @@ public class EntityFactory {
         }
     }
 
-    private static class EntityLinkImpl extends ODataEntityLink {
+    private static class EntityLinkImpl extends ODataLink {
 
         private static final long serialVersionUID = -2533925527313767002L;
 

@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.data;
 import java.net.URI;
 
 /**
- * Generic OData link.
+ * OData navigation link.
  */
 public abstract class ODataLink extends ODataItem {
 
