@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataURI;
+import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
 
 /**
  * This class implements an OData query request returning a single result item.

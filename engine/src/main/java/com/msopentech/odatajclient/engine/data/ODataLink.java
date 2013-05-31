@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import java.net.URI;
+
 /**
  * Generic OData link.
  */
@@ -28,7 +30,7 @@ public abstract class ODataLink extends ODataItem {
      * @param name link property name.
      * @param link link value.
      */
-    public ODataLink(final String name, final ODataURI link) {
+    public ODataLink(final String name, final URI link) {
         super(name);
         this.link = link;
     }

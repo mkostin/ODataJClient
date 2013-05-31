@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class ODataFeed {
     /**
      * Link to the next page.
      */
-    protected ODataURI next;
+    protected URI next;
 
     /**
      * Feed entries.
@@ -38,7 +39,7 @@ public class ODataFeed {
      *
      * @return next page link; null value if single page or last page reached.
      */
-    public ODataURI getNext() {
+    public URI getNext() {
         return next;
     }
 

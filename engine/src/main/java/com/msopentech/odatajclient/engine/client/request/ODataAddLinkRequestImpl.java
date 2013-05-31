@@ -17,8 +17,8 @@ package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * This class implements an create link OData request.
@@ -40,7 +40,7 @@ class ODataAddLinkRequestImpl extends ODataRequestImpl implements ODataAddLinkRe
      * @param targetURI entity set URI.
      * @param entityToBeAdded entity to be linked.
      */
-    ODataAddLinkRequestImpl(final ODataURI targetURI, final ODataLink entityToBeAdded) {
+    ODataAddLinkRequestImpl(final URI targetURI, final ODataLink entityToBeAdded) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
         // set target uri
@@ -54,6 +54,6 @@ class ODataAddLinkRequestImpl extends ODataRequestImpl implements ODataAddLinkRe
      */
     @Override
     public InputStream getBody() {
-        return entityToBeAdded.getLink().toStream();
+        return null; // entityToBeAdded.getLink().toStream();
     }
 }

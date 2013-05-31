@@ -17,8 +17,8 @@ package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Map;
 
 /**
@@ -52,7 +52,7 @@ class ODataInvokeRequestImpl extends ODataRequestImpl implements ODataInvokeRequ
      */
     ODataInvokeRequestImpl(
             final Method method,
-            final ODataURI uri,
+            final URI uri,
             final OperationType type) {
         super(method);
         this.uri = uri;
@@ -70,7 +70,7 @@ class ODataInvokeRequestImpl extends ODataRequestImpl implements ODataInvokeRequ
      */
     ODataInvokeRequestImpl(
             final Method method,
-            final ODataURI uri,
+            final URI uri,
             final OperationType type,
             final Map<String, ODataValue> parameters) {
         super(method);

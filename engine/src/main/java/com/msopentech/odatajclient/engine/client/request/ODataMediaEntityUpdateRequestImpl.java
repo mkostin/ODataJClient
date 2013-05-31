@@ -16,8 +16,8 @@
 package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * This class implements an OData Media Entity create request.
@@ -39,7 +39,7 @@ class ODataMediaEntityUpdateRequestImpl extends ODataRequestImpl implements ODat
      * @param editURI edit URI of the entity to be updated.
      * @param media media entity blob to be created.
      */
-    ODataMediaEntityUpdateRequestImpl(final ODataURI editURI, final InputStream media) {
+    ODataMediaEntityUpdateRequestImpl(final URI editURI, final InputStream media) {
         super(Method.PUT);
         this.media = media;
         this.uri = editURI;

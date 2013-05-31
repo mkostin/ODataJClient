@@ -21,7 +21,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataQueryReques
 import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataURI;
+import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 
 public class QueryUsageTest {
 
@@ -29,11 +29,11 @@ public class QueryUsageTest {
 
     public void usageTest() {
         // prepare URI
-        final ODataURI uri = new ODataURI("http://services.odata.org/OData/Odata.svc");
+        final ODataURIBuilder uri = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
         uri.appendEntityTypeSegment("Products(0)").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
-        final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri);
+        final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri.build());
 
         // execute request
         final ODataQueryResponse res = client.<ODataQueryResponse>execute(request);

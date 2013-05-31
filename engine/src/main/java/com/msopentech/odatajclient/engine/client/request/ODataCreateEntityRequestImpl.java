@@ -17,9 +17,9 @@ package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * This class implements an OData create request.
@@ -41,7 +41,7 @@ class ODataCreateEntityRequestImpl extends ODataRequestImpl implements ODataCrea
      * @param targetURI entity set URI.
      * @param entity entity to be created.
      */
-    ODataCreateEntityRequestImpl(final ODataURI targetURI, final ODataEntity entity) {
+    ODataCreateEntityRequestImpl(final URI targetURI, final ODataEntity entity) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
         // set request body

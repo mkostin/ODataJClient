@@ -17,10 +17,10 @@ package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * This class implements an OData create primitive request.
@@ -42,7 +42,7 @@ class ODataCreatePrimitiveRequestImpl extends ODataRequestImpl implements ODataC
      * @param targetURI entity set or entity or entity property URI.
      * @param value value to be created.
      */
-    ODataCreatePrimitiveRequestImpl(final ODataURI targetURI, final ODataPrimitiveValue value) {
+    ODataCreatePrimitiveRequestImpl(final URI targetURI, final ODataPrimitiveValue value) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
         // set request body

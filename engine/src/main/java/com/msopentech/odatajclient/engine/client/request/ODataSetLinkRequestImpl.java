@@ -17,8 +17,8 @@ package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * This class implements a link set OData request.
@@ -34,7 +34,7 @@ class ODataSetLinkRequestImpl extends ODataRequestImpl implements ODataSetLinkRe
     /**
      * Link to be removed.
      */
-    private final ODataURI linkToBeRemoved;
+    private final URI linkToBeRemoved;
 
     /**
      * Entity to be linked.
@@ -48,7 +48,7 @@ class ODataSetLinkRequestImpl extends ODataRequestImpl implements ODataSetLinkRe
      * @param linkToBeRemoved link to be removed.
      * @param entityToBeAdded entity to be linked.
      */
-    ODataSetLinkRequestImpl(final ODataURI targetURI, final ODataURI linkToBeRemoved, final ODataLink entityToBeAdded) {
+    ODataSetLinkRequestImpl(final URI targetURI, final URI linkToBeRemoved, final ODataLink entityToBeAdded) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
         // set target uri
@@ -64,7 +64,7 @@ class ODataSetLinkRequestImpl extends ODataRequestImpl implements ODataSetLinkRe
      */
     @Override
     public InputStream getLinkToBeRemoved() {
-        return linkToBeRemoved.toStream();
+        return null;
     }
 
     /**
@@ -72,7 +72,7 @@ class ODataSetLinkRequestImpl extends ODataRequestImpl implements ODataSetLinkRe
      */
     @Override
     public InputStream getEntityToBeAdded() {
-        return entityToBeAdded.getLink().toStream();
+        return null;
     }
 
     /**

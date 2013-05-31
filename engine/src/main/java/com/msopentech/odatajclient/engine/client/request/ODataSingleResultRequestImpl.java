@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
-import com.msopentech.odatajclient.engine.data.ODataURI;
+import java.net.URI;
 
 /**
  * This class implements an OData query request returning a single result item.
@@ -29,7 +29,7 @@ class ODataSingleResultRequestImpl extends ODataQueryRequestImpl implements ODat
     /**
      * {@inheritDoc}
      */
-    ODataSingleResultRequestImpl(ODataURI query) {
+    ODataSingleResultRequestImpl(URI query) {
         super(query);
     }
 }

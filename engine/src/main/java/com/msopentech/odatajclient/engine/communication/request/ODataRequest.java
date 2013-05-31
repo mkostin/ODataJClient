@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Collection;
 
 /**
@@ -64,7 +64,7 @@ public interface ODataRequest {
      *
      * @return OData request target URI.
      */
-    ODataURI getURI();
+    URI getURI();
 
     /**
      * Gets all OData request header names.

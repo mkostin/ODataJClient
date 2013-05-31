@@ -17,9 +17,9 @@ package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * This class implements an OData update request.
@@ -43,7 +43,7 @@ class ODataUpdateEntityRequestImpl extends ODataRequestImpl implements ODataUpda
      * @param entity changes to be applied.
      * @param type update type.
      */
-    ODataUpdateEntityRequestImpl(final ODataURI uri, final ODataEntity entity, final UpdateType type) {
+    ODataUpdateEntityRequestImpl(final URI uri, final ODataEntity entity, final UpdateType type) {
         // set method .... If cofigured X-HTTP-METHOD header will be used.
         super(type.getMethod());
         // set request body ...

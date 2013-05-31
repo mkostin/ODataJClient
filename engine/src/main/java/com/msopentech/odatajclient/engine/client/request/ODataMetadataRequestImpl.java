@@ -16,8 +16,8 @@
 package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * This class implements an OData metadata request.
@@ -32,7 +32,7 @@ class ODataMetadataRequestImpl extends ODataRequestImpl implements ODataMetadata
      *
      * @param query query URI.
      */
-    ODataMetadataRequestImpl(final ODataURI query) {
+    ODataMetadataRequestImpl(final URI query) {
         // set method .... If cofigured X-HTTP-METHOD header will be used.
         super(Method.GET);
         // set uri ...

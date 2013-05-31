@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.spi;
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.ODataRestClient;
 import com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest;
-import com.msopentech.odatajclient.engine.data.ODataURI;
+import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -34,11 +34,11 @@ public class InvokeUsageTest {
 
     public void invokeFunction() {
         // provide the target URI
-        final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
+        final ODataURIBuilder targetURI = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
         targetURI.appendFunctionSegment("GetProductsByRating").addQueryParameter("rating", "4");
 
         // create your request
-        final ODataInvokeRequest request = ODataRequestFactory.getInvokeFunctionRequest(targetURI);
+        final ODataInvokeRequest request = ODataRequestFactory.getInvokeFunctionRequest(targetURI.build());
 
         // execute the request
         ODataInvokeResponse res = client.<ODataInvokeResponse>execute(request);
@@ -52,14 +52,15 @@ public class InvokeUsageTest {
 
     public void invokeBindableAction() {
         // provide the target URI
-        final ODataURI targetURI = new ODataURI("http://services.odata.org/OData/Odata.svc");
+        final ODataURIBuilder targetURI = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
         targetURI.appendEntityTypeSegment("Product(0)").appendActionSegment("UpdateProductRating");
 
         final ODataPrimitiveValue value = new ODataPrimitiveValue(2, EdmSimpleType.Int32);
         final Map<String, ODataValue> parameters = Collections.<String, ODataValue>singletonMap("rating", value);
 
         // create your request
-        final ODataInvokeRequest request = ODataRequestFactory.getInvokeActionRequest(targetURI, parameters);
+        final ODataInvokeRequest request =
+                ODataRequestFactory.getInvokeActionRequest(targetURI.build(), parameters);
 
         // execute the request
         ODataInvokeResponse res = client.<ODataInvokeResponse>execute(request);

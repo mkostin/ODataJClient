@@ -19,7 +19,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntityLink;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataURI;
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -29,15 +29,15 @@ public class EntityFactory {
         return new EntityImpl(name);
     }
 
-    static ODataEntity newEntity(final String name, final ODataURI link, final Date updated) {
+    static ODataEntity newEntity(final String name, final URI link, final Date updated) {
         return new EntityImpl(name, link);
     }
 
-    public static ODataLink newLink(final String name, final ODataURI link) {
+    public static ODataLink newLink(final String name, final URI link) {
         return new LinkImpl(name, link);
     }
 
-    public static ODataEntityLink newEntityLink(final String name, final ODataURI link) {
+    public static ODataEntityLink newEntityLink(final String name, final URI link) {
         return new EntityLinkImpl(name, link);
     }
 
@@ -51,7 +51,7 @@ public class EntityFactory {
             this.entities.addAll(entries);
         }
 
-        public FeedImpl(final List<ODataEntity> entries, final ODataURI next) {
+        public FeedImpl(final List<ODataEntity> entries, final URI next) {
             super();
             this.next = next;
             this.entities.addAll(entries);
@@ -66,7 +66,7 @@ public class EntityFactory {
             super(name);
         }
 
-        public EntityImpl(final String name, final ODataURI link) {
+        public EntityImpl(final String name, final URI link) {
             super(name);
             this.link = link;
         }
@@ -76,7 +76,7 @@ public class EntityFactory {
 
         private static final long serialVersionUID = -2533925527313767001L;
 
-        public LinkImpl(final String name, final ODataURI link) {
+        public LinkImpl(final String name, final URI link) {
             super(name, link);
         }
     }
@@ -85,7 +85,7 @@ public class EntityFactory {
 
         private static final long serialVersionUID = -2533925527313767002L;
 
-        public EntityLinkImpl(final String name, final ODataURI link) {
+        public EntityLinkImpl(final String name, final URI link) {
             super(name, link);
         }
     }

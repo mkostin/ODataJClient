@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import java.net.URI;
+
 /**
  * OData navigation link.
  */
@@ -24,10 +26,11 @@ public abstract class ODataEntityLink extends ODataLink {
 
     /**
      * Constructor.
+     *
      * @param name OData navigation link property name.
      * @param link link value.
      */
-    public ODataEntityLink(final String name, final ODataURI link) {
+    public ODataEntityLink(final String name, final URI link) {
         super(name, link);
     }
 }

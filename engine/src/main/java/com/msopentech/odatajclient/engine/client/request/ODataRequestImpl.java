@@ -17,10 +17,10 @@ package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Collection;
 
 /**
@@ -53,7 +53,7 @@ public abstract class ODataRequestImpl implements ODataRequest {
     /**
      * Target URI.
      */
-    protected ODataURI uri;
+    protected URI uri;
 
     /**
      * Constructor.
@@ -88,7 +88,7 @@ public abstract class ODataRequestImpl implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
-    public ODataURI getURI() {
+    public URI getURI() {
         return uri;
     }
 

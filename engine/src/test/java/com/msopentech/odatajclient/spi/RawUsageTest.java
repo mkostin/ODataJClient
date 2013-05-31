@@ -21,7 +21,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataQueryReques
 import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
-import com.msopentech.odatajclient.engine.data.ODataURI;
+import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.NoSuchEntityFound;
 import com.msopentech.odatajclient.engine.utils.ODataReader;
@@ -34,11 +34,11 @@ public class RawUsageTest {
 
     public void usageFullDeSerialization() {
         // prepare URI
-        final ODataURI uri = new ODataURI("http://services.odata.org/OData/Odata.svc");
+        final ODataURIBuilder uri = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
         uri.appendEntitySetSegment("Products").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
-        final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri);
+        final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri.build());
 
         // execute request
         final InputStream is = client.rawExecute(request);
@@ -69,11 +69,11 @@ public class RawUsageTest {
 
     public void usageStepByStepDeSerialization() {
         // prepare URI
-        final ODataURI uri = new ODataURI("http://services.odata.org/OData/Odata.svc");
+        final ODataURIBuilder uri = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
         uri.appendEntitySetSegment("Products").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
-        final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri);
+        final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri.build());
 
         // execute request
         final InputStream is = client.rawExecute(request);

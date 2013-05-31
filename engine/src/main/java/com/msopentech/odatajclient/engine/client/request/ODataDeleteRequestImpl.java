@@ -16,8 +16,8 @@
 package com.msopentech.odatajclient.engine.client.request;
 
 import com.msopentech.odatajclient.engine.communication.request.*;
-import com.msopentech.odatajclient.engine.data.ODataURI;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * This class implements an OData delete request.
@@ -32,7 +32,7 @@ class ODataDeleteRequestImpl extends ODataRequestImpl implements ODataDeleteRequ
      *
      * @param uri URI of the entity to be deleted.
      */
-    ODataDeleteRequestImpl(final ODataURI uri) {
+    ODataDeleteRequestImpl(final URI uri) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.DELETE);
         // set uri ...

@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.data;
 
 import java.io.Serializable;
+import java.net.URI;
 
 /**
  * Abstract representation of entities and navigation links.
@@ -27,7 +28,7 @@ public abstract class ODataItem implements Serializable {
     /**
      * OData entity edit link.
      */
-    protected ODataURI link;
+    protected URI link;
 
     /**
      * OData entity name.
@@ -48,7 +49,7 @@ public abstract class ODataItem implements Serializable {
      *
      * @return entity edit link.
      */
-    public ODataURI getLink() {
+    public URI getLink() {
         return link;
     }
 
