@@ -20,7 +20,6 @@ import com.msopentech.odatajclient.engine.communication.response.*;
 /**
  * This class implements a response to a specific query request returning a single result item.
  *
- * @see ODataResponseFactory#getSingleResultResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataSingleResultRequest
  */
 class ODataSingleResultResponseImpl extends ODataResponseImpl implements ODataSingleResultResponse {

@@ -20,29 +20,28 @@ import java.io.InputStream;
 import java.net.URI;
 
 /**
- * This class implements an OData Media Entity create request.
+ * This class implements an OData stream create request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getMediaEntityUpdateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * java.io.InputStream)
+ * @see ODataRequestFactory#getStreamRequest(com.msopentech.odatajclient.engine.data.ODataURI, java.io.InputStream)
  */
-class ODataMediaEntityUpdateRequestImpl extends ODataRequestImpl implements ODataUpdateMediaEntityRequest {
+class ODataCreateStreamRequestImpl extends ODataRequestImpl implements ODataCreateStreamRequest {
 
     /**
-     * Median entity blob to be updated.
+     * Stream to be created.
      */
-    private final InputStream media;
+    private final InputStream stream;
 
     /**
      * Constructor.
      *
-     * @param editURI edit URI of the entity to be updated.
-     * @param media media entity blob to be created.
+     * @param targetURI target URI.
+     * @param stream stream to be created.
      */
-    ODataMediaEntityUpdateRequestImpl(final URI editURI, final InputStream media) {
-        super(Method.PUT);
-        this.media = media;
-        this.uri = editURI;
+    ODataCreateStreamRequestImpl(final URI targetURI, final InputStream stream) {
+        super(Method.POST);
+        this.stream = stream;
+        this.uri = targetURI;
     }
 
     /**
@@ -50,6 +49,6 @@ class ODataMediaEntityUpdateRequestImpl extends ODataRequestImpl implements ODat
      */
     @Override
     public InputStream getBody() {
-        return media;
+        return stream;
     }
 }

@@ -21,7 +21,6 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 /**
  * This class implements the response to an OData update request.
  *
- * @see ODataResponseFactory#getUpdateEntityResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest
  */
 class ODataUpdateEntityResponseImpl extends ODataResponseImpl implements ODataUpdateEntityResponse {

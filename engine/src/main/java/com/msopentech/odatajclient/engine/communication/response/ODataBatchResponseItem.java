@@ -15,15 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
 import java.util.Iterator;
 
 /**
  * Abstract representation of a response item about a batch request.
- * Get instance by using ODataResponseFactory.
- *
- * @see ODataRequestFactory#getChangesetBatchItem()
- * @see ODataRequestFactory#getRetrieveBatchItem()
  */
 public abstract interface ODataBatchResponseItem {
 

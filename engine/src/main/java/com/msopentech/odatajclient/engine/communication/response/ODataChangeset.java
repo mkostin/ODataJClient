@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.response;
 
 /**
  * Changeset wrapper for the corresponding batch item.
- * Get instance by using ODataResponseFactory.
  */
 public interface ODataChangeset extends ODataBatchResponseItem {
 }

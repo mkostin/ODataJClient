@@ -26,7 +26,7 @@ import java.net.URI;
  * @see ODataRequestFactory#getMediaEntityCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * java.io.InputStream)
  */
-class ODataMediaEntityCreateRequestImpl extends ODataRequestImpl implements ODataMediaEntityCreateRequest {
+class ODataMediaEntityCreateRequestImpl extends ODataRequestImpl implements ODataCreateMediaEntityRequest {
 
     /**
      * Median entity to be created.

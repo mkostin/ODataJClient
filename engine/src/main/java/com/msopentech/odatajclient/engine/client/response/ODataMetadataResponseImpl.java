@@ -21,7 +21,6 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 /**
  * This class implements a response to a metadata request.
  *
- * @see ODataResponseFactory#getMetadataResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataMetadataRequest
  */
 class ODataMetadataResponseImpl extends ODataResponseImpl implements ODataMetadataResponse {

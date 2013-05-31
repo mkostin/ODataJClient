@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.client.response;
 
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,10 +22,6 @@ import java.util.List;
 
 /**
  * Abstract representation of a response item about a batch request.
- * Get instance by using ODataResponseFactory.
- *
- * @see ODataRequestFactory#getChangesetBatchItem()
- * @see ODataRequestFactory#getRetrieveBatchItem()
  */
 abstract class ODataBatchResponseItemImpl implements ODataBatchResponseItem {
 

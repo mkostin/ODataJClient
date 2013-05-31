@@ -20,7 +20,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperat
 /**
  * This class implements the response to an OData link operation request.
  *
- * @see ODataResponseFactory#getLinkOperationResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataAddLinkRequest
  * @see com.msopentech.odatajclient.engine.communication.request.ODataRemoveLinkRequest
  * @see com.msopentech.odatajclient.engine.communication.request.ODataSetLinkRequest

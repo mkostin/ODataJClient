@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client.response;
+package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.communication.response.*;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 
 /**
- * This class implements the response to an Odata media entity create request.
+ * This class implements the response to an Odata stream create/update request.
  *
- * @see ODataResponseFactory#getMediaEntityCreateResponse() ()
- * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityCreateRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataStreamRequest
  */
-class ODataMediaEntityCreateResponseImpl extends ODataResponseImpl implements ODataMediaEntityCreateResponse {
+public interface ODataCreateStreamResponse extends ODataResponse {
 
     /**
-     * {@inheritDoc}
+     * Gets created/updated object.
+     *
+     * @return created/updated object.
      */
-    @Override
-    public ODataEntity getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    ODataEntity getBody();
 }

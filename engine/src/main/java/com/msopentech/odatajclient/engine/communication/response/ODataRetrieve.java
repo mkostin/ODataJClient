@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.response;
 
 /**
  * Retrieve response wrapper for the corresponding batch item.
- * Get instance by using ODataResponseFactory.
  */
 public interface ODataRetrieve extends ODataBatchResponseItem {
 }

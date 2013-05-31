@@ -16,19 +16,20 @@
 package com.msopentech.odatajclient.engine.client.response;
 
 import com.msopentech.odatajclient.engine.communication.response.*;
-import com.msopentech.odatajclient.engine.utils.ODataResultSet;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
 
 /**
- * This class implements a response to a specific query request.
+ * This class implements the response to an OData media entity create request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityCreateRequest
  */
-class ODataQueryResponseImpl extends ODataResponseImpl implements ODataQueryResponse {
+class ODataCreateMediaEntityResponseImpl extends ODataResponseImpl implements ODataCreateMediaEntityResponse {
 
     /**
      * {@inheritDoc}
      */
-    public <T> ODataResultSet<T> getBody() {
+    @Override
+    public ODataEntity getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

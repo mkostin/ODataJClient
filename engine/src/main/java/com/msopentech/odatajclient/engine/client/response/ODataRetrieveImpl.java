@@ -22,10 +22,6 @@ import java.util.Iterator;
 
 /**
  * Retrieve response wrapper for the corresponding batch item.
- * Get instance by using ODataResponseFactory.
- *
- * @see ODataResponseFactory#getRetrieveBatchItem(
- * com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse)
  */
 class ODataRetrieveImpl extends ODataBatchResponseItemImpl implements ODataRetrieve {
 

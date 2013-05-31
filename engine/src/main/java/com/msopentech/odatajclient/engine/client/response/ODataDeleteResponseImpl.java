@@ -20,7 +20,6 @@ import com.msopentech.odatajclient.engine.communication.response.*;
 /**
  * This class implements the response to an OData delete request.
  *
- * @see ODataResponseFactory#getDeleteResponse()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataDeleteRequest
  */
 class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {

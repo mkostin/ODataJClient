@@ -21,10 +21,9 @@ import java.io.InputStream;
 /**
  * This class implements the response to an Odata media entity update request.
  *
- * @see ODataResponseFactory#getMediaEntityUpdateResponse() ()
  * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityUpdateRequest
  */
-class ODataMediaEntityUpdateResponseImpl extends ODataResponseImpl implements ODataMediaEntityUpdateResponse {
+class ODataUpdateMediaEntityResponseImpl extends ODataResponseImpl implements ODataUpdateMediaEntityResponse {
 
     /**
      * {@inheritDoc}

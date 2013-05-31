@@ -53,9 +53,35 @@ public class ODataRequestFactory {
      * @param entity entity blob to be created.
      * @return ODataMediaEntityCreateRequest instance.
      */
-    public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(final URI targetURI,
+    public static ODataCreateMediaEntityRequest getMediaEntityCreateRequest(final URI targetURI,
             final InputStream entity) {
         return new ODataMediaEntityCreateRequestImpl(targetURI, entity);
+    }
+
+    /**
+     * Gets a stream create request object instance.
+     * <p>
+     * Use this kind of request to create a named stream property.
+     *
+     * @param targetURI target URI.
+     * @param stream stream to be created.
+     * @return ODataCreateStreamRequest instance.
+     */
+    public static ODataCreateStreamRequest getCreateStreamRequest(final URI targetURI, final InputStream stream) {
+        return new ODataCreateStreamRequestImpl(targetURI, stream);
+    }
+
+    /**
+     * Gets a stream update request object instance.
+     * <p>
+     * Use this kind of request to update a named stream property.
+     *
+     * @param targetURI target URI.
+     * @param stream stream to be updated.
+     * @return ODataUpdateStreamRequest instance.
+     */
+    public static ODataUpdateStreamRequest getUpdateStreamRequest(final URI targetURI, final InputStream stream) {
+        return new ODataUpdateStreamRequestImpl(targetURI, stream);
     }
 
     /**
@@ -67,7 +93,7 @@ public class ODataRequestFactory {
      * @param entity entity blob to be updated.
      * @return ODataMediaEntityUpdateRequest instance.
      */
-    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(final URI editURI, final InputStream entity) {
+    public static ODataUpdateMediaEntityRequest getMediaEntityUpdateRequest(final URI editURI, final InputStream entity) {
         return new ODataMediaEntityUpdateRequestImpl(editURI, entity);
     }
 
