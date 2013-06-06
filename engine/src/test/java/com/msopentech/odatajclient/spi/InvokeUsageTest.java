@@ -15,11 +15,9 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.client.ODataRestClient;
 import com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
@@ -30,8 +28,6 @@ import java.util.Map;
 
 public class InvokeUsageTest {
 
-    private final ODataClient client = new ODataRestClient();
-
     public void invokeFunction() {
         // provide the target URI
         final ODataURIBuilder targetURI = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
@@ -40,8 +36,8 @@ public class InvokeUsageTest {
         // create your request
         final ODataInvokeRequest request = ODataRequestFactory.getInvokeFunctionRequest(targetURI.build());
 
-        // execute the request
-        ODataInvokeResponse res = client.<ODataInvokeResponse>execute(request);
+        // execute and retrieve response
+        ODataInvokeResponse res = request.execute();
 
         for (ODataEntity result : res.<ODataEntity>getBody()) {
             // process retrieved entity ...
@@ -59,11 +55,10 @@ public class InvokeUsageTest {
         final Map<String, ODataValue> parameters = Collections.<String, ODataValue>singletonMap("rating", value);
 
         // create your request
-        final ODataInvokeRequest request =
-                ODataRequestFactory.getInvokeActionRequest(targetURI.build(), parameters);
+        final ODataInvokeRequest request = ODataRequestFactory.getInvokeActionRequest(targetURI.build(), parameters);
 
         // execute the request
-        ODataInvokeResponse res = client.<ODataInvokeResponse>execute(request);
+        final ODataInvokeResponse res = request.execute();
 
         // .....
     }

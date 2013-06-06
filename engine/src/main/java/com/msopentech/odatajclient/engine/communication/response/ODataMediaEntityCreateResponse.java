@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client.request;
+package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.communication.request.*;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
 
 /**
- * Retrieve request wrapper for the corresponding batch item.
- * Get instance by using ODataRequestFactory.
+ * This class implements the response to an Odata media entity create request.
  *
- * @see ODataRequestFactory#getRetrieveBatchItem()
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityCreateRequest
  */
-class ODataRetrieveImpl extends ODataBatchRequestItemImpl implements ODataRetrieve {
+public interface ODataMediaEntityCreateResponse extends ODataResponse {
 
     /**
-     * Constructor.
+     * Gets created object.
+     *
+     * @return created object.
      */
-    ODataRetrieveImpl(final ODataQueryRequest request) {
-        requests.add(request);
-    }
+    ODataEntity getBody();
 }

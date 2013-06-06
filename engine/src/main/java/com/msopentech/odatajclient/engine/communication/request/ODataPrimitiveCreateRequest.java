@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client.request;
+package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.communication.request.*;
+import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.concurrent.Future;
 
 /**
  * This class implements an OData create primitive request.
@@ -29,7 +29,9 @@ import java.net.URI;
  * @see ODataRequestFactory#getCreatePrimitiveRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataValue)
  */
-class ODataCreatePrimitiveRequestImpl extends ODataRequestImpl implements ODataCreatePrimitiveRequest {
+public class ODataPrimitiveCreateRequest
+        extends ODataRequestImpl
+        implements ODataBasicRequest<ODataQueryResponse>, ODataBatchableRequest {
 
     /**
      * Value to be created.
@@ -42,18 +44,25 @@ class ODataCreatePrimitiveRequestImpl extends ODataRequestImpl implements ODataC
      * @param targetURI entity set or entity or entity property URI.
      * @param value value to be created.
      */
-    ODataCreatePrimitiveRequestImpl(final URI targetURI, final ODataPrimitiveValue value) {
+    ODataPrimitiveCreateRequest(final URI targetURI, final ODataPrimitiveValue value) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
         // set request body
         this.value = value;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public InputStream getBody() {
-        return new ODataWriter(getFormat()).serialize(value);
+    public ODataQueryResponse execute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public InputStream rowExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Future<ODataQueryResponse> asyncExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -23,7 +23,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
  *
  * @see com.msopentech.odatajclient.engine.communication.request.ODataStreamRequest
  */
-class ODataUpdateStreamResponseImpl extends ODataResponseImpl implements ODataUpdateStreamResponse {
+class ODataUpdateStreamResponseImpl extends ODataResponseImpl implements ODataStreamUpdateResponse {
 
     /**
      * {@inheritDoc}

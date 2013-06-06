@@ -44,6 +44,7 @@ public class ODataURIBuilder implements Serializable {
         LEGACY,
         ACTION,
         METADATA,
+        BATCH,
         SERVICEROOT
 
     }
@@ -290,6 +291,17 @@ public class ODataURIBuilder implements Serializable {
      */
     public ODataURIBuilder appendMetadataSegment() {
         segments.add(new Segment(SegmentType.METADATA, "$metadata"));
+        return this;
+    }
+
+    /**
+     * Append batch segment to the URI.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURIBuilder appendBatchSegment() {
+        segments.add(new Segment(SegmentType.BATCH, "$batch"));
         return this;
     }
 

@@ -23,7 +23,7 @@ import java.io.InputStream;
  *
  * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityUpdateRequest
  */
-class ODataUpdateMediaEntityResponseImpl extends ODataResponseImpl implements ODataUpdateMediaEntityResponse {
+class ODataUpdateMediaEntityResponseImpl extends ODataResponseImpl implements ODataMediaEntityUpdateResponse {
 
     /**
      * {@inheritDoc}

@@ -15,10 +15,8 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.client.ODataRestClient;
 import com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest;
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
@@ -30,8 +28,6 @@ import java.io.InputStream;
 
 public class RawUsageTest {
 
-    private final ODataClient client = new ODataRestClient();
-
     public void usageFullDeSerialization() {
         // prepare URI
         final ODataURIBuilder uri = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
@@ -40,8 +36,8 @@ public class RawUsageTest {
         // create new request
         final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri.build());
 
-        // execute request
-        final InputStream is = client.rawExecute(request);
+        // execute and retrieve row response
+        final InputStream is = request.rowExecute();
 
         try {
             // let's suppose to want to deserialize, one shot, an entire atom feed
@@ -75,8 +71,8 @@ public class RawUsageTest {
         // create new request
         final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri.build());
 
-        // execute request
-        final InputStream is = client.rawExecute(request);
+        // execute and retrieve row response
+        final InputStream is = request.rowExecute();
 
         try {
             // let's suppose to want to deserialize, step-by-step, an entire atom feed

@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
 
@@ -142,7 +141,7 @@ public interface ODataRequest {
      * @param value header value.
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#xHttpMethod
      */
-    void setCHTTPMethod(final String value);
+    void setHTTPMethod(final String value);
 
     /**
      * Adds a custom OData request header.
@@ -151,11 +150,4 @@ public interface ODataRequest {
      * @param value header value.
      */
     void addCustomHeader(final String name, final String value);
-
-    /**
-     * Gets request body.
-     *
-     * @return request body stream.
-     */
-    public InputStream getBody();
 }

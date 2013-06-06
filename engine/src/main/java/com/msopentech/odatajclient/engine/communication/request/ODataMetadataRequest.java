@@ -15,7 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.communication.response.ODataMetadataResponse;
 import java.io.InputStream;
+import java.net.URI;
+import java.util.concurrent.Future;
 
 /**
  * This class implements an OData metadata request.
@@ -23,11 +26,33 @@ import java.io.InputStream;
  *
  * @see ODataRequestFactory#getMetadataRequest(java.lang.String)
  */
-public interface ODataMetadataRequest extends ODataRequest {
+public class ODataMetadataRequest extends ODataRequestImpl
+        implements ODataBasicRequest<ODataMetadataResponse> {
 
     /**
-     * Unsupported operation.
+     * Constructor.
+     *
+     * @param serviceRoot query URI.
      */
+    ODataMetadataRequest(final URI uri) {
+        // set method .... If cofigured X-HTTP-METHOD header will be used.
+        super(Method.GET);
+        // set uri ...
+        this.uri = uri;
+    }
+
     @Override
-    InputStream getBody();
+    public ODataMetadataResponse execute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public InputStream rowExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Future<ODataMetadataResponse> asyncExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

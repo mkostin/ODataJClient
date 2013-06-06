@@ -15,20 +15,16 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.client.ODataRestClient;
+import com.msopentech.odatajclient.engine.communication.request.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataCreateEntityResponse;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.utils.EntityFactory;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class AsyncUsageTest {
-
-    private final ODataClient client = new ODataRestClient();
 
     public void asyncCreateTest() {
         // provide the target URI
@@ -40,11 +36,13 @@ public class AsyncUsageTest {
         // newEntity.set ...
 
         // create your request
-        final ODataRequest request = ODataRequestFactory.getCreateEntityRequest(targetURI.build(), newEntity);
+        final ODataEntityCreateRequest request =
+                ODataRequestFactory.getEntityCreateRequest(targetURI.build(), newEntity);
 
         // execute the request
-        final Future<ODataCreateEntityResponse> res = 
-                client.<ODataCreateEntityResponse>asyncExecute(request);
+        request.execute();
+
+        final Future<ODataEntityCreateResponse> res = request.asyncExecute();
 
         if (res.isDone()) {
             try {

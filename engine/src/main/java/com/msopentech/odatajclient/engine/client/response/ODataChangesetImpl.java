@@ -28,7 +28,7 @@ class ODataChangesetImpl extends ODataBatchResponseItemImpl implements ODataChan
      * @param response create response to be added.
      * @return the current updated changeset.
      */
-    protected ODataChangesetImpl addResponse(final ODataCreateEntityResponse response) {
+    protected ODataChangesetImpl addResponse(final ODataEntityCreateResponse response) {
         super.addResponse(response);
         return this;
     }

@@ -15,11 +15,35 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import java.io.PipedOutputStream;
+
 /**
  * Retrieve request wrapper for the corresponding batch item.
  * Get instance by using ODataRequestFactory.
  *
  * @see ODataRequestFactory#getRetrieveBatchItem()
  */
-public interface ODataRetrieve extends ODataBatchRequestItem {
+public class ODataRetrieve extends ODataBatchRequestItem {
+
+    /**
+     * Constructor.
+     */
+    ODataRetrieve(final PipedOutputStream os) {
+        super(os);
+    }
+
+    @Override
+    protected void closeItem() {
+        // serialize and stream close statement
+    }
+
+    public <T extends ODataStreamingManagement, V extends ODataResponse> ODataRetrieve setRequest(ODataBatchableRequest request) {
+        if (((ODataRequestImpl) request).getMethod() != ODataRequest.Method.GET) {
+            throw new IllegalArgumentException("Invalid request. Only GET method is allowed");
+        }
+
+//        ((ODataRequestImpl) request).initializeBatchItem(os);
+        return this;
+    }
 }

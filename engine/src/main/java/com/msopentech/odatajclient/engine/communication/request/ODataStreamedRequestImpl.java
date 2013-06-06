@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client.request;
+package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.communication.request.*;
-import java.net.URI;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 
-/**
- * This class implements an OData query request returning a single result item.
- * Get instance by using ODataRequestFactory.
- *
- * @see ODataRequestFactory#getSingleResultRequest(com.msopentech.odatajclient.engine.data.ODataURI)
- */
-class ODataSingleResultRequestImpl extends ODataQueryRequestImpl implements ODataSingleResultRequest {
+public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extends ODataStreamingManagement<V>>
+        extends ODataRequestImpl
+        implements ODataStreamedRequest<V, T> {
 
-    /**
-     * {@inheritDoc}
-     */
-    ODataSingleResultRequestImpl(URI query) {
-        super(query);
+    public ODataStreamedRequestImpl(Method method) {
+        super(method);
     }
+
+    @Override
+    public abstract T execute();
 }

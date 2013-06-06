@@ -15,8 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import java.io.InputStream;
+import java.net.URI;
+import java.util.concurrent.Future;
 
 /**
  * This class implements an remove navigation link OData request.
@@ -24,11 +26,33 @@ import java.io.InputStream;
  *
  * @see ODataRequestFactory#getRemoveLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public interface ODataRemoveLinkRequest extends ODataRequest {
+public class ODataRemoveLinkRequest extends ODataRequestImpl
+        implements ODataBasicRequest<ODataLinkOperationResponse>, ODataBatchableRequest {
 
     /**
-     * {@inheritDoc}
+     * Constructor.
+     *
+     * @param linkToBeRemoved navigation link to be removed.
      */
+    ODataRemoveLinkRequest(final URI linkToBeRemoved) {
+        // set method ... . If cofigured X-HTTP-METHOD header will be used.
+        super(Method.DELETE);
+        // set target uri
+        this.uri = linkToBeRemoved;
+    }
+
     @Override
-    InputStream getBody();
+    public ODataLinkOperationResponse execute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public InputStream rowExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Future<ODataLinkOperationResponse> asyncExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

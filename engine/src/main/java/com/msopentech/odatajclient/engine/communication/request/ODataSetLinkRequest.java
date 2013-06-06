@@ -15,9 +15,11 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import java.io.InputStream;
+import java.net.URI;
+import java.util.concurrent.Future;
 
 /**
  * This class implements a link set OData request.
@@ -28,25 +30,42 @@ import java.io.InputStream;
  * @see ODataRequestFactory#getSetLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataURI, com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public interface ODataSetLinkRequest extends ODataRequest {
+public class ODataSetLinkRequest extends ODataRequestImpl
+        implements ODataBasicRequest<ODataLinkOperationResponse>, ODataBatchableRequest {
 
     /**
-     * Gets the body for the remove link request.
+     * Entity to be linked.
+     */
+    private final ODataLink entityToBeAdded;
+
+    /**
+     * Constructor.
      *
-     * @return link to be removed.
+     * @param targetURI entity URI.
+     * @param linkToBeRemoved link to be removed.
+     * @param entityToBeAdded entity to be linked.
      */
-    InputStream getLinkToBeRemoved();
+    ODataSetLinkRequest(final URI targetURI, final ODataLink entityToBeAdded) {
+        // set method ... . If cofigured X-HTTP-METHOD header will be used.
+        super(Method.PUT);
+        // set target uri
+        this.uri = targetURI;
+        // set request body
+        this.entityToBeAdded = entityToBeAdded;
+    }
 
-    /**
-     * Gets the body for the add link request.
-     *
-     * @return link to be created.
-     */
-    InputStream getEntityToBeAdded();
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    InputStream getBody();
+    public ODataLinkOperationResponse execute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public InputStream rowExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Future<ODataLinkOperationResponse> asyncExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

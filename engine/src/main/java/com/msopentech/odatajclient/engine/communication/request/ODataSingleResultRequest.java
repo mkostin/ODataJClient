@@ -15,7 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataSingleResultResponse;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.concurrent.Future;
 
 /**
  * This class implements an OData query request returning a single result item.
@@ -23,5 +26,29 @@ import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
  *
  * @see ODataRequestFactory#getSingleResultRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public interface ODataSingleResultRequest extends ODataQueryRequest {
+public class ODataSingleResultRequest
+        extends ODataRequestImpl
+        implements ODataBasicRequest<ODataSingleResultResponse>, ODataBatchableRequest {
+
+    /**
+     * {@inheritDoc}
+     */
+    ODataSingleResultRequest(final URI query) {
+        super(Method.GET);
+    }
+
+    @Override
+    public ODataSingleResultResponse execute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public InputStream rowExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Future<ODataSingleResultResponse> asyncExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

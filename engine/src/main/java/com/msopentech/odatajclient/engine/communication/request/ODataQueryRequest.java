@@ -15,8 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import java.io.InputStream;
+import java.net.URI;
+import java.util.concurrent.Future;
 
 /**
  * This class implements an OData query request.
@@ -24,11 +26,33 @@ import java.io.InputStream;
  *
  * @see ODataRequestFactory#getQueryRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public interface ODataQueryRequest extends ODataRequest {
+public class ODataQueryRequest extends ODataRequestImpl
+        implements ODataBasicRequest<ODataQueryResponse>, ODataBatchableRequest {
 
     /**
-     * Unsupported operation.
+     * Constructor.
+     *
+     * @param query query URI.
      */
+    ODataQueryRequest(final URI query) {
+        // set method .... If cofigured X-HTTP-METHOD header will be used.
+        super(Method.GET);
+        // set uri ...
+        this.uri = query;
+    }
+
     @Override
-    InputStream getBody();
+    public ODataQueryResponse execute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public InputStream rowExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Future<ODataQueryResponse> asyncExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

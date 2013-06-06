@@ -15,22 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.data.ODataEntity;
-import java.io.InputStream;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 
-/**
- * This class implements an OData create request.
- * Get instance by using ODataRequestFactory.
- *
- * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * com.msopentech.odatajclient.engine.data.ODataEntity)
- */
-public interface ODataCreateEntityRequest extends ODataRequest {
+public interface ODataStreamedRequest<V extends ODataResponse, T extends ODataStreamingManagement<V>>
+        extends ODataRequest {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    InputStream getBody();
+    T execute();
 }

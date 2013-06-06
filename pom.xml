@@ -54,11 +54,27 @@
   
   <properties>
     <yworks.uml.path>${basedir}/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
-
     <targetJdk>1.6</targetJdk>
-
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    
+    <sl4j.version>1.7.5</sl4j.version>
+    <logback.version>1.0.13</logback.version>
   </properties>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${sl4j.version}</version>
+      </dependency>
+      <dependency> 
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     

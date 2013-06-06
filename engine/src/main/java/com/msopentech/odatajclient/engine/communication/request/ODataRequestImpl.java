@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client.request;
+package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.communication.request.*;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract representation of an OData request.
@@ -30,6 +30,11 @@ import java.util.Collection;
  * @see ODataRequestFactory.
  */
 public abstract class ODataRequestImpl implements ODataRequest {
+
+    /**
+     * Logger.
+     */
+    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataRequest.class);
 
     /**
      * OData resource representation format.
@@ -160,7 +165,7 @@ public abstract class ODataRequestImpl implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
-    public void setCHTTPMethod(final String value) {
+    public void setHTTPMethod(final String value) {
         header.setHeader(ODataHeader.HeaderName.xHttpMethod, value);
     }
 
@@ -172,9 +177,15 @@ public abstract class ODataRequestImpl implements ODataRequest {
         header.setHeader(name, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public abstract InputStream getBody();
+    Method getMethod() {
+        return method;
+    }
+
+    ODataHeader getHeader() {
+        return header;
+    }
+
+    URI getUri() {
+        return uri;
+    }
 }

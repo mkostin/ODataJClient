@@ -15,7 +15,11 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import java.io.InputStream;
+import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest.BatchRequestPayload;
+import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
+import java.net.URI;
+import java.util.concurrent.Future;
 
 /**
  * This class implements a batch request.
@@ -23,27 +27,76 @@ import java.io.InputStream;
  *
  * @see ODataRequestFactory#getBatchRequest().
  */
-public interface ODataBatchRequest extends ODataRequest {
+public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchResponse, BatchRequestPayload> {
 
     /**
-     * Adds a retrieve operation request.
-     *
-     * @param item retrieve operation request to be added.
-     * @return the current updated request.
+     * Constructor.
      */
-    ODataBatchRequest addItem(final ODataQueryRequest item);
+    ODataBatchRequest(final URI uri) {
+        super(Method.POST);
+        this.uri = uri;
+    }
 
-    /**
-     * Add a changeset to the batch.
-     *
-     * @param item changeset to be added.
-     * @return the current updated request.
-     */
-    ODataBatchRequest addItem(final ODataChangeset item);
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public InputStream getBody();
+    public BatchRequestPayload execute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public static class BatchRequestPayload extends ODataStreamingManagement<ODataBatchResponse> {
+
+        /**
+         * Batch request current item.
+         */
+        private ODataBatchRequestItem currentItem = null;
+
+        /**
+         * Gets a changeset batch item instance.
+         * A changeset can be submitted embedded into a batch request only.
+         *
+         * @return ODataChangeset instance.
+         */
+        public ODataChangeset addChangeset() {
+            closeCurrentItem();
+            currentItem = new ODataChangeset(bodyStreamWriter);
+            return (ODataChangeset) currentItem;
+        }
+
+        /**
+         * Gets a retrieve batch item instance.
+         * A retrieve item can be submitted embedded into a batch request only.
+         *
+         * @return ODataRetrieve instance.
+         */
+        public ODataRetrieve addRetrieve() {
+            closeCurrentItem();
+            currentItem = new ODataRetrieve(bodyStreamWriter);
+            return (ODataRetrieve) currentItem;
+        }
+
+        private BatchRequestPayload() {
+        }
+
+        public BatchRequestPayload setEntity(final ODataEntity entity) {
+            return this;
+        }
+
+        private void closeCurrentItem() {
+            if (currentItem != null && currentItem.isOpen()) {
+                if (currentItem instanceof ODataChangeset) {
+                } else {
+                }
+                currentItem.close();
+            }
+        }
+
+        @Override
+        public ODataBatchResponse getResponse() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public Future<ODataBatchResponse> asyncResponse() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
 }

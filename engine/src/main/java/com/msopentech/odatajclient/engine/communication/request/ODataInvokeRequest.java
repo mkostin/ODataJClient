@@ -15,9 +15,12 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
+import com.msopentech.odatajclient.engine.data.ODataValue;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * This class implements an OData invoke operation request.
@@ -29,11 +32,52 @@ import java.util.Map;
  * com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method,
  * com.msopentech.odatajclient.engine.data.ODataURI, java.util.Map)
  */
-public interface ODataInvokeRequest extends ODataRequest {
+public class ODataInvokeRequest extends ODataRequestImpl
+        implements ODataBasicRequest<ODataInvokeResponse>, ODataBatchableRequest {
 
     /**
-     * {@inheritDoc}
+     * Operation type.
      */
+    private final OperationType type;
+
+    /**
+     * Constructor.
+     *
+     * @param method HTTP method of the request. If configured X-HTTP-METHOD header will be used.
+     * @param uri URI that identifies the operation.
+     * @param type requested operation type.
+     */
+    ODataInvokeRequest(
+            final Method method,
+            final URI uri,
+            final OperationType type) {
+        super(method);
+        this.uri = uri;
+        this.type = type;
+    }
+
+    ODataInvokeRequest(
+            final Method method,
+            final URI uri,
+            final OperationType type,
+            final Map<String, ODataValue> parameters) {
+        super(method);
+        this.uri = uri;
+        this.type = type;
+    }
+
     @Override
-    InputStream getBody();
+    public ODataInvokeResponse execute() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Future<ODataInvokeResponse> asyncExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public InputStream rowExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

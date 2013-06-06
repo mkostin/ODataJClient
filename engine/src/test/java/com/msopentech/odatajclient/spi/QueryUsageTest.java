@@ -15,17 +15,13 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.client.ODataRestClient;
 import com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest;
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 
 public class QueryUsageTest {
-
-    private final ODataClient client = new ODataRestClient();
 
     public void usageTest() {
         // prepare URI
@@ -35,8 +31,8 @@ public class QueryUsageTest {
         // create new request
         final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri.build());
 
-        // execute request
-        final ODataQueryResponse res = client.<ODataQueryResponse>execute(request);
+        // execute and retrieve query response
+        ODataQueryResponse res = request.execute();
 
         // retrieve and process the query result
         for (ODataEntity entity : res.<ODataEntity>getBody()) {

@@ -15,6 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.communication.request.*;
+import java.io.PipedOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,12 +27,27 @@ import java.util.List;
  * @see ODataRequestFactory#getChangesetBatchItem()
  * @see ODataRequestFactory#getRetrieveBatchItem()
  */
-public interface ODataBatchRequestItem {
+public abstract class ODataBatchRequestItem {
 
-    /**
-     * Return all requests encapsulated into the batch item.
-     *
-     * @return item requests.
-     */
-    List<ODataRequest> getRequests();
+    protected final List<ODataRequest> requests = new ArrayList<ODataRequest>();
+
+    private boolean open = false;
+
+    protected final PipedOutputStream os;
+
+    public ODataBatchRequestItem(final PipedOutputStream os) {
+        this.open = true;
+        this.os = os;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void close() {
+        closeItem();
+        open = false;
+    }
+
+    protected abstract void closeItem();
 }

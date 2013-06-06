@@ -13,21 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.response;
-
-import com.msopentech.odatajclient.engine.data.ODataEntity;
+package com.msopentech.odatajclient.engine.communication.request;
 
 /**
- * This class implements the response to an Odata media entity create request.
- *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityCreateRequest
+ * Object request that can be sent embedded into a batch request.
  */
-public interface ODataCreateMediaEntityResponse extends ODataResponse {
-
-    /**
-     * Gets created object.
-     *
-     * @return created object.
-     */
-    ODataEntity getBody();
+public interface ODataBatchableRequest {
 }

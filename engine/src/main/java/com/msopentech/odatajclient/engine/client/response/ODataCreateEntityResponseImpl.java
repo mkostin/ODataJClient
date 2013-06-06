@@ -23,7 +23,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
  *
  * @see com.msopentech.odatajclient.engine.communication.request.ODataCreateEntityRequest
  */
-class ODataCreateEntityResponseImpl extends ODataResponseImpl implements ODataCreateEntityResponse {
+class ODataCreateEntityResponseImpl extends ODataResponseImpl implements ODataEntityCreateResponse {
 
     /**
      * {@inheritDoc}

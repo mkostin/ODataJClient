@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.response;
+package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import java.io.InputStream;
+import java.util.concurrent.Future;
 
-/**
- * This class implements the response to an Odata stream create/update request.
- *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataStreamRequest
- */
-public interface ODataUpdateStreamResponse extends ODataResponse {
+public interface ODataBasicRequest<V extends ODataResponse> extends ODataRequest {
 
-    /**
-     * Gets created/updated object.
-     *
-     * @return created/updated object.
-     */
-    ODataEntity getBody();
+    V execute();
+
+    InputStream rowExecute();
+
+    Future<V> asyncExecute();
 }

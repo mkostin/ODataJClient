@@ -15,19 +15,19 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.data.ODataEntity;
+import java.io.InputStream;
 
 /**
- * This class implements the response to an Odata stream create/update request.
+ * This class implements the response to an Odata media entity update request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataStreamRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityUpdateRequest
  */
-public interface ODataCreateStreamResponse extends ODataResponse {
+public interface ODataMediaEntityUpdateResponse extends ODataResponse {
 
     /**
-     * Gets created/updated object.
+     * Gets updated object.
      *
-     * @return created/updated object.
+     * @return updated object.
      */
-    ODataEntity getBody();
+    InputStream getBody();
 }

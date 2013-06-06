@@ -15,35 +15,38 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import java.io.PipedOutputStream;
+
 /**
  * Changeset wrapper for the corresponding batch item.
  * Get instance by using ODataRequestFactory.
  *
  * @see ODataRequestFactory#getChangesetRequest()
  */
-public interface ODataChangeset extends ODataBatchRequestItem {
+public class ODataChangeset extends ODataBatchRequestItem {
 
     /**
-     * Add a create request to the changeset.
-     *
-     * @param request create request to be added.
-     * @return the current updated changeset.
+     * Constructor.
      */
-    ODataChangeset addRequest(final ODataCreateEntityRequest request);
+    ODataChangeset(final PipedOutputStream os) {
+        super(os);
+        // serialize and stream the changeset open statement
+    }
 
-    /**
-     * Add an update request to the changeset.
-     *
-     * @param request update request to be added.
-     * @return the current updated changeset.
-     */
-    ODataChangeset addRequest(final ODataUpdateEntityRequest request);
+    @Override
+    protected void closeItem() {
+        // serialize and stream the changeset close statement
+    }
 
-    /**
-     * Add a delete request to the changeset.
-     *
-     * @param request delete request to be added.
-     * @return the current updated changeset.
-     */
-    ODataChangeset addRequest(final ODataDeleteRequest request);
+    public <T extends ODataStreamingManagement, V extends ODataResponse> ODataChangeset addRequest(
+            ODataBatchableRequest request) {
+        if (((ODataRequestImpl) request).getMethod() == Method.GET) {
+            throw new IllegalArgumentException("Invalid request. GET method not allowed in changeset");
+        }
+
+//        ((ODataRequestImpl) request).initializeBatchItem(this.os);
+        return this;
+    }
 }

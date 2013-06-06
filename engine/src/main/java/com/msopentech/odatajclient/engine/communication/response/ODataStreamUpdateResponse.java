@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.client.request.ODataRequestFactory;
-import java.io.InputStream;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
 
 /**
- * This class implements an OData stream create request.
- * Get instance by using ODataRequestFactory.
+ * This class implements the response to an Odata stream create/update request.
  *
- * @see ODataRequestFactory#getCreateStreamRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * java.io.InputStream)
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataStreamRequest
  */
-public interface ODataCreateStreamRequest extends ODataRequest {
+public interface ODataStreamUpdateResponse extends ODataResponse {
 
     /**
-     * {@inheritDoc}
+     * Gets created/updated object.
+     *
+     * @return created/updated object.
      */
-    @Override
-    InputStream getBody();
+    ODataEntity getBody();
 }

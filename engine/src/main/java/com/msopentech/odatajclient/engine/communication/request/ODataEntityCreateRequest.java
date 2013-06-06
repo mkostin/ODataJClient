@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client.request;
+package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.communication.request.*;
+import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.utils.ODataWriter;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.concurrent.Future;
 
 /**
  * This class implements an OData create request.
@@ -28,11 +28,9 @@ import java.net.URI;
  * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataEntity)
  */
-class ODataCreateEntityRequestImpl extends ODataRequestImpl implements ODataCreateEntityRequest {
+public class ODataEntityCreateRequest extends ODataRequestImpl
+        implements ODataBasicRequest<ODataEntityCreateResponse>, ODataBatchableRequest {
 
-    /**
-     * Entity to be created.
-     */
     private final ODataEntity entity;
 
     /**
@@ -41,18 +39,24 @@ class ODataCreateEntityRequestImpl extends ODataRequestImpl implements ODataCrea
      * @param targetURI entity set URI.
      * @param entity entity to be created.
      */
-    ODataCreateEntityRequestImpl(final URI targetURI, final ODataEntity entity) {
+    ODataEntityCreateRequest(final URI targetURI, final ODataEntity entity) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
-        // set request body
         this.entity = entity;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public InputStream getBody() {
-        return new ODataWriter(getFormat()).serialize((ODataEntity) entity);
+    public ODataEntityCreateResponse execute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Future<ODataEntityCreateResponse> asyncExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public InputStream rowExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

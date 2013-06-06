@@ -29,6 +29,18 @@
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient-engine</artifactId>
   <packaging>jar</packaging>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+      
+    <dependency> 
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+  </dependencies>
 
   <build>
     <resources>
