@@ -90,6 +90,15 @@ public interface ODataRequest {
     void setMaxDataServiceVersion(final String value);
 
     /**
+     * Gets
+     * <code>MaxDataServiceVersion</code> OData request header.
+     *
+     * @return header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#maxDataServiceVersion
+     */
+    String getMaxDataServiceVersion();
+
+    /**
      * Adds
      * <code>MinDataServiceVersion</code> OData request header.
      *
@@ -97,6 +106,15 @@ public interface ODataRequest {
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#minDataServiceVersion
      */
     void setMinDataServiceVersion(final String value);
+
+    /**
+     * Gets
+     * <code>MinDataServiceVersion</code> OData request header.
+     *
+     * @return header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#minDataServiceVersion
+     */
+    String getMinDataServiceVersion();
 
     /**
      * Adds
@@ -108,6 +126,15 @@ public interface ODataRequest {
     void setAccept(final String value);
 
     /**
+     * Gets
+     * <code>Accept</code> OData request header.
+     *
+     * @return header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#accept
+     */
+    String getAccept();
+
+    /**
      * Adds
      * <code>If-Match</code> OData request header.
      *
@@ -115,6 +142,15 @@ public interface ODataRequest {
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifMatch
      */
     void setIfMatch(final String value);
+
+    /**
+     * Gets
+     * <code>If-Match</code> OData request header.
+     *
+     * @return header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifMatch
+     */
+    String getIfMatch();
 
     /**
      * Adds
@@ -126,6 +162,15 @@ public interface ODataRequest {
     void setIfNoneMatch(final String value);
 
     /**
+     * Gets
+     * <code>If-None-Match</code> OData request header.
+     *
+     * @return header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifNoneMatch
+     */
+    String getIfNoneMatch();
+
+    /**
      * Adds
      * <code>Prefer</code> OData request header.
      *
@@ -133,6 +178,51 @@ public interface ODataRequest {
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#prefer
      */
     void setPrefer(final String value);
+
+    /**
+     * Gets
+     * <code>Prefer</code> OData request header.
+     *
+     * @return header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#prefer
+     */
+    String getPrefer();
+
+    /**
+     * Adds
+     * <code>contentType</code> OData request header.
+     *
+     * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#contentType
+     */
+    void setContentType(final String value);
+
+    /**
+     * Gets
+     * <code>contentType</code> OData request header.
+     *
+     * @return header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#contentType
+     */
+    String getContentType();
+
+    /**
+     * Adds
+     * <code>dataServiceVersion</code> OData request header.
+     *
+     * @param value header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#dataServiceVersion
+     */
+    void setDataServiceVersion(final String value);
+
+    /**
+     * Gets
+     * <code>dataServiceVersion</code> OData request header.
+     *
+     * @return header value.
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#dataServiceVersion
+     */
+    String getDataServiceVersion();
 
     /**
      * Adds
@@ -150,4 +240,6 @@ public interface ODataRequest {
      * @param value header value.
      */
     void addCustomHeader(final String name, final String value);
+
+    byte[] toByteArray();
 }

@@ -18,5 +18,5 @@ package com.msopentech.odatajclient.engine.communication.request;
 /**
  * Object request that can be sent embedded into a batch request.
  */
-public interface ODataBatchableRequest {
+public interface ODataBatchableRequest extends ODataRequest {
 }

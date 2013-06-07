@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.spi;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest.BatchRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
@@ -25,8 +24,6 @@ import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.ODataChangeset;
 import com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRetrieve;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.communication.response.ODataUpdateEntityResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
@@ -54,7 +51,7 @@ public class BatchUsageTest {
         uri.appendEntityTypeSegment("Products(0)").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
-        final ODataQueryRequest query =ODataRequestFactory.getQueryRequest(uri.build());
+        final ODataQueryRequest query = ODataRequestFactory.getQueryRequest(uri.build());
 
         retrieve.setRequest(query);
         // -------------------------------------------

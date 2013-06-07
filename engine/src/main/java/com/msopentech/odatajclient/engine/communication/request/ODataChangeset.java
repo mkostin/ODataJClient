@@ -15,9 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
-import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.PipedOutputStream;
+import java.util.UUID;
 
 /**
  * Changeset wrapper for the corresponding batch item.
@@ -27,26 +28,76 @@ import java.io.PipedOutputStream;
  */
 public class ODataChangeset extends ODataBatchRequestItem {
 
+    private static String CONTENT_TYPE_MULTIPART = "multipart/mixed";
+
+    private int contentId = 0;
+
+    private final String boundary;
+
     /**
      * Constructor.
+     * <p>
+     * Send a changeset header.
+     *
+     * @param os piped output stream to be used to serialize.
      */
     ODataChangeset(final PipedOutputStream os) {
         super(os);
-        // serialize and stream the changeset open statement
+
+        // create a random UUID value for boundary
+        boundary = "changeset_" + UUID.randomUUID().toString();
+
+        stream((HeaderName.contentType.toString() + ": " + CONTENT_TYPE_MULTIPART
+                + "; boundary: " + boundary).getBytes());
+
+        newLine();
+        newLine();
     }
 
+    /**
+     * Close changeset item an send changeset request footer.
+     */
     @Override
     protected void closeItem() {
-        // serialize and stream the changeset close statement
+        // stream close-delimiter
+        newLine();
+        stream(("--" + boundary + "--").getBytes());
+        newLine();
+        newLine();
     }
 
-    public <T extends ODataStreamingManagement, V extends ODataResponse> ODataChangeset addRequest(
-            ODataBatchableRequest request) {
+    /**
+     * Serialize and send the given request.
+     * <p>
+     * An IllegalArgumentException is thrown in case of the given request is a GET.
+     *
+     * @param request request to be serialized.
+     * @return current changeset item instance.
+     */
+    public ODataChangeset addRequest(final ODataBatchableRequest request) {
+        if (!isOpen()) {
+            throw new IllegalStateException("Current batch item is closed");
+        }
+
         if (((ODataRequestImpl) request).getMethod() == Method.GET) {
             throw new IllegalArgumentException("Invalid request. GET method not allowed in changeset");
         }
 
-//        ((ODataRequestImpl) request).initializeBatchItem(this.os);
+        contentId++;
+
+        // preamble
+        newLine();
+
+        // stream batch-boundary
+        stream(("--" + boundary).getBytes());
+        newLine();
+
+        // stream the request
+        streamRequestHeader(request, contentId);
+
+        stream(("< payload ....>").getBytes());
+        newLine();
+
         return this;
     }
 }

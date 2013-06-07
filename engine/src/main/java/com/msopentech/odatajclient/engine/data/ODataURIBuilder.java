@@ -407,8 +407,19 @@ public class ODataURIBuilder implements Serializable {
 
         private final SegmentType type;
 
+        private final String value;
+
         public Segment(final SegmentType type, final String value) {
             this.type = type;
+            this.value = value;
+        }
+
+        public SegmentType getType() {
+            return type;
+        }
+
+        public String getValue() {
+            return value;
         }
     }
 
@@ -419,7 +430,7 @@ public class ODataURIBuilder implements Serializable {
      */
     public URI build() {
         try {
-            return new URI(null);
+            return new URI(segments.get(0).getValue());
         } catch (URISyntaxException ex) {
             Logger.getLogger(ODataURIBuilder.class.getName()).log(Level.SEVERE, null, ex);
             throw new IllegalStateException(ex);

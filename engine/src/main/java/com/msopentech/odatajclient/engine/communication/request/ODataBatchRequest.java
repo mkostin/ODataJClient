@@ -17,8 +17,9 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest.BatchRequestPayload;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
-import com.msopentech.odatajclient.engine.data.ODataEntity;
+import java.io.IOException;
 import java.net.URI;
+import java.util.UUID;
 import java.util.concurrent.Future;
 
 /**
@@ -29,25 +30,55 @@ import java.util.concurrent.Future;
  */
 public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchResponse, BatchRequestPayload> {
 
+    private static String CONTENT_TYPE = "multipart/mixed";
+
+    private final String boundary;
+
     /**
      * Constructor.
+     *
+     * @param uri batch request URI (http://serviceRoot/$batch)
      */
     ODataBatchRequest(final URI uri) {
         super(Method.POST);
+
+        // create a random UUID value for boundary
+        boundary = "batch_" + UUID.randomUUID().toString();
+
+        // specify the contentType header
+        setContentType(CONTENT_TYPE + ";boundary=" + boundary);
+
         this.uri = uri;
     }
 
+    /**
+     * Execute the request.
+     *
+     * @return request payload management to be used to add batch part to be streamed on the HTTP channel.
+     */
     @Override
     public BatchRequestPayload execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final BatchRequestPayload payload = new BatchRequestPayload();
+        // perform HTTP connection passing input stream from BatchRequestPayload
+
+        return payload;
     }
 
-    public static class BatchRequestPayload extends ODataStreamingManagement<ODataBatchResponse> {
+    /**
+     * Batch request payload management.
+     */
+    public class BatchRequestPayload extends ODataStreamingManagement<ODataBatchResponse> {
 
         /**
          * Batch request current item.
          */
         private ODataBatchRequestItem currentItem = null;
+
+        /**
+         * Private constructor.
+         */
+        private BatchRequestPayload() {
+        }
 
         /**
          * Gets a changeset batch item instance.
@@ -57,6 +88,10 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
          */
         public ODataChangeset addChangeset() {
             closeCurrentItem();
+
+            // stream dash boundary
+            streamDashBoundary();
+
             currentItem = new ODataChangeset(bodyStreamWriter);
             return (ODataChangeset) currentItem;
         }
@@ -69,34 +104,76 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
          */
         public ODataRetrieve addRetrieve() {
             closeCurrentItem();
+
+            // stream dash boundary
+            streamDashBoundary();
+
             currentItem = new ODataRetrieve(bodyStreamWriter);
             return (ODataRetrieve) currentItem;
         }
 
-        private BatchRequestPayload() {
-        }
-
-        public BatchRequestPayload setEntity(final ODataEntity entity) {
-            return this;
-        }
-
+        /**
+         * Close the current streamed item.
+         */
         private void closeCurrentItem() {
-            if (currentItem != null && currentItem.isOpen()) {
-                if (currentItem instanceof ODataChangeset) {
-                } else {
-                }
+            if (currentItem != null) {
                 currentItem.close();
             }
         }
 
+        /**
+         * Closes the stream and returns OData response.
+         *
+         * @return batch response.
+         */
         @Override
         public ODataBatchResponse getResponse() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            closeCurrentItem();
+
+            streamCloseDelimiter();
+
+            try {
+                finalizeBody();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+
+            return null;
         }
 
+        /**
+         * Closes the stream and asks for an asynchronous response.
+         *
+         * @return Future object of the async batch response.
+         */
         @Override
         public Future<ODataBatchResponse> asyncResponse() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            closeCurrentItem();
+
+            streamCloseDelimiter();
+
+            try {
+                finalizeBody();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+
+            return null;
+        }
+
+        private void streamDashBoundary() {
+            // preamble
+            newLine();
+
+            // stream batch-boundary
+            stream(("--" + boundary).getBytes());
+            newLine();
+        }
+
+        private void streamCloseDelimiter() {
+            // stream close-delimiter
+            newLine();
+            stream(("--" + boundary + "--").getBytes());
         }
     }
 }

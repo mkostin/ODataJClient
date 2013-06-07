@@ -30,7 +30,7 @@ public class Configuration {
      * @return property value if exists; default value if does not exist.
      */
     public String getProperty(final String key, final String def) {
-        return null;
+        return def;
     }
 
     /**

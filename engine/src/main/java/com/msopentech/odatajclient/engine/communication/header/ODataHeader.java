@@ -50,6 +50,7 @@ public class ODataHeader {
          * <li>text/plain</li>
          * <li>text/xml</li>
          * <li>octet/stream</li>
+         * <li>multipart/mixed</li>
          * </ul>
          */
         contentType("Content-Type"),
@@ -184,6 +185,18 @@ public class ODataHeader {
     public ODataHeader setHeader(final HeaderName name, final String value) {
         headers.put(name.toString(), value);
         return this;
+    }
+
+    /**
+     * Gets the value of the header identified by the given name.
+     * <p>
+     * Please note that header name is case-insensitive.
+     *
+     * @param name name of the header to be retrieved.
+     * @return header value.
+     */
+    public String getHeader(final HeaderName name) {
+        return headers.get(name.toString());
     }
 
     /**

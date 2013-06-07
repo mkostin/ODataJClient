@@ -23,7 +23,7 @@ import java.io.PipedOutputStream;
 import java.util.concurrent.Future;
 import org.slf4j.LoggerFactory;
 
-public abstract class ODataStreamingManagement<T extends ODataResponse> {
+public abstract class ODataStreamingManagement<T extends ODataResponse> extends ODataStreamer {
 
     /**
      * Logger.
@@ -35,13 +35,9 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> {
      */
     private final PipedInputStream body;
 
-    /**
-     * OutputStream to be used to write objects to the stream.
-     */
-    protected final PipedOutputStream bodyStreamWriter;
-
     public ODataStreamingManagement() {
-        this.bodyStreamWriter = new PipedOutputStream();
+        super(new PipedOutputStream());
+
         try {
             this.body = new PipedInputStream(bodyStreamWriter);
         } catch (IOException e) {
@@ -50,7 +46,8 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> {
     }
 
     public ODataStreamingManagement(final PipedOutputStream os) {
-        this.bodyStreamWriter = os;
+        super(os);
+
         try {
             this.body = new PipedInputStream(bodyStreamWriter);
         } catch (IOException e) {
@@ -70,6 +67,6 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> {
     }
 
     public abstract T getResponse();
-    
+
     public abstract Future<T> asyncResponse();
 }

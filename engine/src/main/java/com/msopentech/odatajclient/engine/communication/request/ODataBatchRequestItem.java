@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.communication.request.*;
 import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +26,21 @@ import java.util.List;
  * @see ODataRequestFactory#getChangesetBatchItem()
  * @see ODataRequestFactory#getRetrieveBatchItem()
  */
-public abstract class ODataBatchRequestItem {
+public abstract class ODataBatchRequestItem extends ODataStreamer {
+
+    protected static String CONTENT_TYPE = "Content-Type: application/http";
+
+    protected static String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding: binary";
+
+    private static String CONTENT_ID_NAME = "Content-Id";
 
     protected final List<ODataRequest> requests = new ArrayList<ODataRequest>();
 
     private boolean open = false;
 
-    protected final PipedOutputStream os;
-
     public ODataBatchRequestItem(final PipedOutputStream os) {
+        super(os);
         this.open = true;
-        this.os = os;
     }
 
     public boolean isOpen() {
@@ -47,6 +50,32 @@ public abstract class ODataBatchRequestItem {
     public void close() {
         closeItem();
         open = false;
+    }
+
+    protected void streamRequestHeader(final ODataBatchableRequest request, final int contentId) {
+        //stream batch content type
+        stream(CONTENT_TYPE.getBytes());
+        newLine();
+        stream(CONTENT_TRANSFER_ENCODING.getBytes());
+        newLine();
+        stream((CONTENT_ID_NAME + ":" + contentId).getBytes());
+        newLine();
+        newLine();
+
+        stream(request.toByteArray());
+        newLine();
+    }
+
+    protected void streamRequestHeader(final ODataBatchableRequest request) {
+        //stream batch content type
+        stream(CONTENT_TYPE.getBytes());
+        newLine();
+        stream(CONTENT_TRANSFER_ENCODING.getBytes());
+        newLine();
+        newLine();
+
+        stream(request.toByteArray());
+        newLine();
     }
 
     protected abstract void closeItem();

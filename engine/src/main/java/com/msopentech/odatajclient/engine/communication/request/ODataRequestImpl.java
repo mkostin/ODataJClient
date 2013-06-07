@@ -19,8 +19,11 @@ import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -87,6 +90,7 @@ public abstract class ODataRequestImpl implements ODataRequest {
     @Override
     public void setFormat(final ODataFormat format) {
         this.format = format;
+        setContentType(format.toString());
     }
 
     /**
@@ -173,8 +177,88 @@ public abstract class ODataRequestImpl implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
+    public void setContentType(String value) {
+        header.setHeader(ODataHeader.HeaderName.contentType, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setDataServiceVersion(String value) {
+        header.setHeader(ODataHeader.HeaderName.dataServiceVersion, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void addCustomHeader(final String name, final String value) {
         header.setHeader(name, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMaxDataServiceVersion() {
+        return header.getHeader(ODataHeader.HeaderName.maxDataServiceVersion);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMinDataServiceVersion() {
+        return header.getHeader(ODataHeader.HeaderName.minDataServiceVersion);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getAccept() {
+        return header.getHeader(ODataHeader.HeaderName.accept);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getIfMatch() {
+        return header.getHeader(ODataHeader.HeaderName.ifMatch);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getIfNoneMatch() {
+        return header.getHeader(ODataHeader.HeaderName.ifNoneMatch);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPrefer() {
+        return header.getHeader(ODataHeader.HeaderName.prefer);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getContentType() {
+        return header.getHeader(ODataHeader.HeaderName.contentType);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDataServiceVersion() {
+        return header.getHeader(ODataHeader.HeaderName.dataServiceVersion);
     }
 
     Method getMethod() {
@@ -187,5 +271,38 @@ public abstract class ODataRequestImpl implements ODataRequest {
 
     URI getUri() {
         return uri;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            final StringBuilder request = new StringBuilder();
+            request.append(getMethod().toString()).append(" ").append(uri.toString()).append(" ").append("HTTP/1.1");
+
+            os.write(request.toString().getBytes());
+
+            os.write(ODataStreamer.CRLF);
+
+            for (String name : getHeaderNames()) {
+                final String value = getHeader(name);
+
+                if (StringUtils.isNotBlank(value)) {
+                    os.write((name + ": " + value).getBytes());
+                    os.write(ODataStreamer.CRLF);
+                }
+            }
+
+            return os.toByteArray();
+
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            try {
+                os.close();
+            } catch (IOException ignore) {
+                // ignore
+            }
+        }
     }
 }

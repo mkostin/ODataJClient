@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.PipedOutputStream;
 
 /**
@@ -28,22 +27,45 @@ public class ODataRetrieve extends ODataBatchRequestItem {
 
     /**
      * Constructor.
+     * <p>
+     * Send GET request header.
+     *
+     * @param os piped output stream to be used to serialize.
      */
     ODataRetrieve(final PipedOutputStream os) {
         super(os);
     }
 
+    /**
+     * Close retrieve statement an send retrieve request footer.
+     */
     @Override
     protected void closeItem() {
-        // serialize and stream close statement
+        // nop
     }
 
-    public <T extends ODataStreamingManagement, V extends ODataResponse> ODataRetrieve setRequest(ODataBatchableRequest request) {
+    /**
+     * Serialize and send the given request.
+     * <p>
+     * An IllegalArgumentException is thrown in case of the given request is not a GET.
+     *
+     * @param request request to be serialized.
+     * @return current retrieve item instance.
+     */
+    public ODataRetrieve setRequest(final ODataBatchableRequest request) {
+        if (!isOpen()) {
+            throw new IllegalStateException("Current batch item is closed");
+        }
+
         if (((ODataRequestImpl) request).getMethod() != ODataRequest.Method.GET) {
             throw new IllegalArgumentException("Invalid request. Only GET method is allowed");
         }
 
-//        ((ODataRequestImpl) request).initializeBatchItem(os);
+        // stream the request
+        streamRequestHeader(request);
+
+        close();
+
         return this;
     }
 }
