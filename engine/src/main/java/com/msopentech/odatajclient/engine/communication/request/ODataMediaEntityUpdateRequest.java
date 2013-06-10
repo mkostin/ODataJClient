@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityUpdateRequest.MediaEntityUpdateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
 import java.io.InputStream;
-import java.io.PipedOutputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -30,7 +29,10 @@ import java.util.concurrent.Future;
  * java.io.InputStream)
  */
 public class ODataMediaEntityUpdateRequest
-        extends ODataStreamedRequestImpl<ODataMediaEntityUpdateResponse, MediaEntityUpdateRequestPayload> {
+        extends ODataStreamedRequestImpl<ODataMediaEntityUpdateResponse, MediaEntityUpdateRequestPayload>
+        implements ODataBatchableRequest {
+
+    private final InputStream media;
 
     /**
      * Constructor.
@@ -41,20 +43,24 @@ public class ODataMediaEntityUpdateRequest
     ODataMediaEntityUpdateRequest(final URI editURI, final InputStream media) {
         super(Method.PUT);
         this.uri = editURI;
+        this.media = media;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
-    public MediaEntityUpdateRequestPayload execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected MediaEntityUpdateRequestPayload getPayload() {
+        if (payload == null) {
+            payload = new MediaEntityUpdateRequestPayload(media);
+        }
+        return (MediaEntityUpdateRequestPayload) payload;
     }
 
     public class MediaEntityUpdateRequestPayload extends ODataStreamingManagement<ODataMediaEntityUpdateResponse> {
 
-        public MediaEntityUpdateRequestPayload() {
-        }
-
-        public MediaEntityUpdateRequestPayload(final PipedOutputStream os) {
-            super(os);
+        public MediaEntityUpdateRequestPayload(final InputStream is) {
+            super(is);
         }
 
         @Override

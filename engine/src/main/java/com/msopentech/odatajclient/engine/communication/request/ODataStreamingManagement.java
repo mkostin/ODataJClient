@@ -35,11 +35,17 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
      */
     private final PipedInputStream body;
 
+    /**
+     * Default body input stream.
+     */
+    private final InputStream def;
+
     public ODataStreamingManagement() {
         super(new PipedOutputStream());
 
         try {
             this.body = new PipedInputStream(bodyStreamWriter);
+            this.def = this.body;
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -50,13 +56,20 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
 
         try {
             this.body = new PipedInputStream(bodyStreamWriter);
+            this.def = this.body;
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
+    public ODataStreamingManagement(final InputStream is) {
+        super(null);
+        this.body = null;
+        this.def = is;
+    }
+
     public InputStream getBody() {
-        return this.body;
+        return this.body == null ? this.def : this.body;
     }
 
     public void finalizeBody() throws IOException {

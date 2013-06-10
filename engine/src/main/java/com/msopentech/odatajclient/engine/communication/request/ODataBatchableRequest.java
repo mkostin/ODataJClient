@@ -19,4 +19,13 @@ package com.msopentech.odatajclient.engine.communication.request;
  * Object request that can be sent embedded into a batch request.
  */
 public interface ODataBatchableRequest extends ODataRequest {
+
+    /**
+     * Writes (and consume) the request onto the given batch stream.
+     * <p>
+     * Please note that this method will consume the request (execution won't be possible anymore).
+     *
+     * @param req destination batch request.
+     */
+    void batch(final ODataBatchRequest req);
 }

@@ -28,8 +28,8 @@ import java.util.concurrent.Future;
  * @see ODataRequestFactory#getAddLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataAddLinkRequest extends ODataRequestImpl
-        implements ODataBasicRequest<ODataLinkOperationResponse>, ODataBatchableRequest {
+public class ODataAddLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse>
+        implements ODataBatchableRequest {
 
     /**
      * OData entity to be linked.
@@ -64,5 +64,10 @@ public class ODataAddLinkRequest extends ODataRequestImpl
     @Override
     public Future<ODataLinkOperationResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected byte[] getPayload() {
+        return entityToBeAdded.getLink().toString().getBytes();
     }
 }

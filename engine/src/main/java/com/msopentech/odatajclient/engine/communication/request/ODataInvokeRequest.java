@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -32,13 +32,18 @@ import java.util.concurrent.Future;
  * com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method,
  * com.msopentech.odatajclient.engine.data.ODataURI, java.util.Map)
  */
-public class ODataInvokeRequest extends ODataRequestImpl
-        implements ODataBasicRequest<ODataInvokeResponse>, ODataBatchableRequest {
+public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeResponse>
+        implements ODataBatchableRequest {
 
     /**
      * Operation type.
      */
     private final OperationType type;
+
+    /**
+     * Function parameters.
+     */
+    final Map<String, ODataValue> parameters;
 
     /**
      * Constructor.
@@ -54,6 +59,7 @@ public class ODataInvokeRequest extends ODataRequestImpl
         super(method);
         this.uri = uri;
         this.type = type;
+        this.parameters = null;
     }
 
     ODataInvokeRequest(
@@ -64,6 +70,7 @@ public class ODataInvokeRequest extends ODataRequestImpl
         super(method);
         this.uri = uri;
         this.type = type;
+        this.parameters = parameters;
     }
 
     @Override
@@ -77,7 +84,19 @@ public class ODataInvokeRequest extends ODataRequestImpl
     }
 
     @Override
-    public InputStream rowExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected byte[] getPayload() {
+        final StringBuilder builder = new StringBuilder();
+
+        if (parameters != null) {
+            for (Map.Entry<String, ODataValue> param : parameters.entrySet()) {
+                builder.append(param.getKey()).append("=").append(param.getValue().toString());
+            }
+        }
+        
+        try {
+            return builder.toString().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

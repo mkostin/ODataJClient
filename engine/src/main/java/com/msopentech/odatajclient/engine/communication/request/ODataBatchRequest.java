@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest.BatchRequestPayload;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import java.io.IOException;
+import java.io.PipedOutputStream;
 import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.Future;
@@ -52,16 +53,18 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
     }
 
     /**
-     * Execute the request.
-     *
-     * @return request payload management to be used to add batch part to be streamed on the HTTP channel.
+     * {@inheritDoc }
      */
     @Override
-    public BatchRequestPayload execute() {
-        final BatchRequestPayload payload = new BatchRequestPayload();
-        // perform HTTP connection passing input stream from BatchRequestPayload
+    protected BatchRequestPayload getPayload() {
+        if (payload == null) {
+            payload = new BatchRequestPayload(this);
+        }
+        return (BatchRequestPayload) payload;
+    }
 
-        return payload;
+    PipedOutputStream getOutputStream() {
+        return getPayload().bodyStreamWriter;
     }
 
     /**
@@ -74,10 +77,13 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
          */
         private ODataBatchRequestItem currentItem = null;
 
+        private final ODataBatchRequest req;
+
         /**
          * Private constructor.
          */
-        private BatchRequestPayload() {
+        private BatchRequestPayload(final ODataBatchRequest req) {
+            this.req = req;
         }
 
         /**
@@ -92,7 +98,7 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
             // stream dash boundary
             streamDashBoundary();
 
-            currentItem = new ODataChangeset(bodyStreamWriter);
+            currentItem = new ODataChangeset(req);
             return (ODataChangeset) currentItem;
         }
 
@@ -108,7 +114,7 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
             // stream dash boundary
             streamDashBoundary();
 
-            currentItem = new ODataRetrieve(bodyStreamWriter);
+            currentItem = new ODataRetrieve(req);
             return (ODataRetrieve) currentItem;
         }
 
@@ -175,5 +181,10 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
             newLine();
             stream(("--" + boundary + "--").getBytes());
         }
+    }
+
+    @Override
+    public void batch(ODataBatchRequest req) {
+        throw new UnsupportedOperationException("A batch request is not batchable");
     }
 }

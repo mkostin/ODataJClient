@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataSingleResultResponse;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -26,9 +25,8 @@ import java.util.concurrent.Future;
  *
  * @see ODataRequestFactory#getSingleResultRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataSingleResultRequest
-        extends ODataRequestImpl
-        implements ODataBasicRequest<ODataSingleResultResponse>, ODataBatchableRequest {
+public class ODataSingleResultRequest extends ODataBasicRequestImpl<ODataSingleResultResponse>
+        implements ODataBatchableRequest {
 
     /**
      * {@inheritDoc}
@@ -43,12 +41,12 @@ public class ODataSingleResultRequest
     }
 
     @Override
-    public InputStream rowExecute() {
+    public Future<ODataSingleResultResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Future<ODataSingleResultResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected byte[] getPayload() {
+        return new byte[0];
     }
 }

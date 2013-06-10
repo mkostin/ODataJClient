@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataUpdateEntityResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -29,9 +29,8 @@ import java.util.concurrent.Future;
  * com.msopentech.odatajclient.engine.data.ODataEntity,
  * com.msopentech.odatajclient.engine.communication.request.UpdateType)
  */
-public class ODataUpdateEntityRequest
-        extends ODataRequestImpl
-        implements ODataBasicRequest<ODataUpdateEntityResponse>, ODataBatchableRequest {
+public class ODataUpdateEntityRequest extends ODataBasicRequestImpl<ODataUpdateEntityResponse>
+        implements ODataBatchableRequest {
 
     private final ODataEntity changes;
 
@@ -56,12 +55,16 @@ public class ODataUpdateEntityRequest
     }
 
     @Override
-    public InputStream rowExecute() {
+    public Future<ODataUpdateEntityResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Future<ODataUpdateEntityResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected byte[] getPayload() {
+        try {
+            return "ODataUpdateEntity payload ...".getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

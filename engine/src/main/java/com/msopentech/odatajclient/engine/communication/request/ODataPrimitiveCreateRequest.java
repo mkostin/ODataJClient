@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -29,9 +29,8 @@ import java.util.concurrent.Future;
  * @see ODataRequestFactory#getCreatePrimitiveRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataValue)
  */
-public class ODataPrimitiveCreateRequest
-        extends ODataRequestImpl
-        implements ODataBasicRequest<ODataQueryResponse>, ODataBatchableRequest {
+public class ODataPrimitiveCreateRequest extends ODataBasicRequestImpl<ODataQueryResponse>
+        implements ODataBatchableRequest {
 
     /**
      * Value to be created.
@@ -57,12 +56,16 @@ public class ODataPrimitiveCreateRequest
     }
 
     @Override
-    public InputStream rowExecute() {
+    public Future<ODataQueryResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Future<ODataQueryResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected byte[] getPayload() {
+        try {
+            return value.toString().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

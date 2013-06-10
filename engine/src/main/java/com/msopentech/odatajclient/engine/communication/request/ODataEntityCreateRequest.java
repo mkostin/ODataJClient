@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -28,8 +27,8 @@ import java.util.concurrent.Future;
  * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataEntity)
  */
-public class ODataEntityCreateRequest extends ODataRequestImpl
-        implements ODataBasicRequest<ODataEntityCreateResponse>, ODataBatchableRequest {
+public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse>
+        implements ODataBatchableRequest {
 
     private final ODataEntity entity;
 
@@ -56,7 +55,7 @@ public class ODataEntityCreateRequest extends ODataRequestImpl
     }
 
     @Override
-    public InputStream rowExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected byte[] getPayload() {
+        return "ODataCreateEntity payload ...".getBytes();
     }
 }

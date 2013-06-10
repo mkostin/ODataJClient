@@ -15,8 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import java.io.PipedOutputStream;
-
 /**
  * Retrieve request wrapper for the corresponding batch item.
  * Get instance by using ODataRequestFactory.
@@ -32,8 +30,8 @@ public class ODataRetrieve extends ODataBatchRequestItem {
      *
      * @param os piped output stream to be used to serialize.
      */
-    ODataRetrieve(final PipedOutputStream os) {
-        super(os);
+    ODataRetrieve(final ODataBatchRequest req) {
+        super(req);
     }
 
     /**

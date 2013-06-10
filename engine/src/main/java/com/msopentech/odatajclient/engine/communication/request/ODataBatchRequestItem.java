@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +37,12 @@ public abstract class ODataBatchRequestItem extends ODataStreamer {
 
     private boolean open = false;
 
-    public ODataBatchRequestItem(final PipedOutputStream os) {
-        super(os);
+    protected ODataBatchRequest req;
+
+    public ODataBatchRequestItem(final ODataBatchRequest req) {
+        super(req.getOutputStream());
         this.open = true;
+        this.req = req;
     }
 
     public boolean isOpen() {
@@ -60,9 +62,6 @@ public abstract class ODataBatchRequestItem extends ODataStreamer {
         newLine();
         stream((CONTENT_ID_NAME + ":" + contentId).getBytes());
         newLine();
-        newLine();
-
-        stream(request.toByteArray());
         newLine();
     }
 

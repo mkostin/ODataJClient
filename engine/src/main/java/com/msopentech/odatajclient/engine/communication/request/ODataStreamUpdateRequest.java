@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
 import java.io.InputStream;
-import java.io.PipedOutputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -32,6 +31,8 @@ public class ODataStreamUpdateRequest
         extends ODataStreamedRequestImpl<ODataStreamUpdateResponse, StreamUpdateRequestPayload>
         implements ODataBatchableRequest {
 
+    private final InputStream stream;
+
     /**
      * Constructor.
      *
@@ -41,20 +42,25 @@ public class ODataStreamUpdateRequest
     ODataStreamUpdateRequest(final URI targetURI, final InputStream stream) {
         super(Method.PUT);
         this.uri = targetURI;
+        this.stream = stream;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
-    public StreamUpdateRequestPayload execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected StreamUpdateRequestPayload getPayload() {
+        if (payload == null) {
+            payload = new StreamUpdateRequestPayload(this.stream);
+        }
+
+        return (StreamUpdateRequestPayload) payload;
     }
 
     public class StreamUpdateRequestPayload extends ODataStreamingManagement<ODataStreamUpdateResponse> {
 
-        public StreamUpdateRequestPayload() {
-        }
-
-        public StreamUpdateRequestPayload(PipedOutputStream os) {
-            super(os);
+        public StreamUpdateRequestPayload(InputStream is) {
+            super(is);
         }
 
         @Override

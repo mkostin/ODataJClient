@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -30,8 +30,8 @@ import java.util.concurrent.Future;
  * @see ODataRequestFactory#getSetLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataURI, com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataSetLinkRequest extends ODataRequestImpl
-        implements ODataBasicRequest<ODataLinkOperationResponse>, ODataBatchableRequest {
+public class ODataSetLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse>
+        implements ODataBatchableRequest {
 
     /**
      * Entity to be linked.
@@ -60,12 +60,16 @@ public class ODataSetLinkRequest extends ODataRequestImpl
     }
 
     @Override
-    public InputStream rowExecute() {
+    public Future<ODataLinkOperationResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Future<ODataLinkOperationResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected byte[] getPayload() {
+        try {
+            return entityToBeAdded.getLink().toString().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

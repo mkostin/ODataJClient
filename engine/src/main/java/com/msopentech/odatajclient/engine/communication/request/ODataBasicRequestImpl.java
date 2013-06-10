@@ -16,11 +16,30 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
-import java.util.concurrent.Future;
+import java.io.IOException;
+import java.io.OutputStream;
 
-public interface ODataBasicRequest<V extends ODataResponse> extends ODataRequest {
+public abstract class ODataBasicRequestImpl<V extends ODataResponse>
+        extends ODataRequestImpl
+        implements ODataBasicRequest<V> {
 
-    V execute();
+    public ODataBasicRequestImpl(Method method) {
+        super(method);
+    }
 
-    Future<V> asyncExecute();
+    protected abstract byte[] getPayload();
+
+    public void batch(final ODataBatchRequest req) {
+
+        try {
+            final OutputStream os = req.getOutputStream();
+
+            os.write(toByteArray());
+            os.write(ODataStreamer.CRLF);
+            os.write(getPayload());
+
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

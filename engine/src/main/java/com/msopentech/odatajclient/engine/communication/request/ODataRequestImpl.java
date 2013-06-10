@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
 import org.apache.commons.lang.StringUtils;
@@ -304,5 +305,11 @@ public abstract class ODataRequestImpl implements ODataRequest {
                 // ignore
             }
         }
+    }
+
+    @Override
+    public InputStream rowExecute() {
+        // execute the request
+        return null;
     }
 }

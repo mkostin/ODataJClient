@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
 
@@ -242,4 +243,6 @@ public interface ODataRequest {
     void addCustomHeader(final String name, final String value);
 
     byte[] toByteArray();
+
+    InputStream rowExecute();
 }

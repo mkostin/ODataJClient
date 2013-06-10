@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityCreateRequest.MediaEntityCreateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityCreateResponse;
 import java.io.InputStream;
-import java.io.PipedOutputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -30,7 +29,10 @@ import java.util.concurrent.Future;
  * java.io.InputStream)
  */
 public class ODataMediaEntityCreateRequest
-        extends ODataStreamedRequestImpl<ODataMediaEntityCreateResponse, MediaEntityCreateRequestPayload> {
+        extends ODataStreamedRequestImpl<ODataMediaEntityCreateResponse, MediaEntityCreateRequestPayload>
+        implements ODataBatchableRequest {
+
+    private final InputStream media;
 
     /**
      * Constructor.
@@ -41,20 +43,24 @@ public class ODataMediaEntityCreateRequest
     ODataMediaEntityCreateRequest(final URI targetURI, final InputStream media) {
         super(Method.POST);
         this.uri = targetURI;
+        this.media = media;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
-    public MediaEntityCreateRequestPayload execute() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    protected MediaEntityCreateRequestPayload getPayload() {
+        if (payload == null) {
+            payload = new MediaEntityCreateRequestPayload(media);
+        }
+        return (MediaEntityCreateRequestPayload) payload;
     }
 
     public class MediaEntityCreateRequestPayload extends ODataStreamingManagement<ODataMediaEntityCreateResponse> {
 
-        public MediaEntityCreateRequestPayload() {
-        }
-
-        public MediaEntityCreateRequestPayload(final PipedOutputStream os) {
-            super(os);
+        public MediaEntityCreateRequestPayload(InputStream is) {
+            super(is);
         }
 
         @Override

@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -26,8 +25,8 @@ import java.util.concurrent.Future;
  *
  * @see ODataRequestFactory#getDeleteRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataDeleteRequest extends ODataRequestImpl
-        implements ODataBasicRequest<ODataDeleteResponse>, ODataBatchableRequest {
+public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteResponse>
+        implements ODataBatchableRequest {
 
     /**
      * Constructor.
@@ -43,16 +42,16 @@ public class ODataDeleteRequest extends ODataRequestImpl
 
     @Override
     public ODataDeleteResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    @Override
-    public InputStream rowExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Future<ODataDeleteResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected byte[] getPayload() {
+        return new byte[0];
     }
 }

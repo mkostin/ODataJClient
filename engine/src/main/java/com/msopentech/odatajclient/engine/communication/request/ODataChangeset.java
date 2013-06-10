@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
-import java.io.PipedOutputStream;
 import java.util.UUID;
 
 /**
@@ -41,8 +40,8 @@ public class ODataChangeset extends ODataBatchRequestItem {
      *
      * @param os piped output stream to be used to serialize.
      */
-    ODataChangeset(final PipedOutputStream os) {
-        super(os);
+    ODataChangeset(final ODataBatchRequest req) {
+        super(req);
 
         // create a random UUID value for boundary
         boundary = "changeset_" + UUID.randomUUID().toString();
@@ -95,7 +94,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
         // stream the request
         streamRequestHeader(request, contentId);
 
-        stream(("< payload ....>").getBytes());
+        request.batch(req);
         newLine();
 
         return this;

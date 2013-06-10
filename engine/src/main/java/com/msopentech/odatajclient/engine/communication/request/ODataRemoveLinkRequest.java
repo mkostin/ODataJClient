@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -26,8 +25,8 @@ import java.util.concurrent.Future;
  *
  * @see ODataRequestFactory#getRemoveLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataRemoveLinkRequest extends ODataRequestImpl
-        implements ODataBasicRequest<ODataLinkOperationResponse>, ODataBatchableRequest {
+public class ODataRemoveLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse>
+        implements ODataBatchableRequest {
 
     /**
      * Constructor.
@@ -47,12 +46,12 @@ public class ODataRemoveLinkRequest extends ODataRequestImpl
     }
 
     @Override
-    public InputStream rowExecute() {
+    public Future<ODataLinkOperationResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Future<ODataLinkOperationResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected byte[] getPayload() {
+        return new byte[0];
     }
 }
