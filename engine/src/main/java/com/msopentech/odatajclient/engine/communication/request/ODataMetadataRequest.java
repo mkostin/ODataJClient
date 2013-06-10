@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataMetadataResponse;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -41,18 +40,19 @@ public class ODataMetadataRequest extends ODataRequestImpl
         this.uri = uri;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataMetadataResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public InputStream rowExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataMetadataResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
 
@@ -51,21 +50,25 @@ public class ODataAddLinkRequest extends ODataBasicRequestImpl<ODataLinkOperatio
         this.entityToBeAdded = entityToBeAdded;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ODataLinkOperationResponse execute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public InputStream rowExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Future<ODataLinkOperationResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected byte[] getPayload() {
         return entityToBeAdded.getLink().toString().getBytes();

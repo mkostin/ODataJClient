@@ -20,18 +20,40 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * Streamed OData request abstract class.
+ *
+ * @param <V> OData response type corresponding to the request implementation.
+ * @param <T> OData request payload type corresponding to the request implementation.
+ */
 public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extends ODataStreamingManagement<V>>
         extends ODataRequestImpl
         implements ODataStreamedRequest<V, T> {
 
+    /**
+     * OData request payload.
+     */
     protected ODataStreamingManagement<V> payload = null;
 
-    public ODataStreamedRequestImpl(Method method) {
+    /**
+     * Constructor.
+     *
+     * @param method OData request HTTP method.
+     */
+    public ODataStreamedRequestImpl(final Method method) {
         super(method);
     }
 
+    /**
+     * Gets OData request payload management object.
+     *
+     * @return OData request payload management object.
+     */
     protected abstract T getPayload();
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public T execute() {
         // execute the request
@@ -40,6 +62,13 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
         return getPayload();
     }
 
+    /**
+     * Writes (and consume) the request onto the given batch stream.
+     * <p>
+     * Please note that this method will consume the request (execution won't be possible anymore).
+     *
+     * @param req destination batch request.
+     */
     public void batch(final ODataBatchRequest req) {
         final InputStream is = getPayload().getBody();
 

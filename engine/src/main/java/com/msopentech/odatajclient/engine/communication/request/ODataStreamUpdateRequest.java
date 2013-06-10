@@ -59,15 +59,26 @@ public class ODataStreamUpdateRequest
 
     public class StreamUpdateRequestPayload extends ODataStreamingManagement<ODataStreamUpdateResponse> {
 
-        public StreamUpdateRequestPayload(InputStream is) {
+        /**
+         * Private constructor.
+         *
+         * @param is payload input stream.
+         */
+        private StreamUpdateRequestPayload(final InputStream is) {
             super(is);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataStreamUpdateResponse getResponse() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public Future<ODataStreamUpdateResponse> asyncResponse() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

@@ -21,18 +21,27 @@ import java.util.List;
 /**
  * Abstract representation of a batch request item.
  * Get instance by using ODataRequestFactory.
- *
- * @see ODataRequestFactory#getChangesetBatchItem()
- * @see ODataRequestFactory#getRetrieveBatchItem()
  */
 public abstract class ODataBatchRequestItem extends ODataStreamer {
 
+    /**
+     * item content type.
+     */
     protected static String CONTENT_TYPE = "Content-Type: application/http";
 
+    /**
+     * item transfer encoding.
+     */
     protected static String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding: binary";
 
+    /**
+     * Content id header name.
+     */
     private static String CONTENT_ID_NAME = "Content-Id";
 
+    /**
+     * Batched requests.
+     */
     protected final List<ODataRequest> requests = new ArrayList<ODataRequest>();
 
     private boolean open = false;

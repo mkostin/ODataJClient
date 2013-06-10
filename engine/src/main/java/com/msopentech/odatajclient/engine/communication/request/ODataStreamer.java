@@ -21,8 +21,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedOutputStream;
 
+/**
+ * Streamer utility object.
+ */
 public abstract class ODataStreamer {
 
+    /**
+     * CR/LF.
+     */
     public static final byte[] CRLF = {13, 10};
 
     /**
@@ -30,10 +36,15 @@ public abstract class ODataStreamer {
      */
     protected final PipedOutputStream bodyStreamWriter;
 
-    public ODataStreamer(PipedOutputStream bodyStreamWriter) {
+    public ODataStreamer(final PipedOutputStream bodyStreamWriter) {
         this.bodyStreamWriter = bodyStreamWriter;
     }
 
+    /**
+     * Writes the gibe byte array onto the output stream provided at instantiation time.
+     *
+     * @param src byte array to be written.
+     */
     protected void stream(final byte[] src) {
         new Writer(src, bodyStreamWriter).run();
     }
@@ -45,6 +56,9 @@ public abstract class ODataStreamer {
         stream(CRLF);
     }
 
+    /**
+     * Writer thread.
+     */
     private class Writer implements Runnable {
 
         final OutputStream os;

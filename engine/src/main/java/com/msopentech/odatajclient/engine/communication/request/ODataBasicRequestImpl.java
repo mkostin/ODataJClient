@@ -19,16 +19,36 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Basic request abstract implementation.
+ *
+ * @param <V> OData response type corresponding to the request implementation.
+ */
 public abstract class ODataBasicRequestImpl<V extends ODataResponse>
         extends ODataRequestImpl
         implements ODataBasicRequest<V> {
 
-    public ODataBasicRequestImpl(Method method) {
+    /**
+     * Constructor.
+     *
+     * @param method request method.
+     */
+    public ODataBasicRequestImpl(final Method method) {
         super(method);
     }
 
+    /**
+     * Gets payload as a byte array.
+     *
+     * @return byte array representation of the entire payload.
+     */
     protected abstract byte[] getPayload();
 
+    /**
+     * Serializes the full request into the given batch request.
+     *
+     * @param req destination batch request.
+     */
     public void batch(final ODataBatchRequest req) {
 
         try {

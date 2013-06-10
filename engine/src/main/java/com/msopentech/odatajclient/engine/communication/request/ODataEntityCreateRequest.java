@@ -30,6 +30,9 @@ import java.util.concurrent.Future;
 public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse>
         implements ODataBatchableRequest {
 
+    /**
+     * Entity to be created.
+     */
     private final ODataEntity entity;
 
     /**
@@ -44,16 +47,25 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         this.entity = entity;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataEntityCreateResponse execute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataEntityCreateResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     protected byte[] getPayload() {
         return "ODataCreateEntity payload ...".getBytes();

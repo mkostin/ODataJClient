@@ -29,22 +29,35 @@ public class ODataSingleResultRequest extends ODataBasicRequestImpl<ODataSingleR
         implements ODataBatchableRequest {
 
     /**
-     * {@inheritDoc}
+     * Private constructor.
+     *
+     * @param query query to be executed.
      */
     ODataSingleResultRequest(final URI query) {
         super(Method.GET);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataSingleResultResponse execute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataSingleResultResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     * <p>
+     * This kind of request doesn't have any kind of payload: an empty byte array will be returned.
+     */
     @Override
     protected byte[] getPayload() {
         return new byte[0];

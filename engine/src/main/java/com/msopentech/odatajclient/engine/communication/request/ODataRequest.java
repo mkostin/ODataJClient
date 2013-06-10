@@ -242,7 +242,17 @@ public interface ODataRequest {
      */
     void addCustomHeader(final String name, final String value);
 
+    /**
+     * Gets byte array representation of the full request header.
+     *
+     * @return full request header.
+     */
     byte[] toByteArray();
 
+    /**
+     * Request row execute.
+     *
+     * @return row input stream response.
+     */
     InputStream rowExecute();
 }

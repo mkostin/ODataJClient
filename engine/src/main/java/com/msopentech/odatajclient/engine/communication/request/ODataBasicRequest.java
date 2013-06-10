@@ -18,9 +18,24 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.util.concurrent.Future;
 
+/**
+ * Basic OData request.
+ *
+ * @param <V> OData response type corresponding to the request implementation.
+ */
 public interface ODataBasicRequest<V extends ODataResponse> extends ODataRequest {
 
+    /**
+     * Request execute.
+     *
+     * @return return an OData response.
+     */
     V execute();
 
+    /**
+     * Async request execute.
+     *
+     * @return <code>Future&lt;ODataResponse&gt;</code> about the executed request.
+     */
     Future<V> asyncExecute();
 }

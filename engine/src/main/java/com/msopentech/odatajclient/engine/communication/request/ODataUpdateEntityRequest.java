@@ -32,14 +32,17 @@ import java.util.concurrent.Future;
 public class ODataUpdateEntityRequest extends ODataBasicRequestImpl<ODataUpdateEntityResponse>
         implements ODataBatchableRequest {
 
+    /**
+     * Changes to be applied.
+     */
     private final ODataEntity changes;
 
     /**
      * Constructor.
      *
      * @param uri URI of the entity to be updated.
-     * @param entity changes to be applied.
      * @param type update type.
+     * @param changes changes to be applied.
      */
     ODataUpdateEntityRequest(final URI uri, final UpdateType type, final ODataEntity changes) {
         // set method .... If cofigured X-HTTP-METHOD header will be used.
@@ -49,16 +52,25 @@ public class ODataUpdateEntityRequest extends ODataBasicRequestImpl<ODataUpdateE
         this.changes = changes;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataUpdateEntityResponse execute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataUpdateEntityResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     protected byte[] getPayload() {
         try {

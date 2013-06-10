@@ -58,17 +58,31 @@ public class ODataStreamCreateRequest
         return (StreamCreateRequestPayload) payload;
     }
 
+    /**
+     * Request payload object.
+     */
     public class StreamCreateRequestPayload extends ODataStreamingManagement<ODataStreamCreateResponse> {
 
-        public StreamCreateRequestPayload(final InputStream is) {
+        /**
+         * Private constructor.
+         *
+         * @param is paylod input stream.
+         */
+        private StreamCreateRequestPayload(final InputStream is) {
             super(is);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataStreamCreateResponse getResponse() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public Future<ODataStreamCreateResponse> asyncResponse() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

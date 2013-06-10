@@ -31,8 +31,14 @@ import java.util.concurrent.Future;
  */
 public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchResponse, BatchRequestPayload> {
 
+    /**
+     * Batch request content type.
+     */
     private static String CONTENT_TYPE = "multipart/mixed";
 
+    /**
+     * Batch request boundary.
+     */
     private final String boundary;
 
     /**
@@ -77,10 +83,15 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
          */
         private ODataBatchRequestItem currentItem = null;
 
+        /**
+         * batch request reference.
+         */
         private final ODataBatchRequest req;
 
         /**
          * Private constructor.
+         *
+         * @param req batch request reference.
          */
         private BatchRequestPayload(final ODataBatchRequest req) {
             this.req = req;
@@ -167,6 +178,9 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
             return null;
         }
 
+        /**
+         * Streams dash boundary.
+         */
         private void streamDashBoundary() {
             // preamble
             newLine();
@@ -176,6 +190,9 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
             newLine();
         }
 
+        /**
+         * Streams close delimiter.
+         */
         private void streamCloseDelimiter() {
             // stream close-delimiter
             newLine();
@@ -183,6 +200,11 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This operation is unsupported by a batch request.
+     */
     @Override
     public void batch(ODataBatchRequest req) {
         throw new UnsupportedOperationException("A batch request is not batchable");

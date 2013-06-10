@@ -97,6 +97,8 @@ public class ODataChangeset extends ODataBatchRequestItem {
         request.batch(req);
         newLine();
 
+        // add request to the list
+        requests.add(request);
         return this;
     }
 }

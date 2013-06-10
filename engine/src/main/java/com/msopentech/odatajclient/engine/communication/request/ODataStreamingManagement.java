@@ -23,6 +23,11 @@ import java.io.PipedOutputStream;
 import java.util.concurrent.Future;
 import org.slf4j.LoggerFactory;
 
+/**
+ * OData request payload management abstract class.
+ *
+ * @param <T> OData response type corresponding to the request implementation.
+ */
 public abstract class ODataStreamingManagement<T extends ODataResponse> extends ODataStreamer {
 
     /**
@@ -40,6 +45,9 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
      */
     private final InputStream def;
 
+    /**
+     * Constructor.
+     */
     public ODataStreamingManagement() {
         super(new PipedOutputStream());
 
@@ -51,6 +59,11 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
         }
     }
 
+    /**
+     * Constructor.
+     *
+     * @param os piped output stream.
+     */
     public ODataStreamingManagement(final PipedOutputStream os) {
         super(os);
 
@@ -62,16 +75,31 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
         }
     }
 
+    /**
+     * Constructor.
+     *
+     * @param is payload input stream.
+     */
     public ODataStreamingManagement(final InputStream is) {
         super(null);
         this.body = null;
         this.def = is;
     }
 
+    /**
+     * Gets payload stream.
+     *
+     * @return payload stream.
+     */
     public InputStream getBody() {
         return this.body == null ? this.def : this.body;
     }
 
+    /**
+     * Close piped output stream.
+     *
+     * @throws IOException in case of failure.
+     */
     public void finalizeBody() throws IOException {
         if (bodyStreamWriter != null) {
             bodyStreamWriter.flush();
@@ -79,7 +107,17 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
         }
     }
 
+    /**
+     * Closes the payload input stream and gets back the OData response.
+     *
+     * @return OData response.
+     */
     public abstract T getResponse();
 
+    /**
+     * Closes the payload input stream and ask for an asynchronous response.
+     *
+     * @return <code>Future&lt;ODataResponse&gt;</code> about the executed request.
+     */
     public abstract Future<T> asyncResponse();
 }

@@ -54,16 +54,25 @@ public class ODataSetLinkRequest extends ODataBasicRequestImpl<ODataLinkOperatio
         this.entityToBeAdded = entityToBeAdded;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataLinkOperationResponse execute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataLinkOperationResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     protected byte[] getPayload() {
         try {

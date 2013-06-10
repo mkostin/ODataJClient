@@ -40,16 +40,27 @@ public class ODataRemoveLinkRequest extends ODataBasicRequestImpl<ODataLinkOpera
         this.uri = linkToBeRemoved;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataLinkOperationResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataLinkOperationResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * {@inheritDoc }
+     * <p>
+     * This kind of request doesn't have any kind of payload: an empty byte array will be returned.
+     */
     @Override
     protected byte[] getPayload() {
         return new byte[0];

@@ -50,16 +50,25 @@ public class ODataPrimitiveCreateRequest extends ODataBasicRequestImpl<ODataQuer
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataQueryResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataQueryResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     protected byte[] getPayload() {
         try {

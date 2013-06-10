@@ -262,18 +262,36 @@ public abstract class ODataRequestImpl implements ODataRequest {
         return header.getHeader(ODataHeader.HeaderName.dataServiceVersion);
     }
 
+    /**
+     * Gets request HTTP method.
+     *
+     * @return HTTP method.
+     */
     Method getMethod() {
         return method;
     }
 
+    /**
+     * Gets request header.
+     *
+     * @return request header.
+     */
     ODataHeader getHeader() {
         return header;
     }
 
+    /**
+     * Gets request URI.
+     *
+     * @return request URI.
+     */
     URI getUri() {
         return uri;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public byte[] toByteArray() {
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -307,6 +325,9 @@ public abstract class ODataRequestImpl implements ODataRequest {
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public InputStream rowExecute() {
         // execute the request

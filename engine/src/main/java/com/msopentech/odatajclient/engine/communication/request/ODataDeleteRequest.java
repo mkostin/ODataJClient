@@ -40,16 +40,27 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
         this.uri = uri;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataDeleteResponse execute() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataDeleteResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     * <p>
+     * No payload: empty byte array will be returned.
+     */
     @Override
     protected byte[] getPayload() {
         return new byte[0];

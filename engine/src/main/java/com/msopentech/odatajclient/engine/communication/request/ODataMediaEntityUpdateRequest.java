@@ -57,17 +57,31 @@ public class ODataMediaEntityUpdateRequest
         return (MediaEntityUpdateRequestPayload) payload;
     }
 
+    /**
+     * Media entity payload object.
+     */
     public class MediaEntityUpdateRequestPayload extends ODataStreamingManagement<ODataMediaEntityUpdateResponse> {
 
-        public MediaEntityUpdateRequestPayload(final InputStream is) {
+        /**
+         * Private constructor.
+         *
+         * @param is media stream.
+         */
+        private MediaEntityUpdateRequestPayload(final InputStream is) {
             super(is);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataMediaEntityUpdateResponse getResponse() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public Future<ODataMediaEntityUpdateResponse> asyncResponse() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

@@ -62,6 +62,14 @@ public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeRespons
         this.parameters = null;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param method HTTP method of the request. If configured X-HTTP-METHOD header will be used.
+     * @param uri URI that identifies the operation.
+     * @param type requested operation type.
+     * @param parameters function parameters.
+     */
     ODataInvokeRequest(
             final Method method,
             final URI uri,
@@ -73,16 +81,25 @@ public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeRespons
         this.parameters = parameters;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataInvokeResponse execute() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataInvokeResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     protected byte[] getPayload() {
         final StringBuilder builder = new StringBuilder();
@@ -92,7 +109,7 @@ public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeRespons
                 builder.append(param.getKey()).append("=").append(param.getValue().toString());
             }
         }
-        
+
         try {
             return builder.toString().getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {

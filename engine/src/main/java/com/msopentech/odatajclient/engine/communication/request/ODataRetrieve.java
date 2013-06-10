@@ -62,8 +62,11 @@ public class ODataRetrieve extends ODataBatchRequestItem {
         // stream the request
         streamRequestHeader(request);
 
+        // close before in order to avoid any further setRequest calls.
         close();
 
+        // add request to the list
+        requests.add(request);
         return this;
     }
 }

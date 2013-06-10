@@ -40,16 +40,27 @@ public class ODataQueryRequest extends ODataBasicRequestImpl<ODataQueryResponse>
         this.uri = query;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataQueryResponse execute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Future<ODataQueryResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * {@inheritDoc }
+     * <p>
+     * This kind of request doesn't have any kind of payload: an empty byte array will be returned.
+     */
     @Override
     protected byte[] getPayload() {
         return new byte[0];
