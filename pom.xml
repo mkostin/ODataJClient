@@ -54,13 +54,11 @@
   </prerequisites>
   
   <properties>
-    <yworks.uml.path>${basedir}/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
     <targetJdk>1.6</targetJdk>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
     <sl4j.version>1.7.5</sl4j.version>
     <logback.version>1.0.13</logback.version>
-    <commons.lang.version>2.6</commons.lang.version>
   </properties>
   
   <dependencyManagement>
@@ -69,6 +67,12 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>3.1</version>
+      </dependency>
+    
+      <dependency>
+        <groupId>com.sap.odata</groupId>
+        <artifactId>com.sap.core.odata.core</artifactId>
+        <version>0.6.0-SNAPSHOT</version>
       </dependency>
     
       <dependency>
@@ -206,6 +210,10 @@
   <profiles>
     <profile>
       <id>javadoc</id>
+      
+      <properties>
+        <yworks.uml.path>${basedir}/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
+      </properties>
       
       <build>
         <defaultGoal>clean verify javadoc:aggregate</defaultGoal>
