@@ -66,10 +66,11 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${commons.lang.version}</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.1</version>
       </dependency>
+    
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
@@ -80,10 +81,12 @@
         <artifactId>logback-classic</artifactId>
         <version>${logback.version}</version>
       </dependency>
+      
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.11</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
