@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.client.response;
 
-import com.msopentech.odatajclient.engine.communication.response.*;
+import com.msopentech.odatajclient.engine.communication.response.ODataMetadataResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 
 /**
@@ -28,6 +28,7 @@ class ODataMetadataResponseImpl extends ODataResponseImpl implements ODataMetada
     /**
      * {@inheritDoc}
      */
+    @Override
     public EdmMetadata getBody() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -15,10 +15,11 @@
  */
 package com.msopentech.odatajclient.proxy.odatademo;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.TParameterMode;
 import com.msopentech.odatajclient.proxy.api.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.Parameter;
-import com.msopentech.odatajclient.engine.data.metadata.ParameterMode;
+
 import java.util.Collection;
 import java.util.concurrent.Future;
 
@@ -34,5 +35,5 @@ public interface AsyncDemoService {
     @FunctionImport(name = "GetProductsByRating", entitySet = Products.class,
             returnType = "Collection(ODataDemo.Product)")
     Future<Collection<Product>> getProductsByRating(
-            @Parameter(name = "rating", type = "Edm.Int32", mode = ParameterMode.In) Integer rating);
+            @Parameter(name = "rating", type = "Edm.Int32", mode = TParameterMode.IN) Integer rating);
 }

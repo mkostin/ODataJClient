@@ -27,6 +27,7 @@ public class Utilities {
      * @param type conversion type.
      * @return converted value object.
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Serializable> T convert(final String value, final EdmSimpleType type) {
         return (T) new String();
     }

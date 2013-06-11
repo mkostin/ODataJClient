@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.TSchema;
+import com.msopentech.odatajclient.engine.data.metadata.edmx.TDataServices;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,13 +27,17 @@ public class EdmMetadata implements Serializable {
 
     private static final long serialVersionUID = -1214173426671503187L;
 
-    private List<Schema> schemas;
+    private final TDataServices dataservices;
 
-    public Schema getSchema(int index) {
-        return schemas.get(index);
+    public EdmMetadata(final TDataServices dataservices) {
+        this.dataservices = dataservices;
     }
 
-    public List<Schema> getSchemas() {
-        return schemas;
+    public TSchema getSchema(int index) {
+        return dataservices.getSchema().get(index);
+    }
+
+    public List<TSchema> getSchemas() {
+        return dataservices.getSchema();
     }
 }

@@ -15,9 +15,8 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.engine.data.metadata.CollectionKind;
-import com.msopentech.odatajclient.engine.data.metadata.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
+import com.msopentech.odatajclient.engine.data.metadata.edm.TConcurrencyMode;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -52,12 +51,10 @@ public @interface Property {
 
     int srid() default 0;
 
-    CollectionKind collectionKind() default CollectionKind.None;
-    
-    ConcurrencyMode concurrencyMode() default ConcurrencyMode.None;
+    TConcurrencyMode concurrencyMode() default TConcurrencyMode.NONE;
 
     String mimeType() default "";
-    
+
     /* -- Feed Customization annotations -- */
     String fcSourcePath() default "";
 
