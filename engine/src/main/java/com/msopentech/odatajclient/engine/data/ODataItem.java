@@ -31,7 +31,7 @@ public abstract class ODataItem implements Serializable {
     protected URI link;
 
     /**
-     * OData entity name.
+     * OData entity name/type.
      */
     private final String name;
 

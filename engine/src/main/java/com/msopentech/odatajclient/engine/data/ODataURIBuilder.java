@@ -430,7 +430,19 @@ public class ODataURIBuilder implements Serializable {
      */
     public URI build() {
         try {
-            return new URI(segments.get(0).getValue());
+            final StringBuilder builder = new StringBuilder();
+
+            for (Segment seg : segments) {
+                if (builder.length() > 0) {
+                    builder.append("/");
+
+                }
+                
+                builder.append(seg.value);
+            }
+
+            return new URI(builder.toString());
+
         } catch (URISyntaxException ex) {
             Logger.getLogger(ODataURIBuilder.class.getName()).log(Level.SEVERE, null, ex);
             throw new IllegalStateException(ex);

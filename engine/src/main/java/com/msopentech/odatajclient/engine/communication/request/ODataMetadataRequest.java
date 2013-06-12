@@ -16,8 +16,19 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataMetadataResponse;
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.edmx.TDataServices;
+import com.msopentech.odatajclient.engine.data.metadata.edmx.TEdmx;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.Future;
+import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData metadata request.
@@ -45,7 +56,9 @@ public class ODataMetadataRequest extends ODataRequestImpl
      */
     @Override
     public ODataMetadataResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final WebClient client = WebClient.create(uri.toASCIIString());
+        return new ODataMetadataResponsImpl(client.get());
+
     }
 
     /**
@@ -54,5 +67,61 @@ public class ODataMetadataRequest extends ODataRequestImpl
     @Override
     public Future<ODataMetadataResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private class ODataMetadataResponsImpl implements ODataMetadataResponse {
+
+        private final Response res;
+
+        public ODataMetadataResponsImpl(final Response res) {
+            this.res = res;
+        }
+
+        @Override
+        public EdmMetadata getBody() {
+            try {
+                JAXBContext context = JAXBContext.newInstance(TEdmx.class);
+                @SuppressWarnings("unchecked")
+                TEdmx edmx = ((JAXBElement<TEdmx>) context.createUnmarshaller().unmarshal(
+                        res.readEntity(InputStream.class))).getValue();
+
+                TDataServices dataservices = null;
+                for (JAXBElement<?> edmxContent : edmx.getContent()) {
+                    if (TDataServices.class.equals(edmxContent.getDeclaredType())) {
+                        dataservices = (TDataServices) edmxContent.getValue();
+                    }
+                }
+                if (dataservices == null) {
+                    throw new IllegalArgumentException("No <DataServices/> element found");
+                }
+
+                return new EdmMetadata(dataservices);
+            } catch (JAXBException e) {
+                LOG.error("Error unmarshalling metadata info", e);
+                throw new IllegalStateException(e);
+            } finally {
+                res.close();
+            }
+        }
+
+        @Override
+        public Collection<String> getHeaderNames() {
+            return res.getHeaders() == null ? new HashSet<String>() : res.getHeaders().keySet();
+        }
+
+        @Override
+        public String getHeader(final String name) {
+            return res.getHeaderString(name);
+        }
+
+        @Override
+        public int getStatusCode() {
+            return res.getStatus();
+        }
+
+        @Override
+        public String getStatusMessage() {
+            return res.getStatusInfo().getReasonPhrase();
+        }
     }
 }

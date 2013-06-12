@@ -15,11 +15,10 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.data.metadata.edmx.TDataServices;
-import com.msopentech.odatajclient.engine.data.metadata.edmx.TEdmx;
+import com.msopentech.odatajclient.engine.communication.request.ODataMetadataRequest;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataMetadataResponse;
 import com.msopentech.odatajclient.engine.sap.JAXBEdmProvider;
-import com.sap.core.odata.api.ODataServiceVersion;
-import com.sap.core.odata.api.commons.ODataHttpHeaders;
 import com.sap.core.odata.api.edm.EdmEntityContainer;
 import com.sap.core.odata.api.edm.EdmEntitySet;
 import com.sap.core.odata.api.edm.provider.EdmProvider;
@@ -36,9 +35,6 @@ import com.sap.core.odata.core.edm.provider.EdmImplProv;
 import com.sap.core.odata.core.ep.consumer.XmlEntityConsumer;
 import java.io.InputStream;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
@@ -50,36 +46,14 @@ import org.junit.Test;
 public class AATemporaryTest {
 
     private EdmxProvider sapParseEdmMetadata() throws EntityProviderException {
-        WebClient client = WebClient.create(
-                "http://services.odata.org/v3/(S(zrdgvnc1lzrkqfivykmk5leb))/Northwind/Northwind.svc/$metadata");
-
-        Response response = client.header("Min" + ODataHttpHeaders.DATASERVICEVERSION, ODataServiceVersion.V20).get();
-
-        //System.out.println(response.getHeaderString(ODataHttpHeaders.DATASERVICEVERSION));
-
-        return new EdmxProvider().parse(response.readEntity(InputStream.class), true);
+        return new EdmxProvider().parse(AATemporaryTest.class.getResourceAsStream("/Northwind-metadata.xml"), true);
     }
 
     private JAXBEdmProvider jaxbParseEdmMetadata() throws JAXBException {
-        WebClient client = WebClient.create(
-                "http://services.odata.org/v3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/$metadata");
-
-        JAXBContext context = JAXBContext.newInstance(TEdmx.class);
-        @SuppressWarnings("unchecked")
-        TEdmx edmx = ((JAXBElement<TEdmx>) context.createUnmarshaller().
-                unmarshal(client.get(InputStream.class))).getValue();
-
-        TDataServices dataservices = null;
-        for (JAXBElement<?> edmxContent : edmx.getContent()) {
-            if (TDataServices.class.equals(edmxContent.getDeclaredType())) {
-                dataservices = (TDataServices) edmxContent.getValue();
-            }
-        }
-        if (dataservices == null) {
-            throw new IllegalArgumentException("No <DataServices/> element found");
-        }
-
-        return new JAXBEdmProvider(dataservices.getSchema());
+        final ODataMetadataRequest metadataRequest = ODataRequestFactory.getMetadataRequest(
+                "http://services.odata.org/v3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
+        final ODataMetadataResponse md = metadataRequest.execute();
+        return new JAXBEdmProvider(md.getBody().getSchemas());
     }
 
     public ODataEntry readODataEntry(EdmProvider edmProvider, final String url, final String container,

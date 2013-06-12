@@ -15,8 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import java.io.Serializable;
+
 /**
  * Abstract representation of an OData entity property value.
  */
-public abstract class ODataValue {
+public abstract class ODataValue implements Serializable {
 }
