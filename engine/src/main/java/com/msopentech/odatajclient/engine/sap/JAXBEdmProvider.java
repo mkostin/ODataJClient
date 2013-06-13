@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.TComplexType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.TEntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.TEntityType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.TSchema;
+import com.msopentech.odatajclient.engine.data.metadata.edm.TUsing;
 import com.sap.core.odata.api.edm.FullQualifiedName;
 import com.sap.core.odata.api.edm.provider.AnnotationElement;
 import com.sap.core.odata.api.edm.provider.Association;
@@ -33,6 +34,7 @@ import com.sap.core.odata.api.edm.provider.EntitySet;
 import com.sap.core.odata.api.edm.provider.EntityType;
 import com.sap.core.odata.api.edm.provider.FunctionImport;
 import com.sap.core.odata.api.edm.provider.Schema;
+import com.sap.core.odata.api.edm.provider.Using;
 import com.sap.core.odata.api.exception.ODataException;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,6 +185,12 @@ public class JAXBEdmProvider extends EdmProvider {
             schema.setNamespace(tschema.getNamespace());
             schema.setAlias(tschema.getAlias());
             schema.setAnnotationAttributes(JAXB2SAPBridge.toAnnotationAttributes(tschema.getOtherAttributes()));
+
+            List<Using> usings = new ArrayList<Using>();
+            for (TUsing tUsing : tschema.getUsings()) {
+                usings.add(JAXB2SAPBridge.toUsing(tUsing));
+            }
+            schema.setUsings(usings);
 
             List<ComplexType> complexTypes = new ArrayList<ComplexType>();
             for (TComplexType tComplexType : tschema.getComplexTypes()) {
