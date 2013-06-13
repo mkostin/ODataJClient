@@ -53,6 +53,7 @@ public class ODataEntitySetRequest extends ODataQueryRequest<ODataResultSet<ODat
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public ODataResultSet<ODataEntity> getBody() {
             return res.readEntity(ODataResultSet.class);
         }
