@@ -19,7 +19,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperat
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.concurrent.Future;
 
 /**
  * This class implements a link set OData request.
@@ -59,14 +58,6 @@ public class ODataSetLinkRequest extends ODataBasicRequestImpl<ODataLinkOperatio
      */
     @Override
     public ODataLinkOperationResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public Future<ODataLinkOperationResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

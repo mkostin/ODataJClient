@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import java.net.URI;
-import java.util.concurrent.Future;
 
 /**
  * This class implements an create link OData request.
@@ -55,14 +54,6 @@ public class ODataAddLinkRequest extends ODataBasicRequestImpl<ODataLinkOperatio
      */
     @Override
     public ODataLinkOperationResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Future<ODataLinkOperationResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

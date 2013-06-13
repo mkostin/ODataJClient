@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  * @see ODataRequestFactory.
  */
-public abstract class ODataRequestImpl implements ODataRequest {
+public class ODataRequestImpl implements ODataRequest {
 
     /**
      * Logger.
@@ -251,7 +252,8 @@ public abstract class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getContentType() {
-        return header.getHeader(ODataHeader.HeaderName.contentType);
+        final String ct = header.getHeader(ODataHeader.HeaderName.contentType);
+        return StringUtils.isBlank(ct) ? ODataFormat.JSON.toString() : ct;
     }
 
     /**
@@ -330,7 +332,7 @@ public abstract class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public InputStream rowExecute() {
-        // execute the request
-        return null;
+        final WebClient client = WebClient.create(this.uri);
+        return client.accept(getContentType()).get(InputStream.class);
     }
 }

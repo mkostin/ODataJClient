@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import java.net.URI;
-import java.util.concurrent.Future;
 
 /**
  * This class implements an OData create request.
@@ -52,14 +51,6 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     public ODataEntityCreateResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public Future<ODataEntityCreateResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

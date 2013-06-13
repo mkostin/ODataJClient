@@ -22,8 +22,9 @@ import com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntit
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.ODataChangeset;
-import com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRetrieve;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
@@ -51,7 +52,7 @@ public class BatchUsageTest {
         uri.appendEntityTypeSegment("Products(0)").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
-        final ODataQueryRequest query = ODataRequestFactory.getQueryRequest(uri.build());
+        final ODataEntityRequest query = ODataRetrieveRequestFactory.getEntityRequest(uri.build());
 
         retrieve.setRequest(query);
         // -------------------------------------------

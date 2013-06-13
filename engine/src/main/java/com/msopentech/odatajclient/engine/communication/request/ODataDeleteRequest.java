@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import java.net.URI;
-import java.util.concurrent.Future;
 
 /**
  * This class implements an OData delete request.
@@ -46,14 +45,6 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
     @Override
     public ODataDeleteResponse execute() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public Future<ODataDeleteResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

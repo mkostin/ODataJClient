@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client.response;
+package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
-import com.msopentech.odatajclient.engine.communication.response.*;
-import com.msopentech.odatajclient.engine.utils.ODataResultSet;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
+import java.net.URI;
 
-/**
- * This class implements a response to a specific query request.
- *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest
- */
-class ODataQueryResponseImpl extends ODataResponseImpl implements ODataQueryResponse {
+public class ODataRowRequest extends ODataRequestImpl {
 
-    /**
-     * {@inheritDoc}
-     */
-    public <T> ODataResultSet<T> getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    ODataRowRequest(final URI uri) {
+        super(Method.GET);
+        this.uri = uri;
     }
 }

@@ -19,7 +19,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataUpdateEnti
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.concurrent.Future;
 
 /**
  * This class implements an OData update request.
@@ -57,14 +56,6 @@ public class ODataUpdateEntityRequest extends ODataBasicRequestImpl<ODataUpdateE
      */
     @Override
     public ODataUpdateEntityResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public Future<ODataUpdateEntityResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

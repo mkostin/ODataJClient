@@ -175,26 +175,6 @@ public class ODataRequestFactory {
     }
 
     /**
-     * Gets a query request object instance.
-     *
-     * @param query query to be performed.
-     * @return new ODataQueryRequest instance.
-     */
-    public static ODataQueryRequest getQueryRequest(final URI query) {
-        return new ODataQueryRequest(query);
-    }
-
-    /**
-     * Gets a query request returning a single result item.
-     *
-     * @param query query to be performed.
-     * @return new ODataQueryRequest instance.
-     */
-    public static ODataSingleResultRequest getSingleResultRequest(final URI query) {
-        return new ODataSingleResultRequest(query);
-    }
-
-    /**
      * Gets a batch request object instance.
      *
      * @return new ODataBatchRequest instance.
@@ -234,16 +214,5 @@ public class ODataRequestFactory {
      */
     public static ODataInvokeRequest getInvokeLegacyRequest(final Method method, final URI uri) {
         return new ODataInvokeRequest(method, uri, OperationType.LEGACY);
-    }
-
-    /**
-     * Gets a metadata request instance.
-     *
-     * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
-     * data service.
-     * @return new ODataMetadataRequest instance.
-     */
-    public static ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
-        return new ODataMetadataRequest(new ODataURIBuilder(serviceRoot).appendMetadataSegment().build());
     }
 }
