@@ -22,7 +22,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResp
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.types.EdmSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EDMSimpleType;
 import java.util.Collections;
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public class InvokeUsageTest {
         final ODataURIBuilder targetURI = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
         targetURI.appendEntityTypeSegment("Product(0)").appendActionSegment("UpdateProductRating");
 
-        final ODataPrimitiveValue value = new ODataPrimitiveValue(2, EdmSimpleType.Int32);
+        final ODataPrimitiveValue value = new ODataPrimitiveValue(2, EDMSimpleType.INT_32);
         final Map<String, ODataValue> parameters = Collections.<String, ODataValue>singletonMap("rating", value);
 
         // create your request

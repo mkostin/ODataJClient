@@ -33,6 +33,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.TNavigationProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.TOnAction;
 import com.msopentech.odatajclient.engine.data.metadata.edm.TPropertyRef;
 import com.msopentech.odatajclient.engine.data.metadata.edm.TTypeAnnotation;
+import com.msopentech.odatajclient.engine.data.metadata.edm.TUsing;
 import com.msopentech.odatajclient.engine.data.metadata.edm.TValueAnnotation;
 import com.sap.core.odata.api.edm.Edm;
 import com.sap.core.odata.api.edm.EdmAction;
@@ -64,6 +65,7 @@ import com.sap.core.odata.api.edm.provider.Property;
 import com.sap.core.odata.api.edm.provider.PropertyRef;
 import com.sap.core.odata.api.edm.provider.ReturnType;
 import com.sap.core.odata.api.edm.provider.SimpleProperty;
+import com.sap.core.odata.api.edm.provider.Using;
 import com.sap.core.odata.api.ep.EntityProviderException;
 import com.sap.core.odata.core.edm.parser.EdmParserConstants;
 import java.util.ArrayList;
@@ -114,6 +116,10 @@ public final class JAXB2SAPBridge {
         property.setName(tProperty.getName());
         // TODO: add GeographyPoint (and more)
         try {
+            System.out.println("BBBBBBBBBBBBB1 " + fqName.getName());
+            System.out.println("BBBBBBBBBBBBB2 " + EdmSimpleTypeKind.valueOf(fqName.getName()));
+            System.out.println("=========================\n");
+            
             property.setType(EdmSimpleTypeKind.valueOf(fqName.getName()));
         } catch (IllegalArgumentException e) {
             // ignore            
@@ -233,6 +239,15 @@ public final class JAXB2SAPBridge {
         property.setAnnotationAttributes(toAnnotationAttributes(annotationAttributes));
 
         return property.setAnnotationElements(toAnnotationElements(tProperty));
+    }
+
+    public static Using toUsing(TUsing tUsing) {
+        Using using = new Using();
+        using.setNamespace(tUsing.getNamespace());
+        using.setAlias(tUsing.getAlias());
+        using.setAnnotationAttributes(toAnnotationAttributes(tUsing.getOtherAttributes()));
+
+        return using;
     }
 
     public static ComplexType toComplexType(TComplexType tComplexType) throws EntityProviderException {

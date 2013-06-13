@@ -122,6 +122,10 @@ public class TSchema extends AbstractElement {
         return this.gSchemaBodyElements;
     }
 
+    public List<TUsing> getUsings() {
+        return getElements(TUsing.class);
+    }
+
     public List<TComplexType> getComplexTypes() {
         return getElements(TComplexType.class);
     }
