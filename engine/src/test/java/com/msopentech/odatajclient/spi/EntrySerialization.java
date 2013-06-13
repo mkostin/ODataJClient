@@ -15,24 +15,11 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.types.EdmSimpleType;
-import com.msopentech.odatajclient.engine.utils.EntityFactory;
 import com.sap.core.odata.api.ep.EntityProviderException;
-import com.sap.core.odata.api.ep.EntityProviderWriteProperties.ODataEntityProviderPropertiesBuilder;
 import com.sap.core.odata.core.commons.ContentType;
-import com.sap.core.odata.core.ep.producer.AtomEntryEntityProducer;
-import com.sap.core.odata.core.ep.util.CircleStreamBuffer;
 import com.sap.core.odata.core.exception.ODataRuntimeException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import org.junit.Test;
 
 public class EntrySerialization {
@@ -74,7 +61,6 @@ public class EntrySerialization {
 //            }
 //
 //            is.close();
-
 //
 //        } catch (XMLStreamException e) {
 //            cachedException = new ODataRuntimeException(e);
