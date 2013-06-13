@@ -15,12 +15,34 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.LineString;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiLineString;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoint;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.UUID;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>Java class for EDMSimpleType.
+ * Represent the primitive types of the Entity Data Model (EDM).
+ *
+ * @see http://dl.windowsazure.com/javadoc/com/microsoft/windowsazure/services/table/models/EdmType.html
+ * <p>
+ * For an overview of the available EDM primitive data types and names, see the <a
+ * href="http://www.odata.org/developers/protocols/overview#AbstractTypeSystem">Primitive Data Types</a> section of the
+ * <a href="http://www.odata.org/developers/protocols/overview">OData Protocol Overview</a>.
+ * </p>
+ * <p>
+ * The Abstract Type System used to define the primitive types supported by OData is defined in detail in <a
+ * href="http://msdn.microsoft.com/en-us/library/dd541474.aspx">[MC-CSDL] (section 2.2.1).</a>
+ * </p>
  *
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
@@ -67,77 +89,158 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum EDMSimpleType {
 
+    /**
+     * The absence of a value.
+     */
+    @XmlEnumValue("Null")
+    NULL("Null", void.class),
+    /**
+     * An array of bytes.
+     */
     @XmlEnumValue("Binary")
-    BINARY("Binary"),
+    BINARY("Binary", Byte[].class),
+    /**
+     * A Boolean value.
+     */
     @XmlEnumValue("Boolean")
-    BOOLEAN("Boolean"),
+    BOOLEAN("Boolean", Boolean.class),
+    /**
+     * Unsigned 8-bit integer value.
+     */
     @XmlEnumValue("Byte")
-    BYTE("Byte"),
+    BYTE("Byte", Byte.class),
+    /**
+     * A 64-bit value expressed as Coordinated Universal Time (UTC).
+     */
     @XmlEnumValue("DateTime")
-    DATE_TIME("DateTime"),
+    DATE_TIME("DateTime", Date.class, "yyyy-mm-ddThh:mm[:ss[.fffffff]]"),
+    /**
+     * Date and time as an Offset in minutes from GMT.
+     */
     @XmlEnumValue("DateTimeOffset")
-    DATE_TIME_OFFSET("DateTimeOffset"),
+    DATE_TIME_OFFSET("DateTimeOffset", Date.class, "yyyy-mm-ddThh:mm[:ss[.fffffff]]Z"),
+    /**
+     * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
+     */
     @XmlEnumValue("Time")
-    TIME("Time"),
+    TIME("Time", Date.class, "hh:mm[:ss[.fffffff]]"),
+    /**
+     * Numeric values with fixed precision and scale.
+     */
     @XmlEnumValue("Decimal")
-    DECIMAL("Decimal"),
+    DECIMAL("Decimal", Float.class, "[0-9]+.[0-9]+M|m"),
+    /**
+     * A 64-bit double-precision floating point value.
+     */
     @XmlEnumValue("Double")
-    DOUBLE("Double"),
+    DOUBLE("Double", Double.class),
+    /**
+     * A floating point number with 7 digits precision.
+     */
     @XmlEnumValue("Single")
-    SINGLE("Single"),
+    SINGLE("Single", Float.class, "[0-9]+.[0-9]+f"),
     @XmlEnumValue("Geography")
-    GEOGRAPHY("Geography"),
+    GEOGRAPHY("Geography", Geospatial.class, "GEOGRAPHY|"),
     @XmlEnumValue("GeographyPoint")
-    GEOGRAPHY_POINT("GeographyPoint"),
+    GEOGRAPHY_POINT("GeographyPoint", Point.class, "GEOGRAPHY|"),
     @XmlEnumValue("GeographyLineString")
-    GEOGRAPHY_LINE_STRING("GeographyLineString"),
+    GEOGRAPHY_LINE_STRING("GeographyLineString", LineString.class, "GEOGRAPHY|"),
     @XmlEnumValue("GeographyPolygon")
-    GEOGRAPHY_POLYGON("GeographyPolygon"),
+    GEOGRAPHY_POLYGON("GeographyPolygon", Polygon.class, "GEOGRAPHY|"),
     @XmlEnumValue("GeographyMultiPoint")
-    GEOGRAPHY_MULTI_POINT("GeographyMultiPoint"),
+    GEOGRAPHY_MULTI_POINT("GeographyMultiPoint", MultiPoint.class, "GEOGRAPHY|"),
     @XmlEnumValue("GeographyMultiLineString")
-    GEOGRAPHY_MULTI_LINE_STRING("GeographyMultiLineString"),
+    GEOGRAPHY_MULTI_LINE_STRING("GeographyMultiLineString", MultiLineString.class, "GEOGRAPHY|"),
     @XmlEnumValue("GeographyMultiPolygon")
-    GEOGRAPHY_MULTI_POLYGON("GeographyMultiPolygon"),
+    GEOGRAPHY_MULTI_POLYGON("GeographyMultiPolygon", MultiPolygon.class, "GEOGRAPHY|"),
     @XmlEnumValue("GeographyCollection")
-    GEOGRAPHY_COLLECTION("GeographyCollection"),
+    GEOGRAPHY_COLLECTION("GeographyCollection", GeospatialCollection.class, "GEOGRAPHY|"),
     @XmlEnumValue("Geometry")
-    GEOMETRY("Geometry"),
+    GEOMETRY("Geometry", Geospatial.class, "GEOMETRY|"),
     @XmlEnumValue("GeometryPoint")
-    GEOMETRY_POINT("GeometryPoint"),
+    GEOMETRY_POINT("GeometryPoint", Point.class, "GEOMETRY|"),
     @XmlEnumValue("GeometryLineString")
-    GEOMETRY_LINE_STRING("GeometryLineString"),
+    GEOMETRY_LINE_STRING("GeometryLineString", LineString.class, "GEOMETRY|"),
     @XmlEnumValue("GeometryPolygon")
-    GEOMETRY_POLYGON("GeometryPolygon"),
+    GEOMETRY_POLYGON("GeometryPolygon", Polygon.class, "GEOMETRY|"),
     @XmlEnumValue("GeometryMultiPoint")
-    GEOMETRY_MULTI_POINT("GeometryMultiPoint"),
+    GEOMETRY_MULTI_POINT("GeometryMultiPoint", MultiPoint.class, "GEOMETRY|"),
     @XmlEnumValue("GeometryMultiLineString")
-    GEOMETRY_MULTI_LINE_STRING("GeometryMultiLineString"),
+    GEOMETRY_MULTI_LINE_STRING("GeometryMultiLineString", MultiLineString.class, "GEOMETRY|"),
     @XmlEnumValue("GeometryMultiPolygon")
-    GEOMETRY_MULTI_POLYGON("GeometryMultiPolygon"),
+    GEOMETRY_MULTI_POLYGON("GeometryMultiPolygon", MultiPolygon.class, "GEOMETRY|"),
     @XmlEnumValue("GeometryCollection")
-    GEOMETRY_COLLECTION("GeometryCollection"),
+    GEOMETRY_COLLECTION("GeometryCollection", GeospatialCollection.class, "GEOMETRY|"),
+    /**
+     * A 128-bit globally unique identifier.
+     */
     @XmlEnumValue("Guid")
-    GUID("Guid"),
+    GUID("Guid", UUID.class),
+    /**
+     * A 16-bit integer value.
+     */
     @XmlEnumValue("Int16")
-    INT_16("Int16"),
+    INT_16("Int16", Short.class),
+    /**
+     * A 32-bit integer value.
+     */
     @XmlEnumValue("Int32")
-    INT_32("Int32"),
+    INT_32("Int32", Integer.class),
+    /**
+     * A 64-bit integer value.
+     */
     @XmlEnumValue("Int64")
-    INT_64("Int64"),
+    INT_64("Int64", Long.class),
+    /**
+     * A UTF-16-encoded value.
+     * String values may be up to 64 KB in size.
+     */
     @XmlEnumValue("String")
-    STRING("String"),
+    STRING("String", String.class),
+    /**
+     * A signed 8-bit integer value.
+     */
     @XmlEnumValue("SByte")
-    S_BYTE("SByte");
+    S_BYTE("SByte", Byte.class),
+    /**
+     * Resource stream (for media entities).
+     */
+    @XmlEnumValue("Stream")
+    STREAM("Stream", InputStream.class);
 
     private final String value;
 
-    EDMSimpleType(String v) {
-        value = v;
+    private final Class<?> clazz;
+
+    private final String pattern;
+
+    EDMSimpleType(final String value, final Class<?> clazz) {
+        this.value = value;
+        this.clazz = clazz;
+        this.pattern = null;
+    }
+
+    EDMSimpleType(final String value, final Class<?> clazz, final String pattern) {
+        this.value = value;
+        this.clazz = clazz;
+        this.pattern = pattern;
     }
 
     public String value() {
         return value;
+    }
+
+    public String pattern() {
+        return pattern;
+    }
+
+    public Class<?> javaType() {
+        return this.clazz;
+    }
+
+    @Override
+    public String toString() {
+        return "Edm." + name();
     }
 
     public static EDMSimpleType fromValue(String v) {

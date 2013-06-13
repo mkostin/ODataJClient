@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
-import com.msopentech.odatajclient.engine.data.metadata.edm.EDMSimpleType;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Collection;
 
-/**
- * Mark Java enum as EDM enum type.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface EnumType {
+public class MultiPoint extends ComposedGeospatial<Point> {
 
-    String value();
-
-    EDMSimpleType underlyingType() default EDMSimpleType.INT_32;
-
-    boolean isFlags() default false;
+    public MultiPoint(final Dimension dimension, final Collection<Point> points) {
+        super(dimension, Type.MULTIPOINT, points);
+    }
 }

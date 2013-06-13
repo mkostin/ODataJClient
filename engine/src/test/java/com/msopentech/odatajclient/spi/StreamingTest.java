@@ -32,7 +32,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.types.EdmSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EDMSimpleType;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.EntityFactory;
 import java.io.IOException;
@@ -109,7 +109,7 @@ public class StreamingTest {
 
             // build the new object to change Rating value
             final ODataEntity changes = EntityFactory.newEntity("Java Code");
-            changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EdmSimpleType.Int32)));
+            changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EDMSimpleType.INT_32)));
 
             // create your request
             final ODataUpdateEntityRequest change =

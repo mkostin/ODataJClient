@@ -116,6 +116,10 @@ public final class JAXB2SAPBridge {
         property.setName(tProperty.getName());
         // TODO: add GeographyPoint (and more)
         try {
+            System.out.println("BBBBBBBBBBBBB1 " + fqName.getName());
+            System.out.println("BBBBBBBBBBBBB2 " + EdmSimpleTypeKind.valueOf(fqName.getName()));
+            System.out.println("=========================\n");
+            
             property.setType(EdmSimpleTypeKind.valueOf(fqName.getName()));
         } catch (IllegalArgumentException e) {
             // ignore            

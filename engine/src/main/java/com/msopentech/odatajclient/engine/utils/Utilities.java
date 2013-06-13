@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
-import com.msopentech.odatajclient.engine.types.EdmSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EDMSimpleType;
 import java.io.Serializable;
 
 public class Utilities {
@@ -28,7 +28,7 @@ public class Utilities {
      * @return converted value object.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Serializable> T convert(final String value, final EdmSimpleType type) {
+    public static <T extends Serializable> T convert(final String value, final EDMSimpleType type) {
         return (T) new String();
     }
 
@@ -40,7 +40,7 @@ public class Utilities {
      * @param type current value type.
      * @return String representation of the value.
      */
-    public static <T extends Serializable> String convert(final T value, final EdmSimpleType type) {
+    public static <T extends Serializable> String convert(final T value, final EDMSimpleType type) {
         return new String();
     }
 }
