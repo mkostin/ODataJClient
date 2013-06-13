@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
@@ -29,14 +29,13 @@ public class QueryUsageTest {
         uri.appendEntityTypeSegment("Products(0)").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
-        final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri.build());
+        final ODataEntityRequest request = ODataRetrieveRequestFactory.getEntityRequest(uri.build());
 
         // execute and retrieve query response
-        ODataQueryResponse res = request.execute();
+        final ODataQueryResponse<ODataEntity> res = request.execute();
 
-        // retrieve and process the query result
-        for (ODataEntity entity : res.<ODataEntity>getBody()) {
-            // .................
-        }
+        final ODataEntity entity = res.getBody();
+
+        // ....
     }
 }

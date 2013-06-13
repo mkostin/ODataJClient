@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import java.net.URI;
-import java.util.concurrent.Future;
 
 /**
  * This class implements an remove navigation link OData request.
@@ -45,14 +44,6 @@ public class ODataRemoveLinkRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     public ODataLinkOperationResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public Future<ODataLinkOperationResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

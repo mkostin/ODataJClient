@@ -20,7 +20,6 @@ import com.msopentech.odatajclient.engine.data.ODataValue;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 /**
  * This class implements an OData invoke operation request.
@@ -87,14 +86,6 @@ public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeRespons
     @Override
     public ODataInvokeResponse execute() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public Future<ODataInvokeResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

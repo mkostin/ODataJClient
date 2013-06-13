@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataMetadataRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataMetadataResponse;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.TEntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.TEntityType;
@@ -27,10 +27,10 @@ public class MetadataUsageTest {
     public void usageTest() {
         // create new request
         final ODataMetadataRequest request =
-                ODataRequestFactory.getMetadataRequest("http://services.odata.org/OData/Odata.svc");
+                ODataRetrieveRequestFactory.getMetadataRequest("http://services.odata.org/OData/Odata.svc");
 
         // execute and retrtieve response
-        final ODataMetadataResponse res = request.execute();
+        final ODataQueryResponse<EdmMetadata> res = request.execute();
 
         // get access to metadata object
         EdmMetadata metadata = res.getBody();

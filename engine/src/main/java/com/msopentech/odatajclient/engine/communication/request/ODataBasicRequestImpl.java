@@ -18,6 +18,10 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Basic request abstract implementation.
@@ -28,6 +32,8 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse>
         extends ODataRequestImpl
         implements ODataBasicRequest<V> {
 
+    private final ExecutorService pool = Executors.newFixedThreadPool(10);
+
     /**
      * Constructor.
      *
@@ -35,6 +41,17 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse>
      */
     public ODataBasicRequestImpl(final Method method) {
         super(method);
+    }
+
+    @Override
+    public final Future<V> asyncExecute() {
+        return pool.submit(new Callable<V>() {
+
+            @Override
+            public V call() throws Exception {
+                return execute();
+            }
+        });
     }
 
     /**

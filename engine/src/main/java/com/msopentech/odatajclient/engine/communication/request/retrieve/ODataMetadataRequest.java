@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
-import com.msopentech.odatajclient.engine.communication.response.ODataMetadataResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edmx.TDataServices;
 import com.msopentech.odatajclient.engine.data.metadata.edmx.TEdmx;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.concurrent.Future;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -31,13 +28,12 @@ import javax.xml.bind.JAXBException;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
- * This class implements an OData metadata request.
- * Get instance by using ODataRequestFactory.
+ * This class implements a metadata query request.
+ * Get instance by using ODataRetrieveRequestFactory.
  *
- * @see ODataRequestFactory#getMetadataRequest(java.lang.String)
+ * @see ODataRetrieveRequestFactory#getMetadataRequest(java.lang.String)
  */
-public class ODataMetadataRequest extends ODataRequestImpl
-        implements ODataBasicRequest<ODataMetadataResponse> {
+public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata> {
 
     /**
      * Constructor.
@@ -45,36 +41,23 @@ public class ODataMetadataRequest extends ODataRequestImpl
      * @param serviceRoot query URI.
      */
     ODataMetadataRequest(final URI uri) {
-        // set method .... If cofigured X-HTTP-METHOD header will be used.
-        super(Method.GET);
-        // set uri ...
-        this.uri = uri;
+        super(uri);
     }
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public ODataMetadataResponse execute() {
+    public ODataQueryResponse<EdmMetadata> execute() {
         final WebClient client = WebClient.create(uri.toASCIIString());
         return new ODataMetadataResponsImpl(client.get());
 
     }
 
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public Future<ODataMetadataResponse> asyncExecute() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    protected class ODataMetadataResponsImpl extends ODataQueryResponseImpl {
 
-    private class ODataMetadataResponsImpl implements ODataMetadataResponse {
-
-        private final Response res;
-
-        public ODataMetadataResponsImpl(final Response res) {
-            this.res = res;
+        private ODataMetadataResponsImpl(final Response res) {
+            super(res);
         }
 
         @Override
@@ -102,26 +85,6 @@ public class ODataMetadataRequest extends ODataRequestImpl
             } finally {
                 res.close();
             }
-        }
-
-        @Override
-        public Collection<String> getHeaderNames() {
-            return res.getHeaders() == null ? new HashSet<String>() : res.getHeaders().keySet();
-        }
-
-        @Override
-        public String getHeader(final String name) {
-            return res.getHeaderString(name);
-        }
-
-        @Override
-        public int getStatusCode() {
-            return res.getStatus();
-        }
-
-        @Override
-        public String getStatusMessage() {
-            return res.getStatusInfo().getReasonPhrase();
         }
     }
 }

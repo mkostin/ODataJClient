@@ -20,7 +20,6 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.concurrent.Future;
 
 /**
  * This class implements an OData create primitive request.
@@ -55,14 +54,6 @@ public class ODataPrimitiveCreateRequest extends ODataBasicRequestImpl<ODataQuer
      */
     @Override
     public ODataQueryResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public Future<ODataQueryResponse> asyncExecute() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

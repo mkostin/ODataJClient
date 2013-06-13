@@ -15,8 +15,10 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataQueryRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
@@ -34,7 +36,7 @@ public class RawUsageTest {
         uri.appendEntitySetSegment("Products").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
-        final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri.build());
+        final ODataEntitySetRequest request = ODataRetrieveRequestFactory.getEntitySetRequest(uri.build());
 
         // execute and retrieve row response
         final InputStream is = request.rowExecute();
@@ -69,7 +71,7 @@ public class RawUsageTest {
         uri.appendEntitySetSegment("Products").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
-        final ODataQueryRequest request = ODataRequestFactory.getQueryRequest(uri.build());
+        final ODataEntitySetRequest request = ODataRetrieveRequestFactory.getEntitySetRequest(uri.build());
 
         // execute and retrieve row response
         final InputStream is = request.rowExecute();

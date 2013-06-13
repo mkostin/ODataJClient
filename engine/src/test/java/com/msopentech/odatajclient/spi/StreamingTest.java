@@ -20,12 +20,13 @@ import static org.junit.Assert.*;
 import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest.BatchRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.ODataChangeset;
-import com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataRetrieve;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import org.junit.Test;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -88,7 +89,7 @@ public class StreamingTest {
         uri.appendEntityTypeSegment("Products(0)").expand("Supplier").select("Rating,Supplier/Name");
 
         // create new request
-        ODataQueryRequest query = ODataRequestFactory.getQueryRequest(uri.build());
+        ODataEntityRequest query = ODataRetrieveRequestFactory.getEntityRequest(uri.build());
         query.setDataServiceVersion("2.0");
         query.setMaxDataServiceVersion("3.0");
         query.setAccept("application/atom+xml");
@@ -131,7 +132,7 @@ public class StreamingTest {
         uri.appendEntityTypeSegment("Products(2)");
 
         // create new request
-        query = ODataRequestFactory.getQueryRequest(uri.build());
+        query = ODataRetrieveRequestFactory.getEntityRequest(uri.build());
         query.setDataServiceVersion("2.0");
 
         retrieve.setRequest(query);
