@@ -56,29 +56,35 @@ public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata> {
 
     protected class ODataMetadataResponsImpl extends ODataQueryResponseImpl {
 
+        private EdmMetadata metadata = null;
+
         private ODataMetadataResponsImpl(final Response res) {
             super(res);
+            res.close();
         }
 
         @Override
         public EdmMetadata getBody() {
             try {
-                JAXBContext context = JAXBContext.newInstance(TEdmx.class);
-                @SuppressWarnings("unchecked")
-                TEdmx edmx = ((JAXBElement<TEdmx>) context.createUnmarshaller().unmarshal(
-                        res.readEntity(InputStream.class))).getValue();
+                if (metadata == null) {
+                    JAXBContext context = JAXBContext.newInstance(TEdmx.class);
+                    @SuppressWarnings("unchecked")
+                    TEdmx edmx = ((JAXBElement<TEdmx>) context.createUnmarshaller().unmarshal(
+                            res.readEntity(InputStream.class))).getValue();
 
-                TDataServices dataservices = null;
-                for (JAXBElement<?> edmxContent : edmx.getContent()) {
-                    if (TDataServices.class.equals(edmxContent.getDeclaredType())) {
-                        dataservices = (TDataServices) edmxContent.getValue();
+                    TDataServices dataservices = null;
+                    for (JAXBElement<?> edmxContent : edmx.getContent()) {
+                        if (TDataServices.class.equals(edmxContent.getDeclaredType())) {
+                            dataservices = (TDataServices) edmxContent.getValue();
+                        }
                     }
-                }
-                if (dataservices == null) {
-                    throw new IllegalArgumentException("No <DataServices/> element found");
-                }
+                    if (dataservices == null) {
+                        throw new IllegalArgumentException("No <DataServices/> element found");
+                    }
 
-                return new EdmMetadata(dataservices);
+                    metadata = new EdmMetadata(dataservices);
+                }
+                return metadata;
             } catch (JAXBException e) {
                 LOG.error("Error unmarshalling metadata info", e);
                 throw new IllegalStateException(e);
