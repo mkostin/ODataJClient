@@ -96,8 +96,7 @@ public class EntityTest {
 
         assertNotNull(entity);
         assertEquals("ODataDemo.Product", entity.getName());
-        assertEquals(
-                "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)",
-                entity.getLink());
+        assertEquals("http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)",
+                entity.getEditLink().toASCIIString());
     }
 }

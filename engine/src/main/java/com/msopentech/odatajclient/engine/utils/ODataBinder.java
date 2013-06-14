@@ -20,7 +20,6 @@ import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.Link;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import org.slf4j.LoggerFactory;
 
 public class ODataBinder {
@@ -36,33 +35,35 @@ public class ODataBinder {
         final Link edit = entry.getEditLink();
 
         try {
-            URI uri = getURI(edit);
+            URI uri = getURI(edit, entry.getBase());
             entity.setEditLink(uri);
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             LOG.warn("Unparsable link", e);
         }
 
         final Link self = entry.getSelfLink();
 
         try {
-            URI uri = getURI(self);
+            URI uri = getURI(self, entry.getBase());
             entity.setLink(uri);
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             LOG.warn("Unparsable link", e);
         }
 
         return entity;
     }
 
-    private static URI getURI(final Link link) throws MalformedURLException {
-        URL url = null;
-
-        try {
-            url = new URL(link.getHref());
-        } catch (MalformedURLException e) {
-            url = new URL(link.getBase() + "/" + link.getHref());
+    private static URI getURI(final Link link, final String base) throws MalformedURLException {
+        if (link == null) {
+            throw new IllegalArgumentException("Null link provided");
         }
 
-        return URI.create(url.toExternalForm());
+        URI uri = URI.create(link.getHref());
+
+        if (!uri.isAbsolute()) {
+            uri = URI.create(base + "/" + link.getHref());
+        }
+
+        return uri.normalize();
     }
 }

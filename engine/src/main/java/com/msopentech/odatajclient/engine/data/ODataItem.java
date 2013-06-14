@@ -45,7 +45,7 @@ public abstract class ODataItem implements Serializable {
     }
 
     /**
-     * Returns OData entity edit link.
+     * Returns self link.
      *
      * @return entity edit link.
      */
@@ -54,7 +54,7 @@ public abstract class ODataItem implements Serializable {
     }
 
     /**
-     * Sets OData entity self link.
+     * Sets self link.
      *
      * @param self link.
      */

@@ -114,11 +114,30 @@ public abstract class ODataEntity extends ODataItem {
     }
 
     /**
+     * Returns OData entity edit link.
+     *
+     * @return entity edit link.
+     */
+    public URI getEditLink() {
+        return editLink;
+    }
+
+    /**
      * Sets OData entity edit link.
      *
      * @param editLink edit link.
      */
     public void setEditLink(final URI editLink) {
         this.editLink = editLink;
+    }
+
+    /**
+     * {@inheritDoc }
+     * <p>
+     * In case of null self link the edit link will be returned.I
+     */
+    @Override
+    public URI getLink() {
+        return super.getLink() == null ? getEditLink() : super.getLink();
     }
 }
