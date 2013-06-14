@@ -33,8 +33,8 @@ public class ODataInvokeRequestFactory {
      * @param parameters required input parameters.
      * @return new ODataInvokeRequest instance.
      */
-    public static ODataInvokeRequest getInvokeActionRequest(final URI uri, Map<String, ODataValue> parameters) {
-        return new ODataInvokeRequest(Method.POST, uri, OperationType.ACTION);
+    public static ODataInvokeRequest getInvokeActionRequest(final URI uri, final Map<String, ODataValue> parameters) {
+        return new ODataInvokeRequest(Method.POST, uri, OperationType.ACTION, parameters);
     }
 
     /**
