@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
-import java.util.Collection;
+import java.util.List;
 
 public class GeospatialCollection extends ComposedGeospatial<Geospatial> {
 
-    public GeospatialCollection(final Dimension dimension, final Collection<Geospatial> geospatials) {
+    public GeospatialCollection(final Dimension dimension, final List<Geospatial> geospatials) {
         super(dimension, Type.GEOSPATIALCOLLECTION, geospatials);
     }
 }

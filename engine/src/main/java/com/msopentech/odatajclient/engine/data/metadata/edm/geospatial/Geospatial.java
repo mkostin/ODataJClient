@@ -95,29 +95,6 @@ public abstract class Geospatial {
         this.srid = srid;
     }
 
-    /**
-     * Return the number of Points of the geometry
-     */
-    public abstract int numPoints();
-
-    /**
-     * Get the nth Point of the geometry
-     *
-     * @param index the index of the point, from 0 to numPoints()-1;
-     * @throws ArrayIndexOutOfBoundsException in case of an emtpy geometry or bad index.
-     */
-    public abstract Point getPoint(int index);
-
-    /**
-     * Same as getPoint(0);
-     */
-    public abstract Point getFirstPoint();
-
-    /**
-     * Same as getPoint(numPoints()-1);
-     */
-    public abstract Point getLastPoint();
-
     @Override
     public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);

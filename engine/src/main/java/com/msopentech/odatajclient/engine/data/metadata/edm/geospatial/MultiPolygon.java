@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
-import java.util.Collection;
+import java.util.List;
 
 public class MultiPolygon extends ComposedGeospatial<Polygon> {
 
-    public MultiPolygon(final Dimension dimension, final Collection<Polygon> polygons) {
+    public MultiPolygon(final Dimension dimension, final List<Polygon> polygons) {
         super(dimension, Type.MULTIPOLYGON, polygons);
     }
 }
