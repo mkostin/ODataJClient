@@ -41,13 +41,8 @@
     </dependency>
       
     <dependency>
-      <groupId>com.sap.odata</groupId>
-      <artifactId>com.sap.core.odata.core</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-transports-http</artifactId>
+      <artifactId>cxf-rt-frontend-jaxrs</artifactId>
     </dependency>
             
     <dependency>

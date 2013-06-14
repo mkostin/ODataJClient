@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data.metadata.edm;
+package com.msopentech.odatajclient.engine.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public abstract class AbstractElement {
         List<T> result = new ArrayList<T>();
 
         for (Object object : getValues()) {
-            if (reference.equals(object.getClass())) {
+            if (reference.isAssignableFrom(object.getClass())) {
                 result.add((T) object);
             }
         }

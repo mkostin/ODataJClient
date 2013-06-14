@@ -1,0 +1,302 @@
+/*
+ * Copyright 2013 MS OpenTech.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.msopentech.odatajclient.engine.data.atom;
+
+import com.msopentech.odatajclient.engine.data.AbstractElement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyAttribute;
+import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.namespace.QName;
+
+/**
+ * <p>Java class for entryType complex type.
+ *
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ *
+ * <pre>
+ * &lt;complexType name="entryType">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;choice maxOccurs="unbounded">
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}author"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}category"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}content"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}contributor"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}id"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}link"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}published"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}rights"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}source"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}summary"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}title"/>
+ *           &lt;element ref="{http://www.w3.org/2005/Atom}updated"/>
+ *         &lt;/choice>
+ *         &lt;group ref="{http://www.w3.org/2005/Atom}extensionElement"/>
+ *       &lt;/sequence>
+ *       &lt;attGroup ref="{http://www.w3.org/2005/Atom}atomCommonAttributes"/>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ *
+ *
+ */
+@XmlRootElement(name = "entry")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "entryType", propOrder = {
+    "items",
+    "anyOther",
+    "anyLocal"
+})
+public class AtomEntry extends AbstractElement {
+
+    @XmlElementRefs({
+        @XmlElementRef(name = "published", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
+        @XmlElementRef(name = "summary", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
+        @XmlElementRef(name = "title", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
+        @XmlElementRef(name = "content", namespace = "http://www.w3.org/2005/Atom", type = AtomContent.class),
+        @XmlElementRef(name = "contributor", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
+        @XmlElementRef(name = "rights", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
+        @XmlElementRef(name = "category", namespace = "http://www.w3.org/2005/Atom", type = Category.class),
+        @XmlElementRef(name = "source", namespace = "http://www.w3.org/2005/Atom", type = Source.class),
+        @XmlElementRef(name = "updated", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
+        @XmlElementRef(name = "author", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
+        @XmlElementRef(name = "link", namespace = "http://www.w3.org/2005/Atom", type = Link.class),
+        @XmlElementRef(name = "id", namespace = "http://www.w3.org/2005/Atom", type = Id.class)
+    })
+    protected List<Object> items;
+
+    @XmlAnyElement(lax = true)
+    protected List<Object> anyOther;
+
+    @XmlAnyElement(lax = true)
+    protected List<Object> anyLocal;
+
+    @XmlAttribute(name = "base", namespace = "http://www.w3.org/XML/1998/namespace")
+    @XmlSchemaType(name = "anyURI")
+    protected String base;
+
+    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
+    protected String lang;
+
+    @XmlAnyAttribute
+    private Map<QName, String> otherAttributes = new HashMap<QName, String>();
+
+    /**
+     * Gets the value of the items property.
+     *
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a
+     * <CODE>set</CODE> method for the items property.
+     *
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getItems().add(newItem);
+     * </pre>
+     *
+     *
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link JAXBElement }{@code <}{@link AtomDate }{@code >}
+     * {@link JAXBElement }{@code <}{@link AtomText }{@code >}
+     * {@link Content }
+     * {@link JAXBElement }{@code <}{@link AtomText }{@code >}
+     * {@link JAXBElement }{@code <}{@link AtomText }{@code >}
+     * {@link JAXBElement }{@code <}{@link AtomPerson }{@code >}
+     * {@link Source }
+     * {@link Category }
+     * {@link JAXBElement }{@code <}{@link AtomPerson }{@code >}
+     * {@link JAXBElement }{@code <}{@link AtomDate }{@code >}
+     * {@link Link }
+     * {@link Id }
+     */
+    @Override
+    public List<Object> getValues() {
+        if (items == null) {
+            items = new ArrayList<Object>();
+        }
+        return this.items;
+    }
+
+    public Id getId() {
+        List<Id> ids = getElements(Id.class);
+        return ids.isEmpty() ? null : ids.get(0);
+    }
+
+    public List<Link> getLink() {
+        return getElements(Link.class);
+    }
+
+    public Category getCategory() {
+        List<Category> categories = getElements(Category.class);
+        return categories.isEmpty() ? null : categories.get(0);
+    }
+
+    public Source getSource() {
+        List<Source> sources = getElements(Source.class);
+        return sources.isEmpty() ? null : sources.get(0);
+    }
+
+    public AtomContent getAtomContent() {
+        List<AtomContent> contents = getElements(AtomContent.class);
+        return contents.isEmpty() ? null : contents.get(0);
+    }
+
+    /**
+     * Gets the value of the anyOther property.
+     *
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a
+     * <CODE>set</CODE> method for the anyOther property.
+     *
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getAnyOther().add(newItem);
+     * </pre>
+     *
+     *
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Object }
+     * {@link Element }
+     *
+     *
+     */
+    public List<Object> getAnyOther() {
+        if (anyOther == null) {
+            anyOther = new ArrayList<Object>();
+        }
+        return this.anyOther;
+    }
+
+    /**
+     * Gets the value of the anyLocal property.
+     *
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a
+     * <CODE>set</CODE> method for the anyLocal property.
+     *
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getAnyLocal().add(newItem);
+     * </pre>
+     *
+     *
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Object }
+     * {@link Element }
+     *
+     *
+     */
+    public List<Object> getAnyLocal() {
+        if (anyLocal == null) {
+            anyLocal = new ArrayList<Object>();
+        }
+        return this.anyLocal;
+    }
+
+    /**
+     * Gets the value of the base property.
+     *
+     * @return
+     * possible object is
+     * {@link String }
+     *
+     */
+    public String getBase() {
+        return base;
+    }
+
+    /**
+     * Sets the value of the base property.
+     *
+     * @param value
+     * allowed object is
+     * {@link String }
+     *
+     */
+    public void setBase(String value) {
+        this.base = value;
+    }
+
+    /**
+     * Gets the value of the lang property.
+     *
+     * @return
+     * possible object is
+     * {@link String }
+     *
+     */
+    public String getLang() {
+        return lang;
+    }
+
+    /**
+     * Sets the value of the lang property.
+     *
+     * @param value
+     * allowed object is
+     * {@link String }
+     *
+     */
+    public void setLang(String value) {
+        this.lang = value;
+    }
+
+    /**
+     * Gets a map that contains attributes that aren't bound to any typed property on this class.
+     *
+     * <p>
+     * the map is keyed by the name of the attribute and
+     * the value is the string value of the attribute.
+     *
+     * the map returned by this method is live, and you can add new attribute
+     * by updating the map directly. Because of this design, there's no setter.
+     *
+     *
+     * @return
+     * always non-null
+     */
+    public Map<QName, String> getOtherAttributes() {
+        return otherAttributes;
+    }
+}

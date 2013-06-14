@@ -15,32 +15,22 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.sap.JAXBEdmProvider;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.sap.core.odata.api.edm.EdmEntityContainer;
-import com.sap.core.odata.api.edm.EdmEntitySet;
-import com.sap.core.odata.api.edm.provider.EdmProvider;
-import com.sap.core.odata.api.edm.provider.EntityContainerInfo;
-import com.sap.core.odata.api.edm.provider.EntitySet;
-import com.sap.core.odata.api.ep.EntityProviderException;
-import com.sap.core.odata.api.ep.EntityProviderReadProperties;
-import com.sap.core.odata.api.ep.entry.ODataEntry;
-import com.sap.core.odata.api.exception.ODataException;
-import com.sap.core.odata.core.edm.parser.EdmxProvider;
-import com.sap.core.odata.core.edm.provider.EdmEntityContainerImplProv;
-import com.sap.core.odata.core.edm.provider.EdmEntitySetImplProv;
-import com.sap.core.odata.core.edm.provider.EdmImplProv;
-import com.sap.core.odata.core.ep.consumer.XmlEntityConsumer;
 import java.io.InputStream;
-import java.net.URI;
-import javax.xml.bind.JAXBException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Marshaller;
 import org.junit.Test;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * This is a temporary class, to be removed once client is actually implemented.
@@ -48,62 +38,46 @@ import org.junit.Test;
  */
 public class AATemporaryTest {
 
-    private EdmxProvider sapParseEdmMetadata() throws EntityProviderException {
-        return new EdmxProvider().parse(AATemporaryTest.class.getResourceAsStream("/Northwind-metadata.xml"), true);
-    }
+    @Test
+    public void jaxbReadEntry() throws Exception {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(
+                "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
+        uriBuilder.appendEntityTypeSegment("Categories(1)");
 
-    private JAXBEdmProvider jaxbParseEdmMetadata() throws JAXBException {
-        final ODataMetadataRequest metadataRequest = ODataRetrieveRequestFactory.getMetadataRequest(
-                "http://services.odata.org/v3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
-        final ODataQueryResponse<EdmMetadata> md = metadataRequest.execute();
-        return new JAXBEdmProvider(md.getBody().getSchemas());
-    }
-
-    public ODataEntry readODataEntry(EdmProvider edmProvider, final URI uri, final String container,
-            final String set) throws ODataException {
-
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uri);
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setContentType(ODataFormat.ATOM.toString());
 
         final InputStream is = req.rowExecute();
 
-        EdmImplProv edmImplProv = new EdmImplProv(edmProvider);
+        JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
+        @SuppressWarnings("unchecked")
+        AtomEntry enty = ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(is)).getValue();
+        assertNotNull(enty);
+        assertEquals(uriBuilder.build().toURL().toExternalForm(), enty.getId().getContent());
+        assertEquals("ODataDemo.Category", enty.getCategory().getTerm());
+        
+        Element xmlContent = enty.getAtomContent().getXMLContent();
+        assertEquals("properties", xmlContent.getLocalName());
+        
+        boolean entered = false;
+        boolean checkID = false;
+        for (int i = 0; i < xmlContent.getChildNodes().getLength(); i++) {
+            entered = true;
+            
+            Node property = xmlContent.getChildNodes().item(i);
+            if ("ID".equals(property.getLocalName())) {
+                checkID = true;
+                
+                assertEquals("Edm.Int32", property.getAttributes().item(0).getTextContent());
+                assertEquals("1", property.getTextContent());
+            }
+        }
+        assertTrue(entered);
+        assertTrue(checkID);
 
-        EntityContainerInfo containerInfo = edmProvider.getEntityContainerInfo(container);
-        EdmEntityContainer entityContainer = new EdmEntityContainerImplProv(edmImplProv, containerInfo);
-
-        EntitySet entitySet = edmProvider.getEntitySet(container, set);
-        EdmEntitySet edmEntitySet = new EdmEntitySetImplProv(edmImplProv, entitySet, entityContainer);
-
-        return new XmlEntityConsumer().readEntry(edmEntitySet,
-                is,
-                EntityProviderReadProperties.init().build());
-    }
-
-    @Test
-    public void sapRead() throws Exception {
-        EdmxProvider edmxProvider = sapParseEdmMetadata();
-        System.out.println("EDM Provider: " + edmxProvider);
-
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(
-                "http://services.odata.org/v3/(S(zrdgvnc1lzrkqfivykmk5leb))/Northwind/Northwind.svc");
-        uriBuilder.appendEntityTypeSegment("Categories(1)");
-
-        System.out.println(
-                "ODataEntry: " + readODataEntry(edmxProvider, uriBuilder.build(), "NorthwindEntities", "Categories"));
-    }
-
-    @Test
-    public void jaxbRead() throws Exception {
-        JAXBEdmProvider jaxbEdmProvider = jaxbParseEdmMetadata();
-        System.out.println("EDM Provider: " + jaxbEdmProvider);
-
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(
-                "http://services.odata.org/v3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
-        uriBuilder.appendEntityTypeSegment("Categories(1)");
-
-        System.out.println("ODataEntry: " + readODataEntry(jaxbEdmProvider,
-                uriBuilder.build(),
-                "DemoService", "Categories"));
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.marshal(enty, System.out);
     }
 }

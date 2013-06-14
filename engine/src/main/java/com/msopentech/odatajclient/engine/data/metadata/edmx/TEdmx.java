@@ -71,9 +71,7 @@ public class TEdmx {
      *
      * <p>
      * You are getting this "catch-all" property because of the following reason:
-     * The field name "Runtime" is used by two different parts of a schema. See:
-     * line 43 of file:/home/ilgrosso/work/sap-test/src/main/xsd/edmx.xsd
-     * line 43 of file:/home/ilgrosso/work/sap-test/src/main/xsd/edmx.xsd
+     * The field name "Runtime" is used by two different parts of a schema.
      * <p>
      * To get rid of this property, apply a property customization to one
      * of both of the following declarations to change their names:

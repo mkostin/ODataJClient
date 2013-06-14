@@ -13,18 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data.metadata.edm;
-
-import com.msopentech.odatajclient.engine.data.AbstractElement;
-import java.util.List;
-
-public abstract class AbstractAnnotated extends AbstractElement {
-
-    public List<TTypeAnnotation> getTypeAnnotations() {
-        return getJAXBElements(TTypeAnnotation.class);
-    }
-
-    public List<TValueAnnotation> getValueAnnotations() {
-        return getJAXBElements(TValueAnnotation.class);
-    }
-}
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.w3.org/2005/Atom",
+        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+package com.msopentech.odatajclient.engine.data.atom;
