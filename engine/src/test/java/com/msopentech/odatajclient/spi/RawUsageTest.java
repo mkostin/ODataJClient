@@ -23,7 +23,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.NoSuchEntityFound;
+import com.msopentech.odatajclient.engine.utils.NoValidEntityFound;
 import com.msopentech.odatajclient.engine.utils.ODataReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +52,7 @@ public class RawUsageTest {
                 // .................
             }
 
-        } catch (NoSuchEntityFound ex) {
+        } catch (NoValidEntityFound ex) {
             // ....
         } finally {
             if (is != null) {
@@ -87,7 +87,7 @@ public class RawUsageTest {
             }
         } catch (IOException ex) {
             // ....
-        } catch (NoSuchEntityFound ex) {
+        } catch (NoValidEntityFound ex) {
             // ....
         } finally {
             if (is != null) {

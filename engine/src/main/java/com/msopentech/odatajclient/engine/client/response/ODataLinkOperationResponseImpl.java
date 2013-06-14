@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.client.response;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
+import javax.ws.rs.core.Response;
 
 /**
  * This class implements the response to an OData link operation request.
@@ -25,4 +26,8 @@ import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperat
  * @see com.msopentech.odatajclient.engine.communication.request.ODataSetLinkRequest
  */
 class ODataLinkOperationResponseImpl extends ODataResponseImpl implements ODataLinkOperationResponse {
+
+    public ODataLinkOperationResponseImpl(Response res) {
+        super(res);
+    }
 }

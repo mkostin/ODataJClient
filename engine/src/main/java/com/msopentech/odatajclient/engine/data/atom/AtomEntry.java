@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
+import org.w3c.dom.Element;
 
 /**
  * <p>Java class for entryType complex type.
@@ -153,8 +154,28 @@ public class AtomEntry extends AbstractElement {
         return ids.isEmpty() ? null : ids.get(0);
     }
 
-    public List<Link> getLink() {
+    public List<Link> getLinks() {
         return getElements(Link.class);
+    }
+
+    public Link getSelfLink() {
+        return getNamedLink("self");
+    }
+
+    public Link getEditLink() {
+        return getNamedLink("edit");
+    }
+
+    private Link getNamedLink(final String name) {
+        Link res = null;
+
+        for (Link link : getLinks()) {
+            if (name != null && name.equals(link.getRel())) {
+                res = link;
+            }
+        }
+
+        return res;
     }
 
     public Category getCategory() {

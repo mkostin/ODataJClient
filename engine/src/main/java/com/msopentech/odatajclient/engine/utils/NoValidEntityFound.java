@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
-public class NoSuchEntityFound extends Exception {
+public class NoValidEntityFound extends Exception {
 
     private static final long serialVersionUID = -3078954221364213688L;
 
@@ -23,7 +23,7 @@ public class NoSuchEntityFound extends Exception {
      * Creates a new instance of
      * <code>NoSuchEntityFound</code> without detail message.
      */
-    public NoSuchEntityFound() {
+    public NoValidEntityFound() {
         super();
     }
 
@@ -33,7 +33,11 @@ public class NoSuchEntityFound extends Exception {
      *
      * @param msg the detail message.
      */
-    public NoSuchEntityFound(String msg) {
+    public NoValidEntityFound(String msg) {
         super(msg);
+    }
+
+    public NoValidEntityFound(final Throwable t) {
+        this.initCause(t);
     }
 }

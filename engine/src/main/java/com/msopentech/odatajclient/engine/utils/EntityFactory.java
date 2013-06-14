@@ -16,11 +16,9 @@
 package com.msopentech.odatajclient.engine.utils;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
 
 public class EntityFactory {
@@ -29,7 +27,7 @@ public class EntityFactory {
         return new EntityImpl(name);
     }
 
-    static ODataEntity newEntity(final String name, final URI link, final Date updated) {
+    public static ODataEntity newEntity(final String name, final URI link) {
         return new EntityImpl(name, link);
     }
 

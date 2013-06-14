@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.client.response;
 
 import com.msopentech.odatajclient.engine.communication.response.*;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import javax.ws.rs.core.Response;
 
 /**
  * This class implements the response to an Odata stream create request.
@@ -24,6 +25,10 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
  * @see com.msopentech.odatajclient.engine.communication.request.ODataStreamRequest
  */
 class ODataCreateStreamResponseImpl extends ODataResponseImpl implements ODataStreamCreateResponse {
+
+    public ODataCreateStreamResponseImpl(Response res) {
+        super(res);
+    }
 
     /**
      * {@inheritDoc}

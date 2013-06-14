@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,11 @@ public abstract class ODataEntity extends ODataItem {
      * OData entity navigation links.
      */
     private final List<ODataItem> links = new ArrayList<ODataItem>();
+
+    /**
+     * OData entity edit link.
+     */
+    private URI editLink;
 
     /**
      * Constructor.
@@ -105,5 +111,14 @@ public abstract class ODataEntity extends ODataItem {
      */
     public void setAtomExtensions(ODataEntityAtomExtensions atomExtensions) {
         this.atomExtensions = atomExtensions;
+    }
+
+    /**
+     * Sets OData entity edit link.
+     *
+     * @param editLink edit link.
+     */
+    public void setEditLink(final URI editLink) {
+        this.editLink = editLink;
     }
 }

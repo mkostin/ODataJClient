@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.client.response;
 
 import com.msopentech.odatajclient.engine.communication.response.*;
+import javax.ws.rs.core.Response;
 
 /**
  * This class implements the response to an OData delete request.
@@ -23,4 +24,8 @@ import com.msopentech.odatajclient.engine.communication.response.*;
  * @see com.msopentech.odatajclient.engine.communication.request.ODataDeleteRequest
  */
 class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
+
+    public ODataDeleteResponseImpl(Response res) {
+        super(res);
+    }
 }

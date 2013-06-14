@@ -18,9 +18,13 @@ package com.msopentech.odatajclient.engine.utils;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 
 /**
  * OData reader.
@@ -49,8 +53,8 @@ public class ODataReader {
      * @return de-serialized feed.
      * @throws NoSuchEntityFound in case of the feed has not been found into the input stream.
      */
-    public ODataFeed deserialize(final InputStream input)
-            throws NoSuchEntityFound {
+    public static ODataFeed deserialize(final InputStream input)
+            throws NoValidEntityFound {
         return null;
     }
 
@@ -61,9 +65,19 @@ public class ODataReader {
      * @return entity de-serialized.
      * @throws NoSuchEntityFound in case of no entity has been found into the input stream.
      */
-    public ODataEntity deserializeEntity(final InputStream input)
-            throws NoSuchEntityFound {
-        return null;
+    public static ODataEntity deserializeEntity(final InputStream input)
+            throws NoValidEntityFound {
+
+        try {
+            final JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
+
+            @SuppressWarnings("unchecked")
+            AtomEntry enty = ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(input)).getValue();
+
+            return ODataBinder.getODataEntity(enty);
+        } catch (JAXBException e) {
+            throw new NoValidEntityFound(e);
+        }
     }
 
     /**
@@ -73,8 +87,8 @@ public class ODataReader {
      * @return OData entity property de-serialized.
      * @throws NoSuchEntityFound in case of no property has been found into the input stream.
      */
-    public ODataProperty deserializeProperty(final InputStream input)
-            throws NoSuchEntityFound {
+    public static ODataProperty deserializeProperty(final InputStream input)
+            throws NoValidEntityFound {
         return null;
     }
 
@@ -84,7 +98,7 @@ public class ODataReader {
      * @param input stream to de-serialize.
      * @return metadata representation.
      */
-    public EdmMetadata deserializeMetadata(final InputStream inputStream) {
+    public static EdmMetadata deserializeMetadata(final InputStream inputStream) {
         return null;
     }
 }

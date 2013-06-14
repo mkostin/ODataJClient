@@ -15,13 +15,12 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import java.net.URI;
-import java.util.Collection;
-import java.util.HashSet;
 import javax.ws.rs.core.Response;
 
 /**
@@ -57,35 +56,13 @@ public abstract class ODataQueryRequest<T> extends ODataBasicRequestImpl<ODataQu
         return new byte[0];
     }
 
-    protected abstract class ODataQueryResponseImpl implements ODataQueryResponse<T> {
-
-        protected final Response res;
+    protected abstract class ODataQueryResponseImpl extends ODataResponseImpl implements ODataQueryResponse<T> {
 
         protected ODataQueryResponseImpl(final Response res) {
-            this.res = res;
+            super(res);
         }
 
         @Override
         public abstract T getBody();
-
-        @Override
-        public Collection<String> getHeaderNames() {
-            return res.getHeaders() == null ? new HashSet<String>() : res.getHeaders().keySet();
-        }
-
-        @Override
-        public String getHeader(final String name) {
-            return res.getHeaderString(name);
-        }
-
-        @Override
-        public int getStatusCode() {
-            return res.getStatus();
-        }
-
-        @Override
-        public String getStatusMessage() {
-            return res.getStatusInfo().getReasonPhrase();
-        }
     }
 }

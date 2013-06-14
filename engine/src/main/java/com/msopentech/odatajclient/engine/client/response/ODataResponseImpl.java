@@ -15,91 +15,24 @@
  */
 package com.msopentech.odatajclient.engine.client.response;
 
-import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashSet;
+import javax.ws.rs.core.Response;
 
 /**
  * Abstract representation of an OData response.
  */
-abstract class ODataResponseImpl implements ODataResponse {
+public abstract class ODataResponseImpl implements ODataResponse {
 
-    /**
-     * Response status code.
-     */
-    protected int statusCode;
+    protected final Response res;
 
-    /**
-     * Response status message.
-     */
-    protected String statusMessage;
+    protected InputStream is = null;
 
-    /**
-     * Response header.
-     */
-    protected ODataHeader header;
-
-    /**
-     * Constructor.
-     */
-    public ODataResponseImpl() {
-        // initialize a default header from configuration
-        this.header = new ODataHeader();
-    }
-
-    /**
-     * Adds
-     * <code>ETag</code> OData request header.
-     *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#etag
-     */
-    protected void setETag(final String value) {
-        header.setHeader(ODataHeader.HeaderName.etag, value);
-    }
-
-    /**
-     * Adds
-     * <code>Location</code> OData request header.
-     *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#location
-     */
-    protected void setLocation(final String value) {
-        header.setHeader(ODataHeader.HeaderName.location, value);
-    }
-
-    /**
-     * Adds
-     * <code>DataServiceId</code> OData request header.
-     *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#dataServiceId
-     */
-    protected void setDataServiceId(final String value) {
-        header.setHeader(ODataHeader.HeaderName.dataServiceId, value);
-    }
-
-    /**
-     * Adds
-     * <code>Preference-Applied</code> OData request header.
-     *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#preferenceApplied
-     */
-    protected void setPreferenceApplied(final String value) {
-        header.setHeader(ODataHeader.HeaderName.preferenceApplied, value);
-    }
-
-    /**
-     * Adds
-     * <code>Retry-After</code> OData request header.
-     *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#retryAfter
-     */
-    protected void setRetryAfter(final String value) {
-        header.setHeader(ODataHeader.HeaderName.retryAfter, value);
+    public ODataResponseImpl(final Response res) {
+        this.res = res;
+        this.is = res.readEntity(InputStream.class);
     }
 
     /**
@@ -107,7 +40,7 @@ abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public Collection<String> getHeaderNames() {
-        return header.getHeaderNames();
+        return res.getHeaders() == null ? new HashSet<String>() : res.getHeaders().keySet();
     }
 
     /**
@@ -115,7 +48,7 @@ abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public String getHeader(final String name) {
-        return header.getHeader(name);
+        return res.getHeaderString(name);
     }
 
     /**
@@ -123,7 +56,7 @@ abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public int getStatusCode() {
-        return statusCode;
+        return res.getStatus();
     }
 
     /**
@@ -131,6 +64,14 @@ abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public String getStatusMessage() {
-        return statusMessage;
+        return res.getStatusInfo().getReasonPhrase();
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void close() {
+        res.close();
     }
 }

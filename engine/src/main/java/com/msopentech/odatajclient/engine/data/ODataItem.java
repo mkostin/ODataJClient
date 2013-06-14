@@ -26,7 +26,7 @@ public abstract class ODataItem implements Serializable {
     private static final long serialVersionUID = 1961061310337516113L;
 
     /**
-     * OData entity edit link.
+     * OData entity self link.
      */
     protected URI link;
 
@@ -51,6 +51,15 @@ public abstract class ODataItem implements Serializable {
      */
     public URI getLink() {
         return link;
+    }
+
+    /**
+     * Sets OData entity self link.
+     *
+     * @param self link.
+     */
+    public void setLink(final URI link) {
+        this.link = link;
     }
 
     /**

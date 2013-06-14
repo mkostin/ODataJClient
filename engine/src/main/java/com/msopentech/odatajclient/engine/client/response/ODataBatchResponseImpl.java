@@ -22,6 +22,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataQueryRespo
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.ws.rs.core.Response;
 
 /**
  * This class implements a response to a batch request.
@@ -34,6 +35,10 @@ abstract class ODataBatchResponseImpl extends ODataResponseImpl implements OData
      * Batch request content.
      */
     private final List<ODataBatchResponseItem> batch = new ArrayList<ODataBatchResponseItem>();
+
+    public ODataBatchResponseImpl(Response res) {
+        super(res);
+    }
 
     /**
      * Adds a query response to the batch response.

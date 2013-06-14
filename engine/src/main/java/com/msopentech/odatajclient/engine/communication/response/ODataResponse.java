@@ -50,4 +50,18 @@ public interface ODataResponse {
      * @return status message.
      */
     String getStatusMessage();
+
+    /**
+     * Close the underlying message entity input stream (if available and open) as well as releases any other
+     * resources associated with the response.
+     * <p>
+     * This operation is idempotent, i.e. it can be invoked multiple times with the same effect which also means that
+     * calling the close() method on an already closed message instance is legal and has no further effect.
+     * <p>
+     * The close() method should be invoked on all instances that contain an un-consumed entity input stream to ensure
+     * the resources associated with the instance are properly cleaned-up and prevent potential memory leaks.
+     * This is typical for client-side scenarios where application layer code processes only the response headers and
+     * ignores the response entity.
+     */
+    void close();
 }
