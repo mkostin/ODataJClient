@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
-import java.util.Collection;
+import java.util.List;
 
 public class MultiLineString extends ComposedGeospatial<LineString> {
 
-    public MultiLineString(final Dimension dimension, final Collection<LineString> lineStrings) {
+    public MultiLineString(final Dimension dimension, final List<LineString> lineStrings) {
         super(dimension, Type.MULTILINESTRING, lineStrings);
     }
 }

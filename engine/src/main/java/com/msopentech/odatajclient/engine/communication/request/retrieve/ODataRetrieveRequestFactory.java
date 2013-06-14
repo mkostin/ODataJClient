@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import java.net.URI;
+import javax.ws.rs.core.MediaType;
 
 /**
  * OData request factory class.
@@ -42,7 +43,10 @@ public class ODataRetrieveRequestFactory {
      * @return new ODataMetadataRequest instance.
      */
     public static ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
-        return new ODataMetadataRequest(new ODataURIBuilder(serviceRoot).appendMetadataSegment().build());
+        ODataMetadataRequest request =
+                new ODataMetadataRequest(new ODataURIBuilder(serviceRoot).appendMetadataSegment().build());
+        request.setContentType(MediaType.APPLICATION_XML);
+        return request;
     }
 
     /**

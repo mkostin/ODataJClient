@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
+package com.msopentech.odatajclient.engine.data.metadata;
 
-import java.util.List;
+public class EdmTypeNotFoundException extends RuntimeException {
 
-public class Polygon extends ComposedGeospatial<Point> {
+    private static final long serialVersionUID = 1685118875699966611L;
 
-    public Polygon(final Dimension dimension, final List<Point> points) {
-        super(dimension, Type.POLYGON, points);
+    public EdmTypeNotFoundException(final Class<?> type, final String typeExpression) {
+        super("No " + type.getSimpleName() + " found in " + typeExpression);
     }
 }

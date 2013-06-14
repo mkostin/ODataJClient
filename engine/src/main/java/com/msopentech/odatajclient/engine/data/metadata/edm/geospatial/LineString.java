@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
-import java.util.Collection;
+import java.util.List;
 
 public class LineString extends ComposedGeospatial<Point> {
 
-    public LineString(final Dimension dimension, final Collection<Point> points) {
+    public LineString(final Dimension dimension, final List<Point> points) {
         super(dimension, Type.LINESTRING, points);
     }
 }

@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.engine.data.metadata.edm.EDMSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,7 +30,7 @@ public @interface EnumType {
 
     String value();
 
-    EDMSimpleType underlyingType() default EDMSimpleType.INT_32;
+    EdmSimpleType underlyingType() default EdmSimpleType.INT_32;
 
     boolean isFlags() default false;
 }

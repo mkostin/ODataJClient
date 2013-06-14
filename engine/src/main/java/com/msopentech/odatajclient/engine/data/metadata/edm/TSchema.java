@@ -127,8 +127,16 @@ public class TSchema extends AbstractElement {
         return getElements(TUsing.class);
     }
 
+    public List<TEnumType> getEnumTypes() {
+        return getElements(TEnumType.class);
+    }
+
     public List<TComplexType> getComplexTypes() {
         return getElements(TComplexType.class);
+    }
+
+    public List<TRowType> getRowTypes() {
+        return getElements(TRowType.class);
     }
 
     public List<TEntityType> getEntityTypes() {

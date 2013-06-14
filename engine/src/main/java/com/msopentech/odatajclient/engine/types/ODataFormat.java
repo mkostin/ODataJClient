@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.types;
 
+import javax.ws.rs.core.MediaType;
+
 /**
  * Exchanged data format.
  */
@@ -23,11 +25,11 @@ public enum ODataFormat {
     /**
      * JSON format.
      */
-    JSON("application/json"),
+    JSON(MediaType.APPLICATION_JSON),
     /**
      * Atom format.
      */
-    ATOM("application/atom+xml");
+    ATOM(MediaType.APPLICATION_ATOM_XML);
 
     private final String format;
 

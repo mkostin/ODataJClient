@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,9 +26,7 @@ public abstract class ComposedGeospatial<T extends Geospatial> extends Geospatia
 
     protected final List<T> geospatials;
 
-    protected ComposedGeospatial(final Dimension dimension, final Type type,
-            final Collection<T> geospatials) {
-
+    protected ComposedGeospatial(final Dimension dimension, final Type type, final List<T> geospatials) {
         super(dimension, type);
         this.geospatials = new ArrayList<T>(geospatials);
     }
@@ -37,51 +34,6 @@ public abstract class ComposedGeospatial<T extends Geospatial> extends Geospatia
     @Override
     public Iterator<T> iterator() {
         return this.geospatials.iterator();
-    }
-
-    @Override
-    public int numPoints() {
-        return this.geospatials.size();
-    }
-
-    @Override
-    public Point getPoint(int index) {
-        if (index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Negative index not allowed");
-        }
-        if (this.geospatials.isEmpty()) {
-            throw new ArrayIndexOutOfBoundsException("Empty Geometry has no Points!");
-        }
-
-        Point found = null;
-        for (Geospatial geospatial : this.geospatials) {
-            if (index < geospatial.numPoints()) {
-                found = geospatial.getPoint(index);
-            }
-        }
-
-        if (found == null) {
-            throw new ArrayIndexOutOfBoundsException("Index too large!");
-        }
-        return found;
-    }
-
-    @Override
-    public Point getFirstPoint() {
-        if (this.geospatials.isEmpty()) {
-            throw new ArrayIndexOutOfBoundsException("Empty Geometry has no Points!");
-        }
-
-        return this.geospatials.get(0).getLastPoint();
-    }
-
-    @Override
-    public Point getLastPoint() {
-        if (this.geospatials.isEmpty()) {
-            throw new ArrayIndexOutOfBoundsException("Empty Geometry has no Points!");
-        }
-
-        return this.geospatials.get(this.geospatials.size() - 1).getLastPoint();
     }
 
     public boolean isEmpty() {

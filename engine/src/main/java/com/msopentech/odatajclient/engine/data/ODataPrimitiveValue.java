@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.data.metadata.edm.EDMSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.io.Serializable;
 
 /**
@@ -33,7 +33,7 @@ public class ODataPrimitiveValue extends ODataValue {
     /**
      * Value type.
      */
-    final EDMSimpleType type;
+    final EdmSimpleType type;
 
     /**
      * Constructor.
@@ -41,7 +41,7 @@ public class ODataPrimitiveValue extends ODataValue {
      * @param value actual value.
      * @param type primitive value type.
      */
-    public ODataPrimitiveValue(final Serializable value, final EDMSimpleType type) {
+    public ODataPrimitiveValue(final Serializable value, final EdmSimpleType type) {
         this.value = value;
         this.type = type;
     }
@@ -54,7 +54,7 @@ public class ODataPrimitiveValue extends ODataValue {
      */
     public ODataPrimitiveValue(final Serializable value, final String typeName) {
         this.value = value;
-        this.type = EDMSimpleType.valueOf(typeName);
+        this.type = EdmSimpleType.valueOf(typeName);
     }
 
     /**

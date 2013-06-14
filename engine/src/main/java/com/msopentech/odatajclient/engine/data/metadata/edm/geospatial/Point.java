@@ -64,28 +64,4 @@ public class Point extends Geospatial {
     public void setZ(double z) {
         this.z = z;
     }
-
-    @Override
-    public int numPoints() {
-        return 1;
-    }
-
-    @Override
-    public Point getPoint(int index) {
-        if (index == 0) {
-            return this;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Point only has a single Point! " + index);
-        }
-    }
-
-    @Override
-    public Point getFirstPoint() {
-        return this;
-    }
-
-    @Override
-    public Point getLastPoint() {
-        return this;
-    }
 }
