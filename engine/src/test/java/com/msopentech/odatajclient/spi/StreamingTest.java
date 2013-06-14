@@ -17,14 +17,15 @@ package com.msopentech.odatajclient.spi;
 
 import static org.junit.Assert.*;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest.BatchRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.ODataChangeset;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.ODataRetrieve;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangeset;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
-import com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataRetrieve;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import org.junit.Test;
@@ -73,7 +74,7 @@ public class StreamingTest {
     public void batchRequestStreaming() {
         // create your request
         final ODataBatchRequest request =
-                ODataRequestFactory.getBatchRequest("http://services.odata.org/OData/Odata.svc");
+                ODataBatchRequestFactory.getBatchRequest("http://services.odata.org/OData/Odata.svc");
 
         final ODataBatchRequest.BatchRequestPayload payload = request.execute();
 
@@ -113,8 +114,8 @@ public class StreamingTest {
             changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EDMSimpleType.INT_32)));
 
             // create your request
-            final ODataUpdateEntityRequest change =
-                    ODataRequestFactory.getUpdateEntityRequest(targetURI.build(), UpdateType.PATCH, changes);
+            final ODataEntityUpdateRequest change =
+                    ODataCUDRequestFactory.getEntityUpdateRequest(targetURI.build(), UpdateType.PATCH, changes);
 
             change.setFormat(ODataFormat.JSON);
 

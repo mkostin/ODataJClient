@@ -269,7 +269,7 @@ public class ODataRequestImpl implements ODataRequest {
      *
      * @return HTTP method.
      */
-    Method getMethod() {
+    public Method getMethod() {
         return method;
     }
 
@@ -278,7 +278,7 @@ public class ODataRequestImpl implements ODataRequest {
      *
      * @return request header.
      */
-    ODataHeader getHeader() {
+    public ODataHeader getHeader() {
         return header;
     }
 
@@ -287,7 +287,7 @@ public class ODataRequestImpl implements ODataRequest {
      *
      * @return request URI.
      */
-    URI getUri() {
+    public URI getUri() {
         return uri;
     }
 

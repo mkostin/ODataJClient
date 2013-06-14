@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataQueryRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;

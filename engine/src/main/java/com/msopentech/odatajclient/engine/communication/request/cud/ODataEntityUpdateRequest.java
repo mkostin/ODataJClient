@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataUpdateEntityResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import java.io.UnsupportedEncodingException;
@@ -28,7 +31,7 @@ import java.net.URI;
  * com.msopentech.odatajclient.engine.data.ODataEntity,
  * com.msopentech.odatajclient.engine.communication.request.UpdateType)
  */
-public class ODataUpdateEntityRequest extends ODataBasicRequestImpl<ODataUpdateEntityResponse>
+public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataUpdateEntityResponse>
         implements ODataBatchableRequest {
 
     /**
@@ -43,7 +46,7 @@ public class ODataUpdateEntityRequest extends ODataBasicRequestImpl<ODataUpdateE
      * @param type update type.
      * @param changes changes to be applied.
      */
-    ODataUpdateEntityRequest(final URI uri, final UpdateType type, final ODataEntity changes) {
+    ODataEntityUpdateRequest(final URI uri, final UpdateType type, final ODataEntity changes) {
         // set method .... If cofigured X-HTTP-METHOD header will be used.
         super(type.getMethod());
         // set uri ...

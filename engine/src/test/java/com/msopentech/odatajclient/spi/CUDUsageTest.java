@@ -15,16 +15,16 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataAddLinkRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataDeleteRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataEntityCreateRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataAddLinkRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.ODataStreamCreateRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataStreamCreateRequest.StreamCreateRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamCreateRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamCreateRequest.StreamCreateRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
@@ -73,7 +73,7 @@ public class CUDUsageTest {
 
         // create your request
         final ODataEntityCreateRequest request =
-                ODataRequestFactory.getEntityCreateRequest(targetURI.build(), newEntity);
+                ODataCUDRequestFactory.getEntityCreateRequest(targetURI.build(), newEntity);
 
         // execute and retrieve response
         ODataEntityCreateResponse res = request.execute();
@@ -102,7 +102,7 @@ public class CUDUsageTest {
                 EntityFactory.newEntityLink("Supplier", targetURI.build());
 
         // create your request
-        final ODataAddLinkRequest request = ODataRequestFactory.getAddLinkRequest(sourceURI.build(), newLink);
+        final ODataAddLinkRequest request = ODataCUDRequestFactory.getAddLinkRequest(sourceURI.build(), newLink);
 
         // execute and retrieve response
         ODataLinkOperationResponse res = request.execute();
@@ -124,8 +124,8 @@ public class CUDUsageTest {
         changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EDMSimpleType.INT_32)));
 
         // create your request
-        final ODataUpdateEntityRequest request =
-                ODataRequestFactory.getUpdateEntityRequest(targetURI.build(), UpdateType.PATCH, changes);
+        final ODataEntityUpdateRequest request =
+                ODataCUDRequestFactory.getEntityUpdateRequest(targetURI.build(), UpdateType.PATCH, changes);
 
         // execute and retrieve response
         ODataUpdateEntityResponse res = request.execute();
@@ -146,7 +146,7 @@ public class CUDUsageTest {
         targetURI.appendEntityTypeSegment("Products(2)");
 
         // create your request
-        final ODataDeleteRequest request = ODataRequestFactory.getDeleteRequest(targetURI.build());
+        final ODataDeleteRequest request = ODataCUDRequestFactory.getDeleteRequest(targetURI.build());
 
         // execute and retrieve response
         ODataDeleteResponse res = request.execute();
@@ -162,7 +162,7 @@ public class CUDUsageTest {
         final ODataURIBuilder targetURI = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
 
         final ODataStreamCreateRequest req = 
-                ODataRequestFactory.getStreamCreateRequest(targetURI.build(), new FileInputStream("/tmp/photo.png"));
+                ODataCUDRequestFactory.getStreamCreateRequest(targetURI.build(), new FileInputStream("/tmp/photo.png"));
 
         StreamCreateRequestPayload payload = req.execute();
         ODataStreamCreateResponse response = payload.getResponse();

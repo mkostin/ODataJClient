@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.request.batch;
 
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import java.util.ArrayList;
 import java.util.List;
 

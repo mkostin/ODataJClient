@@ -15,14 +15,15 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest.BatchRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.request.ODataChangeset;
-import com.msopentech.odatajclient.engine.communication.request.ODataRetrieve;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangeset;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataRetrieve;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -37,7 +38,7 @@ public class BatchUsageTest {
     public void batchTest() {
         // create your request
         final ODataBatchRequest request =
-                ODataRequestFactory.getBatchRequest("http://services.odata.org/OData/Odata.svc");
+                ODataBatchRequestFactory.getBatchRequest("http://services.odata.org/OData/Odata.svc");
 
         // execute the request
         final BatchRequestPayload payload = request.execute();
@@ -71,8 +72,8 @@ public class BatchUsageTest {
         changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EDMSimpleType.INT_32)));
 
         // create your request
-        final ODataUpdateEntityRequest change =
-                ODataRequestFactory.getUpdateEntityRequest(targetURI.build(), UpdateType.PATCH, changes);
+        final ODataEntityUpdateRequest change =
+                ODataCUDRequestFactory.getEntityUpdateRequest(targetURI.build(), UpdateType.PATCH, changes);
 
         changeset.addRequest(change);
 

@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
+import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
+import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 /**
- * This class implements an OData create primitive request.
- * Get instance by using ODataRequestFactory.
+ * This class implements an OData update entity property value request.
+ * Get instance by using ODataCUDRequestFactory.
  *
- * @see ODataRequestFactory#getCreatePrimitiveRequest(com.msopentech.odatajclient.engine.data.ODataURI,
+ * @see ODataCUDRequestFactory#getUpdateValueRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataValue)
  */
-public class ODataPrimitiveCreateRequest extends ODataBasicRequestImpl<ODataQueryResponse>
+public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpdateResponse>
         implements ODataBatchableRequest {
 
     /**
@@ -42,19 +44,11 @@ public class ODataPrimitiveCreateRequest extends ODataBasicRequestImpl<ODataQuer
      * @param targetURI entity set or entity or entity property URI.
      * @param value value to be created.
      */
-    ODataPrimitiveCreateRequest(final URI targetURI, final ODataPrimitiveValue value) {
+    ODataValueUpdateRequest(final URI targetURI, final UpdateType type, final ODataValue value) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST);
+        super(type.getMethod());
         // set request body
         this.value = value;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public ODataQueryResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
@@ -67,5 +61,10 @@ public class ODataPrimitiveCreateRequest extends ODataBasicRequestImpl<ODataQuer
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @Override
+    public ODataValueUpdateResponse execute() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

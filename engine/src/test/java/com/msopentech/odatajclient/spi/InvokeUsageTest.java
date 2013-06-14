@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest;
+import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequest;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
@@ -34,7 +34,7 @@ public class InvokeUsageTest {
         targetURI.appendFunctionSegment("GetProductsByRating").addQueryParameter("rating", "4");
 
         // create your request
-        final ODataInvokeRequest request = ODataRequestFactory.getInvokeFunctionRequest(targetURI.build());
+        final ODataInvokeRequest request = ODataInvokeRequestFactory.getInvokeFunctionRequest(targetURI.build());
 
         // execute and retrieve response
         ODataInvokeResponse res = request.execute();
@@ -55,7 +55,8 @@ public class InvokeUsageTest {
         final Map<String, ODataValue> parameters = Collections.<String, ODataValue>singletonMap("rating", value);
 
         // create your request
-        final ODataInvokeRequest request = ODataRequestFactory.getInvokeActionRequest(targetURI.build(), parameters);
+        final ODataInvokeRequest request = ODataInvokeRequestFactory.getInvokeActionRequest(targetURI.build(),
+                parameters);
 
         // execute the request
         final ODataInvokeResponse res = request.execute();

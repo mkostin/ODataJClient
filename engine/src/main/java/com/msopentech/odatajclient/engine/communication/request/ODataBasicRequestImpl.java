@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -69,12 +69,9 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse>
     public void batch(final ODataBatchRequest req) {
 
         try {
-            final OutputStream os = req.getOutputStream();
-
-            os.write(toByteArray());
-            os.write(ODataStreamer.CRLF);
-            os.write(getPayload());
-
+            req.rowAppend(toByteArray());
+            req.rowAppend(ODataStreamer.CRLF);
+            req.rowAppend(getPayload());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.request.batch;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest.BatchRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamedRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import java.io.IOException;
 import java.io.PipedOutputStream;
@@ -70,7 +73,17 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
     }
 
     PipedOutputStream getOutputStream() {
-        return getPayload().bodyStreamWriter;
+        return getPayload().getBodyStreamWriter();
+    }
+
+    public ODataBatchRequest rowAppend(final byte[] toBeStreamed) throws IOException {
+        getPayload().getBodyStreamWriter().write(toBeStreamed);
+        return this;
+    }
+
+    public ODataBatchRequest rowAppend(final byte[] toBeStreamed, int off, int len) throws IOException {
+        getPayload().getBodyStreamWriter().write(toBeStreamed, off, len);
+        return this;
     }
 
     /**

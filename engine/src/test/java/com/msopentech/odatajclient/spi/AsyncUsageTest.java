@@ -15,10 +15,10 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataEntityCreateRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.utils.EntityFactory;
 import java.util.concurrent.ExecutionException;
@@ -37,7 +37,7 @@ public class AsyncUsageTest {
 
         // create your request
         final ODataEntityCreateRequest request =
-                ODataRequestFactory.getEntityCreateRequest(targetURI.build(), newEntity);
+                ODataCUDRequestFactory.getEntityCreateRequest(targetURI.build(), newEntity);
 
         // execute the request
         request.execute();

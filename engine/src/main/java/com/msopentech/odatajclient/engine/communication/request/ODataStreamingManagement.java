@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.concurrent.Future;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -33,7 +34,7 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
     /**
      * Logger.
      */
-    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataStreamingManagement.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(ODataStreamingManagement.class);
 
     /**
      * Body input stream.
@@ -52,7 +53,7 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
         super(new PipedOutputStream());
 
         try {
-            this.body = new PipedInputStream(bodyStreamWriter);
+            this.body = new PipedInputStream(getBodyStreamWriter());
             this.def = this.body;
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -68,7 +69,7 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
         super(os);
 
         try {
-            this.body = new PipedInputStream(bodyStreamWriter);
+            this.body = new PipedInputStream(getBodyStreamWriter());
             this.def = this.body;
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -101,9 +102,9 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
      * @throws IOException in case of failure.
      */
     public void finalizeBody() throws IOException {
-        if (bodyStreamWriter != null) {
-            bodyStreamWriter.flush();
-            bodyStreamWriter.close();
+        if (getBodyStreamWriter() != null) {
+            getBodyStreamWriter().flush();
+            getBodyStreamWriter().close();
         }
     }
 

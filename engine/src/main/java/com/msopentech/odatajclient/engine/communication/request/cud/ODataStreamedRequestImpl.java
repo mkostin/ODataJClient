@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Streamed OData request abstract class.
@@ -73,20 +76,19 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
         final InputStream is = getPayload().getBody();
 
         try {
-            final OutputStream os = req.getOutputStream();
 
             // finalize the body
             getPayload().finalizeBody();
 
-            os.write(toByteArray());
-            os.write(ODataStreamer.CRLF);
+            req.rowAppend(toByteArray());
+            req.rowAppend(ODataStreamer.CRLF);
 
             final byte[] buff = new byte[1024];
 
             int len;
 
             while ((len = is.read(buff)) >= 0) {
-                os.write(buff, 0, len);
+                req.rowAppend(buff, 0, len);
             }
 
         } catch (IOException e) {

@@ -15,16 +15,21 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import static com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement.LOG;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Streamer utility object.
  */
 public abstract class ODataStreamer {
+
+    /**
+     * Logger.
+     */
+    protected static final Logger LOG = LoggerFactory.getLogger(ODataStreamer.class);
 
     /**
      * CR/LF.
@@ -34,7 +39,7 @@ public abstract class ODataStreamer {
     /**
      * OutputStream to be used to write objects to the stream.
      */
-    protected final PipedOutputStream bodyStreamWriter;
+    private final PipedOutputStream bodyStreamWriter;
 
     public ODataStreamer(final PipedOutputStream bodyStreamWriter) {
         this.bodyStreamWriter = bodyStreamWriter;
@@ -54,6 +59,10 @@ public abstract class ODataStreamer {
      */
     protected void newLine() {
         stream(CRLF);
+    }
+
+    public PipedOutputStream getBodyStreamWriter() {
+        return bodyStreamWriter;
     }
 
     /**

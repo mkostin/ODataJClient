@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
+import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.data.ODataValue;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Map;
 
 /**
  * OData request factory class.
  */
-public class ODataRequestFactory {
+public class ODataCUDRequestFactory {
 
     /**
      * Gets a create request object instance.
@@ -100,12 +99,57 @@ public class ODataRequestFactory {
      * Use this kind of request to create a new value (e.g. http://Northwind.svc/Customer(1)/Picture/$value).
      *
      * @param targetURI entity set or entity or entity property URI.
+     * @param type type of update to be performed.
      * @param value value to be created.
      * @return new ODataCreatePrimitiveRequest instance.
      */
-    public static ODataPrimitiveCreateRequest getPrimitiveCreateRequest(
-            final URI targetURI, final ODataPrimitiveValue value) {
-        return new ODataPrimitiveCreateRequest(targetURI, value);
+    public static ODataValueUpdateRequest getValueUpdateRequest(
+            final URI targetURI, final UpdateType type, final ODataPrimitiveValue value) {
+        return new ODataValueUpdateRequest(targetURI, type, value);
+    }
+
+    /**
+     * Gets an update request object instance.
+     * <p>
+     * Use this kind of request to update a complex property value
+     *
+     * @param targetURI entity set or entity or entity property URI.
+     * @param value value to be update.
+     * @return new ODataCreatePrimitiveRequest instance.
+     */
+    public static ODataPropertyUpdateRequest getComplexUpdateRequest(
+            final URI targetURI, final ODataComplexValue value) {
+        return new ODataPropertyUpdateRequest(targetURI, UpdateType.REPLACE, value);
+    }
+
+    /**
+     * Gets an update request object instance.
+     * <p>
+     * Use this kind of request to update a primitive property value
+     *
+     * @param targetURI entity set or entity or entity property URI.
+     * @param type type of update to be performed.
+     * @param value value to be update.
+     * @return new ODataCreatePrimitiveRequest instance.
+     */
+    public static ODataPropertyUpdateRequest getPrimitiveUpdateRequest(
+            final URI targetURI, final UpdateType type, final ODataPrimitiveValue value) {
+        return new ODataPropertyUpdateRequest(targetURI, type, value);
+    }
+
+    /**
+     * Gets an update request object instance.
+     * <p>
+     * Use this kind of request to update a collection property value
+     *
+     * @param targetURI entity set or entity or entity property URI.
+     * @param type type of update to be performed.
+     * @param value value to be update.
+     * @return new ODataCreatePrimitiveRequest instance.
+     */
+    public static ODataPropertyUpdateRequest getCollectionUpdateRequest(
+            final URI targetURI, final UpdateType type, final ODataCollectionValue value) {
+        return new ODataPropertyUpdateRequest(targetURI, type, value);
     }
 
     /**
@@ -169,50 +213,8 @@ public class ODataRequestFactory {
      * @param type type of update to be performed.
      * @return new ODataUpdateEntityRequest instance.
      */
-    public static ODataUpdateEntityRequest getUpdateEntityRequest(
+    public static ODataEntityUpdateRequest getEntityUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataEntity changes) {
-        return new ODataUpdateEntityRequest(targetURI, type, changes);
-    }
-
-    /**
-     * Gets a batch request object instance.
-     *
-     * @return new ODataBatchRequest instance.
-     */
-    public static ODataBatchRequest getBatchRequest(final String serviceRoot) {
-        return new ODataBatchRequest(new ODataURIBuilder(serviceRoot).appendBatchSegment().build());
-    }
-
-    /**
-     * Gets an invoke action request instance.
-     *
-     * @param uri URI that identifies the action.
-     * @param parameters required input parameters.
-     * @return new ODataInvokeRequest instance.
-     */
-    public static ODataInvokeRequest getInvokeActionRequest(final URI uri, Map<String, ODataValue> parameters) {
-        return new ODataInvokeRequest(Method.POST, uri, OperationType.ACTION);
-    }
-
-    /**
-     * Gets an invoke function request instance.
-     *
-     * @param uri URI that identifies the function.
-     * @return new ODataInvokeRequest instance.
-     */
-    public static ODataInvokeRequest getInvokeFunctionRequest(final URI uri) {
-        return new ODataInvokeRequest(Method.GET, uri, OperationType.FUNCTION);
-    }
-
-    /**
-     * Gets an invoke legacy operation request instance.
-     *
-     * @param method HTTP method of the request.
-     * @param uri URI that identifies the function.
-     * @param parameters required input parameters.
-     * @return new ODataInvokeRequest instance.
-     */
-    public static ODataInvokeRequest getInvokeLegacyRequest(final Method method, final URI uri) {
-        return new ODataInvokeRequest(method, uri, OperationType.LEGACY);
+        return new ODataEntityUpdateRequest(targetURI, type, changes);
     }
 }

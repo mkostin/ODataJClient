@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
 import java.io.InputStream;
 import java.net.URI;
