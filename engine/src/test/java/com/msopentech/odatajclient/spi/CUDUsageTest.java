@@ -36,7 +36,7 @@ import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntityAtomExtensions;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EDMSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.EntityFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -53,15 +53,15 @@ public class CUDUsageTest {
 
         // Add a complex property
         final ODataComplexValue addressValue = new ODataComplexValue("Address");
-        addressValue.add(new ODataProperty("city", new ODataPrimitiveValue("XXX", EDMSimpleType.STRING)));
-        addressValue.add(new ODataProperty("street", new ODataPrimitiveValue("YYY", EDMSimpleType.STRING)));
+        addressValue.add(new ODataProperty("city", new ODataPrimitiveValue("XXX", EdmSimpleType.STRING)));
+        addressValue.add(new ODataProperty("street", new ODataPrimitiveValue("YYY", EdmSimpleType.STRING)));
 
         newEntity.addProperty(new ODataProperty("Address", addressValue));
 
         // Add a collection property
         final ODataCollectionValue preferredColors = new ODataCollectionValue("Colors");
-        preferredColors.add(new ODataPrimitiveValue("red", EDMSimpleType.STRING));
-        preferredColors.add(new ODataPrimitiveValue("yellow", EDMSimpleType.STRING));
+        preferredColors.add(new ODataPrimitiveValue("red", EdmSimpleType.STRING));
+        preferredColors.add(new ODataPrimitiveValue("yellow", EdmSimpleType.STRING));
 
         newEntity.addProperty(new ODataProperty("PreferredColors", preferredColors));
         // newEntity.set ...
@@ -121,7 +121,7 @@ public class CUDUsageTest {
 
         // build the new object to change Rating value
         final ODataEntity changes = EntityFactory.newEntity("Java Code");
-        changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EDMSimpleType.INT_32)));
+        changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EdmSimpleType.INT_32)));
 
         // create your request
         final ODataEntityUpdateRequest request =

@@ -23,7 +23,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
-import java.io.InputStream;
+import java.net.URI;
 import java.util.Date;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlEnum;
@@ -87,7 +87,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "EDMSimpleType")
 @XmlEnum
-public enum EDMSimpleType {
+public enum EdmSimpleType {
 
     /**
      * The absence of a value.
@@ -206,7 +206,7 @@ public enum EDMSimpleType {
      * Resource stream (for media entities).
      */
     @XmlEnumValue("Stream")
-    STREAM("Stream", InputStream.class);
+    STREAM("Stream", URI.class);
 
     private final String value;
 
@@ -214,13 +214,13 @@ public enum EDMSimpleType {
 
     private final String pattern;
 
-    EDMSimpleType(final String value, final Class<?> clazz) {
+    EdmSimpleType(final String value, final Class<?> clazz) {
         this.value = value;
         this.clazz = clazz;
         this.pattern = null;
     }
 
-    EDMSimpleType(final String value, final Class<?> clazz, final String pattern) {
+    EdmSimpleType(final String value, final Class<?> clazz, final String pattern) {
         this.value = value;
         this.clazz = clazz;
         this.pattern = pattern;
@@ -240,15 +240,19 @@ public enum EDMSimpleType {
 
     @Override
     public String toString() {
-        return "Edm." + name();
+        return namespace() + "." + name();
     }
 
-    public static EDMSimpleType fromValue(String v) {
-        for (EDMSimpleType c : EDMSimpleType.values()) {
-            if (c.value.equals(v)) {
-                return c;
+    public static EdmSimpleType fromValue(String value) {
+        for (EdmSimpleType edmSimpleType : EdmSimpleType.values()) {
+            if (edmSimpleType.value.equals(value)) {
+                return edmSimpleType;
             }
         }
-        throw new IllegalArgumentException(v);
+        throw new IllegalArgumentException(value);
+    }
+
+    public static String namespace() {
+        return "Edm";
     }
 }

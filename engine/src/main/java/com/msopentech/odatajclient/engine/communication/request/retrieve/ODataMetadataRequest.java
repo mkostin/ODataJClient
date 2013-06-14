@@ -17,13 +17,9 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.data.metadata.edmx.TDataServices;
-import com.msopentech.odatajclient.engine.data.metadata.edmx.TEdmx;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import org.apache.cxf.jaxrs.client.WebClient;
 
@@ -63,22 +59,7 @@ public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata> {
         @Override
         public EdmMetadata getBody() {
             try {
-                JAXBContext context = JAXBContext.newInstance(TEdmx.class);
-                @SuppressWarnings("unchecked")
-                TEdmx edmx = ((JAXBElement<TEdmx>) context.createUnmarshaller().unmarshal(
-                        res.readEntity(InputStream.class))).getValue();
-
-                TDataServices dataservices = null;
-                for (JAXBElement<?> edmxContent : edmx.getContent()) {
-                    if (TDataServices.class.equals(edmxContent.getDeclaredType())) {
-                        dataservices = (TDataServices) edmxContent.getValue();
-                    }
-                }
-                if (dataservices == null) {
-                    throw new IllegalArgumentException("No <DataServices/> element found");
-                }
-
-                return new EdmMetadata(dataservices);
+                return new EdmMetadata(res.readEntity(InputStream.class));
             } catch (JAXBException e) {
                 LOG.error("Error unmarshalling metadata info", e);
                 throw new IllegalStateException(e);

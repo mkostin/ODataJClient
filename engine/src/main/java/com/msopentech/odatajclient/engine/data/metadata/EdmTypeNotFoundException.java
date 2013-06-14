@@ -13,32 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.types;
+package com.msopentech.odatajclient.engine.data.metadata;
 
-import javax.ws.rs.core.MediaType;
+public class EdmTypeNotFoundException extends RuntimeException {
 
-/**
- * Exchanged data format.
- */
-public enum ODataFormat {
+    private static final long serialVersionUID = 1685118875699966611L;
 
-    /**
-     * JSON format.
-     */
-    JSON(MediaType.APPLICATION_JSON),
-    /**
-     * Atom format.
-     */
-    ATOM(MediaType.APPLICATION_ATOM_XML);
-
-    private final String format;
-
-    ODataFormat(final String format) {
-        this.format = format;
-    }
-
-    @Override
-    public String toString() {
-        return format;
+    public EdmTypeNotFoundException(final Class<?> type, final String typeExpression) {
+        super("No " + type.getSimpleName() + " found in " + typeExpression);
     }
 }

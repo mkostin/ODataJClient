@@ -29,7 +29,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
-import org.w3c.dom.Element;
 
 /**
  * <p>Java class for TEnumType complex type.
@@ -67,7 +66,7 @@ import org.w3c.dom.Element;
     "memberOrValueAnnotationOrTypeAnnotation",
     "any"
 })
-public class TEnumType {
+public class TEnumType extends AbstractAnnotated {
 
     @XmlElement(name = "Documentation")
     protected TDocumentation documentation;
@@ -146,11 +145,16 @@ public class TEnumType {
      *
      *
      */
-    public List<Object> getMemberOrValueAnnotationOrTypeAnnotation() {
+    @Override
+    public List<Object> getValues() {
         if (memberOrValueAnnotationOrTypeAnnotation == null) {
             memberOrValueAnnotationOrTypeAnnotation = new ArrayList<Object>();
         }
         return this.memberOrValueAnnotationOrTypeAnnotation;
+    }
+
+    public List<TEnumTypeMember> getMembers() {
+        return getElements(TEnumTypeMember.class);
     }
 
     /**
