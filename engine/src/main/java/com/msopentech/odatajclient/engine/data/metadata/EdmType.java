@@ -39,6 +39,10 @@ public class EdmType {
 
     private TEntityType entityType;
 
+    public EdmType(final String typeExpression) {
+        this(null, typeExpression);
+    }
+
     public EdmType(final EdmMetadata metadata, final String typeExpression) {
         this.typeExpression = typeExpression;
 
@@ -66,7 +70,7 @@ public class EdmType {
 
         if (namespaceOrAlias.equals(EdmSimpleType.namespace())) {
             this.simpleType = EdmSimpleType.fromValue(typeName);
-        } else {
+        } else if (metadata != null) {
             if (!metadata.isNsOrAlias(namespaceOrAlias)) {
                 throw new IllegalArgumentException("Illegal namespace or alias: " + namespaceOrAlias);
             }
@@ -91,6 +95,9 @@ public class EdmType {
                     }
                 }
             }
+        } else {
+            throw new IllegalArgumentException(
+                    "Cannot parse to simple type and no metadata provided: " + typeExpression);
         }
 
         if (!isSimpleType() && !isEnumType() && !isComplexType() && !isEntityType()) {
