@@ -23,6 +23,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEn
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataItem;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
@@ -52,12 +53,12 @@ public class EntityTest {
 
         JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
         @SuppressWarnings("unchecked")
-        AtomEntry enty = ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(is)).getValue();
-        assertNotNull(enty);
-        assertEquals(uriBuilder.build().toURL().toExternalForm(), enty.getId().getContent());
-        assertEquals("ODataDemo.Category", enty.getCategory().getTerm());
+        AtomEntry entry = ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(is)).getValue();
+        assertNotNull(entry);
+        assertEquals(uriBuilder.build().toURL().toExternalForm(), entry.getId().getContent());
+        assertEquals("ODataDemo.Category", entry.getCategory().getTerm());
 
-        Element xmlContent = enty.getAtomContent().getXMLContent();
+        Element xmlContent = entry.getAtomContent().getXMLContent();
         assertEquals("properties", xmlContent.getLocalName());
 
         boolean entered = false;
@@ -79,7 +80,7 @@ public class EntityTest {
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(enty, System.out);
+        marshaller.marshal(entry, System.out);
     }
 
     @Test
@@ -98,5 +99,23 @@ public class EntityTest {
         assertEquals("ODataDemo.Product", entity.getName());
         assertEquals("http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)",
                 entity.getEditLink().toASCIIString());
+
+        assertEquals(4, entity.getAllLinks().size());
+        assertNotNull(entity.getAtomExtensions());
+        assertEquals("http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)",
+                entity.getAtomExtensions().getId());
+        assertEquals("Low fat milk", entity.getAtomExtensions().getSummary());
+
+        boolean check = false;
+
+        for (ODataItem link : entity.getAllLinks()) {
+            if ("Category".equals(link.getName())
+                    && "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)/Category".
+                    equals(link.getLink().toASCIIString())) {
+                check = true;
+            }
+        }
+
+        assertTrue(check);
     }
 }

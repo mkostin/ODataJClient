@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.utils.ODataContants;
 import java.net.URI;
 
 /**
@@ -22,16 +23,78 @@ import java.net.URI;
  */
 public abstract class ODataLink extends ODataItem {
 
+    /**
+     * Link types.
+     */
+    public enum LinkType {
+
+        ENTITY_NAVIGATION("application/atom+xml;type=entry"),
+        FEED_NAVIGATION("application/atom+xml;type=feed"),
+        ASSOCIATION("application/xml"),
+        MEDIA_EDIT("MEDIA-EDIT");
+
+        private String type;
+
+        private LinkType(final String type) {
+            this.type = type;
+        }
+
+        LinkType setType(final String type) {
+            this.type = type;
+            return this;
+        }
+
+        public static LinkType evaluate(final String rel, final String type) {
+            if (ODataContants.MEDIA_EDIT_LINK_REL.equals(rel)) {
+                return MEDIA_EDIT.setType(type);
+            }
+
+            if (LinkType.ENTITY_NAVIGATION.toString().equals(type)) {
+                return ENTITY_NAVIGATION;
+            }
+
+            if (LinkType.FEED_NAVIGATION.toString().equals(type)) {
+                return FEED_NAVIGATION;
+            }
+
+            if (LinkType.ASSOCIATION.toString().equals(type)) {
+                return ASSOCIATION;
+            }
+
+            LOG.error("Invalid link type {}", type);
+            throw new IllegalArgumentException("Invalid string type");
+        }
+
+        @Override
+        public String toString() {
+            return type;
+        }
+    }
+
     private static final long serialVersionUID = -3625922586547616628L;
+
+    private final LinkType type;
 
     /**
      * Constructor.
      *
      * @param name link property name.
      * @param link link value.
+     * @param link link type.
+     * @see LinkType
      */
-    public ODataLink(final String name, final URI link) {
+    public ODataLink(final String name, final URI link, final LinkType type) {
         super(name);
         this.link = link;
+        this.type = type;
+    }
+
+    /**
+     * Gets link type.
+     *
+     * @return link type;
+     */
+    public LinkType getType() {
+        return type;
     }
 }

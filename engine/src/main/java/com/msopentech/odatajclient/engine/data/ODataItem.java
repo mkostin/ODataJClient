@@ -17,11 +17,14 @@ package com.msopentech.odatajclient.engine.data;
 
 import java.io.Serializable;
 import java.net.URI;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract representation of entities and navigation links.
  */
 public abstract class ODataItem implements Serializable {
+
+    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataItem.class);
 
     private static final long serialVersionUID = 1961061310337516113L;
 

@@ -38,6 +38,21 @@ public abstract class AbstractElement {
     }
 
     @SuppressWarnings("unchecked")
+    protected <T> List<T> getJAXBElements(final String localName, final Class<T> reference) {
+        List<T> result = new ArrayList<T>();
+
+        for (Object object : getValues()) {
+            if (object instanceof JAXBElement
+                    && ((JAXBElement) object).getDeclaredType().equals(reference)
+                    && ((JAXBElement) object).getName().getLocalPart().equals(localName)) {
+
+                result.add((T) ((JAXBElement) object).getValue());
+            }
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
     protected <T> List<T> getElements(Class<T> reference) {
         List<T> result = new ArrayList<T>();
 

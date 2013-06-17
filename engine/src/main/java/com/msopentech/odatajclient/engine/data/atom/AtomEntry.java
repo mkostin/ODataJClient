@@ -150,8 +150,23 @@ public class AtomEntry extends AbstractElement {
     }
 
     public Id getId() {
-        List<Id> ids = getElements(Id.class);
-        return ids.isEmpty() ? null : ids.get(0);
+        final List<Id> id = getElements(Id.class);
+        return id.isEmpty() ? null : id.get(0);
+    }
+
+    public String getTitle() {
+        final AtomText value = getTextProperty("title");
+        return value == null || value.getContent().isEmpty() ? null : value.getContent().get(0).toString();
+    }
+
+    public String getSummary() {
+        final AtomText value = getTextProperty("summary");
+        return value == null || value.getContent().isEmpty() ? null : value.getContent().get(0).toString();
+    }
+
+    public String getAuthor() {
+        final AtomPerson author = getPersonProperty("author");
+        return author == null ? null : author.getName();
     }
 
     public List<Link> getLinks() {
@@ -319,5 +334,17 @@ public class AtomEntry extends AbstractElement {
      */
     public Map<QName, String> getOtherAttributes() {
         return otherAttributes;
+    }
+
+    private AtomText getTextProperty(final String name) {
+        @SuppressWarnings("unchecked")
+        final List<AtomText> prop = getJAXBElements(name, AtomText.class);
+        return prop.isEmpty() ? null : prop.get(0);
+    }
+
+    private AtomPerson getPersonProperty(final String name) {
+        @SuppressWarnings("unchecked")
+        final List<AtomPerson> prop = getJAXBElements(name, AtomPerson.class);
+        return prop.isEmpty() ? null : prop.get(0);
     }
 }

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.data.ODataLink.LinkType;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public abstract class ODataEntity extends ODataItem {
     private final List<ODataProperty> properties = new ArrayList<ODataProperty>();
 
     /**
-     * OData entity navigation links.
+     * OData entities/links.
      */
     private final List<ODataItem> links = new ArrayList<ODataItem>();
 
@@ -76,12 +77,58 @@ public abstract class ODataEntity extends ODataItem {
     }
 
     /**
-     * Returns OData entity navigation links.
+     * Returns all OData links.
      *
-     * @return OData entity navigation links.
+     * @return OData entity links.
      */
-    public List<ODataItem> getLinks() {
+    public List<ODataItem> getAllLinks() {
         return links;
+    }
+
+    /**
+     * Returns all entity navigation links.
+     *
+     * @return OData entity links.
+     */
+    public List<ODataLink> getNavigationLinks() {
+        final List<ODataLink> res = new ArrayList<ODataLink>();
+        for (ODataItem item : getAllLinks()) {
+            if (item instanceof ODataLink && (((ODataLink) item).getType() == LinkType.ENTITY_NAVIGATION
+                    || ((ODataLink) item).getType() == LinkType.FEED_NAVIGATION)) {
+                res.add((ODataLink) item);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Returns all entity set navigation links.
+     *
+     * @return OData entity links.
+     */
+    public List<ODataLink> getAssociationLinks() {
+        final List<ODataLink> res = new ArrayList<ODataLink>();
+        for (ODataItem item : getAllLinks()) {
+            if (item instanceof ODataLink && ((ODataLink) item).getType() == LinkType.ASSOCIATION) {
+                res.add((ODataLink) item);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Returns all in-line entities.
+     *
+     * @return OData in-line entities.
+     */
+    public List<ODataEntity> getInlineEntities() {
+        final List<ODataEntity> res = new ArrayList<ODataEntity>();
+        for (ODataItem item : getAllLinks()) {
+            if (item instanceof ODataEntity) {
+                res.add((ODataEntity) item);
+            }
+        }
+        return res;
     }
 
     /**
@@ -109,7 +156,7 @@ public abstract class ODataEntity extends ODataItem {
      *
      * @param atomExtensions Atom extensions to be specified.
      */
-    public void setAtomExtensions(ODataEntityAtomExtensions atomExtensions) {
+    public void setAtomExtensions(final ODataEntityAtomExtensions atomExtensions) {
         this.atomExtensions = atomExtensions;
     }
 
@@ -134,10 +181,19 @@ public abstract class ODataEntity extends ODataItem {
     /**
      * {@inheritDoc }
      * <p>
-     * In case of null self link the edit link will be returned.I
+     * If null the edit link will be returned.
      */
     @Override
     public URI getLink() {
         return super.getLink() == null ? getEditLink() : super.getLink();
+    }
+
+    /**
+     * TRUE if read-only entity.
+     *
+     * @return TRUE if read-only; FALSE otherwise.
+     */
+    public boolean isReadOnly() {
+        return super.getLink() != null;
     }
 }

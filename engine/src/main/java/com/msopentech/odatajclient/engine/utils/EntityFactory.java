@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.utils;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataLink.LinkType;
 import java.net.URI;
 import java.util.List;
 
@@ -31,12 +32,24 @@ public class EntityFactory {
         return new EntityImpl(name, link);
     }
 
-    public static ODataLink newLink(final String name, final URI link) {
-        return new LinkImpl(name, link);
+    public static ODataLink newLink(final String name, final URI link, final LinkType type) {
+        return new LinkImpl(name, link, type);
     }
 
-    public static ODataLink newEntityLink(final String name, final URI link) {
-        return new EntityLinkImpl(name, link);
+    public static ODataLink newEntityNavigationLink(final String name, final URI link) {
+        return new LinkImpl(name, link, LinkType.ENTITY_NAVIGATION);
+    }
+
+    public static ODataLink newEntitySetNavigationLink(final String name, final URI link) {
+        return new LinkImpl(name, link, LinkType.FEED_NAVIGATION);
+    }
+
+    public static ODataLink newAssociationLink(final String name, final URI link) {
+        return new LinkImpl(name, link, LinkType.ASSOCIATION);
+    }
+
+    public static ODataLink newMediaLink(final String name, final URI link) {
+        return new LinkImpl(name, link, LinkType.MEDIA_EDIT);
     }
 
     private static class FeedImpl extends ODataFeed {
@@ -74,17 +87,8 @@ public class EntityFactory {
 
         private static final long serialVersionUID = -2533925527313767001L;
 
-        public LinkImpl(final String name, final URI link) {
-            super(name, link);
-        }
-    }
-
-    private static class EntityLinkImpl extends ODataLink {
-
-        private static final long serialVersionUID = -2533925527313767002L;
-
-        public EntityLinkImpl(final String name, final URI link) {
-            super(name, link);
+        public LinkImpl(final String name, final URI link, final LinkType type) {
+            super(name, link, type);
         }
     }
 }
