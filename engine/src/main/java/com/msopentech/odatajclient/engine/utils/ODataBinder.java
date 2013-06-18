@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.utils;
 
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
+import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntityAtomExtensions;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -33,10 +34,15 @@ import java.net.URI;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class ODataBinder {
 
@@ -44,6 +50,21 @@ public class ODataBinder {
      * Logger.
      */
     protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataBinder.class);
+
+    public static AtomEntry getAtomEntry(final ODataEntity entity) {
+        final AtomEntry entry = new AtomEntry();
+
+        final AtomContent content = newAtomContent();
+        entry.getValues().add(content);
+
+        final Element properties = content.getXMLContent();
+
+        for (ODataProperty prop : entity.getProperties()) {
+            properties.appendChild(newProperty(prop, properties.getOwnerDocument()));
+        }
+
+        return entry;
+    }
 
     public static ODataEntity getODataEntity(final AtomEntry entry) {
         if (LOG.isDebugEnabled()) {
@@ -63,13 +84,16 @@ public class ODataBinder {
         }
 
         final AtomContent content = entry.getAtomContent();
+
         if (content != null) {
             final Element xmlContent = content.getXMLContent();
             for (int i = 0; i < xmlContent.getChildNodes().getLength(); i++) {
-                final Node property = xmlContent.getChildNodes().item(i);
+                final Element property = (Element) xmlContent.getChildNodes().item(i);
 
                 try {
-                    entity.addProperty(getProperty(property));
+                    if (property.getNodeType() != Node.TEXT_NODE) {
+                        entity.addProperty(newProperty(property));
+                    }
                 } catch (IllegalArgumentException e) {
                     LOG.warn("Failure retriving EdmType for {}", property.getTextContent(), e);
                 }
@@ -91,37 +115,200 @@ public class ODataBinder {
                 LinkType.evaluate(link.getRel(), link.getType()));
     }
 
-    private static ODataProperty getProperty(final Node property) {
-        final Node typeNode = property.getAttributes().getNamedItem("m:type");
+    private static AtomContent newAtomContent() {
+        final AtomContent content = new AtomContent();
+        content.getType().add("application/xml");
 
-        final ODataValue value;
-        final EdmSimpleType type;
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+            final Document doc = builder.newDocument();
+            final Element properties = doc.createElement("m:properties");
+            properties.setAttribute("xmlns:m", ODataContants.M_NS);
+            properties.setAttribute("xmlns:d", ODataContants.D_NS);
+            properties.setAttribute("xmlns:gml", ODataContants.GML_NS);
+            properties.setAttribute("xmlns:georss", ODataContants.GEORSS_NS);
+            doc.appendChild(properties);
+
+            content.getValues().add(properties);
+
+        } catch (ParserConfigurationException e) {
+            LOG.error("Failur building AtomEntry content", e);
+        }
+
+        return content;
+    }
+
+    private static ODataProperty newProperty(final Element property) {
+        final Node typeNode = property.getAttributes().getNamedItem("m:type");
+
+        try {
+            final ODataProperty res;
+
             if (typeNode == null) {
-                type = EdmSimpleType.STRING;
-                value = new ODataPrimitiveValue(property.getTextContent(), type);
+                final Node nullNode = property.getAttributes().getNamedItem("m:null");
+                if (nullNode == null) {
+                    res = newPrimitiveProperty(property, new EdmType(EdmSimpleType.STRING.toString()));
+                } else {
+                    res = new ODataProperty(property.getLocalName(), null);
+                }
             } else {
                 final EdmType edmType = new EdmType(typeNode.getTextContent());
-                type = edmType.getSimpleType();
 
                 if (edmType.isCollection()) {
-                    value = new ODataCollectionValue(typeNode.getTextContent());
-                    for (int k = 0; k < property.getChildNodes().getLength(); k++) {
-                        Node el = property.getChildNodes().item(k);
-                        ODataPrimitiveValue primitive = new ODataPrimitiveValue(el.getTextContent(), type);
-                        ((ODataCollectionValue) value).add(primitive);
-                    }
+                    // Collection
+                    res = newCollectionProperty(property, edmType);
+                } else if (edmType.isSimpleType()) {
+                    // EdmSimpleType
+                    res = newPrimitiveProperty(property, edmType);
                 } else {
-                    value = new ODataPrimitiveValue(property.getTextContent(), type);
+                    // ComplexType or EnumType
+                    res = newComplexProperty(property, edmType);
                 }
             }
 
-            return new ODataProperty(property.getLocalName(), value);
+            return res;
         } catch (IllegalArgumentException e) {
             LOG.warn("Failure retriving EdmSimpleType {}", typeNode.getTextContent(), e);
             throw e;
         }
+    }
+
+    private static Element newNullProperty(final ODataProperty prop, final Document doc) {
+        final Element element = doc.createElement("d:" + prop.getName());
+        element.setAttribute("m:null", "true");
+        return element;
+    }
+
+    private static Element newProperty(final ODataProperty prop, final Document doc) {
+        final Element element;
+
+        if (prop.getValue() == null) {
+            element = newNullProperty(prop, doc);
+        } else if (prop.getValue() instanceof ODataPrimitiveValue) {
+            // primitive property handling
+            element = newPrimitiveProperty(prop, doc);
+        } else if (prop.getValue() instanceof ODataCollectionValue) {
+            // collection property handling
+            element = newCollectionProperty(prop, doc);
+        } else {
+            // complex property handling
+            element = newComplexProperty(prop, doc);
+        }
+
+        return element;
+    }
+
+    private static ODataPrimitiveValue newPrimitiveValue(final Element prop, final EdmType edmType) {
+        return new ODataPrimitiveValue(prop.getTextContent(), edmType.getSimpleType());
+    }
+
+    private static ODataProperty newPrimitiveProperty(final Element prop, final EdmType edmType) {
+        return new ODataProperty(prop.getLocalName(), newPrimitiveValue(prop, edmType));
+    }
+
+    private static Element newPrimitiveProperty(final ODataProperty prop, final Document doc) {
+        return newPrimitiveProperty(prop.getName(), prop.getValue(), doc);
+    }
+
+    private static Element newPrimitiveProperty(
+            final String name, final ODataValue propValue, final Document doc) {
+        if (!(propValue instanceof ODataPrimitiveValue)) {
+            throw new IllegalArgumentException("Invalid property value type " + propValue.getClass().getSimpleName());
+        }
+
+        final ODataPrimitiveValue value = (ODataPrimitiveValue) propValue;
+
+        final Element element = doc.createElement("d:" + name);
+        element.setAttribute("m:type", value.getTypeName());
+        element.setTextContent(value.toString());
+        return element;
+    }
+
+    private static ODataComplexValue newComplexValue(final Element prop, final EdmType edmType) {
+        final ODataComplexValue value = new ODataComplexValue(edmType.getTypeExpression());
+
+        final NodeList elements = prop.getChildNodes();
+
+        for (int i = 0; i < elements.getLength(); i++) {
+            final Element child = (Element) elements.item(i);
+            if (child.getNodeType() != Node.TEXT_NODE) {
+                value.add(newProperty(child));
+            }
+        }
+
+        return value;
+    }
+
+    private static ODataProperty newComplexProperty(final Element prop, final EdmType edmType) {
+        return new ODataProperty(prop.getLocalName(), newComplexValue(prop, edmType));
+    }
+
+    private static Element newComplexProperty(final ODataProperty prop, final Document doc) {
+        return newComplexProperty(prop.getName(), prop.getValue(), doc);
+    }
+
+    private static Element newComplexProperty(final String name, final ODataValue propValue, final Document doc) {
+        if (!(propValue instanceof ODataComplexValue)) {
+            throw new IllegalArgumentException("Invalid property value type "
+                    + propValue.getClass().getSimpleName());
+        }
+
+        final ODataComplexValue value = (ODataComplexValue) propValue;
+
+        final Element element = doc.createElement("d:" + name);
+        element.setAttribute("m:type", value.getTypeName());
+
+        for (ODataProperty field : value) {
+            element.appendChild(newProperty(field, doc));
+        }
+        return element;
+    }
+
+    private static ODataProperty newCollectionProperty(final Element prop, final EdmType edmType) {
+        final ODataCollectionValue value = new ODataCollectionValue(edmType.getTypeExpression());
+
+        final NodeList elements = prop.getChildNodes();
+
+        for (int i = 0; i < elements.getLength(); i++) {
+            final Element child = (Element) elements.item(i);
+            if (child.getNodeType() != Node.TEXT_NODE) {
+                final EdmType type = new EdmType(edmType.getBaseType());
+
+                if (edmType.isSimpleType()) {
+                    // collection of EdmSimpleType
+                    value.add(newPrimitiveValue(child, type));
+                } else {
+                    // collection of ComplexType or EnumType            
+                    value.add(newComplexValue(child, type));
+                }
+            }
+        }
+
+        return new ODataProperty(prop.getLocalName(), value);
+    }
+
+    private static Element newCollectionProperty(final ODataProperty prop, final Document doc) {
+        if (!(prop.getValue() instanceof ODataCollectionValue)) {
+            throw new IllegalArgumentException("Invalid property value type "
+                    + prop.getValue().getClass().getSimpleName());
+        }
+
+        final ODataCollectionValue value = (ODataCollectionValue) prop.getValue();
+
+        final Element element = doc.createElement("d:" + prop.getName());
+        element.setAttribute("m:type", value.getTypeName());
+
+        for (ODataValue el : value) {
+            if (el instanceof ODataPrimitiveValue) {
+                element.appendChild(newPrimitiveProperty("element", el, doc));
+            } else {
+                element.appendChild(newComplexProperty("element", el, doc));
+            }
+        }
+
+        return element;
     }
 
     private static void addLink(final Link link, final AtomEntry entry, final ODataEntity entity) {

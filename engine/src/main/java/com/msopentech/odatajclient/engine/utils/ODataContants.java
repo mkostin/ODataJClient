@@ -32,4 +32,12 @@ public class ODataContants {
      */
     public static String MEDIA_EDIT_LINK_REL = "http://schemas.microsoft.com/ado/2007/08/dataservices/edit-media/";
 
+    public static String M_NS = "http://schemas.microsoft.com/ado/2007/08/dataservices/metadata";
+
+    public static String D_NS = "http://schemas.microsoft.com/ado/2007/08/dataservices";
+
+    public static String GEORSS_NS = "http://www.georss.org/georss";
+
+    public static String GML_NS = "http://www.opengis.net/gml";
+
 }

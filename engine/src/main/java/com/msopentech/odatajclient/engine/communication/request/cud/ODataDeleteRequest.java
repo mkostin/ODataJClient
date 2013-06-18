@@ -15,10 +15,14 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import java.net.URI;
+import javax.ws.rs.core.Response;
+import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData delete request.
@@ -46,7 +50,10 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      */
     @Override
     public ODataDeleteResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final WebClient client = WebClient.create(this.uri);
+        final Response res = client.
+                accept(getContentType()).type(getContentType()).delete();
+        return new ODataDeleteResponseImpl(res);
     }
 
     /**
@@ -57,5 +64,13 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
     @Override
     protected byte[] getPayload() {
         return new byte[0];
+    }
+
+    private class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
+
+        public ODataDeleteResponseImpl(Response res) {
+            super(res);
+            res.close();
+        }
     }
 }

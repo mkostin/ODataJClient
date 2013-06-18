@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.utils.ODataContants;
 import java.net.URI;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * OData navigation link.
@@ -45,7 +46,7 @@ public abstract class ODataLink extends ODataItem {
         }
 
         public static LinkType evaluate(final String rel, final String type) {
-            if (ODataContants.MEDIA_EDIT_LINK_REL.equals(rel)) {
+            if (StringUtils.isNotBlank(rel) && rel.startsWith(ODataContants.MEDIA_EDIT_LINK_REL)) {
                 return MEDIA_EDIT.setType(type);
             }
 

@@ -63,6 +63,11 @@ public class ODataPrimitiveValue extends ODataValue {
      * @return type name.
      */
     public String getTypeName() {
-        return type.name();
+        return type.toString();
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }

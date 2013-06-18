@@ -240,7 +240,7 @@ public enum EdmSimpleType {
 
     @Override
     public String toString() {
-        return namespace() + "." + name();
+        return namespace() + "." + value;
     }
 
     public static EdmSimpleType fromValue(String value) {

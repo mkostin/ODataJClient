@@ -53,7 +53,7 @@ public class ODataReader {
      * @return de-serialized feed.
      * @throws NoSuchEntityFound in case of the feed has not been found into the input stream.
      */
-    public static ODataFeed deserialize(final InputStream input)
+    public ODataFeed deserialize(final InputStream input)
             throws NoValidEntityFound {
         return null;
     }
@@ -65,7 +65,7 @@ public class ODataReader {
      * @return entity de-serialized.
      * @throws NoSuchEntityFound in case of no entity has been found into the input stream.
      */
-    public static ODataEntity deserializeEntity(final InputStream input)
+    public ODataEntity deserializeEntity(final InputStream input)
             throws NoValidEntityFound {
 
         try {
@@ -87,7 +87,7 @@ public class ODataReader {
      * @return OData entity property de-serialized.
      * @throws NoSuchEntityFound in case of no property has been found into the input stream.
      */
-    public static ODataProperty deserializeProperty(final InputStream input)
+    public ODataProperty deserializeProperty(final InputStream input)
             throws NoValidEntityFound {
         return null;
     }
@@ -98,7 +98,7 @@ public class ODataReader {
      * @param input stream to de-serialize.
      * @return metadata representation.
      */
-    public static EdmMetadata deserializeMetadata(final InputStream inputStream) {
+    public EdmMetadata deserializeMetadata(final InputStream inputStream) {
         return null;
     }
 }

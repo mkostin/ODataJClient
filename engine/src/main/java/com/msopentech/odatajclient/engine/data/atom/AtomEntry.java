@@ -164,6 +164,15 @@ public class AtomEntry extends AbstractElement {
         return value == null || value.getContent().isEmpty() ? null : value.getContent().get(0).toString();
     }
 
+    public void setSummary(final String summary) {
+        final AtomText summ = new AtomText();
+        summ.getContent().add(summary);
+        summ.setType("text");
+        
+        final JAXBElement<AtomText> el = new JAXBElement<AtomText>(new QName(null,"summary"), AtomText.class, summ);
+        getValues().add(el);
+    }
+
     public String getAuthor() {
         final AtomPerson author = getPersonProperty("author");
         return author == null ? null : author.getName();

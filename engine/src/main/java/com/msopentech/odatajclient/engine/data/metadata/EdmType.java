@@ -29,6 +29,8 @@ public class EdmType {
 
     private final String typeExpression;
 
+    private final String baseType;
+
     private boolean collection;
 
     private EdmSimpleType simpleType;
@@ -46,24 +48,25 @@ public class EdmType {
     public EdmType(final EdmMetadata metadata, final String typeExpression) {
         this.typeExpression = typeExpression;
 
-        String expression = typeExpression;
-        int collectionStartIdx = expression.indexOf("Collection(");
-        int collectionEndIdx = expression.lastIndexOf(')');
+        int collectionStartIdx = typeExpression.indexOf("Collection(");
+        int collectionEndIdx = typeExpression.lastIndexOf(')');
         if (collectionStartIdx != -1) {
             if (collectionEndIdx == -1) {
                 throw new IllegalArgumentException("Malformed type: " + typeExpression);
             }
 
             this.collection = true;
-            expression = expression.substring(collectionStartIdx + 11, collectionEndIdx);
+            baseType = typeExpression.substring(collectionStartIdx + 11, collectionEndIdx);
+        } else {
+            baseType = typeExpression;
         }
 
-        int lastDotIdx = expression.lastIndexOf('.');
+        int lastDotIdx = baseType.lastIndexOf('.');
         if (lastDotIdx == -1) {
             throw new IllegalArgumentException("Cannot find namespace or alias in " + typeExpression);
         }
-        String namespaceOrAlias = expression.substring(0, lastDotIdx);
-        String typeName = expression.substring(lastDotIdx + 1);
+        String namespaceOrAlias = baseType.substring(0, lastDotIdx);
+        String typeName = baseType.substring(lastDotIdx + 1);
         if (StringUtils.isBlank(typeName)) {
             throw new IllegalArgumentException("Null or empty type name in " + typeExpression);
         }
@@ -95,13 +98,10 @@ public class EdmType {
                     }
                 }
             }
-        } else {
-            throw new IllegalArgumentException(
-                    "Cannot parse to simple type and no metadata provided: " + typeExpression);
-        }
 
-        if (!isSimpleType() && !isEnumType() && !isComplexType() && !isEntityType()) {
-            throw new IllegalArgumentException("Could not parse type information out of " + typeExpression);
+            if (!isSimpleType() && !isEnumType() && !isComplexType() && !isEntityType()) {
+                throw new IllegalArgumentException("Could not parse type information out of " + typeExpression);
+            }
         }
     }
 
@@ -155,5 +155,13 @@ public class EdmType {
         }
 
         return this.entityType;
+    }
+
+    public String getBaseType() {
+        return baseType;
+    }
+
+    public String getTypeExpression() {
+        return typeExpression;
     }
 }

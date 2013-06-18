@@ -15,11 +15,17 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
+import com.msopentech.odatajclient.engine.utils.ODataBinder;
 import java.net.URI;
+import javax.ws.rs.core.Response;
+import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData create request.
@@ -46,6 +52,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST);
         this.entity = entity;
+        this.uri = targetURI;
     }
 
     /**
@@ -53,7 +60,10 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     public ODataEntityCreateResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final WebClient client = WebClient.create(this.uri);
+        final Response res = client.
+                accept(getContentType()).type(getContentType()).post(ODataBinder.getAtomEntry(entity));
+        return new ODataEntityCreateResponseImpl(res);
     }
 
     /**
@@ -61,6 +71,27 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     protected byte[] getPayload() {
-        return "ODataCreateEntity payload ...".getBytes();
+        return null;
+    }
+
+    private class ODataEntityCreateResponseImpl extends ODataResponseImpl implements ODataEntityCreateResponse {
+
+        private ODataEntity entity = null;
+
+        public ODataEntityCreateResponseImpl(Response res) {
+            super(res);
+        }
+
+        @Override
+        public ODataEntity getBody() {
+            try {
+                if (entity == null) {
+                    entity = ODataBinder.getODataEntity(res.readEntity(AtomEntry.class));
+                }
+                return entity;
+            } finally {
+                res.close();
+            }
+        }
     }
 }

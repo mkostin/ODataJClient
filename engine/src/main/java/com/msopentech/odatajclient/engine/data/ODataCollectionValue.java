@@ -24,6 +24,8 @@ import java.util.Set;
  */
 public class ODataCollectionValue extends ODataValue implements Iterable<ODataValue> {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Type name;
      */
@@ -78,5 +80,14 @@ public class ODataCollectionValue extends ODataValue implements Iterable<ODataVa
      */
     public String getTypeName() {
         return typeName;
+    }
+
+    /**
+     * Gets collection size.
+     *
+     * @return collection size.
+     */
+    public int size() {
+        return values.size();
     }
 }

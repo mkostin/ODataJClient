@@ -17,8 +17,8 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.utils.NoValidEntityFound;
-import com.msopentech.odatajclient.engine.utils.ODataReader;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
+import com.msopentech.odatajclient.engine.utils.ODataBinder;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -47,14 +47,14 @@ public class ODataEntityRequest extends ODataQueryRequest<ODataEntity> {
     public ODataQueryResponse<ODataEntity> execute() {
         final WebClient client = WebClient.create(this.uri);
         final Response res = client.accept(getContentType()).get();
-        return new ODataEntitySetResponseImpl(res);
+        return new ODataEntityResponseImpl(res);
     }
 
-    protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
+    protected class ODataEntityResponseImpl extends ODataQueryResponseImpl {
 
         private ODataEntity entity = null;
 
-        private ODataEntitySetResponseImpl(final Response res) {
+        private ODataEntityResponseImpl(final Response res) {
             super(res);
         }
 
@@ -62,12 +62,9 @@ public class ODataEntityRequest extends ODataQueryRequest<ODataEntity> {
         public ODataEntity getBody() {
             try {
                 if (entity == null) {
-                    entity = ODataReader.deserializeEntity(is);
+                    entity = ODataBinder.getODataEntity(res.readEntity(AtomEntry.class));
                 }
                 return entity;
-            } catch (NoValidEntityFound e) {
-                LOG.error("Error reading entry", e);
-                throw new IllegalStateException(e);
             } finally {
                 res.close();
             }
