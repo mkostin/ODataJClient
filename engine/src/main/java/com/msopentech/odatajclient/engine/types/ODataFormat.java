@@ -23,9 +23,17 @@ import javax.ws.rs.core.MediaType;
 public enum ODataFormat {
 
     /**
-     * JSON format.
+     * JSON format with no metadata.
      */
-    JSON(MediaType.APPLICATION_JSON),
+    JSON_NO_METADATA(MediaType.APPLICATION_JSON + ";odata=nometadata"),
+    /**
+     * JSON format with minimal metadata (default).
+     */
+    JSON(MediaType.APPLICATION_JSON + ";odata=minimalmetadata"),
+    /**
+     * JSON format with no metadata.
+     */
+    JSON_FULL_METADATA(MediaType.APPLICATION_JSON + ";odata=fullmetadata"),
     /**
      * Atom format.
      */

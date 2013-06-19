@@ -43,7 +43,7 @@ public class ODataDocumentServiceRequest extends ODataQueryRequest<InputStream> 
      */
     @Override
     public ODataQueryResponse<InputStream> execute() {
-        final WebClient client = WebClient.create(uri.toASCIIString());
+        final WebClient client = WebClient.create(uri);
         return new ODataServcieResponsImpl(client.get());
 
     }

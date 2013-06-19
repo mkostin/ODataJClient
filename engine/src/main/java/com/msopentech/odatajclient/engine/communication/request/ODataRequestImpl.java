@@ -17,6 +17,9 @@ package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.ByteArrayOutputStream;
@@ -24,8 +27,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
+import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -39,7 +44,7 @@ public class ODataRequestImpl implements ODataRequest {
     /**
      * Logger.
      */
-    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataRequest.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(ODataRequest.class);
 
     /**
      * OData resource representation format.
@@ -254,6 +259,19 @@ public class ODataRequestImpl implements ODataRequest {
     public String getContentType() {
         final String ct = header.getHeader(ODataHeader.HeaderName.contentType);
         return StringUtils.isBlank(ct) ? ODataFormat.JSON.toString() : ct;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T extends EntryResource> Class<T> getEntryClassForContentType() {
+        final Class<T> clazz;
+
+        if (MediaType.APPLICATION_ATOM_XML.equals(getContentType())) {
+            clazz = (Class<T>) AtomEntry.class;
+        } else {
+            clazz = (Class<T>) JSONEntry.class;
+        }
+
+        return clazz;
     }
 
     /**

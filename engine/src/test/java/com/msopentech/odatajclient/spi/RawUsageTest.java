@@ -15,9 +15,7 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataQueryRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
@@ -45,7 +43,7 @@ public class RawUsageTest {
             // let's suppose to want to deserialize, one shot, an entire atom feed
             ODataReader reader = new ODataReader(ODataFormat.ATOM);
 
-            final ODataFeed feed = reader.deserialize(is);
+            final ODataFeed feed = reader.deserializeFeed(is);
 
             // retrieve and process the query result
             for (ODataEntity entity : feed.getEntities()) {

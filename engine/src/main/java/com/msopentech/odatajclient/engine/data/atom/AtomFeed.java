@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.data.atom;
 
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.FeedResource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +78,7 @@ import org.w3c.dom.Element;
     "anyLocal",
     "entry"
 })
-public class AtomFeed {
+public class AtomFeed extends AbstractAtomElement implements FeedResource {
 
     @XmlElementRefs({
         @XmlElementRef(name = "logo", namespace = "http://www.w3.org/2005/Atom", type = Logo.class),
@@ -89,7 +91,7 @@ public class AtomFeed {
         @XmlElementRef(name = "category", namespace = "http://www.w3.org/2005/Atom", type = Category.class),
         @XmlElementRef(name = "updated", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
         @XmlElementRef(name = "author", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
-        @XmlElementRef(name = "link", namespace = "http://www.w3.org/2005/Atom", type = Link.class),
+        @XmlElementRef(name = "link", namespace = "http://www.w3.org/2005/Atom", type = AtomLink.class),
         @XmlElementRef(name = "id", namespace = "http://www.w3.org/2005/Atom", type = Id.class)
     })
     protected List<Object> items;
@@ -146,7 +148,8 @@ public class AtomFeed {
      *
      *
      */
-    public List<Object> getItems() {
+    @Override
+    public List<Object> getValues() {
         if (items == null) {
             items = new ArrayList<Object>();
         }
@@ -234,11 +237,12 @@ public class AtomFeed {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link EntryType }
+     * {@link AtomEntry }
      *
      *
      */
-    public List<AtomEntry> getEntry() {
+    @Override
+    public List<AtomEntry> getEntries() {
         if (entry == null) {
             entry = new ArrayList<AtomEntry>();
         }
@@ -309,5 +313,15 @@ public class AtomFeed {
      */
     public Map<QName, String> getOtherAttributes() {
         return otherAttributes;
+    }
+
+    @Override
+    public void setEntries(List<EntryResource> entries) {
+        getEntries().clear();
+        for (EntryResource entryResource : entries) {
+            if (entryResource instanceof AtomEntry) {
+                getEntries().add((AtomEntry) entryResource);
+            }
+        }
     }
 }

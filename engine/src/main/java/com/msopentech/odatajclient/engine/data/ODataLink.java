@@ -15,79 +15,48 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.utils.ODataContants;
+import static com.msopentech.odatajclient.engine.data.ODataLinkType.ASSOCIATION;
+import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_NAVIGATION;
+import static com.msopentech.odatajclient.engine.data.ODataLinkType.FEED_NAVIGATION;
+import static com.msopentech.odatajclient.engine.data.ODataLinkType.MEDIA_EDIT;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.net.URI;
-import org.apache.commons.lang3.StringUtils;
 
 /**
- * OData navigation link.
+ * OData link.
  */
 public abstract class ODataLink extends ODataItem {
 
-    /**
-     * Link types.
-     */
-    public enum LinkType {
+    protected final ODataLinkType type;
 
-        ENTITY_NAVIGATION("application/atom+xml;type=entry"),
-        FEED_NAVIGATION("application/atom+xml;type=feed"),
-        ASSOCIATION("application/xml"),
-        MEDIA_EDIT("MEDIA-EDIT");
+    protected final String rel;
 
-        private String type;
+    public ODataLink(final URI uri, final ODataLinkType type, final String title) {
+        super(title);
+        this.link = uri;
 
-        private LinkType(final String type) {
-            this.type = type;
-        }
+        this.type = type;
 
-        LinkType setType(final String type) {
-            this.type = type;
-            return this;
-        }
+        switch (this.type) {
+            case ASSOCIATION:
+                this.rel = ODataConstants.ASSOCIATION_LINK_REL + title;
+                break;
 
-        public static LinkType evaluate(final String rel, final String type) {
-            if (StringUtils.isNotBlank(rel) && rel.startsWith(ODataContants.MEDIA_EDIT_LINK_REL)) {
-                return MEDIA_EDIT.setType(type);
-            }
+            case ENTITY_NAVIGATION:
+            case FEED_NAVIGATION:
+                this.rel = ODataConstants.NAVIGATION_LINK_REL + title;
+                break;
 
-            if (LinkType.ENTITY_NAVIGATION.toString().equals(type)) {
-                return ENTITY_NAVIGATION;
-            }
-
-            if (LinkType.FEED_NAVIGATION.toString().equals(type)) {
-                return FEED_NAVIGATION;
-            }
-
-            if (LinkType.ASSOCIATION.toString().equals(type)) {
-                return ASSOCIATION;
-            }
-
-            LOG.error("Invalid link type {}", type);
-            throw new IllegalArgumentException("Invalid string type");
-        }
-
-        @Override
-        public String toString() {
-            return type;
+            case MEDIA_EDIT:
+            default:
+                this.rel = ODataConstants.MEDIA_EDIT_LINK_REL + title;
+                break;
         }
     }
 
-    private static final long serialVersionUID = -3625922586547616628L;
-
-    private final LinkType type;
-
-    /**
-     * Constructor.
-     *
-     * @param name link property name.
-     * @param link link value.
-     * @param link link type.
-     * @see LinkType
-     */
-    public ODataLink(final String name, final URI link, final LinkType type) {
-        super(name);
-        this.link = link;
-        this.type = type;
+    public ODataLink(final URI baseURI, final String href, final ODataLinkType type, final String title) {
+        this(URIUtils.getURI(baseURI, href), type, title);
     }
 
     /**
@@ -95,7 +64,16 @@ public abstract class ODataLink extends ODataItem {
      *
      * @return link type;
      */
-    public LinkType getType() {
+    public ODataLinkType getType() {
         return type;
+    }
+
+    /**
+     * Gets link rel.
+     *
+     * @return link rel
+     */
+    public String getRel() {
+        return rel;
     }
 }

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data.atom;
 
+import com.msopentech.odatajclient.engine.data.LinkResource;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -52,8 +53,7 @@ import javax.xml.namespace.QName;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "link")
-public class Link
-        extends UndefinedContent {
+public class AtomLink extends UndefinedContent implements LinkResource {
 
     @XmlAttribute(name = "href", required = true)
     @XmlSchemaType(name = "anySimpleType")
@@ -95,6 +95,7 @@ public class Link
      * {@link String }
      *
      */
+    @Override
     public String getHref() {
         return href;
     }
@@ -107,6 +108,7 @@ public class Link
      * {@link String }
      *
      */
+    @Override
     public void setHref(String value) {
         this.href = value;
     }
@@ -119,6 +121,7 @@ public class Link
      * {@link String }
      *
      */
+    @Override
     public String getRel() {
         return rel;
     }
@@ -131,6 +134,7 @@ public class Link
      * {@link String }
      *
      */
+    @Override
     public void setRel(String value) {
         this.rel = value;
     }
@@ -143,6 +147,7 @@ public class Link
      * {@link String }
      *
      */
+    @Override
     public String getType() {
         return type;
     }
@@ -150,13 +155,14 @@ public class Link
     /**
      * Sets the value of the type property.
      *
-     * @param value
+     * @param type
      * allowed object is
      * {@link String }
      *
      */
-    public void setType(String value) {
-        this.type = value;
+    @Override
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
@@ -191,6 +197,7 @@ public class Link
      * {@link String }
      *
      */
+    @Override
     public String getTitle() {
         return title;
     }
@@ -198,13 +205,14 @@ public class Link
     /**
      * Sets the value of the title property.
      *
-     * @param value
+     * @param title
      * allowed object is
      * {@link String }
      *
      */
-    public void setTitle(String value) {
-        this.title = value;
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**

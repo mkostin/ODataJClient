@@ -17,13 +17,10 @@ package com.msopentech.odatajclient.engine.data;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * OData URI/Query builder.
@@ -32,7 +29,7 @@ public class ODataURIBuilder implements Serializable {
 
     private static final long serialVersionUID = -3267515371720408124L;
 
-    private enum SegmentType {
+    public enum SegmentType {
 
         ENTITYSET,
         ENTITYTYPE,
@@ -43,10 +40,23 @@ public class ODataURIBuilder implements Serializable {
         FUNCTION,
         LEGACY,
         ACTION,
-        METADATA,
-        BATCH,
-        SERVICEROOT
+        METADATA("$metadata"),
+        BATCH("$batch"),
+        SERVICEROOT;
 
+        private String value;
+
+        private SegmentType() {
+            this.value = "";
+        }
+
+        private SegmentType(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
     /**
@@ -290,7 +300,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURI object.
      */
     public ODataURIBuilder appendMetadataSegment() {
-        segments.add(new Segment(SegmentType.METADATA, "$metadata"));
+        segments.add(new Segment(SegmentType.METADATA, SegmentType.METADATA.getValue()));
         return this;
     }
 
@@ -301,7 +311,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURI object.
      */
     public ODataURIBuilder appendBatchSegment() {
-        segments.add(new Segment(SegmentType.BATCH, "$batch"));
+        segments.add(new Segment(SegmentType.BATCH, SegmentType.BATCH.getValue()));
         return this;
     }
 
@@ -429,23 +439,16 @@ public class ODataURIBuilder implements Serializable {
      * @return OData URI.
      */
     public URI build() {
-        try {
-            final StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
 
-            for (Segment seg : segments) {
-                if (builder.length() > 0) {
-                    builder.append("/");
-
-                }
-                
-                builder.append(seg.value);
+        for (Segment seg : segments) {
+            if (builder.length() > 0) {
+                builder.append("/");
             }
 
-            return new URI(builder.toString());
-
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(ODataURIBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IllegalStateException(ex);
+            builder.append(seg.value);
         }
+
+        return URI.create(builder.toString());
     }
 }

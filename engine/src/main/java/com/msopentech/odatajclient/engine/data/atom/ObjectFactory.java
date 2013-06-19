@@ -147,8 +147,8 @@ public class ObjectFactory {
      * Create an instance of {@link Link }
      *
      */
-    public Link createLink() {
-        return new Link();
+    public AtomLink createLink() {
+        return new AtomLink();
     }
 
     /**

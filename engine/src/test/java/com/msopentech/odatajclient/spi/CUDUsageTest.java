@@ -32,12 +32,11 @@ import com.msopentech.odatajclient.engine.communication.response.ODataStreamCrea
 import com.msopentech.odatajclient.engine.communication.response.ODataUpdateEntityResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
-import com.msopentech.odatajclient.engine.data.ODataEntityAtomExtensions;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.utils.EntityFactory;
+import com.msopentech.odatajclient.engine.utils.ODataFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -49,7 +48,7 @@ public class CUDUsageTest {
         targetURI.appendEntitySetSegment("Products");
 
         // build the new object
-        final ODataEntity newEntity = EntityFactory.newEntity("Java Code");
+        final ODataEntity newEntity = ODataFactory.newEntity("Java Code");
 
         // Add a complex property
         final ODataComplexValue addressValue = new ODataComplexValue("Address");
@@ -65,11 +64,6 @@ public class CUDUsageTest {
 
         newEntity.addProperty(new ODataProperty("PreferredColors", preferredColors));
         // newEntity.set ...
-
-        // just for example, add atom extensions
-        ODataEntityAtomExtensions atomExtensions = new ODataEntityAtomExtensions();
-        atomExtensions.setSummary("OData client Java framework");
-        newEntity.setAtomExtensions(atomExtensions);
 
         // create your request
         final ODataEntityCreateRequest request =
@@ -98,7 +92,7 @@ public class CUDUsageTest {
         targetURI.appendEntityTypeSegment("Suppliers(5)");
 
         // build the new link
-        final ODataLink newLink = EntityFactory.newEntityNavigationLink("Supplier", targetURI.build());
+        final ODataLink newLink = ODataFactory.newEntityNavigationLink("Supplier", targetURI.build());
 
         // create your request
         final ODataAddLinkRequest request = ODataCUDRequestFactory.getAddLinkRequest(sourceURI.build(), newLink);
@@ -119,7 +113,7 @@ public class CUDUsageTest {
         targetURI.appendEntityTypeSegment("Products(2)");
 
         // build the new object to change Rating value
-        final ODataEntity changes = EntityFactory.newEntity("Java Code");
+        final ODataEntity changes = ODataFactory.newEntity("Java Code");
         changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EdmSimpleType.INT_32)));
 
         // create your request

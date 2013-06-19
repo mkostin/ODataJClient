@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
 })
 @XmlSeeAlso({
     Category.class,
-    Link.class
+    AtomLink.class
 })
 public class UndefinedContent {
 

@@ -143,6 +143,14 @@ public class AtomContent extends AbstractElement {
         return elements.isEmpty() ? null : elements.get(0);
     }
 
+    public void setXMLContent(final Element element) {
+        getType().clear();
+        getType().add(MediaType.APPLICATION_XML);
+
+        getValues().removeAll(getElements(Element.class));
+        getValues().add(element);
+    }
+
     /**
      * Gets the value of the type property.
      *

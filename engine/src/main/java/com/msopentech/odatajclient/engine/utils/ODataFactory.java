@@ -18,11 +18,19 @@ package com.msopentech.odatajclient.engine.utils;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataLink.LinkType;
+import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import java.net.URI;
 import java.util.List;
 
-public class EntityFactory {
+public class ODataFactory {
+
+    public static ODataFeed newFeed(final List<ODataEntity> entries) {
+        return new FeedImpl(entries);
+    }
+
+    public static ODataFeed newFeed(final List<ODataEntity> entries, final URI next) {
+        return new FeedImpl(entries, next);
+    }
 
     public static ODataEntity newEntity(final String name) {
         return new EntityImpl(name);
@@ -32,24 +40,44 @@ public class EntityFactory {
         return new EntityImpl(name, link);
     }
 
-    public static ODataLink newLink(final String name, final URI link, final LinkType type) {
-        return new LinkImpl(name, link, type);
+    public static ODataLink newLink(final String name, final URI link, final ODataLinkType type) {
+        return new LinkImpl(link, type, name);
+    }
+
+    public static ODataLink newLink(final String name, final URI baseURI, final String href, final ODataLinkType type) {
+        return new LinkImpl(baseURI, href, type, name);
     }
 
     public static ODataLink newEntityNavigationLink(final String name, final URI link) {
-        return new LinkImpl(name, link, LinkType.ENTITY_NAVIGATION);
+        return new LinkImpl(link, ODataLinkType.ENTITY_NAVIGATION, name);
     }
 
-    public static ODataLink newEntitySetNavigationLink(final String name, final URI link) {
-        return new LinkImpl(name, link, LinkType.FEED_NAVIGATION);
+    public static ODataLink newEntityNavigationLink(final String name, final URI baseURI, final String href) {
+        return new LinkImpl(baseURI, href, ODataLinkType.ENTITY_NAVIGATION, name);
+    }
+
+    public static ODataLink newFeedNavigationLink(final String name, final URI link) {
+        return new LinkImpl(link, ODataLinkType.FEED_NAVIGATION, name);
+    }
+
+    public static ODataLink newFeedNavigationLink(final String name, final URI baseURI, final String href) {
+        return new LinkImpl(baseURI, href, ODataLinkType.FEED_NAVIGATION, name);
     }
 
     public static ODataLink newAssociationLink(final String name, final URI link) {
-        return new LinkImpl(name, link, LinkType.ASSOCIATION);
+        return new LinkImpl(link, ODataLinkType.ASSOCIATION, name);
     }
 
-    public static ODataLink newMediaLink(final String name, final URI link) {
-        return new LinkImpl(name, link, LinkType.MEDIA_EDIT);
+    public static ODataLink newAssociationLink(final String name, final URI baseURI, final String href) {
+        return new LinkImpl(baseURI, href, ODataLinkType.ASSOCIATION, name);
+    }
+
+    public static ODataLink newMediaEditLink(final String name, final URI link) {
+        return new LinkImpl(link, ODataLinkType.MEDIA_EDIT, name);
+    }
+
+    public static ODataLink newMediaEditLink(final String name, final URI baseURI, final String href) {
+        return new LinkImpl(baseURI, href, ODataLinkType.MEDIA_EDIT, name);
     }
 
     private static class FeedImpl extends ODataFeed {
@@ -87,8 +115,12 @@ public class EntityFactory {
 
         private static final long serialVersionUID = -2533925527313767001L;
 
-        public LinkImpl(final String name, final URI link, final LinkType type) {
-            super(name, link, type);
+        public LinkImpl(final URI uri, final ODataLinkType type, final String title) {
+            super(uri, type, title);
+        }
+
+        public LinkImpl(final URI baseURI, final String href, final ODataLinkType type, final String title) {
+            super(baseURI, href, type, title);
         }
     }
 }

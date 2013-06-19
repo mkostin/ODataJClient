@@ -49,8 +49,7 @@ import javax.xml.namespace.QName;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "category")
-public class Category
-        extends UndefinedContent {
+public class Category extends UndefinedContent {
 
     @XmlAttribute(name = "term", required = true)
     @XmlSchemaType(name = "anySimpleType")

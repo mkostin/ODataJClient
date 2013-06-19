@@ -21,8 +21,11 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequestFact
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.utils.ODataBinder;
+import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -60,9 +63,22 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     public ODataEntityCreateResponse execute() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, getEntryClassForContentType()), baos);
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+
         final WebClient client = WebClient.create(this.uri);
-        final Response res = client.
-                accept(getContentType()).type(getContentType()).post(ODataBinder.getAtomEntry(entity));
+        final Response res = client.accept(getContentType()).type(getContentType()).post(bais);
+
+        try {
+            baos.flush();
+            baos.close();
+            bais.close();
+        } catch (IOException e) {
+            LOG.error("While closing input / output streams for the request execution", e);
+        }
+
         return new ODataEntityCreateResponseImpl(res);
     }
 
@@ -84,14 +100,15 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
 
         @Override
         public ODataEntity getBody() {
-            try {
-                if (entity == null) {
-                    entity = ODataBinder.getODataEntity(res.readEntity(AtomEntry.class));
+            if (entity == null) {
+                try {
+                    entity = ODataBinder.getODataEntity(
+                            res.readEntity(ODataEntityCreateRequest.this.getEntryClassForContentType()));
+                } finally {
+                    res.close();
                 }
-                return entity;
-            } finally {
-                res.close();
             }
+            return entity;
         }
     }
 }

@@ -83,7 +83,7 @@ public class Source {
         @XmlElementRef(name = "category", namespace = "http://www.w3.org/2005/Atom", type = Category.class),
         @XmlElementRef(name = "author", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
         @XmlElementRef(name = "updated", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
-        @XmlElementRef(name = "link", namespace = "http://www.w3.org/2005/Atom", type = Link.class),
+        @XmlElementRef(name = "link", namespace = "http://www.w3.org/2005/Atom", type = AtomLink.class),
         @XmlElementRef(name = "id", namespace = "http://www.w3.org/2005/Atom", type = Id.class)
     })
     @XmlAnyElement(lax = true)

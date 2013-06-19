@@ -15,21 +15,23 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import java.io.Serializable;
 import java.net.URI;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract representation of entities and navigation links.
+ * Abstract representation of OData entities and links.
  */
-public abstract class ODataItem implements Serializable {
+public abstract class ODataItem {
 
-    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataItem.class);
-
-    private static final long serialVersionUID = 1961061310337516113L;
+    protected static final Logger LOG = LoggerFactory.getLogger(ODataItem.class);
 
     /**
-     * OData entity self link.
+     * OData item self link.
      */
     protected URI link;
 
@@ -72,5 +74,20 @@ public abstract class ODataItem implements Serializable {
      */
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }

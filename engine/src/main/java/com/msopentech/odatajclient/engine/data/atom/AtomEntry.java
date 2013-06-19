@@ -15,7 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.data.atom;
 
-import com.msopentech.odatajclient.engine.data.AbstractElement;
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.LinkResource;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +78,7 @@ import org.w3c.dom.Element;
     "anyOther",
     "anyLocal"
 })
-public class AtomEntry extends AbstractElement {
+public class AtomEntry extends AbstractAtomElement implements EntryResource {
 
     @XmlElementRefs({
         @XmlElementRef(name = "published", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
@@ -88,7 +91,7 @@ public class AtomEntry extends AbstractElement {
         @XmlElementRef(name = "source", namespace = "http://www.w3.org/2005/Atom", type = Source.class),
         @XmlElementRef(name = "updated", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
         @XmlElementRef(name = "author", namespace = "http://www.w3.org/2005/Atom", type = JAXBElement.class),
-        @XmlElementRef(name = "link", namespace = "http://www.w3.org/2005/Atom", type = Link.class),
+        @XmlElementRef(name = "link", namespace = "http://www.w3.org/2005/Atom", type = AtomLink.class),
         @XmlElementRef(name = "id", namespace = "http://www.w3.org/2005/Atom", type = Id.class)
     })
     protected List<Object> items;
@@ -130,7 +133,7 @@ public class AtomEntry extends AbstractElement {
      * Objects of the following type(s) are allowed in the list
      * {@link JAXBElement }{@code <}{@link AtomDate }{@code >}
      * {@link JAXBElement }{@code <}{@link AtomText }{@code >}
-     * {@link Content }
+     * {@link AtomContent }
      * {@link JAXBElement }{@code <}{@link AtomText }{@code >}
      * {@link JAXBElement }{@code <}{@link AtomText }{@code >}
      * {@link JAXBElement }{@code <}{@link AtomPerson }{@code >}
@@ -138,7 +141,7 @@ public class AtomEntry extends AbstractElement {
      * {@link Category }
      * {@link JAXBElement }{@code <}{@link AtomPerson }{@code >}
      * {@link JAXBElement }{@code <}{@link AtomDate }{@code >}
-     * {@link Link }
+     * {@link AtomLink }
      * {@link Id }
      */
     @Override
@@ -149,28 +152,14 @@ public class AtomEntry extends AbstractElement {
         return this.items;
     }
 
-    public Id getId() {
-        final List<Id> id = getElements(Id.class);
-        return id.isEmpty() ? null : id.get(0);
-    }
-
-    public String getTitle() {
-        final AtomText value = getTextProperty("title");
-        return value == null || value.getContent().isEmpty() ? null : value.getContent().get(0).toString();
-    }
-
     public String getSummary() {
         final AtomText value = getTextProperty("summary");
         return value == null || value.getContent().isEmpty() ? null : value.getContent().get(0).toString();
     }
 
-    public void setSummary(final String summary) {
-        final AtomText summ = new AtomText();
-        summ.getContent().add(summary);
-        summ.setType("text");
-        
-        final JAXBElement<AtomText> el = new JAXBElement<AtomText>(new QName(null,"summary"), AtomText.class, summ);
-        getValues().add(el);
+    private AtomPerson getPersonProperty(final String name) {
+        final List<AtomPerson> prop = getJAXBElements(name, AtomPerson.class);
+        return prop.isEmpty() ? null : prop.get(0);
     }
 
     public String getAuthor() {
@@ -178,33 +167,43 @@ public class AtomEntry extends AbstractElement {
         return author == null ? null : author.getName();
     }
 
-    public List<Link> getLinks() {
-        return getElements(Link.class);
+    @Override
+    public String getEditLink() {
+        AtomLink link = getLinkWithRel(ODataConstants.EDIT_LINK_REL);
+        return link == null ? null : link.getHref();
     }
 
-    public Link getSelfLink() {
-        return getNamedLink("self");
-    }
+    private List<AtomLink> getLinksWithRelPrefix(final String relPrefix) {
+        List<AtomLink> relLinks = new ArrayList<AtomLink>();
 
-    public Link getEditLink() {
-        return getNamedLink("edit");
-    }
-
-    private Link getNamedLink(final String name) {
-        Link res = null;
-
-        for (Link link : getLinks()) {
-            if (name != null && name.equals(link.getRel())) {
-                res = link;
+        for (AtomLink link : getLinks()) {
+            if (link.getRel().startsWith(relPrefix)) {
+                relLinks.add(link);
             }
         }
 
-        return res;
+        return relLinks;
     }
 
-    public Category getCategory() {
+    @Override
+    public List<? extends LinkResource> getAssociationLinks() {
+        return getLinksWithRelPrefix(ODataConstants.ASSOCIATION_LINK_REL);
+    }
+
+    @Override
+    public List<? extends LinkResource> getNavigationLinks() {
+        return getLinksWithRelPrefix(ODataConstants.NAVIGATION_LINK_REL);
+    }
+
+    @Override
+    public List<? extends LinkResource> getMediaEditLinks() {
+        return getLinksWithRelPrefix(ODataConstants.MEDIA_EDIT_LINK_REL);
+    }
+
+    @Override
+    public String getType() {
         List<Category> categories = getElements(Category.class);
-        return categories.isEmpty() ? null : categories.get(0);
+        return categories.isEmpty() ? null : categories.get(0).getTerm();
     }
 
     public Source getSource() {
@@ -212,9 +211,10 @@ public class AtomEntry extends AbstractElement {
         return sources.isEmpty() ? null : sources.get(0);
     }
 
-    public AtomContent getAtomContent() {
+    @Override
+    public Element getContent() {
         List<AtomContent> contents = getElements(AtomContent.class);
-        return contents.isEmpty() ? null : contents.get(0);
+        return contents.isEmpty() ? null : contents.get(0).getXMLContent();
     }
 
     /**
@@ -291,6 +291,11 @@ public class AtomEntry extends AbstractElement {
         return base;
     }
 
+    @Override
+    public URI getBaseURI() {
+        return URI.create(base);
+    }
+
     /**
      * Sets the value of the base property.
      *
@@ -345,15 +350,100 @@ public class AtomEntry extends AbstractElement {
         return otherAttributes;
     }
 
-    private AtomText getTextProperty(final String name) {
-        @SuppressWarnings("unchecked")
-        final List<AtomText> prop = getJAXBElements(name, AtomText.class);
-        return prop.isEmpty() ? null : prop.get(0);
+    @Override
+    public String getEtag() {
+        String etag = null;
+
+        QName qname = new QName(ODataConstants.NS_METADATA, "etag", "m");
+        if (getOtherAttributes().containsKey(qname)) {
+            etag = getOtherAttributes().get(qname);
+        }
+
+        return etag;
     }
 
-    private AtomPerson getPersonProperty(final String name) {
-        @SuppressWarnings("unchecked")
-        final List<AtomPerson> prop = getJAXBElements(name, AtomPerson.class);
-        return prop.isEmpty() ? null : prop.get(0);
+    @Override
+    public void setType(final String type) {
+        getValues().removeAll(getElements(Category.class));
+
+        Category category = new Category();
+        category.setTerm(type);
+        category.setScheme(ODataConstants.NS_SCHEME);
+        getValues().add(category);
+    }
+
+    @Override
+    public void setId(final String uri) {
+        getValues().removeAll(getElements(Id.class));
+
+        Id id = new Id();
+        id.setContent(uri);
+        getValues().add(id);
+    }
+
+    @Override
+    public void setEtag(String etag) {
+    }
+
+    @Override
+    public void setSelfLink(String selfLink) {
+        AtomLink link = getLinkWithRel(ODataConstants.SELF_LINK_REL);
+        if (link != null) {
+            getValues().remove(link);
+        }
+
+        link = new AtomLink();
+        link.setRel(ODataConstants.SELF_LINK_REL);
+        link.setTitle(getTitle());
+        link.setHref(selfLink);
+
+        getValues().add(link);
+    }
+
+    @Override
+    public void setEditLink(String editLink) {
+        AtomLink link = getLinkWithRel(ODataConstants.EDIT_LINK_REL);
+        if (link != null) {
+            getValues().remove(link);
+        }
+
+        link = new AtomLink();
+        link.setRel(ODataConstants.EDIT_LINK_REL);
+        link.setTitle(getTitle());
+        link.setHref(editLink);
+
+        getValues().add(link);
+    }
+
+    private void setLinksWithRelPrefix(final String relPrefix, final List<LinkResource> linkResources) {
+        getValues().retainAll(getLinksWithRelPrefix(relPrefix));
+
+        for (LinkResource link : linkResources) {
+            if (link instanceof AtomLink) {
+                getValues().add((AtomLink) link);
+            }
+        }
+    }
+
+    @Override
+    public void setAssociationLinks(List<LinkResource> associationLinks) {
+        setLinksWithRelPrefix(ODataConstants.ASSOCIATION_LINK_REL, associationLinks);
+    }
+
+    @Override
+    public void setNavigationLinks(List<LinkResource> navigationLinks) {
+        setLinksWithRelPrefix(ODataConstants.NAVIGATION_LINK_REL, navigationLinks);
+    }
+
+    @Override
+    public void setMediaEditLinks(List<LinkResource> mediaEditLinks) {
+        setLinksWithRelPrefix(ODataConstants.MEDIA_EDIT_LINK_REL, mediaEditLinks);
+    }
+
+    @Override
+    public void setContent(Element content) {
+        AtomContent atomContent = new AtomContent();
+        atomContent.setXMLContent(content);
+        getValues().add(atomContent);
     }
 }

@@ -15,29 +15,26 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.LinkResource;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataEntityAtomExtensions;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataLink.LinkType;
+import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.atom.AtomContent;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
-import com.msopentech.odatajclient.engine.data.atom.Link;
+import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import java.io.OutputStream;
+import java.io.StringWriter;
 import java.net.URI;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,15 +46,61 @@ public class ODataBinder {
     /**
      * Logger.
      */
-    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataBinder.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(ODataBinder.class);
 
-    public static AtomEntry getAtomEntry(final ODataEntity entity) {
+    private static Element newEntryContent() {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        Element properties = null;
+        try {
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+            final Document doc = builder.newDocument();
+            properties = doc.createElement(ODataConstants.ELEM_PROPERTIES);
+            properties.setAttribute(ODataConstants.XMLNS_METADATA, ODataConstants.NS_METADATA);
+            properties.setAttribute(ODataConstants.XMLNS_DATASERVICES, ODataConstants.NS_DATASERVICES);
+            properties.setAttribute(ODataConstants.XMLNS_GML, ODataConstants.NS_GML);
+            properties.setAttribute(ODataConstants.XMLNS_GEORSS, ODataConstants.NS_GEORSS);
+        } catch (ParserConfigurationException e) {
+            LOG.error("Failure building entry content", e);
+        }
+
+        return properties;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference) {
+        T entry;
+
+        if (reference.equals(AtomEntry.class)) {
+            entry = (T) getAtomEntry(entity);
+        } else {
+            entry = (T) getJSONEntry(entity);
+        }
+
+        return entry;
+    }
+
+    // TODO: complete and refactor
+    private static AtomEntry getAtomEntry(final ODataEntity entity) {
         final AtomEntry entry = new AtomEntry();
 
-        final AtomContent content = newAtomContent();
-        entry.getValues().add(content);
+        final Element content = newEntryContent();
+        entry.setContent(content);
 
-        final Element properties = content.getXMLContent();
+        for (ODataProperty prop : entity.getProperties()) {
+            content.appendChild(newProperty(prop, content.getOwnerDocument()));
+        }
+
+        return entry;
+    }
+
+    // TODO: complete and refactor
+    private static JSONEntry getJSONEntry(final ODataEntity entity) {
+        final JSONEntry entry = new JSONEntry();
+
+        entry.setContent(newEntryContent());
+
+        final Element properties = entry.getContent();
 
         for (ODataProperty prop : entity.getProperties()) {
             properties.appendChild(newProperty(prop, properties.getOwnerDocument()));
@@ -66,88 +109,69 @@ public class ODataBinder {
         return entry;
     }
 
-    public static ODataEntity getODataEntity(final AtomEntry entry) {
+    public static ODataEntity getODataEntity(final EntryResource entry) {
         if (LOG.isDebugEnabled()) {
-            getAtomSerialization(entry, AtomEntry.class, System.out);
+            StringWriter writer = new StringWriter();
+            SerializationUtils.serializeEntry(entry, writer);
+            writer.flush();
+            LOG.debug("Processing entity:\n{}", writer.toString());
         }
 
-        final ODataEntity entity = EntityFactory.newEntity(entry.getCategory().getTerm());
+        final ODataEntity entity = entry.getSelfLink() == null
+                ? ODataFactory.newEntity(entry.getType())
+                : ODataFactory.newEntity(entry.getType(), URIUtils.getURI(entry.getBaseURI(), entry.getSelfLink()));
 
-        final ODataEntityAtomExtensions ext = new ODataEntityAtomExtensions();
-        ext.setId(entry.getId().getContent());
-        ext.setSummary(entry.getSummary());
-        ext.setAuthor(entry.getAuthor());
-        entity.setAtomExtensions(ext);
-
-        for (Link link : entry.getLinks()) {
-            addLink(link, entry, entity);
+        if (entry.getEditLink() != null) {
+            entity.setEditLink(URIUtils.getURI(entry.getBaseURI(), entry.getEditLink()));
         }
 
-        final AtomContent content = entry.getAtomContent();
+        for (LinkResource link : entry.getAssociationLinks()) {
+            entity.addLink(ODataFactory.newAssociationLink(link.getTitle(), entry.getBaseURI(), link.getHref()));
+        }
+        for (LinkResource link : entry.getNavigationLinks()) {
+            entity.addLink(ODataFactory.newEntityNavigationLink(link.getTitle(), entry.getBaseURI(), link.getHref()));
+        }
+        for (LinkResource link : entry.getMediaEditLinks()) {
+            entity.addLink(ODataFactory.newMediaEditLink(link.getTitle(), entry.getBaseURI(), link.getHref()));
+        }
 
+        Element content = entry.getContent();
         if (content != null) {
-            final Element xmlContent = content.getXMLContent();
-            for (int i = 0; i < xmlContent.getChildNodes().getLength(); i++) {
-                final Element property = (Element) xmlContent.getChildNodes().item(i);
+            for (int i = 0; i < content.getChildNodes().getLength(); i++) {
+                final Element property = (Element) content.getChildNodes().item(i);
 
                 try {
                     if (property.getNodeType() != Node.TEXT_NODE) {
                         entity.addProperty(newProperty(property));
                     }
                 } catch (IllegalArgumentException e) {
-                    LOG.warn("Failure retriving EdmType for {}", property.getTextContent(), e);
+                    LOG.warn("Failure retrieving EdmType for {}", property.getTextContent(), e);
                 }
             }
         }
 
         return entity;
-
     }
 
-    public static ODataLink getODataLink(final Link link) {
+    public static ODataLink getODataLink(final LinkResource link) {
         return getODataLink(link, null);
     }
 
-    public static ODataLink getODataLink(final Link link, final AtomEntry entry) {
-        return EntityFactory.newLink(
+    public static ODataLink getODataLink(final LinkResource link, final EntryResource entry) {
+        return ODataFactory.newLink(
                 link.getTitle(),
-                entry == null ? getURI(link, null) : getURI(link, entry.getBase()),
-                LinkType.evaluate(link.getRel(), link.getType()));
-    }
-
-    private static AtomContent newAtomContent() {
-        final AtomContent content = new AtomContent();
-        content.getType().add("application/xml");
-
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-        try {
-            final DocumentBuilder builder = factory.newDocumentBuilder();
-            final Document doc = builder.newDocument();
-            final Element properties = doc.createElement("m:properties");
-            properties.setAttribute("xmlns:m", ODataContants.M_NS);
-            properties.setAttribute("xmlns:d", ODataContants.D_NS);
-            properties.setAttribute("xmlns:gml", ODataContants.GML_NS);
-            properties.setAttribute("xmlns:georss", ODataContants.GEORSS_NS);
-            doc.appendChild(properties);
-
-            content.getValues().add(properties);
-
-        } catch (ParserConfigurationException e) {
-            LOG.error("Failur building AtomEntry content", e);
-        }
-
-        return content;
+                entry == null ? URI.create(link.getHref()) : URIUtils.getURI(entry.getBaseURI(), link.getHref()),
+                ODataLinkType.evaluate(link.getRel(), link.getType()));
     }
 
     private static ODataProperty newProperty(final Element property) {
-        final Node typeNode = property.getAttributes().getNamedItem("m:type");
+        final Node typeNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
 
         try {
             final ODataProperty res;
 
             if (typeNode == null) {
-                final Node nullNode = property.getAttributes().getNamedItem("m:null");
+                final Node nullNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_NULL);
                 if (nullNode == null) {
                     res = newPrimitiveProperty(property, new EdmType(EdmSimpleType.STRING.toString()));
                 } else {
@@ -176,8 +200,8 @@ public class ODataBinder {
     }
 
     private static Element newNullProperty(final ODataProperty prop, final Document doc) {
-        final Element element = doc.createElement("d:" + prop.getName());
-        element.setAttribute("m:null", "true");
+        final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + prop.getName());
+        element.setAttribute(ODataConstants.ATTR_NULL, Boolean.toString(true));
         return element;
     }
 
@@ -220,8 +244,8 @@ public class ODataBinder {
 
         final ODataPrimitiveValue value = (ODataPrimitiveValue) propValue;
 
-        final Element element = doc.createElement("d:" + name);
-        element.setAttribute("m:type", value.getTypeName());
+        final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
+        element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
         element.setTextContent(value.toString());
         return element;
     }
@@ -257,8 +281,8 @@ public class ODataBinder {
 
         final ODataComplexValue value = (ODataComplexValue) propValue;
 
-        final Element element = doc.createElement("d:" + name);
-        element.setAttribute("m:type", value.getTypeName());
+        final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
+        element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
 
         for (ODataProperty field : value) {
             element.appendChild(newProperty(field, doc));
@@ -297,88 +321,17 @@ public class ODataBinder {
 
         final ODataCollectionValue value = (ODataCollectionValue) prop.getValue();
 
-        final Element element = doc.createElement("d:" + prop.getName());
-        element.setAttribute("m:type", value.getTypeName());
+        final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + prop.getName());
+        element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
 
         for (ODataValue el : value) {
             if (el instanceof ODataPrimitiveValue) {
-                element.appendChild(newPrimitiveProperty("element", el, doc));
+                element.appendChild(newPrimitiveProperty(ODataConstants.ELEM_ELEMENTS, el, doc));
             } else {
-                element.appendChild(newComplexProperty("element", el, doc));
+                element.appendChild(newComplexProperty(ODataConstants.ELEM_ELEMENTS, el, doc));
             }
         }
 
         return element;
-    }
-
-    private static void addLink(final Link link, final AtomEntry entry, final ODataEntity entity) {
-        if ("edit".equals(link.getRel())) {
-            addEditLink(link, entry, entity);
-        } else if ("self".equals(link.getRel())) {
-            addSelfLink(link, entry, entity);
-        } else {
-            entity.addLink(getODataLink(link, entry));
-        }
-    }
-
-    private static void addEditLink(final Link link, final AtomEntry entry, final ODataEntity entity) {
-        if (entity == null) {
-            throw new IllegalArgumentException("Provided OData entity is null");
-        }
-
-        if (link == null) {
-            throw new IllegalArgumentException("Provided link is null");
-        }
-        try {
-            URI uri = getURI(link, entry.getBase());
-            entity.setEditLink(uri);
-        } catch (Exception e) {
-            LOG.warn("Unparsable link", e);
-        }
-    }
-
-    private static void addSelfLink(final Link link, final AtomEntry entry, final ODataEntity entity) {
-        if (entity == null) {
-            throw new IllegalArgumentException("Provided OData entity is null");
-        }
-
-        if (link == null) {
-            throw new IllegalArgumentException("Provided link is null");
-        }
-        try {
-            URI uri = getURI(link, entry.getBase());
-            entity.setLink(uri);
-        } catch (Exception e) {
-            LOG.warn("Unparsable link", e);
-        }
-    }
-
-    private static URI getURI(final Link link, final String base) {
-        if (link == null) {
-            throw new IllegalArgumentException("Null link provided");
-        }
-
-        URI uri = URI.create(link.getHref());
-
-        if (!uri.isAbsolute()) {
-            final String prefix = link.getBase() == null ? base : link.getBase();
-            if (StringUtils.isNotBlank(prefix)) {
-                uri = URI.create(prefix + "/" + link.getHref());
-            }
-        }
-
-        return uri.normalize();
-    }
-
-    public static void getAtomSerialization(final Object obj, final Class<?> reference, final OutputStream os) {
-        try {
-            JAXBContext context = JAXBContext.newInstance(reference);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            marshaller.marshal(obj, os);
-        } catch (JAXBException e) {
-            LOG.error("Failure serializing object", e);
-        }
     }
 }

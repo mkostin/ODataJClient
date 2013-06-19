@@ -45,7 +45,7 @@ public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata> {
      */
     @Override
     public ODataQueryResponse<EdmMetadata> execute() {
-        final WebClient client = WebClient.create(uri.toASCIIString());
+        final WebClient client = WebClient.create(uri);
         return new ODataMetadataResponsImpl(client.get());
 
     }

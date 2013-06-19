@@ -51,10 +51,11 @@ public class ODataReader {
      *
      * @param input stream to de-serialize.
      * @return de-serialized feed.
-     * @throws NoSuchEntityFound in case of the feed has not been found into the input stream.
+     * @throws NoValidEntityFound in case the feed was not found into the input stream.
      */
-    public ODataFeed deserialize(final InputStream input)
+    public ODataFeed deserializeFeed(final InputStream input)
             throws NoValidEntityFound {
+
         return null;
     }
 
@@ -63,7 +64,7 @@ public class ODataReader {
      *
      * @param input stream to de-serialize.
      * @return entity de-serialized.
-     * @throws NoSuchEntityFound in case of no entity has been found into the input stream.
+     * @throws NoValidEntityFound in case of no entity was found into the input stream.
      */
     public ODataEntity deserializeEntity(final InputStream input)
             throws NoValidEntityFound {
@@ -85,10 +86,11 @@ public class ODataReader {
      *
      * @param input stream to de-serialize.
      * @return OData entity property de-serialized.
-     * @throws NoSuchEntityFound in case of no property has been found into the input stream.
+     * @throws NoValidEntityFound in case no property was found into the input stream.
      */
     public ODataProperty deserializeProperty(final InputStream input)
             throws NoValidEntityFound {
+
         return null;
     }
 

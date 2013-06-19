@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.data.ODataLink.LinkType;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,24 +27,29 @@ public abstract class ODataEntity extends ODataItem {
     private static final long serialVersionUID = 8360640095932811034L;
 
     /**
-     * Atom extensions (optional info).
+     * Edit link.
      */
-    private ODataEntityAtomExtensions atomExtensions;
+    protected URI editLink;
 
     /**
-     * OData entity properties.
+     * Navigation links (might contain inline entities or feeds).
      */
-    private final List<ODataProperty> properties = new ArrayList<ODataProperty>();
+    protected final List<ODataLink> navigationLinks = new ArrayList<ODataLink>();
 
     /**
-     * OData entities/links.
+     * Association links.
      */
-    private final List<ODataItem> links = new ArrayList<ODataItem>();
+    protected final List<ODataLink> associationLinks = new ArrayList<ODataLink>();
 
     /**
-     * OData entity edit link.
+     * Media edit links.
      */
-    private URI editLink;
+    protected final List<ODataLink> mediaEditLinks = new ArrayList<ODataLink>();
+
+    /**
+     * Entity properties.
+     */
+    protected final List<ODataProperty> properties = new ArrayList<ODataProperty>();
 
     /**
      * Constructor.
@@ -70,94 +74,83 @@ public abstract class ODataEntity extends ODataItem {
      *
      * @param property property to be added.
      */
-    public void addProperty(final ODataProperty property) {
-        if (!properties.contains(property)) {
-            properties.add(property);
-        }
+    public boolean addProperty(final ODataProperty property) {
+        return properties.contains(property) ? false : properties.add(property);
     }
 
     /**
-     * Returns all OData links.
+     * Removes given property.
      *
-     * @return OData entity links.
+     * @param property property to be removed.
      */
-    public List<ODataItem> getAllLinks() {
-        return links;
+    public boolean removeProperty(final ODataProperty property) {
+        return properties.remove(property);
     }
 
     /**
-     * Returns all entity navigation links.
+     * Puts the given link into one of available lists, based on its type.
+     *
+     * @param link to be added
+     * @return <tt>true</tt> if the given link was added in one of available lists
+     */
+    public boolean addLink(final ODataLink link) {
+        boolean result = false;
+
+        switch (link.getType()) {
+            case ASSOCIATION:
+                result = associationLinks.contains(link) ? false : associationLinks.add(link);
+                break;
+
+            case ENTITY_NAVIGATION:
+            case FEED_NAVIGATION:
+                result = navigationLinks.contains(link) ? false : navigationLinks.add(link);
+                break;
+
+            case MEDIA_EDIT:
+                result = mediaEditLinks.contains(link) ? false : mediaEditLinks.add(link);
+                break;
+
+            default:
+        }
+
+        return result;
+    }
+
+    /**
+     * Removes the given link from any list (association, navigation, mediaEdit).
+     *
+     * @param link to be removed
+     * @return <tt>true</tt> if the given link was contained in one of available lists
+     */
+    public boolean removeLink(final ODataLink link) {
+        return associationLinks.remove(link) || navigationLinks.remove(link) || mediaEditLinks.remove(link);
+    }
+
+    /**
+     * Returns all entity navigation links (including inline entities / feeds).
      *
      * @return OData entity links.
      */
     public List<ODataLink> getNavigationLinks() {
-        final List<ODataLink> res = new ArrayList<ODataLink>();
-        for (ODataItem item : getAllLinks()) {
-            if (item instanceof ODataLink && (((ODataLink) item).getType() == LinkType.ENTITY_NAVIGATION
-                    || ((ODataLink) item).getType() == LinkType.FEED_NAVIGATION)) {
-                res.add((ODataLink) item);
-            }
-        }
-        return res;
+        return navigationLinks;
     }
 
     /**
-     * Returns all entity set navigation links.
+     * Returns all entity association links.
      *
      * @return OData entity links.
      */
     public List<ODataLink> getAssociationLinks() {
-        final List<ODataLink> res = new ArrayList<ODataLink>();
-        for (ODataItem item : getAllLinks()) {
-            if (item instanceof ODataLink && ((ODataLink) item).getType() == LinkType.ASSOCIATION) {
-                res.add((ODataLink) item);
-            }
-        }
-        return res;
+        return associationLinks;
     }
 
     /**
-     * Returns all in-line entities.
+     * Returns all entity media edit links.
      *
-     * @return OData in-line entities.
+     * @return OData entity links.
      */
-    public List<ODataEntity> getInlineEntities() {
-        final List<ODataEntity> res = new ArrayList<ODataEntity>();
-        for (ODataItem item : getAllLinks()) {
-            if (item instanceof ODataEntity) {
-                res.add((ODataEntity) item);
-            }
-        }
-        return res;
-    }
-
-    /**
-     * Add a new navigation link.
-     *
-     * @param entity navigation link to be added.
-     */
-    public void addLink(final ODataItem entity) {
-        if (!links.contains(entity)) {
-            links.add(entity);
-        }
-    }
-
-    /**
-     * Gets Atom extensions.
-     *
-     * @return Atom extensions.
-     */
-    public ODataEntityAtomExtensions getAtomExtensions() {
-        return atomExtensions;
-    }
-
-    /**
-     * Sets atom extensions (optional).
-     *
-     * @param atomExtensions Atom extensions to be specified.
-     */
-    public void setAtomExtensions(final ODataEntityAtomExtensions atomExtensions) {
-        this.atomExtensions = atomExtensions;
+    public List<ODataLink> getMediaEditLinks() {
+        return mediaEditLinks;
     }
 
     /**

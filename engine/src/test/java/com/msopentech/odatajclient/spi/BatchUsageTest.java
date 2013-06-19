@@ -31,7 +31,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.utils.EntityFactory;
+import com.msopentech.odatajclient.engine.utils.ODataFactory;
 
 public class BatchUsageTest {
 
@@ -68,7 +68,7 @@ public class BatchUsageTest {
         targetURI.appendEntityTypeSegment("Products(2)");
 
         // build the new object to change Rating value
-        final ODataEntity changes = EntityFactory.newEntity("Java Code");
+        final ODataEntity changes = ODataFactory.newEntity("Java Code");
         changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EdmSimpleType.INT_32)));
 
         // create your request

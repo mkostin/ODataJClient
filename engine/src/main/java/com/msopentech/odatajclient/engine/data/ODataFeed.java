@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * OData feed.
+ * OData entity collection.
+ * If pagination was used to get this instance, forward page navigation URI will be available.
  */
-public class ODataFeed {
+public class ODataFeed extends ODataItem {
 
     /**
      * Link to the next page.
@@ -30,9 +31,13 @@ public class ODataFeed {
     protected URI next;
 
     /**
-     * Feed entries.
+     * OData entities contained in this collection.
      */
     protected List<ODataEntity> entities = new ArrayList<ODataEntity>();
+
+    public ODataFeed() {
+        super(null);
+    }
 
     /**
      * Gets next page link.
@@ -43,8 +48,16 @@ public class ODataFeed {
         return next;
     }
 
+    public boolean addEntity(final ODataEntity entity) {
+        return entities.contains(entity) ? false : entities.add(entity);
+    }
+
+    public boolean removeEntity(final ODataEntity entity) {
+        return entities.remove(entity);
+    }
+
     /**
-     * Gets feed entries.
+     * Gets contained entities.
      *
      * @return feed entries.
      */
