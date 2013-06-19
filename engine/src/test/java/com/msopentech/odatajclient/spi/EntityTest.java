@@ -28,20 +28,13 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
-import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
-import com.msopentech.odatajclient.engine.data.json.JSONEntry;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataBinder;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.ODataFactory;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -139,49 +132,14 @@ public class EntityTest extends AbstractTest {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
-        ODataEntity entity = ODataFactory.newEntity("Customer");
+        final String sampleName = "Sample customer";
 
-        // add some attributes
-        final ODataPrimitiveValue nameValue =
-                new ODataPrimitiveValue("ODataEntity sample create", EdmSimpleType.STRING);
-        ODataProperty name = new ODataProperty("Name", nameValue);
-        entity.addProperty(name);
-
-        final ODataPrimitiveValue keyValue = new ODataPrimitiveValue(id, EdmSimpleType.INT_32);
-        ODataProperty key = new ODataProperty("CustomerId", keyValue);
-        entity.addProperty(key);
-
-        // add colection ...
-        ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
-                "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails)");
-        ODataProperty backupContactInfo = new ODataProperty("BackupContactInfo", backupContactInfoValue);
-        entity.addProperty(backupContactInfo);
-
-        // add complex ....
-        ODataComplexValue contactDetails = new ODataComplexValue(
-                "Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails");
-        backupContactInfoValue.add(contactDetails);
-
-        ODataCollectionValue alternativeNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        alternativeNamesValue.add(new ODataPrimitiveValue("myname", EdmSimpleType.STRING));
-        contactDetails.add(new ODataProperty("AlternativeNames", alternativeNamesValue));
-
-        ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
-        emailBagValue.add(new ODataPrimitiveValue("myname@mydomain.com", EdmSimpleType.STRING));
-        contactDetails.add(new ODataProperty("EmailBag", emailBagValue));
-
-        ODataComplexValue contactAliasValue = new ODataComplexValue(
-                "Microsoft.Test.OData.Services.AstoriaDefaultService.Aliases");
-        contactDetails.add(new ODataProperty("ContactAlias", contactAliasValue));
-
-        alternativeNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        alternativeNamesValue.add(new ODataPrimitiveValue("myAlternativeName", EdmSimpleType.STRING));
-        contactAliasValue.add(new ODataProperty("AlternativeNames", alternativeNamesValue));
+        ODataEntity original = getSampleCustomerProfile(id, sampleName);
 
         // log before create entity
         if (LOG.isDebugEnabled()) {
             StringWriter writer = new StringWriter();
-            SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, AtomEntry.class), writer);
+            SerializationUtils.serializeEntry(ODataBinder.getEntry(original, AtomEntry.class), writer);
             writer.flush();
             LOG.debug("About to create (Atom)\n{}", writer.toString());
 
@@ -192,7 +150,7 @@ public class EntityTest extends AbstractTest {
         }
 
         final ODataEntityCreateRequest createReq =
-                ODataRequestFactory.getEntityCreateRequest(uriBuilder.build(), entity);
+                ODataRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
         createReq.setContentType(format.toString());
 
         final ODataEntityCreateResponse createRes = createReq.execute();
@@ -200,13 +158,13 @@ public class EntityTest extends AbstractTest {
         assertEquals(201, createRes.getStatusCode());
         assertEquals("Created", createRes.getStatusMessage());
 
-        entity = createRes.getBody();
-        assertNotNull(entity);
+        ODataEntity created = createRes.getBody();
+        assertNotNull(created);
 
         // log create entity
         if (LOG.isDebugEnabled()) {
             StringWriter writer = new StringWriter();
-            SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, AtomEntry.class), writer);
+            SerializationUtils.serializeEntry(ODataBinder.getEntry(created, AtomEntry.class), writer);
             writer.flush();
             LOG.debug("Just created (Atom)\n{}", writer.toString());
 
@@ -216,30 +174,10 @@ public class EntityTest extends AbstractTest {
 //            LOG.debug("Just created (JSON)\n{}", writer.toString());
         }
 
-        // retrieve key object
-        key = null;
-        backupContactInfo = null;
+        // check defined properties equality
+        checkProperties(original.getProperties(), created.getProperties());
 
-        for (ODataProperty prop : entity.getProperties()) {
-            if (prop.getName().equals("CustomerId")) {
-                key = prop;
-            } else if (prop.getName().equals("BackupContactInfo")) {
-                backupContactInfo = prop;
-            }
-        }
-
-        assertNotNull(key);
-        assertEquals(String.valueOf(id), ((ODataPrimitiveValue) key.getValue()).toString());
-
-        assertNotNull(backupContactInfo);
-        assertTrue(backupContactInfo.getValue() instanceof ODataCollectionValue);
-        backupContactInfoValue = (ODataCollectionValue) backupContactInfo.getValue();
-        assertEquals(1, backupContactInfoValue.size());
-        contactDetails = (ODataComplexValue) backupContactInfoValue.iterator().next();
-        assertEquals("myname@mydomain.com",
-                ((ODataCollectionValue) contactDetails.get("EmailBag").getValue()).iterator().next().toString());
-
-        final URI selflLink = entity.getLink();
+        final URI selflLink = created.getLink();
         assertNotNull(selflLink);
 
         final ODataDeleteRequest deleteReq = ODataRequestFactory.getDeleteRequest(createRes.getBody().getEditLink());
@@ -273,7 +211,8 @@ public class EntityTest extends AbstractTest {
         createODataEntity(ODataFormat.ATOM, 1);
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void createODataEntityAsJSON() {
         createODataEntity(ODataFormat.JSON, 2);
     }

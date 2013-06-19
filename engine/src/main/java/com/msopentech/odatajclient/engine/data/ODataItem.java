@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import java.io.Serializable;
 import java.net.URI;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -26,8 +27,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract representation of OData entities and links.
  */
-public abstract class ODataItem {
+public abstract class ODataItem implements Serializable {
 
+    /**
+     * Logger.
+     */
     protected static final Logger LOG = LoggerFactory.getLogger(ODataItem.class);
 
     /**

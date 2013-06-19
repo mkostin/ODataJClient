@@ -24,6 +24,8 @@ import java.util.Map;
  */
 public class ODataComplexValue extends ODataValue implements Iterable<ODataProperty> {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Type name.
      */
@@ -79,5 +81,14 @@ public class ODataComplexValue extends ODataValue implements Iterable<ODataPrope
      */
     public String getTypeName() {
         return typeName;
+    }
+
+    /**
+     * Gets number of fields.
+     *
+     * @return number of fields.
+     */
+    public int size() {
+        return fields.size();
     }
 }
