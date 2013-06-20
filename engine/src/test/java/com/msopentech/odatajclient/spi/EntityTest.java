@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.LOG;
+import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -28,21 +28,15 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.ODataBinder;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URI;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Marshaller;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -52,57 +46,61 @@ import org.w3c.dom.Node;
  */
 public class EntityTest extends AbstractTest {
 
-    @Test
-    public void readAtomEntry() throws Exception {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(
-                "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
-        uriBuilder.appendEntityTypeSegment("Categories(1)");
+    private void readEntry(final ODataFormat format) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntitySetSegment("Customer(-10)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-        req.setContentType(ODataFormat.ATOM.toString());
+        req.setFormat(format);
 
         final InputStream is = req.rowExecute();
 
-        JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
-        @SuppressWarnings("unchecked")
-        AtomEntry entry = ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(is)).getValue();
+        EntryResource entry = SerializationUtils.deserializeEntry(is, format.getEntryClass());
         assertNotNull(entry);
-        assertEquals(uriBuilder.build().toASCIIString(), entry.getId());
-        assertEquals("ODataDemo.Category", entry.getType());
 
-        Element xmlContent = entry.getContent();
-        assertEquals(ODataConstants.ELEM_PROPERTIES, xmlContent.getNodeName());
+        debugEntry(entry, "Just read");
+
+        assertEquals(uriBuilder.build().toASCIIString(), entry.getId());
+        assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entry.getType());
+        assertNotNull(entry.getBaseURI());
+
+        final Element content = entry.getContent();
+        assertEquals(ODataConstants.ELEM_PROPERTIES, content.getNodeName());
 
         boolean entered = false;
-        boolean checkID = false;
-        for (int i = 0; i < xmlContent.getChildNodes().getLength(); i++) {
+        boolean checked = false;
+        for (int i = 0; i < content.getChildNodes().getLength(); i++) {
             entered = true;
 
-            Node property = xmlContent.getChildNodes().item(i);
-            if ("ID".equals(property.getLocalName())) {
-                checkID = true;
+            Node property = content.getChildNodes().item(i);
+            if ("PrimaryContactInfo".equals(property.getLocalName())) {
+                checked = true;
 
-                assertEquals("Edm.Int32", property.getAttributes().item(0).getTextContent());
-                assertEquals("1", property.getTextContent());
+                assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails",
+                        property.getAttributes().item(0).getTextContent());
             }
         }
         assertTrue(entered);
-        assertTrue(checkID);
-
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(entry, System.out);
+        assertTrue(checked);
     }
 
     @Test
-    public void readODataEntity() {
+    public void readAtomEntry() throws Exception {
+        readEntry(ODataFormat.ATOM);
+    }
+
+    @Test
+    public void readJSONEntry() throws Exception {
+        readEntry(ODataFormat.JSON_FULL_METADATA);
+    }
+
+    private void readODataEntity(final ODataFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(
                 "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
         uriBuilder.appendEntityTypeSegment("Products(1)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-        req.setContentType(ODataFormat.ATOM.toString());
+        req.setFormat(format);
 
         final ODataQueryResponse<ODataEntity> res = req.execute();
         final ODataEntity entity = res.getBody();
@@ -128,6 +126,16 @@ public class EntityTest extends AbstractTest {
         assertTrue(check);
     }
 
+    @Test
+    public void readODataEntityFromAtom() {
+        readODataEntity(ODataFormat.ATOM);
+    }
+
+    @Test
+    public void readODataEntityFromJSON() {
+        readODataEntity(ODataFormat.JSON_FULL_METADATA);
+    }
+
     private void createODataEntity(final ODataFormat format, final int id) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
@@ -136,22 +144,11 @@ public class EntityTest extends AbstractTest {
 
         ODataEntity original = getSampleCustomerProfile(id, sampleName);
 
-        // log before create entity
-        if (LOG.isDebugEnabled()) {
-            StringWriter writer = new StringWriter();
-            SerializationUtils.serializeEntry(ODataBinder.getEntry(original, AtomEntry.class), writer);
-            writer.flush();
-            LOG.debug("About to create (Atom)\n{}", writer.toString());
-
-//            writer = new StringWriter();
-//            SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, JSONEntry.class), writer);
-//            writer.flush();
-//            LOG.debug("About to create (JSON)\n{}", writer.toString());
-        }
+        debugODataEntity(original, "About to create");
 
         final ODataEntityCreateRequest createReq =
                 ODataRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
-        createReq.setContentType(format.toString());
+        createReq.setFormat(format);
 
         final ODataEntityCreateResponse createRes = createReq.execute();
 
@@ -161,18 +158,7 @@ public class EntityTest extends AbstractTest {
         ODataEntity created = createRes.getBody();
         assertNotNull(created);
 
-        // log create entity
-        if (LOG.isDebugEnabled()) {
-            StringWriter writer = new StringWriter();
-            SerializationUtils.serializeEntry(ODataBinder.getEntry(created, AtomEntry.class), writer);
-            writer.flush();
-            LOG.debug("Just created (Atom)\n{}", writer.toString());
-
-//            writer = new StringWriter();
-//            SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, JSONEntry.class), writer);
-//            writer.flush();
-//            LOG.debug("Just created (JSON)\n{}", writer.toString());
-        }
+        debugODataEntity(created, "Just created");
 
         // check defined properties equality
         checkProperties(original.getProperties(), created.getProperties());
@@ -189,7 +175,7 @@ public class EntityTest extends AbstractTest {
         deleteRes.close();
 
         final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(selflLink);
-        retrieveReq.setContentType(ODataFormat.ATOM.toString());
+        retrieveReq.setFormat(ODataFormat.ATOM);
 
         final ODataQueryResponse<ODataEntity> retrieveRes = retrieveReq.execute();
         assertEquals(404, retrieveRes.getStatusCode());
@@ -211,8 +197,6 @@ public class EntityTest extends AbstractTest {
         createODataEntity(ODataFormat.ATOM, 1);
     }
 
-    @Test
-    @Ignore
     public void createODataEntityAsJSON() {
         createODataEntity(ODataFormat.JSON, 2);
     }

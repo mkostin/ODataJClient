@@ -21,11 +21,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -63,6 +66,41 @@ public class SerializationUtils {
         } catch (IOException e) {
             LOG.error("Failure serializing JSON object", e);
             throw new IllegalArgumentException("While serializing JSON object", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends EntryResource> T deserializeEntry(final InputStream is, final Class<T> reference) {
+        T entry;
+
+        if (AtomEntry.class.equals(reference)) {
+            entry = (T) deserializeAtomEntry(is);
+        } else {
+            entry = (T) deserializeJSONEntry(is);
+        }
+
+        return entry;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static AtomEntry deserializeAtomEntry(final InputStream is) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
+            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(is)).getValue();
+        } catch (JAXBException e) {
+            LOG.error("Failure deserializing Atom object", e);
+            throw new IllegalArgumentException("While deserializing Atom object", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static JSONEntry deserializeJSONEntry(final InputStream is) {
+        try {
+            ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            return mapper.readValue(is, JSONEntry.class);
+        } catch (IOException e) {
+            LOG.error("Failure deserializing JSON object", e);
+            throw new IllegalArgumentException("While deserializing JSON object", e);
         }
     }
 }

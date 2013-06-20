@@ -18,13 +18,9 @@ package com.msopentech.odatajclient.engine.utils;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 
 /**
  * OData reader.
@@ -35,17 +31,6 @@ import javax.xml.bind.JAXBException;
  */
 public class ODataReader {
 
-    private final ODataFormat format;
-
-    /**
-     * Constructor.
-     *
-     * @param format OData format.
-     */
-    public ODataReader(final ODataFormat format) {
-        this.format = format;
-    }
-
     /**
      * De-Serializes a stream into an OData feed.
      *
@@ -53,7 +38,7 @@ public class ODataReader {
      * @return de-serialized feed.
      * @throws NoValidEntityFound in case the feed was not found into the input stream.
      */
-    public ODataFeed deserializeFeed(final InputStream input)
+    public static ODataFeed deserializeFeed(final InputStream input)
             throws NoValidEntityFound {
 
         return null;
@@ -63,22 +48,11 @@ public class ODataReader {
      * Parses a stream taking care to de-serializes the first OData entity found.
      *
      * @param input stream to de-serialize.
+     * @param reference deserialize as AtomEntry or JSONEntry
      * @return entity de-serialized.
-     * @throws NoValidEntityFound in case of no entity was found into the input stream.
      */
-    public ODataEntity deserializeEntity(final InputStream input)
-            throws NoValidEntityFound {
-
-        try {
-            final JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
-
-            @SuppressWarnings("unchecked")
-            AtomEntry enty = ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(input)).getValue();
-
-            return ODataBinder.getODataEntity(enty);
-        } catch (JAXBException e) {
-            throw new NoValidEntityFound(e);
-        }
+    public static ODataEntity deserializeEntity(final InputStream input, final ODataFormat format) {
+        return ODataBinder.getODataEntity(SerializationUtils.deserializeEntry(input, format.getEntryClass()));
     }
 
     /**
@@ -88,7 +62,7 @@ public class ODataReader {
      * @return OData entity property de-serialized.
      * @throws NoValidEntityFound in case no property was found into the input stream.
      */
-    public ODataProperty deserializeProperty(final InputStream input)
+    public static ODataProperty deserializeProperty(final InputStream input)
             throws NoValidEntityFound {
 
         return null;
@@ -100,7 +74,7 @@ public class ODataReader {
      * @param input stream to de-serialize.
      * @return metadata representation.
      */
-    public EdmMetadata deserializeMetadata(final InputStream inputStream) {
+    public static EdmMetadata deserializeMetadata(final InputStream inputStream) {
         return null;
     }
 }

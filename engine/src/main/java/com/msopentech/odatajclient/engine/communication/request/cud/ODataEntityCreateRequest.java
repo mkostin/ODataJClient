@@ -22,10 +22,12 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatch
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.utils.ODataBinder;
+import com.msopentech.odatajclient.engine.utils.ODataReader;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -64,7 +66,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
     @Override
     public ODataEntityCreateResponse execute() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, getEntryClassForContentType()), baos);
+        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, getFormat().getEntryClass()), baos);
 
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
@@ -102,8 +104,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataBinder.getODataEntity(
-                            res.readEntity(ODataEntityCreateRequest.this.getEntryClassForContentType()));
+                    entity = ODataReader.deserializeEntity(res.readEntity(InputStream.class), getFormat());
                 } finally {
                     res.close();
                 }

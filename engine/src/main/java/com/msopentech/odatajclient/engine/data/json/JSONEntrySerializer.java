@@ -56,7 +56,7 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         boolean found = false;
 
         for (Node child : getChildNodes(node, Node.ELEMENT_NODE)) {
-            if (ODataConstants.ELEM_ELEMENTS.equals(getSimpleName(child))) {
+            if (ODataConstants.ELEM_ELEMENT.equals(getSimpleName(child))) {
                 found = true;
             }
         }
@@ -81,8 +81,7 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         for (Node child : getChildNodes(content, Node.ELEMENT_NODE)) {
             String childName = getSimpleName(child);
             if (hasOnlyTextChildNodes(child)) {
-                if (hasElementsChildNode(child)) {
-                } else if (child.hasChildNodes()) {
+                if (child.hasChildNodes()) {
                     jgen.writeStringField(childName, child.getChildNodes().item(0).getNodeValue());
                 } else {
                     jgen.writeNullField(childName);
@@ -90,9 +89,17 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
             } else {
                 if (hasElementsChildNode(child)) {
                     jgen.writeArrayFieldStart(childName);
+
                     for (Node nephew : getChildNodes(child, Node.ELEMENT_NODE)) {
-                        writeEntryContent(jgen, nephew);
+                        if (hasOnlyTextChildNodes(nephew)) {
+                            jgen.writeString(nephew.getChildNodes().item(0).getNodeValue());
+                        } else {
+                            jgen.writeStartObject();
+                            writeEntryContent(jgen, nephew);
+                            jgen.writeEndObject();
+                        }
                     }
+
                     jgen.writeEndArray();
                 } else {
                     jgen.writeObjectFieldStart(childName);

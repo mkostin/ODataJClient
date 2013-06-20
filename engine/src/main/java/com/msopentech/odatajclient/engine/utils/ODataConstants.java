@@ -69,7 +69,7 @@ public class ODataConstants {
 
     public static final String ELEM_PROPERTIES = PREFIX_METADATA + "properties";
 
-    public static final String ELEM_ELEMENTS = "element";
+    public static final String ELEM_ELEMENT = "element";
 
     public static final String ELEM_INLINE = PREFIX_METADATA + "inline";
 

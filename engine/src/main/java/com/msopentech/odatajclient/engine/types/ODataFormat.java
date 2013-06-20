@@ -15,6 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.types;
 
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -25,24 +28,31 @@ public enum ODataFormat {
     /**
      * JSON format with no metadata.
      */
-    JSON_NO_METADATA(MediaType.APPLICATION_JSON + ";odata=nometadata"),
+    JSON_NO_METADATA(MediaType.APPLICATION_JSON + ";odata=nometadata", JSONEntry.class),
     /**
      * JSON format with minimal metadata (default).
      */
-    JSON(MediaType.APPLICATION_JSON + ";odata=minimalmetadata"),
+    JSON(MediaType.APPLICATION_JSON + ";odata=minimalmetadata", JSONEntry.class),
     /**
      * JSON format with no metadata.
      */
-    JSON_FULL_METADATA(MediaType.APPLICATION_JSON + ";odata=fullmetadata"),
+    JSON_FULL_METADATA(MediaType.APPLICATION_JSON + ";odata=fullmetadata", JSONEntry.class),
     /**
      * Atom format.
      */
-    ATOM(MediaType.APPLICATION_ATOM_XML);
+    ATOM(MediaType.APPLICATION_ATOM_XML, AtomEntry.class);
 
     private final String format;
 
-    ODataFormat(final String format) {
+    private final Class<? extends EntryResource> entryClass;
+
+    ODataFormat(final String format, final Class<? extends EntryResource> entryClass) {
         this.format = format;
+        this.entryClass = entryClass;
+    }
+
+    public Class<? extends EntryResource> getEntryClass() {
+        return entryClass;
     }
 
     @Override

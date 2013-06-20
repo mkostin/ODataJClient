@@ -39,6 +39,7 @@ import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataFactory;
 import java.io.IOException;
 import java.util.concurrent.Future;
+import javax.ws.rs.core.MediaType;
 
 public class StreamingTest {
 
@@ -93,7 +94,7 @@ public class StreamingTest {
         ODataEntityRequest query = ODataRetrieveRequestFactory.getEntityRequest(uri.build());
         query.setDataServiceVersion("2.0");
         query.setMaxDataServiceVersion("3.0");
-        query.setAccept("application/atom+xml");
+        query.setFormat(ODataFormat.ATOM);
 
         retrieve.setRequest(query);
         // -------------------------------------------

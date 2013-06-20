@@ -58,35 +58,53 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
      * @param node JSON node to be used as source for DOM elements
      */
     private void buildSubtree(final Document document, final Element parent, final JsonNode node) {
-        Iterator<Map.Entry<String, JsonNode>> itor = node.fields();
-        while (itor.hasNext()) {
-            Map.Entry<String, JsonNode> entry = itor.next();
+        Iterator<String> fieldNameItor = node.fieldNames();
+        Iterator<JsonNode> nodeItor = node.elements();
+        while (nodeItor.hasNext()) {
+            JsonNode child = nodeItor.next();
+            String name = fieldNameItor.hasNext() ? fieldNameItor.next() : "";
 
-            if (!entry.getKey().contains("@") && !JSONConstants.TYPE.equals(entry.getKey())) {
-                Element property = document.createElementNS(
-                        ODataConstants.NS_DATASERVICES, ODataConstants.PREFIX_DATASERVICES + entry.getKey());
-                parent.appendChild(property);
+            // TODO: see issue #74
+            if (name.startsWith("#")) {
+                break;
+            }
 
-                if (entry.getValue().isValueNode()) {
-                    if (!entry.getValue().isNull()) {
-                        property.appendChild(document.createTextNode(entry.getValue().asText()));
-                    } else {
-                        property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_NULL,
-                                Boolean.toString(true));
-                    }
+            // no name? array item
+            if (name.isEmpty()) {
+                Element element = document.createElementNS(ODataConstants.NS_DATASERVICES,
+                        ODataConstants.PREFIX_DATASERVICES + ODataConstants.ELEM_ELEMENT);
+                parent.appendChild(element);
 
-                    if (node.hasNonNull(entry.getKey() + "@" + JSONConstants.TYPE)) {
-                        property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
-                                node.get(entry.getKey() + "@" + JSONConstants.TYPE).textValue());
-                    }
+                if (child.isValueNode()) {
+                    element.appendChild(document.createTextNode(child.asText()));
                 }
 
-                if (entry.getValue().isContainerNode()) {
-                    if (entry.getValue().hasNonNull(JSONConstants.TYPE)) {
+                if (child.isContainerNode()) {
+                    buildSubtree(document, element, child);
+                }
+            } else if (!name.contains("@") && !JSONConstants.TYPE.equals(name)) {
+                Element property = document.createElementNS(
+                        ODataConstants.NS_DATASERVICES, ODataConstants.PREFIX_DATASERVICES + name);
+                parent.appendChild(property);
+
+                if (node.hasNonNull(name + "@" + JSONConstants.TYPE)) {
+                    property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            node.get(name + "@" + JSONConstants.TYPE).textValue());
+                }
+
+                if (child.isNull()) {
+                    property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_NULL,
+                            Boolean.toString(true));
+                } else if (child.isValueNode()) {
+                    property.appendChild(document.createTextNode(child.asText()));
+
+                } else if (child.isContainerNode()) {
+                    if (child.hasNonNull(JSONConstants.TYPE)) {
                         property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
-                                entry.getValue().get(JSONConstants.TYPE).textValue());
+                                child.get(JSONConstants.TYPE).textValue());
                     }
-                    buildSubtree(document, property, entry.getValue());
+
+                    buildSubtree(document, property, child);
                 }
             }
         }

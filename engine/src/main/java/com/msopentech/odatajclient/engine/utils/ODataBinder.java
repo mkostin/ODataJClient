@@ -326,9 +326,9 @@ public class ODataBinder {
 
         for (ODataValue el : value) {
             if (el instanceof ODataPrimitiveValue) {
-                element.appendChild(newPrimitiveProperty(ODataConstants.ELEM_ELEMENTS, el, doc));
+                element.appendChild(newPrimitiveProperty(ODataConstants.ELEM_ELEMENT, el, doc));
             } else {
-                element.appendChild(newComplexProperty(ODataConstants.ELEM_ELEMENTS, el, doc));
+                element.appendChild(newComplexProperty(ODataConstants.ELEM_ELEMENT, el, doc));
             }
         }
 

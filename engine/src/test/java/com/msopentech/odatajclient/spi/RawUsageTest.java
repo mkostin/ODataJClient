@@ -41,9 +41,7 @@ public class RawUsageTest {
 
         try {
             // let's suppose to want to deserialize, one shot, an entire atom feed
-            ODataReader reader = new ODataReader(ODataFormat.ATOM);
-
-            final ODataFeed feed = reader.deserializeFeed(is);
+            final ODataFeed feed = ODataReader.deserializeFeed(is);
 
             // retrieve and process the query result
             for (ODataEntity entity : feed.getEntities()) {
@@ -76,16 +74,12 @@ public class RawUsageTest {
 
         try {
             // let's suppose to want to deserialize, step-by-step, an entire atom feed
-            ODataReader reader = new ODataReader(ODataFormat.ATOM);
-
             while (is.available() > 0) {
                 // retrieve and process the new result item
-                ODataEntity entity = reader.deserializeEntity(is);
+                ODataEntity entity = ODataReader.deserializeEntity(is, ODataFormat.ATOM);
                 // .................
             }
         } catch (IOException ex) {
-            // ....
-        } catch (NoValidEntityFound ex) {
             // ....
         } finally {
             if (is != null) {

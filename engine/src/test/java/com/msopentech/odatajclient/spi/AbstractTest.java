@@ -22,19 +22,25 @@ import static org.junit.Assert.assertEquals;
 
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
-import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataFactory;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONEntry;
+import com.msopentech.odatajclient.engine.utils.ODataBinder;
+import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Properties;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
@@ -181,5 +187,24 @@ public abstract class AbstractTest {
         contactAliasValue.add(new ODataProperty("AlternativeNames", alternativeNamesValue));
 
         return entity;
+    }
+
+    protected void debugEntry(final EntryResource entry, final String message) {
+        StringWriter writer = new StringWriter();
+        SerializationUtils.serializeEntry(entry, writer);
+        writer.flush();
+        LOG.debug(message + "\n{}", writer.toString());
+    }
+
+    protected void debugODataEntity(final ODataEntity entity, final String message) {
+        StringWriter writer = new StringWriter();
+        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, AtomEntry.class), writer);
+        writer.flush();
+        LOG.debug(message + " (Atom)\n{}", writer.toString());
+
+        writer = new StringWriter();
+        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, JSONEntry.class), writer);
+        writer.flush();
+        LOG.debug(message + " (JSON)\n{}", writer.toString());
     }
 }

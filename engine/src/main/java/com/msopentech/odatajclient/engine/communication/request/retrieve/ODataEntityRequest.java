@@ -17,8 +17,8 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
-import com.msopentech.odatajclient.engine.utils.ODataBinder;
+import com.msopentech.odatajclient.engine.utils.ODataReader;
+import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -62,7 +62,7 @@ public class ODataEntityRequest extends ODataQueryRequest<ODataEntity> {
         public ODataEntity getBody() {
             try {
                 if (entity == null) {
-                    entity = ODataBinder.getODataEntity(res.readEntity(AtomEntry.class));
+                    entity = ODataReader.deserializeEntity(res.readEntity(InputStream.class), getFormat());
                 }
                 return entity;
             } finally {
