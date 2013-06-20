@@ -15,8 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import org.w3c.dom.Element;
-
 /**
  * REST resource for an <tt>ODataLink</tt>.
  *
@@ -40,7 +38,11 @@ public interface LinkResource {
 
     void setHref(String href);
 
-    Element getContent();
+    EntryResource getInlineEntry();
 
-    void setContent(Element content);
+    void setInlineEntry(EntryResource entry);
+
+    FeedResource getInlineFeed();
+
+    void setInlineFeed(FeedResource feed);
 }

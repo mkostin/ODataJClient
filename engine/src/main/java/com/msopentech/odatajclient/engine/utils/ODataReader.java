@@ -18,14 +18,9 @@ package com.msopentech.odatajclient.engine.utils;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import org.w3c.dom.Node;
 
 /**
  * OData reader.
@@ -47,27 +42,6 @@ public class ODataReader {
             throws NoValidEntityFound {
 
         return null;
-    }
-
-    /**
-     * Parses a DOM object taking care to de-serializes the first OData entity found.
-     *
-     * @param DOM object to be de-serialized.
-     * @return entity de-serialized.
-     * @throws NoValidEntityFound in case of no entity was found into the input stream.
-     */
-    public static ODataEntity deserializeEntity(final Node input)
-            throws NoValidEntityFound {
-        try {
-            final JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
-
-            @SuppressWarnings("unchecked")
-            AtomEntry entry = ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(input)).getValue();
-
-            return ODataBinder.getODataEntity(entry);
-        } catch (JAXBException e) {
-            throw new NoValidEntityFound(e);
-        }
     }
 
     /**

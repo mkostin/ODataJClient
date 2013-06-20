@@ -50,7 +50,7 @@ public class ODataBinder {
     /**
      * Logger.
      */
-    protected static final Logger LOG = LoggerFactory.getLogger(ODataBinder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ODataBinder.class);
 
     private static Element newEntryContent() {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -60,25 +60,6 @@ public class ODataBinder {
             final DocumentBuilder builder = factory.newDocumentBuilder();
             final Document doc = builder.newDocument();
             properties = doc.createElement(ODataConstants.ELEM_PROPERTIES);
-            properties.setAttribute(ODataConstants.XMLNS_METADATA, ODataConstants.NS_METADATA);
-            properties.setAttribute(ODataConstants.XMLNS_DATASERVICES, ODataConstants.NS_DATASERVICES);
-            properties.setAttribute(ODataConstants.XMLNS_GML, ODataConstants.NS_GML);
-            properties.setAttribute(ODataConstants.XMLNS_GEORSS, ODataConstants.NS_GEORSS);
-        } catch (ParserConfigurationException e) {
-            LOG.error("Failure building entry content", e);
-        }
-
-        return properties;
-    }
-
-    private static Element newInlineContent() {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-        Element properties = null;
-        try {
-            final DocumentBuilder builder = factory.newDocumentBuilder();
-            final Document doc = builder.newDocument();
-            properties = doc.createElement(ODataConstants.ELEM_INLINE);
             properties.setAttribute(ODataConstants.XMLNS_METADATA, ODataConstants.NS_METADATA);
             properties.setAttribute(ODataConstants.XMLNS_DATASERVICES, ODataConstants.NS_DATASERVICES);
             properties.setAttribute(ODataConstants.XMLNS_GML, ODataConstants.NS_GML);
@@ -106,7 +87,6 @@ public class ODataBinder {
     // TODO: complete and refactor
     private static AtomEntry getAtomEntry(final ODataEntity entity) {
         final AtomEntry entry = new AtomEntry();
-        entry.setId("http://10.10.10.6:8080/Service.svc/CustomerInfo(1003)");
 
         // -------------------------------------------------------------
         // Add edit and self link
@@ -151,14 +131,7 @@ public class ODataBinder {
                 final ODataEntity inlineEntity = ((ODataInlineEntity) link).getEntity();
                 LOG.debug("Append in-line entity{}\n", inlineEntity);
 
-                final Element inlineContent = newInlineContent();
-                atomLink.setContent(inlineContent);
-
-                SerializationUtils.serializeAsAtom(
-                        getEntry(inlineEntity, AtomEntry.class),
-                        AtomEntry.class,
-                        inlineContent);
-
+                atomLink.setInlineEntry(getEntry(inlineEntity, AtomEntry.class));
             } else if (link instanceof ODataInlineFeed) {
                 // append inline feed
                 final ODataFeed inlineFeed = ((ODataInlineFeed) link).getFeed();
@@ -226,28 +199,15 @@ public class ODataBinder {
         }
 
         for (LinkResource link : entry.getNavigationLinks()) {
-            final Element inline = link.getContent();
-
-            if (inline != null) {
-                final NodeList inlineElements = inline.getElementsByTagName("entry");
-                for (int i = 0; i < inlineElements.getLength(); i++) {
-                    try {
-                        final ODataEntity inlineEntry = ODataReader.deserializeEntity(inlineElements.item(i));
-
-                        entity.addLink(ODataFactory.newInlineEntity(
-                                link.getTitle(),
-                                entry.getBaseURI(),
-                                link.getHref(),
-                                inlineEntry));
-
-                    } catch (Exception e) {
-                        LOG.error("Failure retrieving inline entity", e);
-                    }
-
-                }
+            AtomEntry inlineEntry = (AtomEntry) link.getInlineEntry();
+            if (inlineEntry != null) {
+                entity.addLink(ODataFactory.newInlineEntity(
+                        link.getTitle(), entry.getBaseURI(), link.getHref(),
+                        getODataEntity(inlineEntry)));
             } else {
                 entity.addLink(
-                        ODataFactory.newEntityNavigationLink(link.getTitle(), entry.getBaseURI(), link.getHref()));
+                        ODataFactory.newEntityNavigationLink(
+                        link.getTitle(), entry.getBaseURI(), link.getHref()));
             }
         }
 

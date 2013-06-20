@@ -15,8 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.LinkResource;
-import org.w3c.dom.Element;
 
 /**
  * Link from an entry, represented via JSON.
@@ -28,6 +29,10 @@ public class JSONLink implements LinkResource {
     private String rel;
 
     private String href;
+
+    private JSONEntry entry;
+
+    private JSONFeed feed;
 
     public JSONLink(String title, String rel, String href) {
         this.title = title;
@@ -75,12 +80,28 @@ public class JSONLink implements LinkResource {
     }
 
     @Override
-    public Element getContent() {
-        return null;
+    public EntryResource getInlineEntry() {
+        return entry;
     }
 
     @Override
-    public void setContent(Element content) {
-        
+    public void setInlineEntry(EntryResource entry) {
+        if (entry instanceof JSONEntry) {
+            this.entry = (JSONEntry) entry;
+        }
+
+    }
+
+    @Override
+    public FeedResource getInlineFeed() {
+        return feed;
+    }
+
+    @Override
+    public void setInlineFeed(FeedResource feed) {
+        if (feed instanceof JSONFeed) {
+            this.feed = (JSONFeed) feed;
+        }
+
     }
 }

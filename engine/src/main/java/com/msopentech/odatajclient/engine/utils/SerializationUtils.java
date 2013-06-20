@@ -15,8 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
-import static com.msopentech.odatajclient.engine.utils.ODataBinder.LOG;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msopentech.odatajclient.engine.data.EntryResource;
@@ -47,26 +45,6 @@ public class SerializationUtils {
         }
     }
 
-    public static void serializeAsAtom(final Object obj, final Class<?> reference, final Node root) {
-        try {
-            Marshaller marshaller = getMarshaller(reference);
-            marshaller.marshal(obj, root);
-        } catch (JAXBException e) {
-            LOG.error("Failure serializing Atom object", e);
-            throw new IllegalArgumentException("While serializing Atom object", e);
-        }
-    }
-
-    private static void serializeAsAtom(final Object obj, final Class<?> reference, final Writer writer) {
-        try {
-            Marshaller marshaller = getMarshaller(reference);
-            marshaller.marshal(obj, writer);
-        } catch (JAXBException e) {
-            LOG.error("Failure serializing Atom object", e);
-            throw new IllegalArgumentException("While serializing Atom object", e);
-        }
-    }
-
     private static Marshaller getMarshaller(final Class<?> reference) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(reference);
         Marshaller marshaller = context.createMarshaller();
@@ -76,12 +54,29 @@ public class SerializationUtils {
         return marshaller;
     }
 
+    public static void serializeAsAtom(final Object obj, final Class<?> reference, final Node root) {
+        try {
+            Marshaller marshaller = getMarshaller(reference);
+            marshaller.marshal(obj, root);
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException("While serializing Atom object", e);
+        }
+    }
+
+    private static void serializeAsAtom(final Object obj, final Class<?> reference, final Writer writer) {
+        try {
+            Marshaller marshaller = getMarshaller(reference);
+            marshaller.marshal(obj, writer);
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException("While serializing Atom object", e);
+        }
+    }
+
     private static void serializeAsJSON(final Object obj, final Writer writer) {
         try {
             ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             mapper.writeValue(writer, obj);
         } catch (IOException e) {
-            LOG.error("Failure serializing JSON object", e);
             throw new IllegalArgumentException("While serializing JSON object", e);
         }
     }
@@ -105,7 +100,16 @@ public class SerializationUtils {
             JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
             return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(is)).getValue();
         } catch (JAXBException e) {
-            LOG.error("Failure deserializing Atom object", e);
+            throw new IllegalArgumentException("While deserializing Atom object", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static AtomEntry deserializeAtomEntry(final Node node) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
+            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(node)).getValue();
+        } catch (JAXBException e) {
             throw new IllegalArgumentException("While deserializing Atom object", e);
         }
     }
@@ -116,7 +120,6 @@ public class SerializationUtils {
             ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             return mapper.readValue(is, JSONEntry.class);
         } catch (IOException e) {
-            LOG.error("Failure deserializing JSON object", e);
             throw new IllegalArgumentException("While deserializing JSON object", e);
         }
     }

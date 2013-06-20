@@ -15,7 +15,11 @@
  */
 package com.msopentech.odatajclient.engine.data.atom;
 
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.LinkResource;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -26,7 +30,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -306,19 +315,57 @@ public class AtomLink extends UndefinedContent implements LinkResource {
         return otherAttributes;
     }
 
-    /**
-     * Returns in-line element about entry / feed in case of expanded navigation link.
-     *
-     * @return in-line element.
-     */
-    @Override
-    public Element getContent() {
-        return getAnyOther().isEmpty() ? null : (Element) getAnyOther().get(0);
+    private Element newInlineContent() {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        Element properties = null;
+        try {
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+            final Document doc = builder.newDocument();
+            properties = doc.createElement(ODataConstants.ELEM_INLINE);
+            properties.setAttribute(ODataConstants.XMLNS_METADATA, ODataConstants.NS_METADATA);
+            properties.setAttribute(ODataConstants.XMLNS_DATASERVICES, ODataConstants.NS_DATASERVICES);
+            properties.setAttribute(ODataConstants.XMLNS_GML, ODataConstants.NS_GML);
+            properties.setAttribute(ODataConstants.XMLNS_GEORSS, ODataConstants.NS_GEORSS);
+        } catch (ParserConfigurationException e) {
+            throw new IllegalStateException("Failure building inline content", e);
+        }
+
+        return properties;
     }
 
     @Override
-    public void setContent(final Element content) {
+    public EntryResource getInlineEntry() {
+        if (getAnyOther().isEmpty()) {
+            return null;
+        }
+
+        Element inlineEntryContent = (Element) getAnyOther().get(0);
+
+        AtomEntry inlineEntry = null;
+
+        final NodeList inlineElements = inlineEntryContent.getElementsByTagName("entry");
+        for (int i = 0; i < inlineElements.getLength(); i++) {
+            inlineEntry = SerializationUtils.deserializeAtomEntry(inlineElements.item(i));
+        }
+
+        return inlineEntry;
+    }
+
+    @Override
+    public void setInlineEntry(final EntryResource entry) {
+        Element inlineEntryContent = newInlineContent();
+        SerializationUtils.serializeAsAtom(entry, AtomEntry.class, inlineEntryContent);
         getAnyOther().clear();
-        getAnyOther().add(content);
+        getAnyOther().add(inlineEntryContent);
+    }
+
+    @Override
+    public FeedResource getInlineFeed() {
+        return null;
+    }
+
+    @Override
+    public void setInlineFeed(FeedResource feed) {
     }
 }
