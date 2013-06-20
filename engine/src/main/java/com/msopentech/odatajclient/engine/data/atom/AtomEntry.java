@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -450,5 +451,36 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         AtomContent atomContent = new AtomContent();
         atomContent.setXMLContent(content);
         getValues().add(atomContent);
+    }
+
+    public void setOtherContent(Element content) {
+        getAnyOther().clear();
+        getAnyOther().add(content);
+    }
+
+    public void setMediaContent(final String src, final String type) {
+        AtomContent atomContent = new AtomContent();
+        atomContent.setSrc(src);
+        atomContent.getType().add(type);
+        getValues().add(atomContent);
+    }
+
+    @Override
+    public boolean isMediaEntry() {
+        final List<AtomContent> contents = getElements(AtomContent.class);
+        return !contents.isEmpty() && StringUtils.isNotBlank(contents.get(0).src);
+    }
+
+    @Override
+    public String getMediaContentType() {
+        final List<AtomContent> contents = getElements(AtomContent.class);
+        return contents.isEmpty() ? null
+                : contents.get(0).type == null || contents.get(0).type.isEmpty() ? null : contents.get(0).type.get(0);
+    }
+
+    @Override
+    public String getMediaContentSource() {
+        final List<AtomContent> contents = getElements(AtomContent.class);
+        return contents.isEmpty() || StringUtils.isBlank(contents.get(0).src) ? null : contents.get(0).src;
     }
 }

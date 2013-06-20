@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 public interface EntryResource {
 
     URI getBaseURI();
-    
+
     String getType();
 
     void setType(String type);
@@ -61,8 +61,14 @@ public interface EntryResource {
     void setMediaEditLinks(List<LinkResource> mediaEditLinks);
 
     Element getContent();
-    
+
     Element getOtherContent();
 
     void setContent(Element content);
+
+    boolean isMediaEntry();
+
+    String getMediaContentType();
+
+    String getMediaContentSource();
 }

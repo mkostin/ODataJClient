@@ -27,12 +27,21 @@ public abstract class ODataEntity extends ODataItem {
     private static final long serialVersionUID = 8360640095932811034L;
 
     /**
+     * Media entity flag.
+     */
+    private boolean mediaEntity = false;
+
+    private String mediaContentType;
+
+    private String mediaContentSource;
+
+    /**
      * Edit link.
      */
     protected URI editLink;
 
     /**
-     * Navigation links (might contain inline entities or feeds).
+     * Navigation links (might contain in-line entities or feeds).
      */
     protected final List<ODataLink> navigationLinks = new ArrayList<ODataLink>();
 
@@ -188,5 +197,29 @@ public abstract class ODataEntity extends ODataItem {
      */
     public boolean isReadOnly() {
         return super.getLink() != null;
+    }
+
+    public boolean isMediaEntity() {
+        return mediaEntity;
+    }
+
+    public void setMediaEntity(boolean isMediaEntity) {
+        this.mediaEntity = isMediaEntity;
+    }
+
+    public String getMediaContentType() {
+        return mediaContentType;
+    }
+
+    public void setMediaContentType(String mediaContentType) {
+        this.mediaContentType = mediaContentType;
+    }
+
+    public String getMediaContentSource() {
+        return mediaContentSource;
+    }
+
+    public void setMediaContentSource(String mediaContentSource) {
+        this.mediaContentSource = mediaContentSource;
     }
 }

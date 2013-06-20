@@ -154,7 +154,12 @@ public class ODataBinder {
         // -------------------------------------------------------------
 
         final Element content = newEntryContent();
-        entry.setContent(content);
+        if (entity.isMediaEntity()) {
+            entry.setOtherContent(content);
+            entry.setMediaContent(entity.getMediaContentSource(), entity.getMediaContentType());
+        } else {
+            entry.setContent(content);
+        }
 
         for (ODataProperty prop : entity.getProperties()) {
             content.appendChild(newProperty(prop, content.getOwnerDocument()));
@@ -215,10 +220,15 @@ public class ODataBinder {
             entity.addLink(ODataFactory.newMediaEditLink(link.getTitle(), entry.getBaseURI(), link.getHref()));
         }
 
-        Element content = entry.getContent();
+        final Element content;
 
-        if (content == null) {
+        if (entry.isMediaEntry()) {
+            entity.setMediaEntity(true);
+            entity.setMediaContentSource(entry.getMediaContentSource());
+            entity.setMediaContentType(entry.getMediaContentType());
             content = entry.getOtherContent();
+        } else {
+            content = entry.getContent();
         }
 
         if (content != null) {

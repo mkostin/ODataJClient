@@ -195,4 +195,19 @@ public class JSONEntry implements EntryResource {
     public void setContent(Element content) {
         this.content = content;
     }
+
+    @Override
+    public boolean isMediaEntry() {
+        return false;
+    }
+
+    @Override
+    public String getMediaContentType() {
+        return null;
+    }
+
+    @Override
+    public String getMediaContentSource() {
+        return null;
+    }
 }
