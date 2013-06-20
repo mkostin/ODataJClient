@@ -149,6 +149,9 @@ public abstract class AbstractTest {
             final int id, final String sampleinfo) {
         final ODataEntity entity = ODataFactory.newEntity("CustomerInfo");
         entity.setEditLink(URI.create("CustomerInfo(" + id + ")"));
+        entity.setMediaEntity(true);
+        entity.setMediaContentSource("CustomerInfo(" + id + ")/$value");
+        entity.setMediaContentType("*/*");
 
         entity.addLink(ODataFactory.newMediaEditLink("CustomerInfo", URI.create("CustomerInfo(" + id + ")/$value")));
 

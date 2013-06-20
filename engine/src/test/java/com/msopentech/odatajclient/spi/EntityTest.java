@@ -251,7 +251,6 @@ public class EntityTest extends AbstractTest {
     }
 
     @Test
-    @Ignore
     public void createWithInlineAsAtom() {
         createODataEntity(ODataFormat.ATOM, 3, true);
     }
