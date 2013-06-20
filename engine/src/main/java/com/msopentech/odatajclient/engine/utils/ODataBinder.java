@@ -84,7 +84,6 @@ public class ODataBinder {
         return entry;
     }
 
-    // TODO: complete and refactor
     private static AtomEntry getAtomEntry(final ODataEntity entity) {
         final AtomEntry entry = new AtomEntry();
 
@@ -146,7 +145,6 @@ public class ODataBinder {
         for (ODataLink link : entity.getMediaEditLinks()) {
             final AtomLink mediaEditLink = new AtomLink();
             mediaEditLink.setRel(link.getRel());
-            mediaEditLink.setRel("edit-media");
             mediaEditLink.setTitle(link.getName());
             mediaEditLink.setHref(link.getLink().toASCIIString());
             mediaEditLink.setType(link.getType().toString());
@@ -155,7 +153,7 @@ public class ODataBinder {
 
         final Element content = newEntryContent();
         if (entity.isMediaEntity()) {
-            entry.setOtherContent(content);
+            entry.setMediaEntryProperties(content);
             entry.setMediaContent(entity.getMediaContentSource(), entity.getMediaContentType());
         } else {
             entry.setContent(content);
@@ -168,7 +166,6 @@ public class ODataBinder {
         return entry;
     }
 
-    // TODO: complete and refactor
     private static JSONEntry getJSONEntry(final ODataEntity entity) {
         final JSONEntry entry = new JSONEntry();
 
@@ -204,7 +201,7 @@ public class ODataBinder {
         }
 
         for (LinkResource link : entry.getNavigationLinks()) {
-            AtomEntry inlineEntry = (AtomEntry) link.getInlineEntry();
+            EntryResource inlineEntry = link.getInlineEntry();
             if (inlineEntry != null) {
                 entity.addLink(ODataFactory.newInlineEntity(
                         link.getTitle(), entry.getBaseURI(), link.getHref(),

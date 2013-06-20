@@ -453,7 +453,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         getValues().add(atomContent);
     }
 
-    public void setOtherContent(Element content) {
+    public void setMediaEntryProperties(Element content) {
         getAnyOther().clear();
         getAnyOther().add(content);
     }
