@@ -28,7 +28,7 @@ public enum ODataLinkType {
     ENTITY_NAVIGATION(ODataFormat.ATOM + ";type=entry"),
     FEED_NAVIGATION(ODataFormat.ATOM + ";type=feed"),
     ASSOCIATION(MediaType.APPLICATION_XML),
-    MEDIA_EDIT("MEDIA-EDIT");
+    MEDIA_EDIT("*/*");
 
     private String type;
 
@@ -43,7 +43,7 @@ public enum ODataLinkType {
 
     public static ODataLinkType evaluate(final String rel, final String type) {
         if (StringUtils.isNotBlank(rel) && rel.startsWith(ODataConstants.MEDIA_EDIT_LINK_REL)) {
-            return MEDIA_EDIT.setType(type);
+            return MEDIA_EDIT.setType(StringUtils.isBlank(type) ? "*/*" : type);
         }
 
         if (ODataLinkType.ENTITY_NAVIGATION.type.equals(type)) {
@@ -59,5 +59,10 @@ public enum ODataLinkType {
         }
 
         throw new IllegalArgumentException("Invalid link type: " + type);
+    }
+
+    @Override
+    public String toString() {
+        return type;
     }
 }

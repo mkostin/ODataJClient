@@ -31,6 +31,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import org.w3c.dom.Node;
 
 public class SerializationUtils {
 
@@ -46,17 +47,33 @@ public class SerializationUtils {
         }
     }
 
+    public static void serializeAsAtom(final Object obj, final Class<?> reference, final Node root) {
+        try {
+            Marshaller marshaller = getMarshaller(reference);
+            marshaller.marshal(obj, root);
+        } catch (JAXBException e) {
+            LOG.error("Failure serializing Atom object", e);
+            throw new IllegalArgumentException("While serializing Atom object", e);
+        }
+    }
+
     private static void serializeAsAtom(final Object obj, final Class<?> reference, final Writer writer) {
         try {
-            JAXBContext context = JAXBContext.newInstance(reference);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            Marshaller marshaller = getMarshaller(reference);
             marshaller.marshal(obj, writer);
         } catch (JAXBException e) {
             LOG.error("Failure serializing Atom object", e);
             throw new IllegalArgumentException("While serializing Atom object", e);
         }
+    }
+
+    private static Marshaller getMarshaller(final Class<?> reference) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(reference);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+        return marshaller;
     }
 
     private static void serializeAsJSON(final Object obj, final Writer writer) {

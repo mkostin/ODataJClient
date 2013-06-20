@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
+import org.w3c.dom.Element;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -303,5 +304,21 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      */
     public Map<QName, String> getOtherAttributes() {
         return otherAttributes;
+    }
+
+    /**
+     * Returns in-line element about entry / feed in case of expanded navigation link.
+     *
+     * @return in-line element.
+     */
+    @Override
+    public Element getContent() {
+        return getAnyOther().isEmpty() ? null : (Element) getAnyOther().get(0);
+    }
+
+    @Override
+    public void setContent(final Element content) {
+        getAnyOther().clear();
+        getAnyOther().add(content);
     }
 }

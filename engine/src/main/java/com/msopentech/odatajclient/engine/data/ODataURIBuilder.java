@@ -149,6 +149,11 @@ public class ODataURIBuilder implements Serializable {
     private final Map<String, String> queryParameters = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 
     /**
+     * Case-insensitive map of query options.
+     */
+    private final Map<String, String> queryOptions = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+
+    /**
      * Constructor.
      *
      * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
@@ -190,7 +195,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURI object.
      */
     public ODataURIBuilder addQueryOption(final String option, final String value) {
-        // add query option here ...
+        queryOptions.put(option, value);
         return this;
     }
 
@@ -447,6 +452,20 @@ public class ODataURIBuilder implements Serializable {
             }
 
             builder.append(seg.value);
+        }
+
+        final StringBuilder builderOptions = new StringBuilder();
+
+        for (Map.Entry<String, String> option : queryOptions.entrySet()) {
+            if (builderOptions.length() > 0) {
+                builderOptions.append("&");
+            }
+
+            builderOptions.append("$").append(option.getKey()).append("=").append(option.getValue());
+        }
+
+        if (builderOptions.length() > 0) {
+            builder.append("?").append(builderOptions);
         }
 
         return URI.create(builder.toString());

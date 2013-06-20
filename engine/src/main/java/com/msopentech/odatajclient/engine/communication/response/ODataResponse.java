@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
+import java.io.InputStream;
 import java.util.Collection;
 
 /**
@@ -50,6 +51,12 @@ public interface ODataResponse {
      * @return status message.
      */
     String getStatusMessage();
+    
+    /**
+     * Gets response body as InputStream.
+     * @return response body input stream.
+     */
+    InputStream getRowResponse();
 
     /**
      * Close the underlying message entity input stream (if available and open) as well as releases any other

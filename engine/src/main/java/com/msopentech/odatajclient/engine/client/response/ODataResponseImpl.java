@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.client.response;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import javax.ws.rs.core.Response;
@@ -70,4 +71,11 @@ public abstract class ODataResponseImpl implements ODataResponse {
     public void close() {
         res.close();
     }
+
+    @Override
+    public InputStream getRowResponse() {
+        return res.readEntity(InputStream.class);
+    }
+    
+    
 }

@@ -30,13 +30,21 @@ import com.msopentech.odatajclient.engine.communication.response.ODataEntityCrea
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.utils.ODataBinder;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URI;
+import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -136,13 +144,61 @@ public class EntityTest extends AbstractTest {
         readODataEntity(ODataFormat.JSON_FULL_METADATA);
     }
 
-    private void createODataEntity(final ODataFormat format, final int id) {
+    public void readODataEntityWithInline() {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer(-10)").expand("Info");
+
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setContentType(ODataFormat.ATOM.toString());
+
+        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final ODataEntity entity = res.getBody();
+
+        assertNotNull(entity);
+        assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entity.getName());
+        assertEquals(testODataServiceRootURL + "/Customer(-10)", entity.getEditLink().toASCIIString());
+
+        assertEquals(5, entity.getNavigationLinks().size());
+        assertTrue(entity.getAssociationLinks().isEmpty());
+
+        boolean found = false;
+
+        for (ODataLink link : entity.getNavigationLinks()) {
+            if (link instanceof ODataInlineEntity) {
+                final ODataEntity inline = ((ODataInlineEntity) link).getEntity();
+                assertNotNull(inline);
+
+                if (LOG.isDebugEnabled()) {
+                    StringWriter writer = new StringWriter();
+                    SerializationUtils.serializeEntry(ODataBinder.getEntry(inline, AtomEntry.class), writer);
+                    writer.flush();
+                    LOG.debug("About retrieved inline entity (Atom)\n{}", writer.toString());
+                }
+
+                final List<ODataProperty> properties = inline.getProperties();
+                assertEquals(2, properties.size());
+
+                assertTrue(properties.get(0).getName().equals("CustomerInfoId")
+                        || properties.get(1).getName().equals("CustomerInfoId"));
+                assertTrue(properties.get(0).getValue().toString().equals("11")
+                        || properties.get(1).getValue().toString().equals("11"));
+
+                found = true;
+
+            }
+        }
+
+        assertTrue(found);
+    }
+
+    private void createODataEntity(final ODataFormat format, final int id, final boolean withInlineInfo) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
         final String sampleName = "Sample customer";
 
-        ODataEntity original = getSampleCustomerProfile(id, sampleName);
+        ODataEntity original = getSampleCustomerProfile(id, sampleName, withInlineInfo);
 
         debugODataEntity(original, "About to create");
 
@@ -194,10 +250,16 @@ public class EntityTest extends AbstractTest {
 
     @Test
     public void createODataEntityAsAtom() {
-        createODataEntity(ODataFormat.ATOM, 1);
+        createODataEntity(ODataFormat.ATOM, 1, false);
     }
 
     public void createODataEntityAsJSON() {
-        createODataEntity(ODataFormat.JSON, 2);
+        createODataEntity(ODataFormat.JSON, 2, false);
+    }
+
+    @Test
+    @Ignore
+    public void createWithInlineAsATOM() {
+        createODataEntity(ODataFormat.ATOM, 3, true);
     }
 }

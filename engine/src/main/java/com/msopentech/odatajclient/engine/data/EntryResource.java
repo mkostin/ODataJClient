@@ -61,6 +61,8 @@ public interface EntryResource {
     void setMediaEditLinks(List<LinkResource> mediaEditLinks);
 
     Element getContent();
+    
+    Element getOtherContent();
 
     void setContent(Element content);
 }

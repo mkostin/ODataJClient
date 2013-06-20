@@ -41,6 +41,7 @@ import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URI;
 import java.util.Properties;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
@@ -142,7 +143,26 @@ public abstract class AbstractTest {
         }
     }
 
-    protected ODataEntity getSampleCustomerProfile(final int id, final String sampleName) {
+    protected ODataEntity getSampleCustomerInfo(
+            final int id, final String sampleinfo) {
+        final ODataEntity entity = ODataFactory.newEntity("CustomerInfo");
+        entity.setEditLink(URI.create("CustomerInfo(" + id + ")"));
+
+        entity.addLink(ODataFactory.newMediaEditLink("CustomerInfo", URI.create("CustomerInfo(" + id + ")/$value")));
+
+        final ODataPrimitiveValue customerInfoIdValue = new ODataPrimitiveValue(id, EdmSimpleType.INT_32);
+        final ODataProperty customerInfoId = new ODataProperty("CustomerInfoId", customerInfoIdValue);
+        entity.addProperty(customerInfoId);
+
+        final ODataPrimitiveValue informationValue = new ODataPrimitiveValue(sampleinfo, EdmSimpleType.STRING);
+        final ODataProperty information = new ODataProperty("Information", informationValue);
+        entity.addProperty(information);
+
+        return entity;
+    }
+
+    protected ODataEntity getSampleCustomerProfile(
+            final int id, final String sampleName, final boolean withInlineInfo) {
         ODataEntity entity = ODataFactory.newEntity("Customer");
 
         // add name attribute
@@ -185,6 +205,13 @@ public abstract class AbstractTest {
         alternativeNamesValue = new ODataCollectionValue("Collection(Edm.String)");
         alternativeNamesValue.add(new ODataPrimitiveValue("myAlternativeName", EdmSimpleType.STRING));
         contactAliasValue.add(new ODataProperty("AlternativeNames", alternativeNamesValue));
+
+        if (withInlineInfo) {
+            entity.addLink(ODataFactory.newInlineEntity(
+                    "Info",
+                    URI.create("Customer(-10)/Info"),
+                    getSampleCustomerInfo(1000 + id, sampleName + "_Info")));
+        }
 
         return entity;
     }

@@ -187,6 +187,11 @@ public class JSONEntry implements EntryResource {
     }
 
     @Override
+    public Element getOtherContent() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public void setContent(Element content) {
         this.content = content;
     }

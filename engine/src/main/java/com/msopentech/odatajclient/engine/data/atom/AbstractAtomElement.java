@@ -18,6 +18,8 @@ package com.msopentech.odatajclient.engine.data.atom;
 import com.msopentech.odatajclient.engine.data.AbstractElement;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.util.List;
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 
 public abstract class AbstractAtomElement extends AbstractElement {
 
@@ -35,6 +37,18 @@ public abstract class AbstractAtomElement extends AbstractElement {
     public String getTitle() {
         final AtomText value = getTextProperty("title");
         return value == null || value.getContent().isEmpty() ? null : value.getContent().get(0).toString();
+    }
+
+    public void setTitle(final String title) {
+        AtomText value = getTextProperty("title");
+        if (value != null) {
+            removeJAXBElements(title, AtomText.class);
+        }
+
+        value = new AtomText();
+        value.getContent().add(title);
+
+        getValues().add(new JAXBElement<AtomText>(new QName("title"), AtomText.class, value));
     }
 
     public String getUpdated() {

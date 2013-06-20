@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.data.json;
 
 import com.msopentech.odatajclient.engine.data.LinkResource;
+import org.w3c.dom.Element;
 
 /**
  * Link from an entry, represented via JSON.
@@ -71,5 +72,15 @@ public class JSONLink implements LinkResource {
 
     @Override
     public void setType(String type) {
+    }
+
+    @Override
+    public Element getContent() {
+        return null;
+    }
+
+    @Override
+    public void setContent(Element content) {
+        
     }
 }

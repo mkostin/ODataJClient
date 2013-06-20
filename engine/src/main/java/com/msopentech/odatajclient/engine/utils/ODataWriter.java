@@ -15,11 +15,15 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
@@ -61,8 +65,23 @@ public class ODataWriter {
      * @param entities entities to be serialized.
      * @return stream of serialized objects.
      */
-    public InputStream serialize(final Collection<ODataEntity> entities) {
-        return null;
+    public static InputStream serialize(
+            final Collection<ODataEntity> entities, final Class<? extends EntryResource> reference) {
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        try {
+            for (ODataEntity entity : entities) {
+                SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, reference), os);
+            }
+
+            return new ByteArrayInputStream(os.toByteArray());
+        } finally {
+            try {
+                os.close();
+            } catch (IOException ignore) {
+                // ignore exception
+            }
+        }
     }
 
     /**
@@ -71,8 +90,8 @@ public class ODataWriter {
      * @param entity entity to be serialized.
      * @return stream of serialized object.
      */
-    public InputStream serialize(final ODataEntity entity) {
-        return serialize(Collections.<ODataEntity>singleton(entity));
+    public static InputStream serialize(final ODataEntity entity, final Class<? extends EntryResource> reference) {
+        return serialize(Collections.<ODataEntity>singleton(entity), reference);
     }
 
     /**

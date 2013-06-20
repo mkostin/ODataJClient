@@ -217,6 +217,11 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         return contents.isEmpty() ? null : contents.get(0).getXMLContent();
     }
 
+    @Override
+    public Element getOtherContent() {
+        return getAnyOther().isEmpty() ? null : (Element) getAnyOther().get(0);
+    }
+
     /**
      * Gets the value of the anyOther property.
      *
@@ -293,7 +298,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
 
     @Override
     public URI getBaseURI() {
-        return URI.create(base);
+        return base == null ? null : URI.create(base);
     }
 
     /**

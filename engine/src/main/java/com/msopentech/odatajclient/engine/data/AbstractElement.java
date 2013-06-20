@@ -52,6 +52,29 @@ public abstract class AbstractElement {
         return result;
     }
 
+    @SuppressWarnings({"unchecked"})
+    protected <T> boolean removeJAXBElements(final String localName, final Class<T> reference) {
+
+        boolean res = true;
+
+        final List<JAXBElement<T>> toBeRemoved = new ArrayList<JAXBElement<T>>();
+
+        for (Object object : getValues()) {
+            if (object instanceof JAXBElement
+                    && ((JAXBElement<T>) object).getDeclaredType().equals(reference)
+                    && ((JAXBElement<T>) object).getName().getLocalPart().equals(localName)) {
+
+                toBeRemoved.add((JAXBElement<T>) object);
+            }
+        }
+
+        for (JAXBElement<T> obj : toBeRemoved) {
+            res = res && getValues().remove(obj);
+        }
+
+        return res;
+    }
+
     @SuppressWarnings("unchecked")
     protected <T> List<T> getElements(Class<T> reference) {
         List<T> result = new ArrayList<T>();

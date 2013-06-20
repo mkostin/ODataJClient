@@ -135,7 +135,7 @@ public class AtomContent extends AbstractElement {
     }
 
     public Element getXMLContent() {
-        if (!getType().contains(MediaType.APPLICATION_XML)) {
+        if (!getType().contains(MediaType.APPLICATION_XML) && !getType().contains("*/*")) {
             throw new IllegalStateException("No XML content found");
         }
 
