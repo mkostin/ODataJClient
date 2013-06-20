@@ -34,14 +34,11 @@ import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataBinder;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URI;
 import java.util.List;
 import org.junit.Ignore;
@@ -144,13 +141,13 @@ public class EntityTest extends AbstractTest {
         readODataEntity(ODataFormat.JSON_FULL_METADATA);
     }
 
-    public void readODataEntityWithInline() {
+    private void readODataEntityWithInline(final ODataFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer(-10)").expand("Info");
 
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-        req.setContentType(ODataFormat.ATOM.toString());
+        req.setFormat(format);
 
         final ODataQueryResponse<ODataEntity> res = req.execute();
         final ODataEntity entity = res.getBody();
@@ -169,12 +166,7 @@ public class EntityTest extends AbstractTest {
                 final ODataEntity inline = ((ODataInlineEntity) link).getEntity();
                 assertNotNull(inline);
 
-                if (LOG.isDebugEnabled()) {
-                    StringWriter writer = new StringWriter();
-                    SerializationUtils.serializeEntry(ODataBinder.getEntry(inline, AtomEntry.class), writer);
-                    writer.flush();
-                    LOG.debug("About retrieved inline entity (Atom)\n{}", writer.toString());
-                }
+                debugEntry(ODataBinder.getEntry(inline, format.getEntryClass()), "Just read");
 
                 final List<ODataProperty> properties = inline.getProperties();
                 assertEquals(2, properties.size());
@@ -185,11 +177,21 @@ public class EntityTest extends AbstractTest {
                         || properties.get(1).getValue().toString().equals("11"));
 
                 found = true;
-
             }
         }
 
         assertTrue(found);
+    }
+
+    @Test
+    public void readODataEntityWithInlineFromAtom() {
+        readODataEntityWithInline(ODataFormat.ATOM);
+    }
+
+    @Test
+    @Ignore
+    public void readODataEntityWithInlineFromJSON() {
+        readODataEntityWithInline(ODataFormat.JSON);
     }
 
     private void createODataEntity(final ODataFormat format, final int id, final boolean withInlineInfo) {
@@ -259,7 +261,13 @@ public class EntityTest extends AbstractTest {
 
     @Test
     @Ignore
-    public void createWithInlineAsATOM() {
+    public void createWithInlineAsAtom() {
         createODataEntity(ODataFormat.ATOM, 3, true);
+    }
+
+    @Test
+    @Ignore
+    public void createWithInlineAsJSON() {
+        createODataEntity(ODataFormat.JSON, 3, true);
     }
 }
