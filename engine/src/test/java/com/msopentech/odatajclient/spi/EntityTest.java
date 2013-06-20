@@ -191,7 +191,7 @@ public class EntityTest extends AbstractTest {
     @Test
     @Ignore
     public void readODataEntityWithInlineFromJSON() {
-        readODataEntityWithInline(ODataFormat.JSON);
+        readODataEntityWithInline(ODataFormat.JSON_FULL_METADATA);
     }
 
     private void createODataEntity(final ODataFormat format, final int id, final boolean withInlineInfo) {
@@ -233,20 +233,10 @@ public class EntityTest extends AbstractTest {
         deleteRes.close();
 
         final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(selflLink);
-        retrieveReq.setFormat(ODataFormat.ATOM);
+        retrieveReq.setFormat(format);
 
         final ODataQueryResponse<ODataEntity> retrieveRes = retrieveReq.execute();
         assertEquals(404, retrieveRes.getStatusCode());
-
-        Throwable t = null;
-        try {
-            retrieveRes.getBody();
-        } catch (Exception e) {
-            t = e;
-        }
-
-        assertNotNull(t);
-
         retrieveRes.close();
     }
 
@@ -255,8 +245,9 @@ public class EntityTest extends AbstractTest {
         createODataEntity(ODataFormat.ATOM, 1, false);
     }
 
+    @Test
     public void createODataEntityAsJSON() {
-        createODataEntity(ODataFormat.JSON, 2, false);
+        createODataEntity(ODataFormat.JSON_FULL_METADATA, 2, false);
     }
 
     @Test
@@ -268,6 +259,6 @@ public class EntityTest extends AbstractTest {
     @Test
     @Ignore
     public void createWithInlineAsJSON() {
-        createODataEntity(ODataFormat.JSON, 3, true);
+        createODataEntity(ODataFormat.JSON_FULL_METADATA, 4, true);
     }
 }

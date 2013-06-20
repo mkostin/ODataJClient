@@ -94,7 +94,7 @@ public abstract class AbstractTest {
                 final ODataProperty actualProp = actualProps.get(prop.getName());
                 assertNotNull(actualProp);
 
-                checkPropertyValue(prop.getValue(), actualProp.getValue());
+                checkPropertyValue(prop.getName(), prop.getValue(), actualProp.getValue());
             } else {
                 // nothing ... maybe :FC_KeepInContent="false"
                 // ..... no assert can be done ....
@@ -102,7 +102,9 @@ public abstract class AbstractTest {
         }
     }
 
-    protected void checkPropertyValue(final ODataValue original, final ODataValue actual) {
+    protected void checkPropertyValue(final String propertyName,
+            final ODataValue original, final ODataValue actual) {
+
         assertNotNull(original);
         assertNotNull(actual);
         assertEquals(original.getClass().getSimpleName(), actual.getClass().getSimpleName());
@@ -126,7 +128,7 @@ public abstract class AbstractTest {
             for (ODataValue originalValue : (ODataCollectionValue) original) {
                 for (ODataValue actualValue : (ODataCollectionValue) actual) {
                     try {
-                        checkPropertyValue(originalValue, actualValue);
+                        checkPropertyValue(propertyName, originalValue, actualValue);
                         found = true;
                     } catch (AssertionError ignore) {
                         // ignore
@@ -136,9 +138,9 @@ public abstract class AbstractTest {
 
             assertTrue("Found " + actual + " but expected " + original, found);
         } else {
-            assertEquals("Primitive value type  mismatch",
+            assertEquals("Primitive value for '" + propertyName + "' type mismatch",
                     ((ODataPrimitiveValue) original).getTypeName(), ((ODataPrimitiveValue) actual).getTypeName());
-            assertEquals("Primitive value  mismatch",
+            assertEquals("Primitive value for '" + propertyName + "' mismatch",
                     ((ODataPrimitiveValue) original).toString(), ((ODataPrimitiveValue) actual).toString());
         }
     }

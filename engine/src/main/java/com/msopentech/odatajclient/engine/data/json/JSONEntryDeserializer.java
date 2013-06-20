@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.IOException;
 import java.net.URI;
@@ -87,17 +88,22 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
                         ODataConstants.NS_DATASERVICES, ODataConstants.PREFIX_DATASERVICES + name);
                 parent.appendChild(property);
 
+                boolean typeSet = false;
                 if (node.hasNonNull(name + "@" + JSONConstants.TYPE)) {
                     property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
                             node.get(name + "@" + JSONConstants.TYPE).textValue());
+                    typeSet = true;
                 }
 
                 if (child.isNull()) {
                     property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_NULL,
                             Boolean.toString(true));
                 } else if (child.isValueNode()) {
+                    if (!typeSet && child.isInt()) {
+                        property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                                EdmSimpleType.INT_32.toString());
+                    }
                     property.appendChild(document.createTextNode(child.asText()));
-
                 } else if (child.isContainerNode()) {
                     if (child.hasNonNull(JSONConstants.TYPE)) {
                         property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
