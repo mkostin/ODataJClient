@@ -66,9 +66,11 @@ public class EntityTest extends AbstractTest {
 
         debugEntry(entry, "Just read");
 
-        assertEquals(uriBuilder.build().toASCIIString(), entry.getId());
-        assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entry.getType());
-        assertNotNull(entry.getBaseURI());
+        if (format.JSON_FULL_METADATA == format || format.ATOM == format) {
+            assertEquals(uriBuilder.build().toASCIIString(), entry.getId());
+            assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entry.getType());
+            assertNotNull(entry.getBaseURI());
+        }
 
         final Element content = entry.getContent();
         assertEquals(ODataConstants.ELEM_PROPERTIES, content.getNodeName());
@@ -82,8 +84,10 @@ public class EntityTest extends AbstractTest {
             if ("PrimaryContactInfo".equals(property.getLocalName())) {
                 checked = true;
 
-                assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails",
-                        property.getAttributes().item(0).getTextContent());
+                if (format.JSON_FULL_METADATA == format || format.ATOM == format) {
+                    assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails",
+                            ((Element) property).getAttribute(ODataConstants.ATTR_TYPE));
+                }
             }
         }
         assertTrue(entered);
@@ -97,7 +101,7 @@ public class EntityTest extends AbstractTest {
 
     @Test
     public void readJSONEntry() throws Exception {
-        readEntry(ODataFormat.JSON_FULL_METADATA);
+        readEntry(ODataFormat.JSON);
     }
 
     private void readODataEntity(final ODataFormat format) {

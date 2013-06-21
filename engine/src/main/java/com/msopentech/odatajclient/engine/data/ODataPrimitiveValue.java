@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.io.Serializable;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * OData primitive property value.
@@ -54,7 +55,7 @@ public class ODataPrimitiveValue extends ODataValue {
      */
     public ODataPrimitiveValue(final Serializable value, final String typeName) {
         this.value = value;
-        this.type = EdmSimpleType.valueOf(typeName);
+        this.type = StringUtils.isBlank(typeName) ? null : EdmSimpleType.valueOf(typeName);
     }
 
     /**
@@ -63,11 +64,11 @@ public class ODataPrimitiveValue extends ODataValue {
      * @return type name.
      */
     public String getTypeName() {
-        return type.toString();
+        return type == null ? null : type.toString();
     }
 
     @Override
     public String toString() {
-        return value.toString();
+        return value == null ? null : value.toString();
     }
 }

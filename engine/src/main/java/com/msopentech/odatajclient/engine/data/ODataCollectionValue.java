@@ -41,7 +41,7 @@ public class ODataCollectionValue extends ODataValue implements Iterable<ODataVa
      *
      * @param typeName type name.
      */
-    public ODataCollectionValue(String typeName) {
+    public ODataCollectionValue(final String typeName) {
         this.typeName = typeName;
     }
 
