@@ -32,7 +32,9 @@ import org.w3c.dom.Element;
  */
 @JsonSerialize(using = JSONEntrySerializer.class)
 @JsonDeserialize(using = JSONEntryDeserializer.class)
-public class JSONEntry implements EntryResource {
+public class JSONEntry extends AbstractJSONObject implements EntryResource {
+
+    private static final long serialVersionUID = -5275365545400797758L;
 
     private URI metadata;
 

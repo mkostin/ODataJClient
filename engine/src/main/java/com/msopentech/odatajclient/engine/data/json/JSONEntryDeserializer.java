@@ -137,8 +137,8 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
         return properties;
     }
 
-    private String setInlineEntry(final String name, final String suffix, final ObjectNode tree, final ObjectCodec codec,
-            final JSONLink link) throws IOException {
+    private String setInlineEntry(final String name, final String suffix, final ObjectNode tree,
+            final ObjectCodec codec, final JSONLink link) throws IOException {
 
         String entryNamePrefix = name.substring(0, name.indexOf(suffix));
         if (tree.has(entryNamePrefix)) {
@@ -193,7 +193,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
             tree.remove(JSONConstants.MEDIAREAD_LINK);
         }
         if (tree.hasNonNull(JSONConstants.MEDIAEDIT_LINK)) {
-            jsonEntry.addMediaEditLink(new JSONLink(null, null, 
+            jsonEntry.addMediaEditLink(new JSONLink(null, null,
                     tree.get(JSONConstants.MEDIAEDIT_LINK).textValue()));
             tree.remove(JSONConstants.MEDIAEDIT_LINK);
         }

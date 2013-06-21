@@ -27,7 +27,9 @@ import java.util.List;
  *
  * @see JSONEntry
  */
-public class JSONFeed implements FeedResource {
+public class JSONFeed extends AbstractJSONObject implements FeedResource {
+
+    private static final long serialVersionUID = -3576372289800799417L;
 
     @JsonProperty(value = "odata.metadata", required = false)
     private URI metadata;

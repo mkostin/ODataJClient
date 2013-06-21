@@ -13,74 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data;
+package com.msopentech.odatajclient.engine.data.json;
 
 import java.io.Serializable;
-import java.net.URI;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * Abstract representation of OData entities and links.
- */
-public abstract class ODataItem implements Serializable {
+public abstract class AbstractJSONObject implements Serializable {
 
-    private static final long serialVersionUID = -2600707722689304686L;
-
-    /**
-     * Logger.
-     */
-    protected static final Logger LOG = LoggerFactory.getLogger(ODataItem.class);
-
-    /**
-     * OData item self link.
-     */
-    protected URI link;
-
-    /**
-     * OData entity name/type.
-     */
-    private final String name;
-
-    /**
-     * Constructor.
-     *
-     * @param name OData entity name.
-     */
-    public ODataItem(final String name) {
-        this.name = name;
-    }
-
-    /**
-     * Returns self link.
-     *
-     * @return entity edit link.
-     */
-    public URI getLink() {
-        return link;
-    }
-
-    /**
-     * Sets self link.
-     *
-     * @param self link.
-     */
-    public void setLink(final URI link) {
-        this.link = link;
-    }
-
-    /**
-     * Returns OData entity name.
-     *
-     * @return entity name.
-     */
-    public String getName() {
-        return name;
-    }
+    private static final long serialVersionUID = 1634654241914156675L;
 
     @Override
     public boolean equals(Object obj) {

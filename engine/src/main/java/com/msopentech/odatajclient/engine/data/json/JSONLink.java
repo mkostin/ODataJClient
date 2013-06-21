@@ -22,7 +22,9 @@ import com.msopentech.odatajclient.engine.data.LinkResource;
 /**
  * Link from an entry, represented via JSON.
  */
-public class JSONLink implements LinkResource {
+public class JSONLink extends AbstractJSONObject implements LinkResource {
+
+    private static final long serialVersionUID = 4662606817302869095L;
 
     private String title;
 
