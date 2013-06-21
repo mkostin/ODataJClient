@@ -460,8 +460,15 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
 
     public void setMediaContent(final String src, final String type) {
         AtomContent atomContent = new AtomContent();
-        atomContent.setSrc(src);
-        atomContent.getType().add(type);
+        if (StringUtils.isNotBlank(src)) {
+            atomContent.setSrc(src);
+        } else {
+            // it seems to be necessary
+            atomContent.setSrc(StringUtils.EMPTY);
+        }
+        if (StringUtils.isNotBlank(type)) {
+            atomContent.getType().add(type);
+        }
         getValues().add(atomContent);
     }
 

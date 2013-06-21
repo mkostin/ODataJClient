@@ -40,6 +40,7 @@ import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -195,7 +196,7 @@ public class EntityTest extends AbstractTest {
     }
 
     private void createODataEntity(final ODataFormat format, final int id, final boolean withInlineInfo) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
         final String sampleName = "Sample customer";
@@ -218,26 +219,67 @@ public class EntityTest extends AbstractTest {
 
         debugODataEntity(created, "Just created");
 
+        // check defined links
+        checkLinks(original.getAssociationLinks(), created.getAssociationLinks());
+        checkLinks(original.getEditMediaLinks(), created.getEditMediaLinks());
+        checkLinks(original.getNavigationLinks(), created.getNavigationLinks());
+
         // check defined properties equality
         checkProperties(original.getProperties(), created.getProperties());
 
-        final URI selflLink = created.getLink();
-        assertNotNull(selflLink);
+        // search expanded
+        uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer(" + id + ")").expand("Info");
 
-        final ODataDeleteRequest deleteReq = ODataRequestFactory.getDeleteRequest(createRes.getBody().getEditLink());
-        ODataDeleteResponse deleteRes = deleteReq.execute();
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(format);
 
-        assertEquals(204, deleteRes.getStatusCode());
-        assertEquals("No Content", deleteRes.getStatusMessage());
+        final ODataQueryResponse<ODataEntity> res = req.execute();
+        created = res.getBody();
+        assertNotNull(created);
 
-        deleteRes.close();
+        // check defined links
+        checkLinks(original.getAssociationLinks(), created.getAssociationLinks());
+        checkLinks(original.getEditMediaLinks(), created.getEditMediaLinks());
+        checkLinks(original.getNavigationLinks(), created.getNavigationLinks());
 
-        final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(selflLink);
-        retrieveReq.setFormat(format);
+        // check defined properties equality
+        checkProperties(original.getProperties(), created.getProperties());
 
-        final ODataQueryResponse<ODataEntity> retrieveRes = retrieveReq.execute();
-        assertEquals(404, retrieveRes.getStatusCode());
-        retrieveRes.close();
+        final List<ODataEntity> toBeDeleted = new ArrayList<ODataEntity>();
+        toBeDeleted.add(created);
+
+        for (ODataLink link : created.getNavigationLinks()) {
+            if (link instanceof ODataInlineEntity) {
+                ODataEntity inline = ((ODataInlineEntity) link).getEntity();
+                toBeDeleted.add(inline);
+            }
+        }
+
+        assertTrue(toBeDeleted.size() >= 1);
+
+        for (ODataEntity entity : toBeDeleted) {
+            final URI selflLink = entity.getLink();
+            assertNotNull(selflLink);
+
+            final URI editLink = entity.getEditLink();
+            assertNotNull(editLink);
+
+            final ODataDeleteRequest deleteReq = ODataRequestFactory.getDeleteRequest(editLink);
+            ODataDeleteResponse deleteRes = deleteReq.execute();
+
+            assertEquals(204, deleteRes.getStatusCode());
+            assertEquals("No Content", deleteRes.getStatusMessage());
+
+            deleteRes.close();
+
+            final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(selflLink);
+            retrieveReq.setFormat(format);
+
+            final ODataQueryResponse<ODataEntity> retrieveRes = retrieveReq.execute();
+            assertEquals(404, retrieveRes.getStatusCode());
+            retrieveRes.close();
+        }
     }
 
     @Test

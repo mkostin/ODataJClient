@@ -53,7 +53,7 @@ public abstract class ODataEntity extends ODataItem {
     /**
      * Media edit links.
      */
-    protected final List<ODataLink> mediaEditLinks = new ArrayList<ODataLink>();
+    protected final List<ODataLink> editMediaLinks = new ArrayList<ODataLink>();
 
     /**
      * Entity properties.
@@ -116,7 +116,7 @@ public abstract class ODataEntity extends ODataItem {
                 break;
 
             case MEDIA_EDIT:
-                result = mediaEditLinks.contains(link) ? false : mediaEditLinks.add(link);
+                result = editMediaLinks.contains(link) ? false : editMediaLinks.add(link);
                 break;
 
             default:
@@ -126,13 +126,13 @@ public abstract class ODataEntity extends ODataItem {
     }
 
     /**
-     * Removes the given link from any list (association, navigation, mediaEdit).
+     * Removes the given link from any list (association, navigation, edit-media).
      *
      * @param link to be removed
      * @return <tt>true</tt> if the given link was contained in one of available lists
      */
     public boolean removeLink(final ODataLink link) {
-        return associationLinks.remove(link) || navigationLinks.remove(link) || mediaEditLinks.remove(link);
+        return associationLinks.remove(link) || navigationLinks.remove(link) || editMediaLinks.remove(link);
     }
 
     /**
@@ -158,8 +158,8 @@ public abstract class ODataEntity extends ODataItem {
      *
      * @return OData entity links.
      */
-    public List<ODataLink> getMediaEditLinks() {
-        return mediaEditLinks;
+    public List<ODataLink> getEditMediaLinks() {
+        return editMediaLinks;
     }
 
     /**

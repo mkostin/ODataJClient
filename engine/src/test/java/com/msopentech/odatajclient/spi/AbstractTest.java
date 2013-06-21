@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
+import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.utils.ODataBinder;
@@ -73,6 +75,39 @@ public abstract class AbstractTest {
             }
         }
         assertNotNull("Check value for the 'testODataServiceRootURL' property", testODataServiceRootURL);
+    }
+
+    protected void checkLinks(final Collection<ODataLink> original, final Collection<ODataLink> actual) {
+        assertTrue(original.size() <= actual.size());
+
+        for (ODataLink originalLink : original) {
+            ODataLink foundOriginal = null;
+            ODataLink foundActual = null;
+
+            for (ODataLink actualLink : actual) {
+
+                if (actualLink.getType() == originalLink.getType()
+                        && actualLink.getLink().toASCIIString().endsWith(originalLink.getLink().toASCIIString())
+                        && actualLink.getName().equals(originalLink.getName())) {
+
+                    foundOriginal = originalLink;
+                    foundActual = actualLink;
+                }
+            }
+
+            assertNotNull(foundOriginal);
+            assertNotNull(foundActual);
+
+            if (foundOriginal instanceof ODataInlineEntity && foundActual instanceof ODataInlineEntity) {
+                ODataEntity originalInline = ((ODataInlineEntity) foundOriginal).getEntity();
+                assertNotNull(originalInline);
+
+                ODataEntity actualInline = ((ODataInlineEntity) foundActual).getEntity();
+                assertNotNull(actualInline);
+
+                checkProperties(originalInline.getProperties(), actualInline.getProperties());
+            }
+        }
     }
 
     protected void checkProperties(final Collection<ODataProperty> original, final Collection<ODataProperty> actual) {
@@ -148,16 +183,7 @@ public abstract class AbstractTest {
     protected ODataEntity getSampleCustomerInfo(
             final int id, final String sampleinfo) {
         final ODataEntity entity = ODataFactory.newEntity("CustomerInfo");
-        entity.setEditLink(URI.create("CustomerInfo(" + id + ")"));
         entity.setMediaEntity(true);
-        entity.setMediaContentSource("CustomerInfo(" + id + ")/$value");
-        entity.setMediaContentType("*/*");
-
-        entity.addLink(ODataFactory.newMediaEditLink("CustomerInfo", URI.create("CustomerInfo(" + id + ")/$value")));
-
-        final ODataPrimitiveValue customerInfoIdValue = new ODataPrimitiveValue(id, EdmSimpleType.INT_32);
-        final ODataProperty customerInfoId = new ODataProperty("CustomerInfoId", customerInfoIdValue);
-        entity.addProperty(customerInfoId);
 
         final ODataPrimitiveValue informationValue = new ODataPrimitiveValue(sampleinfo, EdmSimpleType.STRING);
         final ODataProperty information = new ODataProperty("Information", informationValue);
@@ -214,7 +240,7 @@ public abstract class AbstractTest {
         if (withInlineInfo) {
             entity.addLink(ODataFactory.newInlineEntity(
                     "Info",
-                    URI.create("Customer(-10)/Info"),
+                    URI.create("Customer(" + id + ")/Info"),
                     getSampleCustomerInfo(1000 + id, sampleName + "_Info")));
         }
 
