@@ -16,10 +16,10 @@
 package com.msopentech.odatajclient.engine.data.metadata;
 
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.TComplexType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.TEntityType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.TEnumType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.TSchema;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ComplexType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EnumType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -35,11 +35,11 @@ public class EdmType {
 
     private EdmSimpleType simpleType;
 
-    private TEnumType enumType;
+    private EnumType enumType;
 
-    private TComplexType complexType;
+    private ComplexType complexType;
 
-    private TEntityType entityType;
+    private EntityType entityType;
 
     public EdmType(final String typeExpression) {
         this(null, typeExpression);
@@ -77,21 +77,21 @@ public class EdmType {
             if (!metadata.isNsOrAlias(namespaceOrAlias)) {
                 throw new IllegalArgumentException("Illegal namespace or alias: " + namespaceOrAlias);
             }
-            TSchema schema = metadata.getSchema(namespaceOrAlias);
+            Schema schema = metadata.getSchema(namespaceOrAlias);
 
-            for (TEnumType type : schema.getEnumTypes()) {
+            for (EnumType type : schema.getEnumTypes()) {
                 if (typeName.equals(type.getName())) {
                     this.enumType = type;
                 }
             }
             if (this.enumType == null) {
-                for (TComplexType type : schema.getComplexTypes()) {
+                for (ComplexType type : schema.getComplexTypes()) {
                     if (typeName.equals(type.getName())) {
                         this.complexType = type;
                     }
                 }
                 if (this.complexType == null) {
-                    for (TEntityType type : schema.getEntityTypes()) {
+                    for (EntityType type : schema.getEntityTypes()) {
                         if (typeName.equals(type.getName())) {
                             this.entityType = type;
                         }
@@ -125,9 +125,9 @@ public class EdmType {
         return this.enumType != null;
     }
 
-    public final TEnumType getEnumType() {
+    public final EnumType getEnumType() {
         if (!isEnumType()) {
-            throw new EdmTypeNotFoundException(TEnumType.class, this.typeExpression);
+            throw new EdmTypeNotFoundException(EnumType.class, this.typeExpression);
         }
 
         return this.enumType;
@@ -137,9 +137,9 @@ public class EdmType {
         return this.complexType != null;
     }
 
-    public final TComplexType getComplexType() {
+    public final ComplexType getComplexType() {
         if (!isComplexType()) {
-            throw new EdmTypeNotFoundException(TComplexType.class, this.typeExpression);
+            throw new EdmTypeNotFoundException(ComplexType.class, this.typeExpression);
         }
 
         return this.complexType;
@@ -149,9 +149,9 @@ public class EdmType {
         return this.entityType != null;
     }
 
-    public final TEntityType getEntityType() {
+    public final EntityType getEntityType() {
         if (!isEntityType()) {
-            throw new EdmTypeNotFoundException(TEntityType.class, this.typeExpression);
+            throw new EdmTypeNotFoundException(EntityType.class, this.typeExpression);
         }
 
         return this.entityType;

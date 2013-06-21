@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.proxy.api;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
-import com.msopentech.odatajclient.engine.data.metadata.edm.TConcurrencyMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -51,7 +51,7 @@ public @interface Property {
 
     int srid() default 0;
 
-    TConcurrencyMode concurrencyMode() default TConcurrencyMode.NONE;
+    ConcurrencyMode concurrencyMode() default ConcurrencyMode.NONE;
 
     String mimeType() default "";
 

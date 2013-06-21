@@ -60,136 +60,136 @@ public class ObjectFactory {
      * Create an instance of {@link TOptions }
      *
      */
-    public TOptions createTOptions() {
-        return new TOptions();
+    public Options createTOptions() {
+        return new Options();
     }
 
     /**
      * Create an instance of {@link TRuntimeStorageModels }
      *
      */
-    public TRuntimeStorageModels createTRuntimeStorageModels() {
-        return new TRuntimeStorageModels();
+    public RuntimeStorageModels createTRuntimeStorageModels() {
+        return new RuntimeStorageModels();
     }
 
     /**
      * Create an instance of {@link TEntityTypeShape }
      *
      */
-    public TEntityTypeShape createTEntityTypeShape() {
-        return new TEntityTypeShape();
+    public EntityTypeShape createTEntityTypeShape() {
+        return new EntityTypeShape();
     }
 
     /**
      * Create an instance of {@link TConnection }
      *
      */
-    public TConnection createTConnection() {
-        return new TConnection();
+    public Connection createTConnection() {
+        return new Connection();
     }
 
     /**
      * Create an instance of {@link TEdmx }
      *
      */
-    public TEdmx createTEdmx() {
-        return new TEdmx();
+    public Edmx createTEdmx() {
+        return new Edmx();
     }
 
     /**
      * Create an instance of {@link TDataServices }
      *
      */
-    public TDataServices createTDataServices() {
-        return new TDataServices();
+    public DataServices createTDataServices() {
+        return new DataServices();
     }
 
     /**
      * Create an instance of {@link TDiagram }
      *
      */
-    public TDiagram createTDiagram() {
-        return new TDiagram();
+    public Diagram createTDiagram() {
+        return new Diagram();
     }
 
     /**
      * Create an instance of {@link TConnectorPoint }
      *
      */
-    public TConnectorPoint createTConnectorPoint() {
-        return new TConnectorPoint();
+    public ConnectorPoint createTConnectorPoint() {
+        return new ConnectorPoint();
     }
 
     /**
      * Create an instance of {@link TDesignerInfoPropertySet }
      *
      */
-    public TDesignerInfoPropertySet createTDesignerInfoPropertySet() {
-        return new TDesignerInfoPropertySet();
+    public DesignerInfoPropertySet createTDesignerInfoPropertySet() {
+        return new DesignerInfoPropertySet();
     }
 
     /**
      * Create an instance of {@link TAssociationConnector }
      *
      */
-    public TAssociationConnector createTAssociationConnector() {
-        return new TAssociationConnector();
+    public AssociationConnector createTAssociationConnector() {
+        return new AssociationConnector();
     }
 
     /**
      * Create an instance of {@link TRuntimeConceptualModels }
      *
      */
-    public TRuntimeConceptualModels createTRuntimeConceptualModels() {
-        return new TRuntimeConceptualModels();
+    public RuntimeConceptualModels createTRuntimeConceptualModels() {
+        return new RuntimeConceptualModels();
     }
 
     /**
      * Create an instance of {@link TRuntime }
      *
      */
-    public TRuntime createTRuntime() {
-        return new TRuntime();
+    public Runtime createTRuntime() {
+        return new Runtime();
     }
 
     /**
      * Create an instance of {@link TDiagrams }
      *
      */
-    public TDiagrams createTDiagrams() {
-        return new TDiagrams();
+    public Diagrams createTDiagrams() {
+        return new Diagrams();
     }
 
     /**
      * Create an instance of {@link TDesigner }
      *
      */
-    public TDesigner createTDesigner() {
-        return new TDesigner();
+    public Designer createTDesigner() {
+        return new Designer();
     }
 
     /**
      * Create an instance of {@link TRuntimeMappings }
      *
      */
-    public TRuntimeMappings createTRuntimeMappings() {
-        return new TRuntimeMappings();
+    public RuntimeMappings createTRuntimeMappings() {
+        return new RuntimeMappings();
     }
 
     /**
      * Create an instance of {@link TInheritanceConnector }
      *
      */
-    public TInheritanceConnector createTInheritanceConnector() {
-        return new TInheritanceConnector();
+    public InheritanceConnector createTInheritanceConnector() {
+        return new InheritanceConnector();
     }
 
     /**
      * Create an instance of {@link TDesignerProperty }
      *
      */
-    public TDesignerProperty createTDesignerProperty() {
-        return new TDesignerProperty();
+    public DesignerProperty createTDesignerProperty() {
+        return new DesignerProperty();
     }
 
     /**
@@ -197,17 +197,17 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2007/06/edmx", name = "Edmx")
-    public JAXBElement<TEdmx> createEdmx(TEdmx value) {
-        return new JAXBElement<TEdmx>(_Edmx_QNAME, TEdmx.class, null, value);
+    public JAXBElement<Edmx> createEdmx(Edmx value) {
+        return new JAXBElement<Edmx>(_Edmx_QNAME, Edmx.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link TDesigner }{@code >}}
      *
      */
-    @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2007/06/edmx", name = "Designer", scope = TEdmx.class)
-    public JAXBElement<TDesigner> createTEdmxDesigner(TDesigner value) {
-        return new JAXBElement<TDesigner>(_TEdmxDesigner_QNAME, TDesigner.class, TEdmx.class, value);
+    @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2007/06/edmx", name = "Designer", scope = Edmx.class)
+    public JAXBElement<Designer> createTEdmxDesigner(Designer value) {
+        return new JAXBElement<Designer>(_TEdmxDesigner_QNAME, Designer.class, Edmx.class, value);
     }
 
     /**
@@ -215,17 +215,17 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2007/06/edmx", name = "DataServices", scope =
-            TEdmx.class)
-    public JAXBElement<TDataServices> createTEdmxDataServices(TDataServices value) {
-        return new JAXBElement<TDataServices>(_TEdmxDataServices_QNAME, TDataServices.class, TEdmx.class, value);
+            Edmx.class)
+    public JAXBElement<DataServices> createTEdmxDataServices(DataServices value) {
+        return new JAXBElement<DataServices>(_TEdmxDataServices_QNAME, DataServices.class, Edmx.class, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link TRuntime }{@code >}}
      *
      */
-    @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2007/06/edmx", name = "Runtime", scope = TEdmx.class)
-    public JAXBElement<TRuntime> createTEdmxRuntime(TRuntime value) {
-        return new JAXBElement<TRuntime>(_TEdmxRuntime_QNAME, TRuntime.class, TEdmx.class, value);
+    @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2007/06/edmx", name = "Runtime", scope = Edmx.class)
+    public JAXBElement<Runtime> createTEdmxRuntime(Runtime value) {
+        return new JAXBElement<Runtime>(_TEdmxRuntime_QNAME, Runtime.class, Edmx.class, value);
     }
 }

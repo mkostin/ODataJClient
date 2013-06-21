@@ -19,8 +19,8 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMe
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.data.metadata.edm.TEntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.TEntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
 
 public class MetadataUsageTest {
 
@@ -36,9 +36,9 @@ public class MetadataUsageTest {
         EdmMetadata metadata = res.getBody();
 
         // (sample) access EntityType
-        TEntityType entityType = metadata.getSchema(0).getEntityTypes().get(1);
+        EntityType entityType = metadata.getSchema(0).getEntityTypes().get(1);
 
         // (sample) access EntityContainer
-        TEntityContainer entityContainer = metadata.getSchema(0).getEntityContainers().get(0);
+        EntityContainer entityContainer = metadata.getSchema(0).getEntityContainers().get(0);
     }
 }

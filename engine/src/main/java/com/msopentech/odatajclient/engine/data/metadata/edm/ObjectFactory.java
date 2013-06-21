@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 /**
  * This object contains factory methods for each
  * Java content interface and Java element interface
- * generated in the com.microsoft.schemas.ado._2009._11.edm package.
+ * generated in the com.msopentech.odatajclient.engine.data.metadata.edm package.
  * <p>An ObjectFactory allows you to programatically
  * construct new instances of the Java representation
  * for XML content. The Java representation of XML
@@ -162,528 +162,528 @@ public class ObjectFactory {
      * Create an instance of {@link TUsing }
      *
      */
-    public TUsing createTUsing() {
-        return new TUsing();
+    public Using createTUsing() {
+        return new Using();
     }
 
     /**
      * Create an instance of {@link TReferentialConstraintRoleElement }
      *
      */
-    public TReferentialConstraintRoleElement createTReferentialConstraintRoleElement() {
-        return new TReferentialConstraintRoleElement();
+    public ReferentialConstraintRoleElement createTReferentialConstraintRoleElement() {
+        return new ReferentialConstraintRoleElement();
     }
 
     /**
      * Create an instance of {@link TRecordExpression }
      *
      */
-    public TRecordExpression createTRecordExpression() {
-        return new TRecordExpression();
+    public RecordExpression createTRecordExpression() {
+        return new RecordExpression();
     }
 
     /**
      * Create an instance of {@link TFunctionImportParameter }
      *
      */
-    public TFunctionImportParameter createTFunctionImportParameter() {
-        return new TFunctionImportParameter();
+    public FunctionImportParameter createTFunctionImportParameter() {
+        return new FunctionImportParameter();
     }
 
     /**
      * Create an instance of {@link TIsTypeExpression }
      *
      */
-    public TIsTypeExpression createTIsTypeExpression() {
-        return new TIsTypeExpression();
+    public IsTypeExpression createTIsTypeExpression() {
+        return new IsTypeExpression();
     }
 
     /**
      * Create an instance of {@link TSchema }
      *
      */
-    public TSchema createTSchema() {
-        return new TSchema();
+    public Schema createTSchema() {
+        return new Schema();
     }
 
     /**
      * Create an instance of {@link TEntityContainer.AssociationSet }
      *
      */
-    public TEntityContainer.TAssociationSet createEntityContainerAssociationSet() {
-        return new TEntityContainer.TAssociationSet();
+    public EntityContainer.TAssociationSet createEntityContainerAssociationSet() {
+        return new EntityContainer.TAssociationSet();
     }
 
     /**
      * Create an instance of {@link TLabeledElementReferenceExpression }
      *
      */
-    public TLabeledElementReferenceExpression createTLabeledElementReferenceExpression() {
-        return new TLabeledElementReferenceExpression();
+    public LabeledElementReferenceExpression createTLabeledElementReferenceExpression() {
+        return new LabeledElementReferenceExpression();
     }
 
     /**
      * Create an instance of {@link TDateTimeOffsetConstantExpression }
      *
      */
-    public TDateTimeOffsetConstantExpression createTDateTimeOffsetConstantExpression() {
-        return new TDateTimeOffsetConstantExpression();
+    public DateTimeOffsetConstantExpression createTDateTimeOffsetConstantExpression() {
+        return new DateTimeOffsetConstantExpression();
     }
 
     /**
      * Create an instance of {@link TEntityContainer.AssociationSet.End }
      *
      */
-    public TEntityContainer.TAssociationSet.End createEntityContainerAssociationSetEnd() {
-        return new TEntityContainer.TAssociationSet.End();
+    public EntityContainer.TAssociationSet.End createEntityContainerAssociationSetEnd() {
+        return new EntityContainer.TAssociationSet.End();
     }
 
     /**
      * Create an instance of {@link TEntityType }
      *
      */
-    public TEntityType createTEntityType() {
-        return new TEntityType();
+    public EntityType createTEntityType() {
+        return new EntityType();
     }
 
     /**
      * Create an instance of {@link TValueAnnotation }
      *
      */
-    public TValueAnnotation createTValueAnnotation() {
-        return new TValueAnnotation();
+    public ValueAnnotation createTValueAnnotation() {
+        return new ValueAnnotation();
     }
 
     /**
      * Create an instance of {@link TTypeRef }
      *
      */
-    public TTypeRef createTTypeRef() {
-        return new TTypeRef();
+    public TypeRef createTTypeRef() {
+        return new TypeRef();
     }
 
     /**
      * Create an instance of {@link TParameterReferenceExpression }
      *
      */
-    public TParameterReferenceExpression createTParameterReferenceExpression() {
-        return new TParameterReferenceExpression();
+    public ParameterReferenceExpression createTParameterReferenceExpression() {
+        return new ParameterReferenceExpression();
     }
 
     /**
      * Create an instance of {@link TEntityContainer }
      *
      */
-    public TEntityContainer createEntityContainer() {
-        return new TEntityContainer();
+    public EntityContainer createEntityContainer() {
+        return new EntityContainer();
     }
 
     /**
      * Create an instance of {@link TEnumType }
      *
      */
-    public TEnumType createTEnumType() {
-        return new TEnumType();
+    public EnumType createTEnumType() {
+        return new EnumType();
     }
 
     /**
      * Create an instance of {@link TPropertyRef }
      *
      */
-    public TPropertyRef createTPropertyRef() {
-        return new TPropertyRef();
+    public PropertyRef createTPropertyRef() {
+        return new PropertyRef();
     }
 
     /**
      * Create an instance of {@link TAssociationEnd }
      *
      */
-    public TAssociationEnd createTAssociationEnd() {
-        return new TAssociationEnd();
+    public AssociationEnd createTAssociationEnd() {
+        return new AssociationEnd();
     }
 
     /**
      * Create an instance of {@link TFunctionReferenceExpression }
      *
      */
-    public TFunctionReferenceExpression createTFunctionReferenceExpression() {
-        return new TFunctionReferenceExpression();
+    public FunctionReferenceExpression createTFunctionReferenceExpression() {
+        return new FunctionReferenceExpression();
     }
 
     /**
      * Create an instance of {@link TEntityProperty }
      *
      */
-    public TEntityProperty createTEntityProperty() {
-        return new TEntityProperty();
+    public EntityProperty createTEntityProperty() {
+        return new EntityProperty();
     }
 
     /**
      * Create an instance of {@link TValueTerm }
      *
      */
-    public TValueTerm createTValueTerm() {
-        return new TValueTerm();
+    public ValueTerm createTValueTerm() {
+        return new ValueTerm();
     }
 
     /**
      * Create an instance of {@link TText }
      *
      */
-    public TText createTText() {
-        return new TText();
+    public Text createTText() {
+        return new Text();
     }
 
     /**
      * Create an instance of {@link TNullExpression }
      *
      */
-    public TNullExpression createTNullExpression() {
-        return new TNullExpression();
+    public NullExpression createTNullExpression() {
+        return new NullExpression();
     }
 
     /**
      * Create an instance of {@link TApplyExpression }
      *
      */
-    public TApplyExpression createTApplyExpression() {
-        return new TApplyExpression();
+    public ApplyExpression createTApplyExpression() {
+        return new ApplyExpression();
     }
 
     /**
      * Create an instance of {@link TReferenceType }
      *
      */
-    public TReferenceType createTReferenceType() {
-        return new TReferenceType();
+    public ReferenceType createTReferenceType() {
+        return new ReferenceType();
     }
 
     /**
      * Create an instance of {@link TValueTermReferenceExpression }
      *
      */
-    public TValueTermReferenceExpression createTValueTermReferenceExpression() {
-        return new TValueTermReferenceExpression();
+    public ValueTermReferenceExpression createTValueTermReferenceExpression() {
+        return new ValueTermReferenceExpression();
     }
 
     /**
      * Create an instance of {@link TEntitySetReferenceExpression }
      *
      */
-    public TEntitySetReferenceExpression createTEntitySetReferenceExpression() {
-        return new TEntitySetReferenceExpression();
+    public EntitySetReferenceExpression createTEntitySetReferenceExpression() {
+        return new EntitySetReferenceExpression();
     }
 
     /**
      * Create an instance of {@link TBoolConstantExpression }
      *
      */
-    public TBoolConstantExpression createTBoolConstantExpression() {
-        return new TBoolConstantExpression();
+    public BoolConstantExpression createTBoolConstantExpression() {
+        return new BoolConstantExpression();
     }
 
     /**
      * Create an instance of {@link TCollectionType }
      *
      */
-    public TCollectionType createTCollectionType() {
-        return new TCollectionType();
+    public CollectionType createTCollectionType() {
+        return new CollectionType();
     }
 
     /**
      * Create an instance of {@link TFunctionImportReturnType }
      *
      */
-    public TFunctionImportReturnType createTFunctionImportReturnType() {
-        return new TFunctionImportReturnType();
+    public FunctionImportReturnType createTFunctionImportReturnType() {
+        return new FunctionImportReturnType();
     }
 
     /**
      * Create an instance of {@link TLabeledElement }
      *
      */
-    public TLabeledElement createTLabeledElement() {
-        return new TLabeledElement();
+    public LabeledElement createTLabeledElement() {
+        return new LabeledElement();
     }
 
     /**
      * Create an instance of {@link TAnnotations }
      *
      */
-    public TAnnotations createTAnnotations() {
-        return new TAnnotations();
+    public Annotations createTAnnotations() {
+        return new Annotations();
     }
 
     /**
      * Create an instance of {@link TBinaryConstantExpression }
      *
      */
-    public TBinaryConstantExpression createTBinaryConstantExpression() {
-        return new TBinaryConstantExpression();
+    public BinaryConstantExpression createTBinaryConstantExpression() {
+        return new BinaryConstantExpression();
     }
 
     /**
      * Create an instance of {@link TEntityKeyElement }
      *
      */
-    public TEntityKeyElement createTEntityKeyElement() {
-        return new TEntityKeyElement();
+    public EntityKeyElement createTEntityKeyElement() {
+        return new EntityKeyElement();
     }
 
     /**
      * Create an instance of {@link TPropertyReferenceExpression }
      *
      */
-    public TPropertyReferenceExpression createTPropertyReferenceExpression() {
-        return new TPropertyReferenceExpression();
+    public PropertyReferenceExpression createTPropertyReferenceExpression() {
+        return new PropertyReferenceExpression();
     }
 
     /**
      * Create an instance of {@link TStringConstantExpression }
      *
      */
-    public TStringConstantExpression createTStringConstantExpression() {
-        return new TStringConstantExpression();
+    public StringConstantExpression createTStringConstantExpression() {
+        return new StringConstantExpression();
     }
 
     /**
      * Create an instance of {@link TFunctionReferenceExpression.Parameter }
      *
      */
-    public TFunctionReferenceExpression.Parameter createTFunctionReferenceExpressionParameter() {
-        return new TFunctionReferenceExpression.Parameter();
+    public FunctionReferenceExpression.Parameter createTFunctionReferenceExpressionParameter() {
+        return new FunctionReferenceExpression.Parameter();
     }
 
     /**
      * Create an instance of {@link TXmlOrText }
      *
      */
-    public TXmlOrText createTXmlOrText() {
-        return new TXmlOrText();
+    public XmlOrText createTXmlOrText() {
+        return new XmlOrText();
     }
 
     /**
      * Create an instance of {@link TPropertyValue }
      *
      */
-    public TPropertyValue createTPropertyValue() {
-        return new TPropertyValue();
+    public PropertyValue createTPropertyValue() {
+        return new PropertyValue();
     }
 
     /**
      * Create an instance of {@link TConstraint }
      *
      */
-    public TConstraint createTConstraint() {
-        return new TConstraint();
+    public Constraint createTConstraint() {
+        return new Constraint();
     }
 
     /**
      * Create an instance of {@link TNavigationProperty }
      *
      */
-    public TNavigationProperty createTNavigationProperty() {
-        return new TNavigationProperty();
+    public NavigationProperty createTNavigationProperty() {
+        return new NavigationProperty();
     }
 
     /**
      * Create an instance of {@link TPathExpression }
      *
      */
-    public TPathExpression createTPathExpression() {
-        return new TPathExpression();
+    public PathExpression createTPathExpression() {
+        return new PathExpression();
     }
 
     /**
      * Create an instance of {@link TAssertTypeExpression }
      *
      */
-    public TAssertTypeExpression createTAssertTypeExpression() {
-        return new TAssertTypeExpression();
+    public AssertTypeExpression createTAssertTypeExpression() {
+        return new AssertTypeExpression();
     }
 
     /**
      * Create an instance of {@link TGuidConstantExpression }
      *
      */
-    public TGuidConstantExpression createTGuidConstantExpression() {
-        return new TGuidConstantExpression();
+    public GuidConstantExpression createTGuidConstantExpression() {
+        return new GuidConstantExpression();
     }
 
     /**
      * Create an instance of {@link TComplexTypeProperty }
      *
      */
-    public TComplexTypeProperty createTComplexTypeProperty() {
-        return new TComplexTypeProperty();
+    public ComplexTypeProperty createTComplexTypeProperty() {
+        return new ComplexTypeProperty();
     }
 
     /**
      * Create an instance of {@link TFloatConstantExpression }
      *
      */
-    public TFloatConstantExpression createTFloatConstantExpression() {
-        return new TFloatConstantExpression();
+    public FloatConstantExpression createTFloatConstantExpression() {
+        return new FloatConstantExpression();
     }
 
     /**
      * Create an instance of {@link TDateTimeConstantExpression }
      *
      */
-    public TDateTimeConstantExpression createTDateTimeConstantExpression() {
-        return new TDateTimeConstantExpression();
+    public DateTimeConstantExpression createTDateTimeConstantExpression() {
+        return new DateTimeConstantExpression();
     }
 
     /**
      * Create an instance of {@link TDecimalConstantExpression }
      *
      */
-    public TDecimalConstantExpression createTDecimalConstantExpression() {
-        return new TDecimalConstantExpression();
+    public DecimalConstantExpression createTDecimalConstantExpression() {
+        return new DecimalConstantExpression();
     }
 
     /**
      * Create an instance of {@link TTimeConstantExpression }
      *
      */
-    public TTimeConstantExpression createTTimeConstantExpression() {
-        return new TTimeConstantExpression();
+    public TimeConstantExpression createTTimeConstantExpression() {
+        return new TimeConstantExpression();
     }
 
     /**
      * Create an instance of {@link TTypeAnnotation }
      *
      */
-    public TTypeAnnotation createTTypeAnnotation() {
-        return new TTypeAnnotation();
+    public TypeAnnotation createTTypeAnnotation() {
+        return new TypeAnnotation();
     }
 
     /**
      * Create an instance of {@link TRowType }
      *
      */
-    public TRowType createTRowType() {
-        return new TRowType();
+    public RowType createTRowType() {
+        return new RowType();
     }
 
     /**
      * Create an instance of {@link TEnumTypeMember }
      *
      */
-    public TEnumTypeMember createTEnumTypeMember() {
-        return new TEnumTypeMember();
+    public EnumTypeMember createTEnumTypeMember() {
+        return new EnumTypeMember();
     }
 
     /**
      * Create an instance of {@link TAssociation }
      *
      */
-    public TAssociation createTAssociation() {
-        return new TAssociation();
+    public Association createTAssociation() {
+        return new Association();
     }
 
     /**
      * Create an instance of {@link TOnAction }
      *
      */
-    public TOnAction createTOnAction() {
-        return new TOnAction();
+    public OnAction createTOnAction() {
+        return new OnAction();
     }
 
     /**
-     * Create an instance of {@link TDocumentation }
+     * Create an instance of {@link Documentation }
      *
      */
-    public TDocumentation createTDocumentation() {
-        return new TDocumentation();
+    public Documentation createTDocumentation() {
+        return new Documentation();
     }
 
     /**
      * Create an instance of {@link TRowProperty }
      *
      */
-    public TRowProperty createTRowProperty() {
-        return new TRowProperty();
+    public RowProperty createTRowProperty() {
+        return new RowProperty();
     }
 
     /**
      * Create an instance of {@link TEnumMemberReferenceExpression }
      *
      */
-    public TEnumMemberReferenceExpression createTEnumMemberReferenceExpression() {
-        return new TEnumMemberReferenceExpression();
+    public EnumMemberReferenceExpression createTEnumMemberReferenceExpression() {
+        return new EnumMemberReferenceExpression();
     }
 
     /**
      * Create an instance of {@link TCollectionExpression }
      *
      */
-    public TCollectionExpression createTCollectionExpression() {
-        return new TCollectionExpression();
+    public CollectionExpression createTCollectionExpression() {
+        return new CollectionExpression();
     }
 
     /**
      * Create an instance of {@link TIntConstantExpression }
      *
      */
-    public TIntConstantExpression createTIntConstantExpression() {
-        return new TIntConstantExpression();
+    public IntConstantExpression createTIntConstantExpression() {
+        return new IntConstantExpression();
     }
 
     /**
      * Create an instance of {@link TFunctionReturnType }
      *
      */
-    public TFunctionReturnType createTFunctionReturnType() {
-        return new TFunctionReturnType();
+    public FunctionReturnType createTFunctionReturnType() {
+        return new FunctionReturnType();
     }
 
     /**
      * Create an instance of {@link TFunction }
      *
      */
-    public TFunction createTFunction() {
-        return new TFunction();
+    public Function createTFunction() {
+        return new Function();
     }
 
     /**
      * Create an instance of {@link TEntityContainer.FunctionImport }
      *
      */
-    public TEntityContainer.TFunctionImport createEntityContainerFunctionImport() {
-        return new TEntityContainer.TFunctionImport();
+    public EntityContainer.TFunctionImport createEntityContainerFunctionImport() {
+        return new EntityContainer.TFunctionImport();
     }
 
     /**
      * Create an instance of {@link TIfExpression }
      *
      */
-    public TIfExpression createTIfExpression() {
-        return new TIfExpression();
+    public IfExpression createTIfExpression() {
+        return new IfExpression();
     }
 
     /**
      * Create an instance of {@link TFunctionParameter }
      *
      */
-    public TFunctionParameter createTFunctionParameter() {
-        return new TFunctionParameter();
+    public FunctionParameter createTFunctionParameter() {
+        return new FunctionParameter();
     }
 
     /**
      * Create an instance of {@link TEntityContainer.EntitySet }
      *
      */
-    public TEntityContainer.TEntitySet createEntityContainerEntitySet() {
-        return new TEntityContainer.TEntitySet();
+    public EntityContainer.TEntitySet createEntityContainerEntitySet() {
+        return new EntityContainer.TEntitySet();
     }
 
     /**
      * Create an instance of {@link TComplexType }
      *
      */
-    public TComplexType createTComplexType() {
-        return new TComplexType();
+    public ComplexType createTComplexType() {
+        return new ComplexType();
     }
 
     /**
@@ -691,8 +691,8 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Schema")
-    public JAXBElement<TSchema> createSchema(TSchema value) {
-        return new JAXBElement<TSchema>(_Schema_QNAME, TSchema.class, null, value);
+    public JAXBElement<Schema> createSchema(Schema value) {
+        return new JAXBElement<Schema>(_Schema_QNAME, Schema.class, null, value);
     }
 
     /**
@@ -700,11 +700,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TLabeledElement.class)
-    public JAXBElement<TPropertyReferenceExpression> createTLabeledElementPropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<PropertyReferenceExpression> createTLabeledElementPropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -712,9 +712,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TLabeledElement.class)
-    public JAXBElement<TNullExpression> createTLabeledElementNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class, TLabeledElement.class,
+            LabeledElement.class)
+    public JAXBElement<NullExpression> createTLabeledElementNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class, LabeledElement.class,
                 value);
     }
 
@@ -723,11 +723,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TLabeledElement.class)
-    public JAXBElement<TValueTermReferenceExpression> createTLabeledElementValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<ValueTermReferenceExpression> createTLabeledElementValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -735,9 +735,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope =
-            TLabeledElement.class)
-    public JAXBElement<TIfExpression> createTLabeledElementIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class, TLabeledElement.class,
+            LabeledElement.class)
+    public JAXBElement<IfExpression> createTLabeledElementIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class, LabeledElement.class,
                 value);
     }
 
@@ -746,10 +746,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TLabeledElement.class)
-    public JAXBElement<TStringConstantExpression> createTLabeledElementString(TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<StringConstantExpression> createTLabeledElementString(StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -757,10 +757,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TLabeledElement.class)
-    public JAXBElement<TAssertTypeExpression> createTLabeledElementAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<AssertTypeExpression> createTLabeledElementAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -768,11 +768,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TLabeledElement.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTLabeledElementLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TLabeledElement.class, value);
+            scope = LabeledElement.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTLabeledElementLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -780,10 +780,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TLabeledElement.class)
-    public JAXBElement<TRecordExpression> createTLabeledElementRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<RecordExpression> createTLabeledElementRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -791,10 +791,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TLabeledElement.class)
-    public JAXBElement<TLabeledElement> createTLabeledElementLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<LabeledElement> createTLabeledElementLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -802,10 +802,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TLabeledElement.class)
-    public JAXBElement<TFloatConstantExpression> createTLabeledElementFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<FloatConstantExpression> createTLabeledElementFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -813,10 +813,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TLabeledElement.class)
-    public JAXBElement<TCollectionExpression> createTLabeledElementCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<CollectionExpression> createTLabeledElementCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -824,10 +824,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TLabeledElement.class)
-    public JAXBElement<TBinaryConstantExpression> createTLabeledElementBinary(TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<BinaryConstantExpression> createTLabeledElementBinary(BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -835,10 +835,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TLabeledElement.class)
-    public JAXBElement<TApplyExpression> createTLabeledElementApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<ApplyExpression> createTLabeledElementApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -846,10 +846,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TLabeledElement.class)
-    public JAXBElement<TIsTypeExpression> createTLabeledElementIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<IsTypeExpression> createTLabeledElementIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -857,10 +857,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TLabeledElement.class)
-    public JAXBElement<TIntConstantExpression> createTLabeledElementInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<IntConstantExpression> createTLabeledElementInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -868,10 +868,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TLabeledElement.class)
-    public JAXBElement<TGuidConstantExpression> createTLabeledElementGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<GuidConstantExpression> createTLabeledElementGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -879,10 +879,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TLabeledElement.class)
-    public JAXBElement<TTimeConstantExpression> createTLabeledElementTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<TimeConstantExpression> createTLabeledElementTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -890,10 +890,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TLabeledElement.class)
-    public JAXBElement<TDecimalConstantExpression> createTLabeledElementDecimal(TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<DecimalConstantExpression> createTLabeledElementDecimal(DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -901,10 +901,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TLabeledElement.class)
-    public JAXBElement<TDateTimeConstantExpression> createTLabeledElementDateTime(TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<DateTimeConstantExpression> createTLabeledElementDateTime(DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -912,11 +912,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TLabeledElement.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTLabeledElementEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<EntitySetReferenceExpression> createTLabeledElementEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -924,11 +924,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TLabeledElement.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTLabeledElementEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTLabeledElementEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -936,11 +936,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TLabeledElement.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTLabeledElementDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTLabeledElementDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -948,9 +948,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TLabeledElement.class)
-    public JAXBElement<TPathExpression> createTLabeledElementPath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class, TLabeledElement.class,
+            LabeledElement.class)
+    public JAXBElement<PathExpression> createTLabeledElementPath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class, LabeledElement.class,
                 value);
     }
 
@@ -959,11 +959,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TLabeledElement.class)
-    public JAXBElement<TFunctionReferenceExpression> createTLabeledElementFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<FunctionReferenceExpression> createTLabeledElementFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -971,11 +971,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TLabeledElement.class)
-    public JAXBElement<TParameterReferenceExpression> createTLabeledElementParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<ParameterReferenceExpression> createTLabeledElementParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, LabeledElement.class, value);
     }
 
     /**
@@ -983,10 +983,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TLabeledElement.class)
-    public JAXBElement<TBoolConstantExpression> createTLabeledElementBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TLabeledElement.class, value);
+            LabeledElement.class)
+    public JAXBElement<BoolConstantExpression> createTLabeledElementBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                LabeledElement.class, value);
     }
 
     /**
@@ -994,10 +994,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyValue", scope =
-            TTypeAnnotation.class)
-    public JAXBElement<TPropertyValue> createTTypeAnnotationPropertyValue(TPropertyValue value) {
-        return new JAXBElement<TPropertyValue>(_TTypeAnnotationPropertyValue_QNAME, TPropertyValue.class,
-                TTypeAnnotation.class, value);
+            TypeAnnotation.class)
+    public JAXBElement<PropertyValue> createTTypeAnnotationPropertyValue(PropertyValue value) {
+        return new JAXBElement<PropertyValue>(_TTypeAnnotationPropertyValue_QNAME, PropertyValue.class,
+                TypeAnnotation.class, value);
     }
 
     /**
@@ -1005,9 +1005,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Property", scope =
-            TRowType.class)
-    public JAXBElement<TRowProperty> createTRowTypeProperty(TRowProperty value) {
-        return new JAXBElement<TRowProperty>(_TRowTypeProperty_QNAME, TRowProperty.class, TRowType.class, value);
+            RowType.class)
+    public JAXBElement<RowProperty> createTRowTypeProperty(RowProperty value) {
+        return new JAXBElement<RowProperty>(_TRowTypeProperty_QNAME, RowProperty.class, RowType.class, value);
     }
 
     /**
@@ -1015,10 +1015,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TApplyExpression> createTCollectionExpressionApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<ApplyExpression> createTCollectionExpressionApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1026,11 +1026,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TPropertyReferenceExpression> createTCollectionExpressionPropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<PropertyReferenceExpression> createTCollectionExpressionPropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1038,10 +1038,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TIsTypeExpression> createTCollectionExpressionIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<IsTypeExpression> createTCollectionExpressionIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1049,10 +1049,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TNullExpression> createTCollectionExpressionNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<NullExpression> createTCollectionExpressionNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1060,11 +1060,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TValueTermReferenceExpression> createTCollectionExpressionValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<ValueTermReferenceExpression> createTCollectionExpressionValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1072,9 +1072,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TIfExpression> createTCollectionExpressionIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class, TCollectionExpression.class,
+            CollectionExpression.class)
+    public JAXBElement<IfExpression> createTCollectionExpressionIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class, CollectionExpression.class,
                 value);
     }
 
@@ -1083,10 +1083,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TIntConstantExpression> createTCollectionExpressionInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<IntConstantExpression> createTCollectionExpressionInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1094,10 +1094,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TGuidConstantExpression> createTCollectionExpressionGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<GuidConstantExpression> createTCollectionExpressionGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1105,10 +1105,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TTimeConstantExpression> createTCollectionExpressionTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<TimeConstantExpression> createTCollectionExpressionTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1116,10 +1116,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TStringConstantExpression> createTCollectionExpressionString(TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<StringConstantExpression> createTCollectionExpressionString(StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1127,11 +1127,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TCollectionExpression.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTCollectionExpressionLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TCollectionExpression.class, value);
+            scope = CollectionExpression.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTCollectionExpressionLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1139,10 +1139,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TAssertTypeExpression> createTCollectionExpressionAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<AssertTypeExpression> createTCollectionExpressionAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1150,10 +1150,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TRecordExpression> createTCollectionExpressionRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<RecordExpression> createTCollectionExpressionRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1161,11 +1161,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TDateTimeConstantExpression> createTCollectionExpressionDateTime(
-            TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<DateTimeConstantExpression> createTCollectionExpressionDateTime(
+            DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1173,11 +1173,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTCollectionExpressionEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<EntitySetReferenceExpression> createTCollectionExpressionEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1185,10 +1185,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TDecimalConstantExpression> createTCollectionExpressionDecimal(TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<DecimalConstantExpression> createTCollectionExpressionDecimal(DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1196,11 +1196,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTCollectionExpressionEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTCollectionExpressionEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1208,11 +1208,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTCollectionExpressionDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTCollectionExpressionDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1220,10 +1220,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TPathExpression> createTCollectionExpressionPath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<PathExpression> createTCollectionExpressionPath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1231,10 +1231,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TLabeledElement> createTCollectionExpressionLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<LabeledElement> createTCollectionExpressionLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1242,11 +1242,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TFunctionReferenceExpression> createTCollectionExpressionFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<FunctionReferenceExpression> createTCollectionExpressionFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1254,11 +1254,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TParameterReferenceExpression> createTCollectionExpressionParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<ParameterReferenceExpression> createTCollectionExpressionParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, CollectionExpression.class, value);
     }
 
     /**
@@ -1266,10 +1266,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TBoolConstantExpression> createTCollectionExpressionBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<BoolConstantExpression> createTCollectionExpressionBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1277,10 +1277,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TFloatConstantExpression> createTCollectionExpressionFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<FloatConstantExpression> createTCollectionExpressionFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1288,10 +1288,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TCollectionExpression> createTCollectionExpressionCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<CollectionExpression> createTCollectionExpressionCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1299,10 +1299,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TCollectionExpression.class)
-    public JAXBElement<TBinaryConstantExpression> createTCollectionExpressionBinary(TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TCollectionExpression.class, value);
+            CollectionExpression.class)
+    public JAXBElement<BinaryConstantExpression> createTCollectionExpressionBinary(BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                CollectionExpression.class, value);
     }
 
     /**
@@ -1310,10 +1310,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyValue", scope =
-            TRecordExpression.class)
-    public JAXBElement<TPropertyValue> createTRecordExpressionPropertyValue(TPropertyValue value) {
-        return new JAXBElement<TPropertyValue>(_TTypeAnnotationPropertyValue_QNAME, TPropertyValue.class,
-                TRecordExpression.class, value);
+            RecordExpression.class)
+    public JAXBElement<PropertyValue> createTRecordExpressionPropertyValue(PropertyValue value) {
+        return new JAXBElement<PropertyValue>(_TTypeAnnotationPropertyValue_QNAME, PropertyValue.class,
+                RecordExpression.class, value);
     }
 
     /**
@@ -1321,11 +1321,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Parameter", scope =
-            TFunctionReferenceExpression.class)
-    public JAXBElement<TFunctionReferenceExpression.Parameter> createTFunctionReferenceExpressionParameter(
-            TFunctionReferenceExpression.Parameter value) {
-        return new JAXBElement<TFunctionReferenceExpression.Parameter>(_TFunctionReferenceExpressionParameter_QNAME,
-                TFunctionReferenceExpression.Parameter.class, TFunctionReferenceExpression.class, value);
+            FunctionReferenceExpression.class)
+    public JAXBElement<FunctionReferenceExpression.Parameter> createTFunctionReferenceExpressionParameter(
+            FunctionReferenceExpression.Parameter value) {
+        return new JAXBElement<FunctionReferenceExpression.Parameter>(_TFunctionReferenceExpressionParameter_QNAME,
+                FunctionReferenceExpression.Parameter.class, FunctionReferenceExpression.class, value);
     }
 
     /**
@@ -1333,10 +1333,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            TEntityProperty.class)
-    public JAXBElement<TValueAnnotation> createTEntityPropertyValueAnnotation(TValueAnnotation value) {
-        return new JAXBElement<TValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, TValueAnnotation.class,
-                TEntityProperty.class, value);
+            EntityProperty.class)
+    public JAXBElement<ValueAnnotation> createTEntityPropertyValueAnnotation(ValueAnnotation value) {
+        return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
+                EntityProperty.class, value);
     }
 
     /**
@@ -1344,21 +1344,21 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            TEntityProperty.class)
-    public JAXBElement<TTypeAnnotation> createTEntityPropertyTypeAnnotation(TTypeAnnotation value) {
-        return new JAXBElement<TTypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TTypeAnnotation.class,
-                TEntityProperty.class, value);
+            EntityProperty.class)
+    public JAXBElement<TypeAnnotation> createTEntityPropertyTypeAnnotation(TypeAnnotation value) {
+        return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
+                EntityProperty.class, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TDocumentation }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link Documentation }{@code >}}
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Documentation", scope =
-            TEntityProperty.class)
-    public JAXBElement<TDocumentation> createTEntityPropertyDocumentation(TDocumentation value) {
-        return new JAXBElement<TDocumentation>(_TEntityPropertyDocumentation_QNAME, TDocumentation.class,
-                TEntityProperty.class, value);
+            EntityProperty.class)
+    public JAXBElement<Documentation> createTEntityPropertyDocumentation(Documentation value) {
+        return new JAXBElement<Documentation>(_TEntityPropertyDocumentation_QNAME, Documentation.class,
+                EntityProperty.class, value);
     }
 
     /**
@@ -1366,10 +1366,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            TFunctionImportParameter.class)
-    public JAXBElement<TValueAnnotation> createTFunctionImportParameterValueAnnotation(TValueAnnotation value) {
-        return new JAXBElement<TValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, TValueAnnotation.class,
-                TFunctionImportParameter.class, value);
+            FunctionImportParameter.class)
+    public JAXBElement<ValueAnnotation> createTFunctionImportParameterValueAnnotation(ValueAnnotation value) {
+        return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
+                FunctionImportParameter.class, value);
     }
 
     /**
@@ -1377,10 +1377,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            TFunctionImportParameter.class)
-    public JAXBElement<TTypeAnnotation> createTFunctionImportParameterTypeAnnotation(TTypeAnnotation value) {
-        return new JAXBElement<TTypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TTypeAnnotation.class,
-                TFunctionImportParameter.class, value);
+            FunctionImportParameter.class)
+    public JAXBElement<TypeAnnotation> createTFunctionImportParameterTypeAnnotation(TypeAnnotation value) {
+        return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
+                FunctionImportParameter.class, value);
     }
 
     /**
@@ -1388,11 +1388,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TPropertyReferenceExpression> createTIsTypeExpressionPropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<PropertyReferenceExpression> createTIsTypeExpressionPropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1400,10 +1400,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TNullExpression> createTIsTypeExpressionNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<NullExpression> createTIsTypeExpressionNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1411,11 +1411,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TValueTermReferenceExpression> createTIsTypeExpressionValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<ValueTermReferenceExpression> createTIsTypeExpressionValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1423,9 +1423,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TIfExpression> createTIsTypeExpressionIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class, TIsTypeExpression.class,
+            IsTypeExpression.class)
+    public JAXBElement<IfExpression> createTIsTypeExpressionIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class, IsTypeExpression.class,
                 value);
     }
 
@@ -1434,10 +1434,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TStringConstantExpression> createTIsTypeExpressionString(TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<StringConstantExpression> createTIsTypeExpressionString(StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1445,11 +1445,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TIsTypeExpression.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTIsTypeExpressionLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TIsTypeExpression.class, value);
+            scope = IsTypeExpression.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTIsTypeExpressionLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1457,10 +1457,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TAssertTypeExpression> createTIsTypeExpressionAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<AssertTypeExpression> createTIsTypeExpressionAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1468,10 +1468,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TRecordExpression> createTIsTypeExpressionRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<RecordExpression> createTIsTypeExpressionRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1479,10 +1479,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TLabeledElement> createTIsTypeExpressionLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<LabeledElement> createTIsTypeExpressionLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1490,9 +1490,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "RowType", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TRowType> createTIsTypeExpressionRowType(TRowType value) {
-        return new JAXBElement<TRowType>(_TIsTypeExpressionRowType_QNAME, TRowType.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<RowType> createTIsTypeExpressionRowType(RowType value) {
+        return new JAXBElement<RowType>(_TIsTypeExpressionRowType_QNAME, RowType.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1500,10 +1500,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TFloatConstantExpression> createTIsTypeExpressionFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<FloatConstantExpression> createTIsTypeExpressionFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1511,10 +1511,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TCollectionExpression> createTIsTypeExpressionCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<CollectionExpression> createTIsTypeExpressionCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1522,10 +1522,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TBinaryConstantExpression> createTIsTypeExpressionBinary(TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<BinaryConstantExpression> createTIsTypeExpressionBinary(BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1533,10 +1533,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TApplyExpression> createTIsTypeExpressionApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<ApplyExpression> createTIsTypeExpressionApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1544,10 +1544,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TIsTypeExpression> createTIsTypeExpressionIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<IsTypeExpression> createTIsTypeExpressionIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1555,10 +1555,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "CollectionType", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TCollectionType> createTIsTypeExpressionCollectionType(TCollectionType value) {
-        return new JAXBElement<TCollectionType>(_TIsTypeExpressionCollectionType_QNAME, TCollectionType.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<CollectionType> createTIsTypeExpressionCollectionType(CollectionType value) {
+        return new JAXBElement<CollectionType>(_TIsTypeExpressionCollectionType_QNAME, CollectionType.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1566,10 +1566,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TIntConstantExpression> createTIsTypeExpressionInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<IntConstantExpression> createTIsTypeExpressionInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1577,10 +1577,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TGuidConstantExpression> createTIsTypeExpressionGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<GuidConstantExpression> createTIsTypeExpressionGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1588,10 +1588,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TTimeConstantExpression> createTIsTypeExpressionTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<TimeConstantExpression> createTIsTypeExpressionTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1599,10 +1599,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TDecimalConstantExpression> createTIsTypeExpressionDecimal(TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<DecimalConstantExpression> createTIsTypeExpressionDecimal(DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1610,11 +1610,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTIsTypeExpressionEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<EntitySetReferenceExpression> createTIsTypeExpressionEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1622,10 +1622,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TDateTimeConstantExpression> createTIsTypeExpressionDateTime(TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<DateTimeConstantExpression> createTIsTypeExpressionDateTime(DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1633,11 +1633,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTIsTypeExpressionEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTIsTypeExpressionEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1645,11 +1645,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTIsTypeExpressionDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTIsTypeExpressionDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1657,10 +1657,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TPathExpression> createTIsTypeExpressionPath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<PathExpression> createTIsTypeExpressionPath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1668,11 +1668,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TFunctionReferenceExpression> createTIsTypeExpressionFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<FunctionReferenceExpression> createTIsTypeExpressionFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1680,11 +1680,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TParameterReferenceExpression> createTIsTypeExpressionParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<ParameterReferenceExpression> createTIsTypeExpressionParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, IsTypeExpression.class, value);
     }
 
     /**
@@ -1692,10 +1692,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TBoolConstantExpression> createTIsTypeExpressionBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<BoolConstantExpression> createTIsTypeExpressionBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1703,10 +1703,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ReferenceType", scope =
-            TIsTypeExpression.class)
-    public JAXBElement<TReferenceType> createTIsTypeExpressionReferenceType(TReferenceType value) {
-        return new JAXBElement<TReferenceType>(_TIsTypeExpressionReferenceType_QNAME, TReferenceType.class,
-                TIsTypeExpression.class, value);
+            IsTypeExpression.class)
+    public JAXBElement<ReferenceType> createTIsTypeExpressionReferenceType(ReferenceType value) {
+        return new JAXBElement<ReferenceType>(_TIsTypeExpressionReferenceType_QNAME, ReferenceType.class,
+                IsTypeExpression.class, value);
     }
 
     /**
@@ -1714,11 +1714,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TPropertyReferenceExpression> createTPropertyReferenceExpressionPropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<PropertyReferenceExpression> createTPropertyReferenceExpressionPropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1726,10 +1726,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TNullExpression> createTPropertyReferenceExpressionNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<NullExpression> createTPropertyReferenceExpressionNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1737,11 +1737,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TValueTermReferenceExpression> createTPropertyReferenceExpressionValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<ValueTermReferenceExpression> createTPropertyReferenceExpressionValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1749,10 +1749,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TIfExpression> createTPropertyReferenceExpressionIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<IfExpression> createTPropertyReferenceExpressionIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1760,11 +1760,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TStringConstantExpression> createTPropertyReferenceExpressionString(
-            TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<StringConstantExpression> createTPropertyReferenceExpressionString(
+            StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1772,11 +1772,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TPropertyReferenceExpression.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTPropertyReferenceExpressionLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TPropertyReferenceExpression.class, value);
+            scope = PropertyReferenceExpression.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTPropertyReferenceExpressionLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1784,10 +1784,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TAssertTypeExpression> createTPropertyReferenceExpressionAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<AssertTypeExpression> createTPropertyReferenceExpressionAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1795,10 +1795,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TRecordExpression> createTPropertyReferenceExpressionRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<RecordExpression> createTPropertyReferenceExpressionRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1806,10 +1806,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TLabeledElement> createTPropertyReferenceExpressionLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<LabeledElement> createTPropertyReferenceExpressionLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1817,10 +1817,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TFloatConstantExpression> createTPropertyReferenceExpressionFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<FloatConstantExpression> createTPropertyReferenceExpressionFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1828,10 +1828,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TCollectionExpression> createTPropertyReferenceExpressionCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<CollectionExpression> createTPropertyReferenceExpressionCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1839,11 +1839,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TBinaryConstantExpression> createTPropertyReferenceExpressionBinary(
-            TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<BinaryConstantExpression> createTPropertyReferenceExpressionBinary(
+            BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1851,10 +1851,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TApplyExpression> createTPropertyReferenceExpressionApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<ApplyExpression> createTPropertyReferenceExpressionApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1862,10 +1862,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TIsTypeExpression> createTPropertyReferenceExpressionIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<IsTypeExpression> createTPropertyReferenceExpressionIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1873,10 +1873,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TIntConstantExpression> createTPropertyReferenceExpressionInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<IntConstantExpression> createTPropertyReferenceExpressionInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1884,10 +1884,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TGuidConstantExpression> createTPropertyReferenceExpressionGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<GuidConstantExpression> createTPropertyReferenceExpressionGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1895,10 +1895,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TTimeConstantExpression> createTPropertyReferenceExpressionTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<TimeConstantExpression> createTPropertyReferenceExpressionTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1906,11 +1906,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TDecimalConstantExpression> createTPropertyReferenceExpressionDecimal(
-            TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<DecimalConstantExpression> createTPropertyReferenceExpressionDecimal(
+            DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1918,11 +1918,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TDateTimeConstantExpression> createTPropertyReferenceExpressionDateTime(
-            TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<DateTimeConstantExpression> createTPropertyReferenceExpressionDateTime(
+            DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1930,11 +1930,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTPropertyReferenceExpressionEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<EntitySetReferenceExpression> createTPropertyReferenceExpressionEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1942,11 +1942,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTPropertyReferenceExpressionEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTPropertyReferenceExpressionEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1954,11 +1954,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTPropertyReferenceExpressionDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTPropertyReferenceExpressionDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1966,10 +1966,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TPathExpression> createTPropertyReferenceExpressionPath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<PathExpression> createTPropertyReferenceExpressionPath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1977,11 +1977,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TFunctionReferenceExpression> createTPropertyReferenceExpressionFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<FunctionReferenceExpression> createTPropertyReferenceExpressionFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -1989,11 +1989,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TParameterReferenceExpression> createTPropertyReferenceExpressionParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<ParameterReferenceExpression> createTPropertyReferenceExpressionParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -2001,10 +2001,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TPropertyReferenceExpression.class)
-    public JAXBElement<TBoolConstantExpression> createTPropertyReferenceExpressionBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TPropertyReferenceExpression.class, value);
+            PropertyReferenceExpression.class)
+    public JAXBElement<BoolConstantExpression> createTPropertyReferenceExpressionBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                PropertyReferenceExpression.class, value);
     }
 
     /**
@@ -2012,11 +2012,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TApplyExpression.class)
-    public JAXBElement<TPropertyReferenceExpression> createTApplyExpressionPropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<PropertyReferenceExpression> createTApplyExpressionPropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2024,10 +2024,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TApplyExpression.class)
-    public JAXBElement<TNullExpression> createTApplyExpressionNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<NullExpression> createTApplyExpressionNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2035,11 +2035,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TApplyExpression.class)
-    public JAXBElement<TValueTermReferenceExpression> createTApplyExpressionValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<ValueTermReferenceExpression> createTApplyExpressionValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2047,9 +2047,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope =
-            TApplyExpression.class)
-    public JAXBElement<TIfExpression> createTApplyExpressionIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class, TApplyExpression.class,
+            ApplyExpression.class)
+    public JAXBElement<IfExpression> createTApplyExpressionIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class, ApplyExpression.class,
                 value);
     }
 
@@ -2058,10 +2058,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TApplyExpression.class)
-    public JAXBElement<TStringConstantExpression> createTApplyExpressionString(TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<StringConstantExpression> createTApplyExpressionString(StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2069,10 +2069,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TApplyExpression.class)
-    public JAXBElement<TAssertTypeExpression> createTApplyExpressionAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<AssertTypeExpression> createTApplyExpressionAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2080,11 +2080,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TApplyExpression.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTApplyExpressionLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TApplyExpression.class, value);
+            scope = ApplyExpression.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTApplyExpressionLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2092,10 +2092,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TApplyExpression.class)
-    public JAXBElement<TRecordExpression> createTApplyExpressionRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<RecordExpression> createTApplyExpressionRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2103,10 +2103,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TApplyExpression.class)
-    public JAXBElement<TLabeledElement> createTApplyExpressionLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<LabeledElement> createTApplyExpressionLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2114,10 +2114,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TApplyExpression.class)
-    public JAXBElement<TFloatConstantExpression> createTApplyExpressionFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<FloatConstantExpression> createTApplyExpressionFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2125,10 +2125,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TApplyExpression.class)
-    public JAXBElement<TCollectionExpression> createTApplyExpressionCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<CollectionExpression> createTApplyExpressionCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2136,10 +2136,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TApplyExpression.class)
-    public JAXBElement<TBinaryConstantExpression> createTApplyExpressionBinary(TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<BinaryConstantExpression> createTApplyExpressionBinary(BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2147,10 +2147,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TApplyExpression.class)
-    public JAXBElement<TApplyExpression> createTApplyExpressionApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<ApplyExpression> createTApplyExpressionApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2158,10 +2158,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TApplyExpression.class)
-    public JAXBElement<TIsTypeExpression> createTApplyExpressionIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<IsTypeExpression> createTApplyExpressionIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2169,10 +2169,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TApplyExpression.class)
-    public JAXBElement<TIntConstantExpression> createTApplyExpressionInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<IntConstantExpression> createTApplyExpressionInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2180,10 +2180,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TApplyExpression.class)
-    public JAXBElement<TGuidConstantExpression> createTApplyExpressionGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<GuidConstantExpression> createTApplyExpressionGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2191,10 +2191,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TApplyExpression.class)
-    public JAXBElement<TTimeConstantExpression> createTApplyExpressionTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<TimeConstantExpression> createTApplyExpressionTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2202,10 +2202,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TApplyExpression.class)
-    public JAXBElement<TDateTimeConstantExpression> createTApplyExpressionDateTime(TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<DateTimeConstantExpression> createTApplyExpressionDateTime(DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2213,10 +2213,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TApplyExpression.class)
-    public JAXBElement<TDecimalConstantExpression> createTApplyExpressionDecimal(TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<DecimalConstantExpression> createTApplyExpressionDecimal(DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2224,11 +2224,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TApplyExpression.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTApplyExpressionEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<EntitySetReferenceExpression> createTApplyExpressionEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2236,11 +2236,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TApplyExpression.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTApplyExpressionEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTApplyExpressionEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2248,11 +2248,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TApplyExpression.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTApplyExpressionDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTApplyExpressionDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2260,10 +2260,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TApplyExpression.class)
-    public JAXBElement<TPathExpression> createTApplyExpressionPath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<PathExpression> createTApplyExpressionPath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2271,11 +2271,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TApplyExpression.class)
-    public JAXBElement<TFunctionReferenceExpression> createTApplyExpressionFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<FunctionReferenceExpression> createTApplyExpressionFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2283,11 +2283,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TApplyExpression.class)
-    public JAXBElement<TParameterReferenceExpression> createTApplyExpressionParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<ParameterReferenceExpression> createTApplyExpressionParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, ApplyExpression.class, value);
     }
 
     /**
@@ -2295,10 +2295,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TApplyExpression.class)
-    public JAXBElement<TBoolConstantExpression> createTApplyExpressionBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TApplyExpression.class, value);
+            ApplyExpression.class)
+    public JAXBElement<BoolConstantExpression> createTApplyExpressionBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                ApplyExpression.class, value);
     }
 
     /**
@@ -2306,10 +2306,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "CollectionType", scope =
-            TFunctionReferenceExpression.Parameter.class)
-    public JAXBElement<TCollectionType> createTFunctionReferenceExpressionParameterCollectionType(TCollectionType value) {
-        return new JAXBElement<TCollectionType>(_TIsTypeExpressionCollectionType_QNAME, TCollectionType.class,
-                TFunctionReferenceExpression.Parameter.class, value);
+            FunctionReferenceExpression.Parameter.class)
+    public JAXBElement<CollectionType> createTFunctionReferenceExpressionParameterCollectionType(CollectionType value) {
+        return new JAXBElement<CollectionType>(_TIsTypeExpressionCollectionType_QNAME, CollectionType.class,
+                FunctionReferenceExpression.Parameter.class, value);
     }
 
     /**
@@ -2317,10 +2317,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "RowType", scope =
-            TFunctionReferenceExpression.Parameter.class)
-    public JAXBElement<TRowType> createTFunctionReferenceExpressionParameterRowType(TRowType value) {
-        return new JAXBElement<TRowType>(_TIsTypeExpressionRowType_QNAME, TRowType.class,
-                TFunctionReferenceExpression.Parameter.class, value);
+            FunctionReferenceExpression.Parameter.class)
+    public JAXBElement<RowType> createTFunctionReferenceExpressionParameterRowType(RowType value) {
+        return new JAXBElement<RowType>(_TIsTypeExpressionRowType_QNAME, RowType.class,
+                FunctionReferenceExpression.Parameter.class, value);
     }
 
     /**
@@ -2328,10 +2328,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ReferenceType", scope =
-            TFunctionReferenceExpression.Parameter.class)
-    public JAXBElement<TReferenceType> createTFunctionReferenceExpressionParameterReferenceType(TReferenceType value) {
-        return new JAXBElement<TReferenceType>(_TIsTypeExpressionReferenceType_QNAME, TReferenceType.class,
-                TFunctionReferenceExpression.Parameter.class, value);
+            FunctionReferenceExpression.Parameter.class)
+    public JAXBElement<ReferenceType> createTFunctionReferenceExpressionParameterReferenceType(ReferenceType value) {
+        return new JAXBElement<ReferenceType>(_TIsTypeExpressionReferenceType_QNAME, ReferenceType.class,
+                FunctionReferenceExpression.Parameter.class, value);
     }
 
     /**
@@ -2339,10 +2339,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ReturnType", scope =
-            TFunction.class)
-    public JAXBElement<TFunctionReturnType> createTFunctionReturnType(TFunctionReturnType value) {
-        return new JAXBElement<TFunctionReturnType>(_TFunctionReturnType_QNAME, TFunctionReturnType.class,
-                TFunction.class, value);
+            Function.class)
+    public JAXBElement<FunctionReturnType> createTFunctionReturnType(FunctionReturnType value) {
+        return new JAXBElement<FunctionReturnType>(_TFunctionReturnType_QNAME, FunctionReturnType.class,
+                Function.class, value);
     }
 
     /**
@@ -2350,9 +2350,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DefiningExpression", scope =
-            TFunction.class)
+            Function.class)
     public JAXBElement<String> createTFunctionDefiningExpression(String value) {
-        return new JAXBElement<String>(_TFunctionDefiningExpression_QNAME, String.class, TFunction.class, value);
+        return new JAXBElement<String>(_TFunctionDefiningExpression_QNAME, String.class, Function.class, value);
     }
 
     /**
@@ -2360,10 +2360,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Parameter", scope =
-            TFunction.class)
-    public JAXBElement<TFunctionParameter> createTFunctionParameter(TFunctionParameter value) {
-        return new JAXBElement<TFunctionParameter>(_TFunctionReferenceExpressionParameter_QNAME,
-                TFunctionParameter.class, TFunction.class, value);
+            Function.class)
+    public JAXBElement<FunctionParameter> createTFunctionParameter(FunctionParameter value) {
+        return new JAXBElement<FunctionParameter>(_TFunctionReferenceExpressionParameter_QNAME,
+                FunctionParameter.class, Function.class, value);
     }
 
     /**
@@ -2371,10 +2371,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            TFunction.class)
-    public JAXBElement<TValueAnnotation> createTFunctionValueAnnotation(TValueAnnotation value) {
-        return new JAXBElement<TValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, TValueAnnotation.class,
-                TFunction.class, value);
+            Function.class)
+    public JAXBElement<ValueAnnotation> createTFunctionValueAnnotation(ValueAnnotation value) {
+        return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
+                Function.class, value);
     }
 
     /**
@@ -2382,10 +2382,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            TFunction.class)
-    public JAXBElement<TTypeAnnotation> createTFunctionTypeAnnotation(TTypeAnnotation value) {
-        return new JAXBElement<TTypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TTypeAnnotation.class,
-                TFunction.class, value);
+            Function.class)
+    public JAXBElement<TypeAnnotation> createTFunctionTypeAnnotation(TypeAnnotation value) {
+        return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
+                Function.class, value);
     }
 
     /**
@@ -2393,11 +2393,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TPropertyReferenceExpression> createTValueTermReferenceExpressionPropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<PropertyReferenceExpression> createTValueTermReferenceExpressionPropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2405,10 +2405,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TNullExpression> createTValueTermReferenceExpressionNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<NullExpression> createTValueTermReferenceExpressionNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2416,11 +2416,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TValueTermReferenceExpression> createTValueTermReferenceExpressionValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<ValueTermReferenceExpression> createTValueTermReferenceExpressionValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2428,10 +2428,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TIfExpression> createTValueTermReferenceExpressionIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<IfExpression> createTValueTermReferenceExpressionIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2439,11 +2439,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TStringConstantExpression> createTValueTermReferenceExpressionString(
-            TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<StringConstantExpression> createTValueTermReferenceExpressionString(
+            StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2451,11 +2451,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TValueTermReferenceExpression.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTValueTermReferenceExpressionLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TValueTermReferenceExpression.class, value);
+            scope = ValueTermReferenceExpression.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTValueTermReferenceExpressionLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2463,10 +2463,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TAssertTypeExpression> createTValueTermReferenceExpressionAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<AssertTypeExpression> createTValueTermReferenceExpressionAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2474,10 +2474,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TRecordExpression> createTValueTermReferenceExpressionRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<RecordExpression> createTValueTermReferenceExpressionRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2485,10 +2485,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TLabeledElement> createTValueTermReferenceExpressionLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<LabeledElement> createTValueTermReferenceExpressionLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2496,10 +2496,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TFloatConstantExpression> createTValueTermReferenceExpressionFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<FloatConstantExpression> createTValueTermReferenceExpressionFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2507,10 +2507,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TCollectionExpression> createTValueTermReferenceExpressionCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<CollectionExpression> createTValueTermReferenceExpressionCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2518,11 +2518,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TBinaryConstantExpression> createTValueTermReferenceExpressionBinary(
-            TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<BinaryConstantExpression> createTValueTermReferenceExpressionBinary(
+            BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2530,10 +2530,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TApplyExpression> createTValueTermReferenceExpressionApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<ApplyExpression> createTValueTermReferenceExpressionApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2541,10 +2541,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TIsTypeExpression> createTValueTermReferenceExpressionIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<IsTypeExpression> createTValueTermReferenceExpressionIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2552,10 +2552,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TIntConstantExpression> createTValueTermReferenceExpressionInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<IntConstantExpression> createTValueTermReferenceExpressionInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2563,10 +2563,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TGuidConstantExpression> createTValueTermReferenceExpressionGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<GuidConstantExpression> createTValueTermReferenceExpressionGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2574,10 +2574,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TTimeConstantExpression> createTValueTermReferenceExpressionTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<TimeConstantExpression> createTValueTermReferenceExpressionTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2585,11 +2585,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TDateTimeConstantExpression> createTValueTermReferenceExpressionDateTime(
-            TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<DateTimeConstantExpression> createTValueTermReferenceExpressionDateTime(
+            DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2597,11 +2597,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTValueTermReferenceExpressionEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<EntitySetReferenceExpression> createTValueTermReferenceExpressionEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2609,11 +2609,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TDecimalConstantExpression> createTValueTermReferenceExpressionDecimal(
-            TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<DecimalConstantExpression> createTValueTermReferenceExpressionDecimal(
+            DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2621,11 +2621,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTValueTermReferenceExpressionEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTValueTermReferenceExpressionEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2633,11 +2633,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTValueTermReferenceExpressionDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTValueTermReferenceExpressionDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2645,10 +2645,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TPathExpression> createTValueTermReferenceExpressionPath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<PathExpression> createTValueTermReferenceExpressionPath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2656,11 +2656,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TFunctionReferenceExpression> createTValueTermReferenceExpressionFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<FunctionReferenceExpression> createTValueTermReferenceExpressionFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2668,11 +2668,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TParameterReferenceExpression> createTValueTermReferenceExpressionParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<ParameterReferenceExpression> createTValueTermReferenceExpressionParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2680,10 +2680,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TValueTermReferenceExpression.class)
-    public JAXBElement<TBoolConstantExpression> createTValueTermReferenceExpressionBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TValueTermReferenceExpression.class, value);
+            ValueTermReferenceExpression.class)
+    public JAXBElement<BoolConstantExpression> createTValueTermReferenceExpressionBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                ValueTermReferenceExpression.class, value);
     }
 
     /**
@@ -2691,11 +2691,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ReturnType", scope =
-            TEntityContainer.TFunctionImport.class)
-    public JAXBElement<TFunctionImportReturnType> createEntityContainerFunctionImportReturnType(
-            TFunctionImportReturnType value) {
-        return new JAXBElement<TFunctionImportReturnType>(_TFunctionReturnType_QNAME, TFunctionImportReturnType.class,
-                TEntityContainer.TFunctionImport.class, value);
+            EntityContainer.TFunctionImport.class)
+    public JAXBElement<FunctionImportReturnType> createEntityContainerFunctionImportReturnType(
+            FunctionImportReturnType value) {
+        return new JAXBElement<FunctionImportReturnType>(_TFunctionReturnType_QNAME, FunctionImportReturnType.class,
+                EntityContainer.TFunctionImport.class, value);
     }
 
     /**
@@ -2703,11 +2703,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Parameter", scope =
-            TEntityContainer.TFunctionImport.class)
-    public JAXBElement<TFunctionImportParameter> createEntityContainerFunctionImportParameter(
-            TFunctionImportParameter value) {
-        return new JAXBElement<TFunctionImportParameter>(_TFunctionReferenceExpressionParameter_QNAME,
-                TFunctionImportParameter.class, TEntityContainer.TFunctionImport.class, value);
+            EntityContainer.TFunctionImport.class)
+    public JAXBElement<FunctionImportParameter> createEntityContainerFunctionImportParameter(
+            FunctionImportParameter value) {
+        return new JAXBElement<FunctionImportParameter>(_TFunctionReferenceExpressionParameter_QNAME,
+                FunctionImportParameter.class, EntityContainer.TFunctionImport.class, value);
     }
 
     /**
@@ -2715,10 +2715,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            TEntityContainer.TFunctionImport.class)
-    public JAXBElement<TValueAnnotation> createEntityContainerFunctionImportValueAnnotation(TValueAnnotation value) {
-        return new JAXBElement<TValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, TValueAnnotation.class,
-                TEntityContainer.TFunctionImport.class, value);
+            EntityContainer.TFunctionImport.class)
+    public JAXBElement<ValueAnnotation> createEntityContainerFunctionImportValueAnnotation(ValueAnnotation value) {
+        return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
+                EntityContainer.TFunctionImport.class, value);
     }
 
     /**
@@ -2726,10 +2726,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            TEntityContainer.TFunctionImport.class)
-    public JAXBElement<TTypeAnnotation> createEntityContainerFunctionImportTypeAnnotation(TTypeAnnotation value) {
-        return new JAXBElement<TTypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TTypeAnnotation.class,
-                TEntityContainer.TFunctionImport.class, value);
+            EntityContainer.TFunctionImport.class)
+    public JAXBElement<TypeAnnotation> createEntityContainerFunctionImportTypeAnnotation(TypeAnnotation value) {
+        return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
+                EntityContainer.TFunctionImport.class, value);
     }
 
     /**
@@ -2737,11 +2737,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TPropertyValue.class)
-    public JAXBElement<TPropertyReferenceExpression> createTPropertyValuePropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<PropertyReferenceExpression> createTPropertyValuePropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2749,10 +2749,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TPropertyValue.class)
-    public JAXBElement<TApplyExpression> createTPropertyValueApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<ApplyExpression> createTPropertyValueApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2760,10 +2760,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TPropertyValue.class)
-    public JAXBElement<TIsTypeExpression> createTPropertyValueIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<IsTypeExpression> createTPropertyValueIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2771,9 +2771,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TPropertyValue.class)
-    public JAXBElement<TNullExpression> createTPropertyValueNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class, TPropertyValue.class,
+            PropertyValue.class)
+    public JAXBElement<NullExpression> createTPropertyValueNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class, PropertyValue.class,
                 value);
     }
 
@@ -2782,11 +2782,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TPropertyValue.class)
-    public JAXBElement<TValueTermReferenceExpression> createTPropertyValueValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<ValueTermReferenceExpression> createTPropertyValueValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2794,9 +2794,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope =
-            TPropertyValue.class)
-    public JAXBElement<TIfExpression> createTPropertyValueIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<IfExpression> createTPropertyValueIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2804,10 +2804,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TPropertyValue.class)
-    public JAXBElement<TIntConstantExpression> createTPropertyValueInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<IntConstantExpression> createTPropertyValueInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2815,10 +2815,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TPropertyValue.class)
-    public JAXBElement<TGuidConstantExpression> createTPropertyValueGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<GuidConstantExpression> createTPropertyValueGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2826,10 +2826,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TPropertyValue.class)
-    public JAXBElement<TTimeConstantExpression> createTPropertyValueTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<TimeConstantExpression> createTPropertyValueTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2837,10 +2837,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TPropertyValue.class)
-    public JAXBElement<TStringConstantExpression> createTPropertyValueString(TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<StringConstantExpression> createTPropertyValueString(StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2848,11 +2848,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TPropertyValue.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTPropertyValueLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TPropertyValue.class, value);
+            scope = PropertyValue.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTPropertyValueLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2860,10 +2860,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TPropertyValue.class)
-    public JAXBElement<TAssertTypeExpression> createTPropertyValueAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<AssertTypeExpression> createTPropertyValueAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2871,10 +2871,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TPropertyValue.class)
-    public JAXBElement<TRecordExpression> createTPropertyValueRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<RecordExpression> createTPropertyValueRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2882,11 +2882,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TPropertyValue.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTPropertyValueEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<EntitySetReferenceExpression> createTPropertyValueEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2894,10 +2894,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TPropertyValue.class)
-    public JAXBElement<TDecimalConstantExpression> createTPropertyValueDecimal(TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<DecimalConstantExpression> createTPropertyValueDecimal(DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2905,10 +2905,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TPropertyValue.class)
-    public JAXBElement<TDateTimeConstantExpression> createTPropertyValueDateTime(TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<DateTimeConstantExpression> createTPropertyValueDateTime(DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2916,11 +2916,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TPropertyValue.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTPropertyValueEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTPropertyValueEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2928,11 +2928,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TPropertyValue.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTPropertyValueDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTPropertyValueDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2940,9 +2940,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TPropertyValue.class)
-    public JAXBElement<TPathExpression> createTPropertyValuePath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class, TPropertyValue.class,
+            PropertyValue.class)
+    public JAXBElement<PathExpression> createTPropertyValuePath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class, PropertyValue.class,
                 value);
     }
 
@@ -2951,11 +2951,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TPropertyValue.class)
-    public JAXBElement<TFunctionReferenceExpression> createTPropertyValueFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<FunctionReferenceExpression> createTPropertyValueFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2963,10 +2963,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TPropertyValue.class)
-    public JAXBElement<TLabeledElement> createTPropertyValueLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<LabeledElement> createTPropertyValueLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2974,11 +2974,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TPropertyValue.class)
-    public JAXBElement<TParameterReferenceExpression> createTPropertyValueParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<ParameterReferenceExpression> createTPropertyValueParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, PropertyValue.class, value);
     }
 
     /**
@@ -2986,10 +2986,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TPropertyValue.class)
-    public JAXBElement<TBoolConstantExpression> createTPropertyValueBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<BoolConstantExpression> createTPropertyValueBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -2997,10 +2997,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TPropertyValue.class)
-    public JAXBElement<TFloatConstantExpression> createTPropertyValueFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<FloatConstantExpression> createTPropertyValueFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -3008,10 +3008,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TPropertyValue.class)
-    public JAXBElement<TCollectionExpression> createTPropertyValueCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<CollectionExpression> createTPropertyValueCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -3019,10 +3019,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TPropertyValue.class)
-    public JAXBElement<TBinaryConstantExpression> createTPropertyValueBinary(TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TPropertyValue.class, value);
+            PropertyValue.class)
+    public JAXBElement<BinaryConstantExpression> createTPropertyValueBinary(BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                PropertyValue.class, value);
     }
 
     /**
@@ -3030,10 +3030,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            TNavigationProperty.class)
-    public JAXBElement<TValueAnnotation> createTNavigationPropertyValueAnnotation(TValueAnnotation value) {
-        return new JAXBElement<TValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, TValueAnnotation.class,
-                TNavigationProperty.class, value);
+            NavigationProperty.class)
+    public JAXBElement<ValueAnnotation> createTNavigationPropertyValueAnnotation(ValueAnnotation value) {
+        return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
+                NavigationProperty.class, value);
     }
 
     /**
@@ -3041,10 +3041,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            TNavigationProperty.class)
-    public JAXBElement<TTypeAnnotation> createTNavigationPropertyTypeAnnotation(TTypeAnnotation value) {
-        return new JAXBElement<TTypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TTypeAnnotation.class,
-                TNavigationProperty.class, value);
+            NavigationProperty.class)
+    public JAXBElement<TypeAnnotation> createTNavigationPropertyTypeAnnotation(TypeAnnotation value) {
+        return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
+                NavigationProperty.class, value);
     }
 
     /**
@@ -3052,11 +3052,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TPropertyReferenceExpression> createTValueAnnotationPropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<PropertyReferenceExpression> createTValueAnnotationPropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3064,10 +3064,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TApplyExpression> createTValueAnnotationApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<ApplyExpression> createTValueAnnotationApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3075,10 +3075,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TIsTypeExpression> createTValueAnnotationIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<IsTypeExpression> createTValueAnnotationIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3086,10 +3086,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TNullExpression> createTValueAnnotationNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<NullExpression> createTValueAnnotationNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3097,11 +3097,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TValueTermReferenceExpression> createTValueAnnotationValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<ValueTermReferenceExpression> createTValueAnnotationValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3109,9 +3109,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TIfExpression> createTValueAnnotationIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class, TValueAnnotation.class,
+            ValueAnnotation.class)
+    public JAXBElement<IfExpression> createTValueAnnotationIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class, ValueAnnotation.class,
                 value);
     }
 
@@ -3120,10 +3120,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TIntConstantExpression> createTValueAnnotationInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<IntConstantExpression> createTValueAnnotationInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3131,10 +3131,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TGuidConstantExpression> createTValueAnnotationGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<GuidConstantExpression> createTValueAnnotationGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3142,10 +3142,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TTimeConstantExpression> createTValueAnnotationTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<TimeConstantExpression> createTValueAnnotationTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3153,10 +3153,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TStringConstantExpression> createTValueAnnotationString(TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<StringConstantExpression> createTValueAnnotationString(StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3164,11 +3164,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TValueAnnotation.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTValueAnnotationLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TValueAnnotation.class, value);
+            scope = ValueAnnotation.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTValueAnnotationLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3176,10 +3176,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TAssertTypeExpression> createTValueAnnotationAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<AssertTypeExpression> createTValueAnnotationAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3187,10 +3187,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TRecordExpression> createTValueAnnotationRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<RecordExpression> createTValueAnnotationRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3198,10 +3198,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TDateTimeConstantExpression> createTValueAnnotationDateTime(TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<DateTimeConstantExpression> createTValueAnnotationDateTime(DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3209,11 +3209,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTValueAnnotationEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<EntitySetReferenceExpression> createTValueAnnotationEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3221,10 +3221,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TDecimalConstantExpression> createTValueAnnotationDecimal(TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<DecimalConstantExpression> createTValueAnnotationDecimal(DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3232,11 +3232,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTValueAnnotationEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTValueAnnotationEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3244,11 +3244,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTValueAnnotationDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTValueAnnotationDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3256,10 +3256,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TPathExpression> createTValueAnnotationPath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<PathExpression> createTValueAnnotationPath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3267,11 +3267,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TFunctionReferenceExpression> createTValueAnnotationFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<FunctionReferenceExpression> createTValueAnnotationFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3279,10 +3279,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TLabeledElement> createTValueAnnotationLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<LabeledElement> createTValueAnnotationLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3290,11 +3290,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TParameterReferenceExpression> createTValueAnnotationParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<ParameterReferenceExpression> createTValueAnnotationParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, ValueAnnotation.class, value);
     }
 
     /**
@@ -3302,10 +3302,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TBoolConstantExpression> createTValueAnnotationBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<BoolConstantExpression> createTValueAnnotationBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3313,10 +3313,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TFloatConstantExpression> createTValueAnnotationFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<FloatConstantExpression> createTValueAnnotationFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3324,10 +3324,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TCollectionExpression> createTValueAnnotationCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<CollectionExpression> createTValueAnnotationCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3335,10 +3335,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TValueAnnotation.class)
-    public JAXBElement<TBinaryConstantExpression> createTValueAnnotationBinary(TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TValueAnnotation.class, value);
+            ValueAnnotation.class)
+    public JAXBElement<BinaryConstantExpression> createTValueAnnotationBinary(BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                ValueAnnotation.class, value);
     }
 
     /**
@@ -3346,11 +3346,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TPropertyReferenceExpression> createTAssertTypeExpressionPropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<PropertyReferenceExpression> createTAssertTypeExpressionPropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3358,10 +3358,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TNullExpression> createTAssertTypeExpressionNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<NullExpression> createTAssertTypeExpressionNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3369,11 +3369,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TValueTermReferenceExpression> createTAssertTypeExpressionValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<ValueTermReferenceExpression> createTAssertTypeExpressionValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3381,9 +3381,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TIfExpression> createTAssertTypeExpressionIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class, TAssertTypeExpression.class,
+            AssertTypeExpression.class)
+    public JAXBElement<IfExpression> createTAssertTypeExpressionIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class, AssertTypeExpression.class,
                 value);
     }
 
@@ -3392,10 +3392,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TStringConstantExpression> createTAssertTypeExpressionString(TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<StringConstantExpression> createTAssertTypeExpressionString(StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3403,11 +3403,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TAssertTypeExpression.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTAssertTypeExpressionLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TAssertTypeExpression.class, value);
+            scope = AssertTypeExpression.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTAssertTypeExpressionLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3415,10 +3415,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TAssertTypeExpression> createTAssertTypeExpressionAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<AssertTypeExpression> createTAssertTypeExpressionAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3426,10 +3426,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TRecordExpression> createTAssertTypeExpressionRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<RecordExpression> createTAssertTypeExpressionRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3437,10 +3437,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TLabeledElement> createTAssertTypeExpressionLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<LabeledElement> createTAssertTypeExpressionLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3448,10 +3448,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TFloatConstantExpression> createTAssertTypeExpressionFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<FloatConstantExpression> createTAssertTypeExpressionFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3459,9 +3459,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "RowType", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TRowType> createTAssertTypeExpressionRowType(TRowType value) {
-        return new JAXBElement<TRowType>(_TIsTypeExpressionRowType_QNAME, TRowType.class, TAssertTypeExpression.class,
+            AssertTypeExpression.class)
+    public JAXBElement<RowType> createTAssertTypeExpressionRowType(RowType value) {
+        return new JAXBElement<RowType>(_TIsTypeExpressionRowType_QNAME, RowType.class, AssertTypeExpression.class,
                 value);
     }
 
@@ -3470,10 +3470,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TCollectionExpression> createTAssertTypeExpressionCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<CollectionExpression> createTAssertTypeExpressionCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3481,10 +3481,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TBinaryConstantExpression> createTAssertTypeExpressionBinary(TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<BinaryConstantExpression> createTAssertTypeExpressionBinary(BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3492,10 +3492,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TApplyExpression> createTAssertTypeExpressionApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<ApplyExpression> createTAssertTypeExpressionApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3503,10 +3503,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TIsTypeExpression> createTAssertTypeExpressionIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<IsTypeExpression> createTAssertTypeExpressionIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3514,10 +3514,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "CollectionType", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TCollectionType> createTAssertTypeExpressionCollectionType(TCollectionType value) {
-        return new JAXBElement<TCollectionType>(_TIsTypeExpressionCollectionType_QNAME, TCollectionType.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<CollectionType> createTAssertTypeExpressionCollectionType(CollectionType value) {
+        return new JAXBElement<CollectionType>(_TIsTypeExpressionCollectionType_QNAME, CollectionType.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3525,10 +3525,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TIntConstantExpression> createTAssertTypeExpressionInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<IntConstantExpression> createTAssertTypeExpressionInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3536,10 +3536,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TGuidConstantExpression> createTAssertTypeExpressionGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<GuidConstantExpression> createTAssertTypeExpressionGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3547,10 +3547,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TTimeConstantExpression> createTAssertTypeExpressionTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<TimeConstantExpression> createTAssertTypeExpressionTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3558,11 +3558,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTAssertTypeExpressionEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<EntitySetReferenceExpression> createTAssertTypeExpressionEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3570,11 +3570,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TDateTimeConstantExpression> createTAssertTypeExpressionDateTime(
-            TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<DateTimeConstantExpression> createTAssertTypeExpressionDateTime(
+            DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3582,10 +3582,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TDecimalConstantExpression> createTAssertTypeExpressionDecimal(TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<DecimalConstantExpression> createTAssertTypeExpressionDecimal(DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3593,11 +3593,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTAssertTypeExpressionEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTAssertTypeExpressionEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3605,11 +3605,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTAssertTypeExpressionDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTAssertTypeExpressionDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3617,10 +3617,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TPathExpression> createTAssertTypeExpressionPath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<PathExpression> createTAssertTypeExpressionPath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3628,11 +3628,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TFunctionReferenceExpression> createTAssertTypeExpressionFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<FunctionReferenceExpression> createTAssertTypeExpressionFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3640,11 +3640,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TParameterReferenceExpression> createTAssertTypeExpressionParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<ParameterReferenceExpression> createTAssertTypeExpressionParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, AssertTypeExpression.class, value);
     }
 
     /**
@@ -3652,10 +3652,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TBoolConstantExpression> createTAssertTypeExpressionBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<BoolConstantExpression> createTAssertTypeExpressionBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3663,10 +3663,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ReferenceType", scope =
-            TAssertTypeExpression.class)
-    public JAXBElement<TReferenceType> createTAssertTypeExpressionReferenceType(TReferenceType value) {
-        return new JAXBElement<TReferenceType>(_TIsTypeExpressionReferenceType_QNAME, TReferenceType.class,
-                TAssertTypeExpression.class, value);
+            AssertTypeExpression.class)
+    public JAXBElement<ReferenceType> createTAssertTypeExpressionReferenceType(ReferenceType value) {
+        return new JAXBElement<ReferenceType>(_TIsTypeExpressionReferenceType_QNAME, ReferenceType.class,
+                AssertTypeExpression.class, value);
     }
 
     /**
@@ -3674,11 +3674,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "PropertyReference", scope =
-            TIfExpression.class)
-    public JAXBElement<TPropertyReferenceExpression> createTIfExpressionPropertyReference(
-            TPropertyReferenceExpression value) {
-        return new JAXBElement<TPropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
-                TPropertyReferenceExpression.class, TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<PropertyReferenceExpression> createTIfExpressionPropertyReference(
+            PropertyReferenceExpression value) {
+        return new JAXBElement<PropertyReferenceExpression>(_TLabeledElementPropertyReference_QNAME,
+                PropertyReferenceExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3686,9 +3686,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Null", scope =
-            TIfExpression.class)
-    public JAXBElement<TNullExpression> createTIfExpressionNull(TNullExpression value) {
-        return new JAXBElement<TNullExpression>(_TLabeledElementNull_QNAME, TNullExpression.class, TIfExpression.class,
+            IfExpression.class)
+    public JAXBElement<NullExpression> createTIfExpressionNull(NullExpression value) {
+        return new JAXBElement<NullExpression>(_TLabeledElementNull_QNAME, NullExpression.class, IfExpression.class,
                 value);
     }
 
@@ -3697,20 +3697,20 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueTermReference", scope =
-            TIfExpression.class)
-    public JAXBElement<TValueTermReferenceExpression> createTIfExpressionValueTermReference(
-            TValueTermReferenceExpression value) {
-        return new JAXBElement<TValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
-                TValueTermReferenceExpression.class, TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<ValueTermReferenceExpression> createTIfExpressionValueTermReference(
+            ValueTermReferenceExpression value) {
+        return new JAXBElement<ValueTermReferenceExpression>(_TLabeledElementValueTermReference_QNAME,
+                ValueTermReferenceExpression.class, IfExpression.class, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link TIfExpression }{@code >}}
      *
      */
-    @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope = TIfExpression.class)
-    public JAXBElement<TIfExpression> createTIfExpressionIf(TIfExpression value) {
-        return new JAXBElement<TIfExpression>(_TLabeledElementIf_QNAME, TIfExpression.class, TIfExpression.class, value);
+    @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "If", scope = IfExpression.class)
+    public JAXBElement<IfExpression> createTIfExpressionIf(IfExpression value) {
+        return new JAXBElement<IfExpression>(_TLabeledElementIf_QNAME, IfExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3718,10 +3718,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "String", scope =
-            TIfExpression.class)
-    public JAXBElement<TStringConstantExpression> createTIfExpressionString(TStringConstantExpression value) {
-        return new JAXBElement<TStringConstantExpression>(_TLabeledElementString_QNAME, TStringConstantExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<StringConstantExpression> createTIfExpressionString(StringConstantExpression value) {
+        return new JAXBElement<StringConstantExpression>(_TLabeledElementString_QNAME, StringConstantExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3729,10 +3729,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "AssertType", scope =
-            TIfExpression.class)
-    public JAXBElement<TAssertTypeExpression> createTIfExpressionAssertType(TAssertTypeExpression value) {
-        return new JAXBElement<TAssertTypeExpression>(_TLabeledElementAssertType_QNAME, TAssertTypeExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<AssertTypeExpression> createTIfExpressionAssertType(AssertTypeExpression value) {
+        return new JAXBElement<AssertTypeExpression>(_TLabeledElementAssertType_QNAME, AssertTypeExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3740,11 +3740,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElementReference",
-            scope = TIfExpression.class)
-    public JAXBElement<TLabeledElementReferenceExpression> createTIfExpressionLabeledElementReference(
-            TLabeledElementReferenceExpression value) {
-        return new JAXBElement<TLabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
-                TLabeledElementReferenceExpression.class, TIfExpression.class, value);
+            scope = IfExpression.class)
+    public JAXBElement<LabeledElementReferenceExpression> createTIfExpressionLabeledElementReference(
+            LabeledElementReferenceExpression value) {
+        return new JAXBElement<LabeledElementReferenceExpression>(_TLabeledElementLabeledElementReference_QNAME,
+                LabeledElementReferenceExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3752,10 +3752,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Record", scope =
-            TIfExpression.class)
-    public JAXBElement<TRecordExpression> createTIfExpressionRecord(TRecordExpression value) {
-        return new JAXBElement<TRecordExpression>(_TLabeledElementRecord_QNAME, TRecordExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<RecordExpression> createTIfExpressionRecord(RecordExpression value) {
+        return new JAXBElement<RecordExpression>(_TLabeledElementRecord_QNAME, RecordExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3763,10 +3763,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "LabeledElement", scope =
-            TIfExpression.class)
-    public JAXBElement<TLabeledElement> createTIfExpressionLabeledElement(TLabeledElement value) {
-        return new JAXBElement<TLabeledElement>(_TLabeledElementLabeledElement_QNAME, TLabeledElement.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<LabeledElement> createTIfExpressionLabeledElement(LabeledElement value) {
+        return new JAXBElement<LabeledElement>(_TLabeledElementLabeledElement_QNAME, LabeledElement.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3774,10 +3774,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Float", scope =
-            TIfExpression.class)
-    public JAXBElement<TFloatConstantExpression> createTIfExpressionFloat(TFloatConstantExpression value) {
-        return new JAXBElement<TFloatConstantExpression>(_TLabeledElementFloat_QNAME, TFloatConstantExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<FloatConstantExpression> createTIfExpressionFloat(FloatConstantExpression value) {
+        return new JAXBElement<FloatConstantExpression>(_TLabeledElementFloat_QNAME, FloatConstantExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3785,10 +3785,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Collection", scope =
-            TIfExpression.class)
-    public JAXBElement<TCollectionExpression> createTIfExpressionCollection(TCollectionExpression value) {
-        return new JAXBElement<TCollectionExpression>(_TLabeledElementCollection_QNAME, TCollectionExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<CollectionExpression> createTIfExpressionCollection(CollectionExpression value) {
+        return new JAXBElement<CollectionExpression>(_TLabeledElementCollection_QNAME, CollectionExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3796,10 +3796,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Binary", scope =
-            TIfExpression.class)
-    public JAXBElement<TBinaryConstantExpression> createTIfExpressionBinary(TBinaryConstantExpression value) {
-        return new JAXBElement<TBinaryConstantExpression>(_TLabeledElementBinary_QNAME, TBinaryConstantExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<BinaryConstantExpression> createTIfExpressionBinary(BinaryConstantExpression value) {
+        return new JAXBElement<BinaryConstantExpression>(_TLabeledElementBinary_QNAME, BinaryConstantExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3807,10 +3807,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Apply", scope =
-            TIfExpression.class)
-    public JAXBElement<TApplyExpression> createTIfExpressionApply(TApplyExpression value) {
-        return new JAXBElement<TApplyExpression>(_TLabeledElementApply_QNAME, TApplyExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<ApplyExpression> createTIfExpressionApply(ApplyExpression value) {
+        return new JAXBElement<ApplyExpression>(_TLabeledElementApply_QNAME, ApplyExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3818,10 +3818,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "IsType", scope =
-            TIfExpression.class)
-    public JAXBElement<TIsTypeExpression> createTIfExpressionIsType(TIsTypeExpression value) {
-        return new JAXBElement<TIsTypeExpression>(_TLabeledElementIsType_QNAME, TIsTypeExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<IsTypeExpression> createTIfExpressionIsType(IsTypeExpression value) {
+        return new JAXBElement<IsTypeExpression>(_TLabeledElementIsType_QNAME, IsTypeExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3829,10 +3829,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Int", scope =
-            TIfExpression.class)
-    public JAXBElement<TIntConstantExpression> createTIfExpressionInt(TIntConstantExpression value) {
-        return new JAXBElement<TIntConstantExpression>(_TLabeledElementInt_QNAME, TIntConstantExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<IntConstantExpression> createTIfExpressionInt(IntConstantExpression value) {
+        return new JAXBElement<IntConstantExpression>(_TLabeledElementInt_QNAME, IntConstantExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3840,10 +3840,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Guid", scope =
-            TIfExpression.class)
-    public JAXBElement<TGuidConstantExpression> createTIfExpressionGuid(TGuidConstantExpression value) {
-        return new JAXBElement<TGuidConstantExpression>(_TLabeledElementGuid_QNAME, TGuidConstantExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<GuidConstantExpression> createTIfExpressionGuid(GuidConstantExpression value) {
+        return new JAXBElement<GuidConstantExpression>(_TLabeledElementGuid_QNAME, GuidConstantExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3851,10 +3851,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Time", scope =
-            TIfExpression.class)
-    public JAXBElement<TTimeConstantExpression> createTIfExpressionTime(TTimeConstantExpression value) {
-        return new JAXBElement<TTimeConstantExpression>(_TLabeledElementTime_QNAME, TTimeConstantExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<TimeConstantExpression> createTIfExpressionTime(TimeConstantExpression value) {
+        return new JAXBElement<TimeConstantExpression>(_TLabeledElementTime_QNAME, TimeConstantExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3862,10 +3862,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTime", scope =
-            TIfExpression.class)
-    public JAXBElement<TDateTimeConstantExpression> createTIfExpressionDateTime(TDateTimeConstantExpression value) {
-        return new JAXBElement<TDateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
-                TDateTimeConstantExpression.class, TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<DateTimeConstantExpression> createTIfExpressionDateTime(DateTimeConstantExpression value) {
+        return new JAXBElement<DateTimeConstantExpression>(_TLabeledElementDateTime_QNAME,
+                DateTimeConstantExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3873,11 +3873,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EntitySetReference", scope =
-            TIfExpression.class)
-    public JAXBElement<TEntitySetReferenceExpression> createTIfExpressionEntitySetReference(
-            TEntitySetReferenceExpression value) {
-        return new JAXBElement<TEntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
-                TEntitySetReferenceExpression.class, TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<EntitySetReferenceExpression> createTIfExpressionEntitySetReference(
+            EntitySetReferenceExpression value) {
+        return new JAXBElement<EntitySetReferenceExpression>(_TLabeledElementEntitySetReference_QNAME,
+                EntitySetReferenceExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3885,10 +3885,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Decimal", scope =
-            TIfExpression.class)
-    public JAXBElement<TDecimalConstantExpression> createTIfExpressionDecimal(TDecimalConstantExpression value) {
-        return new JAXBElement<TDecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
-                TDecimalConstantExpression.class, TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<DecimalConstantExpression> createTIfExpressionDecimal(DecimalConstantExpression value) {
+        return new JAXBElement<DecimalConstantExpression>(_TLabeledElementDecimal_QNAME,
+                DecimalConstantExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3896,11 +3896,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "EnumMemberReference", scope =
-            TIfExpression.class)
-    public JAXBElement<TEnumMemberReferenceExpression> createTIfExpressionEnumMemberReference(
-            TEnumMemberReferenceExpression value) {
-        return new JAXBElement<TEnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
-                TEnumMemberReferenceExpression.class, TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<EnumMemberReferenceExpression> createTIfExpressionEnumMemberReference(
+            EnumMemberReferenceExpression value) {
+        return new JAXBElement<EnumMemberReferenceExpression>(_TLabeledElementEnumMemberReference_QNAME,
+                EnumMemberReferenceExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3908,11 +3908,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "DateTimeOffset", scope =
-            TIfExpression.class)
-    public JAXBElement<TDateTimeOffsetConstantExpression> createTIfExpressionDateTimeOffset(
-            TDateTimeOffsetConstantExpression value) {
-        return new JAXBElement<TDateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
-                TDateTimeOffsetConstantExpression.class, TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<DateTimeOffsetConstantExpression> createTIfExpressionDateTimeOffset(
+            DateTimeOffsetConstantExpression value) {
+        return new JAXBElement<DateTimeOffsetConstantExpression>(_TLabeledElementDateTimeOffset_QNAME,
+                DateTimeOffsetConstantExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3920,9 +3920,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Path", scope =
-            TIfExpression.class)
-    public JAXBElement<TPathExpression> createTIfExpressionPath(TPathExpression value) {
-        return new JAXBElement<TPathExpression>(_TLabeledElementPath_QNAME, TPathExpression.class, TIfExpression.class,
+            IfExpression.class)
+    public JAXBElement<PathExpression> createTIfExpressionPath(PathExpression value) {
+        return new JAXBElement<PathExpression>(_TLabeledElementPath_QNAME, PathExpression.class, IfExpression.class,
                 value);
     }
 
@@ -3931,11 +3931,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "FunctionReference", scope =
-            TIfExpression.class)
-    public JAXBElement<TFunctionReferenceExpression> createTIfExpressionFunctionReference(
-            TFunctionReferenceExpression value) {
-        return new JAXBElement<TFunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
-                TFunctionReferenceExpression.class, TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<FunctionReferenceExpression> createTIfExpressionFunctionReference(
+            FunctionReferenceExpression value) {
+        return new JAXBElement<FunctionReferenceExpression>(_TLabeledElementFunctionReference_QNAME,
+                FunctionReferenceExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3943,11 +3943,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ParameterReference", scope =
-            TIfExpression.class)
-    public JAXBElement<TParameterReferenceExpression> createTIfExpressionParameterReference(
-            TParameterReferenceExpression value) {
-        return new JAXBElement<TParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
-                TParameterReferenceExpression.class, TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<ParameterReferenceExpression> createTIfExpressionParameterReference(
+            ParameterReferenceExpression value) {
+        return new JAXBElement<ParameterReferenceExpression>(_TLabeledElementParameterReference_QNAME,
+                ParameterReferenceExpression.class, IfExpression.class, value);
     }
 
     /**
@@ -3955,10 +3955,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Bool", scope =
-            TIfExpression.class)
-    public JAXBElement<TBoolConstantExpression> createTIfExpressionBool(TBoolConstantExpression value) {
-        return new JAXBElement<TBoolConstantExpression>(_TLabeledElementBool_QNAME, TBoolConstantExpression.class,
-                TIfExpression.class, value);
+            IfExpression.class)
+    public JAXBElement<BoolConstantExpression> createTIfExpressionBool(BoolConstantExpression value) {
+        return new JAXBElement<BoolConstantExpression>(_TLabeledElementBool_QNAME, BoolConstantExpression.class,
+                IfExpression.class, value);
     }
 
     /**
@@ -3966,10 +3966,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            TEntityContainer.TEntitySet.class)
-    public JAXBElement<TValueAnnotation> createEntityContainerEntitySetValueAnnotation(TValueAnnotation value) {
-        return new JAXBElement<TValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, TValueAnnotation.class,
-                TEntityContainer.TEntitySet.class, value);
+            EntityContainer.TEntitySet.class)
+    public JAXBElement<ValueAnnotation> createEntityContainerEntitySetValueAnnotation(ValueAnnotation value) {
+        return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
+                EntityContainer.TEntitySet.class, value);
     }
 
     /**
@@ -3977,10 +3977,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            TEntityContainer.TEntitySet.class)
-    public JAXBElement<TTypeAnnotation> createEntityContainerEntitySetTypeAnnotation(TTypeAnnotation value) {
-        return new JAXBElement<TTypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TTypeAnnotation.class,
-                TEntityContainer.TEntitySet.class, value);
+            EntityContainer.TEntitySet.class)
+    public JAXBElement<TypeAnnotation> createEntityContainerEntitySetTypeAnnotation(TypeAnnotation value) {
+        return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
+                EntityContainer.TEntitySet.class, value);
     }
 
     /**
@@ -3988,10 +3988,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            TComplexTypeProperty.class)
-    public JAXBElement<TValueAnnotation> createTComplexTypePropertyValueAnnotation(TValueAnnotation value) {
-        return new JAXBElement<TValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, TValueAnnotation.class,
-                TComplexTypeProperty.class, value);
+            ComplexTypeProperty.class)
+    public JAXBElement<ValueAnnotation> createTComplexTypePropertyValueAnnotation(ValueAnnotation value) {
+        return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
+                ComplexTypeProperty.class, value);
     }
 
     /**
@@ -3999,21 +3999,21 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            TComplexTypeProperty.class)
-    public JAXBElement<TTypeAnnotation> createTComplexTypePropertyTypeAnnotation(TTypeAnnotation value) {
-        return new JAXBElement<TTypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TTypeAnnotation.class,
-                TComplexTypeProperty.class, value);
+            ComplexTypeProperty.class)
+    public JAXBElement<TypeAnnotation> createTComplexTypePropertyTypeAnnotation(TypeAnnotation value) {
+        return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
+                ComplexTypeProperty.class, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TDocumentation }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link Documentation }{@code >}}
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Documentation", scope =
-            TComplexTypeProperty.class)
-    public JAXBElement<TDocumentation> createTComplexTypePropertyDocumentation(TDocumentation value) {
-        return new JAXBElement<TDocumentation>(_TEntityPropertyDocumentation_QNAME, TDocumentation.class,
-                TComplexTypeProperty.class, value);
+            ComplexTypeProperty.class)
+    public JAXBElement<Documentation> createTComplexTypePropertyDocumentation(Documentation value) {
+        return new JAXBElement<Documentation>(_TEntityPropertyDocumentation_QNAME, Documentation.class,
+                ComplexTypeProperty.class, value);
     }
 
     /**
@@ -4021,10 +4021,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Property", scope =
-            TComplexType.class)
-    public JAXBElement<TComplexTypeProperty> createTComplexTypeProperty(TComplexTypeProperty value) {
-        return new JAXBElement<TComplexTypeProperty>(_TRowTypeProperty_QNAME, TComplexTypeProperty.class,
-                TComplexType.class, value);
+            ComplexType.class)
+    public JAXBElement<ComplexTypeProperty> createTComplexTypeProperty(ComplexTypeProperty value) {
+        return new JAXBElement<ComplexTypeProperty>(_TRowTypeProperty_QNAME, ComplexTypeProperty.class,
+                ComplexType.class, value);
     }
 
     /**
@@ -4032,10 +4032,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            TComplexType.class)
-    public JAXBElement<TValueAnnotation> createTComplexTypeValueAnnotation(TValueAnnotation value) {
-        return new JAXBElement<TValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, TValueAnnotation.class,
-                TComplexType.class, value);
+            ComplexType.class)
+    public JAXBElement<ValueAnnotation> createTComplexTypeValueAnnotation(ValueAnnotation value) {
+        return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
+                ComplexType.class, value);
     }
 
     /**
@@ -4043,9 +4043,9 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            TComplexType.class)
-    public JAXBElement<TTypeAnnotation> createTComplexTypeTypeAnnotation(TTypeAnnotation value) {
-        return new JAXBElement<TTypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TTypeAnnotation.class,
-                TComplexType.class, value);
+            ComplexType.class)
+    public JAXBElement<TypeAnnotation> createTComplexTypeTypeAnnotation(TypeAnnotation value) {
+        return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
+                ComplexType.class, value);
     }
 }

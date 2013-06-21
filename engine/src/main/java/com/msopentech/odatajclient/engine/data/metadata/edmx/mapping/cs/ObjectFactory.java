@@ -42,224 +42,224 @@ public class ObjectFactory {
      * Create an instance of {@link TFunctionImportCondition }
      *
      */
-    public TFunctionImportCondition createTFunctionImportCondition() {
-        return new TFunctionImportCondition();
+    public FunctionImportCondition createTFunctionImportCondition() {
+        return new FunctionImportCondition();
     }
 
     /**
      * Create an instance of {@link TComplexProperty }
      *
      */
-    public TComplexProperty createTComplexProperty() {
-        return new TComplexProperty();
+    public ComplexProperty createTComplexProperty() {
+        return new ComplexProperty();
     }
 
     /**
      * Create an instance of {@link TEntitySetMapping }
      *
      */
-    public TEntitySetMapping createTEntitySetMapping() {
-        return new TEntitySetMapping();
+    public EntitySetMapping createTEntitySetMapping() {
+        return new EntitySetMapping();
     }
 
     /**
      * Create an instance of {@link TEntityTypeModificationFunctionMapping }
      *
      */
-    public TEntityTypeModificationFunctionMapping createTEntityTypeModificationFunctionMapping() {
-        return new TEntityTypeModificationFunctionMapping();
+    public EntityTypeModificationFunctionMapping createTEntityTypeModificationFunctionMapping() {
+        return new EntityTypeModificationFunctionMapping();
     }
 
     /**
      * Create an instance of {@link TAlias }
      *
      */
-    public TAlias createTAlias() {
-        return new TAlias();
+    public Alias createTAlias() {
+        return new Alias();
     }
 
     /**
      * Create an instance of {@link TModificationFunctionMappingAssociationEnd }
      *
      */
-    public TModificationFunctionMappingAssociationEnd createTModificationFunctionMappingAssociationEnd() {
-        return new TModificationFunctionMappingAssociationEnd();
+    public ModificationFunctionMappingAssociationEnd createTModificationFunctionMappingAssociationEnd() {
+        return new ModificationFunctionMappingAssociationEnd();
     }
 
     /**
      * Create an instance of {@link TMapping }
      *
      */
-    public TMapping createTMapping() {
-        return new TMapping();
+    public Mapping createTMapping() {
+        return new Mapping();
     }
 
     /**
      * Create an instance of {@link TFunctionImportMapping }
      *
      */
-    public TFunctionImportMapping createTFunctionImportMapping() {
-        return new TFunctionImportMapping();
+    public FunctionImportMapping createTFunctionImportMapping() {
+        return new FunctionImportMapping();
     }
 
     /**
      * Create an instance of {@link TEntityContainerMapping }
      *
      */
-    public TEntityContainerMapping createTEntityContainerMapping() {
-        return new TEntityContainerMapping();
+    public EntityContainerMapping createTEntityContainerMapping() {
+        return new EntityContainerMapping();
     }
 
     /**
      * Create an instance of {@link TMappingFragment }
      *
      */
-    public TMappingFragment createTMappingFragment() {
-        return new TMappingFragment();
+    public MappingFragment createTMappingFragment() {
+        return new MappingFragment();
     }
 
     /**
      * Create an instance of {@link TEntityTypeMapping }
      *
      */
-    public TEntityTypeMapping createTEntityTypeMapping() {
-        return new TEntityTypeMapping();
+    public EntityTypeMapping createTEntityTypeMapping() {
+        return new EntityTypeMapping();
     }
 
     /**
      * Create an instance of {@link TEntityTypeModificationFunctionWithResult }
      *
      */
-    public TEntityTypeModificationFunctionWithResult createTEntityTypeModificationFunctionWithResult() {
-        return new TEntityTypeModificationFunctionWithResult();
+    public EntityTypeModificationFunctionWithResult createTEntityTypeModificationFunctionWithResult() {
+        return new EntityTypeModificationFunctionWithResult();
     }
 
     /**
      * Create an instance of {@link TEndProperty }
      *
      */
-    public TEndProperty createTEndProperty() {
-        return new TEndProperty();
+    public EndProperty createTEndProperty() {
+        return new EndProperty();
     }
 
     /**
      * Create an instance of {@link TResultBinding }
      *
      */
-    public TResultBinding createTResultBinding() {
-        return new TResultBinding();
+    public ResultBinding createTResultBinding() {
+        return new ResultBinding();
     }
 
     /**
      * Create an instance of {@link TComplexTypeMapping }
      *
      */
-    public TComplexTypeMapping createTComplexTypeMapping() {
-        return new TComplexTypeMapping();
+    public ComplexTypeMapping createTComplexTypeMapping() {
+        return new ComplexTypeMapping();
     }
 
     /**
      * Create an instance of {@link TModificationFunctionMappingScalarProperty }
      *
      */
-    public TModificationFunctionMappingScalarProperty createTModificationFunctionMappingScalarProperty() {
-        return new TModificationFunctionMappingScalarProperty();
+    public ModificationFunctionMappingScalarProperty createTModificationFunctionMappingScalarProperty() {
+        return new ModificationFunctionMappingScalarProperty();
     }
 
     /**
      * Create an instance of {@link TAssociationSetModificationFunctionMapping }
      *
      */
-    public TAssociationSetModificationFunctionMapping createTAssociationSetModificationFunctionMapping() {
-        return new TAssociationSetModificationFunctionMapping();
+    public AssociationSetModificationFunctionMapping createTAssociationSetModificationFunctionMapping() {
+        return new AssociationSetModificationFunctionMapping();
     }
 
     /**
      * Create an instance of {@link TEntityTypeModificationFunction }
      *
      */
-    public TEntityTypeModificationFunction createTEntityTypeModificationFunction() {
-        return new TEntityTypeModificationFunction();
+    public EntityTypeModificationFunction createTEntityTypeModificationFunction() {
+        return new EntityTypeModificationFunction();
     }
 
     /**
      * Create an instance of {@link TFunctionImportEntityTypeMapping }
      *
      */
-    public TFunctionImportEntityTypeMapping createTFunctionImportEntityTypeMapping() {
-        return new TFunctionImportEntityTypeMapping();
+    public FunctionImportEntityTypeMapping createTFunctionImportEntityTypeMapping() {
+        return new FunctionImportEntityTypeMapping();
     }
 
     /**
      * Create an instance of {@link TModificationFunctionMappingEndProperty }
      *
      */
-    public TModificationFunctionMappingEndProperty createTModificationFunctionMappingEndProperty() {
-        return new TModificationFunctionMappingEndProperty();
+    public ModificationFunctionMappingEndProperty createTModificationFunctionMappingEndProperty() {
+        return new ModificationFunctionMappingEndProperty();
     }
 
     /**
      * Create an instance of {@link TModificationFunctionMappingComplexProperty }
      *
      */
-    public TModificationFunctionMappingComplexProperty createTModificationFunctionMappingComplexProperty() {
-        return new TModificationFunctionMappingComplexProperty();
+    public ModificationFunctionMappingComplexProperty createTModificationFunctionMappingComplexProperty() {
+        return new ModificationFunctionMappingComplexProperty();
     }
 
     /**
      * Create an instance of {@link TFunctionImportComplexTypeMapping }
      *
      */
-    public TFunctionImportComplexTypeMapping createTFunctionImportComplexTypeMapping() {
-        return new TFunctionImportComplexTypeMapping();
+    public FunctionImportComplexTypeMapping createTFunctionImportComplexTypeMapping() {
+        return new FunctionImportComplexTypeMapping();
     }
 
     /**
      * Create an instance of {@link TScalarProperty }
      *
      */
-    public TScalarProperty createTScalarProperty() {
-        return new TScalarProperty();
+    public ScalarProperty createTScalarProperty() {
+        return new ScalarProperty();
     }
 
     /**
      * Create an instance of {@link TQueryView }
      *
      */
-    public TQueryView createTQueryView() {
-        return new TQueryView();
+    public QueryView createTQueryView() {
+        return new QueryView();
     }
 
     /**
      * Create an instance of {@link TFunctionImportMappingResultMapping }
      *
      */
-    public TFunctionImportMappingResultMapping createTFunctionImportMappingResultMapping() {
-        return new TFunctionImportMappingResultMapping();
+    public FunctionImportMappingResultMapping createTFunctionImportMappingResultMapping() {
+        return new FunctionImportMappingResultMapping();
     }
 
     /**
      * Create an instance of {@link TCondition }
      *
      */
-    public TCondition createTCondition() {
-        return new TCondition();
+    public Condition createTCondition() {
+        return new Condition();
     }
 
     /**
      * Create an instance of {@link TAssociationSetMapping }
      *
      */
-    public TAssociationSetMapping createTAssociationSetMapping() {
-        return new TAssociationSetMapping();
+    public AssociationSetMapping createTAssociationSetMapping() {
+        return new AssociationSetMapping();
     }
 
     /**
      * Create an instance of {@link TAssociationSetModificationFunction }
      *
      */
-    public TAssociationSetModificationFunction createTAssociationSetModificationFunction() {
-        return new TAssociationSetModificationFunction();
+    public AssociationSetModificationFunction createTAssociationSetModificationFunction() {
+        return new AssociationSetModificationFunction();
     }
 
     /**
@@ -267,7 +267,7 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/mapping/cs", name = "Mapping")
-    public JAXBElement<TMapping> createMapping(TMapping value) {
-        return new JAXBElement<TMapping>(_Mapping_QNAME, TMapping.class, null, value);
+    public JAXBElement<Mapping> createMapping(Mapping value) {
+        return new JAXBElement<Mapping>(_Mapping_QNAME, Mapping.class, null, value);
     }
 }

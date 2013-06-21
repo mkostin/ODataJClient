@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.engine.data.metadata.edm.TParameterMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,7 +34,7 @@ public @interface Parameter {
 
     String type();
 
-    TParameterMode mode() default TParameterMode.IN;
+    ParameterMode mode() default ParameterMode.IN;
 
     int maxLenght() default Integer.MAX_VALUE;
 

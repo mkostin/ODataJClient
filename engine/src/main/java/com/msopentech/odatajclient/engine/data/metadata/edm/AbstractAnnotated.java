@@ -20,11 +20,11 @@ import java.util.List;
 
 public abstract class AbstractAnnotated extends AbstractElement {
 
-    public List<TTypeAnnotation> getTypeAnnotations() {
-        return getJAXBElements(TTypeAnnotation.class);
+    public List<TypeAnnotation> getTypeAnnotations() {
+        return getJAXBElements(TypeAnnotation.class);
     }
 
-    public List<TValueAnnotation> getValueAnnotations() {
-        return getJAXBElements(TValueAnnotation.class);
+    public List<ValueAnnotation> getValueAnnotations() {
+        return getJAXBElements(ValueAnnotation.class);
     }
 }

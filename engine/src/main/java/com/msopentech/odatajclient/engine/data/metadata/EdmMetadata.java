@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata;
 
-import com.msopentech.odatajclient.engine.data.metadata.edm.TSchema;
-import com.msopentech.odatajclient.engine.data.metadata.edmx.TDataServices;
-import com.msopentech.odatajclient.engine.data.metadata.edmx.TEdmx;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
+import com.msopentech.odatajclient.engine.data.metadata.edmx.DataServices;
+import com.msopentech.odatajclient.engine.data.metadata.edmx.Edmx;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -35,26 +35,26 @@ public class EdmMetadata implements Serializable {
 
     private static final long serialVersionUID = -1214173426671503187L;
 
-    private TDataServices dataservices;
+    private DataServices dataservices;
 
-    private Map<String, TSchema> schemaByNsOrAlias;
+    private Map<String, Schema> schemaByNsOrAlias;
 
     public EdmMetadata(final InputStream inputStream) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(TEdmx.class);
+        JAXBContext context = JAXBContext.newInstance(Edmx.class);
         @SuppressWarnings("unchecked")
-        TEdmx edmx = ((JAXBElement<TEdmx>) context.createUnmarshaller().unmarshal(inputStream)).getValue();
+        Edmx edmx = ((JAXBElement<Edmx>) context.createUnmarshaller().unmarshal(inputStream)).getValue();
 
         for (JAXBElement<?> edmxContent : edmx.getContent()) {
-            if (TDataServices.class.equals(edmxContent.getDeclaredType())) {
-                this.dataservices = (TDataServices) edmxContent.getValue();
+            if (DataServices.class.equals(edmxContent.getDeclaredType())) {
+                this.dataservices = (DataServices) edmxContent.getValue();
             }
         }
         if (this.dataservices == null) {
             throw new IllegalArgumentException("No <DataServices/> element found");
         }
 
-        this.schemaByNsOrAlias = new HashMap<String, TSchema>();
-        for (TSchema schema : this.dataservices.getSchema()) {
+        this.schemaByNsOrAlias = new HashMap<String, Schema>();
+        for (Schema schema : this.dataservices.getSchema()) {
             this.schemaByNsOrAlias.put(schema.getNamespace(), schema);
             if (StringUtils.isNotBlank(schema.getAlias())) {
                 this.schemaByNsOrAlias.put(schema.getAlias(), schema);
@@ -77,7 +77,7 @@ public class EdmMetadata implements Serializable {
      * @param index index of the TSchema to return
      * @return the TSchema at the specified position in the EdM metadata document
      */
-    public TSchema getSchema(final int index) {
+    public Schema getSchema(final int index) {
         return this.dataservices.getSchema().get(index);
     }
 
@@ -87,7 +87,7 @@ public class EdmMetadata implements Serializable {
      * @param key namespace or alias
      * @return the TSchema with the specified key in the EdM metadata document
      */
-    public TSchema getSchema(final String key) {
+    public Schema getSchema(final String key) {
         return this.schemaByNsOrAlias.get(key);
     }
 
@@ -96,7 +96,7 @@ public class EdmMetadata implements Serializable {
      *
      * @return all TSchema objects defined in the EdM metadata document
      */
-    public List<TSchema> getSchemas() {
+    public List<Schema> getSchemas() {
         return this.dataservices.getSchema();
     }
 }

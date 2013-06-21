@@ -24,7 +24,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMe
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.TEntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
 import org.junit.Test;
 
 public class MetadataTest {
@@ -45,7 +45,7 @@ public class MetadataTest {
         assertFalse(productCollection.isComplexType());
         assertTrue(productCollection.isEntityType());
 
-        TEntityType product = productCollection.getEntityType();
+        EntityType product = productCollection.getEntityType();
         assertNotNull(product);
         assertEquals("Product", product.getName());
 

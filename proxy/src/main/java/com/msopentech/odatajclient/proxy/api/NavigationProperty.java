@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.engine.data.metadata.edm.TAction;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,5 +38,5 @@ public @interface NavigationProperty {
 
     boolean containsTarget() default false;
 
-    TAction onDelete() default TAction.NONE;
+    Action onDelete() default Action.NONE;
 }

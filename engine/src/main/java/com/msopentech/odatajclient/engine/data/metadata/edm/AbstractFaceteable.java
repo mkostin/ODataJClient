@@ -39,7 +39,7 @@ public abstract class AbstractFaceteable extends AbstractAnnotated {
 
     public abstract Boolean isUnicode();
 
-    public abstract TConcurrencyMode getConcurrencyMode();
+    public abstract ConcurrencyMode getConcurrencyMode();
 
     public abstract String getDefaultValue();
 
