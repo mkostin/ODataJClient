@@ -25,7 +25,6 @@ import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineFeed;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
@@ -241,17 +240,6 @@ public class ODataBinder {
         }
 
         return entity;
-    }
-
-    public static ODataLink getODataLink(final LinkResource link) {
-        return getODataLink(link, null);
-    }
-
-    public static ODataLink getODataLink(final LinkResource link, final EntryResource entry) {
-        return ODataFactory.newLink(
-                link.getTitle(),
-                entry == null ? URI.create(link.getHref()) : URIUtils.getURI(entry.getBaseURI(), link.getHref()),
-                ODataLinkType.evaluate(link.getRel(), link.getType()));
     }
 
     public static LinkResource getLinkResource(final ODataLink link, final Class<? extends LinkResource> reference) {
