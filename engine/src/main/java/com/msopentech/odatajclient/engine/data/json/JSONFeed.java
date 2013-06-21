@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
@@ -54,6 +55,7 @@ public class JSONFeed extends AbstractJSONObject implements FeedResource {
         return entries;
     }
 
+    @JsonIgnore
     @Override
     public void setEntries(List<EntryResource> entries) {
         this.entries.clear();

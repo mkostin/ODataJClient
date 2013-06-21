@@ -19,6 +19,7 @@ import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootU
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
@@ -40,7 +41,7 @@ import org.junit.Test;
  */
 public class FeedTest extends AbstractTest {
 
-    private void readFeedResource(final ODataFormat format) throws IOException {
+    private void readFeed(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Car");
 
@@ -60,18 +61,17 @@ public class FeedTest extends AbstractTest {
 
     @Test
     public void readAtomFeed() throws Exception {
-        readFeedResource(ODataFormat.ATOM);
+        readFeed(ODataFormat.ATOM);
     }
 
     @Test
-    @Ignore
     public void readJSONFeed() throws Exception {
-        readFeedResource(ODataFormat.JSON);
+        readFeed(ODataFormat.JSON);
     }
 
     private void readODataFeed(final ODataFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(
-                "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
+        final String serviceRoot = "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc";
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(serviceRoot);
         uriBuilder.appendEntityTypeSegment("Products(1)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -84,19 +84,15 @@ public class FeedTest extends AbstractTest {
 
         if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
             assertEquals("ODataDemo.Product", entity.getName());
-            assertEquals("http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)",
-                    entity.getEditLink().toASCIIString());
+            assertEquals(serviceRoot + "/Products(1)", entity.getEditLink().toASCIIString());
             assertEquals(2, entity.getNavigationLinks().size());
             assertEquals(2, entity.getAssociationLinks().size());
 
             boolean check = false;
 
             for (ODataLink link : entity.getNavigationLinks()) {
-                if ("Category".equals(link.getName())
-                        && "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)/Category".
-                        equals(link.getLink().toASCIIString())) {
-                    check = true;
-                }
+                check = ("Category".equals(link.getName())
+                        && (serviceRoot + "/Products(1)/Category").equals(link.getLink().toASCIIString()));
             }
 
             assertTrue(check);
