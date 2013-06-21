@@ -39,6 +39,7 @@ import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
@@ -52,19 +53,45 @@ import org.w3c.dom.Node;
  */
 public class EntityTest extends AbstractTest {
 
-    private void readEntry(final ODataFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntitySetSegment("Customer(-10)");
+    private void readEntry(final ODataFormat format) throws IOException {
+        // ---------------------------------------------
+        // Read Car(16)
+        // ---------------------------------------------
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Car(16)");
 
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final InputStream is = req.rowExecute();
+        InputStream is = req.rowExecute();
 
         EntryResource entry = SerializationUtils.deserializeEntry(is, format.getEntryClass());
         assertNotNull(entry);
 
+        is.close();
+
         debugEntry(entry, "Just read");
+        // ---------------------------------------------
+
+
+        // ---------------------------------------------
+        // Read Customer(-10)
+        // ---------------------------------------------
+        uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer(-10)");
+
+        req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        is = req.rowExecute();
+
+        entry = SerializationUtils.deserializeEntry(is, format.getEntryClass());
+        assertNotNull(entry);
+
+        is.close();
+
+        debugEntry(entry, "Just read");
+        // ---------------------------------------------
 
         if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
             assertEquals(uriBuilder.build().toASCIIString(), entry.getId());

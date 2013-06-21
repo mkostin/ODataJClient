@@ -22,6 +22,8 @@ import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.StringWriter;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -59,7 +61,16 @@ public class ODataBinder {
     }
 
     public static <T extends FeedResource> T getFeed(final ODataFeed feed, final Class<T> reference) {
-        return null;
+        final T feedResource = ResourceFactory.newFeed(reference);
+
+        final List<EntryResource> entries = new ArrayList<EntryResource>();
+        feedResource.setEntries(entries);
+
+        for (ODataEntity entity : feed.getEntities()) {
+            entries.add(getEntry(entity, ResourceFactory.entryClassForFeed(reference)));
+        }
+
+        return feedResource;
     }
 
     @SuppressWarnings("unchecked")
@@ -237,6 +248,7 @@ public class ODataBinder {
             final EdmType edmType = typeNode == null ? null : new EdmType(typeNode.getTextContent());
 
             switch (getPropertyType(property)) {
+                case EMPTY:
                 case COLLECTION:
                     res = newCollectionProperty(property, edmType);
                     break;
@@ -275,7 +287,7 @@ public class ODataBinder {
                 }
             }
         } else {
-            res = PropertyType.COLLECTION;
+            res = PropertyType.EMPTY;
         }
 
         if (res == null) {

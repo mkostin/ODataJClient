@@ -18,8 +18,11 @@ package com.msopentech.odatajclient.engine.utils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
+import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,6 +35,18 @@ import javax.xml.bind.Marshaller;
 import org.w3c.dom.Node;
 
 public class SerializationUtils {
+
+    public static <T extends FeedResource> void serializeFeed(final T obj, final OutputStream out) {
+        serializeFeed(obj, new OutputStreamWriter(out));
+    }
+
+    public static <T extends FeedResource> void serializeFeed(final T obj, final Writer writer) {
+        if (obj.getClass().equals(AtomFeed.class)) {
+            serializeAsAtom(obj, obj.getClass(), writer);
+        } else {
+            serializeAsJSON(obj, writer);
+        }
+    }
 
     public static <T extends EntryResource> void serializeEntry(final T obj, final OutputStream out) {
         serializeEntry(obj, new OutputStreamWriter(out));
@@ -82,6 +97,19 @@ public class SerializationUtils {
     }
 
     @SuppressWarnings("unchecked")
+    public static <T extends FeedResource> T deserializeFeed(final InputStream is, final Class<T> reference) {
+        T entry;
+
+        if (AtomFeed.class.equals(reference)) {
+            entry = (T) deserializeAtomFeed(is);
+        } else {
+            entry = (T) deserializeJSONFeed(is);
+        }
+
+        return entry;
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T extends EntryResource> T deserializeEntry(final InputStream is, final Class<T> reference) {
         T entry;
 
@@ -95,10 +123,30 @@ public class SerializationUtils {
     }
 
     @SuppressWarnings("unchecked")
+    private static AtomFeed deserializeAtomFeed(final InputStream is) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(AtomFeed.class);
+            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(is)).getValue();
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException("While deserializing Atom object", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     private static AtomEntry deserializeAtomEntry(final InputStream is) {
         try {
             JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
             return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(is)).getValue();
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException("While deserializing Atom object", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static AtomFeed deserializeAtomFeed(final Node node) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(AtomFeed.class);
+            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(node)).getValue();
         } catch (JAXBException e) {
             throw new IllegalArgumentException("While deserializing Atom object", e);
         }
@@ -111,6 +159,16 @@ public class SerializationUtils {
             return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(node)).getValue();
         } catch (JAXBException e) {
             throw new IllegalArgumentException("While deserializing Atom object", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static JSONFeed deserializeJSONFeed(final InputStream is) {
+        try {
+            ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            return mapper.readValue(is, JSONFeed.class);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("While deserializing JSON object", e);
         }
     }
 

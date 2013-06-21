@@ -97,16 +97,16 @@ public class ResourceFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends LinkResource, K extends EntryResource> Class<K> entryClassForLink(
+    public static <T extends EntryResource, K extends FeedResource> Class<K> feedClassForEntry(
             final Class<T> resourceClass) {
 
         Class<K> result = null;
 
-        if (AtomLink.class.equals(resourceClass)) {
-            result = (Class<K>) AtomEntry.class;
+        if (AtomEntry.class.equals(resourceClass)) {
+            result = (Class<K>) AtomFeed.class;
         }
-        if (JSONLink.class.equals(resourceClass)) {
-            result = (Class<K>) JSONEntry.class;
+        if (JSONEntry.class.equals(resourceClass)) {
+            result = (Class<K>) JSONFeed.class;
         }
 
         return result;
@@ -123,6 +123,38 @@ public class ResourceFactory {
         }
         if (JSONEntry.class.equals(resourceClass)) {
             result = (Class<T>) JSONLink.class;
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends LinkResource, K extends EntryResource> Class<K> entryClassForLink(
+            final Class<T> resourceClass) {
+
+        Class<K> result = null;
+
+        if (AtomLink.class.equals(resourceClass)) {
+            result = (Class<K>) AtomEntry.class;
+        }
+        if (JSONLink.class.equals(resourceClass)) {
+            result = (Class<K>) JSONEntry.class;
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends FeedResource, K extends EntryResource> Class<K> entryClassForFeed(
+            final Class<T> resourceClass) {
+
+        Class<K> result = null;
+
+        if (AtomFeed.class.equals(resourceClass)) {
+            result = (Class<K>) AtomEntry.class;
+        }
+        if (JSONFeed.class.equals(resourceClass)) {
+            result = (Class<K>) JSONEntry.class;
         }
 
         return result;

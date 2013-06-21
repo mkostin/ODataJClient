@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -253,6 +254,13 @@ public abstract class AbstractTest {
     protected void debugEntry(final EntryResource entry, final String message) {
         StringWriter writer = new StringWriter();
         SerializationUtils.serializeEntry(entry, writer);
+        writer.flush();
+        LOG.debug(message + "\n{}", writer.toString());
+    }
+    
+    protected void debugFeed(final FeedResource feed, final String message) {
+        StringWriter writer = new StringWriter();
+        SerializationUtils.serializeFeed(feed, writer);
         writer.flush();
         LOG.debug(message + "\n{}", writer.toString());
     }
