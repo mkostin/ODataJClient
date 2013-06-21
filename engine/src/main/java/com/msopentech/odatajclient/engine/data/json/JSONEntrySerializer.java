@@ -111,43 +111,71 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
     }
 
     @Override
-    public void serialize(JSONEntry value, JsonGenerator jgen, SerializerProvider provider)
+    public void serialize(JSONEntry entry, JsonGenerator jgen, SerializerProvider provider)
             throws IOException, JsonProcessingException {
 
         jgen.writeStartObject();
 
-        if (value.getMetadata() != null) {
-            jgen.writeStringField(JSONConstants.METADATA, value.getMetadata().toURL().toExternalForm());
+        if (entry.getMetadata() != null) {
+            jgen.writeStringField(JSONConstants.METADATA, entry.getMetadata().toURL().toExternalForm());
         }
-        if (StringUtils.isNotBlank(value.getType())) {
-            jgen.writeStringField(JSONConstants.TYPE, value.getType());
+        if (StringUtils.isNotBlank(entry.getType())) {
+            jgen.writeStringField(JSONConstants.TYPE, entry.getType());
         }
-        if (value.getId() != null) {
-            jgen.writeStringField(JSONConstants.ID, value.getId());
+        if (entry.getId() != null) {
+            jgen.writeStringField(JSONConstants.ID, entry.getId());
         }
-        if (StringUtils.isNotBlank(value.getEtag())) {
-            jgen.writeStringField(JSONConstants.ETAG, value.getEtag());
-        }
-
-        if (value.getSelfLink() != null) {
-            jgen.writeStringField(JSONConstants.READ_LINK, value.getSelfLink());
+        if (StringUtils.isNotBlank(entry.getEtag())) {
+            jgen.writeStringField(JSONConstants.ETAG, entry.getEtag());
         }
 
-        if (value.getEditLink() != null) {
-            jgen.writeStringField(JSONConstants.EDIT_LINK, value.getEditLink());
+        if (entry.getSelfLink() != null) {
+            jgen.writeStringField(JSONConstants.READ_LINK, entry.getSelfLink());
         }
 
-        for (JSONLink link : value.getNavigationLinks()) {
+        if (entry.getEditLink() != null) {
+            jgen.writeStringField(JSONConstants.EDIT_LINK, entry.getEditLink());
+        }
+
+        if (entry.getMediaContentSource() != null) {
+            jgen.writeStringField(JSONConstants.MEDIAREAD_LINK, entry.getMediaContentSource());
+        }
+        if (entry.getMediaContentType() != null) {
+            jgen.writeStringField(JSONConstants.MEDIA_CONTENT_TYPE, entry.getMediaContentType());
+        }
+
+        for (JSONLink link : entry.getNavigationLinks()) {
             jgen.writeStringField(link.getTitle() + JSONConstants.NAVIGATION_LINK_SUFFIX, link.getHref());
+            if (link.getInlineEntry() != null) {
+                jgen.writeObjectField(link.getTitle(), link.getInlineEntry());
+            }
+            if (link.getInlineFeed() != null) {
+                jgen.writeObjectField(link.getTitle(), link.getInlineFeed());
+            }
         }
-        for (JSONLink link : value.getAssociationLinks()) {
+        for (JSONLink link : entry.getAssociationLinks()) {
             jgen.writeStringField(link.getTitle() + JSONConstants.ASSOCIATION_LINK_SUFFIX, link.getHref());
         }
-        for (JSONLink link : value.getMediaEditLinks()) {
-            jgen.writeStringField(link.getTitle() + JSONConstants.MEDIAEDIT_LINK_SUFFIX, link.getHref());
+        for (JSONLink link : entry.getMediaEditLinks()) {
+            if (link.getTitle() != null) {
+                jgen.writeStringField(link.getTitle() + JSONConstants.MEDIAEDIT_LINK_SUFFIX, link.getHref());
+            } else {
+                jgen.writeStringField(JSONConstants.MEDIAEDIT_LINK, link.getHref());
+            }
+
+            if (link.getInlineEntry() != null) {
+                jgen.writeObjectField(link.getTitle(), link.getInlineEntry());
+            }
+            if (link.getInlineFeed() != null) {
+                jgen.writeObjectField(link.getTitle(), link.getInlineFeed());
+            }
         }
 
-        writeEntryContent(jgen, value.getContent());
+        if (entry.isMediaEntry()) {
+            writeEntryContent(jgen, entry.getMediaEntryProperties());
+        } else {
+            writeEntryContent(jgen, entry.getContent());
+        }
 
         jgen.writeEndObject();
     }

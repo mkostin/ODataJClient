@@ -223,7 +223,7 @@ public class ODataBinder {
             entity.setMediaEntity(true);
             entity.setMediaContentSource(entry.getMediaContentSource());
             entity.setMediaContentType(entry.getMediaContentType());
-            content = entry.getOtherContent();
+            content = entry.getMediaEntryProperties();
         } else {
             content = entry.getContent();
         }

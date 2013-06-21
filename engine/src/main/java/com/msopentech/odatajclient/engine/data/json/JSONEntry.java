@@ -24,6 +24,7 @@ import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -52,6 +53,12 @@ public class JSONEntry implements EntryResource {
     private List<JSONLink> mediaEditLinks;
 
     private Element content;
+
+    private Element mediaEntryProperties;
+
+    private String mediaContentSource;
+
+    private String mediaContentType;
 
     public JSONEntry() {
         associationLinks = new ArrayList<JSONLink>();
@@ -187,27 +194,46 @@ public class JSONEntry implements EntryResource {
     }
 
     @Override
-    public Element getOtherContent() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public void setContent(Element content) {
         this.content = content;
     }
 
     @Override
-    public boolean isMediaEntry() {
-        return false;
+    public Element getMediaEntryProperties() {
+        return mediaEntryProperties;
+    }
+
+    @Override
+    public void setMediaEntryProperties(Element mediaEntryProperties) {
+        this.mediaEntryProperties = mediaEntryProperties;
     }
 
     @Override
     public String getMediaContentType() {
-        return null;
+        return this.mediaContentType;
+    }
+
+    public void setMediaContentType(String mediaContentType) {
+        this.mediaContentType = mediaContentType;
     }
 
     @Override
     public String getMediaContentSource() {
-        return null;
+        return this.mediaContentSource;
+    }
+
+    public void setMediaContentSource(String mediaContentSource) {
+        this.mediaContentSource = mediaContentSource;
+    }
+
+    @Override
+    public void setMediaContent(String mediaContentSource, String mediaContentType) {
+        setMediaContentSource(mediaContentSource);
+        setMediaContentType(mediaContentType);
+    }
+
+    @Override
+    public boolean isMediaEntry() {
+        return this.mediaEntryProperties != null && StringUtils.isNotBlank(this.mediaContentSource);
     }
 }

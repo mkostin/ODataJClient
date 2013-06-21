@@ -219,7 +219,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     }
 
     @Override
-    public Element getOtherContent() {
+    public Element getMediaEntryProperties() {
         return getAnyOther().isEmpty() ? null : (Element) getAnyOther().get(0);
     }
 
@@ -453,22 +453,10 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         getValues().add(atomContent);
     }
 
+    @Override
     public void setMediaEntryProperties(Element content) {
         getAnyOther().clear();
         getAnyOther().add(content);
-    }
-
-    public void setMediaContent(final String src, final String type) {
-        AtomContent atomContent = new AtomContent();
-        atomContent.setSrc(src);
-        atomContent.getType().add(type);
-        getValues().add(atomContent);
-    }
-
-    @Override
-    public boolean isMediaEntry() {
-        final List<AtomContent> contents = getElements(AtomContent.class);
-        return !contents.isEmpty() && StringUtils.isNotBlank(contents.get(0).src);
     }
 
     @Override
@@ -482,5 +470,19 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     public String getMediaContentSource() {
         final List<AtomContent> contents = getElements(AtomContent.class);
         return contents.isEmpty() || StringUtils.isBlank(contents.get(0).src) ? null : contents.get(0).src;
+    }
+
+    @Override
+    public void setMediaContent(final String src, final String type) {
+        AtomContent atomContent = new AtomContent();
+        atomContent.setSrc(src);
+        atomContent.getType().add(type);
+        getValues().add(atomContent);
+    }
+
+    @Override
+    public boolean isMediaEntry() {
+        final List<AtomContent> contents = getElements(AtomContent.class);
+        return !contents.isEmpty() && StringUtils.isNotBlank(contents.get(0).src);
     }
 }

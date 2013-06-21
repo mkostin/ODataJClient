@@ -62,13 +62,17 @@ public interface EntryResource {
 
     Element getContent();
 
-    Element getOtherContent();
-
     void setContent(Element content);
 
-    boolean isMediaEntry();
+    Element getMediaEntryProperties();
+
+    void setMediaEntryProperties(Element content);
 
     String getMediaContentType();
 
     String getMediaContentSource();
+
+    void setMediaContent(final String mediaContentSource, final String mediaContentType);
+
+    boolean isMediaEntry();
 }

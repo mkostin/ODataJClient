@@ -63,7 +63,7 @@ public class EntityTest extends AbstractTest {
         EntryResource entry = SerializationUtils.deserializeEntry(is, format.getEntryClass());
         assertNotNull(entry);
 
-        debugEntry(entry, "Just read");
+        debugEntry(entry, "Just read");        
 
         assertEquals(uriBuilder.build().toASCIIString(), entry.getId());
         assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entry.getType());
@@ -145,7 +145,6 @@ public class EntityTest extends AbstractTest {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer(-10)").expand("Info");
 
-
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
@@ -189,7 +188,6 @@ public class EntityTest extends AbstractTest {
     }
 
     @Test
-    @Ignore
     public void readODataEntityWithInlineFromJSON() {
         readODataEntityWithInline(ODataFormat.JSON_FULL_METADATA);
     }

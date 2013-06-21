@@ -89,7 +89,6 @@ public class JSONLink implements LinkResource {
         if (entry instanceof JSONEntry) {
             this.entry = (JSONEntry) entry;
         }
-
     }
 
     @Override
@@ -102,6 +101,5 @@ public class JSONLink implements LinkResource {
         if (feed instanceof JSONFeed) {
             this.feed = (JSONFeed) feed;
         }
-
     }
 }

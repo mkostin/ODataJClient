@@ -15,10 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
-import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -137,11 +137,24 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
         return properties;
     }
 
+    private String setInlineEntry(final String name, final String suffix, final ObjectNode tree, final ObjectCodec codec,
+            final JSONLink link) throws IOException {
+
+        String entryNamePrefix = name.substring(0, name.indexOf(suffix));
+        if (tree.has(entryNamePrefix)) {
+            link.setInlineEntry(tree.path(entryNamePrefix).traverse(codec).readValuesAs(JSONEntry.class).next());
+        }
+        return entryNamePrefix;
+    }
+
     @Override
     public JSONEntry deserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
         ObjectNode tree = (ObjectNode) jp.getCodec().readTree(jp);
+
+        final boolean isMediaEntry =
+                tree.hasNonNull(JSONConstants.MEDIAREAD_LINK) && tree.hasNonNull(JSONConstants.MEDIA_CONTENT_TYPE);
 
         JSONEntry jsonEntry = new JSONEntry();
 
@@ -175,33 +188,60 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
             tree.remove(JSONConstants.EDIT_LINK);
         }
 
+        if (tree.hasNonNull(JSONConstants.MEDIAREAD_LINK)) {
+            jsonEntry.setMediaContentSource(tree.get(JSONConstants.MEDIAREAD_LINK).textValue());
+            tree.remove(JSONConstants.MEDIAREAD_LINK);
+        }
+        if (tree.hasNonNull(JSONConstants.MEDIAEDIT_LINK)) {
+            jsonEntry.addMediaEditLink(new JSONLink(null, null, 
+                    tree.get(JSONConstants.MEDIAEDIT_LINK).textValue()));
+            tree.remove(JSONConstants.MEDIAEDIT_LINK);
+        }
+        if (tree.hasNonNull(JSONConstants.MEDIA_CONTENT_TYPE)) {
+            jsonEntry.setMediaContentType(tree.get(JSONConstants.MEDIA_CONTENT_TYPE).textValue());
+            tree.remove(JSONConstants.MEDIA_CONTENT_TYPE);
+        }
+
         Set<String> toRemove = new HashSet<String>();
         Iterator<Map.Entry<String, JsonNode>> itor = tree.fields();
         while (itor.hasNext()) {
             Map.Entry<String, JsonNode> entry = itor.next();
             if (entry.getKey().endsWith(JSONConstants.NAVIGATION_LINK_SUFFIX)) {
-                jsonEntry.addNavigationLink(new JSONLink(getTitle(entry),
+                JSONLink link = new JSONLink(getTitle(entry),
                         ODataConstants.NAVIGATION_LINK_REL + getTitle(entry),
-                        entry.getValue().textValue()));
+                        entry.getValue().textValue());
+                jsonEntry.addNavigationLink(link);
                 toRemove.add(entry.getKey());
+
+                toRemove.add(setInlineEntry(entry.getKey(),
+                        JSONConstants.NAVIGATION_LINK_SUFFIX, tree, jp.getCodec(), link));
             } else if (entry.getKey().endsWith(JSONConstants.ASSOCIATION_LINK_SUFFIX)) {
                 jsonEntry.addAssociationLink(new JSONLink(getTitle(entry),
                         ODataConstants.ASSOCIATION_LINK_REL + getTitle(entry),
                         entry.getValue().textValue()));
                 toRemove.add(entry.getKey());
             } else if (entry.getKey().endsWith(JSONConstants.MEDIAEDIT_LINK_SUFFIX)) {
-                jsonEntry.addMediaEditLink(new JSONLink(getTitle(entry),
+                JSONLink link = new JSONLink(getTitle(entry),
                         ODataConstants.MEDIA_EDIT_LINK_REL + getTitle(entry),
-                        entry.getValue().textValue()));
+                        entry.getValue().textValue());
+                jsonEntry.addMediaEditLink(link);
                 toRemove.add(entry.getKey());
+
+                toRemove.add(setInlineEntry(entry.getKey(),
+                        JSONConstants.MEDIAEDIT_LINK_SUFFIX, tree, jp.getCodec(), link));
             }
         }
         tree.remove(toRemove);
 
         try {
-            jsonEntry.setContent(getContent(tree));
+            final Element content = getContent(tree);
+            if (isMediaEntry) {
+                jsonEntry.setMediaEntryProperties(content);
+            } else {
+                jsonEntry.setContent(content);
+            }
         } catch (ParserConfigurationException e) {
-            throw new JsonParseException("Cannot build entry content", JsonLocation.NA, e);
+            throw new JsonParseException("Cannot build entry content", jp.getCurrentLocation(), e);
         }
 
         return jsonEntry;

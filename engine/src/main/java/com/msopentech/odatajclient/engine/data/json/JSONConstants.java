@@ -32,6 +32,12 @@ public class JSONConstants {
 
     public final static String EDIT_LINK = "odata.editLink";
 
+    public final static String MEDIAREAD_LINK = "odata.mediaReadLink";
+
+    public final static String MEDIAEDIT_LINK = "odata.mediaEditLink";
+
+    public final static String MEDIA_CONTENT_TYPE = "odata.mediaContentType";
+
     public final static String NAVIGATION_LINK_SUFFIX = "@odata.navigationLinkUrl";
 
     public final static String ASSOCIATION_LINK_SUFFIX = "@odata.associationLinkUrl";
