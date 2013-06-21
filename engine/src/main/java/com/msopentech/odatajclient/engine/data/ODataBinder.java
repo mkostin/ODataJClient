@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.data.ODataProperty.PropertyType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
@@ -227,38 +227,64 @@ public class ODataBinder {
     }
 
     private static ODataProperty newProperty(final Element property) {
-        final Node typeNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
 
-        try {
-            final ODataProperty res;
+        final ODataProperty res;
 
-            if (typeNode == null) {
-                final Node nullNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_NULL);
-                if (nullNode == null) {
-                    res = newPrimitiveProperty(property, new EdmType(EdmSimpleType.STRING.toString()));
-                } else {
-                    res = new ODataProperty(property.getLocalName(), null);
-                }
-            } else {
-                final EdmType edmType = new EdmType(typeNode.getTextContent());
+        final Node nullNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_NULL);
 
-                if (edmType.isCollection()) {
-                    // Collection
+        if (nullNode == null) {
+            final Node typeNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
+            final EdmType edmType = typeNode == null ? null : new EdmType(typeNode.getTextContent());
+
+            switch (getPropertyType(property)) {
+                case COLLECTION:
                     res = newCollectionProperty(property, edmType);
-                } else if (edmType.isSimpleType()) {
-                    // EdmSimpleType
-                    res = newPrimitiveProperty(property, edmType);
-                } else {
-                    // ComplexType or EnumType
+                    break;
+                case COMPLEX:
                     res = newComplexProperty(property, edmType);
+                    break;
+                case PRIMITIVE:
+                    res = newPrimitiveProperty(property, edmType);
+                    break;
+                default:
+                    res = new ODataProperty(property.getLocalName(), null);
+            }
+        } else {
+            res = new ODataProperty(property.getLocalName(), null);
+        }
+
+        return res;
+    }
+
+    private static PropertyType getPropertyType(final Element property) {
+        PropertyType res = null;
+
+        if (property.hasChildNodes()) {
+            final NodeList children = property.getChildNodes();
+
+            for (int i = 0; res == null && i < children.getLength(); i++) {
+                final Node child = children.item(i);
+
+                if (child.getNodeType() != Node.TEXT_NODE) {
+                    if ((ODataConstants.PREFIX_DATASERVICES + ODataConstants.ELEM_ELEMENT).
+                            equals(child.getNodeName())) {
+                        res = PropertyType.COLLECTION;
+                    } else {
+                        res = PropertyType.COMPLEX;
+                    }
                 }
             }
-
-            return res;
-        } catch (IllegalArgumentException e) {
-            LOG.warn("Failure retriving EdmSimpleType {}", typeNode.getTextContent(), e);
-            throw e;
+        } else {
+            res = PropertyType.COLLECTION;
         }
+
+        if (res == null) {
+            res = PropertyType.PRIMITIVE;
+        }
+
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + property.getNodeName() + ":" + res);
+        return res;
+
     }
 
     private static Element newNullProperty(final ODataProperty prop, final Document doc) {
@@ -287,7 +313,7 @@ public class ODataBinder {
     }
 
     private static ODataPrimitiveValue newPrimitiveValue(final Element prop, final EdmType edmType) {
-        return new ODataPrimitiveValue(prop.getTextContent(), edmType.getSimpleType());
+        return new ODataPrimitiveValue(prop.getTextContent(), edmType == null ? null : edmType.getSimpleType());
     }
 
     private static ODataProperty newPrimitiveProperty(final Element prop, final EdmType edmType) {
@@ -307,13 +333,17 @@ public class ODataBinder {
         final ODataPrimitiveValue value = (ODataPrimitiveValue) propValue;
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
-        element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
+
+        if (value.getTypeName() != null) {
+            element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
+        }
+
         element.setTextContent(value.toString());
         return element;
     }
 
     private static ODataComplexValue newComplexValue(final Element prop, final EdmType edmType) {
-        final ODataComplexValue value = new ODataComplexValue(edmType.getTypeExpression());
+        final ODataComplexValue value = new ODataComplexValue(edmType == null ? null : edmType.getTypeExpression());
 
         final NodeList elements = prop.getChildNodes();
 
@@ -344,7 +374,9 @@ public class ODataBinder {
         final ODataComplexValue value = (ODataComplexValue) propValue;
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
-        element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
+        if (value.getTypeName() != null) {
+            element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
+        }
 
         for (ODataProperty field : value) {
             element.appendChild(newProperty(field, doc));
@@ -353,21 +385,24 @@ public class ODataBinder {
     }
 
     private static ODataProperty newCollectionProperty(final Element prop, final EdmType edmType) {
-        final ODataCollectionValue value = new ODataCollectionValue(edmType.getTypeExpression());
+        final ODataCollectionValue value =
+                new ODataCollectionValue(edmType == null ? null : edmType.getTypeExpression());
 
+        final EdmType type = edmType == null ? null : new EdmType(edmType.getBaseType());
         final NodeList elements = prop.getChildNodes();
 
         for (int i = 0; i < elements.getLength(); i++) {
             final Element child = (Element) elements.item(i);
             if (child.getNodeType() != Node.TEXT_NODE) {
-                final EdmType type = new EdmType(edmType.getBaseType());
-
-                if (edmType.isSimpleType()) {
-                    // collection of EdmSimpleType
-                    value.add(newPrimitiveValue(child, type));
-                } else {
-                    // collection of ComplexType or EnumType            
-                    value.add(newComplexValue(child, type));
+                switch (getPropertyType(child)) {
+                    case COMPLEX:
+                        value.add(newComplexValue(child, type));
+                        break;
+                    case PRIMITIVE:
+                        value.add(newPrimitiveValue(child, type));
+                        break;
+                    default:
+                    // do not add null or empty values
                 }
             }
         }
@@ -384,7 +419,9 @@ public class ODataBinder {
         final ODataCollectionValue value = (ODataCollectionValue) prop.getValue();
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + prop.getName());
-        element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
+        if (value.getTypeName() != null) {
+            element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
+        }
 
         for (ODataValue el : value) {
             if (el instanceof ODataPrimitiveValue) {

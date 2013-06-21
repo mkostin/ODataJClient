@@ -142,7 +142,8 @@ public abstract class AbstractTest {
 
         assertNotNull(original);
         assertNotNull(actual);
-        assertEquals(original.getClass().getSimpleName(), actual.getClass().getSimpleName());
+        assertEquals("Type mismatch for '" + propertyName + "'",
+                original.getClass().getSimpleName(), actual.getClass().getSimpleName());
 
         if (original instanceof ODataComplexValue) {
             final List<ODataProperty> originalFileds = new ArrayList<ODataProperty>();
@@ -173,8 +174,10 @@ public abstract class AbstractTest {
 
             assertTrue("Found " + actual + " but expected " + original, found);
         } else {
-            assertEquals("Primitive value for '" + propertyName + "' type mismatch",
-                    ((ODataPrimitiveValue) original).getTypeName(), ((ODataPrimitiveValue) actual).getTypeName());
+            assertTrue("Primitive value for '" + propertyName + "' type mismatch",
+                    ((ODataPrimitiveValue) original).getTypeName().equals(((ODataPrimitiveValue) actual).getTypeName())
+                    || (((ODataPrimitiveValue) original).getTypeName().equals("Edm.String")
+                    && ((ODataPrimitiveValue) actual).getTypeName() == null));
             assertEquals("Primitive value for '" + propertyName + "' mismatch",
                     ((ODataPrimitiveValue) original).toString(), ((ODataPrimitiveValue) actual).toString());
         }
