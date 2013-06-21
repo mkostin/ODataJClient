@@ -19,6 +19,7 @@ import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootU
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
@@ -65,7 +66,7 @@ public class EntityTest extends AbstractTest {
 
         debugEntry(entry, "Just read");
 
-        if (format.JSON_FULL_METADATA == format || format.ATOM == format) {
+        if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
             assertEquals(uriBuilder.build().toASCIIString(), entry.getId());
             assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entry.getType());
             assertNotNull(entry.getBaseURI());
@@ -83,7 +84,7 @@ public class EntityTest extends AbstractTest {
             if ("PrimaryContactInfo".equals(property.getLocalName())) {
                 checked = true;
 
-                if (format.JSON_FULL_METADATA == format || format.ATOM == format) {
+                if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
                     assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails",
                             ((Element) property).getAttribute(ODataConstants.ATTR_TYPE));
                 }
@@ -115,24 +116,26 @@ public class EntityTest extends AbstractTest {
         final ODataEntity entity = res.getBody();
 
         assertNotNull(entity);
-        assertEquals("ODataDemo.Product", entity.getName());
-        assertEquals("http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)",
-                entity.getEditLink().toASCIIString());
 
-        assertEquals(2, entity.getNavigationLinks().size());
-        assertEquals(2, entity.getAssociationLinks().size());
+        if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
+            assertEquals("ODataDemo.Product", entity.getName());
+            assertEquals("http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)",
+                    entity.getEditLink().toASCIIString());
+            assertEquals(2, entity.getNavigationLinks().size());
+            assertEquals(2, entity.getAssociationLinks().size());
 
-        boolean check = false;
+            boolean check = false;
 
-        for (ODataLink link : entity.getNavigationLinks()) {
-            if ("Category".equals(link.getName())
-                    && "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)/Category".
-                    equals(link.getLink().toASCIIString())) {
-                check = true;
+            for (ODataLink link : entity.getNavigationLinks()) {
+                if ("Category".equals(link.getName())
+                        && "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)/Category".
+                        equals(link.getLink().toASCIIString())) {
+                    check = true;
+                }
             }
-        }
 
-        assertTrue(check);
+            assertTrue(check);
+        }
     }
 
     @Test
@@ -142,7 +145,7 @@ public class EntityTest extends AbstractTest {
 
     @Test
     public void readODataEntityFromJSON() {
-        readODataEntity(ODataFormat.JSON_FULL_METADATA);
+        readODataEntity(ODataFormat.JSON);
     }
 
     private void readODataEntityWithInline(final ODataFormat format) {
@@ -193,6 +196,7 @@ public class EntityTest extends AbstractTest {
 
     @Test
     public void readODataEntityWithInlineFromJSON() {
+        // this needs to be full, otherwise there is no mean to recognize links
         readODataEntityWithInline(ODataFormat.JSON_FULL_METADATA);
     }
 
@@ -260,7 +264,7 @@ public class EntityTest extends AbstractTest {
             }
         }
 
-        assertTrue(toBeDeleted.size() >= 1);
+        assertFalse(toBeDeleted.isEmpty());
 
         for (ODataEntity entity : toBeDeleted) {
             final URI selflLink = entity.getLink();
@@ -303,6 +307,7 @@ public class EntityTest extends AbstractTest {
 
     @Test
     public void createWithInlineAsJSON() {
+        // this needs to be full, otherwise there is no mean to recognize links
         createODataEntity(ODataFormat.JSON_FULL_METADATA, 4, true);
     }
 }

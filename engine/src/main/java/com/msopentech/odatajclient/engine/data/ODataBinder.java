@@ -282,9 +282,7 @@ public class ODataBinder {
             res = PropertyType.PRIMITIVE;
         }
 
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + property.getNodeName() + ":" + res);
         return res;
-
     }
 
     private static Element newNullProperty(final ODataProperty prop, final Document doc) {
