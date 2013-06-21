@@ -26,6 +26,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class ODataProperty implements Serializable {
 
+    public enum PropertyType {
+
+        PRIMITIVE,
+        COLLECTION,
+        COMPLEX,
+        EMPTY
+
+    }
+
     private static final long serialVersionUID = 926939448778950450L;
 
     /**
