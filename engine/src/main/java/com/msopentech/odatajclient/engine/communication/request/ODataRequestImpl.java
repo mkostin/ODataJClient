@@ -335,6 +335,9 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public InputStream rowExecute() {
         final WebClient client = WebClient.create(this.uri);
+        for (String key : header.getHeaderNames()) {
+            client.header(key, header.getHeader(key));
+        }
         return client.accept(getContentType()).get(InputStream.class);
     }
 }

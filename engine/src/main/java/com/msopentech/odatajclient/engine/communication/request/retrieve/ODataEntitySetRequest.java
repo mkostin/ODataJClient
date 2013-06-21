@@ -16,10 +16,12 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.utils.ODataResultSet;
+import com.msopentech.odatajclient.engine.data.ODataFeed;
+import com.msopentech.odatajclient.engine.data.ODataReader;
+import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
+import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData EntitySet query request.
@@ -27,7 +29,9 @@ import javax.ws.rs.core.Response;
  *
  * @see ODataRetrieveRequestFactory#getEntitySetRequest(java.net.URI)
  */
-public class ODataEntitySetRequest extends ODataQueryRequest<ODataResultSet<ODataEntity>> {
+public class ODataEntitySetRequest extends ODataQueryRequest<ODataFeed> {
+
+    private ODataFeed feed = null;
 
     /**
      * Private constructor.
@@ -42,8 +46,15 @@ public class ODataEntitySetRequest extends ODataQueryRequest<ODataResultSet<ODat
      * {@inheritDoc }
      */
     @Override
-    public ODataQueryResponse<ODataResultSet<ODataEntity>> execute() {
-        return new ODataEntitySetResponseImpl(null);
+    public ODataQueryResponse<ODataFeed> execute() {
+        final WebClient client = WebClient.create(this.uri);
+
+        for (String key : header.getHeaderNames()) {
+            client.header(key, header.getHeader(key));
+        }
+
+        final Response res = client.accept(getContentType()).get();
+        return new ODataEntitySetResponseImpl(res);
     }
 
     protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
@@ -54,8 +65,15 @@ public class ODataEntitySetRequest extends ODataQueryRequest<ODataResultSet<ODat
 
         @Override
         @SuppressWarnings("unchecked")
-        public ODataResultSet<ODataEntity> getBody() {
-            return res.readEntity(ODataResultSet.class);
+        public ODataFeed getBody() {
+            try {
+                if (feed == null) {
+                    feed = ODataReader.deserializeFeed(res.readEntity(InputStream.class), getFormat());
+                }
+                return feed;
+            } finally {
+                res.close();
+            }
         }
     }
 }

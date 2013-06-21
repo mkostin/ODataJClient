@@ -66,9 +66,20 @@ public class ODataBinder {
         final List<EntryResource> entries = new ArrayList<EntryResource>();
         feedResource.setEntries(entries);
 
+        final URI next = feed.getNext();
+        if (next != null) {
+            final LinkResource nextLink = ResourceFactory.newLinkForFeed(reference);
+            nextLink.setTitle(feed.getName());
+            nextLink.setHref(next.toASCIIString());
+            nextLink.setRel(ODataConstants.NEXT_LINK_REL);
+            feedResource.setNext(nextLink);
+        }
+
         for (ODataEntity entity : feed.getEntities()) {
             entries.add(getEntry(entity, ResourceFactory.entryClassForFeed(reference)));
         }
+
+        feedResource.setEntries(entries);
 
         return feedResource;
     }
@@ -141,6 +152,20 @@ public class ODataBinder {
         }
 
         return entry;
+    }
+
+    public static ODataFeed getODataFeed(final FeedResource feedResource) {
+        final LinkResource next = feedResource.getNext();
+
+        final ODataFeed feed = next == null
+                ? ODataFactory.newFeed()
+                : ODataFactory.newFeed(URI.create(next.getHref()));
+
+        for (EntryResource entryResource : feedResource.getEntries()) {
+            feed.addEntity(getODataEntity(entryResource));
+        }
+
+        return feed;
     }
 
     public static ODataEntity getODataEntity(final EntryResource entry) {

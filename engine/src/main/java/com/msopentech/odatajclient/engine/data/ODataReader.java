@@ -33,13 +33,14 @@ public class ODataReader {
      * De-Serializes a stream into an OData feed.
      *
      * @param input stream to de-serialize.
+     * @param format de-serialize as AtomEntry or JSONEntry
      * @return de-serialized feed.
      * @throws NoValidEntityFound in case the feed was not found into the input stream.
      */
-    public static ODataFeed deserializeFeed(final InputStream input)
-            throws NoValidEntityFound {
-
-        return null;
+    public static ODataFeed deserializeFeed(final InputStream input, final ODataFormat format) {
+        final FeedResource feedResource =
+                SerializationUtils.deserializeFeed(input, ResourceFactory.feedClassForEntry(format.getEntryClass()));
+        return ODataBinder.getODataFeed(feedResource);
     }
 
     /**
@@ -60,9 +61,7 @@ public class ODataReader {
      * @return OData entity property de-serialized.
      * @throws NoValidEntityFound in case no property was found into the input stream.
      */
-    public static ODataProperty deserializeProperty(final InputStream input)
-            throws NoValidEntityFound {
-
+    public static ODataProperty deserializeProperty(final InputStream input) {
         return null;
     }
 

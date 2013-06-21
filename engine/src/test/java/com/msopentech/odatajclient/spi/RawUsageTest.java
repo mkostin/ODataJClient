@@ -21,7 +21,6 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.data.NoValidEntityFound;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,15 +40,13 @@ public class RawUsageTest {
 
         try {
             // let's suppose to want to deserialize, one shot, an entire atom feed
-            final ODataFeed feed = ODataReader.deserializeFeed(is);
+            final ODataFeed feed = ODataReader.deserializeFeed(is, ODataFormat.ATOM);
 
             // retrieve and process the query result
             for (ODataEntity entity : feed.getEntities()) {
                 // .................
             }
 
-        } catch (NoValidEntityFound ex) {
-            // ....
         } finally {
             if (is != null) {
                 try {

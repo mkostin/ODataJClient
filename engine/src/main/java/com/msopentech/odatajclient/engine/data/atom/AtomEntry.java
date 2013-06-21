@@ -398,12 +398,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
             getValues().remove(link);
         }
 
-        boolean result = (selfLink instanceof AtomLink);
-        if (result) {
-            getValues().add(selfLink);
-        }
-
-        return result;
+        return (selfLink instanceof AtomLink) && getValues().add(selfLink);
     }
 
     @Override
@@ -413,12 +408,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
             getValues().remove(link);
         }
 
-        boolean result = (editLink instanceof AtomLink);
-        if (result) {
-            getValues().add(editLink);
-        }
-
-        return result;
+        return (editLink instanceof AtomLink) && getValues().add(editLink);
     }
 
     private void setLinksWithRelPrefix(final String relPrefix, final List<LinkResource> linkResources) {

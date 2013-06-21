@@ -46,6 +46,11 @@ public class ODataEntityRequest extends ODataQueryRequest<ODataEntity> {
     @Override
     public ODataQueryResponse<ODataEntity> execute() {
         final WebClient client = WebClient.create(this.uri);
+
+        for (String key : header.getHeaderNames()) {
+            client.header(key, header.getHeader(key));
+        }
+
         final Response res = client.accept(getContentType()).get();
         return new ODataEntityResponseImpl(res);
     }

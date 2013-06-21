@@ -25,6 +25,8 @@ import java.util.List;
  */
 public class ODataFeed extends ODataItem {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Link to the next page.
      */

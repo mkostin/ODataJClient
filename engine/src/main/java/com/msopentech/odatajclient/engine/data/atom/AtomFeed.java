@@ -17,6 +17,8 @@ package com.msopentech.odatajclient.engine.data.atom;
 
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
+import com.msopentech.odatajclient.engine.data.LinkResource;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -323,5 +325,21 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
                 getEntries().add((AtomEntry) entryResource);
             }
         }
+    }
+
+    @Override
+    public boolean setNext(LinkResource next) {
+        AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);
+        if (link != null) {
+            getValues().remove(link);
+        }
+
+        return (next instanceof AtomLink) && getValues().add(next);
+    }
+
+    @Override
+    public LinkResource getNext() {
+        final AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);
+        return link == null ? null : link;
     }
 }

@@ -16,16 +16,15 @@
 package com.msopentech.odatajclient.engine.data;
 
 import java.net.URI;
-import java.util.List;
 
 public class ODataFactory {
 
-    public static ODataFeed newFeed(final List<ODataEntity> entries) {
-        return new FeedImpl(entries);
+    public static ODataFeed newFeed() {
+        return new FeedImpl();
     }
 
-    public static ODataFeed newFeed(final List<ODataEntity> entries, final URI next) {
-        return new FeedImpl(entries, next);
+    public static ODataFeed newFeed(final URI next) {
+        return new FeedImpl(next);
     }
 
     public static ODataEntity newEntity(final String name) {
@@ -97,16 +96,13 @@ public class ODataFactory {
 
         private static final long serialVersionUID = 1632243717538685102L;
 
-        public FeedImpl(final List<ODataEntity> entries) {
+        public FeedImpl() {
             super();
-            this.next = null;
-            this.entities.addAll(entries);
         }
 
-        public FeedImpl(final List<ODataEntity> entries, final URI next) {
+        public FeedImpl(final URI next) {
             super();
             this.next = next;
-            this.entities.addAll(entries);
         }
     }
 

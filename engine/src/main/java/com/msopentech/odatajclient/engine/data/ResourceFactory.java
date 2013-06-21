@@ -67,6 +67,20 @@ public class ResourceFactory {
     }
 
     @SuppressWarnings("unchecked")
+    public static <T extends LinkResource, K extends FeedResource> T newLinkForFeed(final Class<K> resourceClass) {
+        T result = null;
+
+        if (AtomFeed.class.equals(resourceClass)) {
+            result = (T) new AtomLink();
+        }
+        if (JSONFeed.class.equals(resourceClass)) {
+            result = (T) new JSONLink();
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T extends LinkResource, K extends EntryResource> T newLinkForEntry(final Class<K> resourceClass) {
         T result = null;
 

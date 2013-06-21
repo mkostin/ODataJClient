@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
+import com.msopentech.odatajclient.engine.data.LinkResource;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,5 +65,15 @@ public class JSONFeed extends AbstractJSONObject implements FeedResource {
                 this.entries.add((JSONEntry) entry);
             }
         }
+    }
+
+    @Override
+    public boolean setNext(LinkResource next) {
+        return false;
+    }
+
+    @Override
+    public LinkResource getNext() {
+        return null;
     }
 }

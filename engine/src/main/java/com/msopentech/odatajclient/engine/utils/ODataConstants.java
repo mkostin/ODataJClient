@@ -67,6 +67,8 @@ public class ODataConstants {
      */
     public static final String SELF_LINK_REL = "self";
 
+    public static final String NEXT_LINK_REL = "next";
+
     public static final String ELEM_PROPERTIES = PREFIX_METADATA + "properties";
 
     public static final String ELEM_ELEMENT = "element";

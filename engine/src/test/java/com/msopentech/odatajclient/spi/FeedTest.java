@@ -16,17 +16,15 @@
 package com.msopentech.odatajclient.spi;
 
 import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.FeedResource;
-import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
@@ -43,7 +41,7 @@ public class FeedTest extends AbstractTest {
 
     private void readFeed(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntitySetSegment("Car");
+        uriBuilder.appendEntitySetSegment("Car").top(2).skip(4);
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
@@ -54,7 +52,9 @@ public class FeedTest extends AbstractTest {
                 SerializationUtils.deserializeFeed(is, ResourceFactory.feedClassForEntry(format.getEntryClass()));
         assertNotNull(feed);
 
-        debugFeed(feed, "Just read");
+        debugFeed(feed, "Just (raw)retrieved feed");
+
+        assertEquals(2, feed.getEntries().size());
 
         is.close();
     }
@@ -70,44 +70,32 @@ public class FeedTest extends AbstractTest {
     }
 
     private void readODataFeed(final ODataFormat format) {
-        final String serviceRoot = "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc";
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(serviceRoot);
-        uriBuilder.appendEntityTypeSegment("Products(1)");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(
+                "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
+        uriBuilder.appendEntitySetSegment("Products").top(3);
 
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataEntity> res = req.execute();
-        final ODataEntity entity = res.getBody();
+        final ODataQueryResponse<ODataFeed> res = req.execute();
+        final ODataFeed feed = res.getBody();
 
-        assertNotNull(entity);
+        assertNotNull(feed);
 
-        if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
-            assertEquals("ODataDemo.Product", entity.getName());
-            assertEquals(serviceRoot + "/Products(1)", entity.getEditLink().toASCIIString());
-            assertEquals(2, entity.getNavigationLinks().size());
-            assertEquals(2, entity.getAssociationLinks().size());
+        debugFeed(ODataBinder.getFeed(
+                feed, ResourceFactory.feedClassForEntry(format.getEntryClass())), "Just retrieved feed");
 
-            boolean check = false;
-
-            for (ODataLink link : entity.getNavigationLinks()) {
-                check = ("Category".equals(link.getName())
-                        && (serviceRoot + "/Products(1)/Category").equals(link.getLink().toASCIIString()));
-            }
-
-            assertTrue(check);
-        }
+        assertEquals(3, feed.getEntities().size());
     }
 
     @Test
-    @Ignore
-    public void readODataEntityFromAtom() {
+    public void readODataFeedFromAtom() {
         readODataFeed(ODataFormat.ATOM);
     }
 
     @Test
     @Ignore
-    public void readODataEntityFromJSON() {
+    public void readODataFeedFromJSON() {
         readODataFeed(ODataFormat.JSON);
     }
 }

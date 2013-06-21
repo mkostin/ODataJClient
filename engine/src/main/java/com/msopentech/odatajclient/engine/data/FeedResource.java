@@ -27,4 +27,8 @@ public interface FeedResource {
     List<? extends EntryResource> getEntries();
 
     void setEntries(List<EntryResource> entries);
+
+    boolean setNext(LinkResource next);
+
+    LinkResource getNext();
 }
