@@ -38,7 +38,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMe
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRowRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRawRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
@@ -360,13 +360,13 @@ public class ODataRequestFactory {
     }
 
     /**
-     * Implements a row request returning a stream.
+     * Implements a raw request returning a stream.
      *
      * @param query query to be performed.
      * @return new ODataRowRetrieveRequest instance.
      */
-    public static ODataRowRequest getRowRetrieveRequest(final URI uri) {
-        return ODataRetrieveRequestFactory.getRowRetrieveRequest(uri);
+    public static ODataRawRequest getRawRetrieveRequest(final URI uri) {
+        return ODataRetrieveRequestFactory.getRawRetrieveRequest(uri);
 
     }
 }

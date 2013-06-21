@@ -56,7 +56,7 @@ public interface ODataResponse {
      * Gets response body as InputStream.
      * @return response body input stream.
      */
-    InputStream getRowResponse();
+    InputStream getRawResponse();
 
     /**
      * Close the underlying message entity input stream (if available and open) as well as releases any other

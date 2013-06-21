@@ -21,8 +21,8 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.NoValidEntityFound;
-import com.msopentech.odatajclient.engine.utils.ODataReader;
+import com.msopentech.odatajclient.engine.data.NoValidEntityFound;
+import com.msopentech.odatajclient.engine.data.ODataReader;
 import java.io.IOException;
 import java.io.InputStream;
 

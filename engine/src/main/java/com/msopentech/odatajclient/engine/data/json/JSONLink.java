@@ -36,6 +36,9 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
 
     private JSONFeed feed;
 
+    public JSONLink() {
+    }
+
     public JSONLink(String title, String rel, String href) {
         this.title = title;
         this.rel = rel;

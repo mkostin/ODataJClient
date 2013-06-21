@@ -13,28 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.utils;
+package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.data.EntryResource;
-import com.msopentech.odatajclient.engine.data.FeedResource;
-import com.msopentech.odatajclient.engine.data.LinkResource;
-import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
-import com.msopentech.odatajclient.engine.data.ODataComplexValue;
-import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFeed;
-import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
-import com.msopentech.odatajclient.engine.data.ODataInlineFeed;
-import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
-import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
-import com.msopentech.odatajclient.engine.data.atom.AtomLink;
-import com.msopentech.odatajclient.engine.data.json.JSONEntry;
-import com.msopentech.odatajclient.engine.data.json.JSONLink;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.StringWriter;
 import java.net.URI;
 import javax.xml.parsers.DocumentBuilder;
@@ -79,39 +64,27 @@ public class ODataBinder {
 
     @SuppressWarnings("unchecked")
     public static <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference) {
-        T entry;
-
-        if (reference.equals(AtomEntry.class)) {
-            entry = (T) getAtomEntry(entity);
-        } else {
-            entry = (T) getJSONEntry(entity);
-        }
-
-        return entry;
-    }
-
-    private static AtomEntry getAtomEntry(final ODataEntity entity) {
-        final AtomEntry entry = new AtomEntry();
+        T entry = ResourceFactory.newEntry(reference);
 
         // -------------------------------------------------------------
         // Add edit and self link
         // -------------------------------------------------------------
         final URI editLink = entity.getEditLink();
         if (editLink != null) {
-            AtomLink entryEditLink = new AtomLink();
+            LinkResource entryEditLink = ResourceFactory.newLinkForEntry(reference);
             entryEditLink.setTitle(entity.getName());
             entryEditLink.setHref(editLink.toASCIIString());
             entryEditLink.setRel(ODataConstants.EDIT_LINK_REL);
-            entry.getValues().add(entryEditLink);
+            entry.setEditLink(entryEditLink);
         }
 
         final URI selfLink = entity.isReadOnly() ? entity.getLink() : null;
         if (selfLink != null) {
-            AtomLink entrySelfLink = new AtomLink();
+            LinkResource entrySelfLink = ResourceFactory.newLinkForEntry(reference);
             entrySelfLink.setTitle(entity.getName());
             entrySelfLink.setHref(selfLink.toASCIIString());
             entrySelfLink.setRel(ODataConstants.SELF_LINK_REL);
-            entry.getValues().add(entrySelfLink);
+            entry.setSelfLink(entrySelfLink);
         }
         // -------------------------------------------------------------
 
@@ -122,7 +95,7 @@ public class ODataBinder {
         for (ODataLink link : entity.getNavigationLinks()) {
             // append link 
             LOG.debug("Append navigation link\n{}", link);
-            entry.getValues().add(getLinkResource(link, AtomLink.class));
+            entry.addNavigationLink(getLinkResource(link, ResourceFactory.linkClassForEntry(reference)));
         }
         // -------------------------------------------------------------
 
@@ -131,7 +104,7 @@ public class ODataBinder {
         // -------------------------------------------------------------
         for (ODataLink link : entity.getEditMediaLinks()) {
             LOG.debug("Append edit-media link\n{}", link);
-            entry.getValues().add(getLinkResource(link, AtomLink.class));
+            entry.addMediaEditLink(getLinkResource(link, ResourceFactory.linkClassForEntry(reference)));
         }
         // -------------------------------------------------------------
 
@@ -140,7 +113,7 @@ public class ODataBinder {
         // -------------------------------------------------------------
         for (ODataLink link : entity.getAssociationLinks()) {
             LOG.debug("Append association link\n{}", link);
-            entry.getValues().add(getLinkResource(link, AtomLink.class));
+            entry.addAssociationLink(getLinkResource(link, ResourceFactory.linkClassForEntry(reference)));
         }
         // -------------------------------------------------------------
 
@@ -154,20 +127,6 @@ public class ODataBinder {
 
         for (ODataProperty prop : entity.getProperties()) {
             content.appendChild(newProperty(prop, content.getOwnerDocument()));
-        }
-
-        return entry;
-    }
-
-    private static JSONEntry getJSONEntry(final ODataEntity entity) {
-        final JSONEntry entry = new JSONEntry();
-
-        entry.setContent(newEntryContent());
-
-        final Element properties = entry.getContent();
-
-        for (ODataProperty prop : entity.getProperties()) {
-            properties.appendChild(newProperty(prop, properties.getOwnerDocument()));
         }
 
         return entry;
@@ -189,10 +148,10 @@ public class ODataBinder {
 
         final ODataEntity entity = entry.getSelfLink() == null
                 ? ODataFactory.newEntity(entry.getType())
-                : ODataFactory.newEntity(entry.getType(), URIUtils.getURI(base, entry.getSelfLink()));
+                : ODataFactory.newEntity(entry.getType(), URIUtils.getURI(base, entry.getSelfLink().getHref()));
 
         if (entry.getEditLink() != null) {
-            entity.setEditLink(URIUtils.getURI(base, entry.getEditLink()));
+            entity.setEditLink(URIUtils.getURI(base, entry.getEditLink().getHref()));
         }
 
         for (LinkResource link : entry.getAssociationLinks()) {
@@ -242,31 +201,26 @@ public class ODataBinder {
         return entity;
     }
 
-    public static LinkResource getLinkResource(final ODataLink link, final Class<? extends LinkResource> reference) {
-        final LinkResource linkResource;
-
-        if (reference == JSONLink.class) {
-            linkResource = new JSONLink(link.getName(), link.getRel(), link.getLink().toASCIIString());
-        } else {
-            linkResource = new AtomLink();
-            linkResource.setRel(link.getRel());
-            linkResource.setTitle(link.getName());
-            linkResource.setHref(link.getLink().toASCIIString());
-            linkResource.setType(link.getType().toString());
-        }
+    @SuppressWarnings("unchecked")
+    public static <T extends LinkResource> T getLinkResource(final ODataLink link, final Class<T> reference) {
+        final T linkResource = ResourceFactory.newLink(reference);
+        linkResource.setRel(link.getRel());
+        linkResource.setTitle(link.getName());
+        linkResource.setHref(link.getLink().toASCIIString());
+        linkResource.setType(link.getType().toString());
 
         if (link instanceof ODataInlineEntity) {
             // append inline entity
             final ODataEntity inlineEntity = ((ODataInlineEntity) link).getEntity();
-            LOG.debug("Append in-line entity{}\n", inlineEntity);
+            LOG.debug("Append in-line entity\n{}", inlineEntity);
 
-            linkResource.setInlineEntry(getEntry(inlineEntity, AtomEntry.class));
+            linkResource.setInlineEntry(getEntry(inlineEntity, ResourceFactory.entryClassForLink(reference)));
         } else if (link instanceof ODataInlineFeed) {
             // append inline feed
             final ODataFeed inlineFeed = ((ODataInlineFeed) link).getFeed();
             LOG.debug("Append in-line feed\n{}", inlineFeed);
 
-            linkResource.setInlineFeed(getFeed(inlineFeed, AtomFeed.class));
+            linkResource.setInlineFeed(getFeed(inlineFeed, ResourceFactory.feedClassForLink(reference)));
         }
 
         return linkResource;

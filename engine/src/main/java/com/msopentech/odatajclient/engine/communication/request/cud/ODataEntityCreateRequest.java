@@ -21,8 +21,8 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequestFact
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.utils.ODataBinder;
-import com.msopentech.odatajclient.engine.utils.ODataReader;
+import com.msopentech.odatajclient.engine.data.ODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

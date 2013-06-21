@@ -26,7 +26,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.utils.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
-import com.msopentech.odatajclient.engine.utils.ODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -180,8 +180,7 @@ public abstract class AbstractTest {
         }
     }
 
-    protected ODataEntity getSampleCustomerInfo(
-            final int id, final String sampleinfo) {
+    protected ODataEntity getSampleCustomerInfo(final int id, final String sampleinfo) {
         final ODataEntity entity = ODataFactory.newEntity("CustomerInfo");
         entity.setMediaEntity(true);
 
@@ -194,6 +193,7 @@ public abstract class AbstractTest {
 
     protected ODataEntity getSampleCustomerProfile(
             final int id, final String sampleName, final boolean withInlineInfo) {
+
         ODataEntity entity = ODataFactory.newEntity("Customer");
 
         // add name attribute
@@ -241,7 +241,7 @@ public abstract class AbstractTest {
             entity.addLink(ODataFactory.newInlineEntity(
                     "Info",
                     URI.create("Customer(" + id + ")/Info"),
-                    getSampleCustomerInfo(1000 + id, sampleName + "_Info")));
+                    getSampleCustomerInfo(id, sampleName + "_Info")));
         }
 
         return entity;

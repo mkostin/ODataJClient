@@ -36,7 +36,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 import java.io.IOException;
 import java.util.concurrent.Future;
 import javax.ws.rs.core.MediaType;

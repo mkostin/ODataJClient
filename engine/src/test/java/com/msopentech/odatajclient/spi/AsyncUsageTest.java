@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
-import com.msopentech.odatajclient.engine.utils.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 

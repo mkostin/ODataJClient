@@ -19,9 +19,9 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Met
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import java.net.URI;
 
-public class ODataRowRequest extends ODataRequestImpl {
+public class ODataRawRequest extends ODataRequestImpl {
 
-    ODataRowRequest(final URI uri) {
+    ODataRawRequest(final URI uri) {
         super(Method.GET);
         this.uri = uri;
     }

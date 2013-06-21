@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.utils;
+package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFeed;
-import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
-import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import java.net.URI;
 import java.util.List;
 

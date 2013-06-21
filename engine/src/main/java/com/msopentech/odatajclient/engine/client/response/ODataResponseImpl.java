@@ -73,7 +73,7 @@ public abstract class ODataResponseImpl implements ODataResponse {
     }
 
     @Override
-    public InputStream getRowResponse() {
+    public InputStream getRawResponse() {
         return res.readEntity(InputStream.class);
     }
     

@@ -179,12 +179,16 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
         }
 
         if (tree.hasNonNull(JSONConstants.READ_LINK)) {
-            jsonEntry.setEditLink(tree.get(JSONConstants.READ_LINK).textValue());
+            jsonEntry.setSelfLink(new JSONLink(null,
+                    ODataConstants.SELF_LINK_REL,
+                    tree.get(JSONConstants.READ_LINK).textValue()));
             tree.remove(JSONConstants.READ_LINK);
         }
 
         if (tree.hasNonNull(JSONConstants.EDIT_LINK)) {
-            jsonEntry.setEditLink(tree.get(JSONConstants.EDIT_LINK).textValue());
+            jsonEntry.setEditLink(new JSONLink(null,
+                    ODataConstants.EDIT_LINK_REL,
+                    tree.get(JSONConstants.EDIT_LINK).textValue()));
             tree.remove(JSONConstants.EDIT_LINK);
         }
 

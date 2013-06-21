@@ -31,7 +31,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.utils.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 
 public class BatchUsageTest {
 

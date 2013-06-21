@@ -169,9 +169,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     }
 
     @Override
-    public String getEditLink() {
+    public LinkResource getEditLink() {
         AtomLink link = getLinkWithRel(ODataConstants.EDIT_LINK_REL);
-        return link == null ? null : link.getHref();
+        return link == null ? null : link;
     }
 
     private List<AtomLink> getLinksWithRelPrefix(final String relPrefix) {
@@ -392,33 +392,33 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     }
 
     @Override
-    public void setSelfLink(String selfLink) {
+    public boolean setSelfLink(LinkResource selfLink) {
         AtomLink link = getLinkWithRel(ODataConstants.SELF_LINK_REL);
         if (link != null) {
             getValues().remove(link);
         }
 
-        link = new AtomLink();
-        link.setRel(ODataConstants.SELF_LINK_REL);
-        link.setTitle(getTitle());
-        link.setHref(selfLink);
+        boolean result = (selfLink instanceof AtomLink);
+        if (result) {
+            getValues().add(selfLink);
+        }
 
-        getValues().add(link);
+        return result;
     }
 
     @Override
-    public void setEditLink(String editLink) {
+    public boolean setEditLink(LinkResource editLink) {
         AtomLink link = getLinkWithRel(ODataConstants.EDIT_LINK_REL);
         if (link != null) {
             getValues().remove(link);
         }
 
-        link = new AtomLink();
-        link.setRel(ODataConstants.EDIT_LINK_REL);
-        link.setTitle(getTitle());
-        link.setHref(editLink);
+        boolean result = (editLink instanceof AtomLink);
+        if (result) {
+            getValues().add(editLink);
+        }
 
-        getValues().add(link);
+        return result;
     }
 
     private void setLinksWithRelPrefix(final String relPrefix, final List<LinkResource> linkResources) {
@@ -432,13 +432,28 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     }
 
     @Override
+    public boolean addAssociationLink(LinkResource associationLink) {
+        return (associationLink instanceof AtomLink) ? getValues().add(associationLink) : false;
+    }
+
+    @Override
     public void setAssociationLinks(List<LinkResource> associationLinks) {
         setLinksWithRelPrefix(ODataConstants.ASSOCIATION_LINK_REL, associationLinks);
     }
 
     @Override
+    public boolean addNavigationLink(LinkResource associationLink) {
+        return (associationLink instanceof AtomLink) ? getValues().add(associationLink) : false;
+    }
+
+    @Override
     public void setNavigationLinks(List<LinkResource> navigationLinks) {
         setLinksWithRelPrefix(ODataConstants.NAVIGATION_LINK_REL, navigationLinks);
+    }
+
+    @Override
+    public boolean addMediaEditLink(LinkResource associationLink) {
+        return (associationLink instanceof AtomLink) ? getValues().add(associationLink) : false;
     }
 
     @Override

@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.utils;
+package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.data.EntryResource;
-import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFeed;
-import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

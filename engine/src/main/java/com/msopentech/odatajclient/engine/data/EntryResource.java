@@ -40,24 +40,30 @@ public interface EntryResource {
 
     void setEtag(String etag);
 
-    String getSelfLink();
+    LinkResource getSelfLink();
 
-    void setSelfLink(String editLink);
+    boolean setSelfLink(LinkResource editLink);
 
-    String getEditLink();
+    LinkResource getEditLink();
 
-    void setEditLink(String editLink);
+    boolean setEditLink(LinkResource editLink);
 
     List<? extends LinkResource> getAssociationLinks();
 
+    boolean addAssociationLink(LinkResource associationLink);
+    
     void setAssociationLinks(List<LinkResource> associationLinks);
 
     List<? extends LinkResource> getNavigationLinks();
+
+    boolean addNavigationLink(LinkResource navigationLink);
 
     void setNavigationLinks(List<LinkResource> navigationLinks);
 
     List<? extends LinkResource> getMediaEditLinks();
 
+    boolean addMediaEditLink(LinkResource mediaEditLink);
+    
     void setMediaEditLinks(List<LinkResource> mediaEditLinks);
 
     Element getContent();

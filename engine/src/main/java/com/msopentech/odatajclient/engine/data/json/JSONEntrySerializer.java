@@ -130,11 +130,11 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         }
 
         if (entry.getSelfLink() != null) {
-            jgen.writeStringField(JSONConstants.READ_LINK, entry.getSelfLink());
+            jgen.writeStringField(JSONConstants.READ_LINK, entry.getSelfLink().getHref());
         }
 
         if (entry.getEditLink() != null) {
-            jgen.writeStringField(JSONConstants.EDIT_LINK, entry.getEditLink());
+            jgen.writeStringField(JSONConstants.EDIT_LINK, entry.getEditLink().getHref());
         }
 
         if (entry.getMediaContentSource() != null) {
@@ -145,7 +145,6 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         }
 
         for (JSONLink link : entry.getNavigationLinks()) {
-            jgen.writeStringField(link.getTitle() + JSONConstants.NAVIGATION_LINK_SUFFIX, link.getHref());
             if (link.getInlineEntry() != null) {
                 jgen.writeObjectField(link.getTitle(), link.getInlineEntry());
             }
@@ -153,13 +152,8 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
                 jgen.writeObjectField(link.getTitle(), link.getInlineFeed());
             }
         }
-        for (JSONLink link : entry.getAssociationLinks()) {
-            jgen.writeStringField(link.getTitle() + JSONConstants.ASSOCIATION_LINK_SUFFIX, link.getHref());
-        }
         for (JSONLink link : entry.getMediaEditLinks()) {
-            if (link.getTitle() != null) {
-                jgen.writeStringField(link.getTitle() + JSONConstants.MEDIAEDIT_LINK_SUFFIX, link.getHref());
-            } else {
+            if (link.getTitle() == null) {
                 jgen.writeStringField(JSONConstants.MEDIAEDIT_LINK, link.getHref());
             }
 
@@ -171,10 +165,10 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
             }
         }
 
-        if (entry.isMediaEntry()) {
-            writeEntryContent(jgen, entry.getMediaEntryProperties());
-        } else {
+        if (entry.getMediaEntryProperties() == null) {
             writeEntryContent(jgen, entry.getContent());
+        } else {
+            writeEntryContent(jgen, entry.getMediaEntryProperties());
         }
 
         jgen.writeEndObject();

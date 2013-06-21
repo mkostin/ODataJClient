@@ -35,14 +35,13 @@ import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.ODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -299,7 +298,6 @@ public class EntityTest extends AbstractTest {
     }
 
     @Test
-    @Ignore
     public void createWithInlineAsJSON() {
         createODataEntity(ODataFormat.JSON_FULL_METADATA, 4, true);
     }

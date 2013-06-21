@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.utils.ODataReader;
+import com.msopentech.odatajclient.engine.data.ODataReader;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;

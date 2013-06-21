@@ -115,8 +115,8 @@ public class ODataRetrieveRequestFactory {
      * @param query query to be performed.
      * @return new ODataRowRetrieveRequest instance.
      */
-    public static ODataRowRequest getRowRetrieveRequest(final URI uri) {
-        return new ODataRowRequest(uri);
+    public static ODataRawRequest getRawRetrieveRequest(final URI uri) {
+        return new ODataRawRequest(uri);
 
     }
 }

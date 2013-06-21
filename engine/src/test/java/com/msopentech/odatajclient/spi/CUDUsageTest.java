@@ -36,7 +36,7 @@ import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.utils.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 

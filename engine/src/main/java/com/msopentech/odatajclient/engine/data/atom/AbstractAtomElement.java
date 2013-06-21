@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.data.atom;
 
 import com.msopentech.odatajclient.engine.data.AbstractElement;
+import com.msopentech.odatajclient.engine.data.LinkResource;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
@@ -72,8 +73,8 @@ public abstract class AbstractAtomElement extends AbstractElement {
         return relLink;
     }
 
-    public String getSelfLink() {
+    public LinkResource getSelfLink() {
         AtomLink link = getLinkWithRel(ODataConstants.SELF_LINK_REL);
-        return link == null ? null : link.getHref();
+        return link == null ? null : link;
     }
 }

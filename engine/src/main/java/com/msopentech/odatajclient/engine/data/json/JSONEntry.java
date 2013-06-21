@@ -44,9 +44,9 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
 
     private String etag;
 
-    private String readLink;
+    private JSONLink readLink;
 
-    private String editLink;
+    private JSONLink editLink;
 
     private List<JSONLink> associationLinks;
 
@@ -120,27 +120,38 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public String getSelfLink() {
+    public LinkResource getSelfLink() {
         return readLink;
     }
 
     @Override
-    public void setSelfLink(String readLink) {
-        this.readLink = readLink;
+    public boolean setSelfLink(LinkResource readLink) {
+        boolean result = (readLink instanceof JSONLink);
+        if (result) {
+            this.readLink = (JSONLink) readLink;
+        }
+
+        return result;
     }
 
     @Override
-    public String getEditLink() {
+    public LinkResource getEditLink() {
         return editLink;
     }
 
     @Override
-    public void setEditLink(String editLink) {
-        this.editLink = editLink;
+    public boolean setEditLink(LinkResource editLink) {
+        boolean result = (editLink instanceof JSONLink);
+        if (result) {
+            this.editLink = (JSONLink) editLink;
+        }
+
+        return result;
     }
 
-    public boolean addAssociationLink(final JSONLink link) {
-        return associationLinks.add(link);
+    @Override
+    public boolean addAssociationLink(final LinkResource link) {
+        return (link instanceof JSONLink) ? associationLinks.add((JSONLink) link) : false;
     }
 
     @Override
@@ -158,12 +169,13 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public void setAssociationLinks(final List<LinkResource> associationLinks) {
-        setLinks(this.associationLinks, associationLinks);
+    public boolean addNavigationLink(final LinkResource link) {
+        return (link instanceof JSONLink) ? navigationLinks.add((JSONLink) link) : false;
     }
 
-    public boolean addNavigationLink(final JSONLink link) {
-        return navigationLinks.add(link);
+    @Override
+    public void setAssociationLinks(final List<LinkResource> associationLinks) {
+        setLinks(this.associationLinks, associationLinks);
     }
 
     @Override
@@ -172,12 +184,13 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public void setNavigationLinks(List<LinkResource> navigationLinks) {
-        setLinks(this.navigationLinks, navigationLinks);
+    public boolean addMediaEditLink(final LinkResource link) {
+        return (link instanceof JSONLink) ? mediaEditLinks.add((JSONLink) link) : false;
     }
 
-    public boolean addMediaEditLink(final JSONLink link) {
-        return mediaEditLinks.add(link);
+    @Override
+    public void setNavigationLinks(List<LinkResource> navigationLinks) {
+        setLinks(this.navigationLinks, navigationLinks);
     }
 
     @Override
@@ -236,6 +249,6 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
 
     @Override
     public boolean isMediaEntry() {
-        return this.mediaEntryProperties != null && StringUtils.isNotBlank(this.mediaContentSource);
+        return StringUtils.isNotBlank(this.mediaContentSource);
     }
 }
