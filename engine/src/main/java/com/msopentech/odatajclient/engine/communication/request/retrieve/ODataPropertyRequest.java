@@ -17,6 +17,9 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
+import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 
@@ -26,7 +29,9 @@ import javax.ws.rs.core.Response;
  *
  * @see ODataRetrieveRequestFactory#getPropertyRequest(java.net.URI)
  */
-public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty> {
+public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty, ODataPropertyFormat> {
+
+    private ODataProperty property = null;
 
     /**
      * Private constructor.
@@ -42,7 +47,8 @@ public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty> {
      */
     @Override
     public ODataQueryResponse<ODataProperty> execute() {
-        return new ODataEntitySetResponseImpl(null);
+        final Response res = client.accept(getContentType()).get();
+        return new ODataEntitySetResponseImpl(res);
     }
 
     protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
@@ -53,7 +59,15 @@ public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty> {
 
         @Override
         public ODataProperty getBody() {
-            return res.readEntity(ODataProperty.class);
+            try {
+                if (property == null) {
+                    property = ODataReader.deserializeProperty(
+                            res.readEntity(InputStream.class), ODataPropertyFormat.valueOf(getFormat()));
+                }
+                return property;
+            } finally {
+                res.close();
+            }
         }
     }
 }

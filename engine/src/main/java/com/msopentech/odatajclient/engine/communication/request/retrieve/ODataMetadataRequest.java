@@ -17,11 +17,11 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
-import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements a metadata query request.
@@ -29,7 +29,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
  *
  * @see ODataRetrieveRequestFactory#getMetadataRequest(java.lang.String)
  */
-public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata> {
+public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata, ODataFormat> {
 
     /**
      * Constructor.
@@ -45,7 +45,6 @@ public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata> {
      */
     @Override
     public ODataQueryResponse<EdmMetadata> execute() {
-        final WebClient client = WebClient.create(uri);
         return new ODataMetadataResponsImpl(client.get());
 
     }

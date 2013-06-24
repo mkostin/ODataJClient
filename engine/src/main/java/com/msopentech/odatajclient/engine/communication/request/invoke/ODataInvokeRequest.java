@@ -16,10 +16,12 @@
 package com.msopentech.odatajclient.engine.communication.request.invoke;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.OperationType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataValue;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Map;
@@ -34,7 +36,7 @@ import java.util.Map;
  * com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method,
  * com.msopentech.odatajclient.engine.data.ODataURI, java.util.Map)
  */
-public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeResponse>
+public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -58,8 +60,7 @@ public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeRespons
             final Method method,
             final URI uri,
             final OperationType type) {
-        super(method);
-        this.uri = uri;
+        super(method, uri);
         this.type = type;
         this.parameters = null;
     }
@@ -77,8 +78,7 @@ public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeRespons
             final URI uri,
             final OperationType type,
             final Map<String, ODataValue> parameters) {
-        super(method);
-        this.uri = uri;
+        super(method, uri);
         this.type = type;
         this.parameters = parameters;
     }

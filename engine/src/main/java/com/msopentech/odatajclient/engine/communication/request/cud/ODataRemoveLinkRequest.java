@@ -16,8 +16,10 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.net.URI;
 
 /**
@@ -26,7 +28,7 @@ import java.net.URI;
  *
  * @see ODataRequestFactory#getRemoveLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataRemoveLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse>
+public class ODataRemoveLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -36,9 +38,7 @@ public class ODataRemoveLinkRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     ODataRemoveLinkRequest(final URI linkToBeRemoved) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.DELETE);
-        // set target uri
-        this.uri = linkToBeRemoved;
+        super(Method.DELETE, linkToBeRemoved);
     }
 
     /**

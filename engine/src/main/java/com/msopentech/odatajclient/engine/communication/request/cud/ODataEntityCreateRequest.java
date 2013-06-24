@@ -24,6 +24,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,7 +32,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
-import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData create request.
@@ -40,7 +40,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
  * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataEntity)
  */
-public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse>
+public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -56,9 +56,8 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     ODataEntityCreateRequest(final URI targetURI, final ODataEntity entity) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST);
+        super(Method.POST, targetURI);
         this.entity = entity;
-        this.uri = targetURI;
     }
 
     /**
@@ -68,11 +67,10 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
     public ODataEntityCreateResponse execute() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         SerializationUtils.serializeEntry(ODataBinder.getEntry(entity,
-                ResourceFactory.entryClassForFormat(getFormat())), baos);
+                ResourceFactory.entryClassForFormat(ODataFormat.valueOf(getFormat()))), baos);
 
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
-        final WebClient client = WebClient.create(this.uri);
         final Response res = client.accept(getContentType()).type(getContentType()).post(bais);
 
         try {
@@ -106,7 +104,8 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.deserializeEntity(res.readEntity(InputStream.class), getFormat());
+                    entity = ODataReader.deserializeEntity(
+                            res.readEntity(InputStream.class), ODataFormat.valueOf(getFormat()));
                 } finally {
                     res.close();
                 }

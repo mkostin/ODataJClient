@@ -20,8 +20,10 @@ import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * Streamed OData request abstract class.
@@ -38,13 +40,16 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      */
     protected ODataStreamingManagement<V> payload = null;
 
+    private ODataFormat format;
+
     /**
      * Constructor.
      *
      * @param method OData request HTTP method.
+     * @param uri OData request URI.
      */
-    public ODataStreamedRequestImpl(final Method method) {
-        super(method);
+    public ODataStreamedRequestImpl(final Method method, final URI uri) {
+        super(method, uri);
     }
 
     /**
@@ -53,6 +58,24 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      * @return OData request payload management object.
      */
     protected abstract T getPayload();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ODataFormat getFormat() {
+        return format;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setFormat(final ODataFormat format) {
+        this.format = format;
+        setAccept(format.toString());
+        setContentType(format.toString());
+    }
 
     /**
      * {@inheritDoc }

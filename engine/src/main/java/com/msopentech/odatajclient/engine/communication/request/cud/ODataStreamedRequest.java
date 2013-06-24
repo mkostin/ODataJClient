@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request.cud;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 
 /**
  * Streamed OData request interface.
@@ -34,4 +35,21 @@ public interface ODataStreamedRequest<V extends ODataResponse, T extends ODataSt
      * @return OData request payload management object.
      */
     T execute();
+    
+    /**
+     * Returns resource representation format.
+     *
+     * @return the configured format (<code>ODataFormat.ATOM</code> will be the default value unless differently
+     * specified).
+     */
+    ODataFormat getFormat();
+
+    /**
+     * Override configured request format.
+     *
+     * @param format request format.
+     * @see ODataFormat
+     * * @see ODataPropertyFormat
+     */
+    void setFormat(ODataFormat format);
 }

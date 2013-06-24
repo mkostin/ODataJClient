@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,18 +42,13 @@ public class ODataRequestImpl implements ODataRequest {
     protected static final Logger LOG = LoggerFactory.getLogger(ODataRequest.class);
 
     /**
-     * OData resource representation format.
-     */
-    private ODataFormat format;
-
-    /**
      * OData request method.
      * <p>
      * If configured a X-HTTP-METHOD header will be used.
      * In this case the actual method will be
      * <code>POST</code>.
      */
-    final protected Method method;
+    protected final Method method;
 
     /**
      * OData request header.
@@ -67,34 +61,28 @@ public class ODataRequestImpl implements ODataRequest {
     protected URI uri;
 
     /**
+     * CXF web client.
+     */
+    protected final WebClient client;
+
+    /**
      * Constructor.
      *
      * @param method HTTP request method. If configured X-HTTP-METHOD header will be used.
+     * @param uri OData request URI.
      */
-    protected ODataRequestImpl(final Method method) {
+    protected ODataRequestImpl(final Method method, final URI uri) {
         this.method = method;
         // initialize a default header from configuration
         this.header = new ODataHeader();
-        // take format from configuration
-        this.format = new Configuration().getFormat();
-    }
+        // target uri
+        this.uri = uri;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ODataFormat getFormat() {
-        return format;
-    }
+        client = WebClient.create(this.uri);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setFormat(final ODataFormat format) {
-        this.format = format;
-        setAccept(format.toString());
-        setContentType(format.toString());
+        for (String key : header.getHeaderNames()) {
+            client.header(key, header.getHeader(key));
+        }
     }
 
     /**
@@ -267,10 +255,9 @@ public class ODataRequestImpl implements ODataRequest {
     }
 
     /**
-     * Gets request HTTP method.
-     *
-     * @return HTTP method.
+     * ${@inheritDoc }
      */
+    @Override
     public Method getMethod() {
         return method;
     }
@@ -282,15 +269,6 @@ public class ODataRequestImpl implements ODataRequest {
      */
     public ODataHeader getHeader() {
         return header;
-    }
-
-    /**
-     * Gets request URI.
-     *
-     * @return request URI.
-     */
-    public URI getUri() {
-        return uri;
     }
 
     /**
@@ -334,10 +312,6 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public InputStream rowExecute() {
-        final WebClient client = WebClient.create(this.uri);
-        for (String key : header.getHeaderNames()) {
-            client.header(key, header.getHeader(key));
-        }
         return client.accept(getContentType()).get(InputStream.class);
     }
 }

@@ -43,8 +43,7 @@ public class ODataMediaEntityUpdateRequest
      * @param media media entity blob to be created.
      */
     ODataMediaEntityUpdateRequest(final URI editURI, final InputStream media) {
-        super(Method.PUT);
-        this.uri = editURI;
+        super(Method.PUT, editURI);
         this.media = media;
     }
 

@@ -16,7 +16,10 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.types.ODataValueFormat;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 
@@ -26,7 +29,9 @@ import javax.ws.rs.core.Response;
  *
  * @see ODataRetrieveRequestFactory#getValueRequest(java.net.URI)
  */
-public class ODataValueRequest extends ODataQueryRequest<ODataValue> {
+public class ODataValueRequest extends ODataQueryRequest<ODataValue, ODataValueFormat> {
+
+    private ODataValue value = null;
 
     /**
      * Private constructor.
@@ -42,7 +47,8 @@ public class ODataValueRequest extends ODataQueryRequest<ODataValue> {
      */
     @Override
     public ODataQueryResponse<ODataValue> execute() {
-        return new ODataEntitySetResponseImpl(null);
+        final Response res = client.accept(getContentType()).get();
+        return new ODataEntitySetResponseImpl(res);
     }
 
     protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
@@ -53,7 +59,14 @@ public class ODataValueRequest extends ODataQueryRequest<ODataValue> {
 
         @Override
         public ODataValue getBody() {
-            return res.readEntity(ODataValue.class);
+            try {
+                if (value == null) {
+                    value = new ODataPrimitiveValue(res.readEntity(String.class), EdmSimpleType.STRING);
+                }
+                return value;
+            } finally {
+                res.close();
+            }
         }
     }
 }

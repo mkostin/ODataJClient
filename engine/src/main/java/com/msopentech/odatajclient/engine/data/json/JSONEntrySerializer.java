@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +34,6 @@ import org.w3c.dom.NodeList;
  * @see JSONEntry
  */
 public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
-
-    private String getSimpleName(Node node) {
-        return node.getLocalName() == null
-                ? node.getNodeName().substring(node.getNodeName().indexOf(':') + 1)
-                : node.getLocalName();
-    }
 
     private List<Node> getChildNodes(Node node, short nodetype) {
         List<Node> result = new ArrayList<Node>();
@@ -56,7 +51,7 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         boolean found = false;
 
         for (Node child : getChildNodes(node, Node.ELEMENT_NODE)) {
-            if (ODataConstants.ELEM_ELEMENT.equals(getSimpleName(child))) {
+            if (ODataConstants.ELEM_ELEMENT.equals(SerializationUtils.getSimpleName(child))) {
                 found = true;
             }
         }
@@ -79,7 +74,7 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
 
     private void writeEntryContent(JsonGenerator jgen, Node content) throws IOException {
         for (Node child : getChildNodes(content, Node.ELEMENT_NODE)) {
-            String childName = getSimpleName(child);
+            String childName = SerializationUtils.getSimpleName(child);
             if (hasOnlyTextChildNodes(child)) {
                 if (child.hasChildNodes()) {
                     jgen.writeStringField(childName, child.getChildNodes().item(0).getNodeValue());

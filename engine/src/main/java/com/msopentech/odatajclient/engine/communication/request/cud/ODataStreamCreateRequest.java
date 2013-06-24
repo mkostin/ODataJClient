@@ -43,8 +43,7 @@ public class ODataStreamCreateRequest
      * @param stream stream to be created.
      */
     ODataStreamCreateRequest(final URI targetURI, final InputStream stream) {
-        super(Method.POST);
-        this.uri = targetURI;
+        super(Method.POST, targetURI);
         this.stream = stream;
     }
 

@@ -282,6 +282,14 @@ public abstract class AbstractTest {
         LOG.debug(message + "\n{}", writer.toString());
     }
 
+    protected void debugODataProperty(final ODataProperty property, final String message) {
+        LOG.debug(message + "\n{}", property.toString());
+    }
+
+    protected void debugODataValue(final ODataValue value, final String message) {
+        LOG.debug(message + "\n{}", value.toString());
+    }
+
     protected void debugODataEntity(final ODataEntity entity, final String message) {
         StringWriter writer = new StringWriter();
         SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, AtomEntry.class), writer);

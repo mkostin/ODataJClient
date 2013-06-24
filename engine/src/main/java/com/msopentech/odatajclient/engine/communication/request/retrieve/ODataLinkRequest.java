@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 
@@ -26,7 +27,7 @@ import javax.ws.rs.core.Response;
  *
  * @see ODataRetrieveRequestFactory#getLinkRequest(java.net.URI)
  */
-public class ODataLinkRequest extends ODataQueryRequest<ODataLink> {
+public class ODataLinkRequest extends ODataQueryRequest<ODataLink, ODataFormat> {
 
     /**
      * Private constructor.

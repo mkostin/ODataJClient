@@ -16,9 +16,11 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
@@ -31,7 +33,7 @@ import java.net.URI;
  * @see ODataRequestFactory#getSetLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataURI, com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataSetLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse>
+public class ODataSetLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -48,9 +50,7 @@ public class ODataSetLinkRequest extends ODataBasicRequestImpl<ODataLinkOperatio
      */
     ODataSetLinkRequest(final URI targetURI, final ODataLink entityToBeAdded) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.PUT);
-        // set target uri
-        this.uri = targetURI;
+        super(Method.PUT, targetURI);
         // set request body
         this.entityToBeAdded = entityToBeAdded;
     }

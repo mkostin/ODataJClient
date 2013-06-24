@@ -17,8 +17,13 @@ package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.InputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.slf4j.LoggerFactory;
 
 /**
  * OData reader.
@@ -30,12 +35,16 @@ import java.io.InputStream;
 public class ODataReader {
 
     /**
+     * Logger.
+     */
+    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataReader.class);
+
+    /**
      * De-Serializes a stream into an OData feed.
      *
      * @param input stream to de-serialize.
      * @param format de-serialize as AtomEntry or JSONEntry
      * @return de-serialized feed.
-     * @throws NoValidEntityFound in case the feed was not found into the input stream.
      */
     public static ODataFeed deserializeFeed(final InputStream input, final ODataFormat format) {
         final FeedResource feedResource =
@@ -59,11 +68,21 @@ public class ODataReader {
      * Parses a stream taking care to de-serializes the first OData entity property found.
      *
      * @param input stream to de-serialize.
+     * @param format de-serialize as AtomEntry or JSONEntry
      * @return OData entity property de-serialized.
-     * @throws NoValidEntityFound in case no property was found into the input stream.
      */
-    public static ODataProperty deserializeProperty(final InputStream input) {
-        return null;
+    public static ODataProperty deserializeProperty(final InputStream input, final ODataPropertyFormat format) {
+        try {
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+            return ODataBinder.newProperty(builder.parse(input).getDocumentElement());
+        } catch (ParserConfigurationException e) {
+            LOG.error("Error parsing input stream", e);
+            throw new IllegalArgumentException(e);
+        } catch (Exception e) {
+            LOG.error("Error deserializing property", e);
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**

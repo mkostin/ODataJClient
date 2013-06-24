@@ -42,8 +42,7 @@ public class ODataStreamUpdateRequest
      * @param stream stream to be updated.
      */
     ODataStreamUpdateRequest(final URI targetURI, final InputStream stream) {
-        super(Method.PUT);
-        this.uri = targetURI;
+        super(Method.PUT, targetURI);
         this.stream = stream;
     }
 

@@ -27,7 +27,8 @@ import javax.ws.rs.core.Response;
  * This is an abstract representation of an OData retrieve query request returning one or more result item.
  * Get instance by using ODataRequestFactory.
  */
-public abstract class ODataQueryRequest<T> extends ODataBasicRequestImpl<ODataQueryResponse<T>>
+public abstract class ODataQueryRequest<V, T extends Enum<T>>
+        extends ODataBasicRequestImpl<ODataQueryResponse<V>, T>
         implements ODataBatchableRequest {
 
     /**
@@ -36,15 +37,14 @@ public abstract class ODataQueryRequest<T> extends ODataBasicRequestImpl<ODataQu
      * @param query query to be executed.
      */
     ODataQueryRequest(final URI query) {
-        super(Method.GET);
-        this.uri = query;
+        super(Method.GET, query);
     }
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public abstract ODataQueryResponse<T> execute();
+    public abstract ODataQueryResponse<V> execute();
 
     /**
      * {@inheritDoc }
@@ -56,13 +56,13 @@ public abstract class ODataQueryRequest<T> extends ODataBasicRequestImpl<ODataQu
         return new byte[0];
     }
 
-    protected abstract class ODataQueryResponseImpl extends ODataResponseImpl implements ODataQueryResponse<T> {
+    protected abstract class ODataQueryResponseImpl extends ODataResponseImpl implements ODataQueryResponse<V> {
 
         protected ODataQueryResponseImpl(final Response res) {
             super(res);
         }
 
         @Override
-        public abstract T getBody();
+        public abstract V getBody();
     }
 }

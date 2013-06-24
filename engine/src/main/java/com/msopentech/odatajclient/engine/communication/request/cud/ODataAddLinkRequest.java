@@ -16,9 +16,11 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.net.URI;
 
 /**
@@ -28,7 +30,7 @@ import java.net.URI;
  * @see ODataRequestFactory#getAddLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataAddLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse>
+public class ODataAddLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -44,9 +46,7 @@ public class ODataAddLinkRequest extends ODataBasicRequestImpl<ODataLinkOperatio
      */
     ODataAddLinkRequest(final URI targetURI, final ODataLink entityToBeAdded) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST);
-        // set target uri
-        this.uri = targetURI;
+        super(Method.POST, targetURI);
         // set request body
         this.entityToBeAdded = entityToBeAdded;
     }

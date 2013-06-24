@@ -16,10 +16,10 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
-import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData document service request.
@@ -27,7 +27,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
  *
  * @see ODataRetrieveRequestFactory#getDocumentServiceRequest(java.lang.String)
  */
-public class ODataDocumentServiceRequest extends ODataQueryRequest<InputStream> {
+public class ODataDocumentServiceRequest extends ODataQueryRequest<InputStream, ODataFormat> {
 
     /**
      * Constructor.
@@ -43,9 +43,7 @@ public class ODataDocumentServiceRequest extends ODataQueryRequest<InputStream> 
      */
     @Override
     public ODataQueryResponse<InputStream> execute() {
-        final WebClient client = WebClient.create(uri);
         return new ODataServcieResponsImpl(client.get());
-
     }
 
     /**

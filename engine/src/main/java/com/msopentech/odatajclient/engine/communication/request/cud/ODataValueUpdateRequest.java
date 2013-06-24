@@ -20,6 +20,7 @@ import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataValue;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
@@ -30,7 +31,7 @@ import java.net.URI;
  * @see ODataCUDRequestFactory#getUpdateValueRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataValue)
  */
-public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpdateResponse>
+public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpdateResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -46,7 +47,7 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
      */
     ODataValueUpdateRequest(final URI targetURI, final UpdateType type, final ODataValue value) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(type.getMethod());
+        super(type.getMethod(), targetURI);
         // set request body
         this.value = value;
     }

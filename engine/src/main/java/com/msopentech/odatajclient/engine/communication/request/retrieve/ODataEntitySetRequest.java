@@ -18,10 +18,10 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
-import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData EntitySet query request.
@@ -29,7 +29,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
  *
  * @see ODataRetrieveRequestFactory#getEntitySetRequest(java.net.URI)
  */
-public class ODataEntitySetRequest extends ODataQueryRequest<ODataFeed> {
+public class ODataEntitySetRequest extends ODataQueryRequest<ODataFeed, ODataFormat> {
 
     private ODataFeed feed = null;
 
@@ -47,12 +47,6 @@ public class ODataEntitySetRequest extends ODataQueryRequest<ODataFeed> {
      */
     @Override
     public ODataQueryResponse<ODataFeed> execute() {
-        final WebClient client = WebClient.create(this.uri);
-
-        for (String key : header.getHeaderNames()) {
-            client.header(key, header.getHeader(key));
-        }
-
         final Response res = client.accept(getContentType()).get();
         return new ODataEntitySetResponseImpl(res);
     }
@@ -68,7 +62,8 @@ public class ODataEntitySetRequest extends ODataQueryRequest<ODataFeed> {
         public ODataFeed getBody() {
             try {
                 if (feed == null) {
-                    feed = ODataReader.deserializeFeed(res.readEntity(InputStream.class), getFormat());
+                    feed = ODataReader.deserializeFeed(
+                            res.readEntity(InputStream.class), ODataFormat.valueOf(getFormat()));
                 }
                 return feed;
             } finally {

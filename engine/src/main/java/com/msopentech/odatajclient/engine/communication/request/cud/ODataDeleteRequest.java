@@ -20,6 +20,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataBasicReques
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -30,7 +31,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
  *
  * @see ODataRequestFactory#getDeleteRequest(com.msopentech.odatajclient.engine.data.ODataURI)
  */
-public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteResponse>
+public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -40,9 +41,7 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      */
     ODataDeleteRequest(final URI uri) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.DELETE);
-        // set uri ...
-        this.uri = uri;
+        super(Method.DELETE, uri);
     }
 
     /**

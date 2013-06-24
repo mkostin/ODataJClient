@@ -13,15 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request.retrieve;
+package com.msopentech.odatajclient.engine.types;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
-import java.net.URI;
+import javax.ws.rs.core.MediaType;
 
-public class ODataRawRequest extends ODataRequestImpl {
+/**
+ * Exchanged data format.
+ */
+public enum ODataValueFormat {
 
-    ODataRawRequest(final URI uri) {
-        super(Method.GET, uri);
+    /**
+     * Application octet stream.
+     */
+    STREAM(MediaType.APPLICATION_OCTET_STREAM),
+    /**
+     * Plain text format.
+     */
+    TEXT(MediaType.TEXT_PLAIN);
+
+    private final String format;
+
+    ODataValueFormat(final String format) {
+        this.format = format;
+    }
+
+    @Override
+    public String toString() {
+        return format;
     }
 }

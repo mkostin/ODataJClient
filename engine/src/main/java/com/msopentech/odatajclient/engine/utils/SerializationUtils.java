@@ -36,6 +36,12 @@ import org.w3c.dom.Node;
 
 public class SerializationUtils {
 
+    public static String getSimpleName(final Node node) {
+        return node.getLocalName() == null
+                ? node.getNodeName().substring(node.getNodeName().indexOf(':') + 1)
+                : node.getLocalName();
+    }
+
     public static <T extends FeedResource> void serializeFeed(final T obj, final OutputStream out) {
         serializeFeed(obj, new OutputStreamWriter(out));
     }

@@ -16,10 +16,12 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataUpdateEntityResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
@@ -31,7 +33,7 @@ import java.net.URI;
  * com.msopentech.odatajclient.engine.data.ODataEntity,
  * com.msopentech.odatajclient.engine.communication.request.UpdateType)
  */
-public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataUpdateEntityResponse>
+public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataUpdateEntityResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -48,9 +50,7 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataUpdateE
      */
     ODataEntityUpdateRequest(final URI uri, final UpdateType type, final ODataEntity changes) {
         // set method .... If cofigured X-HTTP-METHOD header will be used.
-        super(type.getMethod());
-        // set uri ...
-        this.uri = uri;
+        super(type.getMethod(), uri);
         this.changes = changes;
     }
 

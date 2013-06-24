@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
@@ -44,27 +43,18 @@ public interface ODataRequest {
     }
 
     /**
-     * Returns resource representation format.
-     *
-     * @return the configured format (<code>Atom</code> will be the default value unless differently specified).
-     */
-    ODataFormat getFormat();
-
-    /**
-     * Override configured request format.
-     *
-     * @param format request format.
-     *
-     * @see ODataFormat
-     */
-    void setFormat(final ODataFormat format);
-
-    /**
      * Returns OData request target URI.
      *
      * @return OData request target URI.
      */
     URI getURI();
+
+    /**
+     * Returns HTTP request method.
+     *
+     * @return HTTP request method.
+     */
+    Method getMethod();
 
     /**
      * Gets all OData request header names.

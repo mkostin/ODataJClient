@@ -262,14 +262,14 @@ public class ODataBinder {
         return linkResource;
     }
 
-    private static ODataProperty newProperty(final Element property) {
-
+    public static ODataProperty newProperty(final Element property) {
         final ODataProperty res;
 
         final Node nullNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_NULL);
 
         if (nullNode == null) {
             final Node typeNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
+
             final EdmType edmType = typeNode == null ? null : new EdmType(typeNode.getTextContent());
 
             switch (getPropertyType(property)) {
@@ -352,7 +352,7 @@ public class ODataBinder {
     }
 
     private static ODataProperty newPrimitiveProperty(final Element prop, final EdmType edmType) {
-        return new ODataProperty(prop.getLocalName(), newPrimitiveValue(prop, edmType));
+        return new ODataProperty(SerializationUtils.getSimpleName(prop), newPrimitiveValue(prop, edmType));
     }
 
     private static Element newPrimitiveProperty(final ODataProperty prop, final Document doc) {
@@ -393,7 +393,7 @@ public class ODataBinder {
     }
 
     private static ODataProperty newComplexProperty(final Element prop, final EdmType edmType) {
-        return new ODataProperty(prop.getLocalName(), newComplexValue(prop, edmType));
+        return new ODataProperty(SerializationUtils.getSimpleName(prop), newComplexValue(prop, edmType));
     }
 
     private static Element newComplexProperty(final ODataProperty prop, final Document doc) {
@@ -442,7 +442,7 @@ public class ODataBinder {
             }
         }
 
-        return new ODataProperty(prop.getLocalName(), value);
+        return new ODataProperty(SerializationUtils.getSimpleName(prop), value);
     }
 
     private static Element newCollectionProperty(final ODataProperty prop, final Document doc) {

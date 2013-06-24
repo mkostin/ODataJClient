@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.util.concurrent.Future;
 
 /**
@@ -23,7 +24,7 @@ import java.util.concurrent.Future;
  *
  * @param <V> OData response type corresponding to the request implementation.
  */
-public interface ODataBasicRequest<V extends ODataResponse> extends ODataRequest {
+public interface ODataBasicRequest<V extends ODataResponse, T extends Enum<T>> extends ODataRequest {
 
     /**
      * Request execute.
@@ -38,4 +39,21 @@ public interface ODataBasicRequest<V extends ODataResponse> extends ODataRequest
      * @return <code>Future&lt;ODataResponse&gt;</code> about the executed request.
      */
     Future<V> asyncExecute();
+
+    /**
+     * Returns resource representation format.
+     *
+     * @return the configured format (<code>ODataFormat.ATOM</code> will be the default value unless differently
+     * specified).
+     */
+    String getFormat();
+
+    /**
+     * Override configured request format.
+     *
+     * @param format request format.
+     * @see ODataFormat
+     * * @see ODataPropertyFormat
+     */
+    void setFormat(T format);
 }

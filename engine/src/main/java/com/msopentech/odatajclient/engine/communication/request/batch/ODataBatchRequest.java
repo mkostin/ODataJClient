@@ -50,15 +50,13 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
      * @param uri batch request URI (http://serviceRoot/$batch)
      */
     ODataBatchRequest(final URI uri) {
-        super(Method.POST);
+        super(Method.POST, uri);
 
         // create a random UUID value for boundary
         boundary = "batch_" + UUID.randomUUID().toString();
 
         // specify the contentType header
         setContentType(CONTENT_TYPE + ";boundary=" + boundary);
-
-        this.uri = uri;
     }
 
     /**

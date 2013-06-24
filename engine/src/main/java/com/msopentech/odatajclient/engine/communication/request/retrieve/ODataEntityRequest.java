@@ -18,10 +18,10 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
-import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData retrieve query request returning a single entity.
@@ -29,7 +29,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
  *
  * @see ODataRetrieveRequestFactory#getEntityRequest(java.lang.String)
  */
-public class ODataEntityRequest extends ODataQueryRequest<ODataEntity> {
+public class ODataEntityRequest extends ODataQueryRequest<ODataEntity, ODataFormat> {
 
     /**
      * Private constructor.
@@ -45,12 +45,6 @@ public class ODataEntityRequest extends ODataQueryRequest<ODataEntity> {
      */
     @Override
     public ODataQueryResponse<ODataEntity> execute() {
-        final WebClient client = WebClient.create(this.uri);
-
-        for (String key : header.getHeaderNames()) {
-            client.header(key, header.getHeader(key));
-        }
-
         final Response res = client.accept(getContentType()).get();
         return new ODataEntityResponseImpl(res);
     }
@@ -67,7 +61,8 @@ public class ODataEntityRequest extends ODataQueryRequest<ODataEntity> {
         public ODataEntity getBody() {
             try {
                 if (entity == null) {
-                    entity = ODataReader.deserializeEntity(res.readEntity(InputStream.class), getFormat());
+                    entity = ODataReader.deserializeEntity(
+                            res.readEntity(InputStream.class), ODataFormat.valueOf(getFormat()));
                 }
                 return entity;
             } finally {
