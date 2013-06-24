@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.spi;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -88,7 +89,7 @@ public abstract class AbstractTest {
             for (ODataLink actualLink : actual) {
 
                 if (actualLink.getType() == originalLink.getType()
-//                        && actualLink.getLink().toASCIIString().endsWith(originalLink.getLink().toASCIIString())
+                        && actualLink.getLink().toASCIIString().endsWith(originalLink.getLink().toASCIIString())
                         && actualLink.getName().equals(originalLink.getName())) {
 
                     foundOriginal = originalLink;
@@ -130,7 +131,12 @@ public abstract class AbstractTest {
                 final ODataProperty actualProp = actualProps.get(prop.getName());
                 assertNotNull(actualProp);
 
-                checkPropertyValue(prop.getName(), prop.getValue(), actualProp.getValue());
+                if (prop.getValue() != null && actualProp.getValue() != null) {
+                    checkPropertyValue(prop.getName(), prop.getValue(), actualProp.getValue());
+                } else {
+                    assertNull(prop.getValue());
+                    assertNull(actualProp.getValue());
+                }
             } else {
                 // nothing ... maybe :FC_KeepInContent="false"
                 // ..... no assert can be done ....
@@ -141,12 +147,14 @@ public abstract class AbstractTest {
     protected void checkPropertyValue(final String propertyName,
             final ODataValue original, final ODataValue actual) {
 
-        assertNotNull(original);
-        assertNotNull(actual);
+        assertNotNull("Null original value for " + propertyName, original);
+        assertNotNull("Null actual value for " + propertyName, actual);
+
         assertEquals("Type mismatch for '" + propertyName + "'",
                 original.getClass().getSimpleName(), actual.getClass().getSimpleName());
 
         if (original instanceof ODataComplexValue) {
+            System.out.println("AAAAAAAAAAAAAAAAAAA complex " + propertyName);
             final List<ODataProperty> originalFileds = new ArrayList<ODataProperty>();
             for (ODataProperty prop : (ODataComplexValue) original) {
                 originalFileds.add(prop);
@@ -159,26 +167,42 @@ public abstract class AbstractTest {
 
             checkProperties(originalFileds, actualFileds);
         } else if (original instanceof ODataCollectionValue) {
+            System.out.println("AAAAAAAAAAAAAAAAAAA collection " + propertyName);
             assertTrue(((ODataCollectionValue) original).size() <= ((ODataCollectionValue) actual).size());
 
-            boolean found = false;
+            boolean found = ((ODataCollectionValue) original).size() == 0;;
+
             for (ODataValue originalValue : (ODataCollectionValue) original) {
+                System.out.println("AAAAAAAAAAAAAAAAAAA Search for " + propertyName);
                 for (ODataValue actualValue : (ODataCollectionValue) actual) {
+//                    System.out.println("AAAAAAAAAAAAAAAAAAA compare with " + actualValue);
                     try {
                         checkPropertyValue(propertyName, originalValue, actualValue);
                         found = true;
                     } catch (AssertionError ignore) {
                         // ignore
+                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA " + propertyName + ":" + ignore.getMessage());
                     }
+                    System.out.println("AAAAAAAAAAAAAAAAAAA Res " + found);
                 }
             }
 
             assertTrue("Found " + actual + " but expected " + original, found);
         } else {
-            assertTrue("Primitive value for '" + propertyName + "' type mismatch",
-                    ((ODataPrimitiveValue) original).getTypeName().equals(((ODataPrimitiveValue) actual).getTypeName())
-                    || (((ODataPrimitiveValue) original).getTypeName().equals("Edm.String")
-                    && ((ODataPrimitiveValue) actual).getTypeName() == null));
+            System.out.println("AAAAAAAAAAAAAAAAAAA primitive " + propertyName);
+
+            if (((ODataPrimitiveValue) original).getTypeName() == null) {
+                assertTrue("Primitive value for '" + propertyName + "' type mismatch",
+                        ((ODataPrimitiveValue) actual).getTypeName() == null
+                        || ((ODataPrimitiveValue) actual).getTypeName().equals("Edm.String"));
+            } else {
+                assertTrue("Primitive value for '" + propertyName + "' type mismatch",
+                        ((ODataPrimitiveValue) original).getTypeName().equals(((ODataPrimitiveValue) actual).
+                        getTypeName())
+                        || (((ODataPrimitiveValue) original).getTypeName().equals("Edm.String")
+                        && ((ODataPrimitiveValue) actual).getTypeName() == null));
+            }
+
             assertEquals("Primitive value for '" + propertyName + "' mismatch",
                     ((ODataPrimitiveValue) original).toString(), ((ODataPrimitiveValue) actual).toString());
         }
@@ -257,7 +281,7 @@ public abstract class AbstractTest {
         writer.flush();
         LOG.debug(message + "\n{}", writer.toString());
     }
-    
+
     protected void debugFeed(final FeedResource feed, final String message) {
         StringWriter writer = new StringWriter();
         SerializationUtils.serializeFeed(feed, writer);

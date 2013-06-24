@@ -44,7 +44,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -225,14 +228,14 @@ public class EntityTest extends AbstractTest {
         readODataEntityWithInline(ODataFormat.JSON_FULL_METADATA);
     }
 
-    private void createODataEntity(final ODataFormat format, final int id, final boolean withInlineInfo) {
+    private ODataEntity createODataEntity(final ODataFormat format, final int id, final boolean withInlineInfo) {
         final String sampleName = "Sample customer";
         final ODataEntity original = getSampleCustomerProfile(id, sampleName, withInlineInfo);
-        createODataEntity(format, original, id, withInlineInfo);
+        return createODataEntity(format, original);
     }
 
-    private void createODataEntity(
-            final ODataFormat format, ODataEntity original, final int id, final boolean withInlineInfo) {
+    private ODataEntity createODataEntity(
+            final ODataFormat format, ODataEntity original) {
         ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
@@ -252,43 +255,55 @@ public class EntityTest extends AbstractTest {
 
         debugODataEntity(created, "Just created");
 
-        // check defined links
-        checkLinks(original.getAssociationLinks(), created.getAssociationLinks());
-        checkLinks(original.getEditMediaLinks(), created.getEditMediaLinks());
-        checkLinks(original.getNavigationLinks(), created.getNavigationLinks());
+        return created;
+    }
 
-        // check defined properties equality
-        checkProperties(original.getProperties(), created.getProperties());
+    private ODataEntity compareEntities(
+            final ODataFormat format,
+            final ODataEntity original,
+            final int actualObjectId,
+            final Collection<String> expands) {
 
-        uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(" + id + ")");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer(" + actualObjectId + ")");
+
         // search expanded
-        if (withInlineInfo) {
-            uriBuilder.expand("Info");
+        if (expands != null) {
+            for (String expand : expands) {
+                uriBuilder.expand(expand);
+            }
         }
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
         final ODataQueryResponse<ODataEntity> res = req.execute();
-        created = res.getBody();
-        assertNotNull(created);
+        assertEquals(200, res.getStatusCode());
+
+        final ODataEntity actual = res.getBody();
+        assertNotNull(actual);
 
         // check defined links
-        checkLinks(original.getAssociationLinks(), created.getAssociationLinks());
-        checkLinks(original.getEditMediaLinks(), created.getEditMediaLinks());
-        checkLinks(original.getNavigationLinks(), created.getNavigationLinks());
+        checkLinks(original.getAssociationLinks(), actual.getAssociationLinks());
+        checkLinks(original.getEditMediaLinks(), actual.getEditMediaLinks());
+        checkLinks(original.getNavigationLinks(), actual.getNavigationLinks());
 
         // check defined properties equality
-        checkProperties(original.getProperties(), created.getProperties());
+        checkProperties(original.getProperties(), actual.getProperties());
 
+        return actual;
+    }
+
+    private void clean(final ODataFormat format, final ODataEntity created, final boolean includeInline) {
         final List<ODataEntity> toBeDeleted = new ArrayList<ODataEntity>();
         toBeDeleted.add(created);
 
-        for (ODataLink link : created.getNavigationLinks()) {
-            if (link instanceof ODataInlineEntity) {
-                ODataEntity inline = ((ODataInlineEntity) link).getEntity();
-                toBeDeleted.add(inline);
+        if (includeInline) {
+            for (ODataLink link : created.getNavigationLinks()) {
+                if (link instanceof ODataInlineEntity) {
+                    ODataEntity inline = ((ODataInlineEntity) link).getEntity();
+                    toBeDeleted.add(inline);
+                }
             }
         }
 
@@ -318,34 +333,109 @@ public class EntityTest extends AbstractTest {
         }
     }
 
+    private ODataEntity createWithNavigationLink(final ODataFormat format, final int id) {
+        final String sampleName = "Sample customer";
+
+        ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
+        original.addLink(ODataFactory.newEntityNavigationLink(
+                "Info", URI.create(testODataServiceRootURL + "/CustomerInfo(12)")));
+
+        ODataEntity created = createODataEntity(format, original);
+        // now, compare the created one with the actula one and go deeply into the associated customer info.....
+        ODataEntity actual = compareEntities(format, created, id, null);
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer(" + id + ")").appendEntityTypeSegment("Info");
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataQueryResponse<ODataEntity> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+
+        final ODataEntity info = res.getBody();
+        assertNotNull(info);
+
+        boolean found = false;
+
+        for (ODataProperty prop : info.getProperties()) {
+            if ("CustomerInfoId".equals(prop.getName())) {
+                assertEquals("12", prop.getValue().toString());
+                found = true;
+            }
+        }
+
+        assertTrue(found);
+
+        return actual;
+    }
+
     @Test
     public void createODataEntityAsAtom() {
-        createODataEntity(ODataFormat.ATOM, 1, false);
+        final ODataFormat format = ODataFormat.ATOM;
+        final int id = 1;
+        final String sampleName = "Sample customer";
+        final ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
+
+        createODataEntity(format, original);
+        ODataEntity actual = compareEntities(format, original, id, null);
+
+        clean(format, actual, false);
     }
 
     @Test
     public void createODataEntityAsJSON() {
-        createODataEntity(ODataFormat.JSON_FULL_METADATA, 2, false);
+        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final int id = 2;
+        final String sampleName = "Sample customer";
+        final ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
+
+        createODataEntity(format, original);
+        ODataEntity actual = compareEntities(format, original, id, null);
+
+        clean(format, actual, false);
     }
 
     @Test
     public void createWithInlineAsAtom() {
-        createODataEntity(ODataFormat.ATOM, 3, true);
+        final ODataFormat format = ODataFormat.ATOM;
+        final int id = 3;
+        final String sampleName = "Sample customer";
+        final ODataEntity original = getSampleCustomerProfile(id, sampleName, true);
+
+        createODataEntity(format, original);
+        ODataEntity actual = compareEntities(format, original, id, Collections.<String>singleton("Info"));
+
+        clean(format, actual, true);
     }
 
     @Test
     public void createWithInlineAsJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
-        createODataEntity(ODataFormat.JSON_FULL_METADATA, 4, true);
+        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final int id = 4;
+        final String sampleName = "Sample customer";
+        final ODataEntity original = getSampleCustomerProfile(id, sampleName, true);
+
+        createODataEntity(format, original);
+        ODataEntity actual = compareEntities(format, original, id, Collections.<String>singleton("Info"));
+
+        clean(format, actual, true);
     }
 
     @Test
     public void createWithNavigationAsAtom() {
-        final String sampleName = "Sample customer";
-        ODataEntity original = getSampleCustomerProfile(5, sampleName, false);
+        final ODataFormat format = ODataFormat.ATOM;
+        ODataEntity actual = createWithNavigationLink(format, 5);
+        clean(format, actual, false);
+    }
 
-        original.addLink(ODataFactory.newEntityNavigationLink(
-                "Info", URI.create(testODataServiceRootURL + "/CustomerInfo(12)")));
-        createODataEntity(ODataFormat.ATOM, original, 5, false);
+    @Test
+    @Ignore
+    public void createWithNavigationAsJSON() {
+        // this needs to be full, otherwise there is no mean to recognize links
+        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        ODataEntity actual = createWithNavigationLink(format, 6);
+        clean(format, actual, false);
     }
 }
