@@ -23,6 +23,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataEntityCrea
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -66,7 +67,8 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
     @Override
     public ODataEntityCreateResponse execute() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, getFormat().getEntryClass()), baos);
+        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity,
+                ResourceFactory.entryClassForFormat(getFormat())), baos);
 
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 

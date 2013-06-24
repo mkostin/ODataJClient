@@ -39,7 +39,7 @@ public class ODataReader {
      */
     public static ODataFeed deserializeFeed(final InputStream input, final ODataFormat format) {
         final FeedResource feedResource =
-                SerializationUtils.deserializeFeed(input, ResourceFactory.feedClassForEntry(format.getEntryClass()));
+                SerializationUtils.deserializeFeed(input, ResourceFactory.feedClassForFormat(format));
         return ODataBinder.getODataFeed(feedResource);
     }
 
@@ -51,7 +51,8 @@ public class ODataReader {
      * @return entity de-serialized.
      */
     public static ODataEntity deserializeEntity(final InputStream input, final ODataFormat format) {
-        return ODataBinder.getODataEntity(SerializationUtils.deserializeEntry(input, format.getEntryClass()));
+        return ODataBinder.getODataEntity(
+                SerializationUtils.deserializeEntry(input, ResourceFactory.entryClassForFormat(format)));
     }
 
     /**
