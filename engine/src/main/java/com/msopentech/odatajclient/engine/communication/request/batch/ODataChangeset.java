@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request.batch;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import java.util.UUID;
 

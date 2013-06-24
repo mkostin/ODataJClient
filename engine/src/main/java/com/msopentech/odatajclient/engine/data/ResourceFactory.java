@@ -15,12 +15,17 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import static com.msopentech.odatajclient.engine.types.ODataFormat.ATOM;
+import static com.msopentech.odatajclient.engine.types.ODataFormat.JSON;
+import static com.msopentech.odatajclient.engine.types.ODataFormat.JSON_FULL_METADATA;
+import static com.msopentech.odatajclient.engine.types.ODataFormat.JSON_NO_METADATA;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.atom.AtomLink;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONLink;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 
 public class ResourceFactory {
 
@@ -67,6 +72,44 @@ public class ResourceFactory {
     }
 
     @SuppressWarnings("unchecked")
+    public static <T extends FeedResource> Class<T> feedClassForFormat(final ODataFormat format) {
+        Class<T> result = null;
+
+        switch (format) {
+            case ATOM:
+                result = (Class<T>) AtomFeed.class;
+                break;
+
+            case JSON:
+            case JSON_FULL_METADATA:
+            case JSON_NO_METADATA:
+                result = (Class<T>) JSONFeed.class;
+                break;
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends EntryResource> Class<T> entryClassForFormat(final ODataFormat format) {
+        Class<T> result = null;
+
+        switch (format) {
+            case ATOM:
+                result = (Class<T>) AtomEntry.class;
+                break;
+
+            case JSON:
+            case JSON_FULL_METADATA:
+            case JSON_NO_METADATA:
+                result = (Class<T>) JSONEntry.class;
+                break;
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T extends LinkResource, K extends FeedResource> T newLinkForFeed(final Class<K> resourceClass) {
         T result = null;
 
@@ -104,22 +147,6 @@ public class ResourceFactory {
             result = (Class<K>) AtomFeed.class;
         }
         if (JSONLink.class.equals(resourceClass)) {
-            result = (Class<K>) JSONFeed.class;
-        }
-
-        return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends EntryResource, K extends FeedResource> Class<K> feedClassForEntry(
-            final Class<T> resourceClass) {
-
-        Class<K> result = null;
-
-        if (AtomEntry.class.equals(resourceClass)) {
-            result = (Class<K>) AtomFeed.class;
-        }
-        if (JSONEntry.class.equals(resourceClass)) {
             result = (Class<K>) JSONFeed.class;
         }
 

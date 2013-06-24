@@ -49,7 +49,7 @@ public class FeedTest extends AbstractTest {
         final InputStream is = req.rowExecute();
 
         final FeedResource feed =
-                SerializationUtils.deserializeFeed(is, ResourceFactory.feedClassForEntry(format.getEntryClass()));
+                SerializationUtils.deserializeFeed(is, ResourceFactory.feedClassForFormat(format));
         assertNotNull(feed);
 
         debugFeed(feed, "Just (raw)retrieved feed");
@@ -81,8 +81,7 @@ public class FeedTest extends AbstractTest {
 
         assertNotNull(feed);
 
-        debugFeed(ODataBinder.getFeed(
-                feed, ResourceFactory.feedClassForEntry(format.getEntryClass())), "Just retrieved feed");
+        debugFeed(ODataBinder.getFeed(feed, ResourceFactory.feedClassForFormat(format)), "Just retrieved feed");
 
         assertEquals(3, feed.getEntities().size());
     }

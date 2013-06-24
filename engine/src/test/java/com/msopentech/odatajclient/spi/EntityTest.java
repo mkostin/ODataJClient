@@ -38,6 +38,7 @@ import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.IOException;
@@ -66,7 +67,7 @@ public class EntityTest extends AbstractTest {
 
         InputStream is = req.rowExecute();
 
-        EntryResource entry = SerializationUtils.deserializeEntry(is, format.getEntryClass());
+        EntryResource entry = SerializationUtils.deserializeEntry(is, ResourceFactory.entryClassForFormat(format));
         assertNotNull(entry);
 
         is.close();
@@ -86,7 +87,7 @@ public class EntityTest extends AbstractTest {
 
         is = req.rowExecute();
 
-        entry = SerializationUtils.deserializeEntry(is, format.getEntryClass());
+        entry = SerializationUtils.deserializeEntry(is, ResourceFactory.entryClassForFormat(format));
         assertNotNull(entry);
 
         is.close();
@@ -197,7 +198,7 @@ public class EntityTest extends AbstractTest {
                 final ODataEntity inline = ((ODataInlineEntity) link).getEntity();
                 assertNotNull(inline);
 
-                debugEntry(ODataBinder.getEntry(inline, format.getEntryClass()), "Just read");
+                debugEntry(ODataBinder.getEntry(inline, ResourceFactory.entryClassForFormat(format)), "Just read");
 
                 final List<ODataProperty> properties = inline.getProperties();
                 assertEquals(2, properties.size());
