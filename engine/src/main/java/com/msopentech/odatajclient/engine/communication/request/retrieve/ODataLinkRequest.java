@@ -16,9 +16,12 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import javax.ws.rs.core.Response;
 
 /**
@@ -27,34 +30,47 @@ import javax.ws.rs.core.Response;
  *
  * @see ODataRetrieveRequestFactory#getLinkRequest(java.net.URI)
  */
-public class ODataLinkRequest extends ODataQueryRequest<ODataLink, ODataFormat> {
+public class ODataLinkRequest extends ODataQueryRequest<List<URI>, ODataPropertyFormat> {
 
     /**
      * Private constructor.
      *
      * @param query query to be executed.
      */
-    ODataLinkRequest(final URI query) {
-        super(query);
+    ODataLinkRequest(final URI targetURI, final String linkName) {
+        super(new ODataURIBuilder(targetURI.toASCIIString()).
+                appendStructuralSegment("$links").
+                appendStructuralSegment(linkName).build());
     }
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public ODataQueryResponse<ODataLink> execute() {
-        return new ODataEntitySetResponseImpl(null);
+    public ODataQueryResponse<List<URI>> execute() {
+        final Response res = client.accept(getContentType()).get();
+        return new ODataEntitySetResponseImpl(res);
     }
 
     protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
+
+        private List<URI> links = null;
 
         private ODataEntitySetResponseImpl(final Response res) {
             super(res);
         }
 
         @Override
-        public ODataLink getBody() {
-            return res.readEntity(ODataLink.class);
+        public List<URI> getBody() {
+            try {
+                if (links == null) {
+                    links = ODataReader.deserializeLinks(
+                            res.readEntity(InputStream.class), ODataPropertyFormat.valueOf(getFormat()));
+                }
+                return links;
+            } finally {
+                res.close();
+            }
         }
     }
 }

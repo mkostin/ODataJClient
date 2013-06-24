@@ -345,8 +345,8 @@ public class ODataRequestFactory {
      * @param query query to be performed.
      * @return new ODataLinkRequest instance.
      */
-    public static ODataLinkRequest getLinkRequest(final URI query) {
-        return ODataRetrieveRequestFactory.getLinkRequest(query);
+    public static ODataLinkRequest getLinkRequest(final URI query, final String linkName) {
+        return ODataRetrieveRequestFactory.getLinkRequest(query, linkName);
     }
 
     /**

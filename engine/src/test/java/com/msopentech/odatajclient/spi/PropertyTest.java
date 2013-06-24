@@ -145,4 +145,23 @@ public class PropertyTest extends AbstractTest {
         assertNotNull(value);
         assertEquals("-10", value.toString());
     }
+
+    @Test
+    public void readCountValue() throws IOException {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer").appendValueSegment("$count");
+
+        ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+
+        final ODataQueryResponse<ODataValue> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+
+        final ODataValue value = res.getBody();
+        debugODataValue(value, "Retrieved property");
+
+        assertNotNull(value);
+        // the following assert depends on the test execution order (use >= to be sure)
+        assertTrue(Integer.valueOf(value.toString()) >= 10);
+    }
 }

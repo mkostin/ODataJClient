@@ -95,8 +95,8 @@ public class ODataRetrieveRequestFactory {
      * @param query query to be performed.
      * @return new ODataLinkRequest instance.
      */
-    public static ODataLinkRequest getLinkRequest(final URI query) {
-        return new ODataLinkRequest(query);
+    public static ODataLinkRequest getLinkRequest(final URI query, final String linkName) {
+        return new ODataLinkRequest(query, linkName);
     }
 
     /**

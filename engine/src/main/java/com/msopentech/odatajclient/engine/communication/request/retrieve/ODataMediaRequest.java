@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataValueFormat;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response;
  *
  * @see ODataRetrieveRequestFactory#getMediaRequest(java.net.URI)
  */
-public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataFormat> {
+public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataValueFormat> {
 
     /**
      * Private constructor.

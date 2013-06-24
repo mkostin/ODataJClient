@@ -31,8 +31,6 @@ import javax.ws.rs.core.Response;
  */
 public class ODataValueRequest extends ODataQueryRequest<ODataValue, ODataValueFormat> {
 
-    private ODataValue value = null;
-
     /**
      * Private constructor.
      *
@@ -52,6 +50,8 @@ public class ODataValueRequest extends ODataQueryRequest<ODataValue, ODataValueF
     }
 
     protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
+
+        private ODataValue value = null;
 
         private ODataEntitySetResponseImpl(final Response res) {
             super(res);
