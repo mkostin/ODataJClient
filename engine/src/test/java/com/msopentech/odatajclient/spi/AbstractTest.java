@@ -154,7 +154,6 @@ public abstract class AbstractTest {
                 original.getClass().getSimpleName(), actual.getClass().getSimpleName());
 
         if (original instanceof ODataComplexValue) {
-            System.out.println("AAAAAAAAAAAAAAAAAAA complex " + propertyName);
             final List<ODataProperty> originalFileds = new ArrayList<ODataProperty>();
             for (ODataProperty prop : (ODataComplexValue) original) {
                 originalFileds.add(prop);
@@ -167,29 +166,23 @@ public abstract class AbstractTest {
 
             checkProperties(originalFileds, actualFileds);
         } else if (original instanceof ODataCollectionValue) {
-            System.out.println("AAAAAAAAAAAAAAAAAAA collection " + propertyName);
             assertTrue(((ODataCollectionValue) original).size() <= ((ODataCollectionValue) actual).size());
 
             boolean found = ((ODataCollectionValue) original).size() == 0;;
 
             for (ODataValue originalValue : (ODataCollectionValue) original) {
-                System.out.println("AAAAAAAAAAAAAAAAAAA Search for " + propertyName);
                 for (ODataValue actualValue : (ODataCollectionValue) actual) {
-//                    System.out.println("AAAAAAAAAAAAAAAAAAA compare with " + actualValue);
                     try {
                         checkPropertyValue(propertyName, originalValue, actualValue);
                         found = true;
                     } catch (AssertionError ignore) {
                         // ignore
-                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA " + propertyName + ":" + ignore.getMessage());
                     }
-                    System.out.println("AAAAAAAAAAAAAAAAAAA Res " + found);
                 }
             }
 
             assertTrue("Found " + actual + " but expected " + original, found);
         } else {
-            System.out.println("AAAAAAAAAAAAAAAAAAA primitive " + propertyName);
 
             if (((ODataPrimitiveValue) original).getTypeName() == null) {
                 assertTrue("Primitive value for '" + propertyName + "' type mismatch",
