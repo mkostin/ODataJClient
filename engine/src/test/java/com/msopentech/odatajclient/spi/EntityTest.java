@@ -37,6 +37,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.IOException;
@@ -132,9 +133,8 @@ public class EntityTest extends AbstractTest {
     }
 
     private void readODataEntity(final ODataFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(
-                "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
-        uriBuilder.appendEntityTypeSegment("Products(1)");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer(-10)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
@@ -145,18 +145,16 @@ public class EntityTest extends AbstractTest {
         assertNotNull(entity);
 
         if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
-            assertEquals("ODataDemo.Product", entity.getName());
-            assertEquals("http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)",
-                    entity.getEditLink().toASCIIString());
-            assertEquals(2, entity.getNavigationLinks().size());
-            assertEquals(2, entity.getAssociationLinks().size());
+            assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entity.getName());
+            assertEquals(testODataServiceRootURL + "/Customer(-10)", entity.getEditLink().toASCIIString());
+            assertEquals(5, entity.getNavigationLinks().size());
+            assertEquals(2, entity.getEditMediaLinks().size());
 
             boolean check = false;
 
             for (ODataLink link : entity.getNavigationLinks()) {
-                if ("Category".equals(link.getName())
-                        && "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/Products(1)/Category".
-                        equals(link.getLink().toASCIIString())) {
+                if ("Wife".equals(link.getName())
+                        && (testODataServiceRootURL + "/Customer(-10)/Wife").equals(link.getLink().toASCIIString())) {
                     check = true;
                 }
             }
@@ -228,12 +226,15 @@ public class EntityTest extends AbstractTest {
     }
 
     private void createODataEntity(final ODataFormat format, final int id, final boolean withInlineInfo) {
+        final String sampleName = "Sample customer";
+        final ODataEntity original = getSampleCustomerProfile(id, sampleName, withInlineInfo);
+        createODataEntity(format, original, id, withInlineInfo);
+    }
+
+    private void createODataEntity(
+            final ODataFormat format, ODataEntity original, final int id, final boolean withInlineInfo) {
         ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
-
-        final String sampleName = "Sample customer";
-
-        ODataEntity original = getSampleCustomerProfile(id, sampleName, withInlineInfo);
 
         debugODataEntity(original, "About to create");
 
@@ -336,5 +337,15 @@ public class EntityTest extends AbstractTest {
     public void createWithInlineAsJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
         createODataEntity(ODataFormat.JSON_FULL_METADATA, 4, true);
+    }
+
+    @Test
+    public void createWithNavigationAsAtom() {
+        final String sampleName = "Sample customer";
+        ODataEntity original = getSampleCustomerProfile(5, sampleName, false);
+
+        original.addLink(ODataFactory.newEntityNavigationLink(
+                "Info", URI.create(testODataServiceRootURL + "/CustomerInfo(12)")));
+        createODataEntity(ODataFormat.ATOM, original, 5, false);
     }
 }

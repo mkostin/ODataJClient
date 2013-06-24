@@ -70,9 +70,8 @@ public class FeedTest extends AbstractTest {
     }
 
     private void readODataFeed(final ODataFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(
-                "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
-        uriBuilder.appendEntitySetSegment("Products").top(3);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntitySetSegment("Car").top(3);
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);

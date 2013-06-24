@@ -27,27 +27,27 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
 import org.junit.Test;
 
-public class MetadataTest {
+public class MetadataTest extends AbstractTest {
 
     @Test
     public void retrieveAndParseEdmTypes() throws Exception {
-        final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(
-                "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc");
+        final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(testODataServiceRootURL);
 
         final EdmMetadata metadata = new EdmMetadata(req.rowExecute());
         assertNotNull(metadata);
 
-        EdmType productCollection = new EdmType(metadata, "Collection(ODataDemo.Product)");
-        assertNotNull(productCollection);
-        assertTrue(productCollection.isCollection());
-        assertFalse(productCollection.isSimpleType());
-        assertFalse(productCollection.isEnumType());
-        assertFalse(productCollection.isComplexType());
-        assertTrue(productCollection.isEntityType());
+        final EdmType orderCollection =
+                new EdmType(metadata, "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Order)");
+        assertNotNull(orderCollection);
+        assertTrue(orderCollection.isCollection());
+        assertFalse(orderCollection.isSimpleType());
+        assertFalse(orderCollection.isEnumType());
+        assertFalse(orderCollection.isComplexType());
+        assertTrue(orderCollection.isEntityType());
 
-        EntityType product = productCollection.getEntityType();
-        assertNotNull(product);
-        assertEquals("Product", product.getName());
+        EntityType order = orderCollection.getEntityType();
+        assertNotNull(order);
+        assertEquals("Order", order.getName());
 
         EdmType stream = new EdmType(metadata, "Edm.Stream");
         assertNotNull(stream);
