@@ -31,12 +31,63 @@ import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.IOException;
 import java.io.InputStream;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * This is the unit test class to check basic entity operations.
  */
 public class FeedTest extends AbstractTest {
+
+    @Test
+    public void readAtomFeed() throws Exception {
+        readFeed(ODataFormat.ATOM);
+    }
+
+    @Test
+    public void readJSONFeed() throws Exception {
+        readFeed(ODataFormat.JSON);
+    }
+
+    @Test
+    public void readODataFeedFromAtom() {
+        readODataFeed(ODataFormat.ATOM);
+    }
+
+    @Test
+    public void readODataFeedFromJSON() {
+        readODataFeed(ODataFormat.JSON);
+    }
+
+    @Test
+    public void readODataFeedWithNextFromAtom() {
+        readODataFeedWithNextLink(ODataFormat.ATOM);
+    }
+
+    @Test
+    @Ignore
+    public void readODataFeedWithNextFromJSON() {
+        readODataFeedWithNextLink(ODataFormat.JSON);
+    }
+    
+    private void readODataFeedWithNextLink(final ODataFormat format) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntitySetSegment("Customer");
+
+        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataQueryResponse<ODataFeed> res = req.execute();
+        final ODataFeed feed = res.getBody();
+
+        assertNotNull(feed);
+
+        debugFeed(ODataBinder.getFeed(feed, ResourceFactory.feedClassForFormat(format)), "Just retrieved feed");
+
+        assertEquals(2, feed.getEntities().size());
+        assertNotNull(feed.getNext());
+        assertEquals(testODataServiceRootURL + "/Customer?$skiptoken=-9", feed.getNext().toASCIIString());
+    }
 
     private void readFeed(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
@@ -58,16 +109,6 @@ public class FeedTest extends AbstractTest {
         is.close();
     }
 
-    @Test
-    public void readAtomFeed() throws Exception {
-        readFeed(ODataFormat.ATOM);
-    }
-
-    @Test
-    public void readJSONFeed() throws Exception {
-        readFeed(ODataFormat.JSON);
-    }
-
     private void readODataFeed(final ODataFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Car").top(3);
@@ -83,15 +124,5 @@ public class FeedTest extends AbstractTest {
         debugFeed(ODataBinder.getFeed(feed, ResourceFactory.feedClassForFormat(format)), "Just retrieved feed");
 
         assertEquals(3, feed.getEntities().size());
-    }
-
-    @Test
-    public void readODataFeedFromAtom() {
-        readODataFeed(ODataFormat.ATOM);
-    }
-
-    @Test
-    public void readODataFeedFromJSON() {
-        readODataFeed(ODataFormat.JSON);
     }
 }
