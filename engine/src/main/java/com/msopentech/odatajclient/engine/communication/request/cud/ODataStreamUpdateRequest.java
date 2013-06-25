@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamU
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
@@ -77,6 +78,12 @@ public class ODataStreamUpdateRequest
          */
         @Override
         public ODataStreamUpdateResponse getResponse() {
+            try {
+                finalizeBody();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+
             return new ODataStreamUpdateResponseImpl(res);
         }
 
@@ -85,7 +92,13 @@ public class ODataStreamUpdateRequest
          */
         @Override
         public Future<ODataStreamUpdateResponse> asyncResponse() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            try {
+                finalizeBody();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+
+            return null;
         }
     }
 

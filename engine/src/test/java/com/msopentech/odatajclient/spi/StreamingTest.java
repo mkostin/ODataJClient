@@ -39,7 +39,7 @@ import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import java.io.IOException;
 import java.util.concurrent.Future;
-import javax.ws.rs.core.MediaType;
+import org.junit.Ignore;
 
 public class StreamingTest {
 
@@ -51,7 +51,6 @@ public class StreamingTest {
 
     @Test
     public void stringStreaming() {
-
         final ODataStreamingMgt streaming = new ODataStreamingMgt();
 
         new StreamingThread(streaming).start();
@@ -72,6 +71,7 @@ public class StreamingTest {
     }
 
     @Test
+    @Ignore
     public void batchRequestStreaming() {
         // create your request
         final ODataBatchRequest request =
@@ -139,7 +139,6 @@ public class StreamingTest {
 
         retrieve.setRequest(query);
         // -------------------------------------------
-
 
         final ODataBatchResponse response = payload.getResponse();
     }
