@@ -20,6 +20,20 @@ import java.net.URI;
 
 public class URIUtils {
 
+    public static URI getURI(final String base, final String href) {
+        if (href == null) {
+            throw new IllegalArgumentException("Null link provided");
+        }
+
+        URI uri = URI.create(href);
+
+        if (!uri.isAbsolute() && base != null) {
+            uri = new ODataURIBuilder(base).appendEntityTypeSegment(href).build();
+        }
+
+        return uri.normalize();
+    }
+    
     public static URI getURI(final URI base, final String href) {
         if (href == null) {
             throw new IllegalArgumentException("Null link provided");

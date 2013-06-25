@@ -16,7 +16,9 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.data.ODataDocumentService;
+import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.types.ODataDocumentServiceFormat;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
@@ -27,7 +29,7 @@ import javax.ws.rs.core.Response;
  *
  * @see ODataRetrieveRequestFactory#getDocumentServiceRequest(java.lang.String)
  */
-public class ODataDocumentServiceRequest extends ODataQueryRequest<InputStream, ODataFormat> {
+public class ODataDocumentServiceRequest extends ODataQueryRequest<ODataDocumentService, ODataDocumentServiceFormat> {
 
     /**
      * Constructor.
@@ -42,7 +44,7 @@ public class ODataDocumentServiceRequest extends ODataQueryRequest<InputStream, 
      * {@inheritDoc }
      */
     @Override
-    public ODataQueryResponse<InputStream> execute() {
+    public ODataQueryResponse<ODataDocumentService> execute() {
         return new ODataServcieResponsImpl(client.get());
     }
 
@@ -58,13 +60,23 @@ public class ODataDocumentServiceRequest extends ODataQueryRequest<InputStream, 
 
     protected class ODataServcieResponsImpl extends ODataQueryResponseImpl {
 
+        private ODataDocumentService documentService = null;
+
         private ODataServcieResponsImpl(final Response res) {
             super(res);
         }
 
         @Override
-        public InputStream getBody() {
-            return res.readEntity(InputStream.class);
+        public ODataDocumentService getBody() {
+            try {
+                if (documentService == null) {
+                    documentService = ODataReader.deserializeDocumentService(
+                            res.readEntity(InputStream.class), ODataDocumentServiceFormat.valueOf(getFormat()));
+                }
+                return documentService;
+            } finally {
+                res.close();
+            }
         }
     }
 }

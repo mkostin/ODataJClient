@@ -79,4 +79,14 @@ public class ODataConstants {
 
     public static final String ATTR_NULL = PREFIX_METADATA + "null";
 
+    public static final String ATTR_XMLBASE = "xml:base";
+    
+    public static final String ATTR_HREF = "href";
+
+    public static final String ELEM_SERVICE = "service";
+
+    public static final String ELEM_COLLECTION = "collection";
+
+    public static final String ATTR_ATOM_TITLE = "atom:title";
+
 }

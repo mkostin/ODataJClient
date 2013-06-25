@@ -16,9 +16,12 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.types.ODataDocumentServiceFormat;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
@@ -98,6 +102,15 @@ public class ODataReader {
      * @return List of URIs.
      */
     public static List<URI> deserializeLinks(final InputStream input, final ODataPropertyFormat format) {
+        switch (format) {
+            case XML:
+                return deserializeLinksAsXML(input);
+            default:
+                return null;
+        }
+    }
+
+    private static List<URI> deserializeLinksAsXML(final InputStream input) {
         try {
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder builder = factory.newDocumentBuilder();
@@ -110,6 +123,63 @@ public class ODataReader {
                 links.add(URI.create(uris.item(i).getTextContent()));
             }
             return links;
+        } catch (ParserConfigurationException e) {
+            LOG.error("Error parsing input stream", e);
+            throw new IllegalArgumentException(e);
+        } catch (Exception e) {
+            LOG.error("Error deserializing property", e);
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Parses an OData document service.
+     *
+     * @param input stream to de-serialize.
+     * @param format de-serialize as XML or JSON
+     * @return List of URIs.
+     */
+    public static ODataDocumentService deserializeDocumentService(
+            final InputStream input, final ODataDocumentServiceFormat format) {
+        switch (format) {
+            case XML:
+                return deserializeDocumentServiceAsXML(input);
+            default:
+                return null;
+        }
+    }
+
+    private static ODataDocumentService deserializeDocumentServiceAsXML(final InputStream input) {
+        try {
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+
+            final Document doc = builder.parse(input);
+            final NodeList services = doc.getElementsByTagName(ODataConstants.ELEM_SERVICE);
+
+            if (services.getLength() != 1) {
+                throw new IllegalArgumentException("Invalid docuemnt service");
+            }
+
+            final Element service = (Element) services.item(0);
+            final String base = service.getAttribute(ODataConstants.ATTR_XMLBASE);
+
+            final NodeList collections = service.getElementsByTagName(ODataConstants.ELEM_COLLECTION);
+
+            ODataDocumentService res = new ODataDocumentService();
+
+            for (int i = 0; i < collections.getLength(); i++) {
+                final Element collection = (Element) collections.item(i);
+                final URI uri = URIUtils.getURI(base, collection.getAttribute(ODataConstants.ATTR_HREF).trim());
+                final NodeList title = collection.getElementsByTagName(ODataConstants.ATTR_ATOM_TITLE);
+
+                if (title.getLength() != 1) {
+                    throw new IllegalArgumentException("Invalid collection element found");
+                }
+
+                res.addEntitySet(title.item(0).getTextContent().trim(), uri);
+            }
+            return res;
         } catch (ParserConfigurationException e) {
             LOG.error("Error parsing input stream", e);
             throw new IllegalArgumentException(e);

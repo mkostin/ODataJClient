@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import java.net.URI;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * OData request factory class.
@@ -32,7 +33,8 @@ public class ODataRetrieveRequestFactory {
      * @return new ODataDocumentServiceRequest instance.
      */
     public static ODataDocumentServiceRequest getDocumentServiceRequest(final String serviceRoot) {
-        return new ODataDocumentServiceRequest(new ODataURIBuilder(serviceRoot).build());
+        return new ODataDocumentServiceRequest(StringUtils.isNotBlank(serviceRoot) && serviceRoot.endsWith("/")
+                ? new ODataURIBuilder(serviceRoot).build() : new ODataURIBuilder(serviceRoot + "/").build());
     }
 
     /**

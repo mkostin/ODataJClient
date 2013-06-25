@@ -20,7 +20,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * Exchanged data format.
  */
-public enum ODataFormat {
+public enum ODataDocumentServiceFormat {
 
     /**
      * JSON format with no metadata.
@@ -28,20 +28,17 @@ public enum ODataFormat {
     JSON_NO_METADATA(MediaType.APPLICATION_JSON + ";odata=nometadata"),
     /**
      * JSON format with minimal metadata (default).
+     * In this case, minimalmetadata is equivalent to fullmetadata.
      */
     JSON(MediaType.APPLICATION_JSON + ";odata=minimalmetadata"),
     /**
-     * JSON format with no metadata.
+     * XML format.
      */
-    JSON_FULL_METADATA(MediaType.APPLICATION_JSON + ";odata=fullmetadata"),
-    /**
-     * Atom format.
-     */
-    ATOM(MediaType.APPLICATION_ATOM_XML);
+    XML(MediaType.APPLICATION_XML);
 
     private final String format;
 
-    ODataFormat(final String format) {
+    ODataDocumentServiceFormat(final String format) {
         this.format = format;
     }
 
