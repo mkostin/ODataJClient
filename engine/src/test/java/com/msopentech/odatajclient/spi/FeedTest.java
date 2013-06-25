@@ -31,7 +31,6 @@ import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.IOException;
 import java.io.InputStream;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -92,7 +91,6 @@ public class FeedTest extends AbstractTest {
     }
 
     @Test
-    @Ignore
     public void readODataFeedFromJSON() {
         readODataFeed(ODataFormat.JSON);
     }
