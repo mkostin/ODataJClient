@@ -69,7 +69,8 @@ public class BatchUsageTest {
 
         // build the new object to change Rating value
         final ODataEntity changes = ODataFactory.newEntity("Java Code");
-        changes.addProperty(new ODataProperty("Rating", new ODataPrimitiveValue(3, EdmSimpleType.INT_32)));
+        changes.addProperty(new ODataProperty("Rating",
+                new ODataPrimitiveValue.Builder().setText("3").setType(EdmSimpleType.INT_32).build()));
 
         // create your request
         final ODataEntityUpdateRequest change =

@@ -24,17 +24,17 @@ import java.util.Map;
  */
 public class ODataComplexValue extends ODataValue implements Iterable<ODataProperty> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -1878555027714020431L;
 
     /**
      * Type name.
      */
-    final String typeName;
+    private final String typeName;
 
     /**
      * Complex type fields.
      */
-    final Map<String, ODataProperty> fields = new HashMap<String, ODataProperty>();
+    private final Map<String, ODataProperty> fields = new HashMap<String, ODataProperty>();
 
     /**
      * Constructor.

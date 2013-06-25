@@ -46,16 +46,17 @@ public class ODataFactory {
     public static ODataLink newInlineEntity(final String name, final URI link, final ODataEntity entity) {
         return new ODataInlineEntity(link, ODataLinkType.ENTITY_NAVIGATION, name, entity) {
 
-            private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = 1215279359077303412L;
 
         };
     }
 
     public static ODataLink newInlineEntity(
             final String name, final URI baseURI, final String href, final ODataEntity entity) {
+
         return new ODataInlineEntity(baseURI, href, ODataLinkType.ENTITY_NAVIGATION, name, entity) {
 
-            private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = 1604155965416337032L;
 
         };
     }

@@ -24,17 +24,17 @@ import java.util.Set;
  */
 public class ODataCollectionValue extends ODataValue implements Iterable<ODataValue> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -3665659846001987187L;
 
     /**
      * Type name;
      */
-    final String typeName;
+    private final String typeName;
 
     /**
      * Values.
      */
-    final Set<ODataValue> values = new HashSet<ODataValue>();
+    private final Set<ODataValue> values = new HashSet<ODataValue>();
 
     /**
      * Constructor.
@@ -89,5 +89,9 @@ public class ODataCollectionValue extends ODataValue implements Iterable<ODataVa
      */
     public int size() {
         return values.size();
+    }
+
+    public boolean isEmpty() {
+        return values.isEmpty();
     }
 }

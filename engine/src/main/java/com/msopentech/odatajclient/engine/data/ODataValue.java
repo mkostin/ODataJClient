@@ -28,6 +28,30 @@ public abstract class ODataValue implements Serializable {
 
     private static final long serialVersionUID = 7445422004232581877L;
 
+    public boolean isPrimitive() {
+        return (this instanceof ODataPrimitiveValue);
+    }
+
+    public ODataPrimitiveValue asPrimitive() {
+        return isPrimitive() ? (ODataPrimitiveValue) this : null;
+    }
+
+    public boolean isComplex() {
+        return (this instanceof ODataComplexValue);
+    }
+
+    public ODataComplexValue asComplex() {
+        return isComplex() ? (ODataComplexValue) this : null;
+    }
+
+    public boolean isCollection() {
+        return (this instanceof ODataCollectionValue);
+    }
+
+    public ODataCollectionValue asCollection() {
+        return isCollection() ? (ODataCollectionValue) this : null;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);

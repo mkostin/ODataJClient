@@ -15,11 +15,10 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
@@ -39,6 +38,7 @@ import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.IOException;
@@ -145,7 +145,6 @@ public class EntityTest extends AbstractTest {
 
         final ODataQueryResponse<ODataEntity> res = req.execute();
         final ODataEntity entity = res.getBody();
-
         assertNotNull(entity);
 
         if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
@@ -175,6 +174,31 @@ public class EntityTest extends AbstractTest {
     @Test
     public void readODataEntityFromJSON() {
         readODataEntity(ODataFormat.JSON);
+    }
+
+    @Test
+    public void readODataEntityWithGeospatial() {
+        final ODataURIBuilder uriBuilder =
+                new ODataURIBuilder("http://services.odata.org/v3/(S(ds4nnexwejbv4fq3nqsx5vd1))/OData/OData.svc/");
+        uriBuilder.appendEntityTypeSegment("Suppliers(1)");
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(ODataFormat.ATOM);
+
+        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final ODataEntity entity = res.getBody();
+
+        assertNotNull(entity);
+
+        boolean found = false;
+        for (ODataProperty property : entity.getProperties()) {
+            if ("Location".equals(property.getName())) {
+                found = true;
+                assertTrue(property.hasPrimitiveValue());
+                assertEquals(EdmSimpleType.GEOGRAPHY_POINT.toString(), property.getPrimitiveValue().getTypeName());
+            }
+        }
+        assertTrue(found);
     }
 
     private void readODataEntityWithInline(final ODataFormat format) {
@@ -229,14 +253,7 @@ public class EntityTest extends AbstractTest {
         readODataEntityWithInline(ODataFormat.JSON_FULL_METADATA);
     }
 
-    private ODataEntity createODataEntity(final ODataFormat format, final int id, final boolean withInlineInfo) {
-        final String sampleName = "Sample customer";
-        final ODataEntity original = getSampleCustomerProfile(id, sampleName, withInlineInfo);
-        return createODataEntity(format, original);
-    }
-
-    private ODataEntity createODataEntity(
-            final ODataFormat format, ODataEntity original) {
+    private ODataEntity createODataEntity(final ODataFormat format, ODataEntity original) {
         ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 

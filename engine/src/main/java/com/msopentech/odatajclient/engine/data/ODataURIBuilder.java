@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * OData URI/Query builder.
@@ -47,7 +48,7 @@ public class ODataURIBuilder implements Serializable {
         private String value;
 
         private SegmentType() {
-            this.value = "";
+            this.value = StringUtils.EMPTY;
         }
 
         private SegmentType(final String value) {

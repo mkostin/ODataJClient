@@ -24,7 +24,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoly
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.net.URI;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
@@ -93,12 +93,12 @@ public enum EdmSimpleType {
      * The absence of a value.
      */
     @XmlEnumValue("Null")
-    NULL("Null", void.class),
+    NULL("Null", Void.class),
     /**
      * An array of bytes.
      */
     @XmlEnumValue("Binary")
-    BINARY("Binary", Byte[].class),
+    BINARY("Binary", byte[].class),
     /**
      * A Boolean value.
      */
@@ -108,37 +108,42 @@ public enum EdmSimpleType {
      * Unsigned 8-bit integer value.
      */
     @XmlEnumValue("Byte")
-    BYTE("Byte", Byte.class),
+    BYTE("Byte", Integer.class),
+    /**
+     * A signed 8-bit integer value.
+     */
+    @XmlEnumValue("SByte")
+    S_BYTE("SByte", Byte.class),
     /**
      * A 64-bit value expressed as Coordinated Universal Time (UTC).
      */
     @XmlEnumValue("DateTime")
-    DATE_TIME("DateTime", Date.class, "yyyy-mm-ddThh:mm[:ss[.fffffff]]"),
+    DATE_TIME("DateTime", Timestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
     /**
      * Date and time as an Offset in minutes from GMT.
      */
     @XmlEnumValue("DateTimeOffset")
-    DATE_TIME_OFFSET("DateTimeOffset", Date.class, "yyyy-mm-ddThh:mm[:ss[.fffffff]]Z"),
+    DATE_TIME_OFFSET("DateTimeOffset", Timestamp.class, "yyyy-MM-dd'T'HH:mm:ssZ"),
     /**
      * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
      */
     @XmlEnumValue("Time")
-    TIME("Time", Date.class, "hh:mm[:ss[.fffffff]]"),
+    TIME("Time", Timestamp.class, "HH:mm:ss"),
     /**
      * Numeric values with fixed precision and scale.
      */
     @XmlEnumValue("Decimal")
     DECIMAL("Decimal", Float.class, "[0-9]+.[0-9]+M|m"),
     /**
-     * A 64-bit double-precision floating point value.
-     */
-    @XmlEnumValue("Double")
-    DOUBLE("Double", Double.class),
-    /**
      * A floating point number with 7 digits precision.
      */
     @XmlEnumValue("Single")
     SINGLE("Single", Float.class, "[0-9]+.[0-9]+f"),
+    /**
+     * A 64-bit double-precision floating point value.
+     */
+    @XmlEnumValue("Double")
+    DOUBLE("Double", Double.class),
     @XmlEnumValue("Geography")
     GEOGRAPHY("Geography", Geospatial.class, "GEOGRAPHY|"),
     @XmlEnumValue("GeographyPoint")
@@ -197,11 +202,6 @@ public enum EdmSimpleType {
      */
     @XmlEnumValue("String")
     STRING("String", String.class),
-    /**
-     * A signed 8-bit integer value.
-     */
-    @XmlEnumValue("SByte")
-    S_BYTE("SByte", Byte.class),
     /**
      * Resource stream (for media entities).
      */

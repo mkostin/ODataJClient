@@ -51,7 +51,8 @@ public class InvokeUsageTest {
         final ODataURIBuilder targetURI = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
         targetURI.appendEntityTypeSegment("Product(0)").appendActionSegment("UpdateProductRating");
 
-        final ODataPrimitiveValue value = new ODataPrimitiveValue(2, EdmSimpleType.INT_32);
+        final ODataPrimitiveValue value = new ODataPrimitiveValue.Builder().
+                setText("2").setType(EdmSimpleType.INT_32).build();
         final Map<String, ODataValue> parameters = Collections.<String, ODataValue>singletonMap("rating", value);
 
         // create your request

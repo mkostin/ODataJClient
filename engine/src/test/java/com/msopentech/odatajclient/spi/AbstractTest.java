@@ -153,9 +153,9 @@ public abstract class AbstractTest {
         assertEquals("Type mismatch for '" + propertyName + "'",
                 original.getClass().getSimpleName(), actual.getClass().getSimpleName());
 
-        if (original instanceof ODataComplexValue) {
+        if (original.isComplex()) {
             final List<ODataProperty> originalFileds = new ArrayList<ODataProperty>();
-            for (ODataProperty prop : (ODataComplexValue) original) {
+            for (ODataProperty prop : original.asComplex()) {
                 originalFileds.add(prop);
             }
 
@@ -165,13 +165,13 @@ public abstract class AbstractTest {
             }
 
             checkProperties(originalFileds, actualFileds);
-        } else if (original instanceof ODataCollectionValue) {
-            assertTrue(((ODataCollectionValue) original).size() <= ((ODataCollectionValue) actual).size());
+        } else if (original.isCollection()) {
+            assertTrue(original.asCollection().size() <= actual.asCollection().size());
 
-            boolean found = ((ODataCollectionValue) original).size() == 0;;
+            boolean found = original.asCollection().isEmpty();
 
-            for (ODataValue originalValue : (ODataCollectionValue) original) {
-                for (ODataValue actualValue : (ODataCollectionValue) actual) {
+            for (ODataValue originalValue : original.asCollection()) {
+                for (ODataValue actualValue : actual.asCollection()) {
                     try {
                         checkPropertyValue(propertyName, originalValue, actualValue);
                         found = true;
@@ -183,21 +183,11 @@ public abstract class AbstractTest {
 
             assertTrue("Found " + actual + " but expected " + original, found);
         } else {
-
-            if (((ODataPrimitiveValue) original).getTypeName() == null) {
-                assertTrue("Primitive value for '" + propertyName + "' type mismatch",
-                        ((ODataPrimitiveValue) actual).getTypeName() == null
-                        || ((ODataPrimitiveValue) actual).getTypeName().equals("Edm.String"));
-            } else {
-                assertTrue("Primitive value for '" + propertyName + "' type mismatch",
-                        ((ODataPrimitiveValue) original).getTypeName().equals(((ODataPrimitiveValue) actual).
-                        getTypeName())
-                        || (((ODataPrimitiveValue) original).getTypeName().equals("Edm.String")
-                        && ((ODataPrimitiveValue) actual).getTypeName() == null));
-            }
+            assertTrue("Primitive value for '" + propertyName + "' type mismatch",
+                    original.asPrimitive().getTypeName().equals(actual.asPrimitive().getTypeName()));
 
             assertEquals("Primitive value for '" + propertyName + "' mismatch",
-                    ((ODataPrimitiveValue) original).toString(), ((ODataPrimitiveValue) actual).toString());
+                    original.asPrimitive().toString(), actual.asPrimitive().toString());
         }
     }
 
@@ -205,7 +195,8 @@ public abstract class AbstractTest {
         final ODataEntity entity = ODataFactory.newEntity("CustomerInfo");
         entity.setMediaEntity(true);
 
-        final ODataPrimitiveValue informationValue = new ODataPrimitiveValue(sampleinfo, EdmSimpleType.STRING);
+        final ODataPrimitiveValue informationValue = new ODataPrimitiveValue.Builder().
+                setText(sampleinfo).setType(EdmSimpleType.STRING).build();
         final ODataProperty information = new ODataProperty("Information", informationValue);
         entity.addProperty(information);
 
@@ -218,12 +209,14 @@ public abstract class AbstractTest {
         ODataEntity entity = ODataFactory.newEntity("Customer");
 
         // add name attribute
-        final ODataPrimitiveValue nameValue = new ODataPrimitiveValue(sampleName, EdmSimpleType.STRING);
+        final ODataPrimitiveValue nameValue = new ODataPrimitiveValue.Builder().
+                setText(sampleName).setType(EdmSimpleType.STRING).build();
         ODataProperty name = new ODataProperty("Name", nameValue);
         entity.addProperty(name);
 
         // add key attribute
-        final ODataPrimitiveValue keyValue = new ODataPrimitiveValue(id, EdmSimpleType.INT_32);
+        final ODataPrimitiveValue keyValue = new ODataPrimitiveValue.Builder().
+                setText(String.valueOf(id)).setType(EdmSimpleType.INT_32).build();
         ODataProperty key = new ODataProperty("CustomerId", keyValue);
         entity.addProperty(key);
 
@@ -240,12 +233,14 @@ public abstract class AbstractTest {
 
         // add BackupContactInfo.ContactDetails.AlternativeNames attribute (collection)
         ODataCollectionValue alternativeNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        alternativeNamesValue.add(new ODataPrimitiveValue("myname", EdmSimpleType.STRING));
+        alternativeNamesValue.add(new ODataPrimitiveValue.Builder().
+                setText("myname").setType(EdmSimpleType.STRING).build());
         contactDetails.add(new ODataProperty("AlternativeNames", alternativeNamesValue));
 
         // add BackupContactInfo.ContactDetails.EmailBag attribute (collection)
         ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
-        emailBagValue.add(new ODataPrimitiveValue("myname@mydomain.com", EdmSimpleType.STRING));
+        emailBagValue.add(new ODataPrimitiveValue.Builder().
+                setText("myname@mydomain.com").setType(EdmSimpleType.STRING).build());
         contactDetails.add(new ODataProperty("EmailBag", emailBagValue));
 
         // add BackupContactInfo.ContactDetails.ContactAlias attribute (complex)
@@ -255,7 +250,8 @@ public abstract class AbstractTest {
 
         // add BackupContactInfo.ContactDetails.ContactAlias.AlternativeNames attribute (collection)
         alternativeNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        alternativeNamesValue.add(new ODataPrimitiveValue("myAlternativeName", EdmSimpleType.STRING));
+        alternativeNamesValue.add(new ODataPrimitiveValue.Builder().
+                setText("myAlternativeName").setType(EdmSimpleType.STRING).build());
         contactAliasValue.add(new ODataProperty("AlternativeNames", alternativeNamesValue));
 
         if (withInlineInfo) {

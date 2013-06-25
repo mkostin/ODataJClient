@@ -76,6 +76,34 @@ public class ODataProperty implements Serializable {
         return value;
     }
 
+    public boolean hasNullValue() {
+        return this.value == null;
+    }
+
+    public boolean hasPrimitiveValue() {
+        return !hasNullValue() && this.value.isPrimitive();
+    }
+
+    public ODataPrimitiveValue getPrimitiveValue() {
+        return hasPrimitiveValue() ? this.value.asPrimitive() : null;
+    }
+
+    public boolean hasComplexValue() {
+        return !hasNullValue() && this.value.isComplex();
+    }
+
+    public ODataComplexValue getComplexValue() {
+        return hasComplexValue() ? this.value.asComplex() : null;
+    }
+
+    public boolean hasCollectionValue() {
+        return !hasNullValue() && this.value.isCollection();
+    }
+
+    public ODataCollectionValue getCollectionValue() {
+        return hasCollectionValue() ? this.value.asCollection() : null;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);

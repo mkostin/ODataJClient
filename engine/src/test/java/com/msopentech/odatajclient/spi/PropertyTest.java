@@ -15,17 +15,14 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
-import com.msopentech.odatajclient.engine.data.ODataComplexValue;
-import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
@@ -40,6 +37,9 @@ import org.junit.Test;
  */
 public class PropertyTest extends AbstractTest {
 
+    /**
+     * @see PrimitiveValueTest
+     */
     private void readPrimitiveProperty(final ODataPropertyFormat format) throws IOException {
         ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer(-10)").appendStructuralSegment("CustomerId");
@@ -54,8 +54,8 @@ public class PropertyTest extends AbstractTest {
         debugODataProperty(property, "Retrieved property");
 
         assertNotNull(property);
-        assertTrue(property.getValue() instanceof ODataPrimitiveValue);
-        assertEquals("-10", ((ODataPrimitiveValue) property.getValue()).toString());
+        assertTrue(property.hasPrimitiveValue());
+        assertEquals("-10", property.getPrimitiveValue().toString());
     }
 
     private void readComplexProperty(final ODataPropertyFormat format) throws IOException {
@@ -72,8 +72,8 @@ public class PropertyTest extends AbstractTest {
         debugODataProperty(property, "Retrieved property");
 
         assertNotNull(property);
-        assertTrue(property.getValue() instanceof ODataComplexValue);
-        assertEquals(6, ((ODataComplexValue) property.getValue()).size());
+        assertTrue(property.hasComplexValue());
+        assertEquals(6, property.getComplexValue().size());
     }
 
     private void readCollectionProperty(final ODataPropertyFormat format) throws IOException {
@@ -90,8 +90,8 @@ public class PropertyTest extends AbstractTest {
         debugODataProperty(property, "Retrieved property");
 
         assertNotNull(property);
-        assertTrue(property.getValue() instanceof ODataCollectionValue);
-        assertEquals(9, ((ODataCollectionValue) property.getValue()).size());
+        assertTrue(property.hasCollectionValue());
+        assertEquals(9, property.getCollectionValue().size());
     }
 
     @Test
