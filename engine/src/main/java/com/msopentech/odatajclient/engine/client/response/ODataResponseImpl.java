@@ -76,6 +76,4 @@ public abstract class ODataResponseImpl implements ODataResponse {
     public InputStream getRawResponse() {
         return res.readEntity(InputStream.class);
     }
-    
-    
 }

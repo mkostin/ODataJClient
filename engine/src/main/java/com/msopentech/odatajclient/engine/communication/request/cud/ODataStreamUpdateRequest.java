@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
@@ -22,6 +24,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpda
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
+import javax.ws.rs.core.Response;
 
 /**
  * This class implements an OData stream create/update request.
@@ -74,7 +77,7 @@ public class ODataStreamUpdateRequest
          */
         @Override
         public ODataStreamUpdateResponse getResponse() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return new ODataStreamUpdateResponseImpl(res);
         }
 
         /**
@@ -83,6 +86,27 @@ public class ODataStreamUpdateRequest
         @Override
         public Future<ODataStreamUpdateResponse> asyncResponse() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
+
+    private class ODataStreamUpdateResponseImpl extends ODataResponseImpl implements ODataStreamUpdateResponse {
+
+        private InputStream is = null;
+
+        public ODataStreamUpdateResponseImpl(final Response res) {
+            super(res);
+        }
+
+        @Override
+        public InputStream getBody() {
+            if (is == null) {
+                try {
+                    is = res.readEntity(InputStream.class);
+                } finally {
+                    res.close();
+                }
+            }
+            return is;
         }
     }
 }

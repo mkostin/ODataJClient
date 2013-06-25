@@ -61,7 +61,9 @@ public class ODataValueRequest extends ODataQueryRequest<ODataValue, ODataValueF
         public ODataValue getBody() {
             try {
                 if (value == null) {
-                    value = new ODataPrimitiveValue(res.readEntity(String.class), EdmSimpleType.STRING);
+                    value = new ODataPrimitiveValue(res.readEntity(String.class),
+                            ODataValueFormat.valueOf(getFormat()) == ODataValueFormat.TEXT
+                            ? EdmSimpleType.STRING : EdmSimpleType.STREAM);
                 }
                 return value;
             } finally {

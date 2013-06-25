@@ -20,10 +20,12 @@ import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataMediaFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * Streamed OData request abstract class.
@@ -40,7 +42,9 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      */
     protected ODataStreamingManagement<V> payload = null;
 
-    private ODataFormat format;
+    private ODataMediaFormat format;
+
+    protected Response res = null;
 
     /**
      * Constructor.
@@ -50,6 +54,8 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      */
     public ODataStreamedRequestImpl(final Method method, final URI uri) {
         super(method, uri);
+        setAccept(MediaType.APPLICATION_OCTET_STREAM);
+        setContentType(MediaType.APPLICATION_OCTET_STREAM);
     }
 
     /**
@@ -63,15 +69,15 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      * {@inheritDoc}
      */
     @Override
-    public ODataFormat getFormat() {
-        return format;
+    public final ODataMediaFormat getFormat() {
+        return format == null ? ODataMediaFormat.APPLICATION_OCTET_STREAM : format;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setFormat(final ODataFormat format) {
+    public final void setFormat(final ODataMediaFormat format) {
         this.format = format;
         setAccept(format.toString());
         setContentType(format.toString());
@@ -81,11 +87,14 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      * {@inheritDoc }
      */
     @Override
+    @SuppressWarnings("unchecked")
     public T execute() {
+        payload = getPayload();
         // execute the request
+        res = client.accept(getContentType()).type(getContentType()).put(payload.getBody());
 
         // return the payload object
-        return getPayload();
+        return (T) payload;
     }
 
     /**

@@ -16,9 +16,10 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.types.ODataValueFormat;
+import com.msopentech.odatajclient.engine.types.ODataMediaFormat;
 import java.io.InputStream;
 import java.net.URI;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -27,7 +28,7 @@ import javax.ws.rs.core.Response;
  *
  * @see ODataRetrieveRequestFactory#getMediaRequest(java.net.URI)
  */
-public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataValueFormat> {
+public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataMediaFormat> {
 
     /**
      * Private constructor.
@@ -36,6 +37,8 @@ public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataValue
      */
     ODataMediaRequest(final URI query) {
         super(query);
+        setAccept(MediaType.APPLICATION_OCTET_STREAM);
+        setContentType(MediaType.APPLICATION_OCTET_STREAM);
     }
 
     /**
@@ -43,12 +46,13 @@ public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataValue
      */
     @Override
     public ODataQueryResponse<InputStream> execute() {
-        return new ODataEntitySetResponseImpl(null);
+        final Response res = client.accept(getContentType()).get();
+        return new ODataMediaResponseImpl(res);
     }
 
-    protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
+    protected class ODataMediaResponseImpl extends ODataQueryResponseImpl {
 
-        private ODataEntitySetResponseImpl(final Response res) {
+        private ODataMediaResponseImpl(final Response res) {
             super(res);
         }
 
