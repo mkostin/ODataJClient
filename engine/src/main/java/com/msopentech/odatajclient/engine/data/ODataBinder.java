@@ -28,6 +28,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -158,7 +159,7 @@ public class ODataBinder {
     public static ODataFeed getODataFeed(final FeedResource feedResource) {
         final LinkResource next = feedResource.getNext();
 
-        final ODataFeed feed = next == null
+        final ODataFeed feed = next == null || StringUtils.isBlank((next.getHref()))
                 ? ODataFactory.newFeed()
                 : ODataFactory.newFeed(URI.create(next.getHref()));
 

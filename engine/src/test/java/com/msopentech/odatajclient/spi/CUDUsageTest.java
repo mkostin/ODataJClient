@@ -29,7 +29,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataEntityCrea
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamCreateResponse;
-import com.msopentech.odatajclient.engine.communication.response.ODataUpdateEntityResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -122,7 +122,7 @@ public class CUDUsageTest {
                 ODataCUDRequestFactory.getEntityUpdateRequest(targetURI.build(), UpdateType.PATCH, changes);
 
         // execute and retrieve response
-        ODataUpdateEntityResponse res = request.execute();
+        ODataEntityUpdateResponse res = request.execute();
 
         // retrieve update object if returned
         ODataEntity updated = res.getBody();

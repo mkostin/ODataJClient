@@ -142,9 +142,10 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         for (JSONLink link : entry.getNavigationLinks()) {
             if (link.getInlineEntry() != null) {
                 jgen.writeObjectField(link.getTitle(), link.getInlineEntry());
-            }
-            if (link.getInlineFeed() != null) {
+            } else if (link.getInlineFeed() != null) {
                 jgen.writeObjectField(link.getTitle(), link.getInlineFeed());
+            } else {
+                jgen.writeStringField(link.getTitle() + JSONConstants.BIND_LINK_SUFFIX, link.getHref());
             }
         }
         for (JSONLink link : entry.getMediaEditLinks()) {

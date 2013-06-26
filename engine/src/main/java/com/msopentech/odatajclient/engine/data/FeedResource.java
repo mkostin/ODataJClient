@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -24,11 +25,13 @@ import java.util.List;
  */
 public interface FeedResource {
 
+    URI getBaseURI();
+
     List<? extends EntryResource> getEntries();
 
     void setEntries(List<EntryResource> entries);
 
-    boolean setNext(LinkResource next);
+    void setNext(LinkResource next);
 
     LinkResource getNext();
 }

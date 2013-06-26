@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.LinkResource;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -275,6 +276,11 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
         this.base = value;
     }
 
+    @Override
+    public URI getBaseURI() {
+        return base == null ? null : URI.create(base);
+    }
+
     /**
      * Gets the value of the lang property.
      *
@@ -328,17 +334,19 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
     }
 
     @Override
-    public boolean setNext(LinkResource next) {
+    public void setNext(LinkResource next) {
         AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);
         if (link != null) {
             getValues().remove(link);
         }
 
-        return (next instanceof AtomLink) && getValues().add(next);
+        if (next instanceof AtomLink) {
+            getValues().add(next);
+        }
     }
 
     @Override
-    public LinkResource getNext() {
+    public AtomLink getNext() {
         final AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);
         return link == null ? null : link;
     }

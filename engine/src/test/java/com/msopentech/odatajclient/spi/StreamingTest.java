@@ -19,24 +19,24 @@ import static org.junit.Assert.*;
 
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangeset;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
-import com.msopentech.odatajclient.engine.communication.request.batch.ODataRetrieve;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangeset;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataRetrieve;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import org.junit.Test;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
 import java.io.IOException;
 import java.util.concurrent.Future;
 import org.junit.Ignore;
@@ -50,6 +50,7 @@ public class StreamingTest {
     private static int MAX = 10000;
 
     @Test
+    @Ignore
     public void stringStreaming() {
         final ODataStreamingMgt streaming = new ODataStreamingMgt();
 

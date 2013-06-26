@@ -13,28 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.client.response;
+package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.communication.response.*;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import javax.ws.rs.core.Response;
 
 /**
  * This class implements the response to an OData update request.
  *
  * @see com.msopentech.odatajclient.engine.communication.request.ODataUpdateEntityRequest
  */
-class ODataUpdateEntityResponseImpl extends ODataResponseImpl implements ODataUpdateEntityResponse {
-
-    ODataUpdateEntityResponseImpl(Response res) {
-        super(res);
-    }
+public interface ODataEntityUpdateResponse extends ODataResponse {
 
     /**
-     * {@inheritDoc}
+     * Gets updated object.
+     *
+     * @return updated object.
      */
-    @Override
-    public ODataEntity getBody() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    ODataEntity getBody();
 }

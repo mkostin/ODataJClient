@@ -39,6 +39,8 @@ public class JSONConstants {
     public final static String MEDIA_CONTENT_TYPE = "odata.mediaContentType";
 
     public final static String NAVIGATION_LINK_SUFFIX = "@odata.navigationLinkUrl";
+    
+    public final static String BIND_LINK_SUFFIX = "@odata.bind";
 
     public final static String ASSOCIATION_LINK_SUFFIX = "@odata.associationLinkUrl";
 
