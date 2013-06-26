@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -44,7 +43,7 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     @Ignore
     public void mergeODataEntityAsAtom() {
-        ODataFormat format = ODataFormat.ATOM;
+        final ODataFormat format = ODataFormat.ATOM;
         final ODataEntity changes = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
         changes.setEditLink(new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Car(14)").build());
         updateCarEntity(format, changes, UpdateType.MERGE);
@@ -53,7 +52,7 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     @Ignore
     public void mergeODataEntityAsJson() {
-        ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
         final ODataEntity changes = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
         changes.setEditLink(new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Car(14)").build());
         updateCarEntity(format, changes, UpdateType.MERGE);
@@ -62,7 +61,7 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     @Ignore
     public void patchODataEntityAsAtom() {
-        ODataFormat format = ODataFormat.ATOM;
+        final ODataFormat format = ODataFormat.ATOM;
         final ODataEntity changes = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
         changes.setEditLink(new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Car(14)").build());
         updateCarEntity(format, changes, UpdateType.PATCH);
@@ -71,7 +70,7 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     @Ignore
     public void patchODataEntityAsJson() {
-        ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
         final ODataEntity changes = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
         changes.setEditLink(new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Car(14)").build());
         updateCarEntity(format, changes, UpdateType.PATCH);
@@ -79,14 +78,14 @@ public class EntityUpdateTest extends AbstractTest {
 
     @Test
     public void replaceODataEntityAsAtom() {
-        ODataFormat format = ODataFormat.ATOM;
+        final ODataFormat format = ODataFormat.ATOM;
         final ODataEntity changes = readODataEntity(format, "Car(14)");
         updateCarEntity(format, changes, UpdateType.REPLACE);
     }
 
     @Test
     public void replaceODataEntityAsJson() {
-        ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
         final ODataEntity changes = readODataEntity(format, "Car(14)");
         updateCarEntity(format, changes, UpdateType.REPLACE);
     }
@@ -103,12 +102,11 @@ public class EntityUpdateTest extends AbstractTest {
         }
 
         final String oldMsg;
-
-        if (description != null) {
+        if (description == null) {
+            oldMsg = null;
+        } else {
             oldMsg = description.getValue().toString();
             changes.removeProperty(description);
-        } else {
-            oldMsg = null;
         }
 
         assertNotEquals(newMsg, oldMsg);
