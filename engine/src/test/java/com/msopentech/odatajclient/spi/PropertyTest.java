@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.spi;
 
 import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -43,6 +44,26 @@ import org.junit.Test;
  * This is the unit test class to check basic entity operations.
  */
 public class PropertyTest extends AbstractTest {
+
+    @Test
+    public void replacePrimitivePropertyAsXML() throws IOException {
+        updatePrimitiveProperty(ODataPropertyFormat.XML);
+    }
+
+    @Test
+    public void replacePrimitivePropertyAsJSON() throws IOException {
+        updatePrimitiveProperty(ODataPropertyFormat.JSON_FULL_METADATA);
+    }
+
+    @Test
+    public void replaceCollectionPropertyAsXML() throws IOException {
+        updateCollectionProperty(ODataPropertyFormat.XML);
+    }
+
+    @Test
+    public void replaceCollectionPropertyAsJSON() throws IOException {
+        updateCollectionProperty(ODataPropertyFormat.JSON_FULL_METADATA);
+    }
 
     @Test
     public void replaceComplexPropertyAsXML() throws IOException {
@@ -117,6 +138,85 @@ public class PropertyTest extends AbstractTest {
         primaryContactInfo = retrieveRes.getBody();
 
         assertEquals(origSize + 1, primaryContactInfo.getComplexValue().get("EmailBag").getCollectionValue().size());
+    }
+
+    private void updateCollectionProperty(final ODataPropertyFormat format) throws IOException {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer(-9)").
+                appendStructuralSegment("PrimaryContactInfo").appendStructuralSegment("AlternativeNames");
+
+        ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        retrieveReq.setFormat(format);
+
+        ODataQueryResponse<ODataProperty> retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
+
+        ODataProperty alternativeNames = retrieveRes.getBody();
+        alternativeNames = new ODataProperty("AlternativeNames", alternativeNames.getCollectionValue());
+
+        final String newItem = "new item " + System.currentTimeMillis();
+
+        final ODataCollectionValue originalValue = alternativeNames.getCollectionValue();
+
+        final int origSize = originalValue.size();
+
+        originalValue.add(new ODataPrimitiveValue.Builder().setText(newItem).build());
+        assertEquals(origSize + 1, originalValue.size());
+
+        final ODataPropertyUpdateRequest updateReq =
+                ODataRequestFactory.getCollectionUpdateRequest(uriBuilder.build(), alternativeNames);
+        updateReq.setFormat(format);
+
+        ODataPropertyUpdateResponse updateRes = updateReq.execute();
+        assertEquals(204, updateRes.getStatusCode());
+
+        retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        retrieveReq.setFormat(format);
+
+        retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
+
+        alternativeNames = retrieveRes.getBody();
+
+        assertEquals(origSize + 1, alternativeNames.getCollectionValue().size());
+    }
+
+    private void updatePrimitiveProperty(final ODataPropertyFormat format) throws IOException {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer(-9)").
+                appendStructuralSegment("PrimaryContactInfo").
+                appendStructuralSegment("HomePhone").appendStructuralSegment("PhoneNumber");
+
+        ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        retrieveReq.setFormat(format);
+
+        ODataQueryResponse<ODataProperty> retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
+
+        ODataProperty phoneNumber = retrieveRes.getBody();
+
+        final String oldMsg = phoneNumber.getPrimitiveValue().<String>toCastValue();
+        final String newMsg = "new item " + System.currentTimeMillis();
+
+        assertNotEquals(newMsg, oldMsg);
+
+        phoneNumber = new ODataProperty("PhoneNumber", new ODataPrimitiveValue.Builder().setText(newMsg).build());
+
+        final ODataPropertyUpdateRequest updateReq =
+                ODataRequestFactory.getPrimitiveUpdateRequest(uriBuilder.build(), phoneNumber);
+        updateReq.setFormat(format);
+
+        ODataPropertyUpdateResponse updateRes = updateReq.execute();
+        assertEquals(204, updateRes.getStatusCode());
+
+        retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        retrieveReq.setFormat(format);
+
+        retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
+
+        phoneNumber = retrieveRes.getBody();
+        assertEquals(newMsg, phoneNumber.getPrimitiveValue().<String>toCastValue());
     }
 
     @Test

@@ -181,9 +181,9 @@ public final class ODataRequestFactory {
      * @return new ODataCreatePrimitiveRequest instance.
      */
     public static ODataPropertyUpdateRequest getPrimitiveUpdateRequest(
-            final URI targetURI, final UpdateType type, final ODataProperty property) {
+            final URI targetURI, final ODataProperty property) {
 
-        return ODataCUDRequestFactory.getPrimitiveUpdateRequest(targetURI, type, property);
+        return ODataCUDRequestFactory.getPrimitiveUpdateRequest(targetURI, property);
     }
 
     /**
@@ -197,9 +197,9 @@ public final class ODataRequestFactory {
      * @return new ODataCreatePrimitiveRequest instance.
      */
     public static ODataPropertyUpdateRequest getCollectionUpdateRequest(
-            final URI targetURI, final UpdateType type, final ODataProperty property) {
+            final URI targetURI, final ODataProperty property) {
 
-        return ODataCUDRequestFactory.getCollectionUpdateRequest(targetURI, type, property);
+        return ODataCUDRequestFactory.getCollectionUpdateRequest(targetURI, property);
     }
 
     /**
