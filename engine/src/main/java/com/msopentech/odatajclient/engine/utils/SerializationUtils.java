@@ -19,12 +19,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
-import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
+import com.msopentech.odatajclient.engine.data.ServiceDocumentResource;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
+import com.msopentech.odatajclient.engine.data.json.JSONServiceDocument;
+import com.msopentech.odatajclient.engine.data.xml.XMLServiceDocument;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
 import java.io.IOException;
@@ -45,6 +47,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
 
 public final class SerializationUtils {
 
@@ -79,6 +85,23 @@ public final class SerializationUtils {
             serializeAsAtom(obj, obj.getClass(), writer);
         } else {
             serializeAsJSON(obj, writer);
+        }
+    }
+
+    public static void serializeDOMElement(final Element content, final OutputStream out) {
+        serializeDOMElement(content, new OutputStreamWriter(out));
+    }
+
+    public static void serializeDOMElement(final Element content, final Writer writer) {
+        try {
+            DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
+            DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");
+            LSSerializer serializer = impl.createLSSerializer();
+            LSOutput lso = impl.createLSOutput();
+            lso.setCharacterStream(writer);
+            serializer.write(content, lso);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("While serializing DOM element", e);
         }
     }
 
@@ -150,12 +173,12 @@ public final class SerializationUtils {
                 : deserializeJSONProperty(input);
     }
 
-    public static ODataServiceDocument deserializeServiceDocument(
+    public static ServiceDocumentResource deserializeServiceDocument(
             final InputStream input, final ODataServiceDocumentFormat format) {
 
         return format == ODataServiceDocumentFormat.XML
                 ? deserializeXMLServiceDocument(input)
-                : null;
+                : deserializeJSONServiceDocument(input);
     }
 
     public static List<URI> deserializeLinks(final InputStream input, final ODataPropertyFormat format) {
@@ -243,7 +266,7 @@ public final class SerializationUtils {
         }
     }
 
-    private static ODataServiceDocument deserializeXMLServiceDocument(final InputStream input) {
+    private static ServiceDocumentResource deserializeXMLServiceDocument(final InputStream input) {
         try {
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder builder = factory.newDocumentBuilder();
@@ -256,26 +279,34 @@ public final class SerializationUtils {
             }
 
             final Element service = (Element) services.item(0);
-            final String base = service.getAttribute(ODataConstants.ATTR_XMLBASE);
+
+            final XMLServiceDocument res = new XMLServiceDocument();
+            res.setBaseURI(URI.create(service.getAttribute(ODataConstants.ATTR_XMLBASE)));
 
             final NodeList collections = service.getElementsByTagName(ODataConstants.ELEM_COLLECTION);
-
-            final ODataServiceDocument res = new ODataServiceDocument();
-
             for (int i = 0; i < collections.getLength(); i++) {
                 final Element collection = (Element) collections.item(i);
-                final URI uri = URIUtils.getURI(base, collection.getAttribute(ODataConstants.ATTR_HREF).trim());
-                final NodeList title = collection.getElementsByTagName(ODataConstants.ATTR_ATOM_TITLE);
 
+                final NodeList title = collection.getElementsByTagName(ODataConstants.ATTR_ATOM_TITLE);
                 if (title.getLength() != 1) {
                     throw new IllegalArgumentException("Invalid collection element found");
                 }
 
-                res.addEntitySet(title.item(0).getTextContent().trim(), uri);
+                res.addToplevelEntitySet(title.item(0).getTextContent(),
+                        collection.getAttribute(ODataConstants.ATTR_HREF));
             }
             return res;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Error deserializing service document", e);
+            throw new IllegalArgumentException("While deserializing XML service document", e);
+        }
+    }
+
+    private static ServiceDocumentResource deserializeJSONServiceDocument(final InputStream input) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            return mapper.readValue(input, JSONServiceDocument.class);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("While deserializing JSON service document", e);
         }
     }
 

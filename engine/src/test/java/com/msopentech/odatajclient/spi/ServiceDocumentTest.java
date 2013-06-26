@@ -23,7 +23,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataQueryRespo
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
 import java.net.URI;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ServiceDocumentTest extends AbstractTest {
@@ -37,7 +36,7 @@ public class ServiceDocumentTest extends AbstractTest {
         assertEquals(200, res.getStatusCode());
 
         final ODataServiceDocument serviceDocument = res.getBody();
-        assertEquals(22, serviceDocument.size());
+        assertEquals(22, serviceDocument.count());
 
         assertEquals(URI.create(testODataServiceRootURL + "/ComputerDetail"),
                 serviceDocument.getEntitySetURI("ComputerDetail"));
@@ -49,7 +48,6 @@ public class ServiceDocumentTest extends AbstractTest {
     }
 
     @Test
-    @Ignore
     public void retrieveServiceDocumentAsJSON() {
         retrieveServiceDocument(ODataServiceDocumentFormat.JSON);
     }

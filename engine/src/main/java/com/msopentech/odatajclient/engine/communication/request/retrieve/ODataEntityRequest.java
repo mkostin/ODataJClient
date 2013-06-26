@@ -45,7 +45,7 @@ public class ODataEntityRequest extends ODataQueryRequest<ODataEntity, ODataForm
      */
     @Override
     public ODataQueryResponse<ODataEntity> execute() {
-        final Response res = client.accept(getContentType()).get();
+        final Response res = client.accept(getAccept()).get();
         return new ODataEntityResponseImpl(res);
     }
 

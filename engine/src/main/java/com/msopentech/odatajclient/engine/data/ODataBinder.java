@@ -25,6 +25,7 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -155,22 +156,32 @@ public class ODataBinder {
         return entry;
     }
 
-    public static ODataFeed getODataFeed(final FeedResource feedResource) {
-        final LinkResource next = feedResource.getNext();
+    public static ODataServiceDocument getODataServiceDocument(final ServiceDocumentResource resource) {
+        final ODataServiceDocument serviceDocument = new ODataServiceDocument();
+
+        for (Map.Entry<String, String> entry : resource.getToplevelEntitySets().entrySet()) {
+            serviceDocument.addEntitySet(entry.getKey(), URIUtils.getURI(resource.getBaseURI(), entry.getValue()));
+        }
+
+        return serviceDocument;
+    }
+
+    public static ODataFeed getODataFeed(final FeedResource resource) {
+        final LinkResource next = resource.getNext();
 
         final ODataFeed feed = next == null || StringUtils.isBlank(next.getHref())
                 ? ODataFactory.newFeed()
-                : ODataFactory.newFeed(URI.create(next.getHref()));
+                : ODataFactory.newFeed(URIUtils.getURI(resource.getBaseURI(), next.getHref()));
 
-        for (EntryResource entryResource : feedResource.getEntries()) {
+        for (EntryResource entryResource : resource.getEntries()) {
             feed.addEntity(getODataEntity(entryResource));
         }
 
         return feed;
     }
 
-    public static ODataEntity getODataEntity(final EntryResource entry) {
-        return getODataEntity(entry, null);
+    public static ODataEntity getODataEntity(final EntryResource resource) {
+        return getODataEntity(resource, null);
     }
 
     public static ODataEntity getODataEntity(final EntryResource entry, final URI defaultBaseURI) {

@@ -46,7 +46,7 @@ public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataMedia
      */
     @Override
     public ODataQueryResponse<InputStream> execute() {
-        final Response res = client.accept(getContentType()).get();
+        final Response res = client.accept(getAccept()).get();
         return new ODataMediaResponseImpl(res);
     }
 

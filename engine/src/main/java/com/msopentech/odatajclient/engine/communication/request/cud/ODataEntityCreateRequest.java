@@ -65,13 +65,13 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     public ODataEntityCreateResponse execute() {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         SerializationUtils.serializeEntry(ODataBinder.getEntry(entity,
                 ResourceFactory.entryClassForFormat(ODataFormat.valueOf(getFormat()))), baos);
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
-        final Response res = client.accept(getContentType()).type(getContentType()).post(bais);
+        final Response res = client.accept(getAccept()).type(getContentType()).post(bais);
 
         try {
             baos.flush();
@@ -89,7 +89,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     protected byte[] getPayload() {
-        return null;
+        return new byte[0];
     }
 
     private class ODataEntityCreateResponseImpl extends ODataResponseImpl implements ODataEntityCreateResponse {

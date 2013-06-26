@@ -51,6 +51,7 @@ public final class ODataRetrieveRequestFactory {
     public static ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
         final ODataMetadataRequest request =
                 new ODataMetadataRequest(new ODataURIBuilder(serviceRoot).appendMetadataSegment().build());
+        request.setAccept(MediaType.APPLICATION_XML);
         request.setContentType(MediaType.APPLICATION_XML);
         return request;
     }

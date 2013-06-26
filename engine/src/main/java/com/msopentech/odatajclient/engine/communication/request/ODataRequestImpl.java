@@ -210,7 +210,8 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getAccept() {
-        return header.getHeader(ODataHeader.HeaderName.accept);
+        final String acceptHead = header.getHeader(ODataHeader.HeaderName.accept);
+        return StringUtils.isBlank(acceptHead) ? ODataFormat.JSON.toString() : acceptHead;
     }
 
     /**
@@ -312,6 +313,6 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public InputStream rawExecute() {
-        return client.accept(getContentType()).get(InputStream.class);
+        return client.accept(getAccept()).get(InputStream.class);
     }
 }

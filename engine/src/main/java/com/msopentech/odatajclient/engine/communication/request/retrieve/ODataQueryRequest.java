@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response;
  * This is an abstract representation of an OData retrieve query request returning one or more result item.
  * Get instance by using ODataRequestFactory.
  */
-public abstract class ODataQueryRequest<V, T extends Enum<T>>
+abstract class ODataQueryRequest<V, T extends Enum<T>>
         extends ODataBasicRequestImpl<ODataQueryResponse<V>, T>
         implements ODataBatchableRequest {
 
@@ -49,7 +49,7 @@ public abstract class ODataQueryRequest<V, T extends Enum<T>>
     /**
      * {@inheritDoc }
      * <p>
-     * This kind of request doesn't have any kind of payload: an empty byte array will be returned.
+     * This kind of request doesn't have any payload: an empty byte array will be returned.
      */
     @Override
     protected byte[] getPayload() {

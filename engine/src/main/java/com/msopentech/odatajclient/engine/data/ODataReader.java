@@ -101,7 +101,7 @@ public final class ODataReader {
     public static ODataServiceDocument getServiceDocument(
             final InputStream input, final ODataServiceDocumentFormat format) {
 
-        return SerializationUtils.deserializeServiceDocument(input, format);
+        return ODataBinder.getODataServiceDocument(SerializationUtils.deserializeServiceDocument(input, format));
     }
 
     /**

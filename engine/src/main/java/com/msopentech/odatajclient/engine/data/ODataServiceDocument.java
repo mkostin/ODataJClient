@@ -22,29 +22,29 @@ import java.util.Map;
 
 public class ODataServiceDocument {
 
-    private final Map<String, URI> topLevelEntitySets = new HashMap<String, URI>();
+    private final Map<String, URI> toplevelEntitySets = new HashMap<String, URI>();
 
     public void addEntitySet(final String name, final URI uri) {
-        topLevelEntitySets.put(name, uri);
+        toplevelEntitySets.put(name, uri);
     }
 
     public void removeEntitySet(final String name) {
-        topLevelEntitySets.remove(name);
+        toplevelEntitySets.remove(name);
     }
 
     public Collection<String> getEntitySetNames() {
-        return topLevelEntitySets.keySet();
+        return toplevelEntitySets.keySet();
     }
 
     public Collection<URI> getEntitySetURIs() {
-        return topLevelEntitySets.values();
+        return toplevelEntitySets.values();
     }
 
     public URI getEntitySetURI(final String name) {
-        return topLevelEntitySets.get(name);
+        return toplevelEntitySets.get(name);
     }
 
-    public int size() {
-        return topLevelEntitySets.size();
+    public int count() {
+        return toplevelEntitySets.size();
     }
 }

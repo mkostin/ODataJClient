@@ -47,7 +47,7 @@ public class ODataEntitySetRequest extends ODataQueryRequest<ODataFeed, ODataFor
      */
     @Override
     public ODataQueryResponse<ODataFeed> execute() {
-        final Response res = client.accept(getContentType()).get();
+        final Response res = client.accept(getAccept()).get();
         return new ODataEntitySetResponseImpl(res);
     }
 

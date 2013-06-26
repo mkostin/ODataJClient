@@ -68,13 +68,13 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
      */
     @Override
     public ODataEntityUpdateResponse execute() {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         SerializationUtils.serializeEntry(ODataBinder.getEntry(changes,
                 ResourceFactory.entryClassForFormat(ODataFormat.valueOf(getFormat()))), baos);
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
-        client.accept(getContentType()).type(getContentType());
+        client.accept(getAccept()).type(getContentType());
         client.header("X-HTTP-Method", getMethod().name());
 //        WebClient.getConfig(client).getRequestContext().put("use.async.http.conduit", true);
 
@@ -97,14 +97,14 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
      */
     @Override
     protected byte[] getPayload() {
-        return null;
+        return new byte[0];
     }
 
     private class ODataEntityUpdateResponseImpl extends ODataResponseImpl implements ODataEntityUpdateResponse {
 
         private ODataEntity entity = null;
 
-        public ODataEntityUpdateResponseImpl(Response res) {
+        public ODataEntityUpdateResponseImpl(final Response res) {
             super(res);
         }
 

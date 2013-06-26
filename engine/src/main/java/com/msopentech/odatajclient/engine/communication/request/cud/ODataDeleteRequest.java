@@ -23,7 +23,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResp
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.net.URI;
 import javax.ws.rs.core.Response;
-import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData delete request.
@@ -49,9 +48,7 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      */
     @Override
     public ODataDeleteResponse execute() {
-        final WebClient client = WebClient.create(this.uri);
-        final Response res = client.
-                accept(getContentType()).type(getContentType()).delete();
+        final Response res = client.accept(getAccept()).delete();
         return new ODataDeleteResponseImpl(res);
     }
 
@@ -67,7 +64,7 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
 
     private class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
 
-        public ODataDeleteResponseImpl(Response res) {
+        public ODataDeleteResponseImpl(final Response res) {
             super(res);
             res.close();
         }

@@ -48,7 +48,7 @@ public class ODataLinkRequest extends ODataQueryRequest<List<URI>, ODataProperty
      */
     @Override
     public ODataQueryResponse<List<URI>> execute() {
-        final Response res = client.accept(getContentType()).get();
+        final Response res = client.accept(getAccept()).get();
         return new ODataEntitySetResponseImpl(res);
     }
 

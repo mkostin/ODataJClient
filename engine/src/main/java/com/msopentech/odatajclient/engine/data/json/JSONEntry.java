@@ -15,12 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.LinkResource;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +30,7 @@ import org.w3c.dom.Element;
  */
 @JsonSerialize(using = JSONEntrySerializer.class)
 @JsonDeserialize(using = JSONEntryDeserializer.class)
-public class JSONEntry extends AbstractJSONObject implements EntryResource {
+public class JSONEntry extends AbstractJSONMetadataObject implements EntryResource {
 
     private static final long serialVersionUID = -5275365545400797758L;
 
@@ -68,24 +66,12 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
         mediaEditLinks = new ArrayList<JSONLink>();
     }
 
-    @JsonIgnore
     @Override
-    public URI getBaseURI() {
-        URI baseURI = null;
-        if (metadata != null) {
-            String metadataURI = metadata.toASCIIString();
-            baseURI = URI.create(
-                    metadataURI.substring(0, metadataURI.indexOf(ODataURIBuilder.SegmentType.METADATA.getValue())));
-        }
-
-        return baseURI;
-    }
-
     public URI getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(URI metadata) {
+    public void setMetadata(final URI metadata) {
         this.metadata = metadata;
     }
 
@@ -95,7 +81,7 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public void setType(String type) {
+    public void setType(final String type) {
         this.type = type;
     }
 
@@ -105,7 +91,7 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -115,7 +101,7 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public void setEtag(String etag) {
+    public void setEtag(final String etag) {
         this.etag = etag;
     }
 
@@ -125,8 +111,8 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public boolean setSelfLink(LinkResource readLink) {
-        boolean result = (readLink instanceof JSONLink);
+    public boolean setSelfLink(final LinkResource readLink) {
+        final boolean result = (readLink instanceof JSONLink);
         if (result) {
             this.readLink = (JSONLink) readLink;
         }
@@ -141,7 +127,7 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
 
     @Override
     public boolean setEditLink(LinkResource editLink) {
-        boolean result = (editLink instanceof JSONLink);
+        final boolean result = (editLink instanceof JSONLink);
         if (result) {
             this.editLink = (JSONLink) editLink;
         }
@@ -189,7 +175,7 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public void setNavigationLinks(List<LinkResource> navigationLinks) {
+    public void setNavigationLinks(final List<LinkResource> navigationLinks) {
         setLinks(this.navigationLinks, navigationLinks);
     }
 
@@ -199,7 +185,7 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public void setMediaEditLinks(List<LinkResource> mediaEditLinks) {
+    public void setMediaEditLinks(final List<LinkResource> mediaEditLinks) {
         setLinks(this.mediaEditLinks, mediaEditLinks);
     }
 
@@ -209,7 +195,7 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public void setContent(Element content) {
+    public void setContent(final Element content) {
         this.content = content;
     }
 
@@ -219,7 +205,7 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
     }
 
     @Override
-    public void setMediaEntryProperties(Element mediaEntryProperties) {
+    public void setMediaEntryProperties(final Element mediaEntryProperties) {
         this.mediaEntryProperties = mediaEntryProperties;
     }
 
@@ -228,7 +214,7 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
         return this.mediaContentType;
     }
 
-    public void setMediaContentType(String mediaContentType) {
+    public void setMediaContentType(final String mediaContentType) {
         this.mediaContentType = mediaContentType;
     }
 
@@ -237,12 +223,12 @@ public class JSONEntry extends AbstractJSONObject implements EntryResource {
         return this.mediaContentSource;
     }
 
-    public void setMediaContentSource(String mediaContentSource) {
+    public void setMediaContentSource(final String mediaContentSource) {
         this.mediaContentSource = mediaContentSource;
     }
 
     @Override
-    public void setMediaContent(String mediaContentSource, String mediaContentType) {
+    public void setMediaContent(final String mediaContentSource, final String mediaContentType) {
         setMediaContentSource(mediaContentSource);
         setMediaContentType(mediaContentType);
     }

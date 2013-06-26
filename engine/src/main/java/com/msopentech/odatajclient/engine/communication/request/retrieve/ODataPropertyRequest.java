@@ -45,7 +45,7 @@ public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty, OData
      */
     @Override
     public ODataQueryResponse<ODataProperty> execute() {
-        final Response res = client.accept(getContentType()).get();
+        final Response res = client.accept(getAccept()).get();
         return new ODataEntitySetResponseImpl(res);
     }
 

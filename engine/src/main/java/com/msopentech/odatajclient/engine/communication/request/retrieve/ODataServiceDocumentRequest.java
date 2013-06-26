@@ -45,17 +45,8 @@ public class ODataServiceDocumentRequest extends ODataQueryRequest<ODataServiceD
      */
     @Override
     public ODataQueryResponse<ODataServiceDocument> execute() {
-        return new ODataServiceResponseImpl(client.get());
-    }
-
-    /**
-     * {@inheritDoc }
-     * <p>
-     * This kind of request doesn't have any kind of payload: an empty byte array will be returned.
-     */
-    @Override
-    protected byte[] getPayload() {
-        return new byte[0];
+        final Response res = client.accept(getAccept()).get();
+        return new ODataServiceResponseImpl(res);
     }
 
     protected class ODataServiceResponseImpl extends ODataQueryResponseImpl {

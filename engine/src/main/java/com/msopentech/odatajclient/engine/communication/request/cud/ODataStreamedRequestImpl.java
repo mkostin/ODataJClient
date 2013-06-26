@@ -92,7 +92,7 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
         payload = getPayload();
 
         // execute the request
-        res = client.accept(getContentType()).type(getContentType()).put(payload.getBody());
+        res = client.accept(getAccept()).type(getContentType()).put(payload.getBody());
 
         // return the payload object
         return (T) payload;
