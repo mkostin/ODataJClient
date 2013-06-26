@@ -95,23 +95,10 @@ public final class SerializationUtils {
     }
 
     public static void serializeProperty(final Element element, final ODataPropertyFormat format, final Writer writer) {
-        switch (format) {
-            case XML:
-                serializeDOMElement(element, writer);
-                break;
-            default:
-                serializeJSONProperty(element, writer);
-        }
-    }
-
-    private static void serializeJSONProperty(final Element element, final Writer writer) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            JSONProperty property = new JSONProperty();
-            property.setContent(element);
-            mapper.writeValue(writer, property);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("While serializing JSON object", e);
+        if (format == ODataPropertyFormat.XML) {
+            serializeDOMElement(element, writer);
+        } else {
+            serializeJSONProperty(element, writer);
         }
     }
 
@@ -163,6 +150,17 @@ public final class SerializationUtils {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             mapper.writeValue(writer, obj);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("While serializing JSON object", e);
+        }
+    }
+
+    private static void serializeJSONProperty(final Element element, final Writer writer) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            final JSONProperty property = new JSONProperty();
+            property.setContent(element);
+            mapper.writeValue(writer, property);
         } catch (IOException e) {
             throw new IllegalArgumentException("While serializing JSON object", e);
         }
