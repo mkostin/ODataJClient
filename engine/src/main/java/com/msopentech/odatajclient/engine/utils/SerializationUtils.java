@@ -94,10 +94,10 @@ public final class SerializationUtils {
 
     public static void serializeDOMElement(final Element content, final Writer writer) {
         try {
-            DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
-            DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");
-            LSSerializer serializer = impl.createLSSerializer();
-            LSOutput lso = impl.createLSOutput();
+            final DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
+            final DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");
+            final LSSerializer serializer = impl.createLSSerializer();
+            final LSOutput lso = impl.createLSOutput();
             lso.setCharacterStream(writer);
             serializer.write(content, lso);
         } catch (Exception e) {
