@@ -15,15 +15,24 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
-import com.msopentech.odatajclient.engine.communication.response.ODataUpdateEntityResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
+import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.UnsupportedEncodingException;
+import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import javax.ws.rs.core.Response;
 
 /**
  * This class implements an OData update request.
@@ -33,7 +42,7 @@ import java.net.URI;
  * com.msopentech.odatajclient.engine.data.ODataEntity,
  * com.msopentech.odatajclient.engine.communication.request.UpdateType)
  */
-public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataUpdateEntityResponse, ODataFormat>
+public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityUpdateResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -58,8 +67,29 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataUpdateE
      * {@inheritDoc }
      */
     @Override
-    public ODataUpdateEntityResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ODataEntityUpdateResponse execute() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        SerializationUtils.serializeEntry(ODataBinder.getEntry(changes,
+                ResourceFactory.entryClassForFormat(ODataFormat.valueOf(getFormat()))), baos);
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+
+        client.accept(getContentType()).type(getContentType());
+        client.header("X-HTTP-Method", getMethod().name());
+//        WebClient.getConfig(client).getRequestContext().put("use.async.http.conduit", true);
+
+//        final Response res = client.invoke(getMethod().name(), bais);
+        final Response res = client.post(bais);
+
+        try {
+            baos.flush();
+            baos.close();
+            bais.close();
+        } catch (IOException e) {
+            LOG.error("While closing input / output streams for the request execution", e);
+        }
+
+        return new ODataEntityUpdateResponseImpl(res);
     }
 
     /**
@@ -67,10 +97,28 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataUpdateE
      */
     @Override
     protected byte[] getPayload() {
-        try {
-            return "ODataUpdateEntity payload ...".getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
+        return null;
+    }
+
+    private class ODataEntityUpdateResponseImpl extends ODataResponseImpl implements ODataEntityUpdateResponse {
+
+        private ODataEntity entity = null;
+
+        public ODataEntityUpdateResponseImpl(Response res) {
+            super(res);
+        }
+
+        @Override
+        public ODataEntity getBody() {
+            if (entity == null) {
+                try {
+                    entity = ODataReader.deserializeEntity(
+                            res.readEntity(InputStream.class), ODataFormat.valueOf(getFormat()));
+                } finally {
+                    res.close();
+                }
+            }
+            return entity;
         }
     }
 }

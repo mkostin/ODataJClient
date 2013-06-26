@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.LinkResource;
+import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,9 @@ public class JSONFeed extends AbstractJSONObject implements FeedResource {
     @JsonProperty("value")
     private List<JSONEntry> entries;
 
+    @JsonProperty(value = "odata.nextLink", required = false)
+    private String next;
+
     public JSONFeed() {
         super();
         entries = new ArrayList<JSONEntry>();
@@ -50,6 +55,19 @@ public class JSONFeed extends AbstractJSONObject implements FeedResource {
 
     public void setMetadata(final URI metadata) {
         this.metadata = metadata;
+    }
+
+    @JsonIgnore
+    @Override
+    public URI getBaseURI() {
+        URI baseURI = null;
+        if (metadata != null) {
+            String metadataURI = metadata.toASCIIString();
+            baseURI = URI.create(
+                    metadataURI.substring(0, metadataURI.indexOf(ODataURIBuilder.SegmentType.METADATA.getValue())));
+        }
+
+        return baseURI;
     }
 
     @Override
@@ -68,13 +86,15 @@ public class JSONFeed extends AbstractJSONObject implements FeedResource {
         }
     }
 
+    @JsonIgnore
     @Override
-    public boolean setNext(final LinkResource next) {
-        return false;
+    public void setNext(LinkResource next) {
+        this.next = next.getHref();
     }
 
+    @JsonIgnore
     @Override
-    public LinkResource getNext() {
-        return null;
+    public JSONLink getNext() {
+        return new JSONLink(null, ODataConstants.NEXT_LINK_REL, next);
     }
 }

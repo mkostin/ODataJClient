@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -56,7 +55,7 @@ import org.w3c.dom.Node;
 /**
  * This is the unit test class to check basic entity operations.
  */
-public class EntityTest extends AbstractTest {
+public class EntityCreateTest extends AbstractTest {
 
     private void readEntry(final ODataFormat format) throws IOException {
         // ---------------------------------------------
@@ -253,7 +252,8 @@ public class EntityTest extends AbstractTest {
         readODataEntityWithInline(ODataFormat.JSON_FULL_METADATA);
     }
 
-    private ODataEntity createODataEntity(final ODataFormat format, ODataEntity original) {
+    private ODataEntity createODataEntity(
+            final ODataFormat format, ODataEntity original) {
         ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
@@ -264,7 +264,6 @@ public class EntityTest extends AbstractTest {
         createReq.setFormat(format);
 
         final ODataEntityCreateResponse createRes = createReq.execute();
-
         assertEquals(201, createRes.getStatusCode());
         assertEquals("Created", createRes.getStatusMessage());
 
@@ -359,7 +358,7 @@ public class EntityTest extends AbstractTest {
                 "Info", URI.create(testODataServiceRootURL + "/CustomerInfo(12)")));
 
         final ODataEntity created = createODataEntity(format, original);
-        // now, compare the created one with the actula one and go deeply into the associated customer info.....
+        // now, compare the created one with the actual one and go deeply into the associated customer info.....
         final ODataEntity actual = compareEntities(format, created, id, null);
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
@@ -445,7 +444,6 @@ public class EntityTest extends AbstractTest {
     }
 
     @Test
-    @Ignore
     public void createWithNavigationAsJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
         final ODataFormat format = ODataFormat.JSON_FULL_METADATA;

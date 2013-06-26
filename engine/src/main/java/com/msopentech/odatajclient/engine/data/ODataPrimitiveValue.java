@@ -107,6 +107,7 @@ public class ODataPrimitiveValue extends ODataValue {
      * @see Builder
      */
     private ODataPrimitiveValue() {
+        super();
     }
 
     /**
@@ -133,9 +134,9 @@ public class ODataPrimitiveValue extends ODataValue {
             case DATE_TIME:
             case DATE_TIME_OFFSET:
             case TIME:
-                String dateText = this.toString();
-                String[] dateParts = dateText.split("\\.");
-                SimpleDateFormat sdf = new SimpleDateFormat(this.type.pattern());
+                final String dateText = this.toString();
+                final String[] dateParts = dateText.split("\\.");
+                final SimpleDateFormat sdf = new SimpleDateFormat(this.type.pattern());
                 try {
                     this.value = new Timestamp(sdf.parse(dateParts[0]).getTime());
                     if (dateParts.length > 1) {
@@ -183,11 +184,11 @@ public class ODataPrimitiveValue extends ODataValue {
 
             case GEOGRAPHY_POINT:
             case GEOMETRY_POINT:
-                String[] points = this.toString().split("\\|");
+                final String[] points = this.toString().split("\\|");
                 if (points == null || points.length == 0) {
                     throw new IllegalArgumentException("No points found in " + this.toString());
                 }
-                String[] point = points[0].split(" ");
+                final String[] point = points[0].split(" ");
                 if (point == null || point.length != 2) {
                     throw new IllegalArgumentException("No X Y coordinates found in " + point);
                 }
@@ -240,9 +241,9 @@ public class ODataPrimitiveValue extends ODataValue {
             case DATE_TIME:
             case DATE_TIME_OFFSET:
             case TIME:
-                Timestamp timestamp = this.<Timestamp>toCastValue();
-                SimpleDateFormat sdf = new SimpleDateFormat(this.type.pattern());
-                StringBuffer formatted = new StringBuffer().append(sdf.format(timestamp));
+                final Timestamp timestamp = this.<Timestamp>toCastValue();
+                final SimpleDateFormat sdf = new SimpleDateFormat(this.type.pattern());
+                final StringBuilder formatted = new StringBuilder().append(sdf.format(timestamp));
                 if (timestamp.getNanos() > 0) {
                     formatted.append('.').append(String.valueOf(timestamp.getNanos()));
                 }
@@ -285,8 +286,7 @@ public class ODataPrimitiveValue extends ODataValue {
 
             case GEOGRAPHY_POINT:
             case GEOMETRY_POINT:
-                this.text = Double.valueOf(this.<Point>toCastValue().getX()).toString()
-                        + " " + Double.valueOf(this.<Point>toCastValue().getY()).toString();
+                this.text = this.<Point>toCastValue().getX() + " " + this.<Point>toCastValue().getY();
                 break;
 
             case GEOGRAPHY:

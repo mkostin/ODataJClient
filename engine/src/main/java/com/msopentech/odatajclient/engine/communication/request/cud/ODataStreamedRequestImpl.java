@@ -90,6 +90,7 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     @SuppressWarnings("unchecked")
     public T execute() {
         payload = getPayload();
+
         // execute the request
         res = client.accept(getContentType()).type(getContentType()).put(payload.getBody());
 

@@ -28,6 +28,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -87,25 +88,24 @@ public class ODataBinder {
 
     @SuppressWarnings("unchecked")
     public static <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference) {
-        T entry = ResourceFactory.newEntry(reference);
+        final T entry = ResourceFactory.newEntry(reference);
 
         // -------------------------------------------------------------
         // Add edit and self link
         // -------------------------------------------------------------
         final URI editLink = entity.getEditLink();
         if (editLink != null) {
-            LinkResource entryEditLink = ResourceFactory.newLinkForEntry(reference);
+            final LinkResource entryEditLink = ResourceFactory.newLinkForEntry(reference);
             entryEditLink.setTitle(entity.getName());
             entryEditLink.setHref(editLink.toASCIIString());
             entryEditLink.setRel(ODataConstants.EDIT_LINK_REL);
             entry.setEditLink(entryEditLink);
         }
 
-        final URI selfLink = entity.isReadOnly() ? entity.getLink() : null;
-        if (selfLink != null) {
-            LinkResource entrySelfLink = ResourceFactory.newLinkForEntry(reference);
+        if (entity.isReadOnly()) {
+            final LinkResource entrySelfLink = ResourceFactory.newLinkForEntry(reference);
             entrySelfLink.setTitle(entity.getName());
-            entrySelfLink.setHref(selfLink.toASCIIString());
+            entrySelfLink.setHref(entity.getLink().toASCIIString());
             entrySelfLink.setRel(ODataConstants.SELF_LINK_REL);
             entry.setSelfLink(entrySelfLink);
         }
@@ -158,7 +158,7 @@ public class ODataBinder {
     public static ODataFeed getODataFeed(final FeedResource feedResource) {
         final LinkResource next = feedResource.getNext();
 
-        final ODataFeed feed = next == null
+        final ODataFeed feed = next == null || StringUtils.isBlank(next.getHref())
                 ? ODataFactory.newFeed()
                 : ODataFactory.newFeed(URI.create(next.getHref()));
 
@@ -175,7 +175,7 @@ public class ODataBinder {
 
     public static ODataEntity getODataEntity(final EntryResource entry, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
-            StringWriter writer = new StringWriter();
+            final StringWriter writer = new StringWriter();
             SerializationUtils.serializeEntry(entry, writer);
             writer.flush();
             LOG.debug("Processing entity:\n{}", writer.toString());
@@ -196,13 +196,13 @@ public class ODataBinder {
         }
 
         for (LinkResource link : entry.getNavigationLinks()) {
-            EntryResource inlineEntry = link.getInlineEntry();
-            if (inlineEntry != null) {
+            final EntryResource inlineEntry = link.getInlineEntry();
+            if (inlineEntry == null) {
+                entity.addLink(ODataFactory.newEntityNavigationLink(link.getTitle(), base, link.getHref()));
+            } else {
                 entity.addLink(ODataFactory.newInlineEntity(
                         link.getTitle(), base, link.getHref(),
                         getODataEntity(inlineEntry, inlineEntry.getBaseURI() == null ? base : inlineEntry.getBaseURI())));
-            } else {
-                entity.addLink(ODataFactory.newEntityNavigationLink(link.getTitle(), base, link.getHref()));
             }
         }
 
@@ -211,7 +211,6 @@ public class ODataBinder {
         }
 
         final Element content;
-
         if (entry.isMediaEntry()) {
             entity.setMediaEntity(true);
             entity.setMediaContentSource(entry.getMediaContentSource());
@@ -220,7 +219,6 @@ public class ODataBinder {
         } else {
             content = entry.getContent();
         }
-
         if (content != null) {
             for (int i = 0; i < content.getChildNodes().getLength(); i++) {
                 final Element property = (Element) content.getChildNodes().item(i);
@@ -353,7 +351,7 @@ public class ODataBinder {
 
     private static ODataPrimitiveValue newPrimitiveValue(final Element prop, final EdmType edmType) {
         // Geospatial types value management
-        final StringBuffer geoData = new StringBuffer();
+        final StringBuilder geoData = new StringBuilder();
         final NodeList points = prop.getChildNodes();
         for (int i = 0; i < points.getLength(); i++) {
             final Node point = points.item(i);
@@ -398,10 +396,10 @@ public class ODataBinder {
 
         // Geospatial types value management
         if (value.toValue() instanceof Point) {
-            Element point = doc.createElement(ODataConstants.ELEM_POINT);
+            final Element point = doc.createElement(ODataConstants.ELEM_POINT);
             element.appendChild(point);
 
-            Element pos = doc.createElement(ODataConstants.ELEM_POS);
+            final Element pos = doc.createElement(ODataConstants.ELEM_POS);
             point.appendChild(pos);
 
             pos.appendChild(doc.createTextNode(value.toString()));

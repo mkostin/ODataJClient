@@ -29,9 +29,10 @@ import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
 import java.io.InputStream;
-import org.junit.Ignore;
+import java.net.URI;
 import org.junit.Test;
 
 /**
@@ -65,11 +66,10 @@ public class FeedTest extends AbstractTest {
     }
 
     @Test
-    @Ignore
     public void readODataFeedWithNextFromJSON() {
-        readODataFeedWithNextLink(ODataFormat.JSON);
+        readODataFeedWithNextLink(ODataFormat.JSON_FULL_METADATA);
     }
-    
+
     private void readODataFeedWithNextLink(final ODataFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
@@ -86,7 +86,11 @@ public class FeedTest extends AbstractTest {
 
         assertEquals(2, feed.getEntities().size());
         assertNotNull(feed.getNext());
-        assertEquals(testODataServiceRootURL + "/Customer?$skiptoken=-9", feed.getNext().toASCIIString());
+
+        final URI expected = URI.create(testODataServiceRootURL + "/Customer?$skiptoken=-9");
+        final URI found = URIUtils.getURI(testODataServiceRootURL, feed.getNext().toASCIIString());
+
+        assertEquals(expected, found);
     }
 
     private void readFeed(final ODataFormat format) throws IOException {

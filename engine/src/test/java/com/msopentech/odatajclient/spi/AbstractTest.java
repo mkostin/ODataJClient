@@ -263,17 +263,21 @@ public abstract class AbstractTest {
     }
 
     protected void debugEntry(final EntryResource entry, final String message) {
-        final StringWriter writer = new StringWriter();
-        SerializationUtils.serializeEntry(entry, writer);
-        writer.flush();
-        LOG.debug(message + "\n{}", writer.toString());
+        if (LOG.isDebugEnabled()) {
+            final StringWriter writer = new StringWriter();
+            SerializationUtils.serializeEntry(entry, writer);
+            writer.flush();
+            LOG.debug(message + "\n{}", writer.toString());
+        }
     }
 
     protected void debugFeed(final FeedResource feed, final String message) {
-        final StringWriter writer = new StringWriter();
-        SerializationUtils.serializeFeed(feed, writer);
-        writer.flush();
-        LOG.debug(message + "\n{}", writer.toString());
+        if (LOG.isDebugEnabled()) {
+            final StringWriter writer = new StringWriter();
+            SerializationUtils.serializeFeed(feed, writer);
+            writer.flush();
+            LOG.debug(message + "\n{}", writer.toString());
+        }
     }
 
     protected void debugODataProperty(final ODataProperty property, final String message) {
@@ -285,14 +289,41 @@ public abstract class AbstractTest {
     }
 
     protected void debugODataEntity(final ODataEntity entity, final String message) {
-        StringWriter writer = new StringWriter();
-        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, AtomEntry.class), writer);
-        writer.flush();
-        LOG.debug(message + " (Atom)\n{}", writer.toString());
+        if (LOG.isDebugEnabled()) {
+            StringWriter writer = new StringWriter();
+            SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, AtomEntry.class), writer);
+            writer.flush();
+            LOG.debug(message + " (Atom)\n{}", writer.toString());
 
-        writer = new StringWriter();
-        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, JSONEntry.class), writer);
-        writer.flush();
-        LOG.debug(message + " (JSON)\n{}", writer.toString());
+            writer = new StringWriter();
+            SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, JSONEntry.class), writer);
+            writer.flush();
+            LOG.debug(message + " (JSON)\n{}", writer.toString());
+        }
+    }
+
+    protected void debugInputStream(final InputStream is) {
+        if (LOG.isDebugEnabled()) {
+            try {
+                final byte[] buffer = new byte[1024];
+                int length = 0;
+
+                final StringBuilder builder = new StringBuilder();
+
+                while ((length = is.read(buffer)) >= 0) {
+                    builder.append(new String(buffer, 0, length));
+                }
+
+                LOG.debug(builder.toString());
+            } catch (IOException e) {
+                LOG.error("Error writing stream", e);
+            } finally {
+                try {
+                    is.close();
+                } catch (Exception ignore) {
+                    // ignore
+                }
+            }
+        }
     }
 }
