@@ -57,7 +57,6 @@ public class LinkTest extends AbstractTest {
     }
 
     @Test
-    @Ignore
     public void retrieveJSONLinkURIs() throws Exception {
         retrieveLinkURIs(ODataPropertyFormat.JSON);
     }

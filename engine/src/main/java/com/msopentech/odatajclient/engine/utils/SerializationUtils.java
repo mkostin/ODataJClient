@@ -24,6 +24,7 @@ import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONFeed;
+import com.msopentech.odatajclient.engine.data.json.JSONLinks;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.data.json.JSONServiceDocument;
 import com.msopentech.odatajclient.engine.data.xml.XMLServiceDocument;
@@ -184,7 +185,7 @@ public final class SerializationUtils {
     public static List<URI> deserializeLinks(final InputStream input, final ODataPropertyFormat format) {
         return format == ODataPropertyFormat.XML
                 ? deserializeXMLLinks(input)
-                : null;
+                : deserializeJSONLinks(input);
     }
 
     @SuppressWarnings("unchecked")
@@ -324,7 +325,16 @@ public final class SerializationUtils {
             }
             return links;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Error deserializing $links", e);
+            throw new IllegalArgumentException("Error deserializing XML $links", e);
+        }
+    }
+
+    private static List<URI> deserializeJSONLinks(final InputStream input) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            return mapper.readValue(input, JSONLinks.class).getLinks();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("While deserializing JSON $links", e);
         }
     }
 }
