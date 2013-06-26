@@ -40,11 +40,10 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPr
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRawRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
-import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
-import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
+import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import java.io.InputStream;
 import java.net.URI;
@@ -109,9 +108,9 @@ public final class ODataRequestFactory {
      * @param entity entity blob to be updated.
      * @return new ODataMediaEntityUpdateRequest instance.
      */
-    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(final URI editURI, 
+    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(final URI editURI,
             final InputStream media) {
-        
+
         return ODataCUDRequestFactory.getMediaEntityUpdateRequest(editURI, media);
     }
 
@@ -162,13 +161,13 @@ public final class ODataRequestFactory {
      * Use this kind of request to update a complex property value
      *
      * @param targetURI entity set or entity or entity property URI.
-     * @param value value to be update.
+     * @param property value to be update.
      * @return new ODataCreatePrimitiveRequest instance.
      */
     public static ODataPropertyUpdateRequest getComplexUpdateRequest(
-            final URI targetURI, final ODataComplexValue value) {
-        
-        return ODataCUDRequestFactory.getComplexUpdateRequest(targetURI, value);
+            final URI targetURI, final UpdateType type, final ODataProperty property) {
+
+        return ODataCUDRequestFactory.getComplexUpdateRequest(targetURI, type, property);
     }
 
     /**
@@ -178,13 +177,13 @@ public final class ODataRequestFactory {
      *
      * @param targetURI entity set or entity or entity property URI.
      * @param type type of update to be performed.
-     * @param value value to be update.
+     * @param property value to be update.
      * @return new ODataCreatePrimitiveRequest instance.
      */
     public static ODataPropertyUpdateRequest getPrimitiveUpdateRequest(
-            final URI targetURI, final UpdateType type, final ODataPrimitiveValue value) {
-        
-        return ODataCUDRequestFactory.getPrimitiveUpdateRequest(targetURI, type, value);
+            final URI targetURI, final UpdateType type, final ODataProperty property) {
+
+        return ODataCUDRequestFactory.getPrimitiveUpdateRequest(targetURI, type, property);
     }
 
     /**
@@ -194,13 +193,13 @@ public final class ODataRequestFactory {
      *
      * @param targetURI entity set or entity or entity property URI.
      * @param type type of update to be performed.
-     * @param value value to be update.
+     * @param property value to be update.
      * @return new ODataCreatePrimitiveRequest instance.
      */
     public static ODataPropertyUpdateRequest getCollectionUpdateRequest(
-            final URI targetURI, final UpdateType type, final ODataCollectionValue value) {
-        
-        return ODataCUDRequestFactory.getCollectionUpdateRequest(targetURI, type, value);
+            final URI targetURI, final UpdateType type, final ODataProperty property) {
+
+        return ODataCUDRequestFactory.getCollectionUpdateRequest(targetURI, type, property);
     }
 
     /**

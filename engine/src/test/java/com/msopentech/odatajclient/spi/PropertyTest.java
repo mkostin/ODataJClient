@@ -15,20 +15,28 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
+import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
+import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import com.msopentech.odatajclient.engine.types.ODataValueFormat;
 import java.io.IOException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -36,61 +44,79 @@ import org.junit.Test;
  */
 public class PropertyTest extends AbstractTest {
 
-    /**
-     * @see PrimitiveValueTest
-     */
-    private void readPrimitiveProperty(final ODataPropertyFormat format) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("CustomerId");
-
-        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
-        req.setFormat(format);
-
-        final ODataQueryResponse<ODataProperty> res = req.execute();
-        assertEquals(200, res.getStatusCode());
-
-        final ODataProperty property = res.getBody();
-        debugODataProperty(property, "Retrieved property");
-
-        assertNotNull(property);
-        assertTrue(property.hasPrimitiveValue());
-        assertEquals("-10", property.getPrimitiveValue().toString());
+    @Test
+    public void replaceComplexPropertyAsXML() throws IOException {
+        updateComplexProperty(ODataPropertyFormat.XML, UpdateType.REPLACE);
     }
 
-    private void readComplexProperty(final ODataPropertyFormat format) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("PrimaryContactInfo");
-
-        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
-        req.setFormat(format);
-
-        final ODataQueryResponse<ODataProperty> res = req.execute();
-        assertEquals(200, res.getStatusCode());
-
-        final ODataProperty property = res.getBody();
-        debugODataProperty(property, "Retrieved property");
-
-        assertNotNull(property);
-        assertTrue(property.hasComplexValue());
-        assertEquals(6, property.getComplexValue().size());
+    @Test
+    public void replaceComplexPropertyAsJSON() throws IOException {
+        updateComplexProperty(ODataPropertyFormat.JSON_FULL_METADATA, UpdateType.REPLACE);
     }
 
-    private void readCollectionProperty(final ODataPropertyFormat format) throws IOException {
+    @Test
+    @Ignore
+    public void patchComplexPropertyAsXML() throws IOException {
+        updateComplexProperty(ODataPropertyFormat.XML, UpdateType.PATCH);
+    }
+
+    @Test
+    @Ignore
+    public void patchComplexPropertyAsJSON() throws IOException {
+        updateComplexProperty(ODataPropertyFormat.JSON_FULL_METADATA, UpdateType.PATCH);
+    }
+
+    @Test
+    @Ignore
+    public void mergeComplexPropertyAsXML() throws IOException {
+        updateComplexProperty(ODataPropertyFormat.XML, UpdateType.MERGE);
+    }
+
+    @Test
+    @Ignore
+    public void mergeComplexPropertyAsJSON() throws IOException {
+        updateComplexProperty(ODataPropertyFormat.JSON_FULL_METADATA, UpdateType.MERGE);
+    }
+
+    private void updateComplexProperty(final ODataPropertyFormat format, final UpdateType type) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("BackupContactInfo");
+        uriBuilder.appendEntityTypeSegment("Customer(-9)").appendStructuralSegment("PrimaryContactInfo");
 
-        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
-        req.setFormat(format);
+        ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        retrieveReq.setFormat(format);
 
-        final ODataQueryResponse<ODataProperty> res = req.execute();
-        assertEquals(200, res.getStatusCode());
+        ODataQueryResponse<ODataProperty> retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
 
-        final ODataProperty property = res.getBody();
-        debugODataProperty(property, "Retrieved property");
+        ODataProperty primaryContactInfo = retrieveRes.getBody();
+        primaryContactInfo = new ODataProperty("PrimaryContactInfo", primaryContactInfo.getComplexValue());
 
-        assertNotNull(property);
-        assertTrue(property.hasCollectionValue());
-        assertEquals(9, property.getCollectionValue().size());
+        final String newItem = "new item " + System.currentTimeMillis();
+
+        final ODataCollectionValue originalValue =
+                primaryContactInfo.getComplexValue().get("EmailBag").getCollectionValue();
+
+        final int origSize = originalValue.size();
+
+        originalValue.add(new ODataPrimitiveValue.Builder().setText(newItem).build());
+        assertEquals(origSize + 1, originalValue.size());
+
+        final ODataPropertyUpdateRequest updateReq =
+                ODataRequestFactory.getComplexUpdateRequest(uriBuilder.build(), type, primaryContactInfo);
+        updateReq.setFormat(format);
+
+        ODataPropertyUpdateResponse updateRes = updateReq.execute();
+        assertEquals(204, updateRes.getStatusCode());
+
+        retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        retrieveReq.setFormat(format);
+
+        retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
+
+        primaryContactInfo = retrieveRes.getBody();
+
+        assertEquals(origSize + 1, primaryContactInfo.getComplexValue().get("EmailBag").getCollectionValue().size());
     }
 
     @Test
@@ -159,5 +185,68 @@ public class PropertyTest extends AbstractTest {
         assertNotNull(value);
         // the following assert depends on the test execution order (use >= to be sure)
         assertTrue(Integer.valueOf(value.toString()) >= 10);
+    }
+
+    /**
+     * @see PrimitiveValueTest
+     */
+    private ODataProperty readPrimitiveProperty(final ODataPropertyFormat format) throws IOException {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("CustomerId");
+
+        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataQueryResponse<ODataProperty> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+
+        final ODataProperty property = res.getBody();
+        debugODataProperty(property, "Retrieved property");
+
+        assertNotNull(property);
+        assertTrue(property.hasPrimitiveValue());
+        assertEquals("-10", property.getPrimitiveValue().toString());
+
+        return property;
+    }
+
+    private ODataProperty readComplexProperty(final ODataPropertyFormat format) throws IOException {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("PrimaryContactInfo");
+
+        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataQueryResponse<ODataProperty> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+
+        final ODataProperty property = res.getBody();
+        debugODataProperty(property, "Retrieved property");
+
+        assertNotNull(property);
+        assertTrue(property.hasComplexValue());
+        assertEquals(6, property.getComplexValue().size());
+
+        return property;
+    }
+
+    private ODataProperty readCollectionProperty(final ODataPropertyFormat format) throws IOException {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("BackupContactInfo");
+
+        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataQueryResponse<ODataProperty> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+
+        final ODataProperty property = res.getBody();
+        debugODataProperty(property, "Retrieved property");
+
+        assertNotNull(property);
+        assertTrue(property.hasCollectionValue());
+        assertEquals(9, property.getCollectionValue().size());
+
+        return property;
     }
 }

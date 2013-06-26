@@ -156,6 +156,15 @@ public class ODataBinder {
         return entry;
     }
 
+    public static Element getProperty(final ODataProperty prop) {
+        try {
+            return newProperty(prop, DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
+        } catch (ParserConfigurationException e) {
+            LOG.error("Error retrieving property DOM", e);
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     public static ODataServiceDocument getODataServiceDocument(final ServiceDocumentResource resource) {
         final ODataServiceDocument serviceDocument = new ODataServiceDocument();
 
@@ -297,10 +306,10 @@ public class ODataBinder {
                     break;
 
                 default:
-                    res = new ODataProperty(property.getLocalName(), null);
+                    res = new ODataProperty(SerializationUtils.getSimpleName(property), null);
             }
         } else {
-            res = new ODataProperty(property.getLocalName(), null);
+            res = new ODataProperty(SerializationUtils.getSimpleName(property), null);
         }
 
         return res;
@@ -356,6 +365,11 @@ public class ODataBinder {
             // complex property handling
             element = newComplexProperty(prop, doc);
         }
+
+        element.setAttribute(ODataConstants.XMLNS_METADATA, ODataConstants.NS_METADATA);
+        element.setAttribute(ODataConstants.XMLNS_DATASERVICES, ODataConstants.NS_DATASERVICES);
+        element.setAttribute(ODataConstants.XMLNS_GML, ODataConstants.NS_GML);
+        element.setAttribute(ODataConstants.XMLNS_GEORSS, ODataConstants.NS_GEORSS);
 
         return element;
     }
