@@ -36,10 +36,10 @@ import org.junit.Test;
 public class LinkTest extends AbstractTest {
 
     private void retrieveLinkURIs(final ODataPropertyFormat format) throws IOException {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-10)");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER);
 
-        ODataLinkRequest req = ODataRetrieveRequestFactory.getLinkRequest(uriBuilder.build(), "Logins");
+        final ODataLinkRequest req = ODataRetrieveRequestFactory.getLinkRequest(uriBuilder.build(), "Logins");
         req.setFormat(format);
 
         final ODataQueryResponse<List<URI>> res = req.execute();

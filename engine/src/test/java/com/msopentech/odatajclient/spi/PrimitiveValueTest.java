@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static com.msopentech.odatajclient.spi.AbstractTest.TEST_CUSTOMER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -38,10 +39,10 @@ public class PrimitiveValueTest extends AbstractTest {
     private ODataPrimitiveValue readPropertyValue(final String serviceRootURL,
             final String entity, final String propertyName) {
 
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(serviceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(serviceRootURL);
         uriBuilder.appendEntityTypeSegment(entity).appendStructuralSegment(propertyName);
 
-        ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         req.setFormat(ODataPropertyFormat.XML);
 
         final ODataQueryResponse<ODataProperty> res = req.execute();
@@ -57,63 +58,63 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void string() {
-        ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, "Customer(-10)", "CustomerId");
+        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, TEST_CUSTOMER, "CustomerId");
         assertEquals(EdmSimpleType.INT_32.toString(), opv.getTypeName());
 
-        Integer value = opv.<Integer>toCastValue();
+        final Integer value = opv.<Integer>toCastValue();
         assertNotNull(value);
         assertTrue(-10 == value);
     }
 
     @Test
     public void int32() {
-        ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, "Product(-10)", "Description");
+        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, "Product(-10)", "Description");
         assertEquals(EdmSimpleType.STRING.toString(), opv.getTypeName());
 
-        String value = opv.<String>toCastValue();
+        final String value = opv.<String>toCastValue();
         assertNotNull(value);
         assertEquals("onesusjnzuzrmzhqankkugdrftiukzkzqaggsfdmtvineulehkrbpu", value);
     }
 
     @Test
     public void decimal() {
-        ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, "Product(-10)", "Dimensions/Width");
+        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, "Product(-10)", "Dimensions/Width");
         assertEquals(EdmSimpleType.DECIMAL.toString(), opv.getTypeName());
 
-        Float value = opv.<Float>toCastValue();
+        final Float value = opv.<Float>toCastValue();
         assertNotNull(value);
         assertTrue(-79228162514264337593543950335F == value);
     }
 
     @Test
     public void datetime() {
-        ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
+        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
                 "Product(-10)", "ComplexConcurrency/QueriedDateTime");
         assertEquals(EdmSimpleType.DATE_TIME.toString(), opv.getTypeName());
 
-        Timestamp value = opv.<Timestamp>toCastValue();
+        final Timestamp value = opv.<Timestamp>toCastValue();
         assertNotNull(value);
         assertEquals("2013-01-10T06:27:51.1667673", opv.toString());
     }
 
     @Test
     public void guid() {
-        ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
+        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
                 "MessageAttachment(guid'1126a28b-a4af-4bbd-bf0a-2b2c22635565')", "AttachmentId");
         assertEquals(EdmSimpleType.GUID.toString(), opv.getTypeName());
 
-        UUID value = opv.<UUID>toCastValue();
+        final UUID value = opv.<UUID>toCastValue();
         assertNotNull(value);
         assertEquals("1126a28b-a4af-4bbd-bf0a-2b2c22635565", opv.toString());
     }
 
     @Test
     public void binary() {
-        ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
+        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
                 "MessageAttachment(guid'1126a28b-a4af-4bbd-bf0a-2b2c22635565')", "Attachment");
         assertEquals(EdmSimpleType.BINARY.toString(), opv.getTypeName());
 
-        byte[] value = opv.<byte[]>toCastValue();
+        final byte[] value = opv.<byte[]>toCastValue();
         assertNotNull(value);
         assertTrue(value.length > 0);
         assertTrue(Base64.isBase64(opv.toString()));
@@ -121,12 +122,12 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void geographyPoint() {
-        ODataPrimitiveValue opv = readPropertyValue(
+        final ODataPrimitiveValue opv = readPropertyValue(
                 "http://services.odata.org/v3/(S(ds4nnexwejbv4fq3nqsx5vd1))/OData/OData.svc/",
                 "Suppliers(1)", "Location");
         assertEquals(EdmSimpleType.GEOGRAPHY_POINT.toString(), opv.getTypeName());
 
-        Point value = opv.<Point>toCastValue();
+        final Point value = opv.<Point>toCastValue();
         assertNotNull(value);
         assertEquals(47.6472206115723, value.getX(), 0);
         assertEquals(-122.107711791992, value.getY(), 0);

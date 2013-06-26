@@ -82,7 +82,7 @@ public class EntityCreateTest extends AbstractTest {
         // Read Customer(-10)
         // ---------------------------------------------
         uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-10)");
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER);
 
         req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
@@ -137,7 +137,7 @@ public class EntityCreateTest extends AbstractTest {
 
     private void readODataEntity(final ODataFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-10)");
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER);
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
@@ -148,7 +148,7 @@ public class EntityCreateTest extends AbstractTest {
 
         if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
             assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entity.getName());
-            assertEquals(testODataServiceRootURL + "/Customer(-10)", entity.getEditLink().toASCIIString());
+            assertEquals(testODataServiceRootURL + "/" + TEST_CUSTOMER, entity.getEditLink().toASCIIString());
             assertEquals(5, entity.getNavigationLinks().size());
             assertEquals(2, entity.getEditMediaLinks().size());
 
@@ -156,7 +156,8 @@ public class EntityCreateTest extends AbstractTest {
 
             for (ODataLink link : entity.getNavigationLinks()) {
                 if ("Wife".equals(link.getName())
-                        && (testODataServiceRootURL + "/Customer(-10)/Wife").equals(link.getLink().toASCIIString())) {
+                        && (testODataServiceRootURL + "/" + TEST_CUSTOMER + "/Wife").
+                        equals(link.getLink().toASCIIString())) {
                     check = true;
                 }
             }
@@ -202,7 +203,7 @@ public class EntityCreateTest extends AbstractTest {
 
     private void readODataEntityWithInline(final ODataFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-10)").expand("Info");
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).expand("Info");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
@@ -212,7 +213,7 @@ public class EntityCreateTest extends AbstractTest {
 
         assertNotNull(entity);
         assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entity.getName());
-        assertEquals(testODataServiceRootURL + "/Customer(-10)", entity.getEditLink().toASCIIString());
+        assertEquals(testODataServiceRootURL + "/" + TEST_CUSTOMER, entity.getEditLink().toASCIIString());
 
         assertEquals(5, entity.getNavigationLinks().size());
         assertTrue(entity.getAssociationLinks().isEmpty());
