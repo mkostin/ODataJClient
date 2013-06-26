@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ODataDocumentService {
+public class ODataServiceDocument {
 
     private final Map<String, URI> topLevelEntitySets = new HashMap<String, URI>();
 

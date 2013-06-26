@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.types.ODataDocumentServiceFormat;
+import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -124,21 +124,21 @@ public final class ODataReader {
     }
 
     /**
-     * Parses an OData document service.
+     * Parses an OData service document.
      *
      * @param input stream to de-serialize.
      * @param format de-serialize as XML or JSON
      * @return List of URIs.
      */
-    public static ODataDocumentService deserializeDocumentService(
-            final InputStream input, final ODataDocumentServiceFormat format) {
+    public static ODataServiceDocument deserializeServiceDocument(
+            final InputStream input, final ODataServiceDocumentFormat format) {
 
-        return format == ODataDocumentServiceFormat.XML
-                ? deserializeDocumentServiceAsXML(input)
+        return format == ODataServiceDocumentFormat.XML
+                ? deserializeServiceDocumentAsXML(input)
                 : null;
     }
 
-    private static ODataDocumentService deserializeDocumentServiceAsXML(final InputStream input) {
+    private static ODataServiceDocument deserializeServiceDocumentAsXML(final InputStream input) {
         try {
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder builder = factory.newDocumentBuilder();
@@ -147,7 +147,7 @@ public final class ODataReader {
             final NodeList services = doc.getElementsByTagName(ODataConstants.ELEM_SERVICE);
 
             if (services.getLength() != 1) {
-                throw new IllegalArgumentException("Invalid docuemnt service");
+                throw new IllegalArgumentException("Invalid service document");
             }
 
             final Element service = (Element) services.item(0);
@@ -155,7 +155,7 @@ public final class ODataReader {
 
             final NodeList collections = service.getElementsByTagName(ODataConstants.ELEM_COLLECTION);
 
-            final ODataDocumentService res = new ODataDocumentService();
+            final ODataServiceDocument res = new ODataServiceDocument();
 
             for (int i = 0; i < collections.getLength(); i++) {
                 final Element collection = (Element) collections.item(i);

@@ -20,7 +20,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * Exchanged data format.
  */
-public enum ODataDocumentServiceFormat {
+public enum ODataServiceDocumentFormat {
 
     /**
      * JSON format with no metadata.
@@ -38,7 +38,7 @@ public enum ODataDocumentServiceFormat {
 
     private final String format;
 
-    ODataDocumentServiceFormat(final String format) {
+    ODataServiceDocumentFormat(final String format) {
         this.format = format;
     }
 

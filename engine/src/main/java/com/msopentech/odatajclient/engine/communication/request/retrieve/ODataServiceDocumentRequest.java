@@ -16,27 +16,27 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.data.ODataDocumentService;
+import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.types.ODataDocumentServiceFormat;
+import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
 
 /**
- * This class implements an OData document service request.
+ * This class implements an OData service document request.
  * Get instance by using ODataRetrieveRequestFactory.
  *
- * @see ODataRetrieveRequestFactory#getDocumentServiceRequest(java.lang.String)
+ * @see ODataRetrieveRequestFactory#getServiceDocumentRequest(java.lang.String)
  */
-public class ODataDocumentServiceRequest extends ODataQueryRequest<ODataDocumentService, ODataDocumentServiceFormat> {
+public class ODataServiceDocumentRequest extends ODataQueryRequest<ODataServiceDocument, ODataServiceDocumentFormat> {
 
     /**
      * Constructor.
      *
      * @param serviceRoot query URI.
      */
-    ODataDocumentServiceRequest(final URI uri) {
+    ODataServiceDocumentRequest(final URI uri) {
         super(uri);
     }
 
@@ -44,8 +44,8 @@ public class ODataDocumentServiceRequest extends ODataQueryRequest<ODataDocument
      * {@inheritDoc }
      */
     @Override
-    public ODataQueryResponse<ODataDocumentService> execute() {
-        return new ODataServcieResponsImpl(client.get());
+    public ODataQueryResponse<ODataServiceDocument> execute() {
+        return new ODataServiceResponseImpl(client.get());
     }
 
     /**
@@ -58,22 +58,22 @@ public class ODataDocumentServiceRequest extends ODataQueryRequest<ODataDocument
         return new byte[0];
     }
 
-    protected class ODataServcieResponsImpl extends ODataQueryResponseImpl {
+    protected class ODataServiceResponseImpl extends ODataQueryResponseImpl {
 
-        private ODataDocumentService documentService = null;
+        private ODataServiceDocument serviceDocument = null;
 
-        private ODataServcieResponsImpl(final Response res) {
+        private ODataServiceResponseImpl(final Response res) {
             super(res);
         }
 
         @Override
-        public ODataDocumentService getBody() {
+        public ODataServiceDocument getBody() {
             try {
-                if (documentService == null) {
-                    documentService = ODataReader.deserializeDocumentService(
-                            res.readEntity(InputStream.class), ODataDocumentServiceFormat.valueOf(getFormat()));
+                if (serviceDocument == null) {
+                    serviceDocument = ODataReader.deserializeServiceDocument(
+                            res.readEntity(InputStream.class), ODataServiceDocumentFormat.valueOf(getFormat()));
                 }
-                return documentService;
+                return serviceDocument;
             } finally {
                 res.close();
             }

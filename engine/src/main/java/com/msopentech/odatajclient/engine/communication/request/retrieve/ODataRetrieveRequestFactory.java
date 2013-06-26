@@ -30,14 +30,14 @@ public final class ODataRetrieveRequestFactory {
     }
 
     /**
-     * Gets a document service request instance.
+     * Gets a service document request instance.
      *
      * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
      * data service.
-     * @return new ODataDocumentServiceRequest instance.
+     * @return new ODataServiceDocumentRequest instance.
      */
-    public static ODataDocumentServiceRequest getDocumentServiceRequest(final String serviceRoot) {
-        return new ODataDocumentServiceRequest(StringUtils.isNotBlank(serviceRoot) && serviceRoot.endsWith("/")
+    public static ODataServiceDocumentRequest getServiceDocumentRequest(final String serviceRoot) {
+        return new ODataServiceDocumentRequest(StringUtils.isNotBlank(serviceRoot) && serviceRoot.endsWith("/")
                 ? new ODataURIBuilder(serviceRoot).build() : new ODataURIBuilder(serviceRoot + "/").build());
     }
 

@@ -17,40 +17,40 @@ package com.msopentech.odatajclient.spi;
 
 import static org.junit.Assert.assertEquals;
 
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataDocumentServiceRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataServiceDocumentRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
-import com.msopentech.odatajclient.engine.data.ODataDocumentService;
-import com.msopentech.odatajclient.engine.types.ODataDocumentServiceFormat;
+import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
+import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
 import java.net.URI;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class DocumentServiceTest extends AbstractTest {
+public class ServiceDocumentTest extends AbstractTest {
 
-    private void retrieveDocumentService(final ODataDocumentServiceFormat format) {
-        final ODataDocumentServiceRequest req =
-                ODataRetrieveRequestFactory.getDocumentServiceRequest(testODataServiceRootURL);
+    private void retrieveServiceDocument(final ODataServiceDocumentFormat format) {
+        final ODataServiceDocumentRequest req =
+                ODataRetrieveRequestFactory.getServiceDocumentRequest(testODataServiceRootURL);
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataDocumentService> res = req.execute();
+        final ODataQueryResponse<ODataServiceDocument> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
-        ODataDocumentService documentService = res.getBody();
-        assertEquals(22, documentService.size());
+        final ODataServiceDocument serviceDocument = res.getBody();
+        assertEquals(22, serviceDocument.size());
 
         assertEquals(URI.create(testODataServiceRootURL + "/ComputerDetail"),
-                documentService.getEntitySetURI("ComputerDetail"));
+                serviceDocument.getEntitySetURI("ComputerDetail"));
     }
 
     @Test
-    public void retrieveDocumentServiceAsXML() {
-        retrieveDocumentService(ODataDocumentServiceFormat.XML);
+    public void retrieveServiceDocumentAsXML() {
+        retrieveServiceDocument(ODataServiceDocumentFormat.XML);
     }
 
     @Test
     @Ignore
-    public void retrieveDocumentServiceAsJSON() {
-        retrieveDocumentService(ODataDocumentServiceFormat.JSON);
+    public void retrieveServiceDocumentAsJSON() {
+        retrieveServiceDocument(ODataServiceDocumentFormat.JSON);
     }
 }

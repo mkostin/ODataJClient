@@ -30,7 +30,7 @@ import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamU
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataValueUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequest;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataDocumentServiceRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataServiceDocumentRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataLinkRequest;
@@ -290,14 +290,14 @@ public final class ODataRequestFactory {
     }
 
     /**
-     * Gets a document service request instance.
+     * Gets a service document request instance.
      *
      * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
      * data service.
-     * @return new ODataDocumentServiceRequest instance.
+     * @return new ODataServiceDocumentRequest instance.
      */
-    public static ODataDocumentServiceRequest getDocumentServiceRequest(final String serviceRoot) {
-        return ODataRetrieveRequestFactory.getDocumentServiceRequest(serviceRoot);
+    public static ODataServiceDocumentRequest getServiceDocumentRequest(final String serviceRoot) {
+        return ODataRetrieveRequestFactory.getServiceDocumentRequest(serviceRoot);
     }
 
     /**
