@@ -61,7 +61,7 @@ public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty, OData
         public ODataProperty getBody() {
             try {
                 if (property == null) {
-                    property = ODataReader.deserializeProperty(
+                    property = ODataReader.getProperty(
                             res.readEntity(InputStream.class), ODataPropertyFormat.valueOf(getFormat()));
                 }
                 return property;

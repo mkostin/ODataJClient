@@ -225,7 +225,7 @@ public class ODataBinder {
 
                 try {
                     if (property.getNodeType() != Node.TEXT_NODE) {
-                        entity.addProperty(newProperty(property));
+                        entity.addProperty(getProperty(property));
                     }
                 } catch (IllegalArgumentException e) {
                     LOG.warn("Failure retrieving EdmType for {}", property.getTextContent(), e);
@@ -261,7 +261,7 @@ public class ODataBinder {
         return linkResource;
     }
 
-    public static ODataProperty newProperty(final Element property) {
+    public static ODataProperty getProperty(final Element property) {
         final ODataProperty res;
 
         final Node nullNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_NULL);
@@ -418,7 +418,7 @@ public class ODataBinder {
         for (int i = 0; i < elements.getLength(); i++) {
             final Element child = (Element) elements.item(i);
             if (child.getNodeType() != Node.TEXT_NODE) {
-                value.add(newProperty(child));
+                value.add(getProperty(child));
             }
         }
 

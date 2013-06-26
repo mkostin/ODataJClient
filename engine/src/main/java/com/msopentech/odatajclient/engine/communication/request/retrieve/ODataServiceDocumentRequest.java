@@ -70,7 +70,7 @@ public class ODataServiceDocumentRequest extends ODataQueryRequest<ODataServiceD
         public ODataServiceDocument getBody() {
             try {
                 if (serviceDocument == null) {
-                    serviceDocument = ODataReader.deserializeServiceDocument(
+                    serviceDocument = ODataReader.getServiceDocument(
                             res.readEntity(InputStream.class), ODataServiceDocumentFormat.valueOf(getFormat()));
                 }
                 return serviceDocument;

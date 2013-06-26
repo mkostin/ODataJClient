@@ -16,12 +16,12 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBException;
 
 /**
  * This class implements a metadata query request.
@@ -62,12 +62,9 @@ public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata, ODataFo
         public EdmMetadata getBody() {
             try {
                 if (metadata == null) {
-                    metadata = new EdmMetadata(res.readEntity(InputStream.class));
+                    metadata = ODataReader.getMetadata(res.readEntity(InputStream.class));
                 }
                 return metadata;
-            } catch (JAXBException e) {
-                LOG.error("Error unmarshalling metadata info", e);
-                throw new IllegalStateException(e);
             } finally {
                 res.close();
             }

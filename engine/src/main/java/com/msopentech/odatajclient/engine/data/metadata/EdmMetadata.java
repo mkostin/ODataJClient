@@ -40,9 +40,9 @@ public class EdmMetadata implements Serializable {
     private Map<String, Schema> schemaByNsOrAlias;
 
     public EdmMetadata(final InputStream inputStream) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(Edmx.class);
+        final JAXBContext context = JAXBContext.newInstance(Edmx.class);
         @SuppressWarnings("unchecked")
-        Edmx edmx = ((JAXBElement<Edmx>) context.createUnmarshaller().unmarshal(inputStream)).getValue();
+        final Edmx edmx = ((JAXBElement<Edmx>) context.createUnmarshaller().unmarshal(inputStream)).getValue();
 
         for (JAXBElement<?> edmxContent : edmx.getContent()) {
             if (DataServices.class.equals(edmxContent.getDeclaredType())) {

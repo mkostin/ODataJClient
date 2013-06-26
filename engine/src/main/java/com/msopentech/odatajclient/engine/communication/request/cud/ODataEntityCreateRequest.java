@@ -104,7 +104,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.deserializeEntity(
+                    entity = ODataReader.getEntity(
                             res.readEntity(InputStream.class), ODataFormat.valueOf(getFormat()));
                 } finally {
                     res.close();

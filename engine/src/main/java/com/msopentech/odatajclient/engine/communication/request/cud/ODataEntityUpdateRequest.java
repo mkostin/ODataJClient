@@ -112,7 +112,7 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.deserializeEntity(
+                    entity = ODataReader.getEntity(
                             res.readEntity(InputStream.class), ODataFormat.valueOf(getFormat()));
                 } finally {
                     res.close();
