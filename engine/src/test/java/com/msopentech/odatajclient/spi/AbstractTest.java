@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.spi;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -58,6 +57,8 @@ public abstract class AbstractTest {
      */
     protected static final Logger LOG = LoggerFactory.getLogger(AbstractTest.class);
 
+    protected static final String TEST_CUSTOMER = "Customer(-10)";
+
     protected static String testODataServiceRootURL;
 
     @BeforeClass
@@ -65,7 +66,7 @@ public abstract class AbstractTest {
         InputStream propStream = null;
         try {
             propStream = AbstractTest.class.getResourceAsStream("/test.properties");
-            Properties props = new Properties();
+            final Properties props = new Properties();
             props.load(propStream);
 
             testODataServiceRootURL = props.getProperty("test.odata.serviceroot.url");
@@ -101,10 +102,10 @@ public abstract class AbstractTest {
             assertNotNull(foundActual);
 
             if (foundOriginal instanceof ODataInlineEntity && foundActual instanceof ODataInlineEntity) {
-                ODataEntity originalInline = ((ODataInlineEntity) foundOriginal).getEntity();
+                final ODataEntity originalInline = ((ODataInlineEntity) foundOriginal).getEntity();
                 assertNotNull(originalInline);
 
-                ODataEntity actualInline = ((ODataInlineEntity) foundActual).getEntity();
+                final ODataEntity actualInline = ((ODataInlineEntity) foundActual).getEntity();
                 assertNotNull(actualInline);
 
                 checkProperties(originalInline.getProperties(), actualInline.getProperties());
@@ -133,9 +134,6 @@ public abstract class AbstractTest {
 
                 if (prop.getValue() != null && actualProp.getValue() != null) {
                     checkPropertyValue(prop.getName(), prop.getValue(), actualProp.getValue());
-                } else {
-                    assertNull(prop.getValue());
-                    assertNull(actualProp.getValue());
                 }
             } else {
                 // nothing ... maybe :FC_KeepInContent="false"
@@ -206,53 +204,53 @@ public abstract class AbstractTest {
     protected ODataEntity getSampleCustomerProfile(
             final int id, final String sampleName, final boolean withInlineInfo) {
 
-        ODataEntity entity = ODataFactory.newEntity("Customer");
+        final ODataEntity entity = ODataFactory.newEntity("Customer");
 
         // add name attribute
         final ODataPrimitiveValue nameValue = new ODataPrimitiveValue.Builder().
                 setText(sampleName).setType(EdmSimpleType.STRING).build();
-        ODataProperty name = new ODataProperty("Name", nameValue);
+        final ODataProperty name = new ODataProperty("Name", nameValue);
         entity.addProperty(name);
 
         // add key attribute
         final ODataPrimitiveValue keyValue = new ODataPrimitiveValue.Builder().
                 setText(String.valueOf(id)).setType(EdmSimpleType.INT_32).build();
-        ODataProperty key = new ODataProperty("CustomerId", keyValue);
+        final ODataProperty key = new ODataProperty("CustomerId", keyValue);
         entity.addProperty(key);
 
         // add BackupContactInfo attribute (collection)
-        ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
+        final ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
                 "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails)");
-        ODataProperty backupContactInfo = new ODataProperty("BackupContactInfo", backupContactInfoValue);
+        final ODataProperty backupContactInfo = new ODataProperty("BackupContactInfo", backupContactInfoValue);
         entity.addProperty(backupContactInfo);
 
         // add BackupContactInfo.ContactDetails attribute (complex)
-        ODataComplexValue contactDetails = new ODataComplexValue(
+        final ODataComplexValue contactDetails = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails");
         backupContactInfoValue.add(contactDetails);
 
         // add BackupContactInfo.ContactDetails.AlternativeNames attribute (collection)
-        ODataCollectionValue alternativeNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        alternativeNamesValue.add(new ODataPrimitiveValue.Builder().
+        final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
+        altNamesValue.add(new ODataPrimitiveValue.Builder().
                 setText("myname").setType(EdmSimpleType.STRING).build());
-        contactDetails.add(new ODataProperty("AlternativeNames", alternativeNamesValue));
+        contactDetails.add(new ODataProperty("AlternativeNames", altNamesValue));
 
         // add BackupContactInfo.ContactDetails.EmailBag attribute (collection)
-        ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
+        final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
         emailBagValue.add(new ODataPrimitiveValue.Builder().
                 setText("myname@mydomain.com").setType(EdmSimpleType.STRING).build());
         contactDetails.add(new ODataProperty("EmailBag", emailBagValue));
 
         // add BackupContactInfo.ContactDetails.ContactAlias attribute (complex)
-        ODataComplexValue contactAliasValue = new ODataComplexValue(
+        final ODataComplexValue contactAliasValue = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Aliases");
         contactDetails.add(new ODataProperty("ContactAlias", contactAliasValue));
 
         // add BackupContactInfo.ContactDetails.ContactAlias.AlternativeNames attribute (collection)
-        alternativeNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        alternativeNamesValue.add(new ODataPrimitiveValue.Builder().
+        final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
+        aliasAltNamesValue.add(new ODataPrimitiveValue.Builder().
                 setText("myAlternativeName").setType(EdmSimpleType.STRING).build());
-        contactAliasValue.add(new ODataProperty("AlternativeNames", alternativeNamesValue));
+        contactAliasValue.add(new ODataProperty("AlternativeNames", aliasAltNamesValue));
 
         if (withInlineInfo) {
             entity.addLink(ODataFactory.newInlineEntity(
@@ -265,14 +263,14 @@ public abstract class AbstractTest {
     }
 
     protected void debugEntry(final EntryResource entry, final String message) {
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         SerializationUtils.serializeEntry(entry, writer);
         writer.flush();
         LOG.debug(message + "\n{}", writer.toString());
     }
 
     protected void debugFeed(final FeedResource feed, final String message) {
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         SerializationUtils.serializeFeed(feed, writer);
         writer.flush();
         LOG.debug(message + "\n{}", writer.toString());

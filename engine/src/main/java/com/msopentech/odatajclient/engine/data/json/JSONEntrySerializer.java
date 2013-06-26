@@ -35,11 +35,11 @@ import org.w3c.dom.NodeList;
  */
 public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
 
-    private List<Node> getChildNodes(Node node, short nodetype) {
-        List<Node> result = new ArrayList<Node>();
-        NodeList children = node.getChildNodes();
+    private List<Node> getChildNodes(final Node node, final short nodetype) {
+        final List<Node> result = new ArrayList<Node>();
+        final NodeList children = node.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-            Node child = children.item(i);
+            final Node child = children.item(i);
             if (child.getNodeType() == nodetype) {
                 result.add(child);
             }
@@ -47,7 +47,7 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         return result;
     }
 
-    private boolean hasElementsChildNode(Node node) {
+    private boolean hasElementsChildNode(final Node node) {
         boolean found = false;
 
         for (Node child : getChildNodes(node, Node.ELEMENT_NODE)) {
@@ -59,11 +59,11 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         return found;
     }
 
-    private boolean hasOnlyTextChildNodes(Node node) {
+    private boolean hasOnlyTextChildNodes(final Node node) {
         boolean result = true;
-        NodeList children = node.getChildNodes();
+        final NodeList children = node.getChildNodes();
         for (int i = 0; result && i < children.getLength(); i++) {
-            Node child = children.item(i);
+            final Node child = children.item(i);
             if (child.getNodeType() != Node.TEXT_NODE) {
                 result = false;
             }
@@ -72,9 +72,9 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         return result;
     }
 
-    private void writeEntryContent(JsonGenerator jgen, Node content) throws IOException {
+    private void writeEntryContent(final JsonGenerator jgen, final Node content) throws IOException {
         for (Node child : getChildNodes(content, Node.ELEMENT_NODE)) {
-            String childName = SerializationUtils.getSimpleName(child);
+            final String childName = SerializationUtils.getSimpleName(child);
             if (hasOnlyTextChildNodes(child)) {
                 if (child.hasChildNodes()) {
                     jgen.writeStringField(childName, child.getChildNodes().item(0).getNodeValue());
@@ -106,13 +106,13 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
     }
 
     @Override
-    public void serialize(JSONEntry entry, JsonGenerator jgen, SerializerProvider provider)
+    public void serialize(final JSONEntry entry, final JsonGenerator jgen, final SerializerProvider provider)
             throws IOException, JsonProcessingException {
 
         jgen.writeStartObject();
 
         if (entry.getMetadata() != null) {
-            jgen.writeStringField(JSONConstants.METADATA, entry.getMetadata().toURL().toExternalForm());
+            jgen.writeStringField(JSONConstants.METADATA, entry.getMetadata().toASCIIString());
         }
         if (StringUtils.isNotBlank(entry.getType())) {
             jgen.writeStringField(JSONConstants.TYPE, entry.getType());

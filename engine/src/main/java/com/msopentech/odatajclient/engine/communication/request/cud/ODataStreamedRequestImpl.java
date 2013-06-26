@@ -112,15 +112,15 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
             // finalize the body
             getPayload().finalizeBody();
 
-            req.rowAppend(toByteArray());
-            req.rowAppend(ODataStreamer.CRLF);
+            req.rawAppend(toByteArray());
+            req.rawAppend(ODataStreamer.CRLF);
 
             final byte[] buff = new byte[1024];
 
             int len;
 
             while ((len = is.read(buff)) >= 0) {
-                req.rowAppend(buff, 0, len);
+                req.rawAppend(buff, 0, len);
             }
 
         } catch (IOException e) {

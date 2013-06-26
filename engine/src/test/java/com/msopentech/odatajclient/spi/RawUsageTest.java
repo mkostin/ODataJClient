@@ -35,8 +35,8 @@ public class RawUsageTest {
         // create new request
         final ODataEntitySetRequest request = ODataRetrieveRequestFactory.getEntitySetRequest(uri.build());
 
-        // execute and retrieve row response
-        final InputStream is = request.rowExecute();
+        // execute and retrieve raw response
+        final InputStream is = request.rawExecute();
 
         try {
             // let's suppose to want to deserialize, one shot, an entire atom feed
@@ -66,14 +66,14 @@ public class RawUsageTest {
         // create new request
         final ODataEntitySetRequest request = ODataRetrieveRequestFactory.getEntitySetRequest(uri.build());
 
-        // execute and retrieve row response
-        final InputStream is = request.rowExecute();
+        // execute and retrieve raw response
+        final InputStream is = request.rawExecute();
 
         try {
             // let's suppose to want to deserialize, step-by-step, an entire atom feed
             while (is.available() > 0) {
                 // retrieve and process the new result item
-                ODataEntity entity = ODataReader.deserializeEntity(is, ODataFormat.ATOM);
+                final ODataEntity entity = ODataReader.deserializeEntity(is, ODataFormat.ATOM);
                 // .................
             }
         } catch (IOException ex) {

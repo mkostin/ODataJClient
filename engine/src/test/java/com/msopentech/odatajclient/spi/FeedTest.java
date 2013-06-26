@@ -96,7 +96,7 @@ public class FeedTest extends AbstractTest {
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final InputStream is = req.rowExecute();
+        final InputStream is = req.rawExecute();
 
         final FeedResource feed =
                 SerializationUtils.deserializeFeed(is, ResourceFactory.feedClassForFormat(format));

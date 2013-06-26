@@ -23,7 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * OData request factory class.
  */
-public class ODataRetrieveRequestFactory {
+public final class ODataRetrieveRequestFactory {
+
+    private ODataRetrieveRequestFactory() {
+        // Empty private constructor for static utility classes
+    }
 
     /**
      * Gets a document service request instance.
@@ -45,7 +49,7 @@ public class ODataRetrieveRequestFactory {
      * @return new ODataMetadataRequest instance.
      */
     public static ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
-        ODataMetadataRequest request =
+        final ODataMetadataRequest request =
                 new ODataMetadataRequest(new ODataURIBuilder(serviceRoot).appendMetadataSegment().build());
         request.setContentType(MediaType.APPLICATION_XML);
         return request;
@@ -112,10 +116,10 @@ public class ODataRetrieveRequestFactory {
     }
 
     /**
-     * Implements a row request returning a stream.
+     * Implements a raw request returning a stream.
      *
      * @param query query to be performed.
-     * @return new ODataRowRetrieveRequest instance.
+     * @return new ODataRawRetrieveRequest instance.
      */
     public static ODataRawRequest getRawRetrieveRequest(final URI uri) {
         return new ODataRawRequest(uri);

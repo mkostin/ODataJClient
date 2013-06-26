@@ -29,6 +29,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,12 +42,16 @@ import org.w3c.dom.NodeList;
  * <p>
  * This class provides method helpers to de-serialize an entire feed, a set of entities and a single entity as well.
  */
-public class ODataReader {
+public final class ODataReader {
 
     /**
      * Logger.
      */
-    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataReader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ODataReader.class);
+
+    private ODataReader() {
+        // Empty private constructor for static utility classes
+    }
 
     /**
      * De-Serializes a stream into an OData feed.
@@ -81,17 +86,7 @@ public class ODataReader {
      * @return OData entity property de-serialized.
      */
     public static ODataProperty deserializeProperty(final InputStream input, final ODataPropertyFormat format) {
-        try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder builder = factory.newDocumentBuilder();
-            return ODataBinder.newProperty(builder.parse(input).getDocumentElement());
-        } catch (ParserConfigurationException e) {
-            LOG.error("Error parsing input stream", e);
-            throw new IllegalArgumentException(e);
-        } catch (Exception e) {
-            LOG.error("Error deserializing property", e);
-            throw new IllegalArgumentException(e);
-        }
+        return ODataBinder.newProperty(SerializationUtils.deserializeProperty(input, format));
     }
 
     /**
@@ -102,12 +97,8 @@ public class ODataReader {
      * @return List of URIs.
      */
     public static List<URI> deserializeLinks(final InputStream input, final ODataPropertyFormat format) {
-        switch (format) {
-            case XML:
-                return deserializeLinksAsXML(input);
-            default:
-                return null;
-        }
+        return format == ODataPropertyFormat.XML
+                ? deserializeLinksAsXML(input) : null;
     }
 
     private static List<URI> deserializeLinksAsXML(final InputStream input) {
@@ -116,7 +107,7 @@ public class ODataReader {
             final DocumentBuilder builder = factory.newDocumentBuilder();
 
             final Document doc = builder.parse(input);
-            NodeList uris = doc.getElementsByTagName("uri");
+            final NodeList uris = doc.getElementsByTagName("uri");
 
             final List<URI> links = new ArrayList<URI>();
             for (int i = 0; i < uris.getLength(); i++) {
@@ -141,12 +132,10 @@ public class ODataReader {
      */
     public static ODataDocumentService deserializeDocumentService(
             final InputStream input, final ODataDocumentServiceFormat format) {
-        switch (format) {
-            case XML:
-                return deserializeDocumentServiceAsXML(input);
-            default:
-                return null;
-        }
+
+        return format == ODataDocumentServiceFormat.XML
+                ? deserializeDocumentServiceAsXML(input)
+                : null;
     }
 
     private static ODataDocumentService deserializeDocumentServiceAsXML(final InputStream input) {
@@ -166,7 +155,7 @@ public class ODataReader {
 
             final NodeList collections = service.getElementsByTagName(ODataConstants.ELEM_COLLECTION);
 
-            ODataDocumentService res = new ODataDocumentService();
+            final ODataDocumentService res = new ODataDocumentService();
 
             for (int i = 0; i < collections.getLength(); i++) {
                 final Element collection = (Element) collections.item(i);

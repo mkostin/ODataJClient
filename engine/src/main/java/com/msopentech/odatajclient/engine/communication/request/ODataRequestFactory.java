@@ -53,7 +53,11 @@ import java.util.Map;
 /**
  * OData request factory class.
  */
-public class ODataRequestFactory {
+public final class ODataRequestFactory {
+
+    private ODataRequestFactory() {
+        // Empty private constructor for static utility classes
+    }
 
     /**
      * Gets a create request object instance.
@@ -77,6 +81,7 @@ public class ODataRequestFactory {
      */
     public static ODataEntityUpdateRequest getEntityUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataEntity changes) {
+
         return ODataCUDRequestFactory.getEntityUpdateRequest(targetURI, type, changes);
     }
 
@@ -89,7 +94,9 @@ public class ODataRequestFactory {
      * @param entity entity blob to be created.
      * @return new ODataMediaEntityCreateRequest instance.
      */
-    public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(final URI targetURI, final InputStream media) {
+    public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(final URI targetURI,
+            final InputStream media) {
+
         return ODataCUDRequestFactory.getMediaEntityCreateRequest(targetURI, media);
     }
 
@@ -102,7 +109,9 @@ public class ODataRequestFactory {
      * @param entity entity blob to be updated.
      * @return new ODataMediaEntityUpdateRequest instance.
      */
-    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(final URI editURI, final InputStream media) {
+    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(final URI editURI, 
+            final InputStream media) {
+        
         return ODataCUDRequestFactory.getMediaEntityUpdateRequest(editURI, media);
     }
 
@@ -158,6 +167,7 @@ public class ODataRequestFactory {
      */
     public static ODataPropertyUpdateRequest getComplexUpdateRequest(
             final URI targetURI, final ODataComplexValue value) {
+        
         return ODataCUDRequestFactory.getComplexUpdateRequest(targetURI, value);
     }
 
@@ -173,6 +183,7 @@ public class ODataRequestFactory {
      */
     public static ODataPropertyUpdateRequest getPrimitiveUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataPrimitiveValue value) {
+        
         return ODataCUDRequestFactory.getPrimitiveUpdateRequest(targetURI, type, value);
     }
 
@@ -188,6 +199,7 @@ public class ODataRequestFactory {
      */
     public static ODataPropertyUpdateRequest getCollectionUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataCollectionValue value) {
+        
         return ODataCUDRequestFactory.getCollectionUpdateRequest(targetURI, type, value);
     }
 
@@ -251,7 +263,7 @@ public class ODataRequestFactory {
      * @param parameters required input parameters.
      * @return new ODataInvokeRequest instance.
      */
-    public static ODataInvokeRequest getInvokeActionRequest(final URI uri, Map<String, ODataValue> parameters) {
+    public static ODataInvokeRequest getInvokeActionRequest(final URI uri, final Map<String, ODataValue> parameters) {
         return ODataInvokeRequestFactory.getInvokeActionRequest(uri, parameters);
     }
 
@@ -363,7 +375,7 @@ public class ODataRequestFactory {
      * Implements a raw request returning a stream.
      *
      * @param query query to be performed.
-     * @return new ODataRowRetrieveRequest instance.
+     * @return new ODataRawRetrieveRequest instance.
      */
     public static ODataRawRequest getRawRetrieveRequest(final URI uri) {
         return ODataRetrieveRequestFactory.getRawRetrieveRequest(uri);

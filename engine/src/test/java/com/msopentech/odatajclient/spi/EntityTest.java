@@ -68,12 +68,12 @@ public class EntityTest extends AbstractTest {
         ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
-        InputStream is = req.rowExecute();
+        InputStream input = req.rawExecute();
 
-        EntryResource entry = SerializationUtils.deserializeEntry(is, ResourceFactory.entryClassForFormat(format));
+        EntryResource entry = SerializationUtils.deserializeEntry(input, ResourceFactory.entryClassForFormat(format));
         assertNotNull(entry);
 
-        is.close();
+        input.close();
 
         debugEntry(entry, "Just read");
         // ---------------------------------------------
@@ -88,12 +88,12 @@ public class EntityTest extends AbstractTest {
         req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
-        is = req.rowExecute();
+        input = req.rawExecute();
 
-        entry = SerializationUtils.deserializeEntry(is, ResourceFactory.entryClassForFormat(format));
+        entry = SerializationUtils.deserializeEntry(input, ResourceFactory.entryClassForFormat(format));
         assertNotNull(entry);
 
-        is.close();
+        input.close();
 
         debugEntry(entry, "Just read");
         // ---------------------------------------------
@@ -112,7 +112,7 @@ public class EntityTest extends AbstractTest {
         for (int i = 0; i < content.getChildNodes().getLength(); i++) {
             entered = true;
 
-            Node property = content.getChildNodes().item(i);
+            final Node property = content.getChildNodes().item(i);
             if ("PrimaryContactInfo".equals(property.getLocalName())) {
                 checked = true;
 
@@ -127,12 +127,12 @@ public class EntityTest extends AbstractTest {
     }
 
     @Test
-    public void readAtomEntry() throws Exception {
+    public void readAtomEntry() throws IOException {
         readEntry(ODataFormat.ATOM);
     }
 
     @Test
-    public void readJSONEntry() throws Exception {
+    public void readJSONEntry() throws IOException {
         readEntry(ODataFormat.JSON);
     }
 
@@ -354,13 +354,13 @@ public class EntityTest extends AbstractTest {
     private ODataEntity createWithNavigationLink(final ODataFormat format, final int id) {
         final String sampleName = "Sample customer";
 
-        ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
+        final ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
         original.addLink(ODataFactory.newEntityNavigationLink(
                 "Info", URI.create(testODataServiceRootURL + "/CustomerInfo(12)")));
 
-        ODataEntity created = createODataEntity(format, original);
+        final ODataEntity created = createODataEntity(format, original);
         // now, compare the created one with the actula one and go deeply into the associated customer info.....
-        ODataEntity actual = compareEntities(format, created, id, null);
+        final ODataEntity actual = compareEntities(format, created, id, null);
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer(" + id + ")").appendEntityTypeSegment("Info");
@@ -392,11 +392,10 @@ public class EntityTest extends AbstractTest {
     public void createODataEntityAsAtom() {
         final ODataFormat format = ODataFormat.ATOM;
         final int id = 1;
-        final String sampleName = "Sample customer";
-        final ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
         createODataEntity(format, original);
-        ODataEntity actual = compareEntities(format, original, id, null);
+        final ODataEntity actual = compareEntities(format, original, id, null);
 
         clean(format, actual, false);
     }
@@ -405,11 +404,10 @@ public class EntityTest extends AbstractTest {
     public void createODataEntityAsJSON() {
         final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
         final int id = 2;
-        final String sampleName = "Sample customer";
-        final ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
         createODataEntity(format, original);
-        ODataEntity actual = compareEntities(format, original, id, null);
+        final ODataEntity actual = compareEntities(format, original, id, null);
 
         clean(format, actual, false);
     }
@@ -418,11 +416,10 @@ public class EntityTest extends AbstractTest {
     public void createWithInlineAsAtom() {
         final ODataFormat format = ODataFormat.ATOM;
         final int id = 3;
-        final String sampleName = "Sample customer";
-        final ODataEntity original = getSampleCustomerProfile(id, sampleName, true);
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
         createODataEntity(format, original);
-        ODataEntity actual = compareEntities(format, original, id, Collections.<String>singleton("Info"));
+        final ODataEntity actual = compareEntities(format, original, id, Collections.<String>singleton("Info"));
 
         clean(format, actual, true);
     }
@@ -432,11 +429,10 @@ public class EntityTest extends AbstractTest {
         // this needs to be full, otherwise there is no mean to recognize links
         final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
         final int id = 4;
-        final String sampleName = "Sample customer";
-        final ODataEntity original = getSampleCustomerProfile(id, sampleName, true);
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
         createODataEntity(format, original);
-        ODataEntity actual = compareEntities(format, original, id, Collections.<String>singleton("Info"));
+        final ODataEntity actual = compareEntities(format, original, id, Collections.<String>singleton("Info"));
 
         clean(format, actual, true);
     }
@@ -444,7 +440,7 @@ public class EntityTest extends AbstractTest {
     @Test
     public void createWithNavigationAsAtom() {
         final ODataFormat format = ODataFormat.ATOM;
-        ODataEntity actual = createWithNavigationLink(format, 5);
+        final ODataEntity actual = createWithNavigationLink(format, 5);
         clean(format, actual, false);
     }
 
@@ -453,7 +449,7 @@ public class EntityTest extends AbstractTest {
     public void createWithNavigationAsJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
         final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
-        ODataEntity actual = createWithNavigationLink(format, 6);
+        final ODataEntity actual = createWithNavigationLink(format, 6);
         clean(format, actual, false);
     }
 }

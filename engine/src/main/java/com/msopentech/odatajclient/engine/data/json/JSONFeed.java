@@ -40,6 +40,7 @@ public class JSONFeed extends AbstractJSONObject implements FeedResource {
     private List<JSONEntry> entries;
 
     public JSONFeed() {
+        super();
         entries = new ArrayList<JSONEntry>();
     }
 
@@ -47,7 +48,7 @@ public class JSONFeed extends AbstractJSONObject implements FeedResource {
         return metadata;
     }
 
-    public void setMetadata(URI metadata) {
+    public void setMetadata(final URI metadata) {
         this.metadata = metadata;
     }
 
@@ -58,7 +59,7 @@ public class JSONFeed extends AbstractJSONObject implements FeedResource {
 
     @JsonIgnore
     @Override
-    public void setEntries(List<EntryResource> entries) {
+    public void setEntries(final List<EntryResource> entries) {
         this.entries.clear();
         for (EntryResource entry : entries) {
             if (entry instanceof JSONEntry) {
@@ -68,7 +69,7 @@ public class JSONFeed extends AbstractJSONObject implements FeedResource {
     }
 
     @Override
-    public boolean setNext(LinkResource next) {
+    public boolean setNext(final LinkResource next) {
         return false;
     }
 

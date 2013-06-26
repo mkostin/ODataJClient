@@ -240,9 +240,9 @@ public interface ODataRequest {
     byte[] toByteArray();
 
     /**
-     * Request row execute.
+     * Request raw execute.
      *
-     * @return row input stream response.
+     * @return raw input stream response.
      */
-    InputStream rowExecute();
+    InputStream rawExecute();
 }

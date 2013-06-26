@@ -93,11 +93,10 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      * @param req destination batch request.
      */
     public void batch(final ODataBatchRequest req) {
-
         try {
-            req.rowAppend(toByteArray());
-            req.rowAppend(ODataStreamer.CRLF);
-            req.rowAppend(getPayload());
+            req.rawAppend(toByteArray());
+            req.rawAppend(ODataStreamer.CRLF);
+            req.rawAppend(getPayload());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

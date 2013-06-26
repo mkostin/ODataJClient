@@ -18,7 +18,11 @@ package com.msopentech.odatajclient.engine.data.json;
 /**
  * Set of some useful JSON constants.
  */
-public class JSONConstants {
+final class JSONConstants {
+
+    private JSONConstants() {
+        // Empty private constructor for static utility classes
+    }
 
     public final static String METADATA = "odata.metadata";
 
@@ -43,5 +47,7 @@ public class JSONConstants {
     public final static String ASSOCIATION_LINK_SUFFIX = "@odata.associationLinkUrl";
 
     public final static String MEDIAEDIT_LINK_SUFFIX = "@odata.mediaEditLink";
+
+    public final static String VALUE = "value";
 
 }

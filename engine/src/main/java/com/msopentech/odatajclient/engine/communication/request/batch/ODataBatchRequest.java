@@ -74,12 +74,12 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
         return getPayload().getBodyStreamWriter();
     }
 
-    public ODataBatchRequest rowAppend(final byte[] toBeStreamed) throws IOException {
+    public ODataBatchRequest rawAppend(final byte[] toBeStreamed) throws IOException {
         getPayload().getBodyStreamWriter().write(toBeStreamed);
         return this;
     }
 
-    public ODataBatchRequest rowAppend(final byte[] toBeStreamed, int off, int len) throws IOException {
+    public ODataBatchRequest rawAppend(final byte[] toBeStreamed, int off, int len) throws IOException {
         getPayload().getBodyStreamWriter().write(toBeStreamed, off, len);
         return this;
     }

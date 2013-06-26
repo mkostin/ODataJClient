@@ -33,7 +33,7 @@ public class MetadataTest extends AbstractTest {
     public void retrieveAndParseEdmTypes() throws Exception {
         final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(testODataServiceRootURL);
 
-        final EdmMetadata metadata = new EdmMetadata(req.rowExecute());
+        final EdmMetadata metadata = new EdmMetadata(req.rawExecute());
         assertNotNull(metadata);
 
         final EdmType orderCollection =

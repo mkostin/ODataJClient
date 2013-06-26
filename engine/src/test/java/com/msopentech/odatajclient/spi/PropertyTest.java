@@ -29,7 +29,6 @@ import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import com.msopentech.odatajclient.engine.types.ODataValueFormat;
 import java.io.IOException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -41,10 +40,10 @@ public class PropertyTest extends AbstractTest {
      * @see PrimitiveValueTest
      */
     private void readPrimitiveProperty(final ODataPropertyFormat format) throws IOException {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-10)").appendStructuralSegment("CustomerId");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("CustomerId");
 
-        ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         req.setFormat(format);
 
         final ODataQueryResponse<ODataProperty> res = req.execute();
@@ -59,10 +58,10 @@ public class PropertyTest extends AbstractTest {
     }
 
     private void readComplexProperty(final ODataPropertyFormat format) throws IOException {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-10)").appendStructuralSegment("PrimaryContactInfo");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("PrimaryContactInfo");
 
-        ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         req.setFormat(format);
 
         final ODataQueryResponse<ODataProperty> res = req.execute();
@@ -77,10 +76,10 @@ public class PropertyTest extends AbstractTest {
     }
 
     private void readCollectionProperty(final ODataPropertyFormat format) throws IOException {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-10)").appendStructuralSegment("BackupContactInfo");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("BackupContactInfo");
 
-        ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         req.setFormat(format);
 
         final ODataQueryResponse<ODataProperty> res = req.execute();
@@ -95,45 +94,42 @@ public class PropertyTest extends AbstractTest {
     }
 
     @Test
-    public void readXmlCollectionProperty() throws Exception {
+    public void readXmlCollectionProperty() throws IOException {
         readCollectionProperty(ODataPropertyFormat.XML);
     }
 
     @Test
-    @Ignore
-    public void readJSONCollectionProperty() throws Exception {
+    public void readJSONCollectionProperty() throws IOException {
         readCollectionProperty(ODataPropertyFormat.JSON);
     }
 
     @Test
-    public void readXmlComplexProperty() throws Exception {
+    public void readXmlComplexProperty() throws IOException {
         readComplexProperty(ODataPropertyFormat.XML);
     }
 
     @Test
-    @Ignore
-    public void readJSONComplexProperty() throws Exception {
+    public void readJSONComplexProperty() throws IOException {
         readComplexProperty(ODataPropertyFormat.JSON);
     }
 
     @Test
-    public void readXmlPrimitiveProperty() throws Exception {
+    public void readXmlPrimitiveProperty() throws IOException {
         readPrimitiveProperty(ODataPropertyFormat.XML);
     }
 
     @Test
-    @Ignore
-    public void readJSONPrimitiveProperty() throws Exception {
+    public void readJSONPrimitiveProperty() throws IOException {
         readPrimitiveProperty(ODataPropertyFormat.JSON);
     }
 
     @Test
     public void readPropertyValue() throws IOException {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-10)").appendStructuralSegment("CustomerId").
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("CustomerId").
                 appendValueSegment("$value");
 
-        ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
         req.setFormat(ODataValueFormat.TEXT);
 
         final ODataQueryResponse<ODataValue> res = req.execute();
@@ -148,10 +144,10 @@ public class PropertyTest extends AbstractTest {
 
     @Test
     public void readCountValue() throws IOException {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer").appendValueSegment("$count");
 
-        ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
         req.setFormat(ODataValueFormat.TEXT);
 
         final ODataQueryResponse<ODataValue> res = req.execute();

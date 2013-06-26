@@ -169,7 +169,7 @@ public class ODataRequestImpl implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
-    public void setContentType(String value) {
+    public void setContentType(final String value) {
         header.setHeader(ODataHeader.HeaderName.contentType, value);
     }
 
@@ -177,7 +177,7 @@ public class ODataRequestImpl implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
-    public void setDataServiceVersion(String value) {
+    public void setDataServiceVersion(final String value) {
         header.setHeader(ODataHeader.HeaderName.dataServiceVersion, value);
     }
 
@@ -242,8 +242,8 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getContentType() {
-        final String ct = header.getHeader(ODataHeader.HeaderName.contentType);
-        return StringUtils.isBlank(ct) ? ODataFormat.JSON.toString() : ct;
+        final String contentTypeHead = header.getHeader(ODataHeader.HeaderName.contentType);
+        return StringUtils.isBlank(contentTypeHead) ? ODataFormat.JSON.toString() : contentTypeHead;
     }
 
     /**
@@ -276,31 +276,31 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public byte[] toByteArray() {
-        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             final StringBuilder request = new StringBuilder();
             request.append(getMethod().toString()).append(" ").append(uri.toString()).append(" ").append("HTTP/1.1");
 
-            os.write(request.toString().getBytes());
+            baos.write(request.toString().getBytes());
 
-            os.write(ODataStreamer.CRLF);
+            baos.write(ODataStreamer.CRLF);
 
             for (String name : getHeaderNames()) {
                 final String value = getHeader(name);
 
                 if (StringUtils.isNotBlank(value)) {
-                    os.write((name + ": " + value).getBytes());
-                    os.write(ODataStreamer.CRLF);
+                    baos.write((name + ": " + value).getBytes());
+                    baos.write(ODataStreamer.CRLF);
                 }
             }
 
-            return os.toByteArray();
+            return baos.toByteArray();
 
         } catch (IOException e) {
             throw new IllegalStateException(e);
         } finally {
             try {
-                os.close();
+                baos.close();
             } catch (IOException ignore) {
                 // ignore
             }
@@ -311,7 +311,7 @@ public class ODataRequestImpl implements ODataRequest {
      * {@inheritDoc }
      */
     @Override
-    public InputStream rowExecute() {
+    public InputStream rawExecute() {
         return client.accept(getContentType()).get(InputStream.class);
     }
 }

@@ -93,4 +93,6 @@ public class ODataConstants {
 
     public static final String ELEM_POS = PREFIX_GML + "pos";
 
+    public static final String ELEM_PROPERTY = "property";
+
 }
