@@ -89,6 +89,32 @@ public final class SerializationUtils {
         }
     }
 
+    public static void serializeProperty(
+            final Element element, final ODataPropertyFormat format, final OutputStream out) {
+        serializeProperty(element, format, new OutputStreamWriter(out));
+    }
+
+    public static void serializeProperty(final Element element, final ODataPropertyFormat format, final Writer writer) {
+        switch (format) {
+            case XML:
+                serializeDOMElement(element, writer);
+                break;
+            default:
+                serializeJSONProperty(element, writer);
+        }
+    }
+
+    private static void serializeJSONProperty(final Element element, final Writer writer) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            JSONProperty property = new JSONProperty();
+            property.setContent(element);
+            mapper.writeValue(writer, property);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("While serializing JSON object", e);
+        }
+    }
+
     public static void serializeDOMElement(final Element content, final OutputStream out) {
         serializeDOMElement(content, new OutputStreamWriter(out));
     }

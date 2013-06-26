@@ -16,11 +16,10 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
-import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
+import com.msopentech.odatajclient.engine.data.ODataProperty;
 import java.io.InputStream;
 import java.net.URI;
 
@@ -114,12 +113,12 @@ public class ODataCUDRequestFactory {
      * Use this kind of request to update a complex property value
      *
      * @param targetURI entity set or entity or entity property URI.
-     * @param value value to be update.
+     * @param property value to be update.
      * @return new ODataCreatePrimitiveRequest instance.
      */
     public static ODataPropertyUpdateRequest getComplexUpdateRequest(
-            final URI targetURI, final ODataComplexValue value) {
-        return new ODataPropertyUpdateRequest(targetURI, UpdateType.REPLACE, value);
+            final URI targetURI, final UpdateType type, final ODataProperty property) {
+        return new ODataPropertyUpdateRequest(targetURI, type, property);
     }
 
     /**
@@ -129,12 +128,12 @@ public class ODataCUDRequestFactory {
      *
      * @param targetURI entity set or entity or entity property URI.
      * @param type type of update to be performed.
-     * @param value value to be update.
+     * @param property value to be update.
      * @return new ODataCreatePrimitiveRequest instance.
      */
     public static ODataPropertyUpdateRequest getPrimitiveUpdateRequest(
-            final URI targetURI, final UpdateType type, final ODataPrimitiveValue value) {
-        return new ODataPropertyUpdateRequest(targetURI, type, value);
+            final URI targetURI, final UpdateType type, final ODataProperty property) {
+        return new ODataPropertyUpdateRequest(targetURI, type, property);
     }
 
     /**
@@ -144,12 +143,12 @@ public class ODataCUDRequestFactory {
      *
      * @param targetURI entity set or entity or entity property URI.
      * @param type type of update to be performed.
-     * @param value value to be update.
+     * @param property value to be update.
      * @return new ODataCreatePrimitiveRequest instance.
      */
     public static ODataPropertyUpdateRequest getCollectionUpdateRequest(
-            final URI targetURI, final UpdateType type, final ODataCollectionValue value) {
-        return new ODataPropertyUpdateRequest(targetURI, type, value);
+            final URI targetURI, final UpdateType type, final ODataProperty property) {
+        return new ODataPropertyUpdateRequest(targetURI, type, property);
     }
 
     /**

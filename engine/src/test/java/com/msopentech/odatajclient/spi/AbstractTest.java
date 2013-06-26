@@ -302,7 +302,7 @@ public abstract class AbstractTest {
         }
     }
 
-    protected void debugInputStream(final InputStream is) {
+    protected void debugInputStream(final InputStream is, final String message) {
         if (LOG.isDebugEnabled()) {
             try {
                 final byte[] buffer = new byte[1024];
@@ -314,7 +314,7 @@ public abstract class AbstractTest {
                     builder.append(new String(buffer, 0, length));
                 }
 
-                LOG.debug(builder.toString());
+                LOG.debug(message + "\n{}", builder.toString());
             } catch (IOException e) {
                 LOG.error("Error writing stream", e);
             } finally {

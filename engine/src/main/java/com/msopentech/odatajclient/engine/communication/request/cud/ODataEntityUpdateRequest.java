@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import javax.ws.rs.core.Response;
+import org.apache.cxf.jaxrs.client.WebClient;
 
 /**
  * This class implements an OData update request.
@@ -75,11 +76,9 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
         final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
         client.accept(getAccept()).type(getContentType());
-        client.header("X-HTTP-Method", getMethod().name());
-//        WebClient.getConfig(client).getRequestContext().put("use.async.http.conduit", true);
-
-//        final Response res = client.invoke(getMethod().name(), bais);
-        final Response res = client.post(bais);
+        WebClient.getConfig(client).getRequestContext().put("use.async.http.conduit", true);
+        
+        final Response res = client.invoke(getMethod().name(), bais);
 
         try {
             baos.flush();
