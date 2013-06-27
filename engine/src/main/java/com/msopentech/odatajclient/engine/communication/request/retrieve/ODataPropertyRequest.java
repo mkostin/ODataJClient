@@ -48,14 +48,14 @@ public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty, OData
     @Override
     public ODataQueryResponse<ODataProperty> execute() {
         final HttpResponse res = doExecute();
-        return new ODataEntitySetResponseImpl(client, res);
+        return new ODataPropertyResponseImpl(client, res);
     }
 
-    protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
+    protected class ODataPropertyResponseImpl extends ODataQueryResponseImpl {
 
         private ODataProperty property = null;
 
-        private ODataEntitySetResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataPropertyResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

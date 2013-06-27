@@ -24,11 +24,13 @@ import static org.junit.Assert.assertTrue;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataValueUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
@@ -43,6 +45,11 @@ import org.junit.Test;
  * This is the unit test class to check basic entity operations.
  */
 public class PropertyTest extends AbstractTest {
+
+    @Test
+    public void replacePropertyValue() throws IOException {
+        updatePropertyValue(ODataValueFormat.TEXT, UpdateType.REPLACE);
+    }
 
     @Test
     public void replacePrimitivePropertyAsXML() throws IOException {
@@ -92,6 +99,114 @@ public class PropertyTest extends AbstractTest {
     @Test
     public void mergeComplexPropertyAsJSON() throws IOException {
         updateComplexProperty(ODataPropertyFormat.JSON_FULL_METADATA, UpdateType.MERGE);
+    }
+
+    @Test
+    public void readXmlCollectionProperty() throws IOException {
+        readCollectionProperty(ODataPropertyFormat.XML);
+    }
+
+    @Test
+    public void readJSONCollectionProperty() throws IOException {
+        readCollectionProperty(ODataPropertyFormat.JSON);
+    }
+
+    @Test
+    public void readXmlComplexProperty() throws IOException {
+        readComplexProperty(ODataPropertyFormat.XML);
+    }
+
+    @Test
+    public void readJSONComplexProperty() throws IOException {
+        readComplexProperty(ODataPropertyFormat.JSON);
+    }
+
+    @Test
+    public void readXmlPrimitiveProperty() throws IOException {
+        readPrimitiveProperty(ODataPropertyFormat.XML);
+    }
+
+    @Test
+    public void readJSONPrimitiveProperty() throws IOException {
+        readPrimitiveProperty(ODataPropertyFormat.JSON);
+    }
+
+    @Test
+    public void readPropertyValue() throws IOException {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("CustomerId").appendValueSegment();
+
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+
+        final ODataQueryResponse<ODataValue> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+
+        final ODataValue value = res.getBody();
+        debugODataValue(value, "Retrieved property");
+
+        assertNotNull(value);
+        assertEquals("-10", value.toString());
+    }
+
+    @Test
+    public void readCountValue() throws IOException {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer").appendCountSegment();
+
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+
+        final ODataQueryResponse<ODataValue> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+
+        final ODataValue value = res.getBody();
+        debugODataValue(value, "Retrieved property");
+
+        assertNotNull(value);
+        // the following assert depends on the test execution order (use >= to be sure)
+        assertTrue(Integer.valueOf(value.toString()) >= 10);
+    }
+
+    private void updatePropertyValue(final ODataValueFormat format, final UpdateType type) throws IOException {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer(-9)").
+                appendStructuralSegment("PrimaryContactInfo").
+                appendStructuralSegment("HomePhone").appendStructuralSegment("PhoneNumber").appendValueSegment();
+
+        ODataValueRequest retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        retrieveReq.setFormat(format);
+
+        ODataQueryResponse<ODataValue> retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
+
+        ODataValue phoneNumber = retrieveRes.getBody();
+        assertNotNull(phoneNumber);
+
+        final String oldMsg = phoneNumber.asPrimitive().<String>toCastValue();
+        final String newMsg = "new msg (" + System.currentTimeMillis() + ")";
+
+        assertNotEquals(newMsg, oldMsg);
+
+        ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setText(newMsg).build();
+
+        final ODataValueUpdateRequest updateReq =
+                ODataRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
+        updateReq.setFormat(format);
+
+        ODataValueUpdateResponse updateRes = updateReq.execute();
+        assertEquals(204, updateRes.getStatusCode());
+
+        retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        retrieveReq.setFormat(format);
+
+        retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
+
+        phoneNumber = retrieveRes.getBody();
+        assertNotNull(phoneNumber);
+
+        assertEquals(newMsg, phoneNumber.asPrimitive().<String>toCastValue());
     }
 
     private void updateComplexProperty(final ODataPropertyFormat format, final UpdateType type) throws IOException {
@@ -212,74 +327,6 @@ public class PropertyTest extends AbstractTest {
 
         phoneNumber = retrieveRes.getBody();
         assertEquals(newMsg, phoneNumber.getPrimitiveValue().<String>toCastValue());
-    }
-
-    @Test
-    public void readXmlCollectionProperty() throws IOException {
-        readCollectionProperty(ODataPropertyFormat.XML);
-    }
-
-    @Test
-    public void readJSONCollectionProperty() throws IOException {
-        readCollectionProperty(ODataPropertyFormat.JSON);
-    }
-
-    @Test
-    public void readXmlComplexProperty() throws IOException {
-        readComplexProperty(ODataPropertyFormat.XML);
-    }
-
-    @Test
-    public void readJSONComplexProperty() throws IOException {
-        readComplexProperty(ODataPropertyFormat.JSON);
-    }
-
-    @Test
-    public void readXmlPrimitiveProperty() throws IOException {
-        readPrimitiveProperty(ODataPropertyFormat.XML);
-    }
-
-    @Test
-    public void readJSONPrimitiveProperty() throws IOException {
-        readPrimitiveProperty(ODataPropertyFormat.JSON);
-    }
-
-    @Test
-    public void readPropertyValue() throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("CustomerId").
-                appendValueSegment("$value");
-
-        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-        req.setFormat(ODataValueFormat.TEXT);
-
-        final ODataQueryResponse<ODataValue> res = req.execute();
-        assertEquals(200, res.getStatusCode());
-
-        final ODataValue value = res.getBody();
-        debugODataValue(value, "Retrieved property");
-
-        assertNotNull(value);
-        assertEquals("-10", value.toString());
-    }
-
-    @Test
-    public void readCountValue() throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer").appendValueSegment("$count");
-
-        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-        req.setFormat(ODataValueFormat.TEXT);
-
-        final ODataQueryResponse<ODataValue> res = req.execute();
-        assertEquals(200, res.getStatusCode());
-
-        final ODataValue value = res.getBody();
-        debugODataValue(value, "Retrieved property");
-
-        assertNotNull(value);
-        // the following assert depends on the test execution order (use >= to be sure)
-        assertTrue(Integer.valueOf(value.toString()) >= 10);
     }
 
     /**

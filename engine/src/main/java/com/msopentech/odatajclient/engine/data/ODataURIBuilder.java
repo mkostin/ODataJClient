@@ -258,11 +258,20 @@ public class ODataURIBuilder implements Serializable {
     /**
      * Append value segment to the URI.
      *
-     * @param segmentValue segment value.
      * @return current ODataURI object.
      */
-    public ODataURIBuilder appendValueSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.VALUE, segmentValue));
+    public ODataURIBuilder appendValueSegment() {
+        segments.add(new Segment(SegmentType.VALUE, "$value"));
+        return this;
+    }
+
+    /**
+     * Append count segment to the URI.
+     *
+     * @return current ODataURI object.
+     */
+    public ODataURIBuilder appendCountSegment() {
+        segments.add(new Segment(SegmentType.VALUE, "$count"));
         return this;
     }
 
