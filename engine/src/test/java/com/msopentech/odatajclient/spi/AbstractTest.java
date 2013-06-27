@@ -191,7 +191,8 @@ public abstract class AbstractTest {
     }
 
     protected ODataEntity getSampleCustomerInfo(final int id, final String sampleinfo) {
-        final ODataEntity entity = ODataFactory.newEntity("CustomerInfo");
+        final ODataEntity entity = 
+                ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.CustomerInfo");
         entity.setMediaEntity(true);
 
         final ODataPrimitiveValue informationValue = new ODataPrimitiveValue.Builder().
@@ -205,7 +206,8 @@ public abstract class AbstractTest {
     protected ODataEntity getSampleCustomerProfile(
             final int id, final String sampleName, final boolean withInlineInfo) {
 
-        final ODataEntity entity = ODataFactory.newEntity("Customer");
+        final ODataEntity entity = 
+                ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
 
         // add name attribute
         final ODataPrimitiveValue nameValue = new ODataPrimitiveValue.Builder().

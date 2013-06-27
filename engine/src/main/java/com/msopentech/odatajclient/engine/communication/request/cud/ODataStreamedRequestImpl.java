@@ -15,8 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.client.http.HttpClientException;
-import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
@@ -95,19 +93,8 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     public T execute() {
         payload = getPayload();
 
-        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
-        request.setHeader(ODataHeader.HeaderName.contentType.toString(), getContentType());
-
         ((HttpPut) request).setEntity(new InputStreamEntity(payload.getBody(), -1));
-
-        try {
-            res = client.execute(request);
-        } catch (IOException e) {
-            throw new HttpClientException(e);
-        } catch (RuntimeException e) {
-            this.request.abort();
-            throw new HttpClientException(e);
-        }
+        res = doExecute();
 
         // return the payload object
         return (T) payload;

@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
-import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
@@ -67,19 +66,12 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     public ODataEntityCreateResponse execute() {
-        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
-        request.setHeader(ODataHeader.HeaderName.contentType.toString(), getContentType());
-
         final InputStream input = ODataWriter.writeEntity(entity, ODataFormat.valueOf(getFormat()));
         ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
+
         try {
-            final HttpResponse res = client.execute(request);
+            final HttpResponse res = doExecute();
             return new ODataEntityCreateResponseImpl(client, res);
-        } catch (IOException e) {
-            throw new HttpClientException(e);
-        } catch (RuntimeException e) {
-            this.request.abort();
-            throw new HttpClientException(e);
         } finally {
             IOUtils.closeQuietly(input);
         }

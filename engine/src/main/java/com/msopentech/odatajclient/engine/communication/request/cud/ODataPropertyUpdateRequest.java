@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
-import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
@@ -73,19 +72,12 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
 
     @Override
     public ODataPropertyUpdateResponse execute() {
-        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
-        request.setHeader(ODataHeader.HeaderName.contentType.toString(), getContentType());
-
         final InputStream input = ODataWriter.writeProperty(property, ODataPropertyFormat.valueOf(getFormat()));
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
+
         try {
-            final HttpResponse res = client.execute(request);
+            final HttpResponse res = doExecute();
             return new ODataPropertyUpdateResponseImpl(client, res);
-        } catch (IOException e) {
-            throw new HttpClientException(e);
-        } catch (RuntimeException e) {
-            this.request.abort();
-            throw new HttpClientException(e);
         } finally {
             IOUtils.closeQuietly(input);
         }

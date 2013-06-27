@@ -94,6 +94,7 @@ public final class ODataBinder {
     @SuppressWarnings("unchecked")
     public static <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference) {
         final T entry = ResourceFactory.newEntry(reference);
+        entry.setType(entity.getName());
 
         // -------------------------------------------------------------
         // Add edit and self link

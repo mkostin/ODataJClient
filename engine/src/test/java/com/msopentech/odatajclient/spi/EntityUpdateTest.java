@@ -32,7 +32,9 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import org.junit.Ignore;
+import java.net.URI;
+import java.util.Collection;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 /**
@@ -41,57 +43,70 @@ import org.junit.Test;
 public class EntityUpdateTest extends AbstractTest {
 
     @Test
-    @Ignore
     public void mergeODataEntityAsAtom() {
         final ODataFormat format = ODataFormat.ATOM;
-        final ODataEntity changes = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
-        changes.setEditLink(new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Car(14)").build());
-        updateCarEntity(format, changes, UpdateType.MERGE);
+        final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)").build();
+        final String etag = getETag(uri);
+        final ODataEntity merge = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
+        merge.setEditLink(uri);
+        updateEntityDescription(format, merge, UpdateType.MERGE, etag);
     }
 
     @Test
-    @Ignore
     public void mergeODataEntityAsJson() {
         final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
-        final ODataEntity changes = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
-        changes.setEditLink(new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Car(14)").build());
-        updateCarEntity(format, changes, UpdateType.MERGE);
+        final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)").build();
+        final String etag = getETag(uri);
+        final ODataEntity merge = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
+        merge.setEditLink(uri);
+        updateEntityDescription(format, merge, UpdateType.MERGE, etag);
     }
 
     @Test
-    @Ignore
     public void patchODataEntityAsAtom() {
         final ODataFormat format = ODataFormat.ATOM;
-        final ODataEntity changes = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
-        changes.setEditLink(new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Car(14)").build());
-        updateCarEntity(format, changes, UpdateType.PATCH);
+        final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)").build();
+        final String etag = getETag(uri);
+        final ODataEntity patch = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
+        patch.setEditLink(uri);
+        updateEntityDescription(format, patch, UpdateType.PATCH, etag);
     }
 
     @Test
-    @Ignore
     public void patchODataEntityAsJson() {
         final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
-        final ODataEntity changes = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
-        changes.setEditLink(new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Car(14)").build());
-        updateCarEntity(format, changes, UpdateType.PATCH);
+        final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)").build();
+        final String etag = getETag(uri);
+        final ODataEntity patch = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
+        patch.setEditLink(uri);
+        updateEntityDescription(format, patch, UpdateType.PATCH, etag);
     }
 
     @Test
     public void replaceODataEntityAsAtom() {
         final ODataFormat format = ODataFormat.ATOM;
         final ODataEntity changes = readODataEntity(format, "Car(14)");
-        updateCarEntity(format, changes, UpdateType.REPLACE);
+        updateEntityDescription(format, changes, UpdateType.REPLACE);
     }
 
     @Test
     public void replaceODataEntityAsJson() {
         final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
         final ODataEntity changes = readODataEntity(format, "Car(14)");
-        updateCarEntity(format, changes, UpdateType.REPLACE);
+        updateEntityDescription(format, changes, UpdateType.REPLACE);
     }
 
-    public void updateCarEntity(final ODataFormat format, final ODataEntity changes, final UpdateType type) {
-        final String newMsg = "New description(" + System.currentTimeMillis() + ")";
+    private void updateEntityDescription(final ODataFormat format, final ODataEntity changes, final UpdateType type) {
+        updateEntityDescription(format, changes, type, null);
+    }
+
+    private void updateEntityDescription(
+            final ODataFormat format, final ODataEntity changes, final UpdateType type, final String etag) {
+        final URI editLink = changes.getEditLink();
+        final String entityTypeSeg = editLink.toASCIIString().substring(
+                editLink.toASCIIString().lastIndexOf("/") + 1, editLink.toASCIIString().length());
+
+        final String newm = "New description(" + System.currentTimeMillis() + ")";
 
         ODataProperty description = null;
 
@@ -101,28 +116,29 @@ public class EntityUpdateTest extends AbstractTest {
             }
         }
 
-        final String oldMsg;
+        final String oldm;
         if (description == null) {
-            oldMsg = null;
+            oldm = null;
         } else {
-            oldMsg = description.getValue().toString();
+            oldm = description.getValue().toString();
             changes.removeProperty(description);
         }
 
-        assertNotEquals(newMsg, oldMsg);
+        assertNotEquals(newm, oldm);
 
-        changes.addProperty(
-                new ODataProperty("Description", new ODataPrimitiveValue.Builder().setText(newMsg).build()));
+        changes.addProperty(new ODataProperty("Description", new ODataPrimitiveValue.Builder().setText(newm).build()));
 
-        ODataEntityUpdateRequest req =
-                ODataRequestFactory.getEntityUpdateRequest(changes.getEditLink(), type, changes);
+        ODataEntityUpdateRequest req = ODataRequestFactory.getEntityUpdateRequest(editLink, type, changes);
         req.setFormat(format);
 
-        ODataEntityUpdateResponse res = req.execute();        
+        if (StringUtils.isNotBlank(etag)) {
+            req.setIfMatch(etag); // Product include ETag header into the response .....
+        }
+
+        ODataEntityUpdateResponse res = req.execute();
         assertEquals(204, res.getStatusCode());
 
-        final ODataEntity actual = readODataEntity(format, "Car(14)");
-        assertEquals(2, actual.getProperties().size());
+        final ODataEntity actual = readODataEntity(format, entityTypeSeg);
 
         description = null;
 
@@ -133,17 +149,7 @@ public class EntityUpdateTest extends AbstractTest {
         }
 
         assertNotNull(description);
-        assertEquals(newMsg, description.getValue().toString());
-
-        actual.removeProperty(description);
-        actual.addProperty(
-                new ODataProperty("Description", new ODataPrimitiveValue.Builder().setText(oldMsg).build()));
-
-        req = ODataRequestFactory.getEntityUpdateRequest(changes.getEditLink(), type, changes);
-        req.setFormat(format);
-
-        res = req.execute();
-        assertEquals(204, res.getStatusCode());
+        assertEquals(newm, description.getValue().toString());
     }
 
     private ODataEntity readODataEntity(final ODataFormat format, final String entitySegment) {
@@ -163,5 +169,14 @@ public class EntityUpdateTest extends AbstractTest {
         }
 
         return entity;
+    }
+
+    private String getETag(final URI uri) {
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uri);
+        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final Collection<String> etag = res.getHeader("ETag");
+        res.close();
+
+        return etag == null || etag.isEmpty() ? null : etag.iterator().next();
     }
 }

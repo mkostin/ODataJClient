@@ -15,15 +15,12 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
-import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -52,16 +49,8 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      */
     @Override
     public ODataDeleteResponse execute() {
-        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
-        try {
-            final HttpResponse res = client.execute(request);
-            return new ODataDeleteResponseImpl(client, res);
-        } catch (IOException e) {
-            throw new HttpClientException(e);
-        } catch (RuntimeException e) {
-            this.request.abort();
-            throw new HttpClientException(e);
-        }
+        final HttpResponse res = doExecute();
+        return new ODataDeleteResponseImpl(client, res);
     }
 
     /**

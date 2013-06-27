@@ -47,15 +47,8 @@ public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata, ODataFo
      */
     @Override
     public ODataQueryResponse<EdmMetadata> execute() {
-        try {
-            final HttpResponse res = client.execute(request);
-            return new ODataMetadataResponsImpl(client, res);
-        } catch (IOException e) {
-            throw new HttpClientException(e);
-        } catch (RuntimeException e) {
-            this.request.abort();
-            throw new HttpClientException(e);
-        }
+        final HttpResponse res = doExecute();
+        return new ODataMetadataResponsImpl(client, res);
     }
 
     protected class ODataMetadataResponsImpl extends ODataQueryResponseImpl {

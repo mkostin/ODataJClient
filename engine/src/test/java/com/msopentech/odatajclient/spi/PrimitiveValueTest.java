@@ -68,12 +68,12 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void int32() {
-        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, "Product(-10)", "Description");
+        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, "Product(-9)", "Description");
         assertEquals(EdmSimpleType.STRING.toString(), opv.getTypeName());
 
         final String value = opv.<String>toCastValue();
         assertNotNull(value);
-        assertEquals("onesusjnzuzrmzhqankkugdrftiukzkzqaggsfdmtvineulehkrbpu", value);
+        assertEquals("kdcuklu", value);
     }
 
     @Test

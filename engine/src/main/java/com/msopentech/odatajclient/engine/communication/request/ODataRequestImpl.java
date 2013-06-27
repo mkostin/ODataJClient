@@ -27,6 +27,7 @@ import java.net.URI;
 import java.util.Collection;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -90,10 +91,6 @@ public class ODataRequestImpl implements ODataRequest {
 
         this.client = new DefaultHttpClient();
         this.request = URIUtils.toHttpURIRequest(this.method, this.uri);
-
-        for (String key : header.getHeaderNames()) {
-            this.request.addHeader(key, header.getHeader(key));
-        }
     }
 
     /**
@@ -328,6 +325,24 @@ public class ODataRequestImpl implements ODataRequest {
         } catch (RuntimeException e) {
             this.request.abort();
             throw new HttpClientException("During raw execution", e);
+        }
+    }
+
+    protected HttpResponse doExecute() {
+        setAccept(getAccept());
+        setContentType(getContentType());
+
+        for (String key : header.getHeaderNames()) {
+            this.request.addHeader(key, header.getHeader(key));
+        }
+
+        try {
+            return client.execute(request);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
         }
     }
 }

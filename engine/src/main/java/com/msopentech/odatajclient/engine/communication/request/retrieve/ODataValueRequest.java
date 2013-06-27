@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
-import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
@@ -50,16 +49,8 @@ public class ODataValueRequest extends ODataQueryRequest<ODataValue, ODataValueF
      */
     @Override
     public ODataQueryResponse<ODataValue> execute() {
-        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
-        try {
-            final HttpResponse res = client.execute(request);
-            return new ODataValueResponseImpl(client, res);
-        } catch (IOException e) {
-            throw new HttpClientException(e);
-        } catch (RuntimeException e) {
-            this.request.abort();
-            throw new HttpClientException(e);
-        }
+        final HttpResponse res = doExecute();
+        return new ODataValueResponseImpl(client, res);
     }
 
     protected class ODataValueResponseImpl extends ODataQueryResponseImpl {
