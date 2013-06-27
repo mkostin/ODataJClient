@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.client.response;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponseItem;
 import com.msopentech.odatajclient.engine.communication.response.ODataChangeset;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -49,9 +49,9 @@ abstract class ODataBatchResponseImpl extends ODataResponseImpl implements OData
      * @param response query response to be added.
      * @return the current batch response.
      *
-     * @see ODataQueryResponse.
+     * @see ODataRetrieveResponse
      */
-    protected ODataBatchResponseImpl addItem(final ODataQueryResponse response) {
+    protected ODataBatchResponseImpl addItem(final ODataRetrieveResponse response) {
         batch.add(new ODataRetrieveImpl(response));
         return this;
     }

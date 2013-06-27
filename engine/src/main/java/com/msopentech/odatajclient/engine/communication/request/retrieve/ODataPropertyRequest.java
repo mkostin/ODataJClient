@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
@@ -31,7 +31,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getPropertyRequest(java.net.URI)
  */
-public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty, ODataPropertyFormat> {
+public class ODataPropertyRequest extends ODataRetrieveRequest<ODataProperty, ODataPropertyFormat> {
 
     /**
      * Private constructor.
@@ -46,12 +46,12 @@ public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty, OData
      * {@inheritDoc }
      */
     @Override
-    public ODataQueryResponse<ODataProperty> execute() {
+    public ODataRetrieveResponse<ODataProperty> execute() {
         final HttpResponse res = doExecute();
         return new ODataEntitySetResponseImpl(client, res);
     }
 
-    protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
+    protected class ODataEntitySetResponseImpl extends ODataRetrieveResponseImpl {
 
         private ODataProperty property = null;
 

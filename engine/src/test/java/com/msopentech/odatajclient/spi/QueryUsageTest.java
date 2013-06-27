@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.spi;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 
@@ -32,7 +32,7 @@ public class QueryUsageTest {
         final ODataEntityRequest request = ODataRetrieveRequestFactory.getEntityRequest(uri.build());
 
         // execute and retrieve query response
-        final ODataQueryResponse<ODataEntity> res = request.execute();
+        final ODataRetrieveResponse<ODataEntity> res = request.execute();
 
         final ODataEntity entity = res.getBody();
 

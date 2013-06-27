@@ -19,7 +19,7 @@ import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -28,8 +28,8 @@ import org.apache.http.client.HttpClient;
  * This is an abstract representation of an OData retrieve query request returning one or more result item.
  * Get instance by using ODataRequestFactory.
  */
-abstract class ODataQueryRequest<V, T extends Enum<T>>
-        extends ODataBasicRequestImpl<ODataQueryResponse<V>, T>
+abstract class ODataRetrieveRequest<V, T extends Enum<T>>
+        extends ODataBasicRequestImpl<ODataRetrieveResponse<V>, T>
         implements ODataBatchableRequest {
 
     /**
@@ -37,7 +37,7 @@ abstract class ODataQueryRequest<V, T extends Enum<T>>
      *
      * @param query query to be executed.
      */
-    ODataQueryRequest(final URI query) {
+    ODataRetrieveRequest(final URI query) {
         super(Method.GET, query);
     }
 
@@ -45,7 +45,7 @@ abstract class ODataQueryRequest<V, T extends Enum<T>>
      * {@inheritDoc }
      */
     @Override
-    public abstract ODataQueryResponse<V> execute();
+    public abstract ODataRetrieveResponse<V> execute();
 
     /**
      * {@inheritDoc }
@@ -57,9 +57,9 @@ abstract class ODataQueryRequest<V, T extends Enum<T>>
         return new byte[0];
     }
 
-    protected abstract class ODataQueryResponseImpl extends ODataResponseImpl implements ODataQueryResponse<V> {
+    protected abstract class ODataRetrieveResponseImpl extends ODataResponseImpl implements ODataRetrieveResponse<V> {
 
-        protected ODataQueryResponseImpl(final HttpClient client, final HttpResponse res) {
+        protected ODataRetrieveResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

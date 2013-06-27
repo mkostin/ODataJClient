@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
@@ -31,7 +31,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getMetadataRequest(java.lang.String)
  */
-public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata, ODataFormat> {
+public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODataFormat> {
 
     /**
      * Constructor.
@@ -46,12 +46,12 @@ public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata, ODataFo
      * {@inheritDoc }
      */
     @Override
-    public ODataQueryResponse<EdmMetadata> execute() {
+    public ODataRetrieveResponse<EdmMetadata> execute() {
         final HttpResponse res = doExecute();
         return new ODataMetadataResponsImpl(client, res);
     }
 
-    protected class ODataMetadataResponsImpl extends ODataQueryResponseImpl {
+    protected class ODataMetadataResponsImpl extends ODataRetrieveResponseImpl {
 
         private EdmMetadata metadata = null;
 

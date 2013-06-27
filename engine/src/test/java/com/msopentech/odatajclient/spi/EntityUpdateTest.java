@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityU
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
@@ -159,7 +159,7 @@ public class EntityUpdateTest extends AbstractTest {
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
         final ODataEntity entity = res.getBody();
 
         assertNotNull(entity);
@@ -173,7 +173,7 @@ public class EntityUpdateTest extends AbstractTest {
 
     private String getETag(final URI uri) {
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uri);
-        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
         final Collection<String> etag = res.getHeader("ETag");
         res.close();
 

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataServiceDocumentRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
 import java.net.URI;
@@ -32,7 +32,7 @@ public class ServiceDocumentTest extends AbstractTest {
                 ODataRetrieveRequestFactory.getServiceDocumentRequest(testODataServiceRootURL);
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataServiceDocument> res = req.execute();
+        final ODataRetrieveResponse<ODataServiceDocument> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         final ODataServiceDocument serviceDocument = res.getBody();
