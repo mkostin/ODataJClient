@@ -91,6 +91,7 @@ public final class SerializationUtils {
 
     public static void serializeProperty(
             final Element element, final ODataPropertyFormat format, final OutputStream out) {
+        
         serializeProperty(element, format, new OutputStreamWriter(out));
     }
 

@@ -72,7 +72,7 @@ public class ODataServiceDocumentRequest extends ODataQueryRequest<ODataServiceD
         public ODataServiceDocument getBody() {
             if (serviceDocument == null) {
                 try {
-                    serviceDocument = ODataReader.getServiceDocument(
+                    serviceDocument = ODataReader.readServiceDocument(
                             res.getEntity().getContent(), ODataServiceDocumentFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);

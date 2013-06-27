@@ -37,12 +37,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ODataBinder {
+public final class ODataBinder {
 
     /**
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ODataBinder.class);
+
+    private ODataBinder() {
+        // Empty private constructor for static utility classes
+    }
 
     private static Element newEntryContent() {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

@@ -22,14 +22,12 @@ import com.msopentech.odatajclient.engine.communication.request.ODataBasicReques
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUpdateResponse;
-import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -75,16 +73,11 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
 
     @Override
     public ODataPropertyUpdateResponse execute() {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        SerializationUtils.serializeProperty(
-                ODataBinder.getProperty(property), ODataPropertyFormat.valueOf(getFormat()), baos);
-        final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-
         request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
         request.setHeader(ODataHeader.HeaderName.contentType.toString(), getContentType());
 
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(bais, -1));
-
+        final InputStream input = ODataWriter.writeProperty(property, ODataPropertyFormat.valueOf(getFormat()));
+        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
         try {
             final HttpResponse res = client.execute(request);
             return new ODataPropertyUpdateResponseImpl(client, res);
@@ -94,8 +87,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
             this.request.abort();
             throw new HttpClientException(e);
         } finally {
-            IOUtils.closeQuietly(baos);
-            IOUtils.closeQuietly(bais);
+            IOUtils.closeQuietly(input);
         }
     }
 
@@ -111,7 +103,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
         public ODataProperty getBody() {
             if (property == null) {
                 try {
-                    property = ODataReader.getProperty(
+                    property = ODataReader.readProperty(
                             res.getEntity().getContent(), ODataPropertyFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);

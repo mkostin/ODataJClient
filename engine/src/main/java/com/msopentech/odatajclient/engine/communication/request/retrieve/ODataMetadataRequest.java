@@ -70,7 +70,7 @@ public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata, ODataFo
         public EdmMetadata getBody() {
             if (metadata == null) {
                 try {
-                    metadata = ODataReader.getMetadata(res.getEntity().getContent());
+                    metadata = ODataReader.readMetadata(res.getEntity().getContent());
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

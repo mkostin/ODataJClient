@@ -52,7 +52,7 @@ public final class ODataReader {
      * @param format de-serialize as AtomEntry or JSONEntry
      * @return de-serialized feed.
      */
-    public static ODataFeed getFeed(final InputStream input, final ODataFormat format) {
+    public static ODataFeed readFeed(final InputStream input, final ODataFormat format) {
         return ODataBinder.getODataFeed(
                 SerializationUtils.deserializeFeed(input, ResourceFactory.feedClassForFormat(format)));
     }
@@ -64,7 +64,7 @@ public final class ODataReader {
      * @param format de-serialize as AtomEntry or JSONEntry
      * @return entity de-serialized.
      */
-    public static ODataEntity getEntity(final InputStream input, final ODataFormat format) {
+    public static ODataEntity readEntity(final InputStream input, final ODataFormat format) {
         return ODataBinder.getODataEntity(
                 SerializationUtils.deserializeEntry(input, ResourceFactory.entryClassForFormat(format)));
     }
@@ -76,7 +76,7 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return OData entity property de-serialized.
      */
-    public static ODataProperty getProperty(final InputStream input, final ODataPropertyFormat format) {
+    public static ODataProperty readProperty(final InputStream input, final ODataPropertyFormat format) {
         return ODataBinder.getProperty(SerializationUtils.deserializeProperty(input, format));
     }
 
@@ -87,7 +87,7 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return List of URIs.
      */
-    public static List<URI> getLinks(final InputStream input, final ODataPropertyFormat format) {
+    public static List<URI> readLinks(final InputStream input, final ODataPropertyFormat format) {
         return SerializationUtils.deserializeLinks(input, format);
     }
 
@@ -98,7 +98,7 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return List of URIs.
      */
-    public static ODataServiceDocument getServiceDocument(
+    public static ODataServiceDocument readServiceDocument(
             final InputStream input, final ODataServiceDocumentFormat format) {
 
         return ODataBinder.getODataServiceDocument(SerializationUtils.deserializeServiceDocument(input, format));
@@ -110,7 +110,7 @@ public final class ODataReader {
      * @param input stream to de-serialize.
      * @return metadata representation.
      */
-    public static EdmMetadata getMetadata(final InputStream inputStream) {
+    public static EdmMetadata readMetadata(final InputStream inputStream) {
         try {
             return new EdmMetadata(inputStream);
         } catch (JAXBException e) {

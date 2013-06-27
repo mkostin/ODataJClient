@@ -72,7 +72,7 @@ public class ODataEntityRequest extends ODataQueryRequest<ODataEntity, ODataForm
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.getEntity(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                    entity = ODataReader.readEntity(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

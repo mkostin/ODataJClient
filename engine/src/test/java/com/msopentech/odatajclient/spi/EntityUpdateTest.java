@@ -118,10 +118,7 @@ public class EntityUpdateTest extends AbstractTest {
                 ODataRequestFactory.getEntityUpdateRequest(changes.getEditLink(), type, changes);
         req.setFormat(format);
 
-        ODataEntityUpdateResponse res = req.execute();
-        
-        debugInputStream(res.getRawResponse(), "KKKKKKKKZ");
-        
+        ODataEntityUpdateResponse res = req.execute();        
         assertEquals(204, res.getStatusCode());
 
         final ODataEntity actual = readODataEntity(format, "Car(14)");

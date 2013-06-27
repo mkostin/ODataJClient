@@ -16,11 +16,11 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Collections;
 import org.apache.commons.io.IOUtils;
@@ -32,42 +32,25 @@ import org.apache.commons.io.IOUtils;
  * <p>
  * This class provides method helpers to serialize a set of entities and a single entity as well.
  */
-public class ODataWriter {
+public final class ODataWriter {
 
-    private final ODataFormat format;
-
-    /**
-     * Constructor.
-     *
-     * @param format OData format.
-     */
-    public ODataWriter(final ODataFormat format) {
-        this.format = format;
+    private ODataWriter() {
+        // Empty private constructor for static utility classes
     }
 
     /**
-     * Serializes an entire feed.
-     *
-     * @param feed entities to be serialized.
-     * @return stream of serialized object.
-     */
-    public InputStream serialize(final ODataFeed feed) {
-        return null;
-    }
-
-    /**
-     * Serializes a collection of OData entities.
+     * Writes a collection of OData entities.
      *
      * @param entities entities to be serialized.
+     * @param format serialize as AtomEntry or JSONEntry
      * @return stream of serialized objects.
      */
-    public static InputStream serialize(
-            final Collection<ODataEntity> entities, final Class<? extends EntryResource> reference) {
+    public static InputStream writeEntities(final Collection<ODataEntity> entities, final ODataFormat format) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-
         try {
             for (ODataEntity entity : entities) {
-                SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, reference), output);
+                SerializationUtils.serializeEntry(
+                        ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)), output);
             }
 
             return new ByteArrayInputStream(output.toByteArray());
@@ -80,38 +63,28 @@ public class ODataWriter {
      * Serializes a single OData entity.
      *
      * @param entity entity to be serialized.
+     * @param format serialize as AtomEntry or JSONEntry
      * @return stream of serialized object.
      */
-    public static InputStream serialize(final ODataEntity entity, final Class<? extends EntryResource> reference) {
-        return serialize(Collections.<ODataEntity>singleton(entity), reference);
+    public static InputStream writeEntity(final ODataEntity entity, final ODataFormat format) {
+        return writeEntities(Collections.<ODataEntity>singleton(entity), format);
     }
 
     /**
-     * Serializes a single OData entity property.
+     * Writes a single OData entity property.
      *
      * @param property entity property to be serialized.
+     * @param format serialize as AtomEntry or JSONEntry
      * @return stream of serialized object.
      */
-    public InputStream serialize(final ODataProperty property) {
-        return null;
-    }
+    public static InputStream writeProperty(final ODataProperty property, final ODataPropertyFormat format) {
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            SerializationUtils.serializeProperty(ODataBinder.getProperty(property), format, output);
 
-    /**
-     * Serializes a single OData entity property value.
-     *
-     * @param value entity property value to be serialized.
-     * @return stream of serialized object.
-     */
-    public InputStream serialize(final ODataValue value) {
-        return null;
-    }
-
-    /**
-     * Serializes a single OData entity into a given OutputStream.
-     *
-     * @param entity entity to be serialized.
-     * @param os output stream of the serialization.
-     */
-    public void serialize(final ODataEntity entity, final OutputStream os) {
+            return new ByteArrayInputStream(output.toByteArray());
+        } finally {
+            IOUtils.closeQuietly(output);
+        }
     }
 }

@@ -23,14 +23,11 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequestFact
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.data.ResourceFactory;
+import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -70,17 +67,11 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     public ODataEntityCreateResponse execute() {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        SerializationUtils.serializeEntry(ODataBinder.getEntry(entity,
-                ResourceFactory.entryClassForFormat(ODataFormat.valueOf(getFormat()))), baos);
-
-        final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-
         request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
         request.setHeader(ODataHeader.HeaderName.contentType.toString(), getContentType());
 
-        ((HttpPost) request).setEntity(new InputStreamEntity(bais, -1));
-
+        final InputStream input = ODataWriter.writeEntity(entity, ODataFormat.valueOf(getFormat()));
+        ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
         try {
             final HttpResponse res = client.execute(request);
             return new ODataEntityCreateResponseImpl(client, res);
@@ -90,8 +81,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
             this.request.abort();
             throw new HttpClientException(e);
         } finally {
-            IOUtils.closeQuietly(baos);
-            IOUtils.closeQuietly(bais);
+            IOUtils.closeQuietly(input);
         }
     }
 
@@ -115,7 +105,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.getEntity(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                    entity = ODataReader.readEntity(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

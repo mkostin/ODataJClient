@@ -75,7 +75,7 @@ public class ODataLinkRequest extends ODataQueryRequest<List<URI>, ODataProperty
         public List<URI> getBody() {
             if (links == null) {
                 try {
-                    links = ODataReader.getLinks(
+                    links = ODataReader.readLinks(
                             res.getEntity().getContent(), ODataPropertyFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
