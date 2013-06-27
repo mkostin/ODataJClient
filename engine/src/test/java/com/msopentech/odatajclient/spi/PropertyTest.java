@@ -37,7 +37,6 @@ import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import com.msopentech.odatajclient.engine.types.ODataValueFormat;
 import java.io.IOException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -76,25 +75,21 @@ public class PropertyTest extends AbstractTest {
     }
 
     @Test
-    @Ignore
     public void patchComplexPropertyAsXML() throws IOException {
         updateComplexProperty(ODataPropertyFormat.XML, UpdateType.PATCH);
     }
 
     @Test
-    @Ignore
     public void patchComplexPropertyAsJSON() throws IOException {
         updateComplexProperty(ODataPropertyFormat.JSON_FULL_METADATA, UpdateType.PATCH);
     }
 
     @Test
-    @Ignore
     public void mergeComplexPropertyAsXML() throws IOException {
         updateComplexProperty(ODataPropertyFormat.XML, UpdateType.MERGE);
     }
 
     @Test
-    @Ignore
     public void mergeComplexPropertyAsJSON() throws IOException {
         updateComplexProperty(ODataPropertyFormat.JSON_FULL_METADATA, UpdateType.MERGE);
     }
