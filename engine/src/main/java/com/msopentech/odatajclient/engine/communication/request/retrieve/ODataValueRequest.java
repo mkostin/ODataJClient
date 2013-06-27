@@ -15,13 +15,18 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.types.ODataValueFormat;
+import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.core.Response;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData entity property value query request.
@@ -45,32 +50,42 @@ public class ODataValueRequest extends ODataQueryRequest<ODataValue, ODataValueF
      */
     @Override
     public ODataQueryResponse<ODataValue> execute() {
-        final Response res = client.accept(getAccept()).get();
-        return new ODataEntitySetResponseImpl(res);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        try {
+            final HttpResponse res = client.execute(request);
+            return new ODataValueResponseImpl(client, res);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
     }
 
-    protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
+    protected class ODataValueResponseImpl extends ODataQueryResponseImpl {
 
         private ODataValue value = null;
 
-        private ODataEntitySetResponseImpl(final Response res) {
-            super(res);
+        private ODataValueResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public ODataValue getBody() {
-            try {
-                if (value == null) {
+            if (value == null) {
+                try {
                     value = new ODataPrimitiveValue.Builder().
                             setType(ODataValueFormat.valueOf(getFormat()) == ODataValueFormat.TEXT
                             ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
-                            setText(res.readEntity(String.class)).
+                            setText(IOUtils.toString(res.getEntity().getContent())).
                             build();
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
                 }
-                return value;
-            } finally {
-                res.close();
             }
+            return value;
         }
     }
 }

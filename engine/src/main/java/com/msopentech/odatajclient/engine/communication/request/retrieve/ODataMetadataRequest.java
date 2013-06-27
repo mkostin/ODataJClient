@@ -15,13 +15,15 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements a metadata query request.
@@ -45,29 +47,37 @@ public class ODataMetadataRequest extends ODataQueryRequest<EdmMetadata, ODataFo
      */
     @Override
     public ODataQueryResponse<EdmMetadata> execute() {
-        return new ODataMetadataResponsImpl(client.get());
-
+        try {
+            final HttpResponse res = client.execute(request);
+            return new ODataMetadataResponsImpl(client, res);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
     }
 
     protected class ODataMetadataResponsImpl extends ODataQueryResponseImpl {
 
         private EdmMetadata metadata = null;
 
-        private ODataMetadataResponsImpl(final Response res) {
-            super(res);
-            res.close();
+        private ODataMetadataResponsImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public EdmMetadata getBody() {
-            try {
-                if (metadata == null) {
-                    metadata = ODataReader.getMetadata(res.readEntity(InputStream.class));
+            if (metadata == null) {
+                try {
+                    metadata = ODataReader.getMetadata(res.getEntity().getContent());
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
                 }
-                return metadata;
-            } finally {
-                res.close();
             }
+            return metadata;
         }
     }
 }

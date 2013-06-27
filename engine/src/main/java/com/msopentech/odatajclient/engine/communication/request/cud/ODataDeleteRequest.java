@@ -15,14 +15,18 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData delete request.
@@ -48,8 +52,16 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      */
     @Override
     public ODataDeleteResponse execute() {
-        final Response res = client.accept(getAccept()).delete();
-        return new ODataDeleteResponseImpl(res);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        try {
+            final HttpResponse res = client.execute(request);
+            return new ODataDeleteResponseImpl(client, res);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
     }
 
     /**
@@ -62,11 +74,11 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
         return new byte[0];
     }
 
-    private class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
+    private static class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
 
-        public ODataDeleteResponseImpl(final Response res) {
-            super(res);
-            res.close();
+        public ODataDeleteResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
+            this.close();
         }
     }
 }

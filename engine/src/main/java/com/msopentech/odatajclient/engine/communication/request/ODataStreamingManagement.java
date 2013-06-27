@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.concurrent.Future;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,15 +98,10 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
     }
 
     /**
-     * Close piped output stream.
-     *
-     * @throws IOException in case of failure.
+     * Closes piped output stream.
      */
-    public void finalizeBody() throws IOException {
-        if (getBodyStreamWriter() != null) {
-            getBodyStreamWriter().flush();
-            getBodyStreamWriter().close();
-        }
+    public void finalizeBody() {
+        IOUtils.closeQuietly(getBodyStreamWriter());
     }
 
     /**

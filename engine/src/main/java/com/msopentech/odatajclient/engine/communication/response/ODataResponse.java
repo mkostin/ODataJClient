@@ -36,7 +36,7 @@ public interface ODataResponse {
      * @param name header to be retrieved.
      * @return response header value.
      */
-    String getHeader(final String name);
+    Collection<String> getHeader(final String name);
 
     /**
      * Gets status code.

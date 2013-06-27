@@ -15,20 +15,27 @@
  */
 package com.msopentech.odatajclient.engine.client.response;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import javax.ws.rs.core.Response;
+import java.util.List;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * Abstract representation of an OData response.
  */
 public abstract class ODataResponseImpl implements ODataResponse {
 
-    protected final Response res;
+    protected final HttpClient client;
 
-    public ODataResponseImpl(final Response res) {
+    protected final HttpResponse res;
+
+    public ODataResponseImpl(final HttpClient client, final HttpResponse res) {
+        this.client = client;
         this.res = res;
     }
 
@@ -37,15 +44,27 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public Collection<String> getHeaderNames() {
-        return res.getHeaders() == null ? new HashSet<String>() : res.getHeaders().keySet();
+        final List<String> headerNames = new ArrayList<String>();
+
+        for (Header header : res.getAllHeaders()) {
+            headerNames.add(header.getName());
+        }
+
+        return headerNames;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getHeader(final String name) {
-        return res.getHeaderString(name);
+    public Collection<String> getHeader(final String name) {
+        final List<String> headerValues = new ArrayList<String>();
+
+        for (Header header : res.getHeaders(name)) {
+            headerValues.add(header.getValue());
+        }
+
+        return headerValues;
     }
 
     /**
@@ -53,7 +72,7 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public int getStatusCode() {
-        return res.getStatus();
+        return res.getStatusLine().getStatusCode();
     }
 
     /**
@@ -61,7 +80,7 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public String getStatusMessage() {
-        return res.getStatusInfo().getReasonPhrase();
+        return res.getStatusLine().getReasonPhrase();
     }
 
     /**
@@ -69,11 +88,15 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public void close() {
-        res.close();
+        this.client.getConnectionManager().shutdown();
     }
 
     @Override
     public InputStream getRawResponse() {
-        return res.readEntity(InputStream.class);
+        try {
+            return res.getEntity().getContent();
+        } catch (Exception e) {
+            throw new HttpClientException("While extracting raw response", e);
+        }
     }
 }

@@ -17,7 +17,8 @@ package com.msopentech.odatajclient.engine.client.response;
 
 import com.msopentech.odatajclient.engine.communication.response.*;
 import com.msopentech.odatajclient.engine.utils.ODataResultSet;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements a response to a specific invoke request.
@@ -26,8 +27,8 @@ import javax.ws.rs.core.Response;
  */
 class ODataInvokeResponseImpl extends ODataResponseImpl implements ODataInvokeResponse {
 
-    public ODataInvokeResponseImpl(Response res) {
-        super(res);
+    public ODataInvokeResponseImpl(final HttpClient client, final HttpResponse res) {
+        super(client, res);
     }
 
     /**

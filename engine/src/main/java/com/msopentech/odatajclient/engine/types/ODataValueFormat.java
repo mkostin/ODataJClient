@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.types;
 
-import javax.ws.rs.core.MediaType;
+import org.apache.http.entity.ContentType;
 
 /**
  * Exchanged data format.
@@ -25,11 +25,11 @@ public enum ODataValueFormat {
     /**
      * Application octet stream.
      */
-    STREAM(MediaType.APPLICATION_OCTET_STREAM),
+    STREAM(ContentType.APPLICATION_OCTET_STREAM.getMimeType()),
     /**
      * Plain text format.
      */
-    TEXT(MediaType.TEXT_PLAIN);
+    TEXT(ContentType.TEXT_PLAIN.getMimeType());
 
     private final String format;
 

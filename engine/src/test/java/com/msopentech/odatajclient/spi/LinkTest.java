@@ -27,7 +27,6 @@ import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**

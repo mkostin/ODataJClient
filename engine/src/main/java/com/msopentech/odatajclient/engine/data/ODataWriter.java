@@ -19,11 +19,11 @@ import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Collections;
+import org.apache.commons.io.IOUtils;
 
 /**
  * OData writer.
@@ -41,7 +41,7 @@ public class ODataWriter {
      *
      * @param format OData format.
      */
-    public ODataWriter(ODataFormat format) {
+    public ODataWriter(final ODataFormat format) {
         this.format = format;
     }
 
@@ -63,20 +63,16 @@ public class ODataWriter {
      */
     public static InputStream serialize(
             final Collection<ODataEntity> entities, final Class<? extends EntryResource> reference) {
-        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
         try {
             for (ODataEntity entity : entities) {
-                SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, reference), os);
+                SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, reference), output);
             }
 
-            return new ByteArrayInputStream(os.toByteArray());
+            return new ByteArrayInputStream(output.toByteArray());
         } finally {
-            try {
-                os.close();
-            } catch (IOException ignore) {
-                // ignore exception
-            }
+            IOUtils.closeQuietly(output);
         }
     }
 

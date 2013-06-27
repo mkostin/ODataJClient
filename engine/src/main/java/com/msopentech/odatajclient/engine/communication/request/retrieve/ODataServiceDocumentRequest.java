@@ -15,13 +15,16 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData service document request.
@@ -45,29 +48,39 @@ public class ODataServiceDocumentRequest extends ODataQueryRequest<ODataServiceD
      */
     @Override
     public ODataQueryResponse<ODataServiceDocument> execute() {
-        final Response res = client.accept(getAccept()).get();
-        return new ODataServiceResponseImpl(res);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        try {
+            final HttpResponse res = client.execute(request);
+            return new ODataServiceResponseImpl(client, res);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
     }
 
     protected class ODataServiceResponseImpl extends ODataQueryResponseImpl {
 
         private ODataServiceDocument serviceDocument = null;
 
-        private ODataServiceResponseImpl(final Response res) {
-            super(res);
+        private ODataServiceResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public ODataServiceDocument getBody() {
-            try {
-                if (serviceDocument == null) {
+            if (serviceDocument == null) {
+                try {
                     serviceDocument = ODataReader.getServiceDocument(
-                            res.readEntity(InputStream.class), ODataServiceDocumentFormat.valueOf(getFormat()));
+                            res.getEntity().getContent(), ODataServiceDocumentFormat.valueOf(getFormat()));
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
                 }
-                return serviceDocument;
-            } finally {
-                res.close();
             }
+            return serviceDocument;
         }
     }
 }

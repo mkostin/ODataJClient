@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.types;
 
-import javax.ws.rs.core.MediaType;
+import org.apache.http.entity.ContentType;
 
 /**
  * Exchanged data format.
@@ -25,19 +25,19 @@ public enum ODataFormat {
     /**
      * JSON format with no metadata.
      */
-    JSON_NO_METADATA(MediaType.APPLICATION_JSON + ";odata=nometadata"),
+    JSON_NO_METADATA(ContentType.APPLICATION_JSON.getMimeType() + ";odata=nometadata"),
     /**
      * JSON format with minimal metadata (default).
      */
-    JSON(MediaType.APPLICATION_JSON + ";odata=minimalmetadata"),
+    JSON(ContentType.APPLICATION_JSON.getMimeType() + ";odata=minimalmetadata"),
     /**
      * JSON format with no metadata.
      */
-    JSON_FULL_METADATA(MediaType.APPLICATION_JSON + ";odata=fullmetadata"),
+    JSON_FULL_METADATA(ContentType.APPLICATION_JSON.getMimeType() + ";odata=fullmetadata"),
     /**
      * Atom format.
      */
-    ATOM(MediaType.APPLICATION_ATOM_XML);
+    ATOM(ContentType.APPLICATION_ATOM_XML.getMimeType());
 
     private final String format;
 

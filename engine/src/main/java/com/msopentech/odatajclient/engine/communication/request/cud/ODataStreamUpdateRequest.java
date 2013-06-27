@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
@@ -25,7 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData stream create/update request.
@@ -67,10 +69,10 @@ public class ODataStreamUpdateRequest
         /**
          * Private constructor.
          *
-         * @param is payload input stream.
+         * @param input payload input stream.
          */
-        private StreamUpdateRequestPayload(final InputStream is) {
-            super(is);
+        private StreamUpdateRequestPayload(final InputStream input) {
+            super(input);
         }
 
         /**
@@ -78,13 +80,8 @@ public class ODataStreamUpdateRequest
          */
         @Override
         public ODataStreamUpdateResponse getResponse() {
-            try {
-                finalizeBody();
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-
-            return new ODataStreamUpdateResponseImpl(res);
+            finalizeBody();
+            return new ODataStreamUpdateResponseImpl(client, res);
         }
 
         /**
@@ -92,34 +89,31 @@ public class ODataStreamUpdateRequest
          */
         @Override
         public Future<ODataStreamUpdateResponse> asyncResponse() {
-            try {
-                finalizeBody();
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-
+            finalizeBody();
             return null;
         }
     }
 
     private class ODataStreamUpdateResponseImpl extends ODataResponseImpl implements ODataStreamUpdateResponse {
 
-        private InputStream is = null;
+        private InputStream input = null;
 
-        public ODataStreamUpdateResponseImpl(final Response res) {
-            super(res);
+        public ODataStreamUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public InputStream getBody() {
-            if (is == null) {
+            if (input == null) {
                 try {
-                    is = res.readEntity(InputStream.class);
+                    input = res.getEntity().getContent();
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
                 } finally {
-                    res.close();
+                    this.close();
                 }
             }
-            return is;
+            return input;
         }
     }
 }

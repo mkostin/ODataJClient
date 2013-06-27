@@ -15,16 +15,21 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,9 +66,14 @@ public class ODataRequestImpl implements ODataRequest {
     protected URI uri;
 
     /**
-     * CXF web client.
+     * HTTP client.
      */
-    protected final WebClient client;
+    protected final HttpClient client;
+
+    /**
+     * HTTP request.
+     */
+    protected final HttpUriRequest request;
 
     /**
      * Constructor.
@@ -78,10 +88,11 @@ public class ODataRequestImpl implements ODataRequest {
         // target uri
         this.uri = uri;
 
-        client = WebClient.create(this.uri);
+        this.client = new DefaultHttpClient();
+        this.request = URIUtils.toHttpURIRequest(this.method, this.uri);
 
         for (String key : header.getHeaderNames()) {
-            client.header(key, header.getHeader(key));
+            this.request.addHeader(key, header.getHeader(key));
         }
     }
 
@@ -279,10 +290,11 @@ public class ODataRequestImpl implements ODataRequest {
     public byte[] toByteArray() {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
-            final StringBuilder request = new StringBuilder();
-            request.append(getMethod().toString()).append(" ").append(uri.toString()).append(" ").append("HTTP/1.1");
+            final StringBuilder requestBuilder = new StringBuilder();
+            requestBuilder.append(getMethod().toString()).append(" ").
+                    append(uri.toString()).append(" ").append("HTTP/1.1");
 
-            baos.write(request.toString().getBytes());
+            baos.write(requestBuilder.toString().getBytes());
 
             baos.write(ODataStreamer.CRLF);
 
@@ -296,15 +308,10 @@ public class ODataRequestImpl implements ODataRequest {
             }
 
             return baos.toByteArray();
-
         } catch (IOException e) {
             throw new IllegalStateException(e);
         } finally {
-            try {
-                baos.close();
-            } catch (IOException ignore) {
-                // ignore
-            }
+            IOUtils.closeQuietly(baos);
         }
     }
 
@@ -313,6 +320,14 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public InputStream rawExecute() {
-        return client.accept(getAccept()).get(InputStream.class);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        try {
+            return client.execute(request).getEntity().getContent();
+        } catch (IOException e) {
+            throw new HttpClientException("During raw execution", e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException("During raw execution", e);
+        }
     }
 }

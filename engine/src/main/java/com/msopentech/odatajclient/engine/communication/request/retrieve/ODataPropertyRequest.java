@@ -15,13 +15,16 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData entity property query request.
@@ -45,29 +48,39 @@ public class ODataPropertyRequest extends ODataQueryRequest<ODataProperty, OData
      */
     @Override
     public ODataQueryResponse<ODataProperty> execute() {
-        final Response res = client.accept(getAccept()).get();
-        return new ODataEntitySetResponseImpl(res);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        try {
+            final HttpResponse res = client.execute(request);
+            return new ODataEntitySetResponseImpl(client, res);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
     }
 
     protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
 
         private ODataProperty property = null;
 
-        private ODataEntitySetResponseImpl(final Response res) {
-            super(res);
+        private ODataEntitySetResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public ODataProperty getBody() {
-            try {
-                if (property == null) {
+            if (property == null) {
+                try {
                     property = ODataReader.getProperty(
-                            res.readEntity(InputStream.class), ODataPropertyFormat.valueOf(getFormat()));
+                            res.getEntity().getContent(), ODataPropertyFormat.valueOf(getFormat()));
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
                 }
-                return property;
-            } finally {
-                res.close();
             }
+            return property;
         }
     }
 }

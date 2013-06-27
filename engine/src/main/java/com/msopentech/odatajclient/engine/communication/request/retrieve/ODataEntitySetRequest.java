@@ -15,13 +15,16 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData EntitySet query request.
@@ -47,28 +50,37 @@ public class ODataEntitySetRequest extends ODataQueryRequest<ODataFeed, ODataFor
      */
     @Override
     public ODataQueryResponse<ODataFeed> execute() {
-        final Response res = client.accept(getAccept()).get();
-        return new ODataEntitySetResponseImpl(res);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        try {
+            final HttpResponse res = client.execute(request);
+            return new ODataEntitySetResponseImpl(client, res);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
     }
 
     protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
 
-        private ODataEntitySetResponseImpl(final Response res) {
-            super(res);
+        private ODataEntitySetResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         @SuppressWarnings("unchecked")
         public ODataFeed getBody() {
-            try {
-                if (feed == null) {
-                    feed = ODataReader.getFeed(
-                            res.readEntity(InputStream.class), ODataFormat.valueOf(getFormat()));
+            if (feed == null) {
+                try {
+                    feed = ODataReader.getFeed(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
                 }
-                return feed;
-            } finally {
-                res.close();
             }
+            return feed;
         }
     }
 }

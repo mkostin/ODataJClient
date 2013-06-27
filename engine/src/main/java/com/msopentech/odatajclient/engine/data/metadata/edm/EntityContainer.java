@@ -34,7 +34,6 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import com.msopentech.odatajclient.engine.data.metadata.edm.codegeneration.Access;
 import com.msopentech.odatajclient.engine.data.metadata.edm.codegeneration.PublicOrInternalAccess;
-import org.apache.cxf.wsdl.TDocumentation;
 import org.w3c.dom.Element;
 
 /**

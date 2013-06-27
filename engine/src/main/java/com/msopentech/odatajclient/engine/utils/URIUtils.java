@@ -15,8 +15,23 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.DELETE;
+import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.GET;
+import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.MERGE;
+import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.PATCH;
+import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.POST;
+import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.PUT;
+
+import com.msopentech.odatajclient.engine.client.http.HttpMerge;
+import com.msopentech.odatajclient.engine.client.http.HttpPatch;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import java.net.URI;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 
 public class URIUtils {
 
@@ -33,7 +48,7 @@ public class URIUtils {
 
         return uri.normalize();
     }
-    
+
     public static URI getURI(final URI base, final String href) {
         if (href == null) {
             throw new IllegalArgumentException("Null link provided");
@@ -46,5 +61,38 @@ public class URIUtils {
         }
 
         return uri.normalize();
+    }
+
+    public static HttpUriRequest toHttpURIRequest(final ODataRequest.Method method, final URI uri) {
+        HttpUriRequest result;
+
+        switch (method) {
+            case POST:
+                result = new HttpPost(uri);
+                break;
+
+            case PUT:
+                result = new HttpPut(uri);
+                break;
+
+            case PATCH:
+                result = new HttpPatch(uri);
+                break;
+
+            case MERGE:
+                result = new HttpMerge(uri);
+                break;
+
+            case DELETE:
+                result = new HttpDelete(uri);
+                break;
+
+            case GET:
+            default:
+                result = new HttpGet(uri);
+                break;
+        }
+
+        return result;
     }
 }

@@ -17,7 +17,8 @@ package com.msopentech.odatajclient.engine.client.response;
 
 import com.msopentech.odatajclient.engine.communication.response.*;
 import java.io.InputStream;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements the response to an Odata media entity update request.
@@ -26,8 +27,8 @@ import javax.ws.rs.core.Response;
  */
 class ODataUpdateMediaEntityResponseImpl extends ODataResponseImpl implements ODataMediaEntityUpdateResponse {
 
-    ODataUpdateMediaEntityResponseImpl(Response res) {
-        super(res);
+    ODataUpdateMediaEntityResponseImpl(final HttpClient client, final HttpResponse res) {
+        super(client, res);
     }
 
     /**

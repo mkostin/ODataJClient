@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyAttribute;
@@ -31,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
+import org.apache.http.entity.ContentType;
 import org.w3c.dom.Element;
 
 /**
@@ -135,17 +135,17 @@ public class AtomContent extends AbstractElement {
     }
 
     public Element getXMLContent() {
-        if (!getType().contains(MediaType.APPLICATION_XML) && !getType().contains("*/*")) {
+        if (!getType().contains(ContentType.APPLICATION_XML.getMimeType()) && !getType().contains("*/*")) {
             throw new IllegalStateException("No XML content found");
         }
 
-        List<Element> elements = getElements(Element.class);
+        final List<Element> elements = getElements(Element.class);
         return elements.isEmpty() ? null : elements.get(0);
     }
 
     public void setXMLContent(final Element element) {
         getType().clear();
-        getType().add(MediaType.APPLICATION_XML);
+        getType().add(ContentType.APPLICATION_XML.getMimeType());
 
         getValues().removeAll(getElements(Element.class));
         getValues().add(element);

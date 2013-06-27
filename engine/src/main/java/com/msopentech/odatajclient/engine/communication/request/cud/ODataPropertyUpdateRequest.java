@@ -15,7 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
@@ -23,16 +25,17 @@ import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUp
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import javax.ws.rs.core.Response;
-import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData update entity property request.
@@ -72,46 +75,51 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
 
     @Override
     public ODataPropertyUpdateResponse execute() {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         SerializationUtils.serializeProperty(
                 ODataBinder.getProperty(property), ODataPropertyFormat.valueOf(getFormat()), baos);
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
-        client.accept(getContentType()).type(getContentType());
-        WebClient.getConfig(client).getRequestContext().put("use.async.http.conduit", true);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        request.setHeader(ODataHeader.HeaderName.contentType.toString(), getContentType());
 
-        final Response res = client.invoke(getMethod().name(), bais);
+        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(bais, -1));
 
         try {
-            baos.flush();
-            baos.close();
-            bais.close();
+            final HttpResponse res = client.execute(request);
+            return new ODataPropertyUpdateResponseImpl(client, res);
         } catch (IOException e) {
-            LOG.error("While closing input / output streams for the request execution", e);
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        } finally {
+            IOUtils.closeQuietly(baos);
+            IOUtils.closeQuietly(bais);
         }
-
-        return new ODataPropertyUpdateResponseImpl(res);
     }
 
     private class ODataPropertyUpdateResponseImpl extends ODataResponseImpl implements ODataPropertyUpdateResponse {
 
         private ODataProperty property = null;
 
-        public ODataPropertyUpdateResponseImpl(Response res) {
-            super(res);
+        public ODataPropertyUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public ODataProperty getBody() {
-            try {
-                if (property == null) {
+            if (property == null) {
+                try {
                     property = ODataReader.getProperty(
-                            res.readEntity(InputStream.class), ODataPropertyFormat.valueOf(getFormat()));
+                            res.getEntity().getContent(), ODataPropertyFormat.valueOf(getFormat()));
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
                 }
-                return property;
-            } finally {
-                res.close();
             }
+            return property;
         }
     }
 }

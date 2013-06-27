@@ -64,12 +64,7 @@ public class StreamingTest {
         }
 
         streaming.addObject((SUFFIX).getBytes());
-
-        try {
-            streaming.finalizeBody();
-        } catch (IOException e) {
-            fail();
-        }
+        streaming.finalizeBody();
     }
 
     @Test

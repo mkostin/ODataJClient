@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
@@ -24,8 +26,11 @@ import com.msopentech.odatajclient.engine.types.ODataMediaFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.InputStreamEntity;
 
 /**
  * Streamed OData request abstract class.
@@ -34,8 +39,7 @@ import javax.ws.rs.core.Response;
  * @param <T> OData request payload type corresponding to the request implementation.
  */
 public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extends ODataStreamingManagement<V>>
-        extends ODataRequestImpl
-        implements ODataStreamedRequest<V, T> {
+        extends ODataRequestImpl implements ODataStreamedRequest<V, T> {
 
     /**
      * OData request payload.
@@ -44,7 +48,7 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
 
     private ODataMediaFormat format;
 
-    protected Response res = null;
+    protected HttpResponse res = null;
 
     /**
      * Constructor.
@@ -54,8 +58,8 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      */
     public ODataStreamedRequestImpl(final Method method, final URI uri) {
         super(method, uri);
-        setAccept(MediaType.APPLICATION_OCTET_STREAM);
-        setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        setAccept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+        setContentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
     }
 
     /**
@@ -91,8 +95,19 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     public T execute() {
         payload = getPayload();
 
-        // execute the request
-        res = client.accept(getAccept()).type(getContentType()).put(payload.getBody());
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        request.setHeader(ODataHeader.HeaderName.contentType.toString(), getContentType());
+
+        ((HttpPut) request).setEntity(new InputStreamEntity(payload.getBody(), -1));
+
+        try {
+            res = client.execute(request);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
 
         // return the payload object
         return (T) payload;
@@ -106,10 +121,9 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      * @param req destination batch request.
      */
     public void batch(final ODataBatchRequest req) {
-        final InputStream is = getPayload().getBody();
+        final InputStream input = getPayload().getBody();
 
         try {
-
             // finalize the body
             getPayload().finalizeBody();
 
@@ -120,20 +134,13 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
 
             int len;
 
-            while ((len = is.read(buff)) >= 0) {
+            while ((len = input.read(buff)) >= 0) {
                 req.rawAppend(buff, 0, len);
             }
-
         } catch (IOException e) {
             throw new IllegalStateException(e);
         } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
+            IOUtils.closeQuietly(input);
         }
     }
 }

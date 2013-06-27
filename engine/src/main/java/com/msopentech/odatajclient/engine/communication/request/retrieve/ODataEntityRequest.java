@@ -15,13 +15,16 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData retrieve query request returning a single entity.
@@ -45,29 +48,38 @@ public class ODataEntityRequest extends ODataQueryRequest<ODataEntity, ODataForm
      */
     @Override
     public ODataQueryResponse<ODataEntity> execute() {
-        final Response res = client.accept(getAccept()).get();
-        return new ODataEntityResponseImpl(res);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        try {
+            final HttpResponse res = client.execute(request);
+            return new ODataEntityResponseImpl(client, res);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
     }
 
     protected class ODataEntityResponseImpl extends ODataQueryResponseImpl {
 
         private ODataEntity entity = null;
 
-        private ODataEntityResponseImpl(final Response res) {
-            super(res);
+        private ODataEntityResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public ODataEntity getBody() {
-            try {
-                if (entity == null) {
-                    entity = ODataReader.getEntity(
-                            res.readEntity(InputStream.class), ODataFormat.valueOf(getFormat()));
+            if (entity == null) {
+                try {
+                    entity = ODataReader.getEntity(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
                 }
-                return entity;
-            } finally {
-                res.close();
             }
+            return entity;
         }
     }
 }

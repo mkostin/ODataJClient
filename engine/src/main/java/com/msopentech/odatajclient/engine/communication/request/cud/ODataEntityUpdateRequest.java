@@ -15,7 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
@@ -30,10 +32,12 @@ import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import javax.ws.rs.core.Response;
-import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData update request.
@@ -75,20 +79,23 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
 
         final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
-        client.accept(getAccept()).type(getContentType());
-        WebClient.getConfig(client).getRequestContext().put("use.async.http.conduit", true);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        request.setHeader(ODataHeader.HeaderName.contentType.toString(), getContentType());
+
+        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(bais, -1));
         
-        final Response res = client.invoke(getMethod().name(), bais);
-
         try {
-            baos.flush();
-            baos.close();
-            bais.close();
+            final HttpResponse res = client.execute(request);
+            return new ODataEntityUpdateResponseImpl(client, res);
         } catch (IOException e) {
-            LOG.error("While closing input / output streams for the request execution", e);
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        } finally {
+            IOUtils.closeQuietly(baos);
+            IOUtils.closeQuietly(bais);
         }
-
-        return new ODataEntityUpdateResponseImpl(res);
     }
 
     /**
@@ -103,18 +110,19 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
 
         private ODataEntity entity = null;
 
-        public ODataEntityUpdateResponseImpl(final Response res) {
-            super(res);
+        public ODataEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.getEntity(
-                            res.readEntity(InputStream.class), ODataFormat.valueOf(getFormat()));
+                    entity = ODataReader.getEntity(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
                 } finally {
-                    res.close();
+                    this.close();
                 }
             }
             return entity;

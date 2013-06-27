@@ -15,12 +15,16 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.types.ODataMediaFormat;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.entity.ContentType;
 
 /**
  * This class implements an OData media query request.
@@ -37,8 +41,8 @@ public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataMedia
      */
     ODataMediaRequest(final URI query) {
         super(query);
-        setAccept(MediaType.APPLICATION_OCTET_STREAM);
-        setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        setAccept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+        setContentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
     }
 
     /**
@@ -46,19 +50,33 @@ public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataMedia
      */
     @Override
     public ODataQueryResponse<InputStream> execute() {
-        final Response res = client.accept(getAccept()).get();
-        return new ODataMediaResponseImpl(res);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        try {
+            final HttpResponse res = client.execute(request);
+            return new ODataMediaResponseImpl(client, res);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
     }
 
     protected class ODataMediaResponseImpl extends ODataQueryResponseImpl {
 
-        private ODataMediaResponseImpl(final Response res) {
-            super(res);
+        private ODataMediaResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public InputStream getBody() {
-            return res.readEntity(InputStream.class);
+            try {
+                return res.getEntity().getContent();
+            } catch (IOException e) {
+                throw new HttpClientException(e);
+            } finally {
+                this.close();
+            }
         }
     }
 }

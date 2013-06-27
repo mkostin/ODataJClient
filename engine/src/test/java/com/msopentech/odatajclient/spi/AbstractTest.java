@@ -46,6 +46,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.Properties;
+import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -302,27 +303,14 @@ public abstract class AbstractTest {
         }
     }
 
-    protected void debugInputStream(final InputStream is, final String message) {
+    protected void debugInputStream(final InputStream input, final String message) {
         if (LOG.isDebugEnabled()) {
             try {
-                final byte[] buffer = new byte[1024];
-                int length = 0;
-
-                final StringBuilder builder = new StringBuilder();
-
-                while ((length = is.read(buffer)) >= 0) {
-                    builder.append(new String(buffer, 0, length));
-                }
-
-                LOG.debug(message + "\n{}", builder.toString());
+                LOG.debug(message + "\n{}", IOUtils.toString(input));
             } catch (IOException e) {
                 LOG.error("Error writing stream", e);
             } finally {
-                try {
-                    is.close();
-                } catch (Exception ignore) {
-                    // ignore
-                }
+                IOUtils.closeQuietly(input);
             }
         }
     }

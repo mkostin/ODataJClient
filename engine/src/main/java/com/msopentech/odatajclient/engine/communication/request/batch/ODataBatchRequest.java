@@ -157,15 +157,8 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
         @Override
         public ODataBatchResponse getResponse() {
             closeCurrentItem();
-
             streamCloseDelimiter();
-
-            try {
-                finalizeBody();
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-
+            finalizeBody();
             return null;
         }
 
@@ -177,15 +170,8 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
         @Override
         public Future<ODataBatchResponse> asyncResponse() {
             closeCurrentItem();
-
             streamCloseDelimiter();
-
-            try {
-                finalizeBody();
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-
+            finalizeBody();
             return null;
         }
 

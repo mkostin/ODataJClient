@@ -57,21 +57,22 @@
     <targetJdk>1.6</targetJdk>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
-    <cxf.version>2.7.5</cxf.version>
+    <hc.client.version>4.2.5</hc.client.version>
     <jackson.version>2.2.2</jackson.version>
     
+    <commons.io.version>2.4</commons.io.version>
+    <commons.lang3.version>3.1</commons.lang3.version>
+
     <sl4j.version>1.7.5</sl4j.version>
     <logback.version>1.0.13</logback.version>
-    <commons.codec.version>1.6</commons.codec.version>
-    <commons.lang3.version>3.1</commons.lang3.version>
   </properties>
   
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>${commons.codec.version}</version>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons.io.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -80,16 +81,11 @@
       </dependency>
     
       <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-        <version>${cxf.version}</version>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${hc.client.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-rt-transports-http-hc</artifactId>
-        <version>${cxf.version}</version>
-      </dependency>
-    
+
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>

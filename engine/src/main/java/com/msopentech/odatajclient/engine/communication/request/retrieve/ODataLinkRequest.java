@@ -15,14 +15,17 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData link query request.
@@ -48,29 +51,39 @@ public class ODataLinkRequest extends ODataQueryRequest<List<URI>, ODataProperty
      */
     @Override
     public ODataQueryResponse<List<URI>> execute() {
-        final Response res = client.accept(getAccept()).get();
-        return new ODataEntitySetResponseImpl(res);
+        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
+        try {
+            final HttpResponse res = client.execute(request);
+            return new ODataEntitySetResponseImpl(client, res);
+        } catch (IOException e) {
+            throw new HttpClientException(e);
+        } catch (RuntimeException e) {
+            this.request.abort();
+            throw new HttpClientException(e);
+        }
     }
 
     protected class ODataEntitySetResponseImpl extends ODataQueryResponseImpl {
 
         private List<URI> links = null;
 
-        private ODataEntitySetResponseImpl(final Response res) {
-            super(res);
+        private ODataEntitySetResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
         public List<URI> getBody() {
-            try {
-                if (links == null) {
+            if (links == null) {
+                try {
                     links = ODataReader.getLinks(
-                            res.readEntity(InputStream.class), ODataPropertyFormat.valueOf(getFormat()));
+                            res.getEntity().getContent(), ODataPropertyFormat.valueOf(getFormat()));
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
                 }
-                return links;
-            } finally {
-                res.close();
             }
+            return links;
         }
     }
 }

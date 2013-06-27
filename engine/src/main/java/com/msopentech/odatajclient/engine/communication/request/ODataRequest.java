@@ -32,13 +32,12 @@ public interface ODataRequest {
      */
     public enum Method {
 
-        NONE,
         GET,
         POST,
-        DELETE,
         PUT,
         PATCH,
-        MERGE
+        MERGE,
+        DELETE;
 
     }
 

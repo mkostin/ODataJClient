@@ -21,7 +21,8 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Met
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
 import java.net.URI;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This is an abstract representation of an OData retrieve query request returning one or more result item.
@@ -58,8 +59,8 @@ abstract class ODataQueryRequest<V, T extends Enum<T>>
 
     protected abstract class ODataQueryResponseImpl extends ODataResponseImpl implements ODataQueryResponse<V> {
 
-        protected ODataQueryResponseImpl(final Response res) {
-            super(res);
+        protected ODataQueryResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
         }
 
         @Override
