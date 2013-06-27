@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
@@ -31,7 +31,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getServiceDocumentRequest(java.lang.String)
  */
-public class ODataServiceDocumentRequest extends ODataQueryRequest<ODataServiceDocument, ODataServiceDocumentFormat> {
+public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServiceDocument, ODataServiceDocumentFormat> {
 
     /**
      * Constructor.
@@ -46,12 +46,12 @@ public class ODataServiceDocumentRequest extends ODataQueryRequest<ODataServiceD
      * {@inheritDoc }
      */
     @Override
-    public ODataQueryResponse<ODataServiceDocument> execute() {
+    public ODataRetrieveResponse<ODataServiceDocument> execute() {
         final HttpResponse res = doExecute();
         return new ODataServiceResponseImpl(client, res);
     }
 
-    protected class ODataServiceResponseImpl extends ODataQueryResponseImpl {
+    protected class ODataServiceResponseImpl extends ODataRetrieveResponseImpl {
 
         private ODataServiceDocument serviceDocument = null;
 

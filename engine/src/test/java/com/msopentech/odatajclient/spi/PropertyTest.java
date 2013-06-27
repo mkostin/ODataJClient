@@ -29,7 +29,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPr
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUpdateResponse;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
@@ -139,7 +139,7 @@ public class PropertyTest extends AbstractTest {
         final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
         req.setFormat(ODataValueFormat.TEXT);
 
-        final ODataQueryResponse<ODataValue> res = req.execute();
+        final ODataRetrieveResponse<ODataValue> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         final ODataValue value = res.getBody();
@@ -157,7 +157,7 @@ public class PropertyTest extends AbstractTest {
         final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
         req.setFormat(ODataValueFormat.TEXT);
 
-        final ODataQueryResponse<ODataValue> res = req.execute();
+        final ODataRetrieveResponse<ODataValue> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         final ODataValue value = res.getBody();
@@ -177,7 +177,7 @@ public class PropertyTest extends AbstractTest {
         ODataValueRequest retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
 
-        ODataQueryResponse<ODataValue> retrieveRes = retrieveReq.execute();
+        ODataRetrieveResponse<ODataValue> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
 
         ODataValue phoneNumber = retrieveRes.getBody();
@@ -216,7 +216,7 @@ public class PropertyTest extends AbstractTest {
         ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
 
-        ODataQueryResponse<ODataProperty> retrieveRes = retrieveReq.execute();
+        ODataRetrieveResponse<ODataProperty> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
 
         ODataProperty primaryContactInfo = retrieveRes.getBody();
@@ -258,7 +258,7 @@ public class PropertyTest extends AbstractTest {
         ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
 
-        ODataQueryResponse<ODataProperty> retrieveRes = retrieveReq.execute();
+        ODataRetrieveResponse<ODataProperty> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
 
         ODataProperty alternativeNames = retrieveRes.getBody();
@@ -300,7 +300,7 @@ public class PropertyTest extends AbstractTest {
         ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
 
-        ODataQueryResponse<ODataProperty> retrieveRes = retrieveReq.execute();
+        ODataRetrieveResponse<ODataProperty> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
 
         ODataProperty phoneNumber = retrieveRes.getBody();
@@ -339,7 +339,7 @@ public class PropertyTest extends AbstractTest {
         final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataProperty> res = req.execute();
+        final ODataRetrieveResponse<ODataProperty> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         final ODataProperty property = res.getBody();
@@ -359,7 +359,7 @@ public class PropertyTest extends AbstractTest {
         final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataProperty> res = req.execute();
+        final ODataRetrieveResponse<ODataProperty> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         final ODataProperty property = res.getBody();
@@ -379,7 +379,7 @@ public class PropertyTest extends AbstractTest {
         final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataProperty> res = req.execute();
+        final ODataRetrieveResponse<ODataProperty> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         final ODataProperty property = res.getBody();

@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
@@ -33,7 +33,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getValueRequest(java.net.URI)
  */
-public class ODataValueRequest extends ODataQueryRequest<ODataValue, ODataValueFormat> {
+public class ODataValueRequest extends ODataRetrieveRequest<ODataValue, ODataValueFormat> {
 
     /**
      * Private constructor.
@@ -48,12 +48,12 @@ public class ODataValueRequest extends ODataQueryRequest<ODataValue, ODataValueF
      * {@inheritDoc }
      */
     @Override
-    public ODataQueryResponse<ODataValue> execute() {
+    public ODataRetrieveResponse<ODataValue> execute() {
         final HttpResponse res = doExecute();
         return new ODataValueResponseImpl(client, res);
     }
 
-    protected class ODataValueResponseImpl extends ODataQueryResponseImpl {
+    protected class ODataValueResponseImpl extends ODataRetrieveResponseImpl {
 
         private ODataValue value = null;
 

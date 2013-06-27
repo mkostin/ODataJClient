@@ -27,7 +27,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEn
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
@@ -142,7 +142,7 @@ public class EntityCreateTest extends AbstractTest {
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
         final ODataEntity entity = res.getBody();
         assertNotNull(entity);
 
@@ -185,7 +185,7 @@ public class EntityCreateTest extends AbstractTest {
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(ODataFormat.ATOM);
 
-        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
         final ODataEntity entity = res.getBody();
 
         assertNotNull(entity);
@@ -208,7 +208,7 @@ public class EntityCreateTest extends AbstractTest {
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
         final ODataEntity entity = res.getBody();
 
         assertNotNull(entity);
@@ -295,7 +295,7 @@ public class EntityCreateTest extends AbstractTest {
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         final ODataEntity actual = res.getBody();
@@ -345,7 +345,7 @@ public class EntityCreateTest extends AbstractTest {
             final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(selflLink);
             retrieveReq.setFormat(format);
 
-            final ODataQueryResponse<ODataEntity> retrieveRes = retrieveReq.execute();
+            final ODataRetrieveResponse<ODataEntity> retrieveRes = retrieveReq.execute();
             assertEquals(404, retrieveRes.getStatusCode());
             retrieveRes.close();
         }
@@ -368,7 +368,7 @@ public class EntityCreateTest extends AbstractTest {
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataEntity> res = req.execute();
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         final ODataEntity info = res.getBody();

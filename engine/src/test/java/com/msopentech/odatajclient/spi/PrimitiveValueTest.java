@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
@@ -45,7 +45,7 @@ public class PrimitiveValueTest extends AbstractTest {
         final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         req.setFormat(ODataPropertyFormat.XML);
 
-        final ODataQueryResponse<ODataProperty> res = req.execute();
+        final ODataRetrieveResponse<ODataProperty> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         final ODataProperty property = res.getBody();

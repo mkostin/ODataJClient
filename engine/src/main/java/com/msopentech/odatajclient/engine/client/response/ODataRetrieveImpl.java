@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.client.response;
 
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieve;
 import java.util.Iterator;
@@ -28,7 +28,7 @@ class ODataRetrieveImpl extends ODataBatchResponseItemImpl implements ODataRetri
     /**
      * Constructor.
      */
-    ODataRetrieveImpl(final ODataQueryResponse response) {
+    ODataRetrieveImpl(final ODataRetrieveResponse response) {
         super.addResponse(response);
     }
 

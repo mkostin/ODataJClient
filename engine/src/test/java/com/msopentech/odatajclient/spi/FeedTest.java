@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
@@ -77,7 +77,7 @@ public class FeedTest extends AbstractTest {
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataFeed> res = req.execute();
+        final ODataRetrieveResponse<ODataFeed> res = req.execute();
         final ODataFeed feed = res.getBody();
 
         assertNotNull(feed);
@@ -120,7 +120,7 @@ public class FeedTest extends AbstractTest {
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataQueryResponse<ODataFeed> res = req.execute();
+        final ODataRetrieveResponse<ODataFeed> res = req.execute();
         final ODataFeed feed = res.getBody();
 
         assertNotNull(feed);

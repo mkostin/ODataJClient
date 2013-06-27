@@ -23,7 +23,7 @@ import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamU
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import java.io.ByteArrayInputStream;
@@ -52,7 +52,7 @@ public class MediaResourceTest extends AbstractTest {
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
 
-        final ODataQueryResponse<InputStream> retrieveRes = retrieveReq.execute();
+        final ODataRetrieveResponse<InputStream> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
 
         final StringBuilder resBuilder = new StringBuilder();

@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
-import com.msopentech.odatajclient.engine.communication.response.ODataQueryResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.types.ODataMediaFormat;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +31,7 @@ import org.apache.http.entity.ContentType;
  *
  * @see ODataRetrieveRequestFactory#getMediaRequest(java.net.URI)
  */
-public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataMediaFormat> {
+public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMediaFormat> {
 
     /**
      * Private constructor.
@@ -48,12 +48,12 @@ public class ODataMediaRequest extends ODataQueryRequest<InputStream, ODataMedia
      * {@inheritDoc }
      */
     @Override
-    public ODataQueryResponse<InputStream> execute() {
+    public ODataRetrieveResponse<InputStream> execute() {
         final HttpResponse res = doExecute();
         return new ODataMediaResponseImpl(client, res);
     }
 
-    protected class ODataMediaResponseImpl extends ODataQueryResponseImpl {
+    protected class ODataMediaResponseImpl extends ODataRetrieveResponseImpl {
 
         private ODataMediaResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);

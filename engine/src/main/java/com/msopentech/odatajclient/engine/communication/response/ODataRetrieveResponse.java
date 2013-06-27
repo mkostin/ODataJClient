@@ -18,9 +18,9 @@ package com.msopentech.odatajclient.engine.communication.response;
 /**
  * This class implements a response to a specific query request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataQueryRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequest
  */
-public interface ODataQueryResponse<T> extends ODataResponse {
+public interface ODataRetrieveResponse<T> extends ODataResponse {
 
     /**
      * Gets query result objects.
