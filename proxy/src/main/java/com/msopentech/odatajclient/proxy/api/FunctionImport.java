@@ -65,5 +65,5 @@ public @interface FunctionImport {
      * if not NONE, this annotates a legacy service operation.
      * @return 
      */
-    ODataRequest.Method httpMethod() default ODataRequest.Method.NONE;
+    ODataRequest.Method httpMethod() default ODataRequest.Method.GET;
 }
