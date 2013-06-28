@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.entity.ContentType;
 
 /**
  * This class implements an OData media query request.
@@ -40,8 +39,8 @@ public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMe
      */
     ODataMediaRequest(final URI query) {
         super(query);
-        setAccept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
-        setContentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+        setAccept(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
+        setContentType(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
     }
 
     /**

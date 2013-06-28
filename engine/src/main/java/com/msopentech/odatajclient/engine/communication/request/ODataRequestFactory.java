@@ -25,7 +25,6 @@ import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEn
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataRemoveLinkRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataSetLinkRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataValueUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequest;
@@ -112,19 +111,6 @@ public final class ODataRequestFactory {
             final InputStream media) {
 
         return ODataCUDRequestFactory.getMediaEntityUpdateRequest(editURI, media);
-    }
-
-    /**
-     * Gets a stream create request object instance.
-     * <p>
-     * Use this kind of request to create a named stream property.
-     *
-     * @param targetURI target URI.
-     * @param stream stream to be created.
-     * @return new ODataCreateStreamRequest instance.
-     */
-    public static ODataStreamCreateRequest getStreamCreateRequest(final URI targetURI, final InputStream stream) {
-        return ODataCUDRequestFactory.getStreamCreateRequest(targetURI, stream);
     }
 
     /**

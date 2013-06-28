@@ -54,19 +54,6 @@ public class ODataCUDRequestFactory {
     }
 
     /**
-     * Gets a stream create request object instance.
-     * <p>
-     * Use this kind of request to create a named stream property.
-     *
-     * @param targetURI target URI.
-     * @param stream stream to be created.
-     * @return new ODataCreateStreamRequest instance.
-     */
-    public static ODataStreamCreateRequest getStreamCreateRequest(final URI targetURI, final InputStream stream) {
-        return new ODataStreamCreateRequest(targetURI, stream);
-    }
-
-    /**
      * Gets a stream update request object instance.
      * <p>
      * Use this kind of request to update a named stream property.
