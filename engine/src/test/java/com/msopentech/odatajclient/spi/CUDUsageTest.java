@@ -21,14 +21,11 @@ import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityC
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamCreateRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamCreateRequest.StreamCreateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
-import com.msopentech.odatajclient.engine.communication.response.ODataStreamCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
@@ -37,8 +34,6 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class CUDUsageTest {
 
@@ -150,15 +145,5 @@ public class CUDUsageTest {
         String statusMessage = res.getStatusMessage();
 
         // .....
-    }
-
-    public void createNamedStream() throws FileNotFoundException {
-        final ODataURIBuilder targetURI = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
-
-        final ODataStreamCreateRequest req =
-                ODataCUDRequestFactory.getStreamCreateRequest(targetURI.build(), new FileInputStream("/tmp/photo.png"));
-
-        StreamCreateRequestPayload payload = req.execute();
-        ODataStreamCreateResponse response = payload.getResponse();
     }
 }

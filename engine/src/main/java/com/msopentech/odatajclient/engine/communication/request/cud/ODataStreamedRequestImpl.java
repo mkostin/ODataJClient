@@ -20,13 +20,12 @@ import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
-import com.msopentech.odatajclient.engine.types.ODataMediaFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 
@@ -43,8 +42,6 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      * OData request payload.
      */
     protected ODataStreamingManagement<V> payload = null;
-
-    private ODataMediaFormat format;
 
     protected HttpResponse res = null;
 
@@ -68,24 +65,6 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     protected abstract T getPayload();
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final ODataMediaFormat getFormat() {
-        return format == null ? ODataMediaFormat.APPLICATION_OCTET_STREAM : format;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final void setFormat(final ODataMediaFormat format) {
-        this.format = format;
-        setAccept(format.toString());
-        setContentType(format.toString());
-    }
-
-    /**
      * {@inheritDoc }
      */
     @Override
@@ -93,7 +72,7 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     public T execute() {
         payload = getPayload();
 
-        ((HttpPut) request).setEntity(new InputStreamEntity(payload.getBody(), -1));
+        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(payload.getBody(), -1));
         res = doExecute();
 
         // return the payload object

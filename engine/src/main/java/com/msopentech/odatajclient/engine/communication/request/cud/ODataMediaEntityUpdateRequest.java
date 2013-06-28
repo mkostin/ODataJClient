@@ -15,13 +15,21 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityUpdateRequest.MediaEntityUpdateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData Media Entity create request.
@@ -31,7 +39,7 @@ import java.util.concurrent.Future;
  * java.io.InputStream)
  */
 public class ODataMediaEntityUpdateRequest
-        extends ODataStreamedRequestImpl<ODataMediaEntityUpdateResponse, MediaEntityUpdateRequestPayload>
+        extends ODataStreamedEntityRequestImpl<ODataMediaEntityUpdateResponse, MediaEntityUpdateRequestPayload>
         implements ODataBatchableRequest {
 
     private final InputStream media;
@@ -77,7 +85,8 @@ public class ODataMediaEntityUpdateRequest
          */
         @Override
         public ODataMediaEntityUpdateResponse getResponse() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            finalizeBody();
+            return new ODataMediaEntityUpdateResponseImpl(client, res);
         }
 
         /**
@@ -85,7 +94,32 @@ public class ODataMediaEntityUpdateRequest
          */
         @Override
         public Future<ODataMediaEntityUpdateResponse> asyncResponse() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            finalizeBody();
+            return null;
+        }
+    }
+
+    private class ODataMediaEntityUpdateResponseImpl extends ODataResponseImpl
+            implements ODataMediaEntityUpdateResponse {
+
+        private ODataEntity entity = null;
+
+        public ODataMediaEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
+        }
+
+        @Override
+        public ODataEntity getBody() {
+            if (entity == null) {
+                try {
+                    entity = ODataReader.readEntity(res.getEntity().getContent(), getFormat());
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
+                }
+            }
+            return entity;
         }
     }
 }

@@ -15,13 +15,21 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest.MediaEntityCreateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityCreateResponse;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData Media Entity create request.
@@ -31,7 +39,7 @@ import java.util.concurrent.Future;
  * java.io.InputStream)
  */
 public class ODataMediaEntityCreateRequest
-        extends ODataStreamedRequestImpl<ODataMediaEntityCreateResponse, MediaEntityCreateRequestPayload>
+        extends ODataStreamedEntityRequestImpl<ODataMediaEntityCreateResponse, MediaEntityCreateRequestPayload>
         implements ODataBatchableRequest {
 
     private final InputStream media;
@@ -77,7 +85,8 @@ public class ODataMediaEntityCreateRequest
          */
         @Override
         public ODataMediaEntityCreateResponse getResponse() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            finalizeBody();
+            return new ODataMediaEntityCreateResponseImpl(client, res);
         }
 
         /**
@@ -85,7 +94,32 @@ public class ODataMediaEntityCreateRequest
          */
         @Override
         public Future<ODataMediaEntityCreateResponse> asyncResponse() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            finalizeBody();
+            return null;
+        }
+    }
+
+    private class ODataMediaEntityCreateResponseImpl extends ODataResponseImpl
+            implements ODataMediaEntityCreateResponse {
+
+        private ODataEntity entity = null;
+
+        public ODataMediaEntityCreateResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
+        }
+
+        @Override
+        public ODataEntity getBody() {
+            if (entity == null) {
+                try {
+                    entity = ODataReader.readEntity(res.getEntity().getContent(), getFormat());
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                } finally {
+                    this.close();
+                }
+            }
+            return entity;
         }
     }
 }
