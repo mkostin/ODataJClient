@@ -21,7 +21,7 @@
 
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient</artifactId>
-  <version>M2-SNAPSHOT</version>
+  <version>M3-SNAPSHOT</version>
   <name>Client OData libray for Java</name>
   <description>Java client API for OData 3.0 services</description>
 
