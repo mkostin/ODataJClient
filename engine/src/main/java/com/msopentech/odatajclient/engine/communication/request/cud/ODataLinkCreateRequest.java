@@ -63,7 +63,7 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     public ODataLinkOperationResponse execute() {
-        final InputStream input = ODataWriter.writeLink(link, ODataPropertyFormat.valueOf(getFormat()));
+        final InputStream input = getPayload();
         ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
 
         try {
@@ -78,7 +78,7 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      * {@inheritDoc}
      */
     @Override
-    protected byte[] getPayload() {
-        return link.getLink().toString().getBytes();
+    protected InputStream getPayload() {
+        return ODataWriter.writeLink(link, ODataPropertyFormat.valueOf(getFormat()));
     }
 }

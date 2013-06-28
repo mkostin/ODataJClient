@@ -66,7 +66,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     public ODataEntityCreateResponse execute() {
-        final InputStream input = ODataWriter.writeEntity(entity, ODataFormat.valueOf(getFormat()));
+        final InputStream input = getPayload();
         ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
 
         try {
@@ -81,8 +81,8 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      * {@inheritDoc }
      */
     @Override
-    protected byte[] getPayload() {
-        return new byte[0];
+    protected InputStream getPayload() {
+        return ODataWriter.writeEntity(entity, ODataFormat.valueOf(getFormat()));
     }
 
     private class ODataEntityCreateResponseImpl extends ODataResponseImpl implements ODataEntityCreateResponse {

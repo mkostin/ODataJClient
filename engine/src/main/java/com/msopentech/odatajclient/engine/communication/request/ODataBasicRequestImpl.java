@@ -19,11 +19,13 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatch
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Basic request abstract implementation.
@@ -85,7 +87,7 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      *
      * @return byte array representation of the entire payload.
      */
-    protected abstract byte[] getPayload();
+    protected abstract InputStream getPayload();
 
     /**
      * Serializes the full request into the given batch request.
@@ -96,7 +98,12 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
         try {
             req.rawAppend(toByteArray());
             req.rawAppend(ODataStreamer.CRLF);
-            req.rawAppend(getPayload());
+
+            final InputStream payload = getPayload();
+            if (payload != null) {
+                req.rawAppend(IOUtils.toByteArray(getPayload()));
+            }
+
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

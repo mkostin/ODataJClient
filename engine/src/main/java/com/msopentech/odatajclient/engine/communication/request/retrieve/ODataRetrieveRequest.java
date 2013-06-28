@@ -20,6 +20,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataBasicReques
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
+import java.io.InputStream;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -50,11 +51,11 @@ abstract class ODataRetrieveRequest<V, T extends Enum<T>>
     /**
      * {@inheritDoc }
      * <p>
-     * This kind of request doesn't have any payload: an empty byte array will be returned.
+     * This kind of request doesn't have any payload: null will be returned.
      */
     @Override
-    protected byte[] getPayload() {
-        return new byte[0];
+    protected InputStream getPayload() {
+        return null;
     }
 
     protected abstract class ODataRetrieveResponseImpl extends ODataResponseImpl implements ODataRetrieveResponse<V> {

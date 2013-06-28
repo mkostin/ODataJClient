@@ -20,7 +20,6 @@ package com.msopentech.odatajclient.engine.communication.response;
  *
  * @see com.msopentech.odatajclient.engine.communication.request.ODataLinkCreateRequest
  * @see com.msopentech.odatajclient.engine.communication.request.ODataLinkUpdateRequest
- * @see com.msopentech.odatajclient.engine.communication.request.ODataLinkRemoveRequest
  */
 public interface ODataLinkOperationResponse extends ODataResponse {
 }

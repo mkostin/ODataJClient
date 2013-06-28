@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
@@ -23,6 +24,11 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -43,7 +49,9 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      */
     protected ODataStreamingManagement<V> payload = null;
 
-    protected HttpResponse res = null;
+    private Future<HttpResponse> futureRes = null;
+
+    private final ExecutorService threadpool = Executors.newFixedThreadPool(1);
 
     /**
      * Constructor.
@@ -73,7 +81,8 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
         payload = getPayload();
 
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(payload.getBody(), -1));
-        res = doExecute();
+
+        futureRes = threadpool.submit(new Executor());
 
         // return the payload object
         return (T) payload;
@@ -92,21 +101,34 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
         try {
             // finalize the body
             getPayload().finalizeBody();
-
+            
             req.rawAppend(toByteArray());
             req.rawAppend(ODataStreamer.CRLF);
-
-            final byte[] buff = new byte[1024];
-
-            int len;
-
-            while ((len = input.read(buff)) >= 0) {
-                req.rawAppend(buff, 0, len);
-            }
+            
+            req.rawAppend(IOUtils.toByteArray(input));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         } finally {
             IOUtils.closeQuietly(input);
+        }
+    }
+
+    protected HttpResponse getResponse() {
+        try {
+            return futureRes.get(30, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            LOG.error("Failure executing request");
+            throw new HttpClientException(e);
+        } finally {
+            threadpool.shutdownNow();
+        }
+    }
+
+    private class Executor implements Callable<HttpResponse> {
+
+        @Override
+        public HttpResponse call() throws Exception {
+            return doExecute();
         }
     }
 }

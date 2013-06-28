@@ -62,17 +62,9 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
         this.property = property;
     }
 
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    protected byte[] getPayload() {
-        return new byte[0];
-    }
-
     @Override
     public ODataPropertyUpdateResponse execute() {
-        final InputStream input = ODataWriter.writeProperty(property, ODataPropertyFormat.valueOf(getFormat()));
+        final InputStream input = getPayload();
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
 
         try {
@@ -81,6 +73,14 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
         } finally {
             IOUtils.closeQuietly(input);
         }
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    protected InputStream getPayload() {
+        return ODataWriter.writeProperty(property, ODataPropertyFormat.valueOf(getFormat()));
     }
 
     private class ODataPropertyUpdateResponseImpl extends ODataResponseImpl implements ODataPropertyUpdateResponse {

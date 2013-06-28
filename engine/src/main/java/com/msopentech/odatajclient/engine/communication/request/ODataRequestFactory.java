@@ -23,7 +23,6 @@ import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityU
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkRemoveRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataValueUpdateRequest;
@@ -218,18 +217,6 @@ public final class ODataRequestFactory {
             final URI targetURI, final UpdateType type, final ODataLink link) {
 
         return ODataCUDRequestFactory.getLinkUpdateRequest(targetURI, type, link);
-    }
-
-    /**
-     * Gets a remove link request object instance.
-     * <p>
-     * Use this kind of request to remove a navigation link between existing entities.
-     *
-     * @param linkToBeRemoved navigation link to be removed.
-     * @return new ODataRemovedLinkRequest instance.
-     */
-    public static ODataLinkRemoveRequest getLinkRemoveRequest(final URI linkToBeRemoved) {
-        return ODataCUDRequestFactory.getLinkRemoveRequest(linkToBeRemoved);
     }
 
     /**

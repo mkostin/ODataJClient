@@ -86,7 +86,7 @@ public class ODataMediaEntityUpdateRequest
         @Override
         public ODataMediaEntityUpdateResponse getResponse() {
             finalizeBody();
-            return new ODataMediaEntityUpdateResponseImpl(client, res);
+            return new ODataMediaEntityUpdateResponseImpl(client, ODataMediaEntityUpdateRequest.this.getResponse());
         }
 
         /**

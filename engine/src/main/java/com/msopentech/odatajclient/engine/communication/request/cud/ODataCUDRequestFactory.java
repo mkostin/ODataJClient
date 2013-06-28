@@ -176,18 +176,6 @@ public final class ODataCUDRequestFactory {
     }
 
     /**
-     * Gets a remove link request object instance.
-     * <p>
-     * Use this kind of request to remove a navigation link between existing entities.
-     *
-     * @param linkToBeRemoved navigation link to be removed.
-     * @return new ODataLinkRemoveRequest instance.
-     */
-    public static ODataLinkRemoveRequest getLinkRemoveRequest(final URI linkToBeRemoved) {
-        return new ODataLinkRemoveRequest(linkToBeRemoved);
-    }
-
-    /**
      * Gets a delete request object instance.
      * <p>
      * Use this kind of request to delete an entity and media entity as well.

@@ -81,7 +81,7 @@ public class ODataStreamUpdateRequest
         @Override
         public ODataStreamUpdateResponse getResponse() {
             finalizeBody();
-            return new ODataStreamUpdateResponseImpl(client, res);
+            return new ODataStreamUpdateResponseImpl(client, ODataStreamUpdateRequest.this.getResponse());
         }
 
         /**

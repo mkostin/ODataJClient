@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequestFact
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import java.io.InputStream;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -56,11 +57,11 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
     /**
      * {@inheritDoc }
      * <p>
-     * No payload: empty byte array will be returned.
+     * No payload: null will be returned.
      */
     @Override
-    protected byte[] getPayload() {
-        return new byte[0];
+    protected InputStream getPayload() {
+        return null;
     }
 
     private static class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {

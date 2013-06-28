@@ -40,9 +40,8 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.IOException;
 import java.util.concurrent.Future;
-import org.junit.Ignore;
 
-public class StreamingTest {
+public class StreamingTest extends AbstractTest {
 
     private static String PREFIX = "!!PREFIX!!";
 
@@ -51,7 +50,6 @@ public class StreamingTest {
     private static int MAX = 10000;
 
     @Test
-    @Ignore
     public void stringStreaming() {
         final ODataStreamingMgt streaming = new ODataStreamingMgt();
 
@@ -68,13 +66,11 @@ public class StreamingTest {
     }
 
     @Test
-    @Ignore
     public void batchRequestStreaming() {
         // create your request
-        final ODataBatchRequest request =
-                ODataBatchRequestFactory.getBatchRequest("http://services.odata.org/OData/Odata.svc");
+        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testODataServiceRootURL);
 
-        final ODataBatchRequest.BatchRequestPayload payload = request.execute();
+        final BatchRequestPayload payload = request.execute();
 
         new BatchStreamingThread(payload).start();
 
@@ -84,8 +80,8 @@ public class StreamingTest {
         ODataRetrieve retrieve = payload.addRetrieve();
 
         // prepare URI
-        ODataURIBuilder uri = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
-        uri.appendEntityTypeSegment("Products(0)").expand("Supplier").select("Rating,Supplier/Name");
+        ODataURIBuilder uri = new ODataURIBuilder(testODataServiceRootURL);
+        uri.appendEntityTypeSegment("Customer(-10)").expand("Logins").select("CustomerId,Logins/Username");
 
         // create new request
         ODataEntityRequest query = ODataRetrieveRequestFactory.getEntityRequest(uri.build());
@@ -104,13 +100,14 @@ public class StreamingTest {
         // add several request into the changeset
         for (int i = 0; i < 2; i++) {
             // provide the target URI
-            final ODataURIBuilder targetURI = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
-            targetURI.appendEntityTypeSegment("Products(2)");
+            final ODataURIBuilder targetURI = new ODataURIBuilder(testODataServiceRootURL);
+            targetURI.appendEntityTypeSegment("Login('4')");
 
             // build the new object to change Rating value
-            final ODataEntity changes = ODataFactory.newEntity("Java Code");
-            changes.addProperty(new ODataProperty("Rating",
-                    new ODataPrimitiveValue.Builder().setText("3").setType(EdmSimpleType.INT_32).build()));
+            final ODataEntity changes =
+                    ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Login");
+            changes.addProperty(new ODataProperty("Username",
+                    new ODataPrimitiveValue.Builder().setText("myuid").setType(EdmSimpleType.STRING).build()));
 
             // create your request
             final ODataEntityUpdateRequest change =
@@ -128,17 +125,18 @@ public class StreamingTest {
         retrieve = payload.addRetrieve();
 
         // prepare URI
-        uri = new ODataURIBuilder("http://services.odata.org/OData/Odata.svc");
-        uri.appendEntityTypeSegment("Products(2)");
+        uri = new ODataURIBuilder(testODataServiceRootURL);
+        uri.appendEntityTypeSegment("Login('4')");
 
         // create new request
         query = ODataRetrieveRequestFactory.getEntityRequest(uri.build());
-        query.setDataServiceVersion("2.0");
+        query.setDataServiceVersion("3.0");
 
         retrieve.setRequest(query);
         // -------------------------------------------
 
         final ODataBatchResponse response = payload.getResponse();
+        payload.finalizeBody();
     }
 
     private static class ODataStreamingMgt extends ODataStreamingManagement<ODataBatchResponse> {

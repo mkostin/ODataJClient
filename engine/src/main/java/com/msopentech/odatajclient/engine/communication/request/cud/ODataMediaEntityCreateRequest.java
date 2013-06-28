@@ -86,7 +86,7 @@ public class ODataMediaEntityCreateRequest
         @Override
         public ODataMediaEntityCreateResponse getResponse() {
             finalizeBody();
-            return new ODataMediaEntityCreateResponseImpl(client, res);
+            return new ODataMediaEntityCreateResponseImpl(client, ODataMediaEntityCreateRequest.this.getResponse());
         }
 
         /**

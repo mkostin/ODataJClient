@@ -22,9 +22,10 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatch
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
+import org.apache.commons.io.IOUtils;
 
 /**
  * This class implements an OData invoke operation request.
@@ -95,7 +96,7 @@ public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeRespons
      * {@inheritDoc }
      */
     @Override
-    protected byte[] getPayload() {
+    protected InputStream getPayload() {
         final StringBuilder builder = new StringBuilder();
 
         if (parameters != null) {
@@ -104,10 +105,6 @@ public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeRespons
             }
         }
 
-        try {
-            return builder.toString().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
+        return IOUtils.toInputStream(builder.toString());
     }
 }

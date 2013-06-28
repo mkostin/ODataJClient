@@ -62,17 +62,9 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
         this.value = value;
     }
 
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    protected byte[] getPayload() {
-        return new byte[0];
-    }
-
     @Override
     public ODataValueUpdateResponseImpl execute() {
-        final InputStream input = IOUtils.toInputStream(value.toString());
+        final InputStream input = getPayload();
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
 
         try {
@@ -81,6 +73,14 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
         } finally {
             IOUtils.closeQuietly(input);
         }
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    protected InputStream getPayload() {
+        return IOUtils.toInputStream(value.toString());
     }
 
     private class ODataValueUpdateResponseImpl extends ODataResponseImpl implements ODataValueUpdateResponse {
