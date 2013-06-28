@@ -40,9 +40,7 @@ public class ODataLinkRequest extends ODataRetrieveRequest<List<URI>, ODataPrope
      * @param query query to be executed.
      */
     ODataLinkRequest(final URI targetURI, final String linkName) {
-        super(new ODataURIBuilder(targetURI.toASCIIString()).
-                appendStructuralSegment("$links").
-                appendStructuralSegment(linkName).build());
+        super(new ODataURIBuilder(targetURI.toASCIIString()).appendLinksSegment(linkName).build());
     }
 
     /**

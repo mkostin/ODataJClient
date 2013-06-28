@@ -28,6 +28,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
+import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
@@ -40,7 +41,7 @@ import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import com.msopentech.odatajclient.engine.data.Serializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -69,7 +70,7 @@ public class EntityCreateTest extends AbstractTest {
 
         InputStream input = req.rawExecute();
 
-        EntryResource entry = SerializationUtils.deserializeEntry(input, ResourceFactory.entryClassForFormat(format));
+        EntryResource entry = Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format));
         assertNotNull(entry);
 
         input.close();
@@ -89,7 +90,7 @@ public class EntityCreateTest extends AbstractTest {
 
         input = req.rawExecute();
 
-        entry = SerializationUtils.deserializeEntry(input, ResourceFactory.entryClassForFormat(format));
+        entry = Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format));
         assertNotNull(entry);
 
         input.close();

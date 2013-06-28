@@ -20,7 +20,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import com.msopentech.odatajclient.engine.data.Serializer;
+import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         boolean found = false;
 
         for (Node child : getChildNodes(node, Node.ELEMENT_NODE)) {
-            if (ODataConstants.ELEM_ELEMENT.equals(SerializationUtils.getSimpleName(child))) {
+            if (ODataConstants.ELEM_ELEMENT.equals(XMLUtils.getSimpleName(child))) {
                 found = true;
             }
         }
@@ -74,7 +75,7 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
 
     private void writeEntryContent(final JsonGenerator jgen, final Node content) throws IOException {
         for (Node child : getChildNodes(content, Node.ELEMENT_NODE)) {
-            final String childName = SerializationUtils.getSimpleName(child);
+            final String childName = XMLUtils.getSimpleName(child);
             if (hasOnlyTextChildNodes(child)) {
                 if (child.hasChildNodes()) {
                     jgen.writeStringField(childName, child.getChildNodes().item(0).getNodeValue());

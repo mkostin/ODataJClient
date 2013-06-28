@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
-import com.msopentech.odatajclient.engine.communication.header.ODataHeader;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
@@ -27,6 +27,7 @@ import java.net.URI;
 import java.util.Collection;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -59,7 +60,7 @@ public class ODataRequestImpl implements ODataRequest {
     /**
      * OData request header.
      */
-    protected ODataHeader header;
+    protected ODataHeaders odataHeaders;
 
     /**
      * Target URI.
@@ -85,7 +86,7 @@ public class ODataRequestImpl implements ODataRequest {
     protected ODataRequestImpl(final Method method, final URI uri) {
         this.method = method;
         // initialize a default header from configuration
-        this.header = new ODataHeader();
+        this.odataHeaders = new ODataHeaders();
         // target uri
         this.uri = uri;
 
@@ -106,7 +107,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public Collection<String> getHeaderNames() {
-        return header.getHeaderNames();
+        return odataHeaders.getHeaderNames();
     }
 
     /**
@@ -114,7 +115,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getHeader(final String name) {
-        return header.getHeader(name);
+        return odataHeaders.getHeader(name);
     }
 
     /**
@@ -122,7 +123,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void setMaxDataServiceVersion(final String value) {
-        header.setHeader(ODataHeader.HeaderName.maxDataServiceVersion, value);
+        odataHeaders.setHeader(ODataHeaders.HeaderName.maxDataServiceVersion, value);
     }
 
     /**
@@ -130,7 +131,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void setMinDataServiceVersion(final String value) {
-        header.setHeader(ODataHeader.HeaderName.minDataServiceVersion, value);
+        odataHeaders.setHeader(ODataHeaders.HeaderName.minDataServiceVersion, value);
     }
 
     /**
@@ -138,7 +139,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void setAccept(final String value) {
-        header.setHeader(ODataHeader.HeaderName.accept, value);
+        odataHeaders.setHeader(ODataHeaders.HeaderName.accept, value);
     }
 
     /**
@@ -146,7 +147,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void setIfMatch(final String value) {
-        header.setHeader(ODataHeader.HeaderName.ifMatch, value);
+        odataHeaders.setHeader(ODataHeaders.HeaderName.ifMatch, value);
     }
 
     /**
@@ -154,7 +155,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void setIfNoneMatch(final String value) {
-        header.setHeader(ODataHeader.HeaderName.ifNoneMatch, value);
+        odataHeaders.setHeader(ODataHeaders.HeaderName.ifNoneMatch, value);
     }
 
     /**
@@ -162,7 +163,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void setPrefer(final String value) {
-        header.setHeader(ODataHeader.HeaderName.prefer, value);
+        odataHeaders.setHeader(ODataHeaders.HeaderName.prefer, value);
     }
 
     /**
@@ -170,7 +171,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void setHTTPMethod(final String value) {
-        header.setHeader(ODataHeader.HeaderName.xHttpMethod, value);
+        odataHeaders.setHeader(ODataHeaders.HeaderName.xHttpMethod, value);
     }
 
     /**
@@ -178,7 +179,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void setContentType(final String value) {
-        header.setHeader(ODataHeader.HeaderName.contentType, value);
+        odataHeaders.setHeader(ODataHeaders.HeaderName.contentType, value);
     }
 
     /**
@@ -186,7 +187,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void setDataServiceVersion(final String value) {
-        header.setHeader(ODataHeader.HeaderName.dataServiceVersion, value);
+        odataHeaders.setHeader(ODataHeaders.HeaderName.dataServiceVersion, value);
     }
 
     /**
@@ -194,7 +195,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public void addCustomHeader(final String name, final String value) {
-        header.setHeader(name, value);
+        odataHeaders.setHeader(name, value);
     }
 
     /**
@@ -202,7 +203,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getMaxDataServiceVersion() {
-        return header.getHeader(ODataHeader.HeaderName.maxDataServiceVersion);
+        return odataHeaders.getHeader(ODataHeaders.HeaderName.maxDataServiceVersion);
     }
 
     /**
@@ -210,7 +211,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getMinDataServiceVersion() {
-        return header.getHeader(ODataHeader.HeaderName.minDataServiceVersion);
+        return odataHeaders.getHeader(ODataHeaders.HeaderName.minDataServiceVersion);
     }
 
     /**
@@ -218,7 +219,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getAccept() {
-        final String acceptHead = header.getHeader(ODataHeader.HeaderName.accept);
+        final String acceptHead = odataHeaders.getHeader(ODataHeaders.HeaderName.accept);
         return StringUtils.isBlank(acceptHead) ? ODataFormat.JSON.toString() : acceptHead;
     }
 
@@ -227,7 +228,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getIfMatch() {
-        return header.getHeader(ODataHeader.HeaderName.ifMatch);
+        return odataHeaders.getHeader(ODataHeaders.HeaderName.ifMatch);
     }
 
     /**
@@ -235,7 +236,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getIfNoneMatch() {
-        return header.getHeader(ODataHeader.HeaderName.ifNoneMatch);
+        return odataHeaders.getHeader(ODataHeaders.HeaderName.ifNoneMatch);
     }
 
     /**
@@ -243,7 +244,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getPrefer() {
-        return header.getHeader(ODataHeader.HeaderName.prefer);
+        return odataHeaders.getHeader(ODataHeaders.HeaderName.prefer);
     }
 
     /**
@@ -251,7 +252,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getContentType() {
-        final String contentTypeHead = header.getHeader(ODataHeader.HeaderName.contentType);
+        final String contentTypeHead = odataHeaders.getHeader(ODataHeaders.HeaderName.contentType);
         return StringUtils.isBlank(contentTypeHead) ? ODataFormat.JSON.toString() : contentTypeHead;
     }
 
@@ -260,7 +261,7 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public String getDataServiceVersion() {
-        return header.getHeader(ODataHeader.HeaderName.dataServiceVersion);
+        return odataHeaders.getHeader(ODataHeaders.HeaderName.dataServiceVersion);
     }
 
     /**
@@ -276,8 +277,8 @@ public class ODataRequestImpl implements ODataRequest {
      *
      * @return request header.
      */
-    public ODataHeader getHeader() {
-        return header;
+    public ODataHeaders getHeader() {
+        return odataHeaders;
     }
 
     /**
@@ -317,27 +318,29 @@ public class ODataRequestImpl implements ODataRequest {
      */
     @Override
     public InputStream rawExecute() {
-        request.setHeader(ODataHeader.HeaderName.accept.toString(), getAccept());
         try {
-            return client.execute(request).getEntity().getContent();
+            return doExecute().getEntity().getContent();
         } catch (IOException e) {
-            throw new HttpClientException("During raw execution", e);
+            throw new HttpClientException(e);
         } catch (RuntimeException e) {
             this.request.abort();
-            throw new HttpClientException("During raw execution", e);
+            throw new HttpClientException(e);
         }
     }
 
     protected HttpResponse doExecute() {
-        setAccept(getAccept());
-        setContentType(getContentType());
+        for (String key : odataHeaders.getHeaderNames()) {
+            this.request.addHeader(key, odataHeaders.getHeader(key));
+        }
 
-        for (String key : header.getHeaderNames()) {
-            this.request.addHeader(key, header.getHeader(key));
+        if (LOG.isDebugEnabled()) {
+            for (Header header : request.getAllHeaders()) {
+                LOG.debug("HTTP header being sent: " + header);
+            }
         }
 
         try {
-            return client.execute(request);
+            return this.client.execute(this.request);
         } catch (IOException e) {
             throw new HttpClientException(e);
         } catch (RuntimeException e) {

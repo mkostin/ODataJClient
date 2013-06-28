@@ -158,10 +158,10 @@ public class ODataCUDRequestFactory {
      *
      * @param targetURI navigation property's link collection.
      * @param entityToBeAdded navigation link to be added.
-     * @return new ODataAddLinkRequest instance.
+     * @return new ODataInsertLinkRequest instance.
      */
-    public static ODataAddLinkRequest getAddLinkRequest(final URI targetURI, final ODataLink entityToBeAdded) {
-        return new ODataAddLinkRequest(targetURI, entityToBeAdded);
+    public static ODataInsertLinkRequest getInsertLinkRequest(final URI targetURI, final ODataLink entityToBeAdded) {
+        return new ODataInsertLinkRequest(targetURI, entityToBeAdded);
     }
 
     /**
@@ -186,10 +186,10 @@ public class ODataCUDRequestFactory {
      * @param targetURI navigation property's link collection.
      * @param linkToBeRemoved navigation link to be removed.
      * @param entityToBeAdded URL that identifies the entity to be linked.
-     * @return new ODataSetLinkRequest instance.
+     * @return new ODataUpdateLinkRequest instance.
      */
-    public static ODataSetLinkRequest getSetLinkRequest(final URI targetURI, final ODataLink entityToBeAdded) {
-        return new ODataSetLinkRequest(targetURI, entityToBeAdded);
+    public static ODataUpdateLinkRequest getUpdateLinkRequest(final URI targetURI, final ODataLink entityToBeAdded) {
+        return new ODataUpdateLinkRequest(targetURI, entityToBeAdded);
     }
 
     /**

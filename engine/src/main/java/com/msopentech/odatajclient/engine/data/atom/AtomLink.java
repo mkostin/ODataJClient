@@ -15,11 +15,12 @@
  */
 package com.msopentech.odatajclient.engine.data.atom;
 
+import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.LinkResource;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import com.msopentech.odatajclient.engine.data.Serializer;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -346,7 +347,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
 
         final NodeList inlineElements = inlineEntryContent.getElementsByTagName("entry");
         for (int i = 0; i < inlineElements.getLength(); i++) {
-            inlineEntry = SerializationUtils.deserializeAtomEntry(inlineElements.item(i));
+            inlineEntry = Deserializer.toAtomEntry(inlineElements.item(i));
         }
 
         return inlineEntry;
@@ -355,7 +356,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
     @Override
     public void setInlineEntry(final EntryResource entry) {
         Element inlineEntryContent = newInlineContent();
-        SerializationUtils.serializeAsAtom(entry, AtomEntry.class, inlineEntryContent);
+        Serializer.atom(entry, AtomEntry.class, inlineEntryContent);
         getAnyOther().clear();
         getAnyOther().add(inlineEntryContent);
     }

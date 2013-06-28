@@ -15,13 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
-import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.DELETE;
-import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.GET;
-import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.MERGE;
-import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.PATCH;
-import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.POST;
-import static com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method.PUT;
-
 import com.msopentech.odatajclient.engine.client.http.HttpMerge;
 import com.msopentech.odatajclient.engine.client.http.HttpPatch;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
@@ -33,7 +26,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 
-public class URIUtils {
+public final class URIUtils {
+
+    private URIUtils() {
+        // Empty private constructor for static utility classes
+    }
 
     public static URI getURI(final String base, final String href) {
         if (href == null) {

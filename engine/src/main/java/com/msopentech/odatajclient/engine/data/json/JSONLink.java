@@ -39,7 +39,7 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
     public JSONLink() {
     }
 
-    public JSONLink(String title, String rel, String href) {
+    public JSONLink(final String title, final String rel, final String href) {
         this.title = title;
         this.rel = rel;
         this.href = href;
@@ -51,7 +51,7 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
     }
 
     @Override
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -61,7 +61,7 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
     }
 
     @Override
-    public void setRel(String rel) {
+    public void setRel(final String rel) {
         this.rel = rel;
     }
 
@@ -71,7 +71,7 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
     }
 
     @Override
-    public void setHref(String href) {
+    public void setHref(final String href) {
         this.href = href;
     }
 
@@ -81,7 +81,7 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
     }
 
     @Override
-    public void setType(String type) {
+    public void setType(final String type) {
     }
 
     @Override
@@ -90,7 +90,7 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
     }
 
     @Override
-    public void setInlineEntry(EntryResource entry) {
+    public void setInlineEntry(final EntryResource entry) {
         if (entry instanceof JSONEntry) {
             this.entry = (JSONEntry) entry;
         }
@@ -102,7 +102,7 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
     }
 
     @Override
-    public void setInlineFeed(FeedResource feed) {
+    public void setInlineFeed(final FeedResource feed) {
         if (feed instanceof JSONFeed) {
             this.feed = (JSONFeed) feed;
         }

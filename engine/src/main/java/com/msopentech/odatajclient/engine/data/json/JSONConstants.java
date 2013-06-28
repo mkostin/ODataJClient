@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.data.json;
 /**
  * Set of some useful JSON constants.
  */
-final class JSONConstants {
+public final class JSONConstants {
 
     private JSONConstants() {
         // Empty private constructor for static utility classes
@@ -43,7 +43,7 @@ final class JSONConstants {
     public final static String MEDIA_CONTENT_TYPE = "odata.mediaContentType";
 
     public final static String NAVIGATION_LINK_SUFFIX = "@odata.navigationLinkUrl";
-    
+
     public final static String BIND_LINK_SUFFIX = "@odata.bind";
 
     public final static String ASSOCIATION_LINK_SUFFIX = "@odata.associationLinkUrl";
@@ -51,5 +51,7 @@ final class JSONConstants {
     public final static String MEDIAEDIT_LINK_SUFFIX = "@odata.mediaEditLink";
 
     public final static String VALUE = "value";
+
+    public final static String URL = "url";
 
 }

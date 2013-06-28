@@ -36,13 +36,14 @@ public class ODataURIBuilder implements Serializable {
         ENTITYTYPE,
         KEY,
         NAVIGATION,
-        STRUNCTURAL,
+        STRUCTURAL,
         VALUE,
         FUNCTION,
         LEGACY,
         ACTION,
         METADATA("$metadata"),
         BATCH("$batch"),
+        LINKS("$links"),
         SERVICEROOT;
 
         private String value;
@@ -251,7 +252,13 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURI object.
      */
     public ODataURIBuilder appendStructuralSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.STRUNCTURAL, segmentValue));
+        segments.add(new Segment(SegmentType.STRUCTURAL, segmentValue));
+        return this;
+    }
+
+    public ODataURIBuilder appendLinksSegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.LINKS, SegmentType.LINKS.getValue()));
+        segments.add(new Segment(SegmentType.STRUCTURAL, segmentValue));
         return this;
     }
 

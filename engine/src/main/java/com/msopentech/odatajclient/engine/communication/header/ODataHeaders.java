@@ -20,12 +20,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * ODataHeader wraps OData request/response headers.
+ * ODataHeaders wraps OData request/response headers.
  *
  * @see com.msopentech.odatajclient.engine.communication.request.ODataRequest
  * @see com.msopentech.odatajclient.engine.communication.response.ODataResponse
  */
-public class ODataHeader {
+public class ODataHeaders {
 
     /**
      * Major OData request/response header names.
@@ -170,7 +170,7 @@ public class ODataHeader {
      * @param value header value.
      * @return the current updated header instance.
      */
-    public ODataHeader setHeader(final String name, final String value) {
+    public ODataHeaders setHeader(final String name, final String value) {
         headers.put(name, value);
         return this;
     }
@@ -182,7 +182,7 @@ public class ODataHeader {
      * @param value header value.
      * @return the current updated header instance.
      */
-    public ODataHeader setHeader(final HeaderName name, final String value) {
+    public ODataHeaders setHeader(final HeaderName name, final String value) {
         headers.put(name.toString(), value);
         return this;
     }

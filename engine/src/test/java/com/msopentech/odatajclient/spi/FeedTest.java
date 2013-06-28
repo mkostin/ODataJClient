@@ -22,13 +22,13 @@ import static org.junit.Assert.assertEquals;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
+import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -102,8 +102,7 @@ public class FeedTest extends AbstractTest {
 
         final InputStream is = req.rawExecute();
 
-        final FeedResource feed =
-                SerializationUtils.deserializeFeed(is, ResourceFactory.feedClassForFormat(format));
+        final FeedResource feed = Deserializer.toFeed(is, ResourceFactory.feedClassForFormat(format));
         assertNotNull(feed);
 
         debugFeed(feed, "Just (raw)retrieved feed");

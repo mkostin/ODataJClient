@@ -22,11 +22,11 @@ import org.apache.http.client.HttpClient;
 /**
  * This class implements the response to an OData link operation request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataAddLinkRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataInsertLinkRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataUpdateLinkRequest
  * @see com.msopentech.odatajclient.engine.communication.request.ODataRemoveLinkRequest
- * @see com.msopentech.odatajclient.engine.communication.request.ODataSetLinkRequest
  */
-class ODataLinkOperationResponseImpl extends ODataResponseImpl implements ODataLinkOperationResponse {
+public class ODataLinkOperationResponseImpl extends ODataResponseImpl implements ODataLinkOperationResponse {
 
     public ODataLinkOperationResponseImpl(final HttpClient client, final HttpResponse res) {
         super(client, res);

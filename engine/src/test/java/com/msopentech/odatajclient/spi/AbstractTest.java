@@ -40,7 +40,7 @@ import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
+import com.msopentech.odatajclient.engine.data.Serializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -268,7 +268,7 @@ public abstract class AbstractTest {
     protected void debugEntry(final EntryResource entry, final String message) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
-            SerializationUtils.serializeEntry(entry, writer);
+            Serializer.entry(entry, writer);
             writer.flush();
             LOG.debug(message + "\n{}", writer.toString());
         }
@@ -277,7 +277,7 @@ public abstract class AbstractTest {
     protected void debugFeed(final FeedResource feed, final String message) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
-            SerializationUtils.serializeFeed(feed, writer);
+            Serializer.feed(feed, writer);
             writer.flush();
             LOG.debug(message + "\n{}", writer.toString());
         }
@@ -294,12 +294,12 @@ public abstract class AbstractTest {
     protected void debugODataEntity(final ODataEntity entity, final String message) {
         if (LOG.isDebugEnabled()) {
             StringWriter writer = new StringWriter();
-            SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, AtomEntry.class), writer);
+            Serializer.entry(ODataBinder.getEntry(entity, AtomEntry.class), writer);
             writer.flush();
             LOG.debug(message + " (Atom)\n{}", writer.toString());
 
             writer = new StringWriter();
-            SerializationUtils.serializeEntry(ODataBinder.getEntry(entity, JSONEntry.class), writer);
+            Serializer.entry(ODataBinder.getEntry(entity, JSONEntry.class), writer);
             writer.flush();
             LOG.debug(message + " (JSON)\n{}", writer.toString());
         }

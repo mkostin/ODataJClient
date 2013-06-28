@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.response;
+package com.msopentech.odatajclient.engine.utils;
 
-/**
- * This class implements the response to an OData link operation request.
- *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataInsertLinkRequest
- * @see com.msopentech.odatajclient.engine.communication.request.ODataUpdateLinkRequest
- * @see com.msopentech.odatajclient.engine.communication.request.ODataRemoveLinkRequest
- */
-public interface ODataLinkOperationResponse extends ODataResponse {
+import org.w3c.dom.Node;
+
+public class XMLUtils {
+
+    public static String getSimpleName(final Node node) {
+        return node.getLocalName() == null
+                ? node.getNodeName().substring(node.getNodeName().indexOf(':') + 1)
+                : node.getLocalName();
+    }
 }

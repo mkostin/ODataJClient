@@ -19,8 +19,8 @@ import com.msopentech.odatajclient.engine.data.ODataProperty.PropertyType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
+import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
@@ -201,7 +201,7 @@ public final class ODataBinder {
     public static ODataEntity getODataEntity(final EntryResource entry, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
-            SerializationUtils.serializeEntry(entry, writer);
+            Serializer.entry(entry, writer);
             writer.flush();
             LOG.debug("Processing entity:\n{}", writer.toString());
         }
@@ -311,10 +311,10 @@ public final class ODataBinder {
                     break;
 
                 default:
-                    res = new ODataProperty(SerializationUtils.getSimpleName(property), null);
+                    res = new ODataProperty(XMLUtils.getSimpleName(property), null);
             }
         } else {
-            res = new ODataProperty(SerializationUtils.getSimpleName(property), null);
+            res = new ODataProperty(XMLUtils.getSimpleName(property), null);
         }
 
         return res;
@@ -411,7 +411,7 @@ public final class ODataBinder {
     }
 
     private static ODataProperty newPrimitiveProperty(final Element prop, final EdmType edmType) {
-        return new ODataProperty(SerializationUtils.getSimpleName(prop), newPrimitiveValue(prop, edmType));
+        return new ODataProperty(XMLUtils.getSimpleName(prop), newPrimitiveValue(prop, edmType));
     }
 
     private static Element newPrimitiveProperty(final ODataProperty prop, final Document doc) {
@@ -456,7 +456,7 @@ public final class ODataBinder {
     }
 
     private static ODataProperty newComplexProperty(final Element prop, final EdmType edmType) {
-        return new ODataProperty(SerializationUtils.getSimpleName(prop), newComplexValue(prop, edmType));
+        return new ODataProperty(XMLUtils.getSimpleName(prop), newComplexValue(prop, edmType));
     }
 
     private static Element newComplexProperty(final ODataProperty prop, final Document doc) {
@@ -498,7 +498,7 @@ public final class ODataBinder {
             }
         }
 
-        return new ODataProperty(SerializationUtils.getSimpleName(prop), value);
+        return new ODataProperty(XMLUtils.getSimpleName(prop), value);
     }
 
     private static Element newCollectionProperty(final ODataProperty prop, final Document doc) {

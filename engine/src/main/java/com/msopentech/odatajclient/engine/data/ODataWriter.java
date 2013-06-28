@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -49,8 +48,7 @@ public final class ODataWriter {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             for (ODataEntity entity : entities) {
-                SerializationUtils.serializeEntry(
-                        ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)), output);
+                Serializer.entry(ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)), output);
             }
 
             return new ByteArrayInputStream(output.toByteArray());
@@ -80,7 +78,18 @@ public final class ODataWriter {
     public static InputStream writeProperty(final ODataProperty property, final ODataPropertyFormat format) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
-            SerializationUtils.serializeProperty(ODataBinder.getProperty(property), format, output);
+            Serializer.property(ODataBinder.getProperty(property), format, output);
+
+            return new ByteArrayInputStream(output.toByteArray());
+        } finally {
+            IOUtils.closeQuietly(output);
+        }
+    }
+
+    public static InputStream writeLink(final ODataLink link, final ODataPropertyFormat format) {
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            Serializer.link(link, format, output);
 
             return new ByteArrayInputStream(output.toByteArray());
         } finally {

@@ -19,7 +19,6 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
-import com.msopentech.odatajclient.engine.utils.SerializationUtils;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
@@ -53,8 +52,7 @@ public final class ODataReader {
      * @return de-serialized feed.
      */
     public static ODataFeed readFeed(final InputStream input, final ODataFormat format) {
-        return ODataBinder.getODataFeed(
-                SerializationUtils.deserializeFeed(input, ResourceFactory.feedClassForFormat(format)));
+        return ODataBinder.getODataFeed(Deserializer.toFeed(input, ResourceFactory.feedClassForFormat(format)));
     }
 
     /**
@@ -65,8 +63,7 @@ public final class ODataReader {
      * @return entity de-serialized.
      */
     public static ODataEntity readEntity(final InputStream input, final ODataFormat format) {
-        return ODataBinder.getODataEntity(
-                SerializationUtils.deserializeEntry(input, ResourceFactory.entryClassForFormat(format)));
+        return ODataBinder.getODataEntity(Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
     }
 
     /**
@@ -77,7 +74,7 @@ public final class ODataReader {
      * @return OData entity property de-serialized.
      */
     public static ODataProperty readProperty(final InputStream input, final ODataPropertyFormat format) {
-        return ODataBinder.getProperty(SerializationUtils.deserializeProperty(input, format));
+        return ODataBinder.getProperty(Deserializer.toDOM(input, format));
     }
 
     /**
@@ -88,7 +85,7 @@ public final class ODataReader {
      * @return List of URIs.
      */
     public static List<URI> readLinks(final InputStream input, final ODataPropertyFormat format) {
-        return SerializationUtils.deserializeLinks(input, format);
+        return Deserializer.toLinks(input, format);
     }
 
     /**
@@ -101,7 +98,7 @@ public final class ODataReader {
     public static ODataServiceDocument readServiceDocument(
             final InputStream input, final ODataServiceDocumentFormat format) {
 
-        return ODataBinder.getODataServiceDocument(SerializationUtils.deserializeServiceDocument(input, format));
+        return ODataBinder.getODataServiceDocument(Deserializer.toServiceDocument(input, format));
     }
 
     /**
