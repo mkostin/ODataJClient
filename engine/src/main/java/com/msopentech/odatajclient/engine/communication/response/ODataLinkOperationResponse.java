@@ -16,11 +16,11 @@
 package com.msopentech.odatajclient.engine.communication.response;
 
 /**
- * This class implements the response to an OData link operation request.
+ * This interface defines the response to an OData link operation request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataInsertLinkRequest
- * @see com.msopentech.odatajclient.engine.communication.request.ODataUpdateLinkRequest
- * @see com.msopentech.odatajclient.engine.communication.request.ODataRemoveLinkRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataLinkCreateRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataLinkUpdateRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.ODataLinkRemoveRequest
  */
 public interface ODataLinkOperationResponse extends ODataResponse {
 }

@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataInsertLinkRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -90,7 +90,7 @@ public class CUDUsageTest {
         final ODataLink newLink = ODataFactory.newEntityNavigationLink("Supplier", targetURI.build());
 
         // create your request
-        final ODataInsertLinkRequest request = ODataCUDRequestFactory.getInsertLinkRequest(sourceURI.build(), newLink);
+        final ODataLinkCreateRequest request = ODataCUDRequestFactory.getLinkCreateRequest(sourceURI.build(), newLink);
 
         // execute and retrieve response
         ODataLinkOperationResponse res = request.execute();

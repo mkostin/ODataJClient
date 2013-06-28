@@ -35,10 +35,10 @@ import org.apache.http.entity.InputStreamEntity;
  * This class implements an insert link OData request.
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getInsertLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI,
+ * @see ODataRequestFactory#getLinkCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataInsertLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataPropertyFormat>
+public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataPropertyFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -52,7 +52,7 @@ public class ODataInsertLinkRequest extends ODataBasicRequestImpl<ODataLinkOpera
      * @param targetURI entity set URI.
      * @param link entity to be linked.
      */
-    ODataInsertLinkRequest(final URI targetURI, final ODataLink link) {
+    ODataLinkCreateRequest(final URI targetURI, final ODataLink link) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST, targetURI);
         // set request body

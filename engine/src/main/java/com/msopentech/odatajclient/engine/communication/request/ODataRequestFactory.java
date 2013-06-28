@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataInsertLinkRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
@@ -23,9 +23,9 @@ import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityU
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataRemoveLinkRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkRemoveRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataUpdateLinkRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataValueUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequest;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
@@ -195,22 +195,10 @@ public final class ODataRequestFactory {
      *
      * @param targetURI navigation property's link collection.
      * @param entityToBeAdded navigation link to be added.
-     * @return new ODataInsertLinkRequest instance.
+     * @return new ODataLinkCreateRequest instance.
      */
-    public static ODataInsertLinkRequest getInsertLinkRequest(final URI targetURI, final ODataLink entityToBeAdded) {
-        return ODataCUDRequestFactory.getInsertLinkRequest(targetURI, entityToBeAdded);
-    }
-
-    /**
-     * Gets a remove link request object instance.
-     * <p>
-     * Use this kind of request to remove a navigation link between existing entities.
-     *
-     * @param linkToBeRemoved navigation link to be removed.
-     * @return new ODataRemovedLinkRequest instance.
-     */
-    public static ODataRemoveLinkRequest getRemoveLinkRequest(final URI linkToBeRemoved) {
-        return ODataCUDRequestFactory.getRemoveLinkRequest(linkToBeRemoved);
+    public static ODataLinkCreateRequest getLinkCreateRequest(final URI targetURI, final ODataLink entityToBeAdded) {
+        return ODataCUDRequestFactory.getLinkCreateRequest(targetURI, entityToBeAdded);
     }
 
     /**
@@ -223,10 +211,22 @@ public final class ODataRequestFactory {
      * @param targetURI navigation property's link collection.
      * @param linkToBeRemoved navigation link to be removed.
      * @param entityToBeAdded URL that identifies the entity to be linked.
-     * @return new ODataUpdateLinkRequest instance.
+     * @return new ODataLinkUpdateRequest instance.
      */
-    public static ODataUpdateLinkRequest getUpdateLinkRequest(final URI targetURI, final ODataLink entityToBeAdded) {
-        return ODataCUDRequestFactory.getUpdateLinkRequest(targetURI, entityToBeAdded);
+    public static ODataLinkUpdateRequest getLinkUpdateRequest(final URI targetURI, final ODataLink entityToBeAdded) {
+        return ODataCUDRequestFactory.getLinkUpdateRequest(targetURI, entityToBeAdded);
+    }
+
+    /**
+     * Gets a remove link request object instance.
+     * <p>
+     * Use this kind of request to remove a navigation link between existing entities.
+     *
+     * @param linkToBeRemoved navigation link to be removed.
+     * @return new ODataRemovedLinkRequest instance.
+     */
+    public static ODataLinkRemoveRequest getLinkRemoveRequest(final URI linkToBeRemoved) {
+        return ODataCUDRequestFactory.getLinkRemoveRequest(linkToBeRemoved);
     }
 
     /**

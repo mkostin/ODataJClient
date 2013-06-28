@@ -19,26 +19,40 @@ import com.msopentech.odatajclient.engine.communication.request.ODataBasicReques
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
+import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 /**
- * This class implements an remove navigation link OData request.
+ * This class implements an update link OData request.
+ * It encapsulates two different request: the former remove link request and the latter add link request.
+ * <p>
  * Get instance by using ODataRequestFactory.
  *
- * @see ODataRequestFactory#getRemoveLinkRequest(com.msopentech.odatajclient.engine.data.ODataURI)
+ * @see ODataRequestFactory#getLinkUpdateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
+ * com.msopentech.odatajclient.engine.data.ODataURI, com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataRemoveLinkRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
+public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
         implements ODataBatchableRequest {
+
+    /**
+     * Entity to be linked.
+     */
+    private final ODataLink entityToBeAdded;
 
     /**
      * Constructor.
      *
-     * @param linkToBeRemoved navigation link to be removed.
+     * @param targetURI entity URI.
+     * @param linkToBeRemoved link to be removed.
+     * @param entityToBeAdded entity to be linked.
      */
-    ODataRemoveLinkRequest(final URI linkToBeRemoved) {
+    ODataLinkUpdateRequest(final URI targetURI, final ODataLink entityToBeAdded) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.DELETE, linkToBeRemoved);
+        super(Method.PUT, targetURI);
+        // set request body
+        this.entityToBeAdded = entityToBeAdded;
     }
 
     /**
@@ -46,16 +60,18 @@ public class ODataRemoveLinkRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     public ODataLinkOperationResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
      * {@inheritDoc }
-     * <p>
-     * This kind of request doesn't have any kind of payload: an empty byte array will be returned.
      */
     @Override
     protected byte[] getPayload() {
-        return new byte[0];
+        try {
+            return entityToBeAdded.getLink().toString().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

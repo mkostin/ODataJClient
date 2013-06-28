@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataInsertLinkRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataLinkRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
@@ -72,7 +72,7 @@ public class LinkTest extends AbstractTest {
         retrieveLinkURIs(ODataPropertyFormat.JSON);
     }
 
-    private void insertLinkURI(final ODataPropertyFormat format) throws IOException {
+    private void createLink(final ODataPropertyFormat format) throws IOException {
         final List<URI> before = doRetrieveLinkURIs(format);
 
         final ODataLink newLink = ODataFactory.newLink(null, URI.create(testODataServiceRootURL + "/Login('3')"),
@@ -81,7 +81,7 @@ public class LinkTest extends AbstractTest {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendLinksSegment("Logins");
 
-        final ODataInsertLinkRequest req = ODataCUDRequestFactory.getInsertLinkRequest(uriBuilder.build(), newLink);
+        final ODataLinkCreateRequest req = ODataCUDRequestFactory.getLinkCreateRequest(uriBuilder.build(), newLink);
         req.setFormat(format);
 
         final ODataLinkOperationResponse res = req.execute();
@@ -99,12 +99,12 @@ public class LinkTest extends AbstractTest {
     }
 
     @Test
-    public void insertXMLLinkURI() throws IOException {
-        insertLinkURI(ODataPropertyFormat.XML);
+    public void createXMLLink() throws IOException {
+        createLink(ODataPropertyFormat.XML);
     }
 
     @Test
-    public void insertJSONLinkURI() throws IOException {
-        insertLinkURI(ODataPropertyFormat.JSON);
+    public void createJSONLink() throws IOException {
+        createLink(ODataPropertyFormat.JSON);
     }
 }
