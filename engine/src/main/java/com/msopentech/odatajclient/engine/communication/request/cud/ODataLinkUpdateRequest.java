@@ -15,14 +15,22 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.response.ODataLinkOperationResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.UnsupportedEncodingException;
+import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import java.io.InputStream;
 import java.net.URI;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an update link OData request.
@@ -33,26 +41,26 @@ import java.net.URI;
  * @see ODataRequestFactory#getLinkUpdateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataURI, com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
+public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataPropertyFormat>
         implements ODataBatchableRequest {
 
     /**
      * Entity to be linked.
      */
-    private final ODataLink entityToBeAdded;
+    private final ODataLink link;
 
     /**
      * Constructor.
      *
      * @param targetURI entity URI.
      * @param linkToBeRemoved link to be removed.
-     * @param entityToBeAdded entity to be linked.
+     * @param link entity to be linked.
      */
-    ODataLinkUpdateRequest(final URI targetURI, final ODataLink entityToBeAdded) {
+    ODataLinkUpdateRequest(final URI targetURI, final UpdateType type, final ODataLink link) {
         // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.PUT, targetURI);
+        super(type.getMethod(), targetURI);
         // set request body
-        this.entityToBeAdded = entityToBeAdded;
+        this.link = link;
     }
 
     /**
@@ -60,7 +68,15 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     public ODataLinkOperationResponse execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final InputStream input = ODataWriter.writeLink(link, ODataPropertyFormat.valueOf(getFormat()));
+        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
+
+        try {
+            final HttpResponse res = doExecute();
+            return new ODataLinkOperationResponseImpl(client, res);
+        } finally {
+            IOUtils.closeQuietly(input);
+        }
     }
 
     /**
@@ -68,10 +84,6 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     protected byte[] getPayload() {
-        try {
-            return entityToBeAdded.getLink().toString().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
+        return link.getLink().toString().getBytes();
     }
 }

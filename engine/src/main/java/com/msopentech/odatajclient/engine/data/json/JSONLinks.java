@@ -46,7 +46,10 @@ public class JSONLinks extends AbstractJSONMetadataObject {
     @JsonProperty(value = "odata.metadata", required = false)
     private URI metadata;
 
-    @JsonProperty("value")
+    @JsonProperty(required = false)
+    private URI url;
+
+    @JsonProperty(value = "value", required = false)
     private final List<JSONLinkURL> links = new ArrayList<JSONLinkURL>();
 
     public void setMetadata(final URI metadata) {
@@ -58,12 +61,24 @@ public class JSONLinks extends AbstractJSONMetadataObject {
         return this.metadata;
     }
 
+    /**
+     * Smart management of different JSON format produced by OData services when
+     * <tt>$links</tt> is a single or a collection property.
+     *
+     * @return list of URIs for <tt>$links</tt>
+     */
     @JsonIgnore
     public List<URI> getLinks() {
         final List<URI> result = new ArrayList<URI>();
-        for (JSONLinkURL url: links) {
-            result.add(url.getUrl());
+
+        if (this.url == null) {
+            for (JSONLinkURL link : links) {
+                result.add(link.getUrl());
+            }
+        } else {
+            result.add(this.url);
         }
+
         return result;
     }
 }

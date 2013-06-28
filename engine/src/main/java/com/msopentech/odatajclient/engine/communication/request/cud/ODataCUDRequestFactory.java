@@ -26,7 +26,11 @@ import java.net.URI;
 /**
  * OData request factory class.
  */
-public class ODataCUDRequestFactory {
+public final class ODataCUDRequestFactory {
+
+    private ODataCUDRequestFactory() {
+        // Empty private constructor for static utility classes
+    }
 
     /**
      * Gets a create request object instance.
@@ -91,6 +95,7 @@ public class ODataCUDRequestFactory {
      */
     public static ODataValueUpdateRequest getValueUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataPrimitiveValue value) {
+
         return new ODataValueUpdateRequest(targetURI, type, value);
     }
 
@@ -144,11 +149,11 @@ public class ODataCUDRequestFactory {
      * Use this kind of request to create a navigation link between existing entities.
      *
      * @param targetURI navigation property's link collection.
-     * @param entityToBeAdded navigation link to be added.
+     * @param link navigation link to be added.
      * @return new ODataLinkCreateRequest instance.
      */
-    public static ODataLinkCreateRequest getLinkCreateRequest(final URI targetURI, final ODataLink entityToBeAdded) {
-        return new ODataLinkCreateRequest(targetURI, entityToBeAdded);
+    public static ODataLinkCreateRequest getLinkCreateRequest(final URI targetURI, final ODataLink link) {
+        return new ODataLinkCreateRequest(targetURI, link);
     }
 
     /**
@@ -159,12 +164,15 @@ public class ODataCUDRequestFactory {
      * In case of the old navigation link doesn't exist the new one will be added as well.
      *
      * @param targetURI navigation property's link collection.
+     * @param type type of update to be performed.
      * @param linkToBeRemoved navigation link to be removed.
-     * @param entityToBeAdded URL that identifies the entity to be linked.
+     * @param link URL that identifies the entity to be linked.
      * @return new ODataLinkUpdateRequest instance.
      */
-    public static ODataLinkUpdateRequest getLinkUpdateRequest(final URI targetURI, final ODataLink entityToBeAdded) {
-        return new ODataLinkUpdateRequest(targetURI, entityToBeAdded);
+    public static ODataLinkUpdateRequest getLinkUpdateRequest(
+            final URI targetURI, final UpdateType type, final ODataLink link) {
+
+        return new ODataLinkUpdateRequest(targetURI, type, link);
     }
 
     /**
