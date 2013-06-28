@@ -68,33 +68,6 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <inherited>true</inherited>
-        <executions>
-          <execution>
-            <id>enforce-property</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireProperty>
-                  <property>test.odata.serviceroot.url</property>
-                  <message>You must set 'test.odata.serviceroot.url' property!</message>
-                  <regex>http(s)?://.*</regex>
-                  <regexMessage>The test.odata.serviceroot.url property must be a valid HTTP(S) URL.</regexMessage>
-                </requireProperty>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-    
     <resources>
       <resource>
         <directory>src/main/resources</directory>
