@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 
 /**
  * Configuration wrapper.
@@ -39,7 +39,7 @@ public class Configuration {
      *
      * @return configured OData format if exists; JSON format otherwise.
      */
-    public ODataFormat getFormat() {
-        return ODataFormat.valueOf(getProperty("format", "JSON"));
+    public ODataPubFormat getFormat() {
+        return ODataPubFormat.valueOf(getProperty("format", "JSON"));
     }
 }

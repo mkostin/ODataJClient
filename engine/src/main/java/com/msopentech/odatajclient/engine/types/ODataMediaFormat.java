@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.types;
 import org.apache.http.entity.ContentType;
 
 /**
- * Media format.
+ * Available formats for media.
  */
 public enum ODataMediaFormat {
 

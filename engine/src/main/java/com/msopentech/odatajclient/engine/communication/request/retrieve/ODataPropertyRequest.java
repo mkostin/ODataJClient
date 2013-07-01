@@ -19,7 +19,7 @@ import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
@@ -31,7 +31,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getPropertyRequest(java.net.URI)
  */
-public class ODataPropertyRequest extends ODataRetrieveRequest<ODataProperty, ODataPropertyFormat> {
+public class ODataPropertyRequest extends ODataRetrieveRequest<ODataProperty, ODataFormat> {
 
     /**
      * Private constructor.
@@ -64,7 +64,7 @@ public class ODataPropertyRequest extends ODataRetrieveRequest<ODataProperty, OD
             if (property == null) {
                 try {
                     property = ODataReader.readProperty(
-                            res.getEntity().getContent(), ODataPropertyFormat.valueOf(getFormat()));
+                            res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

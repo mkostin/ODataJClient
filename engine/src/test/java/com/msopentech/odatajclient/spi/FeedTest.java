@@ -28,7 +28,7 @@ import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,35 +42,35 @@ public class FeedTest extends AbstractTest {
 
     @Test
     public void readAtomFeed() throws Exception {
-        readFeed(ODataFormat.ATOM);
+        readFeed(ODataPubFormat.ATOM);
     }
 
     @Test
     public void readJSONFeed() throws Exception {
-        readFeed(ODataFormat.JSON);
+        readFeed(ODataPubFormat.JSON);
     }
 
     @Test
     public void readODataFeedFromAtom() {
-        readODataFeed(ODataFormat.ATOM);
+        readODataFeed(ODataPubFormat.ATOM);
     }
 
     @Test
     public void readODataFeedFromJSON() {
-        readODataFeed(ODataFormat.JSON);
+        readODataFeed(ODataPubFormat.JSON);
     }
 
     @Test
     public void readODataFeedWithNextFromAtom() {
-        readODataFeedWithNextLink(ODataFormat.ATOM);
+        readODataFeedWithNextLink(ODataPubFormat.ATOM);
     }
 
     @Test
     public void readODataFeedWithNextFromJSON() {
-        readODataFeedWithNextLink(ODataFormat.JSON_FULL_METADATA);
+        readODataFeedWithNextLink(ODataPubFormat.JSON_FULL_METADATA);
     }
 
-    private void readODataFeedWithNextLink(final ODataFormat format) {
+    private void readODataFeedWithNextLink(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
@@ -93,7 +93,7 @@ public class FeedTest extends AbstractTest {
         assertEquals(expected, found);
     }
 
-    private void readFeed(final ODataFormat format) throws IOException {
+    private void readFeed(final ODataPubFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Car").top(2).skip(4);
 
@@ -112,7 +112,7 @@ public class FeedTest extends AbstractTest {
         is.close();
     }
 
-    private void readODataFeed(final ODataFormat format) {
+    private void readODataFeed(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Car").top(3);
 

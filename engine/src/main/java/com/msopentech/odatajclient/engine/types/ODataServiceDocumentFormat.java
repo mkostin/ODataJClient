@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.types;
 import org.apache.http.entity.ContentType;
 
 /**
- * Exchanged data format.
+ * Available formats for the service document.
  */
 public enum ODataServiceDocumentFormat {
 

@@ -24,7 +24,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUp
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
-import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -41,7 +41,7 @@ import org.apache.http.entity.InputStreamEntity;
  * @see ODataCUDRequestFactory#getUpdatePropertyRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataValue)
  */
-public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPropertyUpdateResponse, ODataPropertyFormat>
+public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPropertyUpdateResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -80,7 +80,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeProperty(property, ODataPropertyFormat.valueOf(getFormat()));
+        return ODataWriter.writeProperty(property, ODataFormat.valueOf(getFormat()));
     }
 
     private class ODataPropertyUpdateResponseImpl extends ODataResponseImpl implements ODataPropertyUpdateResponse {
@@ -96,7 +96,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
             if (property == null) {
                 try {
                     property = ODataReader.readProperty(
-                            res.getEntity().getContent(), ODataPropertyFormat.valueOf(getFormat()));
+                            res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

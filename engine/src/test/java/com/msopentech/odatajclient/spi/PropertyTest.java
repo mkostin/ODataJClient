@@ -37,7 +37,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.types.ODataValueFormat;
 import java.io.IOException;
 import org.junit.Test;
@@ -54,82 +54,82 @@ public class PropertyTest extends AbstractTest {
 
     @Test
     public void replacePrimitivePropertyAsXML() throws IOException {
-        updatePrimitiveProperty(ODataPropertyFormat.XML);
+        updatePrimitiveProperty(ODataFormat.XML);
     }
 
     @Test
     public void replacePrimitivePropertyAsJSON() throws IOException {
-        updatePrimitiveProperty(ODataPropertyFormat.JSON_FULL_METADATA);
+        updatePrimitiveProperty(ODataFormat.JSON_FULL_METADATA);
     }
 
     @Test
     public void replaceCollectionPropertyAsXML() throws IOException {
-        updateCollectionProperty(ODataPropertyFormat.XML);
+        updateCollectionProperty(ODataFormat.XML);
     }
 
     @Test
     public void replaceCollectionPropertyAsJSON() throws IOException {
-        updateCollectionProperty(ODataPropertyFormat.JSON_FULL_METADATA);
+        updateCollectionProperty(ODataFormat.JSON_FULL_METADATA);
     }
 
     @Test
     public void replaceComplexPropertyAsXML() throws IOException {
-        updateComplexProperty(ODataPropertyFormat.XML, UpdateType.REPLACE);
+        updateComplexProperty(ODataFormat.XML, UpdateType.REPLACE);
     }
 
     @Test
     public void replaceComplexPropertyAsJSON() throws IOException {
-        updateComplexProperty(ODataPropertyFormat.JSON_FULL_METADATA, UpdateType.REPLACE);
+        updateComplexProperty(ODataFormat.JSON_FULL_METADATA, UpdateType.REPLACE);
     }
 
     @Test
     public void patchComplexPropertyAsXML() throws IOException {
-        updateComplexProperty(ODataPropertyFormat.XML, UpdateType.PATCH);
+        updateComplexProperty(ODataFormat.XML, UpdateType.PATCH);
     }
 
     @Test
     public void patchComplexPropertyAsJSON() throws IOException {
-        updateComplexProperty(ODataPropertyFormat.JSON_FULL_METADATA, UpdateType.PATCH);
+        updateComplexProperty(ODataFormat.JSON_FULL_METADATA, UpdateType.PATCH);
     }
 
     @Test
     public void mergeComplexPropertyAsXML() throws IOException {
-        updateComplexProperty(ODataPropertyFormat.XML, UpdateType.MERGE);
+        updateComplexProperty(ODataFormat.XML, UpdateType.MERGE);
     }
 
     @Test
     public void mergeComplexPropertyAsJSON() throws IOException {
-        updateComplexProperty(ODataPropertyFormat.JSON_FULL_METADATA, UpdateType.MERGE);
+        updateComplexProperty(ODataFormat.JSON_FULL_METADATA, UpdateType.MERGE);
     }
 
     @Test
     public void readXmlCollectionProperty() throws IOException {
-        readCollectionProperty(ODataPropertyFormat.XML);
+        readCollectionProperty(ODataFormat.XML);
     }
 
     @Test
     public void readJSONCollectionProperty() throws IOException {
-        readCollectionProperty(ODataPropertyFormat.JSON);
+        readCollectionProperty(ODataFormat.JSON);
     }
 
     @Test
     public void readXmlComplexProperty() throws IOException {
-        readComplexProperty(ODataPropertyFormat.XML);
+        readComplexProperty(ODataFormat.XML);
     }
 
     @Test
     public void readJSONComplexProperty() throws IOException {
-        readComplexProperty(ODataPropertyFormat.JSON);
+        readComplexProperty(ODataFormat.JSON);
     }
 
     @Test
     public void readXmlPrimitiveProperty() throws IOException {
-        readPrimitiveProperty(ODataPropertyFormat.XML);
+        readPrimitiveProperty(ODataFormat.XML);
     }
 
     @Test
     public void readJSONPrimitiveProperty() throws IOException {
-        readPrimitiveProperty(ODataPropertyFormat.JSON);
+        readPrimitiveProperty(ODataFormat.JSON);
     }
 
     @Test
@@ -210,7 +210,7 @@ public class PropertyTest extends AbstractTest {
         assertEquals(newMsg, phoneNumber.asPrimitive().<String>toCastValue());
     }
 
-    private void updateComplexProperty(final ODataPropertyFormat format, final UpdateType type) throws IOException {
+    private void updateComplexProperty(final ODataFormat format, final UpdateType type) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer(-9)").appendStructuralSegment("PrimaryContactInfo");
 
@@ -251,7 +251,7 @@ public class PropertyTest extends AbstractTest {
         assertEquals(origSize + 1, primaryContactInfo.getComplexValue().get("EmailBag").getCollectionValue().size());
     }
 
-    private void updateCollectionProperty(final ODataPropertyFormat format) throws IOException {
+    private void updateCollectionProperty(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer(-9)").
                 appendStructuralSegment("PrimaryContactInfo").appendStructuralSegment("AlternativeNames");
@@ -292,7 +292,7 @@ public class PropertyTest extends AbstractTest {
         assertEquals(origSize + 1, alternativeNames.getCollectionValue().size());
     }
 
-    private void updatePrimitiveProperty(final ODataPropertyFormat format) throws IOException {
+    private void updatePrimitiveProperty(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer(-9)").
                 appendStructuralSegment("PrimaryContactInfo").
@@ -333,7 +333,7 @@ public class PropertyTest extends AbstractTest {
     /**
      * @see PrimitiveValueTest
      */
-    private ODataProperty readPrimitiveProperty(final ODataPropertyFormat format) throws IOException {
+    private ODataProperty readPrimitiveProperty(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("CustomerId");
 
@@ -353,7 +353,7 @@ public class PropertyTest extends AbstractTest {
         return property;
     }
 
-    private ODataProperty readComplexProperty(final ODataPropertyFormat format) throws IOException {
+    private ODataProperty readComplexProperty(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("PrimaryContactInfo");
 
@@ -373,7 +373,7 @@ public class PropertyTest extends AbstractTest {
         return property;
     }
 
-    private ODataProperty readCollectionProperty(final ODataPropertyFormat format) throws IOException {
+    private ODataProperty readCollectionProperty(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("BackupContactInfo");
 

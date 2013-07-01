@@ -35,7 +35,7 @@ import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
@@ -58,7 +58,7 @@ import org.w3c.dom.Node;
  */
 public class EntityCreateTest extends AbstractTest {
 
-    private void readEntry(final ODataFormat format) throws IOException {
+    private void readEntry(final ODataPubFormat format) throws IOException {
         // ---------------------------------------------
         // Read Car(16)
         // ---------------------------------------------
@@ -98,7 +98,7 @@ public class EntityCreateTest extends AbstractTest {
         debugEntry(entry, "Just read");
         // ---------------------------------------------
 
-        if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
+        if (ODataPubFormat.JSON_FULL_METADATA == format || ODataPubFormat.ATOM == format) {
             assertEquals(uriBuilder.build().toASCIIString(), entry.getId());
             assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entry.getType());
             assertNotNull(entry.getBaseURI());
@@ -116,7 +116,7 @@ public class EntityCreateTest extends AbstractTest {
             if ("PrimaryContactInfo".equals(property.getLocalName())) {
                 checked = true;
 
-                if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
+                if (ODataPubFormat.JSON_FULL_METADATA == format || ODataPubFormat.ATOM == format) {
                     assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails",
                             ((Element) property).getAttribute(ODataConstants.ATTR_TYPE));
                 }
@@ -128,15 +128,15 @@ public class EntityCreateTest extends AbstractTest {
 
     @Test
     public void readAtomEntry() throws IOException {
-        readEntry(ODataFormat.ATOM);
+        readEntry(ODataPubFormat.ATOM);
     }
 
     @Test
     public void readJSONEntry() throws IOException {
-        readEntry(ODataFormat.JSON);
+        readEntry(ODataPubFormat.JSON);
     }
 
-    private void readODataEntity(final ODataFormat format) {
+    private void readODataEntity(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER);
 
@@ -147,7 +147,7 @@ public class EntityCreateTest extends AbstractTest {
         final ODataEntity entity = res.getBody();
         assertNotNull(entity);
 
-        if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
+        if (ODataPubFormat.JSON_FULL_METADATA == format || ODataPubFormat.ATOM == format) {
             assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entity.getName());
             assertEquals(testODataServiceRootURL + "/" + TEST_CUSTOMER, entity.getEditLink().toASCIIString());
             assertEquals(5, entity.getNavigationLinks().size());
@@ -169,12 +169,12 @@ public class EntityCreateTest extends AbstractTest {
 
     @Test
     public void readODataEntityFromAtom() {
-        readODataEntity(ODataFormat.ATOM);
+        readODataEntity(ODataPubFormat.ATOM);
     }
 
     @Test
     public void readODataEntityFromJSON() {
-        readODataEntity(ODataFormat.JSON);
+        readODataEntity(ODataPubFormat.JSON);
     }
 
     @Test
@@ -184,7 +184,7 @@ public class EntityCreateTest extends AbstractTest {
         uriBuilder.appendEntityTypeSegment("Suppliers(1)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-        req.setFormat(ODataFormat.ATOM);
+        req.setFormat(ODataPubFormat.ATOM);
 
         final ODataRetrieveResponse<ODataEntity> res = req.execute();
         final ODataEntity entity = res.getBody();
@@ -202,7 +202,7 @@ public class EntityCreateTest extends AbstractTest {
         assertTrue(found);
     }
 
-    private void readODataEntityWithInline(final ODataFormat format) {
+    private void readODataEntityWithInline(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).expand("Info");
 
@@ -245,17 +245,17 @@ public class EntityCreateTest extends AbstractTest {
 
     @Test
     public void readODataEntityWithInlineFromAtom() {
-        readODataEntityWithInline(ODataFormat.ATOM);
+        readODataEntityWithInline(ODataPubFormat.ATOM);
     }
 
     @Test
     public void readODataEntityWithInlineFromJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
-        readODataEntityWithInline(ODataFormat.JSON_FULL_METADATA);
+        readODataEntityWithInline(ODataPubFormat.JSON_FULL_METADATA);
     }
 
     private ODataEntity createODataEntity(
-            final ODataFormat format, ODataEntity original) {
+            final ODataPubFormat format, ODataEntity original) {
         ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
@@ -278,7 +278,7 @@ public class EntityCreateTest extends AbstractTest {
     }
 
     private ODataEntity compareEntities(
-            final ODataFormat format,
+            final ODataPubFormat format,
             final ODataEntity original,
             final int actualObjectId,
             final Collection<String> expands) {
@@ -313,7 +313,7 @@ public class EntityCreateTest extends AbstractTest {
         return actual;
     }
 
-    private void clean(final ODataFormat format, final ODataEntity created, final boolean includeInline) {
+    private void clean(final ODataPubFormat format, final ODataEntity created, final boolean includeInline) {
         final List<ODataEntity> toBeDeleted = new ArrayList<ODataEntity>();
         toBeDeleted.add(created);
 
@@ -352,7 +352,7 @@ public class EntityCreateTest extends AbstractTest {
         }
     }
 
-    private ODataEntity createWithNavigationLink(final ODataFormat format, final int id) {
+    private ODataEntity createWithNavigationLink(final ODataPubFormat format, final int id) {
         final String sampleName = "Sample customer";
 
         final ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
@@ -391,7 +391,7 @@ public class EntityCreateTest extends AbstractTest {
 
     @Test
     public void createODataEntityAsAtom() {
-        final ODataFormat format = ODataFormat.ATOM;
+        final ODataPubFormat format = ODataPubFormat.ATOM;
         final int id = 1;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
@@ -403,7 +403,7 @@ public class EntityCreateTest extends AbstractTest {
 
     @Test
     public void createODataEntityAsJSON() {
-        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final int id = 2;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
@@ -415,7 +415,7 @@ public class EntityCreateTest extends AbstractTest {
 
     @Test
     public void createWithInlineAsAtom() {
-        final ODataFormat format = ODataFormat.ATOM;
+        final ODataPubFormat format = ODataPubFormat.ATOM;
         final int id = 3;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
@@ -428,7 +428,7 @@ public class EntityCreateTest extends AbstractTest {
     @Test
     public void createWithInlineAsJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
-        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final int id = 4;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
@@ -440,7 +440,7 @@ public class EntityCreateTest extends AbstractTest {
 
     @Test
     public void createWithNavigationAsAtom() {
-        final ODataFormat format = ODataFormat.ATOM;
+        final ODataPubFormat format = ODataPubFormat.ATOM;
         final ODataEntity actual = createWithNavigationLink(format, 5);
         clean(format, actual, false);
     }
@@ -448,7 +448,7 @@ public class EntityCreateTest extends AbstractTest {
     @Test
     public void createWithNavigationAsJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
-        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final ODataEntity actual = createWithNavigationLink(format, 6);
         clean(format, actual, false);
     }

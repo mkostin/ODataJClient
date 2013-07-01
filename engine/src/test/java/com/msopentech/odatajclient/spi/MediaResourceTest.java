@@ -34,7 +34,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
@@ -44,22 +44,22 @@ public class MediaResourceTest extends AbstractTest {
 
     @Test
     public void updateMediaResourceAsAtom() throws Exception {
-        updateMediaResource(ODataFormat.ATOM, 14);
+        updateMediaResource(ODataPubFormat.ATOM, 14);
     }
 
     @Test
     public void updateMediaResourceAsJson() throws Exception {
-        updateMediaResource(ODataFormat.JSON, 15);
+        updateMediaResource(ODataPubFormat.JSON, 15);
     }
 
     @Test
     public void createMediaResourceAsAtom() throws Exception {
-        createMediaResource(ODataFormat.ATOM);
+        createMediaResource(ODataPubFormat.ATOM);
     }
 
     @Test
     public void createMediaResourceAsJson() throws Exception {
-        createMediaResource(ODataFormat.JSON);
+        createMediaResource(ODataPubFormat.JSON);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class MediaResourceTest extends AbstractTest {
         assertEquals(TO_BE_UPDATED, IOUtils.toString(retrieveRes.getBody()));
     }
 
-    private void updateMediaResource(final ODataFormat format, final int id) throws Exception {
+    private void updateMediaResource(final ODataPubFormat format, final int id) throws Exception {
         ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL);
         builder.appendEntitySetSegment("Car(" + id + ")").appendValueSegment();
 
@@ -109,7 +109,7 @@ public class MediaResourceTest extends AbstractTest {
         assertEquals(TO_BE_UPDATED, IOUtils.toString(retrieveRes.getBody()));
     }
 
-    private void createMediaResource(final ODataFormat format) throws Exception {
+    private void createMediaResource(final ODataPubFormat format) throws Exception {
         ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL);
         builder.appendEntitySetSegment("Car");
 
