@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
-import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;

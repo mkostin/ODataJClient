@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
@@ -36,17 +35,17 @@ import java.net.URI;
 import org.junit.Test;
 
 /**
- * This is the unit test class to check basic entity operations.
+ * This is the unit test class to check basic feed operations.
  */
 public class FeedTest extends AbstractTest {
 
     @Test
-    public void readAtomFeed() throws Exception {
+    public void readAtomFeed() throws IOException {
         readFeed(ODataPubFormat.ATOM);
     }
 
     @Test
-    public void readJSONFeed() throws Exception {
+    public void readJSONFeed() throws IOException {
         readFeed(ODataPubFormat.JSON);
     }
 

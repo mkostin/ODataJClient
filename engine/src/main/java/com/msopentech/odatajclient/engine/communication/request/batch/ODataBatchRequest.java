@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
-import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
@@ -25,6 +24,8 @@ import com.msopentech.odatajclient.engine.communication.response.ODataBatchChang
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponseItem;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchRetrieveResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
 import java.io.PipedOutputStream;

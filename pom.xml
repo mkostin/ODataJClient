@@ -63,6 +63,8 @@
     <commons.io.version>2.4</commons.io.version>
     <commons.lang3.version>3.1</commons.lang3.version>
 
+    <woodstox.version>4.2.0</woodstox.version>
+
     <sl4j.version>1.7.5</sl4j.version>
     <logback.version>1.0.13</logback.version>
     
@@ -80,6 +82,12 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${commons.lang3.version}</version>
+      </dependency>
+    
+      <dependency>
+        <groupId>org.codehaus.woodstox</groupId>
+        <artifactId>woodstox-core-asl</artifactId>
+        <version>${woodstox.version}</version>
       </dependency>
     
       <dependency>

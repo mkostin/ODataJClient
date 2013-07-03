@@ -16,9 +16,12 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
+import com.msopentech.odatajclient.engine.communication.ODataServerErrorException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayOutputStream;
@@ -63,12 +66,12 @@ public class ODataRequestImpl implements ODataRequest {
     /**
      * OData request header.
      */
-    protected ODataHeaders odataHeaders;
+    protected final ODataHeaders odataHeaders;
 
     /**
      * Target URI.
      */
-    protected URI uri;
+    protected final URI uri;
 
     /**
      * HTTP client.
@@ -322,7 +325,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public InputStream rawExecute() {
         try {
-            HttpEntity httpEntity = doExecute().getEntity();
+            final HttpEntity httpEntity = doExecute().getEntity();
             return httpEntity == null ? null : httpEntity.getContent();
         } catch (IOException e) {
             throw new HttpClientException(e);
@@ -343,14 +346,35 @@ public class ODataRequestImpl implements ODataRequest {
             }
         }
 
+        final HttpResponse response;
         try {
-            return this.client.execute(this.request);
+            response = this.client.execute(this.request);
         } catch (IOException e) {
             throw new HttpClientException(e);
         } catch (RuntimeException e) {
             this.request.abort();
             throw new HttpClientException(e);
         }
+
+
+        if (response.getStatusLine().getStatusCode() >= 500) {
+            throw new ODataServerErrorException(response.getStatusLine());
+        } else if (response.getStatusLine().getStatusCode() >= 400) {
+            try {
+                final HttpEntity httpEntity = response.getEntity();
+                if (httpEntity == null) {
+                    throw new ODataClientErrorException(response.getStatusLine());
+                } else {
+                    throw new ODataClientErrorException(response.getStatusLine(),
+                            ODataReader.readError(httpEntity.getContent(), getAccept().indexOf("xml") != -1));
+                }
+            } catch (IOException e) {
+                throw new HttpClientException(
+                        "Received '" + response.getStatusLine() + "' but could not extract error body", e);
+            }
+        }
+
+        return response;
     }
 
     @SuppressWarnings("unchecked")

@@ -15,12 +15,12 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest.MediaEntityCreateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest.MediaEntityCreateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityCreateResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import java.io.InputStream;

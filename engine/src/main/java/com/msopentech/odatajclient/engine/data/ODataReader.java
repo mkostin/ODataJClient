@@ -115,4 +115,8 @@ public final class ODataReader {
             throw new IllegalStateException(e);
         }
     }
+
+    public static ODataError readError(final InputStream inputStream, final boolean isXML) {
+        return Deserializer.toODataError(inputStream, isXML);
+    }
 }

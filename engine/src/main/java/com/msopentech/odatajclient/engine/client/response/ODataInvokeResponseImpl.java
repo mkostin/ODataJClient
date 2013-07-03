@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.client.response;
 
+import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.response.*;
 import com.msopentech.odatajclient.engine.utils.ODataResultSet;
 import org.apache.http.HttpResponse;

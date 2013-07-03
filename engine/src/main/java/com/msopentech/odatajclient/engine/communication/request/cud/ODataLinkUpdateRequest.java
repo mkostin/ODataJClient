@@ -15,12 +15,12 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.types.ODataFormat;

@@ -24,7 +24,10 @@ import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONLinks;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.data.json.JSONServiceDocument;
+import com.msopentech.odatajclient.engine.data.json.error.JSONODataError;
+import com.msopentech.odatajclient.engine.data.json.error.JSONODataErrorBundle;
 import com.msopentech.odatajclient.engine.data.xml.XMLServiceDocument;
+import com.msopentech.odatajclient.engine.data.xml.error.XMLODataError;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -116,6 +119,12 @@ public final class Deserializer {
         return format == ODataFormat.XML
                 ? toLinksFromXML(input)
                 : toLinksFromJSON(input);
+    }
+
+    public static ODataError toODataError(final InputStream input, final boolean isXML) {
+        return isXML
+                ? toODataErrorFromXML(input)
+                : toODataErrorFromJSON(input);
     }
 
     /*
@@ -248,6 +257,25 @@ public final class Deserializer {
             return mapper.readValue(input, JSONLinks.class).getLinks();
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON $links", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static XMLODataError toODataErrorFromXML(final InputStream input) {
+        try {
+            final JAXBContext context = JAXBContext.newInstance(XMLODataError.class);
+            return (XMLODataError) context.createUnmarshaller().unmarshal(input);
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException("While deserializing XML error", e);
+        }
+    }
+
+    private static JSONODataError toODataErrorFromJSON(final InputStream input) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            return mapper.readValue(input, JSONODataErrorBundle.class).getError();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("While deserializing JSON error", e);
         }
     }
 }
