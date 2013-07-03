@@ -15,14 +15,12 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
@@ -98,7 +96,10 @@ public class ODataStreamUpdateRequest
 
         private InputStream input = null;
 
-        public ODataStreamUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        public ODataStreamUpdateResponseImpl() {
+        }
+
+        private ODataStreamUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
@@ -106,9 +107,7 @@ public class ODataStreamUpdateRequest
         public InputStream getBody() {
             if (input == null) {
                 try {
-                    input = res.getEntity().getContent();
-                } catch (IOException e) {
-                    throw new HttpClientException(e);
+                    input = getRawResponse();
                 } finally {
                     this.close();
                 }

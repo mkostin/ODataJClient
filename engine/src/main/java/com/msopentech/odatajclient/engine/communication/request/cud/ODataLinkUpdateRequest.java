@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.client.response.ODataLinkOperationResponseImpl;
+import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.entity.InputStreamEntity;
 
@@ -72,7 +73,7 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
 
         try {
             final HttpResponse res = doExecute();
-            return new ODataLinkOperationResponseImpl(client, res);
+            return new ODataLinkUpdateResponseImpl(client, res);
         } finally {
             IOUtils.closeQuietly(input);
         }
@@ -84,5 +85,18 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
     @Override
     protected InputStream getPayload() {
         return ODataWriter.writeLink(link, ODataFormat.valueOf(getFormat()));
+    }
+
+    /**
+     * This class implements the response to an OData link operation request.
+     */
+    public class ODataLinkUpdateResponseImpl extends ODataResponseImpl implements ODataLinkOperationResponse {
+
+        public ODataLinkUpdateResponseImpl() {
+        }
+
+        public ODataLinkUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
+        }
     }
 }

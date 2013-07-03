@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
@@ -25,7 +24,6 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
@@ -87,7 +85,10 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
 
         private ODataProperty property = null;
 
-        public ODataPropertyUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataPropertyUpdateResponseImpl() {
+        }
+
+        private ODataPropertyUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
@@ -95,10 +96,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
         public ODataProperty getBody() {
             if (property == null) {
                 try {
-                    property = ODataReader.readProperty(
-                            res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
-                } catch (IOException e) {
-                    throw new HttpClientException(e);
+                    property = ODataReader.readProperty(getRawResponse(), ODataFormat.valueOf(getFormat()));
                 } finally {
                     this.close();
                 }

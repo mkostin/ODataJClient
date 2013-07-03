@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityUpdateRequest.MediaEntityUpdateRequestPayload;
@@ -24,7 +23,6 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatch
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Future;
@@ -104,7 +102,10 @@ public class ODataMediaEntityUpdateRequest
 
         private ODataEntity entity = null;
 
-        public ODataMediaEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataMediaEntityUpdateResponseImpl() {
+        }
+
+        private ODataMediaEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
@@ -112,9 +113,7 @@ public class ODataMediaEntityUpdateRequest
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.readEntity(res.getEntity().getContent(), getFormat());
-                } catch (IOException e) {
-                    throw new HttpClientException(e);
+                    entity = ODataReader.readEntity(getRawResponse(), getFormat());
                 } finally {
                     this.close();
                 }

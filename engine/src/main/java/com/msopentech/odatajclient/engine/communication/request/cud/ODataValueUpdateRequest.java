@@ -87,7 +87,10 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
 
         private ODataValue value = null;
 
-        public ODataValueUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataValueUpdateResponseImpl() {
+        }
+
+        private ODataValueUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
@@ -98,7 +101,7 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
                     value = new ODataPrimitiveValue.Builder().
                             setType(ODataValueFormat.valueOf(getFormat()) == ODataValueFormat.TEXT
                             ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
-                            setText(IOUtils.toString(res.getEntity().getContent())).
+                            setText(IOUtils.toString(getRawResponse())).
                             build();
                 } catch (IOException e) {
                     throw new HttpClientException(e);
