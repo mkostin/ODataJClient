@@ -33,7 +33,13 @@ public class ODataFeed extends ODataItem {
     protected URI next;
 
     /**
-     * OData entities contained in this collection.
+     * Number of ODataEntities contained in this feed.
+     * If <tt>$inlinecount</tt> was requested, this value comes from there.
+     */
+    protected Integer count;
+
+    /**
+     * OData entities contained in this feed.
      */
     protected List<ODataEntity> entities = new ArrayList<ODataEntity>();
 
@@ -48,6 +54,14 @@ public class ODataFeed extends ODataItem {
      */
     public URI getNext() {
         return next;
+    }
+
+    public void setCount(final int count) {
+        this.count = count;
+    }
+
+    public int getCount() {
+        return count == null ? entities.size() : count;
     }
 
     public boolean addEntity(final ODataEntity entity) {

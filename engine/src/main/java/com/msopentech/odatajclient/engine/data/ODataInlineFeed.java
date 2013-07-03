@@ -22,6 +22,8 @@ import java.net.URI;
  */
 public abstract class ODataInlineFeed extends ODataLink {
 
+    private static final long serialVersionUID = -77628001615355449L;
+
     private ODataFeed feed;
 
     public ODataInlineFeed(final URI uri, final ODataLinkType type, final String title, final ODataFeed feed) {

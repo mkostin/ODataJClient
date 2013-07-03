@@ -37,6 +37,9 @@ public class JSONFeed extends AbstractJSONMetadataObject implements FeedResource
     @JsonProperty(value = "odata.metadata", required = false)
     private URI metadata;
 
+    @JsonProperty(value = "odata.count", required = false)
+    private Integer count;
+
     @JsonProperty("value")
     private final List<JSONEntry> entries;
 
@@ -57,9 +60,19 @@ public class JSONFeed extends AbstractJSONMetadataObject implements FeedResource
         this.metadata = metadata;
     }
 
+    @JsonIgnore
+    @Override
+    public Integer getCount() {
+        return count;
+    }
+
     @Override
     public List<JSONEntry> getEntries() {
         return entries;
+    }
+
+    public boolean addEntry(final JSONEntry entry) {
+        return this.entries.add(entry);
     }
 
     @JsonIgnore

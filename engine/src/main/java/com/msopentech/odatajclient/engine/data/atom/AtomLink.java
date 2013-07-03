@@ -120,7 +120,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      *
      */
     @Override
-    public void setHref(String value) {
+    public void setHref(final String value) {
         this.href = value;
     }
 
@@ -146,7 +146,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      *
      */
     @Override
-    public void setRel(String value) {
+    public void setRel(final String value) {
         this.rel = value;
     }
 
@@ -172,7 +172,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      *
      */
     @Override
-    public void setType(String type) {
+    public void setType(final String type) {
         this.type = type;
     }
 
@@ -196,7 +196,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      * {@link String }
      *
      */
-    public void setHreflang(String value) {
+    public void setHreflang(final String value) {
         this.hreflang = value;
     }
 
@@ -222,7 +222,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      *
      */
     @Override
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -246,7 +246,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      * {@link String }
      *
      */
-    public void setLength(String value) {
+    public void setLength(final String value) {
         this.length = value;
     }
 
@@ -270,7 +270,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      * {@link String }
      *
      */
-    public void setBase(String value) {
+    public void setBase(final String value) {
         this.base = value;
     }
 
@@ -294,7 +294,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      * {@link String }
      *
      */
-    public void setLang(String value) {
+    public void setLang(final String value) {
         this.lang = value;
     }
 
@@ -341,7 +341,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
             return null;
         }
 
-        Element inlineEntryContent = (Element) getAnyOther().get(0);
+        final Element inlineEntryContent = (Element) getAnyOther().get(0);
 
         AtomEntry inlineEntry = null;
 
@@ -355,7 +355,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
 
     @Override
     public void setInlineEntry(final EntryResource entry) {
-        Element inlineEntryContent = newInlineContent();
+        final Element inlineEntryContent = newInlineContent();
         Serializer.atom(entry, AtomEntry.class, inlineEntryContent);
         getAnyOther().clear();
         getAnyOther().add(inlineEntryContent);
@@ -363,10 +363,27 @@ public class AtomLink extends UndefinedContent implements LinkResource {
 
     @Override
     public FeedResource getInlineFeed() {
-        return null;
+        if (getAnyOther().isEmpty()) {
+            return null;
+        }
+
+        final Element inlineFeedContent = (Element) getAnyOther().get(0);
+
+        AtomFeed inlineFeed = null;
+
+        final NodeList inlineElements = inlineFeedContent.getElementsByTagName("feed");
+        for (int i = 0; i < inlineElements.getLength(); i++) {
+            inlineFeed = Deserializer.toAtomFeed(inlineElements.item(i));
+        }
+
+        return inlineFeed;
     }
 
     @Override
-    public void setInlineFeed(FeedResource feed) {
+    public void setInlineFeed(final FeedResource feed) {
+        final Element inlineEntryContent = newInlineContent();
+        Serializer.atom(feed, AtomFeed.class, inlineEntryContent);
+        getAnyOther().clear();
+        getAnyOther().add(inlineEntryContent);
     }
 }

@@ -17,11 +17,13 @@ package com.msopentech.odatajclient.engine.data;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 
 /**
  * OData URI/Query builder.
@@ -209,7 +211,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURI object.
      */
     public ODataURIBuilder appendEntitySetSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.SERVICEROOT, segmentValue));
+        segments.add(new Segment(SegmentType.ENTITYSET, segmentValue));
         return this;
     }
 
@@ -462,30 +464,25 @@ public class ODataURIBuilder implements Serializable {
      * @return OData URI.
      */
     public URI build() {
-        final StringBuilder builder = new StringBuilder();
-
+        final StringBuilder segmentsBuilder = new StringBuilder();
         for (Segment seg : segments) {
-            if (builder.length() > 0) {
-                builder.append("/");
+            if (segmentsBuilder.length() > 0) {
+                segmentsBuilder.append("/");
             }
 
-            builder.append(seg.value);
+            segmentsBuilder.append(seg.value);
         }
 
-        final StringBuilder builderOptions = new StringBuilder();
+        try {
+            final URIBuilder builder = new URIBuilder(segmentsBuilder.toString());
 
-        for (Map.Entry<String, String> option : queryOptions.entrySet()) {
-            if (builderOptions.length() > 0) {
-                builderOptions.append("&");
+            for (Map.Entry<String, String> option : queryOptions.entrySet()) {
+                builder.addParameter("$" + option.getKey(), option.getValue());
             }
 
-            builderOptions.append("$").append(option.getKey()).append("=").append(option.getValue());
+            return builder.build();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Could not build valid URI", e);
         }
-
-        if (builderOptions.length() > 0) {
-            builder.append("?").append(builderOptions);
-        }
-
-        return URI.create(builder.toString());
     }
 }

@@ -221,6 +221,20 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
         return this.anyLocal;
     }
 
+    @Override
+    public Integer getCount() {
+        Element count = null;
+        for (Object any : getAnyOther()) {
+            if (any instanceof Element) {
+                final Element anyElem = (Element) any;
+                if ("m:count".equals(anyElem.getNodeName())) {
+                    count = anyElem;
+                }
+            }
+        }
+        return count == null ? null : Integer.valueOf(count.getTextContent());
+    }
+
     /**
      * Gets the value of the entry property.
      *
@@ -272,7 +286,7 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
      * {@link String }
      *
      */
-    public void setBase(String value) {
+    public void setBase(final String value) {
         this.base = value;
     }
 
@@ -301,7 +315,7 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
      * {@link String }
      *
      */
-    public void setLang(String value) {
+    public void setLang(final String value) {
         this.lang = value;
     }
 
@@ -324,7 +338,7 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
     }
 
     @Override
-    public void setEntries(List<EntryResource> entries) {
+    public void setEntries(final List<EntryResource> entries) {
         getEntries().clear();
         for (EntryResource entryResource : entries) {
             if (entryResource instanceof AtomEntry) {
@@ -334,8 +348,8 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
     }
 
     @Override
-    public void setNext(LinkResource next) {
-        AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);
+    public void setNext(final LinkResource next) {
+        final AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);
         if (link != null) {
             getValues().remove(link);
         }

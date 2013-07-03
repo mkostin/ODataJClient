@@ -54,6 +54,13 @@ public interface ODataResponse {
     String getStatusMessage();
 
     /**
+     * Gets the content type.
+     *
+     * @return content type
+     */
+    String getContentType();
+
+    /**
      * Gets response body as InputStream.
      *
      * @return response body input stream.

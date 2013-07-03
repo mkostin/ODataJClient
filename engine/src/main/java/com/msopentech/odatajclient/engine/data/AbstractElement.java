@@ -76,8 +76,8 @@ public abstract class AbstractElement {
     }
 
     @SuppressWarnings("unchecked")
-    protected <T> List<T> getElements(Class<T> reference) {
-        List<T> result = new ArrayList<T>();
+    protected <T> List<T> getElements(final Class<T> reference) {
+        final List<T> result = new ArrayList<T>();
 
         for (Object object : getValues()) {
             if (reference.isAssignableFrom(object.getClass())) {

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.IOException;
@@ -48,12 +49,26 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
         return entry.getKey().substring(0, entry.getKey().indexOf('@'));
     }
 
-    private String setInlineEntry(final String name, final String suffix, final ObjectNode tree,
+    private String setInline(final String name, final String suffix, final ObjectNode tree,
             final ObjectCodec codec, final JSONLink link) throws IOException {
 
         final String entryNamePrefix = name.substring(0, name.indexOf(suffix));
         if (tree.has(entryNamePrefix)) {
-            link.setInlineEntry(tree.path(entryNamePrefix).traverse(codec).readValuesAs(JSONEntry.class).next());
+            final JsonNode inline = tree.path(entryNamePrefix);
+
+            if (inline instanceof ObjectNode) {
+                link.setInlineEntry(inline.traverse(codec).readValuesAs(JSONEntry.class).next());
+            }
+
+            if (inline instanceof ArrayNode) {
+                final JSONFeed feed = new JSONFeed();
+                final Iterator<JsonNode> entries = ((ArrayNode) inline).elements();
+                while (entries.hasNext()) {
+                    feed.addEntry(entries.next().traverse(codec).readValuesAs(JSONEntry.class).next());
+                }
+
+                link.setInlineFeed(feed);
+            }
         }
         return entryNamePrefix;
     }
@@ -128,7 +143,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
                 entry.addNavigationLink(link);
                 toRemove.add(fields.getKey());
 
-                toRemove.add(setInlineEntry(fields.getKey(),
+                toRemove.add(setInline(fields.getKey(),
                         JSONConstants.NAVIGATION_LINK_SUFFIX, tree, parser.getCodec(), link));
             } else if (fields.getKey().endsWith(JSONConstants.ASSOCIATION_LINK_SUFFIX)) {
                 entry.addAssociationLink(new JSONLink(getTitle(fields),
@@ -142,7 +157,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
                 entry.addMediaEditLink(link);
                 toRemove.add(fields.getKey());
 
-                toRemove.add(setInlineEntry(fields.getKey(),
+                toRemove.add(setInline(fields.getKey(),
                         JSONConstants.MEDIAEDIT_LINK_SUFFIX, tree, parser.getCodec(), link));
             }
         }

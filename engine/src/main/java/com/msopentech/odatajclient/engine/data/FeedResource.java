@@ -27,6 +27,8 @@ public interface FeedResource {
 
     URI getBaseURI();
 
+    Integer getCount();
+
     List<? extends EntryResource> getEntries();
 
     void setEntries(List<EntryResource> entries);

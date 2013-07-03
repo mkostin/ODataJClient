@@ -17,7 +17,11 @@ package com.msopentech.odatajclient.engine.data;
 
 import java.net.URI;
 
-public class ODataFactory {
+public final class ODataFactory {
+
+    private ODataFactory() {
+        // Empty private constructor for static utility classes
+    }
 
     public static ODataFeed newFeed() {
         return new FeedImpl();
@@ -41,6 +45,24 @@ public class ODataFactory {
 
     public static ODataLink newLink(final String name, final URI baseURI, final String href, final ODataLinkType type) {
         return new LinkImpl(baseURI, href, type, name);
+    }
+
+    public static ODataLink newInlineFeed(final String name, final URI link, final ODataFeed feed) {
+        return new ODataInlineFeed(link, ODataLinkType.FEED_NAVIGATION, name, feed) {
+
+            private static final long serialVersionUID = -8829134406268153228L;
+
+        };
+    }
+
+    public static ODataLink newInlineFeed(
+            final String name, final URI baseURI, final String href, final ODataFeed feed) {
+
+        return new ODataInlineFeed(baseURI, href, ODataLinkType.FEED_NAVIGATION, name, feed) {
+
+            private static final long serialVersionUID = -1267690133705251052L;
+
+        };
     }
 
     public static ODataLink newInlineEntity(final String name, final URI link, final ODataEntity entity) {

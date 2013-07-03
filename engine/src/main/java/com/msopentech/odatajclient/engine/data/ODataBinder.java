@@ -181,11 +181,21 @@ public final class ODataBinder {
     }
 
     public static ODataFeed getODataFeed(final FeedResource resource) {
+        return getODataFeed(resource, null);
+    }
+
+    public static ODataFeed getODataFeed(final FeedResource resource, final URI defaultBaseURI) {
+        final URI base = defaultBaseURI == null ? resource.getBaseURI() : defaultBaseURI;
+
         final LinkResource next = resource.getNext();
 
         final ODataFeed feed = next == null || StringUtils.isBlank(next.getHref())
                 ? ODataFactory.newFeed()
-                : ODataFactory.newFeed(URIUtils.getURI(resource.getBaseURI(), next.getHref()));
+                : ODataFactory.newFeed(URIUtils.getURI(base, next.getHref()));
+
+        if (resource.getCount() != null) {
+            feed.setCount(resource.getCount());
+        }
 
         for (EntryResource entryResource : resource.getEntries()) {
             feed.addEntity(getODataEntity(entryResource));
@@ -198,51 +208,57 @@ public final class ODataBinder {
         return getODataEntity(resource, null);
     }
 
-    public static ODataEntity getODataEntity(final EntryResource entry, final URI defaultBaseURI) {
+    public static ODataEntity getODataEntity(final EntryResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
-            Serializer.entry(entry, writer);
+            Serializer.entry(resource, writer);
             writer.flush();
             LOG.debug("Processing entity:\n{}", writer.toString());
         }
 
-        final URI base = defaultBaseURI == null ? entry.getBaseURI() : defaultBaseURI;
+        final URI base = defaultBaseURI == null ? resource.getBaseURI() : defaultBaseURI;
 
-        final ODataEntity entity = entry.getSelfLink() == null
-                ? ODataFactory.newEntity(entry.getType())
-                : ODataFactory.newEntity(entry.getType(), URIUtils.getURI(base, entry.getSelfLink().getHref()));
+        final ODataEntity entity = resource.getSelfLink() == null
+                ? ODataFactory.newEntity(resource.getType())
+                : ODataFactory.newEntity(resource.getType(), URIUtils.getURI(base, resource.getSelfLink().getHref()));
 
-        if (entry.getEditLink() != null) {
-            entity.setEditLink(URIUtils.getURI(base, entry.getEditLink().getHref()));
+        if (resource.getEditLink() != null) {
+            entity.setEditLink(URIUtils.getURI(base, resource.getEditLink().getHref()));
         }
 
-        for (LinkResource link : entry.getAssociationLinks()) {
+        for (LinkResource link : resource.getAssociationLinks()) {
             entity.addLink(ODataFactory.newAssociationLink(link.getTitle(), base, link.getHref()));
         }
 
-        for (LinkResource link : entry.getNavigationLinks()) {
+        for (LinkResource link : resource.getNavigationLinks()) {
             final EntryResource inlineEntry = link.getInlineEntry();
-            if (inlineEntry == null) {
+            final FeedResource inlineFeed = link.getInlineFeed();
+
+            if (inlineEntry == null && inlineFeed == null) {
                 entity.addLink(ODataFactory.newEntityNavigationLink(link.getTitle(), base, link.getHref()));
-            } else {
+            } else if (inlineFeed == null) {
                 entity.addLink(ODataFactory.newInlineEntity(
                         link.getTitle(), base, link.getHref(),
                         getODataEntity(inlineEntry, inlineEntry.getBaseURI() == null ? base : inlineEntry.getBaseURI())));
+            } else {
+                entity.addLink(ODataFactory.newInlineFeed(
+                        link.getTitle(), base, link.getHref(),
+                        getODataFeed(inlineFeed, inlineFeed.getBaseURI() == null ? base : inlineFeed.getBaseURI())));
             }
         }
 
-        for (LinkResource link : entry.getMediaEditLinks()) {
+        for (LinkResource link : resource.getMediaEditLinks()) {
             entity.addLink(ODataFactory.newMediaEditLink(link.getTitle(), base, link.getHref()));
         }
 
         final Element content;
-        if (entry.isMediaEntry()) {
+        if (resource.isMediaEntry()) {
             entity.setMediaEntity(true);
-            entity.setMediaContentSource(entry.getMediaContentSource());
-            entity.setMediaContentType(entry.getMediaContentType());
-            content = entry.getMediaEntryProperties();
+            entity.setMediaContentSource(resource.getMediaContentSource());
+            entity.setMediaContentType(resource.getMediaContentType());
+            content = resource.getMediaEntryProperties();
         } else {
-            content = entry.getContent();
+            content = resource.getContent();
         }
         if (content != null) {
             for (int i = 0; i < content.getChildNodes().getLength(); i++) {

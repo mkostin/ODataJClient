@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchUtilities;
-import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -108,6 +108,17 @@ public abstract class ODataResponseImpl implements ODataResponse {
     @Override
     public Collection<String> getHeader(final String name) {
         return headers.get(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getContentType() {
+        final Collection<String> contentTypes = getHeader(ODataHeaders.HeaderName.contentType.toString());
+        return contentTypes == null || contentTypes.isEmpty()
+                ? null
+                : contentTypes.iterator().next();
     }
 
     /**

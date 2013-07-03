@@ -22,6 +22,8 @@ import java.net.URI;
  */
 public abstract class ODataInlineEntity extends ODataLink {
 
+    private static final long serialVersionUID = -4763341581843700743L;
+
     private final ODataEntity entity;
 
     public ODataInlineEntity(final URI uri, final ODataLinkType type, final String title, final ODataEntity entity) {

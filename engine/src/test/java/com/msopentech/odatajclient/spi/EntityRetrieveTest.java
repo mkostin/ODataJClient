@@ -15,9 +15,10 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
@@ -31,6 +32,8 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataFeed;
+import com.msopentech.odatajclient.engine.data.ODataInlineFeed;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -190,7 +193,7 @@ public class EntityRetrieveTest extends AbstractTest {
         assertTrue(found);
     }
 
-    private void readODataEntityWithInline(final ODataPubFormat format) {
+    private void readODataEntityWithInlineEntry(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).expand("Info");
 
@@ -232,13 +235,51 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     @Test
-    public void readODataEntityWithInlineFromAtom() {
-        readODataEntityWithInline(ODataPubFormat.ATOM);
+    public void readODataEntityWithInlineEntryFromAtom() {
+        readODataEntityWithInlineEntry(ODataPubFormat.ATOM);
     }
 
     @Test
-    public void readODataEntityWithInlineFromJSON() {
+    public void readODataEntityWithInlineEntryFromJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
-        readODataEntityWithInline(ODataPubFormat.JSON_FULL_METADATA);
+        readODataEntityWithInlineEntry(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    private void readODataEntityWithInlineFeed(final ODataPubFormat format) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).expand("Orders");
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
+        final ODataEntity entity = res.getBody();
+        assertNotNull(entity);
+
+        boolean found = false;
+
+        for (ODataLink link : entity.getNavigationLinks()) {
+            if (link instanceof ODataInlineFeed) {
+                final ODataFeed inline = ((ODataInlineFeed) link).getFeed();
+                assertNotNull(inline);
+
+                debugFeed(ODataBinder.getFeed(inline, ResourceFactory.feedClassForFormat(format)), "Just read");
+
+                found = true;
+            }
+        }
+
+        assertTrue(found);
+    }
+
+    @Test
+    public void readODataEntityWithInlineFeedFromAtom() {
+        readODataEntityWithInlineFeed(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void readODataEntityWithInlineFeedFromJSON() {
+        // this needs to be full, otherwise there is no mean to recognize links
+        readODataEntityWithInlineFeed(ODataPubFormat.JSON_FULL_METADATA);
     }
 }

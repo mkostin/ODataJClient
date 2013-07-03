@@ -61,15 +61,15 @@ public class FeedTest extends AbstractTest {
 
     @Test
     public void readODataFeedWithNextFromAtom() {
-        readODataFeedWithNextLink(ODataPubFormat.ATOM);
+        readFeedWithNextLink(ODataPubFormat.ATOM);
     }
 
     @Test
     public void readODataFeedWithNextFromJSON() {
-        readODataFeedWithNextLink(ODataPubFormat.JSON_FULL_METADATA);
+        readFeedWithNextLink(ODataPubFormat.JSON_FULL_METADATA);
     }
 
-    private void readODataFeedWithNextLink(final ODataPubFormat format) {
+    private void readFeedWithNextLink(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 

@@ -70,6 +70,23 @@ public abstract class ODataEntity extends ODataItem {
     }
 
     /**
+     * Searches for property with given name.
+     *
+     * @param name property to look for
+     * @return property if found with given name, <tt>null</tt> otherwise
+     */
+    public ODataProperty getProperty(final String name) {
+        ODataProperty result = null;
+        for (ODataProperty property : properties) {
+            if (name.equals(property.getName())) {
+                result = property;
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Returns OData entity properties.
      *
      * @return OData entity properties.
