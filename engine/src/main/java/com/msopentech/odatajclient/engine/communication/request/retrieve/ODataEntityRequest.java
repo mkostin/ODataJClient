@@ -53,7 +53,7 @@ public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataF
 
         private ODataEntity entity = null;
 
-        private ODataEntityResponseImpl() {
+        public ODataEntityResponseImpl() {
             super();
         }
 

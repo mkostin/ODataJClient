@@ -30,6 +30,7 @@ import java.util.Collection;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -321,7 +322,8 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public InputStream rawExecute() {
         try {
-            return doExecute().getEntity() == null ? null : doExecute().getEntity().getContent();
+            HttpEntity httpEntity = doExecute().getEntity();
+            return httpEntity == null ? null : httpEntity.getContent();
         } catch (IOException e) {
             throw new HttpClientException(e);
         } catch (RuntimeException e) {
@@ -357,10 +359,9 @@ public class ODataRequestImpl implements ODataRequest {
         for (Class<?> clazz : this.getClass().getDeclaredClasses()) {
             if (ODataResponse.class.isAssignableFrom(clazz)) {
                 try {
-                    final Constructor constructor = clazz.getDeclaredConstructor(new Class<?>[0]);
+                    final Constructor constructor = clazz.getDeclaredConstructor(this.getClass());
                     constructor.setAccessible(true);
-
-                    return (V) constructor.newInstance();
+                    return (V) constructor.newInstance(this);
                 } catch (Exception e) {
                     LOG.error("Error retrieving response class template instance", e);
                 }

@@ -82,9 +82,9 @@ public abstract class ODataResponseImpl implements ODataResponse {
             final Collection<String> headerValues;
             if (headers.containsKey(header.getName())) {
                 headerValues = headers.get(header.getName());
-                headers.put(header.getName(), headerValues);
             } else {
                 headerValues = new HashSet<String>();
+                headers.put(header.getName(), headerValues);
             }
 
             headerValues.add(header.getValue());

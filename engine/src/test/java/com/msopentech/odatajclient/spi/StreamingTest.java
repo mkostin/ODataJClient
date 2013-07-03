@@ -136,9 +136,7 @@ public class StreamingTest extends AbstractTest {
         // -------------------------------------------
 
         final ODataBatchResponse response = payload.getResponse();
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + response.getHeaderNames());
-        debugInputStream(response.getRawResponse(), "kjhvgcfxzdszdxcgvhbjklkjbhv");
-        
+
     }
 
     private static class ODataStreamingMgt extends ODataStreamingManagement<ODataBatchResponse> {
@@ -163,6 +161,9 @@ public class StreamingTest extends AbstractTest {
         }
     };
 
+    /**
+     * To be used for debug purposes.
+     */
     private static class StreamingThread extends Thread {
 
         private final ODataStreamingMgt streaming;
@@ -219,7 +220,6 @@ public class StreamingTest extends AbstractTest {
                     builder.append(new String(buff, 0, len));
                 }
 
-                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + builder.toString());
                 assertTrue(builder.toString().contains("Content-Id:2"));
                 assertTrue(builder.toString().contains("GET http://services.odata.org/OData/Odata.svc"));
 
