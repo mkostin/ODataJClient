@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +40,7 @@ public class RawUsageTest {
 
         try {
             // let's suppose to want to deserialize, one shot, an entire atom feed
-            final ODataFeed feed = ODataReader.readFeed(is, ODataFormat.ATOM);
+            final ODataFeed feed = ODataReader.readFeed(is, ODataPubFormat.ATOM);
 
             // retrieve and process the query result
             for (ODataEntity entity : feed.getEntities()) {
@@ -73,7 +73,7 @@ public class RawUsageTest {
             // let's suppose to want to deserialize, step-by-step, an entire atom feed
             while (is.available() > 0) {
                 // retrieve and process the new result item
-                final ODataEntity entity = ODataReader.readEntity(is, ODataFormat.ATOM);
+                final ODataEntity entity = ODataReader.readEntity(is, ODataPubFormat.ATOM);
                 // .................
             }
         } catch (IOException ex) {

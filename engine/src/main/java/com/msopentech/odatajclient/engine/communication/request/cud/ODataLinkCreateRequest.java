@@ -22,7 +22,7 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatch
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
-import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
@@ -37,7 +37,7 @@ import org.apache.http.entity.InputStreamEntity;
  * @see ODataRequestFactory#getLinkCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataPropertyFormat>
+public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -79,6 +79,6 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeLink(link, ODataPropertyFormat.valueOf(getFormat()));
+        return ODataWriter.writeLink(link, ODataFormat.valueOf(getFormat()));
     }
 }

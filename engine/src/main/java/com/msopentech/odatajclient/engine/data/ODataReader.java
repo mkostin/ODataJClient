@@ -17,8 +17,8 @@ package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
@@ -51,7 +51,7 @@ public final class ODataReader {
      * @param format de-serialize as AtomEntry or JSONEntry
      * @return de-serialized feed.
      */
-    public static ODataFeed readFeed(final InputStream input, final ODataFormat format) {
+    public static ODataFeed readFeed(final InputStream input, final ODataPubFormat format) {
         return ODataBinder.getODataFeed(Deserializer.toFeed(input, ResourceFactory.feedClassForFormat(format)));
     }
 
@@ -62,7 +62,7 @@ public final class ODataReader {
      * @param format de-serialize as AtomEntry or JSONEntry
      * @return entity de-serialized.
      */
-    public static ODataEntity readEntity(final InputStream input, final ODataFormat format) {
+    public static ODataEntity readEntity(final InputStream input, final ODataPubFormat format) {
         return ODataBinder.getODataEntity(Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
     }
 
@@ -73,7 +73,7 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return OData entity property de-serialized.
      */
-    public static ODataProperty readProperty(final InputStream input, final ODataPropertyFormat format) {
+    public static ODataProperty readProperty(final InputStream input, final ODataFormat format) {
         return ODataBinder.getProperty(Deserializer.toDOM(input, format));
     }
 
@@ -84,7 +84,7 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return List of URIs.
      */
-    public static List<URI> readLinks(final InputStream input, final ODataPropertyFormat format) {
+    public static List<URI> readLinks(final InputStream input, final ODataFormat format) {
         return Deserializer.toLinks(input, format);
     }
 

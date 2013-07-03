@@ -28,7 +28,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
-import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.sql.Timestamp;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
@@ -43,7 +43,7 @@ public class PrimitiveValueTest extends AbstractTest {
         uriBuilder.appendEntityTypeSegment(entity).appendStructuralSegment(propertyName);
 
         final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
-        req.setFormat(ODataPropertyFormat.XML);
+        req.setFormat(ODataFormat.XML);
 
         final ODataRetrieveResponse<ODataProperty> res = req.execute();
         assertEquals(200, res.getStatusCode());

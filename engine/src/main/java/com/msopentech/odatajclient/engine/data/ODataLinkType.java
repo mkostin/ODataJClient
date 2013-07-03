@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
@@ -25,8 +25,8 @@ import org.apache.http.entity.ContentType;
  */
 public enum ODataLinkType {
 
-    ENTITY_NAVIGATION(ODataFormat.ATOM + ";type=entry"),
-    FEED_NAVIGATION(ODataFormat.ATOM + ";type=feed"),
+    ENTITY_NAVIGATION(ODataPubFormat.ATOM + ";type=entry"),
+    FEED_NAVIGATION(ODataPubFormat.ATOM + ";type=feed"),
     ASSOCIATION(ContentType.APPLICATION_XML.getMimeType()),
     MEDIA_EDIT("*/*");
 

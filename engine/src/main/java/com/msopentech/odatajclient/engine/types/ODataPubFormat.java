@@ -18,9 +18,9 @@ package com.msopentech.odatajclient.engine.types;
 import org.apache.http.entity.ContentType;
 
 /**
- * OData property format.
+ * Available formats for AtomPub exchange.
  */
-public enum ODataPropertyFormat {
+public enum ODataPubFormat {
 
     /**
      * JSON format with no metadata.
@@ -35,13 +35,13 @@ public enum ODataPropertyFormat {
      */
     JSON_FULL_METADATA(ContentType.APPLICATION_JSON.getMimeType() + ";odata=fullmetadata"),
     /**
-     * XML format.
+     * Atom format.
      */
-    XML(ContentType.APPLICATION_XML.getMimeType());
+    ATOM(ContentType.APPLICATION_ATOM_XML.getMimeType());
 
     private final String format;
 
-    ODataPropertyFormat(final String format) {
+    ODataPubFormat(final String format) {
         this.format = format;
     }
 

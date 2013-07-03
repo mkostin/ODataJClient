@@ -37,7 +37,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
@@ -87,7 +87,7 @@ public class StreamingTest extends AbstractTest {
         ODataEntityRequest query = ODataRetrieveRequestFactory.getEntityRequest(uri.build());
         query.setDataServiceVersion("2.0");
         query.setMaxDataServiceVersion("3.0");
-        query.setFormat(ODataFormat.ATOM);
+        query.setFormat(ODataPubFormat.ATOM);
 
         retrieve.setRequest(query);
         // -------------------------------------------
@@ -113,7 +113,7 @@ public class StreamingTest extends AbstractTest {
             final ODataEntityUpdateRequest change =
                     ODataCUDRequestFactory.getEntityUpdateRequest(targetURI.build(), UpdateType.PATCH, changes);
 
-            change.setFormat(ODataFormat.JSON);
+            change.setFormat(ODataPubFormat.JSON);
 
             changeset.addRequest(change);
         }

@@ -24,7 +24,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataEntityCrea
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -41,7 +41,7 @@ import org.apache.http.entity.InputStreamEntity;
  * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
  * com.msopentech.odatajclient.engine.data.ODataEntity)
  */
-public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse, ODataFormat>
+public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse, ODataPubFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -82,7 +82,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeEntity(entity, ODataFormat.valueOf(getFormat()));
+        return ODataWriter.writeEntity(entity, ODataPubFormat.valueOf(getFormat()));
     }
 
     private class ODataEntityCreateResponseImpl extends ODataResponseImpl implements ODataEntityCreateResponse {
@@ -97,7 +97,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.readEntity(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                    entity = ODataReader.readEntity(res.getEntity().getContent(), ODataPubFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

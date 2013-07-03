@@ -30,7 +30,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import java.net.URI;
 import java.util.Collection;
@@ -44,7 +44,7 @@ public class EntityUpdateTest extends AbstractTest {
 
     @Test
     public void mergeODataEntityAsAtom() {
-        final ODataFormat format = ODataFormat.ATOM;
+        final ODataPubFormat format = ODataPubFormat.ATOM;
         final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)").build();
         final String etag = getETag(uri);
         final ODataEntity merge = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
@@ -54,7 +54,7 @@ public class EntityUpdateTest extends AbstractTest {
 
     @Test
     public void mergeODataEntityAsJson() {
-        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)").build();
         final String etag = getETag(uri);
         final ODataEntity merge = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
@@ -64,7 +64,7 @@ public class EntityUpdateTest extends AbstractTest {
 
     @Test
     public void patchODataEntityAsAtom() {
-        final ODataFormat format = ODataFormat.ATOM;
+        final ODataPubFormat format = ODataPubFormat.ATOM;
         final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)").build();
         final String etag = getETag(uri);
         final ODataEntity patch = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
@@ -74,7 +74,7 @@ public class EntityUpdateTest extends AbstractTest {
 
     @Test
     public void patchODataEntityAsJson() {
-        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)").build();
         final String etag = getETag(uri);
         final ODataEntity patch = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
@@ -84,24 +84,24 @@ public class EntityUpdateTest extends AbstractTest {
 
     @Test
     public void replaceODataEntityAsAtom() {
-        final ODataFormat format = ODataFormat.ATOM;
+        final ODataPubFormat format = ODataPubFormat.ATOM;
         final ODataEntity changes = readODataEntity(format, "Car(14)");
         updateEntityDescription(format, changes, UpdateType.REPLACE);
     }
 
     @Test
     public void replaceODataEntityAsJson() {
-        final ODataFormat format = ODataFormat.JSON_FULL_METADATA;
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final ODataEntity changes = readODataEntity(format, "Car(14)");
         updateEntityDescription(format, changes, UpdateType.REPLACE);
     }
 
-    private void updateEntityDescription(final ODataFormat format, final ODataEntity changes, final UpdateType type) {
+    private void updateEntityDescription(final ODataPubFormat format, final ODataEntity changes, final UpdateType type) {
         updateEntityDescription(format, changes, type, null);
     }
 
     private void updateEntityDescription(
-            final ODataFormat format, final ODataEntity changes, final UpdateType type, final String etag) {
+            final ODataPubFormat format, final ODataEntity changes, final UpdateType type, final String etag) {
         final URI editLink = changes.getEditLink();
         final String entityTypeSeg = editLink.toASCIIString().substring(
                 editLink.toASCIIString().lastIndexOf("/") + 1, editLink.toASCIIString().length());
@@ -152,7 +152,7 @@ public class EntityUpdateTest extends AbstractTest {
         assertEquals(newm, description.getValue().toString());
     }
 
-    private ODataEntity readODataEntity(final ODataFormat format, final String entitySegment) {
+    private ODataEntity readODataEntity(final ODataPubFormat format, final String entitySegment) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(entitySegment);
 
@@ -164,7 +164,7 @@ public class EntityUpdateTest extends AbstractTest {
 
         assertNotNull(entity);
 
-        if (ODataFormat.JSON_FULL_METADATA == format || ODataFormat.ATOM == format) {
+        if (ODataPubFormat.JSON_FULL_METADATA == format || ODataPubFormat.ATOM == format) {
             assertEquals(req.getURI(), entity.getEditLink());
         }
 

@@ -22,7 +22,7 @@ import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONConstants;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
-import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -74,24 +74,24 @@ public final class Serializer {
         }
     }
 
-    public static void property(final Element element, final ODataPropertyFormat format, final OutputStream out) {
+    public static void property(final Element element, final ODataFormat format, final OutputStream out) {
         property(element, format, new OutputStreamWriter(out));
     }
 
-    public static void property(final Element element, final ODataPropertyFormat format, final Writer writer) {
-        if (format == ODataPropertyFormat.XML) {
+    public static void property(final Element element, final ODataFormat format, final Writer writer) {
+        if (format == ODataFormat.XML) {
             dom(element, writer);
         } else {
             json(element, writer);
         }
     }
 
-    public static void link(final ODataLink link, final ODataPropertyFormat format, final OutputStream out) {
+    public static void link(final ODataLink link, final ODataFormat format, final OutputStream out) {
         link(link, format, new OutputStreamWriter(out));
     }
 
-    public static void link(final ODataLink link, final ODataPropertyFormat format, final Writer writer) {
-        if (format == ODataPropertyFormat.XML) {
+    public static void link(final ODataLink link, final ODataFormat format, final Writer writer) {
+        if (format == ODataFormat.XML) {
             xmlLink(link, writer);
         } else {
             jsonLink(link, writer);

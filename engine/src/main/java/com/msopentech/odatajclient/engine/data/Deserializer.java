@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.data.json.JSONLinks;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.data.json.JSONServiceDocument;
 import com.msopentech.odatajclient.engine.data.xml.XMLServiceDocument;
-import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.IOException;
@@ -98,8 +98,8 @@ public final class Deserializer {
         }
     }
 
-    public static Element toDOM(final InputStream input, final ODataPropertyFormat format) {
-        return format == ODataPropertyFormat.XML
+    public static Element toDOM(final InputStream input, final ODataFormat format) {
+        return format == ODataFormat.XML
                 ? toDOMFromXML(input)
                 : toDOMFromJSON(input);
     }
@@ -112,8 +112,8 @@ public final class Deserializer {
                 : toServiceDocumentFromJSON(input);
     }
 
-    public static List<URI> toLinks(final InputStream input, final ODataPropertyFormat format) {
-        return format == ODataPropertyFormat.XML
+    public static List<URI> toLinks(final InputStream input, final ODataFormat format) {
+        return format == ODataFormat.XML
                 ? toLinksFromXML(input)
                 : toLinksFromJSON(input);
     }

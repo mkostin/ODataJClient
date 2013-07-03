@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.types;
 import org.apache.http.entity.ContentType;
 
 /**
- * Exchanged data format.
+ * Available formats to be used in various contexts.
  */
 public enum ODataFormat {
 
@@ -35,9 +35,9 @@ public enum ODataFormat {
      */
     JSON_FULL_METADATA(ContentType.APPLICATION_JSON.getMimeType() + ";odata=fullmetadata"),
     /**
-     * Atom format.
+     * XML format.
      */
-    ATOM(ContentType.APPLICATION_ATOM_XML.getMimeType());
+    XML(ContentType.APPLICATION_XML.getMimeType());
 
     private final String format;
 

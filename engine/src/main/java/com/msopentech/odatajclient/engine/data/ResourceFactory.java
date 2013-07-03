@@ -15,17 +15,17 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import static com.msopentech.odatajclient.engine.types.ODataFormat.ATOM;
-import static com.msopentech.odatajclient.engine.types.ODataFormat.JSON;
-import static com.msopentech.odatajclient.engine.types.ODataFormat.JSON_FULL_METADATA;
-import static com.msopentech.odatajclient.engine.types.ODataFormat.JSON_NO_METADATA;
+import static com.msopentech.odatajclient.engine.types.ODataPubFormat.ATOM;
+import static com.msopentech.odatajclient.engine.types.ODataPubFormat.JSON;
+import static com.msopentech.odatajclient.engine.types.ODataPubFormat.JSON_FULL_METADATA;
+import static com.msopentech.odatajclient.engine.types.ODataPubFormat.JSON_NO_METADATA;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.atom.AtomLink;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONLink;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 
 public class ResourceFactory {
 
@@ -72,7 +72,7 @@ public class ResourceFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends FeedResource> Class<T> feedClassForFormat(final ODataFormat format) {
+    public static <T extends FeedResource> Class<T> feedClassForFormat(final ODataPubFormat format) {
         Class<T> result = null;
 
         switch (format) {
@@ -91,7 +91,7 @@ public class ResourceFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends EntryResource> Class<T> entryClassForFormat(final ODataFormat format) {
+    public static <T extends EntryResource> Class<T> entryClassForFormat(final ODataPubFormat format) {
         Class<T> result = null;
 
         switch (format) {

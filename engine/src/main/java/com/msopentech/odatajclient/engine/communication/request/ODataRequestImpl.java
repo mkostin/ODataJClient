@@ -19,7 +19,7 @@ import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -223,7 +223,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getAccept() {
         final String acceptHead = odataHeaders.getHeader(ODataHeaders.HeaderName.accept);
-        return StringUtils.isBlank(acceptHead) ? ODataFormat.JSON.toString() : acceptHead;
+        return StringUtils.isBlank(acceptHead) ? ODataPubFormat.JSON.toString() : acceptHead;
     }
 
     /**
@@ -256,7 +256,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getContentType() {
         final String contentTypeHead = odataHeaders.getHeader(ODataHeaders.HeaderName.contentType);
-        return StringUtils.isBlank(contentTypeHead) ? ODataFormat.JSON.toString() : contentTypeHead;
+        return StringUtils.isBlank(contentTypeHead) ? ODataPubFormat.JSON.toString() : contentTypeHead;
     }
 
     /**

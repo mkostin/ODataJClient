@@ -21,7 +21,7 @@ import com.msopentech.odatajclient.engine.communication.request.OperationType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
@@ -37,7 +37,7 @@ import org.apache.commons.io.IOUtils;
  * com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method,
  * com.msopentech.odatajclient.engine.data.ODataURI, java.util.Map)
  */
-public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeResponse, ODataFormat>
+public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeResponse, ODataPubFormat>
         implements ODataBatchableRequest {
 
     /**

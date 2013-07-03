@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpda
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -43,7 +43,7 @@ import org.apache.http.entity.InputStreamEntity;
  * com.msopentech.odatajclient.engine.data.ODataEntity,
  * com.msopentech.odatajclient.engine.communication.request.UpdateType)
  */
-public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityUpdateResponse, ODataFormat>
+public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityUpdateResponse, ODataPubFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -85,7 +85,7 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeEntity(changes, ODataFormat.valueOf(getFormat()));
+        return ODataWriter.writeEntity(changes, ODataPubFormat.valueOf(getFormat()));
     }
 
     private class ODataEntityUpdateResponseImpl extends ODataResponseImpl implements ODataEntityUpdateResponse {
@@ -103,7 +103,7 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.readEntity(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                    entity = ODataReader.readEntity(res.getEntity().getContent(), ODataPubFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

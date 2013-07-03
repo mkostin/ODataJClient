@@ -32,7 +32,7 @@ import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.types.ODataPropertyFormat;
+import com.msopentech.odatajclient.engine.types.ODataFormat;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
@@ -44,7 +44,7 @@ import org.junit.Test;
  */
 public class LinkTest extends AbstractTest {
 
-    private List<URI> doRetrieveLinkURIs(final ODataPropertyFormat format, final String linkname) throws IOException {
+    private List<URI> doRetrieveLinkURIs(final ODataFormat format, final String linkname) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER);
 
@@ -57,7 +57,7 @@ public class LinkTest extends AbstractTest {
         return res.getBody();
     }
 
-    private void retrieveLinkURIs(final ODataPropertyFormat format) throws IOException {
+    private void retrieveLinkURIs(final ODataFormat format) throws IOException {
         final List<URI> links = doRetrieveLinkURIs(format, "Logins");
         assertEquals(2, links.size());
         assertTrue(links.contains(URI.create(testODataServiceRootURL + "/Login('1')")));
@@ -66,15 +66,15 @@ public class LinkTest extends AbstractTest {
 
     @Test
     public void retrieveXMLLinkURIs() throws IOException {
-        retrieveLinkURIs(ODataPropertyFormat.XML);
+        retrieveLinkURIs(ODataFormat.XML);
     }
 
     @Test
     public void retrieveJSONLinkURIs() throws IOException {
-        retrieveLinkURIs(ODataPropertyFormat.JSON);
+        retrieveLinkURIs(ODataFormat.JSON);
     }
 
-    private void createLink(final ODataPropertyFormat format) throws IOException {
+    private void createLink(final ODataFormat format) throws IOException {
         // 1. read current Logins $links (for later usage)
         final List<URI> before = doRetrieveLinkURIs(format, "Logins");
         assertEquals(2, before.size());
@@ -106,15 +106,15 @@ public class LinkTest extends AbstractTest {
 
     @Test
     public void createXMLLink() throws IOException {
-        createLink(ODataPropertyFormat.XML);
+        createLink(ODataFormat.XML);
     }
 
     @Test
     public void createJSONLink() throws IOException {
-        createLink(ODataPropertyFormat.JSON);
+        createLink(ODataFormat.JSON);
     }
 
-    private void updateLink(final ODataPropertyFormat format, final UpdateType updateType) throws IOException {
+    private void updateLink(final ODataFormat format, final UpdateType updateType) throws IOException {
         // 1. read what is the link before the test runs
         final URI before = doRetrieveLinkURIs(format, "Info").get(0);
 
@@ -150,15 +150,15 @@ public class LinkTest extends AbstractTest {
     
         @Test
     public void updateXMLLink() throws IOException {
-        updateLink(ODataPropertyFormat.XML, UpdateType.MERGE);
-        updateLink(ODataPropertyFormat.XML, UpdateType.PATCH);
-        updateLink(ODataPropertyFormat.XML, UpdateType.REPLACE);
+        updateLink(ODataFormat.XML, UpdateType.MERGE);
+        updateLink(ODataFormat.XML, UpdateType.PATCH);
+        updateLink(ODataFormat.XML, UpdateType.REPLACE);
     }
 
     @Test
     public void updateJSONLink() throws IOException {
-        updateLink(ODataPropertyFormat.JSON, UpdateType.MERGE);
-        updateLink(ODataPropertyFormat.JSON, UpdateType.PATCH);
-        updateLink(ODataPropertyFormat.JSON, UpdateType.REPLACE);
+        updateLink(ODataFormat.JSON, UpdateType.MERGE);
+        updateLink(ODataFormat.JSON, UpdateType.PATCH);
+        updateLink(ODataFormat.JSON, UpdateType.REPLACE);
     }
 }

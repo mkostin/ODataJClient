@@ -19,7 +19,7 @@ import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataFeed;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
@@ -31,7 +31,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getEntitySetRequest(java.net.URI)
  */
-public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataFeed, ODataFormat> {
+public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataFeed, ODataPubFormat> {
 
     private ODataFeed feed = null;
 
@@ -64,7 +64,7 @@ public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataFeed, OData
         public ODataFeed getBody() {
             if (feed == null) {
                 try {
-                    feed = ODataReader.readFeed(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                    feed = ODataReader.readFeed(res.getEntity().getContent(), ODataPubFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

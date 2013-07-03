@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.types.ODataPubFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -29,7 +29,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getEntityRequest(java.lang.String)
  */
-public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataFormat> {
+public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataPubFormat> {
 
     /**
      * Private constructor.
@@ -65,7 +65,7 @@ public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataF
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.readEntity(getRawResponse(), ODataFormat.valueOf(getFormat()));
+                    entity = ODataReader.readEntity(getRawResponse(), ODataPubFormat.valueOf(getFormat()));
                 } finally {
                     this.close();
                 }
