@@ -15,8 +15,26 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Retrieve response wrapper for the corresponding batch item.
+ * Changeset wrapper for the corresponding batch item.
  */
-public interface ODataRetrieve extends ODataBatchResponseItem {
+public class ODataBatchChangesetResponse implements ODataBatchResponseItem {
+
+    private final Map<String, ODataResponse> responses = new HashMap<String, ODataResponse>();
+
+    public void addResponse(final String contentId, final ODataResponse res) {
+        responses.put(contentId, res);
+    }
+
+    public ODataResponse getResponse(final String contentId) {
+        return responses.get(contentId);
+    }
+
+    @Override
+    public boolean isChangeset() {
+        return true;
+    }
 }

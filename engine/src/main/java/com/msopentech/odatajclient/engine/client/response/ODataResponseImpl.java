@@ -15,28 +15,83 @@
  */
 package com.msopentech.odatajclient.engine.client.response;
 
-import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchUtilities;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.LineIterator;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract representation of an OData response.
  */
 public abstract class ODataResponseImpl implements ODataResponse {
 
+    /**
+     * Logger.
+     */
+    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataResponse.class);
+
     protected final HttpClient client;
 
     protected final HttpResponse res;
 
+    protected final Map<String, Collection<String>> headers =
+            new TreeMap<String, Collection<String>>(String.CASE_INSENSITIVE_ORDER);
+
+    private int statusCode;
+
+    private String statusMessage;
+
+    private InputStream payload;
+
+    private boolean hasBeenInitialized = false;
+
+    public ODataResponseImpl() {
+        this.client = null;
+        this.res = null;
+        this.payload = null;
+        this.statusCode = -1;
+        this.statusMessage = null;
+    }
+
     public ODataResponseImpl(final HttpClient client, final HttpResponse res) {
         this.client = client;
         this.res = res;
+
+        try {
+            this.payload = this.res.getEntity() == null ? null : this.res.getEntity().getContent();
+        } catch (Exception e) {
+            LOG.error("Error retrieving payload", e);
+            throw new IllegalStateException(e);
+        }
+
+        this.hasBeenInitialized = true;
+
+        for (Header header : res.getAllHeaders()) {
+            final Collection<String> headerValues;
+            if (headers.containsKey(header.getName())) {
+                headerValues = headers.get(header.getName());
+                headers.put(header.getName(), headerValues);
+            } else {
+                headerValues = new HashSet<String>();
+            }
+
+            headerValues.add(header.getValue());
+        }
+
+        statusCode = res.getStatusLine().getStatusCode();
+        statusMessage = res.getStatusLine().getReasonPhrase();
     }
 
     /**
@@ -44,13 +99,7 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public Collection<String> getHeaderNames() {
-        final List<String> headerNames = new ArrayList<String>();
-
-        for (Header header : res.getAllHeaders()) {
-            headerNames.add(header.getName());
-        }
-
-        return headerNames;
+        return headers.keySet();
     }
 
     /**
@@ -58,13 +107,7 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public Collection<String> getHeader(final String name) {
-        final List<String> headerValues = new ArrayList<String>();
-
-        for (Header header : res.getHeaders(name)) {
-            headerValues.add(header.getValue());
-        }
-
-        return headerValues;
+        return headers.get(name);
     }
 
     /**
@@ -72,7 +115,7 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public int getStatusCode() {
-        return res.getStatusLine().getStatusCode();
+        return statusCode;
     }
 
     /**
@@ -80,7 +123,49 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public String getStatusMessage() {
-        return res.getStatusLine().getReasonPhrase();
+        return statusMessage;
+    }
+
+    @Override
+    public void initFromBatch(final LineIterator batchLineIterator, final String boundary) {
+        if (hasBeenInitialized) {
+            throw new IllegalStateException("Request already initialized");
+        }
+
+        hasBeenInitialized = true;
+
+        // read response line and get statusCode and statusMessage
+        final Map.Entry<Integer, String> responseLine = ODataBatchUtilities.readResponseLine(batchLineIterator);
+        this.statusCode = responseLine.getKey();
+        this.statusMessage = responseLine.getValue();
+
+        // read headers
+        ODataBatchUtilities.readHeaders(batchLineIterator, headers);
+
+        // get input stream till the end of item
+        payload = new PipedInputStream();
+
+        try {
+            final PipedOutputStream os = new PipedOutputStream((PipedInputStream) payload);
+
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        ODataBatchUtilities.writeLinesTillNextBoundary(batchLineIterator, boundary, os);
+                    } catch (Exception e) {
+                        LOG.error("Error streaming batch item payload", e);
+                    } finally {
+                        IOUtils.closeQuietly(os);
+                    }
+                }
+            }).start();
+
+        } catch (IOException e) {
+            LOG.error("Error streaming payload response", e);
+            throw new IllegalStateException(e);
+        }
     }
 
     /**
@@ -88,15 +173,15 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public void close() {
-        this.client.getConnectionManager().shutdown();
+        if (client == null) {
+            IOUtils.closeQuietly(payload);
+        } else {
+            this.client.getConnectionManager().shutdown();
+        }
     }
 
     @Override
     public InputStream getRawResponse() {
-        try {
-            return res.getEntity().getContent();
-        } catch (Exception e) {
-            throw new HttpClientException("While extracting raw response", e);
-        }
+        return payload;
     }
 }

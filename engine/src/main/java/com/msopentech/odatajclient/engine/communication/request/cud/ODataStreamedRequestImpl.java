@@ -101,10 +101,10 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
         try {
             // finalize the body
             getPayload().finalizeBody();
-            
+
             req.rawAppend(toByteArray());
             req.rawAppend(ODataStreamer.CRLF);
-            
+
             req.rawAppend(IOUtils.toByteArray(input));
         } catch (IOException e) {
             throw new IllegalStateException(e);

@@ -15,10 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
-import java.util.ArrayList;
-import java.util.List;
+import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 
 /**
  * Abstract representation of a batch request item.
@@ -26,25 +24,7 @@ import java.util.List;
  */
 public abstract class ODataBatchRequestItem extends ODataStreamer {
 
-    /**
-     * item content type.
-     */
-    protected static String CONTENT_TYPE = "Content-Type: application/http";
-
-    /**
-     * item transfer encoding.
-     */
-    protected static String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding: binary";
-
-    /**
-     * Content id header name.
-     */
-    private static String CONTENT_ID_NAME = "Content-Id";
-
-    /**
-     * Batched requests.
-     */
-    protected final List<ODataRequest> requests = new ArrayList<ODataRequest>();
+    protected boolean hasStreamedSomething = false;
 
     private boolean open = false;
 
@@ -67,25 +47,29 @@ public abstract class ODataBatchRequestItem extends ODataStreamer {
 
     protected void streamRequestHeader(final ODataBatchableRequest request, final int contentId) {
         //stream batch content type
-        stream(CONTENT_TYPE.getBytes());
+        stream(ODataBatchConstants.ITEM_CONTENT_TYPE_LINE.getBytes());
         newLine();
-        stream(CONTENT_TRANSFER_ENCODING.getBytes());
+        stream(ODataBatchConstants.ITEM_TRANSFER_ENCODING_LINE.getBytes());
         newLine();
-        stream((CONTENT_ID_NAME + ":" + contentId).getBytes());
+        stream((ODataBatchConstants.CHANGESET_CONTENT_ID_NAME + ":" + contentId).getBytes());
         newLine();
         newLine();
     }
 
     protected void streamRequestHeader(final ODataBatchableRequest request) {
         //stream batch content type
-        stream(CONTENT_TYPE.getBytes());
+        stream(ODataBatchConstants.ITEM_CONTENT_TYPE_LINE.getBytes());
         newLine();
-        stream(CONTENT_TRANSFER_ENCODING.getBytes());
+        stream(ODataBatchConstants.ITEM_TRANSFER_ENCODING_LINE.getBytes());
         newLine();
         newLine();
 
         stream(request.toByteArray());
         newLine();
+    }
+
+    public boolean hasStreamedSomething() {
+        return hasStreamedSomething;
     }
 
     protected abstract void closeItem();

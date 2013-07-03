@@ -15,12 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
-import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
-import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -51,9 +49,13 @@ public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataF
         return new ODataEntityResponseImpl(client, res);
     }
 
-    protected class ODataEntityResponseImpl extends ODataRetrieveResponseImpl {
+    public class ODataEntityResponseImpl extends ODataRetrieveResponseImpl {
 
         private ODataEntity entity = null;
+
+        private ODataEntityResponseImpl() {
+            super();
+        }
 
         private ODataEntityResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
@@ -63,9 +65,7 @@ public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataF
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.readEntity(res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
-                } catch (IOException e) {
-                    throw new HttpClientException(e);
+                    entity = ODataReader.readEntity(getRawResponse(), ODataFormat.valueOf(getFormat()));
                 } finally {
                     this.close();
                 }

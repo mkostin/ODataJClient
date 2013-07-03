@@ -15,17 +15,15 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import java.util.Iterator;
-
 /**
  * Abstract representation of a response item about a batch request.
  */
 public abstract interface ODataBatchResponseItem {
 
     /**
-     * Return all responses encapsulated into the batch item.
+     * Returns 'TRUE' if the item is a changeset.
      *
-     * @return item responses.
+     * @return 'TRUE' if the item is a changeset; 'FALSE' otherwise.
      */
-    Iterator<ODataResponse> getResponse();
+    boolean isChangeset();
 }

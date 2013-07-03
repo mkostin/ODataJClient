@@ -16,7 +16,21 @@
 package com.msopentech.odatajclient.engine.communication.response;
 
 /**
- * Changeset wrapper for the corresponding batch item.
+ * Retrieve response wrapper for the corresponding batch item.
  */
-public interface ODataChangeset extends ODataBatchResponseItem {
+public class ODataBatchRetrieveResponse implements ODataBatchResponseItem {
+
+    private ODataResponse res = null;
+
+    /**
+     * Sets response to be encapsulated into the batch item.
+     */
+    public void setResponse(final ODataResponse res) {
+        this.res = res;
+    }
+
+    @Override
+    public boolean isChangeset() {
+        return false;
+    }
 }

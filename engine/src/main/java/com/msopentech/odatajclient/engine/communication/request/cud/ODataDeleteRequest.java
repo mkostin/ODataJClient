@@ -66,7 +66,10 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
 
     private static class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
 
-        public ODataDeleteResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataDeleteResponseImpl() {
+        }
+
+        private ODataDeleteResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
             this.close();
         }

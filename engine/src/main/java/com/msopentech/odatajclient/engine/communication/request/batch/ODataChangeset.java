@@ -15,10 +15,13 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
-import com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
+import com.msopentech.odatajclient.engine.communication.response.ODataBatchChangesetResponse;
+import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.util.UUID;
+import org.apache.http.HttpHeaders;
 
 /**
  * Changeset wrapper for the corresponding batch item.
@@ -28,11 +31,11 @@ import java.util.UUID;
  */
 public class ODataChangeset extends ODataBatchRequestItem {
 
-    private static String CONTENT_TYPE_MULTIPART = "multipart/mixed";
-
     private int contentId = 0;
 
     private final String boundary;
+
+    private final ODataBatchChangesetResponse expectedResItem;
 
     /**
      * Constructor.
@@ -41,17 +44,12 @@ public class ODataChangeset extends ODataBatchRequestItem {
      *
      * @param os piped output stream to be used to serialize.
      */
-    ODataChangeset(final ODataBatchRequest req) {
+    ODataChangeset(final ODataBatchRequest req, final ODataBatchChangesetResponse expectedResItem) {
         super(req);
+        this.expectedResItem = expectedResItem;
 
         // create a random UUID value for boundary
         boundary = "changeset_" + UUID.randomUUID().toString();
-
-        stream((HeaderName.contentType.toString() + ": " + CONTENT_TYPE_MULTIPART
-                + "; boundary: " + boundary).getBytes());
-
-        newLine();
-        newLine();
     }
 
     /**
@@ -60,10 +58,12 @@ public class ODataChangeset extends ODataBatchRequestItem {
     @Override
     protected void closeItem() {
         // stream close-delimiter
-        newLine();
-        stream(("--" + boundary + "--").getBytes());
-        newLine();
-        newLine();
+        if (hasStreamedSomething) {
+            newLine();
+            stream(("--" + boundary + "--").getBytes());
+            newLine();
+            newLine();
+        }
     }
 
     /**
@@ -83,6 +83,16 @@ public class ODataChangeset extends ODataBatchRequestItem {
             throw new IllegalArgumentException("Invalid request. GET method not allowed in changeset");
         }
 
+        if (!hasStreamedSomething) {
+            stream((HttpHeaders.CONTENT_TYPE + ": "
+                    + ODataBatchConstants.MULTIPART_CONTENT_TYPE + ";boundary=" + boundary).getBytes());
+
+            newLine();
+            newLine();
+
+            hasStreamedSomething = true;
+        }
+
         contentId++;
 
         // preamble
@@ -99,7 +109,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
         newLine();
 
         // add request to the list
-        requests.add(request);
+        expectedResItem.addResponse(String.valueOf(contentId), ((ODataRequestImpl) request).getResponseTemplate());
         return this;
     }
 }

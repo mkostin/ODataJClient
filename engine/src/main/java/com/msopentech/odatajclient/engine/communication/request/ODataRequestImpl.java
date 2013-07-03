@@ -18,11 +18,13 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.Collection;
 import org.apache.commons.io.IOUtils;
@@ -319,7 +321,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public InputStream rawExecute() {
         try {
-            return doExecute().getEntity().getContent();
+            return doExecute().getEntity() == null ? null : doExecute().getEntity().getContent();
         } catch (IOException e) {
             throw new HttpClientException(e);
         } catch (RuntimeException e) {
@@ -347,5 +349,24 @@ public class ODataRequestImpl implements ODataRequest {
             this.request.abort();
             throw new HttpClientException(e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <V extends ODataResponse> V getResponseTemplate() {
+
+        for (Class<?> clazz : this.getClass().getDeclaredClasses()) {
+            if (ODataResponse.class.isAssignableFrom(clazz)) {
+                try {
+                    final Constructor constructor = clazz.getDeclaredConstructor(new Class<?>[0]);
+                    constructor.setAccessible(true);
+
+                    return (V) constructor.newInstance();
+                } catch (Exception e) {
+                    LOG.error("Error retrieving response class template instance", e);
+                }
+            }
+        }
+
+        throw new IllegalStateException("No response class template has been found");
     }
 }

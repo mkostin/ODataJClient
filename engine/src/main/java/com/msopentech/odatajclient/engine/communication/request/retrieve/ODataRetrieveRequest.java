@@ -60,6 +60,9 @@ abstract class ODataRetrieveRequest<V, T extends Enum<T>>
 
     protected abstract class ODataRetrieveResponseImpl extends ODataResponseImpl implements ODataRetrieveResponse<V> {
 
+        protected ODataRetrieveResponseImpl() {
+        }
+
         protected ODataRetrieveResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }

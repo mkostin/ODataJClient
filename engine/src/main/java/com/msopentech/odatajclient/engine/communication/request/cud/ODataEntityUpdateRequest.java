@@ -92,7 +92,10 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
 
         private ODataEntity entity = null;
 
-        public ODataEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataEntityUpdateResponseImpl() {
+        }
+
+        private ODataEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

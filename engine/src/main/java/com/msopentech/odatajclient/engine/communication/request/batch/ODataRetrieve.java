@@ -16,7 +16,9 @@
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
+import com.msopentech.odatajclient.engine.communication.response.ODataBatchRetrieveResponse;
 
 /**
  * Retrieve request wrapper for the corresponding batch item.
@@ -26,6 +28,8 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl
  */
 public class ODataRetrieve extends ODataBatchRequestItem {
 
+    private final ODataBatchRetrieveResponse expectedResItem;
+
     /**
      * Constructor.
      * <p>
@@ -33,8 +37,9 @@ public class ODataRetrieve extends ODataBatchRequestItem {
      *
      * @param os piped output stream to be used to serialize.
      */
-    ODataRetrieve(final ODataBatchRequest req) {
+    ODataRetrieve(final ODataBatchRequest req, final ODataBatchRetrieveResponse expectedResItem) {
         super(req);
+        this.expectedResItem = expectedResItem;
     }
 
     /**
@@ -62,6 +67,8 @@ public class ODataRetrieve extends ODataBatchRequestItem {
             throw new IllegalArgumentException("Invalid request. Only GET method is allowed");
         }
 
+        hasStreamedSomething = true;
+
         // stream the request
         streamRequestHeader(request);
 
@@ -69,7 +76,8 @@ public class ODataRetrieve extends ODataBatchRequestItem {
         close();
 
         // add request to the list
-        requests.add(request);
+        expectedResItem.setResponse(((ODataRequestImpl) request).getResponseTemplate());
+
         return this;
     }
 }

@@ -15,16 +15,32 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
+import com.msopentech.odatajclient.engine.client.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamedRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
+import com.msopentech.odatajclient.engine.communication.response.ODataBatchChangesetResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponseItem;
+import com.msopentech.odatajclient.engine.communication.response.ODataBatchRetrieveResponse;
+import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
 import java.io.PipedOutputStream;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Future;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.LineIterator;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 
 /**
  * This class implements a batch request.
@@ -35,14 +51,11 @@ import java.util.concurrent.Future;
 public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchResponse, BatchRequestPayload> {
 
     /**
-     * Batch request content type.
-     */
-    private static String CONTENT_TYPE = "multipart/mixed";
-
-    /**
      * Batch request boundary.
      */
     private final String boundary;
+
+    private final List<ODataBatchResponseItem> expectedResItems = new ArrayList<ODataBatchResponseItem>();
 
     /**
      * Constructor.
@@ -56,7 +69,7 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
         boundary = "batch_" + UUID.randomUUID().toString();
 
         // specify the contentType header
-        setContentType(CONTENT_TYPE + ";boundary=" + boundary);
+        setContentType(ODataBatchConstants.MULTIPART_CONTENT_TYPE + ";" + ODataBatchConstants.BOUNDARY + "=" + boundary);
     }
 
     /**
@@ -120,7 +133,11 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
             // stream dash boundary
             streamDashBoundary();
 
-            currentItem = new ODataChangeset(req);
+            final ODataBatchChangesetResponse expectedResItem = new ODataBatchChangesetResponse();
+            expectedResItems.add(expectedResItem);
+
+            currentItem = new ODataChangeset(req, expectedResItem);
+
             return (ODataChangeset) currentItem;
         }
 
@@ -136,7 +153,11 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
             // stream dash boundary
             streamDashBoundary();
 
-            currentItem = new ODataRetrieve(req);
+            final ODataBatchRetrieveResponse expectedResItem = new ODataBatchRetrieveResponse();
+            currentItem = new ODataRetrieve(req, expectedResItem);
+
+            expectedResItems.add(expectedResItem);
+
             return (ODataRetrieve) currentItem;
         }
 
@@ -159,7 +180,7 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
             closeCurrentItem();
             streamCloseDelimiter();
             finalizeBody();
-            return null;
+            return new ODataBatchResponseImpl(client, ODataBatchRequest.this.getResponse());
         }
 
         /**
@@ -205,5 +226,158 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
     @Override
     public void batch(ODataBatchRequest req) {
         throw new UnsupportedOperationException("A batch request is not batchable");
+    }
+
+    /**
+     * This class implements a response to a batch request.
+     *
+     * @see com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest
+     */
+    private static class ODataBatchResponseImpl extends ODataResponseImpl implements ODataBatchResponse {
+
+        private enum BatchStatus {
+
+            NONE,
+            START,
+            END,
+            RETRIEVE_ITEM,
+            CHANGESET_ITEM,
+            CLOSEITEM,
+            RETRIEVE,
+            CHANGESET,
+            REQUEST,
+            HEADER
+
+        };
+
+        /**
+         * Batch request content.
+         */
+        private final List<ODataBatchResponseItem> batch = new ArrayList<ODataBatchResponseItem>();
+
+        private ODataBatchResponseImpl(final HttpClient client, final HttpResponse res) {
+            super(client, res);
+
+            // create the batch response ....
+
+        }
+
+        /**
+         * Adds a query response to the batch response.
+         * <p>
+         * Each query response is about a query request submitted embedded into a batch request.
+         *
+         * @param response query response to be added.
+         * @return the current batch response.
+         *
+         * @see ODataRetrieveResponse
+         */
+        private ODataBatchResponseImpl addItem(final ODataBatchRetrieveResponse response) {
+            batch.add(response);
+            return this;
+        }
+
+        /**
+         * Add a changeset to the batch response.
+         *
+         * @param item changeset to be added.
+         * @return the current batch response.
+         */
+        private ODataBatchResponseImpl addResponse(final ODataBatchChangesetResponse item) {
+            batch.add(item);
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Iterator<ODataBatchResponseItem> getBody() {
+            try {
+                BatchStatus status = BatchStatus.NONE;
+
+                String startBoundary = null;
+                String endBoundary = null;
+                boolean isChangeset = false;
+
+                final LineIterator lineIterator = IOUtils.lineIterator(getRawResponse(), "UTF-8");
+
+                final Map<String, String> headers = new HashMap<String, String>();
+                while (lineIterator.hasNext()) {
+                    final String line = lineIterator.nextLine();
+                    switch (status) {
+                        case NONE:
+                            startBoundary = line;
+                            endBoundary = line + "--";
+                            status = BatchStatus.START;
+                            break;
+                        case START:
+                            // do nothing (but collect headers) till CRLF
+                            if (Arrays.equals(line.getBytes(), ODataStreamer.CRLF)) {
+                                if (headers.get("content-type").equals("application/http")) {
+                                    status = BatchStatus.REQUEST;
+                                } else {
+                                    status = BatchStatus.CHANGESET;
+                                }
+                                headers.clear();
+                            } else {
+                                int sep = line.indexOf(":");
+                                if (sep > 0 && sep < line.length() - 1) {
+                                    headers.put(
+                                            line.substring(0, sep).trim().toLowerCase(),
+                                            line.substring(sep + 1, line.length()).trim().toLowerCase());
+                                }
+                            }
+                            break;
+                        case REQUEST:
+                            // parse the request "<protocol> <status code> <status msg>"
+
+                            // create and add the new response item
+
+                            // expected info
+                            status = BatchStatus.HEADER;
+                            break;
+                        case HEADER:
+                        // parse header
+                        case RETRIEVE_ITEM:
+                            if (endBoundary.equals(line)) {
+                                // end of batch
+                                status = BatchStatus.END;
+                            } else if (startBoundary.equals(line)) {
+                                // start new item
+                                status = BatchStatus.START;
+                            } else if (line.startsWith("--")) {
+                                // found 
+                                status = BatchStatus.CHANGESET;
+                            } else {
+                            }
+                            break;
+                        case CHANGESET:
+                            break;
+                        case END:
+                        default:
+                    }
+
+                    if (startBoundary == null) {
+                        // found open boundary tag
+                        startBoundary = line;
+                    } else {
+                        // process batch
+                        if ((startBoundary + "--").equals(line)) {
+                            // found close boundary tag
+                        } else if (startBoundary.equals(startBoundary)) {
+                            // found new item boundary tag
+                        } else {
+                            // process item
+                        }
+                    }
+                }
+
+                return batch.iterator();
+            } catch (IOException e) {
+                LOG.error("Error parsing batch response", e);
+                throw new IllegalStateException(e);
+            }
+        }
     }
 }
