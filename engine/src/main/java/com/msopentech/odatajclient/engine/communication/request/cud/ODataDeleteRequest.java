@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataBasicReques
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
-import com.msopentech.odatajclient.engine.types.ODataPubFormat;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.http.HttpResponse;

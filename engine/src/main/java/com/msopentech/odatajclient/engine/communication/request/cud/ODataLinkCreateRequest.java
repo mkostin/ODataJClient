@@ -22,7 +22,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperat
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;

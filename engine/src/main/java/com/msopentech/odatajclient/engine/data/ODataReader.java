@@ -16,9 +16,9 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
-import com.msopentech.odatajclient.engine.types.ODataPubFormat;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;

@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.types.ODataMediaFormat;
+import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;

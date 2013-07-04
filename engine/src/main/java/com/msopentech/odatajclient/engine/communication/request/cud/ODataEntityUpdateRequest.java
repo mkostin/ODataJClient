@@ -24,7 +24,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponseIm
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
-import com.msopentech.odatajclient.engine.types.ODataPubFormat;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;

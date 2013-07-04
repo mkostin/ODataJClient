@@ -19,7 +19,7 @@ import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.types.ODataServiceDocumentFormat;
+import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;

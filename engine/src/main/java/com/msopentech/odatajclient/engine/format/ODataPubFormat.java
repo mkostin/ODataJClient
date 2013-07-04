@@ -13,27 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.types;
+package com.msopentech.odatajclient.engine.format;
 
 import org.apache.http.entity.ContentType;
 
 /**
- * Available formats for property values.
+ * Available formats for AtomPub exchange.
  */
-public enum ODataValueFormat {
+public enum ODataPubFormat {
 
     /**
-     * Application octet stream.
+     * JSON format with no metadata.
      */
-    STREAM(ContentType.APPLICATION_OCTET_STREAM.getMimeType()),
+    JSON_NO_METADATA(ContentType.APPLICATION_JSON.getMimeType() + ";odata=nometadata"),
     /**
-     * Plain text format.
+     * JSON format with minimal metadata (default).
      */
-    TEXT(ContentType.TEXT_PLAIN.getMimeType());
+    JSON(ContentType.APPLICATION_JSON.getMimeType() + ";odata=minimalmetadata"),
+    /**
+     * JSON format with no metadata.
+     */
+    JSON_FULL_METADATA(ContentType.APPLICATION_JSON.getMimeType() + ";odata=fullmetadata"),
+    /**
+     * Atom format.
+     */
+    ATOM(ContentType.APPLICATION_ATOM_XML.getMimeType());
 
     private final String format;
 
-    ODataValueFormat(final String format) {
+    ODataPubFormat(final String format) {
         this.format = format;
     }
 

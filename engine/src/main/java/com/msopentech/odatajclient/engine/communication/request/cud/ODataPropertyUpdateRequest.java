@@ -23,7 +23,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponseIm
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
-import com.msopentech.odatajclient.engine.types.ODataFormat;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;

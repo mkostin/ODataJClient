@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.types.ODataValueFormat;
+import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;

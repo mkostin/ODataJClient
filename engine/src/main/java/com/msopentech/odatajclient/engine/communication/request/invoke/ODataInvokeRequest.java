@@ -21,7 +21,7 @@ import com.msopentech.odatajclient.engine.communication.request.OperationType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.types.ODataPubFormat;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
@@ -61,6 +61,7 @@ public class ODataInvokeRequest extends ODataBasicRequestImpl<ODataInvokeRespons
             final Method method,
             final URI uri,
             final OperationType type) {
+        
         super(method, uri);
         this.type = type;
         this.parameters = null;
