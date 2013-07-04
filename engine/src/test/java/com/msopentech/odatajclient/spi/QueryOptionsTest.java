@@ -63,9 +63,9 @@ public class QueryOptionsTest extends AbstractTest {
         assertEquals(5, feed.getEntities().size());
 
         // 2. extract VIN values - sorted ASC by default
-        final List<Integer> vinsASC = new ArrayList(5);
+        final List<Integer> vinsASC = new ArrayList<Integer>(5);
         for (ODataEntity entity : feed.getEntities()) {
-            Integer vin = entity.getProperty("VIN").getPrimitiveValue().<Integer>toCastValue();
+            final Integer vin = entity.getProperty("VIN").getPrimitiveValue().<Integer>toCastValue();
             assertTrue(vin < 16);
             vinsASC.add(vin);
         }

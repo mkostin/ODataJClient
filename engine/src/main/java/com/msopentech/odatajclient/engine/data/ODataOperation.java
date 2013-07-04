@@ -13,17 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data.json;
+package com.msopentech.odatajclient.engine.data;
 
 import java.io.Serializable;
+import java.net.URI;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class AbstractJSONObject implements Serializable {
+/**
+ * Representation of an OData operation (legacy, action or function).
+ */
+public class ODataOperation implements Serializable {
 
-    private static final long serialVersionUID = 1634654241914156675L;
+    private static final long serialVersionUID = -5784652334334645128L;
+
+    private String metadataAnchor;
+
+    private String title;
+
+    private URI target;
+
+    public String getMetadataAnchor() {
+        return metadataAnchor;
+    }
+
+    public void setMetadataAnchor(final String metadataAnchor) {
+        this.metadataAnchor = metadataAnchor;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public URI getTarget() {
+        return target;
+    }
+
+    public void setTarget(final URI target) {
+        this.target = target;
+    }
 
     @Override
     public boolean equals(final Object obj) {

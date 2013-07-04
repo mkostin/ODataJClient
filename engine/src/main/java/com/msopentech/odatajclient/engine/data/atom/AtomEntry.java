@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.data.atom;
 
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.LinkResource;
+import com.msopentech.odatajclient.engine.data.ODataOperation;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.net.URI;
 import java.util.ArrayList;
@@ -203,24 +204,25 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
 
     @Override
     public String getType() {
-        List<Category> categories = getElements(Category.class);
+        final List<Category> categories = getElements(Category.class);
         return categories.isEmpty() ? null : categories.get(0).getTerm();
     }
 
     public Source getSource() {
-        List<Source> sources = getElements(Source.class);
+        final List<Source> sources = getElements(Source.class);
         return sources.isEmpty() ? null : sources.get(0);
     }
 
     @Override
     public Element getContent() {
-        List<AtomContent> contents = getElements(AtomContent.class);
+        final List<AtomContent> contents = getElements(AtomContent.class);
         return contents.isEmpty() ? null : contents.get(0).getXMLContent();
     }
 
     @Override
     public Element getMediaEntryProperties() {
-        return getAnyOther().isEmpty() ? null : (Element) getAnyOther().get(0);
+        List<Element> properties = getAnyOtherElementsByName(ODataConstants.ELEM_PROPERTIES);
+        return properties.isEmpty() ? null : properties.get(0);
     }
 
     /**
@@ -252,6 +254,20 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
             anyOther = new ArrayList<Object>();
         }
         return this.anyOther;
+    }
+
+    private List<Element> getAnyOtherElementsByName(final String nodeName) {
+        List<Element> found = new ArrayList<Element>();
+        for (Object object : getAnyOther()) {
+            if (object instanceof Element) {
+                final Element element = (Element) object;
+                if (nodeName.equals(element.getNodeName())) {
+                    found.add(element);
+                }
+            }
+        }
+
+        return found;
     }
 
     /**
@@ -310,7 +326,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
      * {@link String }
      *
      */
-    public void setBase(String value) {
+    public void setBase(final String value) {
         this.base = value;
     }
 
@@ -334,7 +350,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
      * {@link String }
      *
      */
-    public void setLang(String value) {
+    public void setLang(final String value) {
         this.lang = value;
     }
 
@@ -360,7 +376,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     public String getEtag() {
         String etag = null;
 
-        QName qname = new QName(ODataConstants.NS_METADATA, "etag", "m");
+        final QName qname = new QName(ODataConstants.NS_METADATA, "etag", "m");
         if (getOtherAttributes().containsKey(qname)) {
             etag = getOtherAttributes().get(qname);
         }
@@ -372,7 +388,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     public void setType(final String type) {
         getValues().removeAll(getElements(Category.class));
 
-        Category category = new Category();
+        final Category category = new Category();
         category.setTerm(type);
         category.setScheme(ODataConstants.NS_SCHEME);
         getValues().add(category);
@@ -382,18 +398,14 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     public void setId(final String uri) {
         getValues().removeAll(getElements(Id.class));
 
-        Id id = new Id();
+        final Id id = new Id();
         id.setContent(uri);
         getValues().add(id);
     }
 
     @Override
-    public void setEtag(String etag) {
-    }
-
-    @Override
-    public boolean setSelfLink(LinkResource selfLink) {
-        AtomLink link = getLinkWithRel(ODataConstants.SELF_LINK_REL);
+    public boolean setSelfLink(final LinkResource selfLink) {
+        final AtomLink link = getLinkWithRel(ODataConstants.SELF_LINK_REL);
         if (link != null) {
             getValues().remove(link);
         }
@@ -402,8 +414,8 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     }
 
     @Override
-    public boolean setEditLink(LinkResource editLink) {
-        AtomLink link = getLinkWithRel(ODataConstants.EDIT_LINK_REL);
+    public boolean setEditLink(final LinkResource editLink) {
+        final AtomLink link = getLinkWithRel(ODataConstants.EDIT_LINK_REL);
         if (link != null) {
             getValues().remove(link);
         }
@@ -422,45 +434,65 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     }
 
     @Override
-    public boolean addAssociationLink(LinkResource associationLink) {
+    public boolean addAssociationLink(final LinkResource associationLink) {
         return (associationLink instanceof AtomLink) ? getValues().add(associationLink) : false;
     }
 
     @Override
-    public void setAssociationLinks(List<LinkResource> associationLinks) {
+    public void setAssociationLinks(final List<LinkResource> associationLinks) {
         setLinksWithRelPrefix(ODataConstants.ASSOCIATION_LINK_REL, associationLinks);
     }
 
     @Override
-    public boolean addNavigationLink(LinkResource associationLink) {
+    public boolean addNavigationLink(final LinkResource associationLink) {
         return (associationLink instanceof AtomLink) ? getValues().add(associationLink) : false;
     }
 
     @Override
-    public void setNavigationLinks(List<LinkResource> navigationLinks) {
+    public void setNavigationLinks(final List<LinkResource> navigationLinks) {
         setLinksWithRelPrefix(ODataConstants.NAVIGATION_LINK_REL, navigationLinks);
     }
 
     @Override
-    public boolean addMediaEditLink(LinkResource associationLink) {
+    public boolean addMediaEditLink(final LinkResource associationLink) {
         return (associationLink instanceof AtomLink) ? getValues().add(associationLink) : false;
     }
 
     @Override
-    public void setMediaEditLinks(List<LinkResource> mediaEditLinks) {
+    public void setMediaEditLinks(final List<LinkResource> mediaEditLinks) {
         setLinksWithRelPrefix(ODataConstants.MEDIA_EDIT_LINK_REL, mediaEditLinks);
     }
 
     @Override
-    public void setContent(Element content) {
-        AtomContent atomContent = new AtomContent();
+    public List<ODataOperation> getOperations() {
+        final List<ODataOperation> result = new ArrayList<ODataOperation>();
+
+        for (Element action : getAnyOtherElementsByName(ODataConstants.ELEM_ACTION)) {
+            final ODataOperation operation = new ODataOperation();
+            operation.setMetadataAnchor(action.getAttribute(ODataConstants.ATTR_METADATA));
+            operation.setTitle(action.getAttribute(ODataConstants.ATTR_TITLE));
+            operation.setTarget(URI.create(action.getAttribute(ODataConstants.ATTR_TARGET)));
+
+            result.add(operation);
+        }
+
+        return result;
+    }
+
+    @Override
+    public void setContent(final Element content) {
+        final AtomContent atomContent = new AtomContent();
         atomContent.setXMLContent(content);
         getValues().add(atomContent);
     }
 
     @Override
-    public void setMediaEntryProperties(Element content) {
-        getAnyOther().clear();
+    public void setMediaEntryProperties(final Element content) {
+        final Element old = getMediaEntryProperties();
+        if (old != null) {
+            getAnyOther().remove(old);
+        }
+
         getAnyOther().add(content);
     }
 
@@ -479,7 +511,7 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
 
     @Override
     public void setMediaContent(final String src, final String type) {
-        AtomContent atomContent = new AtomContent();
+        final AtomContent atomContent = new AtomContent();
         if (StringUtils.isNotBlank(src)) {
             atomContent.setSrc(src);
         } else {

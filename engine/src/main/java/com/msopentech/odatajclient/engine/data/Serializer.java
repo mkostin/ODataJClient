@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
-import com.msopentech.odatajclient.engine.data.json.JSONConstants;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.types.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -183,7 +182,7 @@ public final class Serializer {
     private static void jsonLink(final ODataLink link, final Writer writer) {
         final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
         final ObjectNode uri = mapper.createObjectNode();
-        uri.put(JSONConstants.URL, link.getLink().toASCIIString());
+        uri.put(ODataConstants.JSON_URL, link.getLink().toASCIIString());
 
         try {
             mapper.writeValue(writer, uri);

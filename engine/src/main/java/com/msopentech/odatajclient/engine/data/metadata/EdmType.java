@@ -48,25 +48,25 @@ public class EdmType {
     public EdmType(final EdmMetadata metadata, final String typeExpression) {
         this.typeExpression = typeExpression;
 
-        int collectionStartIdx = typeExpression.indexOf("Collection(");
-        int collectionEndIdx = typeExpression.lastIndexOf(')');
-        if (collectionStartIdx != -1) {
+        final int collectionStartIdx = typeExpression.indexOf("Collection(");
+        final int collectionEndIdx = typeExpression.lastIndexOf(')');
+        if (collectionStartIdx == -1) {
+            baseType = typeExpression;
+        } else {
             if (collectionEndIdx == -1) {
                 throw new IllegalArgumentException("Malformed type: " + typeExpression);
             }
 
             this.collection = true;
             baseType = typeExpression.substring(collectionStartIdx + 11, collectionEndIdx);
-        } else {
-            baseType = typeExpression;
         }
 
-        int lastDotIdx = baseType.lastIndexOf('.');
+        final int lastDotIdx = baseType.lastIndexOf('.');
         if (lastDotIdx == -1) {
             throw new IllegalArgumentException("Cannot find namespace or alias in " + typeExpression);
         }
-        String namespaceOrAlias = baseType.substring(0, lastDotIdx);
-        String typeName = baseType.substring(lastDotIdx + 1);
+        final String namespaceOrAlias = baseType.substring(0, lastDotIdx);
+        final String typeName = baseType.substring(lastDotIdx + 1);
         if (StringUtils.isBlank(typeName)) {
             throw new IllegalArgumentException("Null or empty type name in " + typeExpression);
         }
@@ -77,7 +77,7 @@ public class EdmType {
             if (!metadata.isNsOrAlias(namespaceOrAlias)) {
                 throw new IllegalArgumentException("Illegal namespace or alias: " + namespaceOrAlias);
             }
-            Schema schema = metadata.getSchema(namespaceOrAlias);
+            final Schema schema = metadata.getSchema(namespaceOrAlias);
 
             for (EnumType type : schema.getEnumTypes()) {
                 if (typeName.equals(type.getName())) {

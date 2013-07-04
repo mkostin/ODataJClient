@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -118,16 +117,16 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     @Test
-    public void readAtomEntry() throws IOException {
+    public void atomEntry() throws IOException {
         readEntry(ODataPubFormat.ATOM);
     }
 
     @Test
-    public void readJSONEntry() throws IOException {
+    public void jsonEntry() throws IOException {
         readEntry(ODataPubFormat.JSON);
     }
 
-    private void readODataEntity(final ODataPubFormat format) {
+    private void read(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER);
 
@@ -159,17 +158,17 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     @Test
-    public void readODataEntityFromAtom() {
-        readODataEntity(ODataPubFormat.ATOM);
+    public void fromAtom() {
+        read(ODataPubFormat.ATOM);
     }
 
     @Test
-    public void readODataEntityFromJSON() {
-        readODataEntity(ODataPubFormat.JSON);
+    public void fromJSON() {
+        read(ODataPubFormat.JSON);
     }
 
     @Test
-    public void readODataEntityWithGeospatial() {
+    public void withGeospatial() {
         final ODataURIBuilder uriBuilder =
                 new ODataURIBuilder("http://services.odata.org/v3/(S(ds4nnexwejbv4fq3nqsx5vd1))/OData/OData.svc/");
         uriBuilder.appendEntityTypeSegment("Suppliers(1)");
@@ -193,7 +192,7 @@ public class EntityRetrieveTest extends AbstractTest {
         assertTrue(found);
     }
 
-    private void readODataEntityWithInlineEntry(final ODataPubFormat format) {
+    private void withInlineEntry(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).expand("Info");
 
@@ -235,17 +234,17 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     @Test
-    public void readODataEntityWithInlineEntryFromAtom() {
-        readODataEntityWithInlineEntry(ODataPubFormat.ATOM);
+    public void withInlineEntryFromAtom() {
+        withInlineEntry(ODataPubFormat.ATOM);
     }
 
     @Test
-    public void readODataEntityWithInlineEntryFromJSON() {
+    public void withInlineEntryFromJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
-        readODataEntityWithInlineEntry(ODataPubFormat.JSON_FULL_METADATA);
+        withInlineEntry(ODataPubFormat.JSON_FULL_METADATA);
     }
 
-    private void readODataEntityWithInlineFeed(final ODataPubFormat format) {
+    private void withInlineFeed(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).expand("Orders");
 
@@ -273,13 +272,40 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     @Test
-    public void readODataEntityWithInlineFeedFromAtom() {
-        readODataEntityWithInlineFeed(ODataPubFormat.ATOM);
+    public void withInlineFeedFromAtom() {
+        withInlineFeed(ODataPubFormat.ATOM);
     }
 
     @Test
-    public void readODataEntityWithInlineFeedFromJSON() {
+    public void withInlineFeedFromJSON() {
         // this needs to be full, otherwise there is no mean to recognize links
-        readODataEntityWithInlineFeed(ODataPubFormat.JSON_FULL_METADATA);
+        withInlineFeed(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    private void withActions(final ODataPubFormat format) {
+        final ODataURIBuilder uriBuilder =
+                new ODataURIBuilder("http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc").
+                appendEntityTypeSegment("Products(3)");
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
+        final ODataEntity entity = res.getBody();
+        assertNotNull(entity);
+
+        assertEquals(1, entity.getOperations().size());
+        assertEquals("Discount", entity.getOperations().get(0).getTitle());
+    }
+
+    @Test
+    public void withActionsFromAtom() {
+        withActions(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void withActionsFromJSON() {
+        // this needs to be full, otherwise actions will not be provided
+        withActions(ODataPubFormat.JSON_FULL_METADATA);
     }
 }

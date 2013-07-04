@@ -38,8 +38,6 @@ public interface EntryResource {
 
     String getEtag();
 
-    void setEtag(String etag);
-
     LinkResource getSelfLink();
 
     boolean setSelfLink(LinkResource editLink);
@@ -51,7 +49,7 @@ public interface EntryResource {
     List<? extends LinkResource> getAssociationLinks();
 
     boolean addAssociationLink(LinkResource associationLink);
-    
+
     void setAssociationLinks(List<LinkResource> associationLinks);
 
     List<? extends LinkResource> getNavigationLinks();
@@ -63,8 +61,10 @@ public interface EntryResource {
     List<? extends LinkResource> getMediaEditLinks();
 
     boolean addMediaEditLink(LinkResource mediaEditLink);
-    
+
     void setMediaEditLinks(List<LinkResource> mediaEditLinks);
+
+    List<ODataOperation> getOperations();
 
     Element getContent();
 

@@ -56,6 +56,11 @@ public abstract class ODataEntity extends ODataItem {
     protected final List<ODataLink> editMediaLinks = new ArrayList<ODataLink>();
 
     /**
+     * Operations (legacy, functions, actions).
+     */
+    protected final List<ODataOperation> operations = new ArrayList<ODataOperation>();
+
+    /**
      * Entity properties.
      */
     protected final List<ODataProperty> properties = new ArrayList<ODataProperty>();
@@ -67,6 +72,17 @@ public abstract class ODataEntity extends ODataItem {
      */
     public ODataEntity(final String name) {
         super(name);
+    }
+
+    public void setOperations(final List<ODataOperation> operations) {
+        this.operations.clear();
+        if (operations != null && !operations.isEmpty()) {
+            this.operations.addAll(operations);
+        }
+    }
+
+    public List<ODataOperation> getOperations() {
+        return this.operations;
     }
 
     /**

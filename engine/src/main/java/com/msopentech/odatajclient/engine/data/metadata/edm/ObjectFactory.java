@@ -210,8 +210,8 @@ public class ObjectFactory {
      * Create an instance of {@link TEntityContainer.AssociationSet }
      *
      */
-    public EntityContainer.TAssociationSet createEntityContainerAssociationSet() {
-        return new EntityContainer.TAssociationSet();
+    public EntityContainer.AssociationSet createEntityContainerAssociationSet() {
+        return new EntityContainer.AssociationSet();
     }
 
     /**
@@ -234,8 +234,8 @@ public class ObjectFactory {
      * Create an instance of {@link TEntityContainer.AssociationSet.End }
      *
      */
-    public EntityContainer.TAssociationSet.End createEntityContainerAssociationSetEnd() {
-        return new EntityContainer.TAssociationSet.End();
+    public EntityContainer.AssociationSet.End createEntityContainerAssociationSetEnd() {
+        return new EntityContainer.AssociationSet.End();
     }
 
     /**
@@ -650,8 +650,8 @@ public class ObjectFactory {
      * Create an instance of {@link TEntityContainer.FunctionImport }
      *
      */
-    public EntityContainer.TFunctionImport createEntityContainerFunctionImport() {
-        return new EntityContainer.TFunctionImport();
+    public EntityContainer.FunctionImport createEntityContainerFunctionImport() {
+        return new EntityContainer.FunctionImport();
     }
 
     /**
@@ -674,8 +674,8 @@ public class ObjectFactory {
      * Create an instance of {@link TEntityContainer.EntitySet }
      *
      */
-    public EntityContainer.TEntitySet createEntityContainerEntitySet() {
-        return new EntityContainer.TEntitySet();
+    public EntityContainer.EntitySet createEntityContainerEntitySet() {
+        return new EntityContainer.EntitySet();
     }
 
     /**
@@ -2691,11 +2691,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ReturnType", scope =
-            EntityContainer.TFunctionImport.class)
+            EntityContainer.FunctionImport.class)
     public JAXBElement<FunctionImportReturnType> createEntityContainerFunctionImportReturnType(
             FunctionImportReturnType value) {
         return new JAXBElement<FunctionImportReturnType>(_TFunctionReturnType_QNAME, FunctionImportReturnType.class,
-                EntityContainer.TFunctionImport.class, value);
+                EntityContainer.FunctionImport.class, value);
     }
 
     /**
@@ -2703,11 +2703,11 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "Parameter", scope =
-            EntityContainer.TFunctionImport.class)
+            EntityContainer.FunctionImport.class)
     public JAXBElement<FunctionImportParameter> createEntityContainerFunctionImportParameter(
             FunctionImportParameter value) {
         return new JAXBElement<FunctionImportParameter>(_TFunctionReferenceExpressionParameter_QNAME,
-                FunctionImportParameter.class, EntityContainer.TFunctionImport.class, value);
+                FunctionImportParameter.class, EntityContainer.FunctionImport.class, value);
     }
 
     /**
@@ -2715,10 +2715,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            EntityContainer.TFunctionImport.class)
+            EntityContainer.FunctionImport.class)
     public JAXBElement<ValueAnnotation> createEntityContainerFunctionImportValueAnnotation(ValueAnnotation value) {
         return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
-                EntityContainer.TFunctionImport.class, value);
+                EntityContainer.FunctionImport.class, value);
     }
 
     /**
@@ -2726,10 +2726,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            EntityContainer.TFunctionImport.class)
+            EntityContainer.FunctionImport.class)
     public JAXBElement<TypeAnnotation> createEntityContainerFunctionImportTypeAnnotation(TypeAnnotation value) {
         return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
-                EntityContainer.TFunctionImport.class, value);
+                EntityContainer.FunctionImport.class, value);
     }
 
     /**
@@ -3966,10 +3966,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "ValueAnnotation", scope =
-            EntityContainer.TEntitySet.class)
+            EntityContainer.EntitySet.class)
     public JAXBElement<ValueAnnotation> createEntityContainerEntitySetValueAnnotation(ValueAnnotation value) {
         return new JAXBElement<ValueAnnotation>(_TEntityPropertyValueAnnotation_QNAME, ValueAnnotation.class,
-                EntityContainer.TEntitySet.class, value);
+                EntityContainer.EntitySet.class, value);
     }
 
     /**
@@ -3977,10 +3977,10 @@ public class ObjectFactory {
      *
      */
     @XmlElementDecl(namespace = "http://schemas.microsoft.com/ado/2009/11/edm", name = "TypeAnnotation", scope =
-            EntityContainer.TEntitySet.class)
+            EntityContainer.EntitySet.class)
     public JAXBElement<TypeAnnotation> createEntityContainerEntitySetTypeAnnotation(TypeAnnotation value) {
         return new JAXBElement<TypeAnnotation>(_TEntityPropertyTypeAnnotation_QNAME, TypeAnnotation.class,
-                EntityContainer.TEntitySet.class, value);
+                EntityContainer.EntitySet.class, value);
     }
 
     /**

@@ -46,9 +46,9 @@ public class JSONPropertyDeserializer extends JsonDeserializer<JSONProperty> {
 
         final JSONProperty property = new JSONProperty();
 
-        if (tree.hasNonNull(JSONConstants.METADATA)) {
-            property.setMetadata(URI.create(tree.get(JSONConstants.METADATA).textValue()));
-            tree.remove(JSONConstants.METADATA);
+        if (tree.hasNonNull(ODataConstants.JSON_METADATA)) {
+            property.setMetadata(URI.create(tree.get(ODataConstants.JSON_METADATA).textValue()));
+            tree.remove(ODataConstants.JSON_METADATA);
         }
 
         try {
@@ -67,12 +67,12 @@ public class JSONPropertyDeserializer extends JsonDeserializer<JSONProperty> {
             }
 
             JsonNode subtree = null;
-            if (tree.has(JSONConstants.VALUE)) {
-                final JsonNode value = tree.get(JSONConstants.VALUE);
+            if (tree.has(ODataConstants.JSON_VALUE)) {
+                final JsonNode value = tree.get(ODataConstants.JSON_VALUE);
                 if (value.isValueNode()) {
                     content.appendChild(document.createTextNode(value.asText()));
                 } else {
-                    subtree = tree.get(JSONConstants.VALUE);
+                    subtree = tree.get(ODataConstants.JSON_VALUE);
                 }
             } else {
                 subtree = tree;

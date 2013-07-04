@@ -24,7 +24,9 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMe
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
+import java.util.List;
 import org.junit.Test;
 
 public class MetadataTest extends AbstractTest {
@@ -45,16 +47,40 @@ public class MetadataTest extends AbstractTest {
         assertFalse(orderCollection.isComplexType());
         assertTrue(orderCollection.isEntityType());
 
-        EntityType order = orderCollection.getEntityType();
+        final EntityType order = orderCollection.getEntityType();
         assertNotNull(order);
         assertEquals("Order", order.getName());
 
-        EdmType stream = new EdmType(metadata, "Edm.Stream");
+        final EdmType stream = new EdmType(metadata, "Edm.Stream");
         assertNotNull(stream);
         assertFalse(stream.isCollection());
         assertTrue(stream.isSimpleType());
         assertFalse(stream.isEnumType());
         assertFalse(stream.isComplexType());
         assertFalse(stream.isEntityType());
+
+        final List<FunctionImport> functionImports =
+                metadata.getSchemas().get(0).getEntityContainers().get(0).getFunctionImports();
+        int legacyGetters = 0;
+        int legacyPosters = 0;
+        int actions = 0;
+        int functions = 0;
+        for (FunctionImport functionImport : functionImports) {
+            if ("GET".equals(functionImport.getHttpMethod())) {
+                legacyGetters++;
+            } else if ("POST".equals(functionImport.getHttpMethod())) {
+                legacyPosters++;
+            } else if (functionImport.getHttpMethod() == null) {
+                if (functionImport.isIsSideEffecting()) {
+                    actions++;
+                } else {
+                    functions++;
+                }
+            }
+        }
+        assertEquals(6, legacyGetters);
+        assertEquals(1, legacyPosters);
+        assertEquals(2, actions);
+        assertEquals(0, functions);
     }
 }

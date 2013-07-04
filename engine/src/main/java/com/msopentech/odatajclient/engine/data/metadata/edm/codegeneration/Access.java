@@ -59,7 +59,7 @@ public enum Access {
         return value;
     }
 
-    public static Access fromValue(String v) {
+    public static Access fromValue(final String v) {
         for (Access c : Access.values()) {
             if (c.value.equals(v)) {
                 return c;

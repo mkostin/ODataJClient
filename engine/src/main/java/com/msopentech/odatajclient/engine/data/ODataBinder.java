@@ -251,6 +251,8 @@ public final class ODataBinder {
             entity.addLink(ODataFactory.newMediaEditLink(link.getTitle(), base, link.getHref()));
         }
 
+        entity.setOperations(resource.getOperations());
+
         final Element content;
         if (resource.isMediaEntry()) {
             entity.setMediaEntity(true);

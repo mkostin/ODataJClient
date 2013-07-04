@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.LinkResource;
+import com.msopentech.odatajclient.engine.data.ODataOperation;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,8 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
 
     private List<JSONLink> mediaEditLinks;
 
+    private List<ODataOperation> operations;
+
     private Element content;
 
     private Element mediaEntryProperties;
@@ -64,6 +67,7 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
         associationLinks = new ArrayList<JSONLink>();
         navigationLinks = new ArrayList<JSONLink>();
         mediaEditLinks = new ArrayList<JSONLink>();
+        operations = new ArrayList<ODataOperation>();
     }
 
     @Override
@@ -100,7 +104,6 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
         return etag;
     }
 
-    @Override
     public void setEtag(final String etag) {
         this.etag = etag;
     }
@@ -187,6 +190,22 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
     @Override
     public void setMediaEditLinks(final List<LinkResource> mediaEditLinks) {
         setLinks(this.mediaEditLinks, mediaEditLinks);
+    }
+
+    @Override
+    public List<ODataOperation> getOperations() {
+        return operations;
+    }
+
+    public boolean addOperation(final ODataOperation operation) {
+        return this.operations.add(operation);
+    }
+
+    public void setOperations(final List<ODataOperation> operations) {
+        this.operations.clear();
+        if (operations != null && !operations.isEmpty()) {
+            this.operations.addAll(operations);
+        }
     }
 
     @Override

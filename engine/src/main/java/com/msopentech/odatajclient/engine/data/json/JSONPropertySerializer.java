@@ -42,12 +42,12 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
         jgen.writeStartObject();
 
         if (property.getMetadata() != null) {
-            jgen.writeStringField(JSONConstants.METADATA, property.getMetadata().toASCIIString());
+            jgen.writeStringField(ODataConstants.JSON_METADATA, property.getMetadata().toASCIIString());
         }
 
         final Element content = property.getContent();
         if (TreeUtils.hasOnlyTextChildNodes(content)) {
-            jgen.writeStringField(JSONConstants.VALUE, content.getTextContent());
+            jgen.writeStringField(ODataConstants.JSON_VALUE, content.getTextContent());
         } else {
             try {
                 if (TreeUtils.hasElementsChildNode(content)) {
@@ -58,7 +58,7 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
 
                     final Element wrapper = document.createElement(ODataConstants.ELEM_PROPERTY);
                     wrapper.appendChild(
-                            document.renameNode(document.importNode(content, true), null, JSONConstants.VALUE));
+                            document.renameNode(document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 
                     TreeUtils.writeContent(jgen, wrapper);
                 } else {

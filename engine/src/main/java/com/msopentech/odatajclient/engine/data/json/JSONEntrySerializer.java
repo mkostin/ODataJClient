@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -113,31 +112,31 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         jgen.writeStartObject();
 
         if (entry.getMetadata() != null) {
-            jgen.writeStringField(JSONConstants.METADATA, entry.getMetadata().toASCIIString());
+            jgen.writeStringField(ODataConstants.JSON_METADATA, entry.getMetadata().toASCIIString());
         }
         if (StringUtils.isNotBlank(entry.getType())) {
-            jgen.writeStringField(JSONConstants.TYPE, entry.getType());
+            jgen.writeStringField(ODataConstants.JSON_TYPE, entry.getType());
         }
         if (entry.getId() != null) {
-            jgen.writeStringField(JSONConstants.ID, entry.getId());
+            jgen.writeStringField(ODataConstants.JSON_ID, entry.getId());
         }
         if (StringUtils.isNotBlank(entry.getEtag())) {
-            jgen.writeStringField(JSONConstants.ETAG, entry.getEtag());
+            jgen.writeStringField(ODataConstants.JSON_ETAG, entry.getEtag());
         }
 
         if (entry.getSelfLink() != null) {
-            jgen.writeStringField(JSONConstants.READ_LINK, entry.getSelfLink().getHref());
+            jgen.writeStringField(ODataConstants.JSON_READ_LINK, entry.getSelfLink().getHref());
         }
 
         if (entry.getEditLink() != null) {
-            jgen.writeStringField(JSONConstants.EDIT_LINK, entry.getEditLink().getHref());
+            jgen.writeStringField(ODataConstants.JSON_EDIT_LINK, entry.getEditLink().getHref());
         }
 
         if (entry.getMediaContentSource() != null) {
-            jgen.writeStringField(JSONConstants.MEDIAREAD_LINK, entry.getMediaContentSource());
+            jgen.writeStringField(ODataConstants.JSON_MEDIAREAD_LINK, entry.getMediaContentSource());
         }
         if (entry.getMediaContentType() != null) {
-            jgen.writeStringField(JSONConstants.MEDIA_CONTENT_TYPE, entry.getMediaContentType());
+            jgen.writeStringField(ODataConstants.JSON_MEDIA_CONTENT_TYPE, entry.getMediaContentType());
         }
 
         for (JSONLink link : entry.getNavigationLinks()) {
@@ -146,12 +145,12 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
             } else if (link.getInlineFeed() != null) {
                 jgen.writeObjectField(link.getTitle(), link.getInlineFeed());
             } else {
-                jgen.writeStringField(link.getTitle() + JSONConstants.BIND_LINK_SUFFIX, link.getHref());
+                jgen.writeStringField(link.getTitle() + ODataConstants.JSON_BIND_LINK_SUFFIX, link.getHref());
             }
         }
         for (JSONLink link : entry.getMediaEditLinks()) {
             if (link.getTitle() == null) {
-                jgen.writeStringField(JSONConstants.MEDIAEDIT_LINK, link.getHref());
+                jgen.writeStringField(ODataConstants.JSON_MEDIAEDIT_LINK, link.getHref());
             }
 
             if (link.getInlineEntry() != null) {

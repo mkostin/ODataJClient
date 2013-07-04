@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import com.msopentech.odatajclient.engine.data.metadata.edm.codegeneration.Access;
 import com.msopentech.odatajclient.engine.data.metadata.edm.codegeneration.PublicOrInternalAccess;
-import org.w3c.dom.Element;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -145,9 +145,9 @@ public class EntityContainer extends AbstractAnnotated {
 
     @XmlElements({
         @XmlElement(name = "TypeAnnotation", type = TypeAnnotation.class),
-        @XmlElement(name = "EntitySet", type = EntityContainer.TEntitySet.class),
-        @XmlElement(name = "AssociationSet", type = EntityContainer.TAssociationSet.class),
-        @XmlElement(name = "FunctionImport", type = EntityContainer.TFunctionImport.class),
+        @XmlElement(name = "EntitySet", type = EntityContainer.EntitySet.class),
+        @XmlElement(name = "AssociationSet", type = EntityContainer.AssociationSet.class),
+        @XmlElement(name = "FunctionImport", type = EntityContainer.FunctionImport.class),
         @XmlElement(name = "ValueAnnotation", type = ValueAnnotation.class)
     })
     protected List<Object> functionImportOrEntitySetOrAssociationSet;
@@ -229,16 +229,46 @@ public class EntityContainer extends AbstractAnnotated {
         return this.functionImportOrEntitySetOrAssociationSet;
     }
 
-    public List<TEntitySet> getEntitySets() {
-        return getElements(TEntitySet.class);
+    public List<EntitySet> getEntitySets() {
+        return getElements(EntitySet.class);
     }
 
-    public List<TAssociationSet> getAssociationSets() {
-        return getElements(TAssociationSet.class);
+    public EntitySet getEntitySet(final String name) {
+        EntitySet result = null;
+        for (EntitySet entitySet : getEntitySets()) {
+            if (name.equals(entitySet.getName())) {
+                result = entitySet;
+            }
+        }
+        return result;
     }
 
-    public List<TFunctionImport> getFunctionImports() {
-        return getElements(TFunctionImport.class);
+    public List<AssociationSet> getAssociationSets() {
+        return getElements(AssociationSet.class);
+    }
+
+    public AssociationSet getAssociationSet(final String name) {
+        AssociationSet result = null;
+        for (AssociationSet associationSet : getAssociationSets()) {
+            if (name.equals(associationSet.getName())) {
+                result = associationSet;
+            }
+        }
+        return result;
+    }
+
+    public List<FunctionImport> getFunctionImports() {
+        return getElements(FunctionImport.class);
+    }
+
+    public FunctionImport getFunctionImport(final String name) {
+        FunctionImport result = null;
+        for (FunctionImport functionImport : getFunctionImports()) {
+            if (name.equals(functionImport.getName())) {
+                result = functionImport;
+            }
+        }
+        return result;
     }
 
     /**
@@ -428,13 +458,13 @@ public class EntityContainer extends AbstractAnnotated {
         "end",
         "any"
     })
-    public static class TAssociationSet {
+    public static class AssociationSet {
 
         @XmlElement(name = "Documentation")
         protected Documentation documentation;
 
         @XmlElement(name = "End")
-        protected List<EntityContainer.TAssociationSet.End> end;
+        protected List<EntityContainer.AssociationSet.End> end;
 
         @XmlAnyElement(lax = true)
         protected List<Object> any;
@@ -495,9 +525,9 @@ public class EntityContainer extends AbstractAnnotated {
          *
          *
          */
-        public List<EntityContainer.TAssociationSet.End> getEnd() {
+        public List<EntityContainer.AssociationSet.End> getEnd() {
             if (end == null) {
-                end = new ArrayList<EntityContainer.TAssociationSet.End>();
+                end = new ArrayList<EntityContainer.AssociationSet.End>();
             }
             return this.end;
         }
@@ -775,7 +805,7 @@ public class EntityContainer extends AbstractAnnotated {
         "documentation",
         "valueAnnotationOrTypeAnnotationOrAny"
     })
-    public static class TEntitySet extends AbstractAnnotated {
+    public static class EntitySet extends AbstractAnnotated {
 
         @XmlElement(name = "Documentation")
         protected Documentation documentation;
@@ -983,7 +1013,7 @@ public class EntityContainer extends AbstractAnnotated {
         "documentation",
         "returnTypeOrParameterOrValueAnnotation"
     })
-    public static class TFunctionImport extends AbstractAnnotated {
+    public static class FunctionImport extends AbstractAnnotated {
 
         @XmlElement(name = "Documentation")
         protected Documentation documentation;
@@ -1093,11 +1123,10 @@ public class EntityContainer extends AbstractAnnotated {
         }
 
         public String getFunctionImportReturnType() {
-            List<FunctionImportReturnType> functionImportReturnTypes =
-                    getJAXBElements(FunctionImportReturnType.class);
-            return functionImportReturnTypes.isEmpty()
+            final List<FunctionImportReturnType> returnTypes = getJAXBElements(FunctionImportReturnType.class);
+            return returnTypes.isEmpty()
                     ? getReturnType()
-                    : functionImportReturnTypes.get(0).getType();
+                    : returnTypes.get(0).getType();
         }
 
         /**
@@ -1120,7 +1149,7 @@ public class EntityContainer extends AbstractAnnotated {
          * {@link String }
          *
          */
-        public void setName(String value) {
+        public void setName(final String value) {
             this.name = value;
         }
 
@@ -1144,7 +1173,7 @@ public class EntityContainer extends AbstractAnnotated {
          * {@link String }
          *
          */
-        public void setReturnType(String value) {
+        public void setReturnType(final String value) {
             this.returnType = value;
         }
 
@@ -1168,7 +1197,7 @@ public class EntityContainer extends AbstractAnnotated {
          * {@link String }
          *
          */
-        public void setEntitySet(String value) {
+        public void setEntitySet(final String value) {
             this.entitySet = value;
         }
 
@@ -1192,7 +1221,7 @@ public class EntityContainer extends AbstractAnnotated {
          * {@link String }
          *
          */
-        public void setEntitySetPath(String value) {
+        public void setEntitySetPath(final String value) {
             this.entitySetPath = value;
         }
 
@@ -1205,11 +1234,7 @@ public class EntityContainer extends AbstractAnnotated {
          *
          */
         public boolean isIsComposable() {
-            if (isComposable == null) {
-                return false;
-            } else {
-                return isComposable;
-            }
+            return isComposable == null ? false : isComposable;
         }
 
         /**
@@ -1220,7 +1245,7 @@ public class EntityContainer extends AbstractAnnotated {
          * {@link Boolean }
          *
          */
-        public void setIsComposable(Boolean value) {
+        public void setIsComposable(final Boolean value) {
             this.isComposable = value;
         }
 
@@ -1233,7 +1258,7 @@ public class EntityContainer extends AbstractAnnotated {
          *
          */
         public Boolean isIsSideEffecting() {
-            return isSideEffecting;
+            return isSideEffecting == null ? true : isSideEffecting;
         }
 
         /**
@@ -1244,7 +1269,7 @@ public class EntityContainer extends AbstractAnnotated {
          * {@link Boolean }
          *
          */
-        public void setIsSideEffecting(Boolean value) {
+        public void setIsSideEffecting(final Boolean value) {
             this.isSideEffecting = value;
         }
 
@@ -1257,11 +1282,7 @@ public class EntityContainer extends AbstractAnnotated {
          *
          */
         public boolean isIsBindable() {
-            if (isBindable == null) {
-                return false;
-            } else {
-                return isBindable;
-            }
+            return isBindable == null ? false : isBindable;
         }
 
         /**
@@ -1272,7 +1293,7 @@ public class EntityContainer extends AbstractAnnotated {
          * {@link Boolean }
          *
          */
-        public void setIsBindable(Boolean value) {
+        public void setIsBindable(final Boolean value) {
             this.isBindable = value;
         }
 
@@ -1296,7 +1317,7 @@ public class EntityContainer extends AbstractAnnotated {
          * {@link TAccess }
          *
          */
-        public void setMethodAccess(Access value) {
+        public void setMethodAccess(final Access value) {
             this.methodAccess = value;
         }
 
@@ -1316,6 +1337,15 @@ public class EntityContainer extends AbstractAnnotated {
          */
         public Map<QName, String> getOtherAttributes() {
             return otherAttributes;
+        }
+
+        public boolean isIsAlwaysBindable() {
+            final String result = otherAttributes.get(new QName(ODataConstants.NS_METADATA, "IsAlwaysBindable"));
+            return result == null ? false : Boolean.valueOf(result);
+        }
+
+        public String getHttpMethod() {
+            return otherAttributes.get(new QName(ODataConstants.NS_METADATA, "HttpMethod"));
         }
     }
 }

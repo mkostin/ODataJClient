@@ -83,6 +83,12 @@ public class ODataConstants {
 
     public static final String ATTR_HREF = "href";
 
+    public static final String ATTR_METADATA = "metadata";
+
+    public static final String ATTR_TITLE = "title";
+
+    public static final String ATTR_TARGET = "target";
+
     public static final String ELEM_SERVICE = "service";
 
     public static final String ELEM_COLLECTION = "collection";
@@ -96,5 +102,37 @@ public class ODataConstants {
     public static final String ELEM_PROPERTY = "property";
 
     public static final String ELEM_URI = "uri";
+
+    public static final String ELEM_ACTION = PREFIX_METADATA + "action";
+
+    public final static String JSON_METADATA = "odata.metadata";
+
+    public final static String JSON_TYPE = "odata.type";
+
+    public final static String JSON_ID = "odata.id";
+
+    public final static String JSON_ETAG = "odata.etag";
+
+    public final static String JSON_READ_LINK = "odata.readLink";
+
+    public final static String JSON_EDIT_LINK = "odata.editLink";
+
+    public final static String JSON_MEDIAREAD_LINK = "odata.mediaReadLink";
+
+    public final static String JSON_MEDIAEDIT_LINK = "odata.mediaEditLink";
+
+    public final static String JSON_MEDIA_CONTENT_TYPE = "odata.mediaContentType";
+
+    public final static String JSON_NAVIGATION_LINK_SUFFIX = "@odata.navigationLinkUrl";
+
+    public final static String JSON_BIND_LINK_SUFFIX = "@odata.bind";
+
+    public final static String JSON_ASSOCIATION_LINK_SUFFIX = "@odata.associationLinkUrl";
+
+    public final static String JSON_MEDIAEDIT_LINK_SUFFIX = "@odata.mediaEditLink";
+
+    public final static String JSON_VALUE = "value";
+
+    public final static String JSON_URL = "url";
 
 }

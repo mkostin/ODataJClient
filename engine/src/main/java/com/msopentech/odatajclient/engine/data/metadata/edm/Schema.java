@@ -105,15 +105,15 @@ public class Schema extends AbstractElement {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link TEntityType }
-     * {@link TFunction }
-     * {@link TEnumType }
-     * {@link TUsing }
-     * {@link TValueTerm }
-     * {@link TAssociation }
-     * {@link TEntityContainer }
-     * {@link TAnnotations }
-     * {@link TComplexType }
+     * {@link EntityType }
+     * {@link Function }
+     * {@link EnumType }
+     * {@link Using }
+     * {@link ValueTerm }
+     * {@link Association }
+     * {@link EntityContainer }
+     * {@link Annotations }
+     * {@link ComplexType }
      */
     @Override
     public List<Object> getValues() {
@@ -131,8 +131,28 @@ public class Schema extends AbstractElement {
         return getElements(EnumType.class);
     }
 
+    public EnumType getEnumType(final String name) {
+        EnumType result = null;
+        for (EnumType enumType : getEnumTypes()) {
+            if (name.equals(enumType.getName())) {
+                result = enumType;
+            }
+        }
+        return result;
+    }
+
     public List<ComplexType> getComplexTypes() {
         return getElements(ComplexType.class);
+    }
+
+    public ComplexType getComplexType(final String name) {
+        ComplexType result = null;
+        for (ComplexType complexType : getComplexTypes()) {
+            if (name.equals(complexType.getName())) {
+                result = complexType;
+            }
+        }
+        return result;
     }
 
     public List<RowType> getRowTypes() {
@@ -143,16 +163,42 @@ public class Schema extends AbstractElement {
         return getElements(EntityType.class);
     }
 
+    public EntityType getEntityType(final String name) {
+        EntityType result = null;
+        for (EntityType complexType : getEntityTypes()) {
+            if (name.equals(complexType.getName())) {
+                result = complexType;
+            }
+        }
+        return result;
+    }
+
     public List<Association> getAssociations() {
         return getElements(Association.class);
+    }
+
+    public Association getAssociation(final String name) {
+        Association result = null;
+        for (Association association : getAssociations()) {
+            if (name.equals(association.getName())) {
+                result = association;
+            }
+        }
+        return result;
     }
 
     public List<EntityContainer> getEntityContainers() {
         return getElements(EntityContainer.class);
     }
 
-    public List<Annotations> getAnnotations() {
-        return getElements(Annotations.class);
+    public EntityContainer getEntityContainer(final String name) {
+        EntityContainer result = null;
+        for (EntityContainer container : getEntityContainers()) {
+            if (name.equals(container.getName())) {
+                result = container;
+            }
+        }
+        return result;
     }
 
     /**
@@ -206,7 +252,7 @@ public class Schema extends AbstractElement {
      * {@link String }
      *
      */
-    public void setNamespace(String value) {
+    public void setNamespace(final String value) {
         this.namespace = value;
     }
 
@@ -230,7 +276,7 @@ public class Schema extends AbstractElement {
      * {@link String }
      *
      */
-    public void setAlias(String value) {
+    public void setAlias(final String value) {
         this.alias = value;
     }
 

@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,11 +51,6 @@ final class TreeUtils {
             final JsonNode child = nodeItor.next();
             final String name = fieldNameItor.hasNext() ? fieldNameItor.next() : "";
 
-            // TODO: see issue #74
-            if (name.startsWith("#")) {
-                break;
-            }
-
             // no name? array item
             if (name.isEmpty()) {
                 final Element element = document.createElementNS(ODataConstants.NS_DATASERVICES,
@@ -70,15 +64,15 @@ final class TreeUtils {
                 if (child.isContainerNode()) {
                     buildSubtree(document, element, child);
                 }
-            } else if (!name.contains("@") && !JSONConstants.TYPE.equals(name)) {
+            } else if (!name.contains("@") && !ODataConstants.JSON_TYPE.equals(name)) {
                 final Element property = document.createElementNS(
                         ODataConstants.NS_DATASERVICES, ODataConstants.PREFIX_DATASERVICES + name);
                 parent.appendChild(property);
 
                 boolean typeSet = false;
-                if (node.hasNonNull(name + "@" + JSONConstants.TYPE)) {
+                if (node.hasNonNull(name + "@" + ODataConstants.JSON_TYPE)) {
                     property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
-                            node.get(name + "@" + JSONConstants.TYPE).textValue());
+                            node.get(name + "@" + ODataConstants.JSON_TYPE).textValue());
                     typeSet = true;
                 }
 
@@ -92,9 +86,9 @@ final class TreeUtils {
                     }
                     property.appendChild(document.createTextNode(child.asText()));
                 } else if (child.isContainerNode()) {
-                    if (child.hasNonNull(JSONConstants.TYPE)) {
+                    if (child.hasNonNull(ODataConstants.JSON_TYPE)) {
                         property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
-                                child.get(JSONConstants.TYPE).textValue());
+                                child.get(ODataConstants.JSON_TYPE).textValue());
                     }
 
                     buildSubtree(document, property, child);
