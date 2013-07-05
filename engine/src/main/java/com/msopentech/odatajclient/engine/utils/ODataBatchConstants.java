@@ -48,6 +48,6 @@ public class ODataBatchConstants {
     /**
      * Content id header name.
      */
-    public static String CHANGESET_CONTENT_ID_NAME = "Content-Id";
+    public static String CHANGESET_CONTENT_ID_NAME = "Content-ID";
 
 }

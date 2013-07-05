@@ -33,7 +33,6 @@ import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import java.net.URI;
-import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
@@ -169,14 +168,5 @@ public class EntityUpdateTest extends AbstractTest {
         }
 
         return entity;
-    }
-
-    private String getETag(final URI uri) {
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uri);
-        final ODataRetrieveResponse<ODataEntity> res = req.execute();
-        final Collection<String> etag = res.getHeader("ETag");
-        res.close();
-
-        return etag == null || etag.isEmpty() ? null : etag.iterator().next();
     }
 }

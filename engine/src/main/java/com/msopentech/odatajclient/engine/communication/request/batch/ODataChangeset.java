@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.engine.communication.request.batch;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
-import com.msopentech.odatajclient.engine.communication.response.ODataBatchChangesetResponse;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.util.UUID;
 import org.apache.http.HttpHeaders;
@@ -35,7 +34,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
 
     private final String boundary;
 
-    private final ODataBatchChangesetResponse expectedResItem;
+    private final ODataChangesetResponseItem expectedResItem;
 
     /**
      * Constructor.
@@ -44,7 +43,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
      *
      * @param os piped output stream to be used to serialize.
      */
-    ODataChangeset(final ODataBatchRequest req, final ODataBatchChangesetResponse expectedResItem) {
+    ODataChangeset(final ODataBatchRequest req, final ODataChangesetResponseItem expectedResItem) {
         super(req);
         this.expectedResItem = expectedResItem;
 
@@ -105,7 +104,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
         // stream the request
         streamRequestHeader(request, contentId);
 
-        request.batch(req);
+        request.batch(req, String.valueOf(contentId));
         newLine();
 
         // add request to the list

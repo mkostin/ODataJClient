@@ -17,6 +17,8 @@ package com.msopentech.odatajclient.engine.communication.response;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchUtilities;
+import com.msopentech.odatajclient.engine.utils.BatchController;
+import com.msopentech.odatajclient.engine.utils.BatchLineIterator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -26,7 +28,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.LineIterator;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -49,20 +50,19 @@ public abstract class ODataResponseImpl implements ODataResponse {
     protected final Map<String, Collection<String>> headers =
             new TreeMap<String, Collection<String>>(String.CASE_INSENSITIVE_ORDER);
 
-    private int statusCode;
+    private int statusCode = -1;
 
-    private String statusMessage;
+    private String statusMessage = null;
 
-    private InputStream payload;
+    private InputStream payload = null;
 
     private boolean hasBeenInitialized = false;
+
+    private BatchController batchInfo = null;
 
     public ODataResponseImpl() {
         this.client = null;
         this.res = null;
-        this.payload = null;
-        this.statusCode = -1;
-        this.statusMessage = null;
     }
 
     public ODataResponseImpl(final HttpClient client, final HttpResponse res) {
@@ -138,45 +138,25 @@ public abstract class ODataResponseImpl implements ODataResponse {
     }
 
     @Override
-    public void initFromBatch(final LineIterator batchLineIterator, final String boundary) {
+    public ODataResponse initFromBatch(
+            final Map.Entry<Integer, String> responseLine,
+            final Map<String, Collection<String>> headers,
+            final BatchLineIterator batchLineIterator,
+            final String boundary) {
+
         if (hasBeenInitialized) {
             throw new IllegalStateException("Request already initialized");
         }
 
-        hasBeenInitialized = true;
+        this.hasBeenInitialized = true;
 
-        // read response line and get statusCode and statusMessage
-        final Map.Entry<Integer, String> responseLine = ODataBatchUtilities.readResponseLine(batchLineIterator);
+        this.batchInfo = new BatchController(batchLineIterator, boundary);
+
         this.statusCode = responseLine.getKey();
         this.statusMessage = responseLine.getValue();
+        this.headers.putAll(headers);
 
-        // read headers
-        ODataBatchUtilities.readHeaders(batchLineIterator, headers);
-
-        // get input stream till the end of item
-        payload = new PipedInputStream();
-
-        try {
-            final PipedOutputStream os = new PipedOutputStream((PipedInputStream) payload);
-
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        ODataBatchUtilities.writeLinesTillNextBoundary(batchLineIterator, boundary, os);
-                    } catch (Exception e) {
-                        LOG.error("Error streaming batch item payload", e);
-                    } finally {
-                        IOUtils.closeQuietly(os);
-                    }
-                }
-            }).start();
-
-        } catch (IOException e) {
-            LOG.error("Error streaming payload response", e);
-            throw new IllegalStateException(e);
-        }
+        return this;
     }
 
     /**
@@ -189,10 +169,41 @@ public abstract class ODataResponseImpl implements ODataResponse {
         } else {
             this.client.getConnectionManager().shutdown();
         }
+
+        if (batchInfo != null) {
+            batchInfo.setValidBatch(false);
+        }
     }
 
     @Override
     public InputStream getRawResponse() {
+        if (payload == null && batchInfo.isValidBatch()) {
+            // get input stream till the end of item
+            payload = new PipedInputStream();
+
+            try {
+                final PipedOutputStream os = new PipedOutputStream((PipedInputStream) payload);
+
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            ODataBatchUtilities.readBatchPart(batchInfo, os, true);
+                        } catch (Exception e) {
+                            LOG.error("Error streaming batch item payload", e);
+                        } finally {
+                            IOUtils.closeQuietly(os);
+                        }
+                    }
+                }).start();
+
+            } catch (IOException e) {
+                LOG.error("Error streaming payload response", e);
+                throw new IllegalStateException(e);
+            }
+        }
+
         return payload;
     }
 }

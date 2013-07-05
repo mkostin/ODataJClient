@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.engine.communication.request.batch;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
-import com.msopentech.odatajclient.engine.communication.response.ODataBatchRetrieveResponse;
 
 /**
  * Retrieve request wrapper for the corresponding batch item.
@@ -28,7 +27,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataBatchRetri
  */
 public class ODataRetrieve extends ODataBatchRequestItem {
 
-    private final ODataBatchRetrieveResponse expectedResItem;
+    private final ODataRetrieveResponseItem expectedResItem;
 
     /**
      * Constructor.
@@ -37,7 +36,7 @@ public class ODataRetrieve extends ODataBatchRequestItem {
      *
      * @param os piped output stream to be used to serialize.
      */
-    ODataRetrieve(final ODataBatchRequest req, final ODataBatchRetrieveResponse expectedResItem) {
+    ODataRetrieve(final ODataBatchRequest req, final ODataRetrieveResponseItem expectedResItem) {
         super(req);
         this.expectedResItem = expectedResItem;
     }
@@ -76,7 +75,8 @@ public class ODataRetrieve extends ODataBatchRequestItem {
         close();
 
         // add request to the list
-        expectedResItem.setResponse(((ODataRequestImpl) request).getResponseTemplate());
+        expectedResItem.addResponse(
+                ODataRetrieveResponseItem.RETRIEVE_CONTENT_ID, ((ODataRequestImpl) request).getResponseTemplate());
 
         return this;
     }

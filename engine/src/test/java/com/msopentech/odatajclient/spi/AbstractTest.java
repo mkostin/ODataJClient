@@ -20,6 +20,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
@@ -191,7 +194,7 @@ public abstract class AbstractTest {
     }
 
     protected ODataEntity getSampleCustomerInfo(final int id, final String sampleinfo) {
-        final ODataEntity entity = 
+        final ODataEntity entity =
                 ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.CustomerInfo");
         entity.setMediaEntity(true);
 
@@ -206,7 +209,7 @@ public abstract class AbstractTest {
     protected ODataEntity getSampleCustomerProfile(
             final int id, final String sampleName, final boolean withInlineInfo) {
 
-        final ODataEntity entity = 
+        final ODataEntity entity =
                 ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
 
         // add name attribute
@@ -315,5 +318,14 @@ public abstract class AbstractTest {
                 IOUtils.closeQuietly(input);
             }
         }
+    }
+
+    protected String getETag(final URI uri) {
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uri);
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
+        final Collection<String> etag = res.getHeader("ETag");
+        res.close();
+
+        return etag == null || etag.isEmpty() ? null : etag.iterator().next();
     }
 }

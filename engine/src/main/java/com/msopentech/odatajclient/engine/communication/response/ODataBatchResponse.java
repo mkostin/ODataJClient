@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchResponseItem;
 import java.util.Iterator;
 
 /**

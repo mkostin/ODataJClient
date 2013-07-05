@@ -15,41 +15,127 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
+import com.msopentech.odatajclient.engine.utils.BatchController;
+import com.msopentech.odatajclient.engine.utils.BatchLineIterator;
+import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpHeaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ODataBatchUtilities {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ODataBatchUtilities.class);
 
     private static final Pattern RESPONSE_PATTERN =
             Pattern.compile("HTTP/\\d\\.\\d (\\d+) (.*)", Pattern.CASE_INSENSITIVE);
 
-    public static void writeLinesTillNextBoundary(final LineIterator lineIterator, final String boundary, final OutputStream os) 
-            throws UnsupportedEncodingException, IOException {
-        if (lineIterator.hasNext()) {
-            final String line = lineIterator.nextLine();
-            if (!line.startsWith(boundary)) {
-                os.write(line.getBytes("UTF-8"));
-                writeLinesTillNextBoundary(lineIterator, boundary, os);
+    public static String readBatchPart(
+            final BatchController batchController, final boolean checkCurrent) {
+        return readBatchPart(batchController, null, -1, checkCurrent);
+    }
+
+    public static String readBatchPart(
+            final BatchController batchController, final int count) {
+        return readBatchPart(batchController, null, count, true);
+    }
+
+    public static String readBatchPart(
+            final BatchController controller, final OutputStream os, final boolean checkCurrent) {
+        return readBatchPart(controller, os, -1, checkCurrent);
+    }
+
+    public static enum BatchItemType {
+
+        NONE,
+        CHANGESET,
+        RETRIEVE
+
+    }
+
+    public static String readBatchPart(
+            final BatchController controller, final OutputStream os, final int count, final boolean checkCurrent) {
+
+        String currentLine;
+
+        synchronized (controller.getBatchLineIterator()) {
+            currentLine = checkCurrent ? controller.getBatchLineIterator().getCurrent() : null;
+
+            if (count < 0) {
+                try {
+
+                    boolean notEndLine = isNotEndLine(controller, currentLine);
+
+                    while (controller.isValidBatch() && notEndLine && controller.getBatchLineIterator().hasNext()) {
+
+                        currentLine = controller.getBatchLineIterator().nextLine();
+                        LOG.debug("Read line '{}' (end-line '{}')", currentLine, controller.getBoundary());
+
+                        notEndLine = isNotEndLine(controller, currentLine);
+
+                        if (notEndLine && os != null) {
+                            os.write(currentLine.getBytes("UTF-8"));
+                            os.write(ODataStreamer.CRLF);
+                        }
+                    }
+
+                } catch (IOException e) {
+                    LOG.error("Error reading batch part", e);
+                    throw new IllegalStateException(e);
+                }
+
+            } else {
+                for (int i = 0;
+                        controller.isValidBatch() && controller.getBatchLineIterator().hasNext() && i < count; i++) {
+                    currentLine = controller.getBatchLineIterator().nextLine();
+                }
             }
         }
+
+        return currentLine;
     }
-    
-    public static void readHeaders(final LineIterator lineIterator, final Map<String, Collection<String>> targetMap) {
-        if (lineIterator.hasNext()) {
-            final String line = lineIterator.nextLine().trim();
-            if (StringUtils.isNotBlank(line)) {
-                addHeaderLine(line, targetMap);
-                readHeaders(lineIterator, targetMap);
+
+    public static Map<String, Collection<String>> readHeaders(final BatchLineIterator iterator) {
+        final Map<String, Collection<String>> target =
+                new TreeMap<String, Collection<String>>(String.CASE_INSENSITIVE_ORDER);
+
+        readHeaders(iterator, target);
+        return target;
+    }
+
+    public static void readHeaders(final BatchLineIterator iterator, final Map<String, Collection<String>> target) {
+
+        try {
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            readBatchPart(new BatchController(iterator, null), os, true);
+
+            final LineIterator headers = IOUtils.lineIterator(new ByteArrayInputStream(os.toByteArray()), "UTF-8");
+            while (headers.hasNext()) {
+                final String line = headers.nextLine().trim();
+                if (StringUtils.isNotBlank(line)) {
+                    addHeaderLine(line, target);
+                }
             }
+        } catch (Exception e) {
+            LOG.error("Error retrieving headers", e);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -68,14 +154,77 @@ public class ODataBatchUtilities {
         }
     }
 
-    public static Map.Entry<Integer, String> readResponseLine(final LineIterator lineIterator) {
-        final String line = lineIterator.nextLine();
+    public static String getBoundaryFromHeader(final Collection<String> contentType) {
+        final String boundaryKey = ODataBatchConstants.BOUNDARY + "=";
+
+        if (contentType == null || contentType.isEmpty() || !contentType.toString().contains(boundaryKey)) {
+            throw new IllegalArgumentException("Invalid content type");
+        }
+
+        final String headerValue = contentType.toString();
+
+        final int start = headerValue.indexOf(boundaryKey) + boundaryKey.length();
+        int end = headerValue.indexOf(";", start);
+
+        if (end < 0) {
+            end = headerValue.indexOf("]", start);
+        }
+
+        final String res = headerValue.substring(start, end);
+        return res.startsWith("--") ? res : "--" + res;
+    }
+
+    public static Map.Entry<Integer, String> readResponseLine(final BatchLineIterator iterator) {
+        final String line = readBatchPart(new BatchController(iterator, null), 1);
+        LOG.debug("Response line '{}'", line);
+
         final Matcher matcher = RESPONSE_PATTERN.matcher(line.trim());
 
         if (matcher.matches()) {
-            return new AbstractMap.SimpleEntry<Integer, String>(Integer.valueOf(matcher.group(2)), matcher.group(3));
+            return new AbstractMap.SimpleEntry<Integer, String>(Integer.valueOf(matcher.group(1)), matcher.group(2));
         }
 
         throw new IllegalArgumentException("Invalid response line '" + line + "'");
+    }
+
+    public static Map<String, Collection<String>> nextItemHeaders(
+            final BatchLineIterator iterator, final String boundary) {
+
+        final Map<String, Collection<String>> headers =
+                new TreeMap<String, Collection<String>>(String.CASE_INSENSITIVE_ORDER);
+
+        final String line = ODataBatchUtilities.readBatchPart(new BatchController(iterator, boundary), true);
+
+        if (line != null && line.trim().equals(boundary)) {
+            ODataBatchUtilities.readHeaders(iterator, headers);
+        }
+
+        LOG.debug("Retrieved batch item headers {}", headers);
+        return headers;
+    }
+
+    public static BatchItemType getItemType(final Map<String, Collection<String>> headers) {
+
+        final BatchItemType nextItemType;
+
+        final String contentType = headers.containsKey(HttpHeaders.CONTENT_TYPE)
+                ? headers.get(HttpHeaders.CONTENT_TYPE).toString() : StringUtils.EMPTY;
+
+        if (contentType.contains(ODataBatchConstants.MULTIPART_CONTENT_TYPE)) {
+            nextItemType = BatchItemType.CHANGESET;
+        } else if (contentType.contains(ODataBatchConstants.ITEM_CONTENT_TYPE)) {
+            nextItemType = BatchItemType.RETRIEVE;
+        } else {
+            nextItemType = BatchItemType.NONE;
+        }
+
+        LOG.debug("Retrieved next item type {}", nextItemType);
+        return nextItemType;
+    }
+
+    private static boolean isNotEndLine(final BatchController controller, final String line) {
+        return line == null
+                || (StringUtils.isBlank(controller.getBoundary()) && StringUtils.isNotBlank(line))
+                || (StringUtils.isNotBlank(controller.getBoundary()) && !line.startsWith(controller.getBoundary()));
     }
 }

@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -30,6 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.entity.ContentType;
@@ -96,6 +98,10 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      * @param req destination batch request.
      */
     public void batch(final ODataBatchRequest req) {
+        batch(req, null);
+    }
+
+    public void batch(final ODataBatchRequest req, final String contentId) {
         final InputStream input = getPayload().getBody();
 
         try {
@@ -103,6 +109,10 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
             getPayload().finalizeBody();
 
             req.rawAppend(toByteArray());
+            if (StringUtils.isNotBlank(contentId)) {
+                req.rawAppend((ODataBatchConstants.CHANGESET_CONTENT_ID_NAME + ": " + contentId).getBytes());
+                req.rawAppend(ODataStreamer.CRLF);
+            }
             req.rawAppend(ODataStreamer.CRLF);
 
             req.rawAppend(IOUtils.toByteArray(input));

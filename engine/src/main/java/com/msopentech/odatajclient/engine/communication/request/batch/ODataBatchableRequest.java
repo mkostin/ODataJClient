@@ -30,4 +30,6 @@ public interface ODataBatchableRequest extends ODataRequest {
      * @param req destination batch request.
      */
     void batch(final ODataBatchRequest req);
+
+    void batch(final ODataBatchRequest req, final String contentId);
 }

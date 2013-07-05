@@ -15,9 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
+import com.msopentech.odatajclient.engine.utils.BatchLineIterator;
 import java.io.InputStream;
 import java.util.Collection;
-import org.apache.commons.io.LineIterator;
+import java.util.Map;
 
 /**
  * Abstract representation of an OData response.
@@ -70,10 +71,16 @@ public interface ODataResponse {
     /**
      * Initializes response from batch response item.
      *
-     * @param batchLineIterator batch item line iterator.
+     * @param responseLine response line.
+     * @param headers response headers.
+     * @param batchLineIterator payload line iterator.
      * @param boundary batch boundary.
      */
-    void initFromBatch(final LineIterator batchLineIterator, final String boundary);
+    ODataResponse initFromBatch(
+            final Map.Entry<Integer, String> responseLine,
+            final Map<String, Collection<String>> headers,
+            final BatchLineIterator batchLineIterator,
+            final String boundary);
 
     /**
      * Close the underlying message entity input stream (if available and open) as well as releases any other

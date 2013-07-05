@@ -16,117 +16,91 @@
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
-import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
+import com.msopentech.odatajclient.engine.utils.BatchLineIterator;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
+import java.util.NoSuchElementException;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.LineIterator;
 import org.apache.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ODataBatchResponseManager implements Iterator<ODataBatchRequestItem> {
-
-    private enum BatchItemType {
-
-        NONE,
-        CHANGESET,
-        ITEM
-
-    }
+public class ODataBatchResponseManager implements Iterator<ODataBatchResponseItem> {
 
     /**
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ODataBatchResponseManager.class);
 
-    private final Pattern RESPONSE_PATTERN = Pattern.compile("HTTP/\\d\\.\\d (\\d+) (.*)", Pattern.CASE_INSENSITIVE);
+    private final BatchLineIterator batchLineIterator;
 
-    private final LineIterator lineIterator;
+    private final String batchBoundary;
 
-    private String boundary;
+    private final Iterator<ODataBatchResponseItem> expectedItemsIterator;
 
-    private BatchItemType nextItem = BatchItemType.NONE;
+    private ODataBatchResponseItem current = null;
 
-    private ODataBatchRequestItem current;
-
-    public ODataBatchResponseManager(final ODataBatchResponse res) {
+    public ODataBatchResponseManager(final ODataBatchResponse res, final List<ODataBatchResponseItem> expectedItems) {
         try {
-            this.lineIterator = IOUtils.lineIterator(res.getRawResponse(), "UTF-8");
-            init(res);
-            retrieveNext();
+            this.expectedItemsIterator = expectedItems.iterator();
+            this.batchLineIterator = new BatchLineIterator(IOUtils.lineIterator(res.getRawResponse(), "UTF-8"));
+
+            // search for boundary
+            batchBoundary = ODataBatchUtilities.getBoundaryFromHeader(res.getHeader(HttpHeaders.CONTENT_TYPE));
+            LOG.debug("Retrieved batch response bondary '{}'", batchBoundary);
         } catch (IOException e) {
             LOG.error("Error parsing batch response", e);
             throw new IllegalStateException(e);
         }
     }
 
-    private void init(final ODataBatchResponse res) {
-        // search for boundary
-
-        // to be sure to ignore case
-        final Collection<String> headers = res.getHeaderNames();
-
-        for (Iterator<String> iter = headers.iterator(); iter.hasNext() && boundary == null;) {
-            final String header = iter.next();
-            if (header.equalsIgnoreCase(HttpHeaders.CONTENT_TYPE)) {
-                boundary = getBoundaryFromHeader(res.getHeader(header));
-            }
-        }
-
-        consume();
-    }
-
-    private void retrieveNext() {
-        final Map<String, Collection<String>> headers =
-                new TreeMap<String, Collection<String>>(String.CASE_INSENSITIVE_ORDER);
-        ODataBatchUtilities.readHeaders(lineIterator, headers);
-
-        if (headers.get(HttpHeaders.CONTENT_TYPE).contains(ODataBatchConstants.MULTIPART_CONTENT_TYPE)) {
-            nextItem = BatchItemType.CHANGESET;
-        } else if (headers.get(HttpHeaders.CONTENT_TYPE).contains(ODataBatchConstants.ITEM_CONTENT_TYPE)) {
-            nextItem = BatchItemType.ITEM;
-        } else {
-            nextItem = BatchItemType.NONE;
-        }
-    }
-
-    private void consume() {
-        while (lineIterator.hasNext() && !lineIterator.nextLine().equals(boundary)) {
-            // do nothing till the start
-        }
-    }
-
-    private String getBoundaryFromHeader(final Collection<String> contentType) {
-        final String boundaryKey = ODataBatchConstants.BOUNDARY + "=";
-
-        if (contentType == null || contentType.isEmpty() || !contentType.toString().contains(boundaryKey)) {
-            throw new IllegalArgumentException("Invalid content type");
-        }
-
-        final String headerValue = contentType.toString();
-
-        final int start = headerValue.indexOf(boundaryKey) + boundaryKey.length() + 1;
-        int end = headerValue.indexOf(";", start);
-
-        if (end < 0) {
-            end = headerValue.indexOf("]", start);
-        }
-
-        return headerValue.substring(start, end);
-    }
-
     @Override
     public boolean hasNext() {
-        return nextItem != BatchItemType.NONE;
+        return expectedItemsIterator.hasNext();
     }
 
     @Override
-    public ODataBatchRequestItem next() {
+    public ODataBatchResponseItem next() {
+        if (current != null) {
+            current.close();
+        }
+
+        if (!hasNext()) {
+            throw new NoSuchElementException("No item found");
+        }
+
+        current = expectedItemsIterator.next();
+
+        final Map<String, Collection<String>> nextItemHeaders =
+                ODataBatchUtilities.nextItemHeaders(batchLineIterator, batchBoundary);
+
+        switch (ODataBatchUtilities.getItemType(nextItemHeaders)) {
+            case CHANGESET:
+                if (!current.isChangeset()) {
+                    throw new IllegalStateException("Unexpected batch item");
+                }
+
+                current.initFromBatch(
+                        batchLineIterator,
+                        ODataBatchUtilities.getBoundaryFromHeader(nextItemHeaders.get(HttpHeaders.CONTENT_TYPE)));
+                break;
+
+            case RETRIEVE:
+                if (current.isChangeset()) {
+                    throw new IllegalStateException("Unexpected batch item");
+                }
+
+                current.initFromBatch(
+                        batchLineIterator,
+                        batchBoundary);
+                break;
+            default:
+                throw new IllegalStateException("Expected item not found");
+        }
+
         return current;
     }
 
