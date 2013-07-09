@@ -31,6 +31,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUp
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
@@ -219,7 +220,7 @@ public class PropertyTest extends AbstractTest {
         assertEquals(200, retrieveRes.getStatusCode());
 
         ODataProperty primaryContactInfo = retrieveRes.getBody();
-        primaryContactInfo = new ODataProperty("PrimaryContactInfo", primaryContactInfo.getComplexValue());
+        primaryContactInfo = ODataFactory.newComplexProperty("PrimaryContactInfo", primaryContactInfo.getComplexValue());
 
         final String newItem = "new item " + System.currentTimeMillis();
 
@@ -261,7 +262,7 @@ public class PropertyTest extends AbstractTest {
         assertEquals(200, retrieveRes.getStatusCode());
 
         ODataProperty alternativeNames = retrieveRes.getBody();
-        alternativeNames = new ODataProperty("AlternativeNames", alternativeNames.getCollectionValue());
+        alternativeNames = ODataFactory.newCollectionProperty("AlternativeNames", alternativeNames.getCollectionValue());
 
         final String newItem = "new item " + System.currentTimeMillis();
 
@@ -309,7 +310,8 @@ public class PropertyTest extends AbstractTest {
 
         assertNotEquals(newMsg, oldMsg);
 
-        phoneNumber = new ODataProperty("PhoneNumber", new ODataPrimitiveValue.Builder().setText(newMsg).build());
+        phoneNumber = ODataFactory.newPrimitiveProperty("PhoneNumber",
+                new ODataPrimitiveValue.Builder().setText(newMsg).build());
 
         final ODataPropertyUpdateRequest updateReq =
                 ODataCUDRequestFactory.getPrimitiveUpdateRequest(uriBuilder.build(), phoneNumber);

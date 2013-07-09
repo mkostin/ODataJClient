@@ -118,7 +118,19 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
             // Additional, non-binding parameters MUST be sent as JSON
             final ODataEntity tmp = ODataFactory.newEntity("");
             for (Map.Entry<String, ODataValue> param : parameters.entrySet()) {
-                tmp.addProperty(new ODataProperty(param.getKey(), param.getValue()));
+                ODataProperty property = null;
+
+                if (param.getValue().isPrimitive()) {
+                    property = ODataFactory.newPrimitiveProperty(param.getKey(), param.getValue().asPrimitive());
+                } else if (param.getValue().isComplex()) {
+                    property = ODataFactory.newComplexProperty(param.getKey(), param.getValue().asComplex());
+                } else if (param.getValue().isCollection()) {
+                    property = ODataFactory.newCollectionProperty(param.getKey(), param.getValue().asCollection());
+                }
+
+                if (property != null) {
+                    tmp.addProperty(property);
+                }
             }
 
             return ODataWriter.writeEntity(tmp, ODataPubFormat.JSON);

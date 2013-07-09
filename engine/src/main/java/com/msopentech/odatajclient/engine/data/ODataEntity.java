@@ -144,7 +144,7 @@ public abstract class ODataEntity extends ODataItem implements ODataInvokeResult
                 break;
 
             case ENTITY_NAVIGATION:
-            case FEED_NAVIGATION:
+            case ENTITY_SET_NAVIGATION:
                 result = navigationLinks.contains(link) ? false : navigationLinks.add(link);
                 break;
 

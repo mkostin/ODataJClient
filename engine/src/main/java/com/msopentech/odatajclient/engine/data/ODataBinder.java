@@ -197,8 +197,8 @@ public final class ODataBinder {
         final LinkResource next = resource.getNext();
 
         final ODataEntitySet entitySet = next == null || StringUtils.isBlank(next.getHref())
-                ? ODataFactory.newFeed()
-                : ODataFactory.newFeed(URIUtils.getURI(base, next.getHref()));
+                ? ODataFactory.newEntitySet()
+                : ODataFactory.newEntitySet(URIUtils.getURI(base, next.getHref()));
 
         if (resource.getCount() != null) {
             entitySet.setCount(resource.getCount());
@@ -248,7 +248,7 @@ public final class ODataBinder {
                         link.getTitle(), base, link.getHref(),
                         getODataEntity(inlineEntry, inlineEntry.getBaseURI() == null ? base : inlineEntry.getBaseURI())));
             } else {
-                entity.addLink(ODataFactory.newInlineFeed(
+                entity.addLink(ODataFactory.newInlineEntitySet(
                         link.getTitle(), base, link.getHref(),
                         getODataEntitySet(inlineFeed, inlineFeed.getBaseURI() == null ? base : inlineFeed.getBaseURI())));
             }
@@ -300,9 +300,9 @@ public final class ODataBinder {
             LOG.debug("Append in-line entity\n{}", inlineEntity);
 
             linkResource.setInlineEntry(getEntry(inlineEntity, ResourceFactory.entryClassForLink(reference)));
-        } else if (link instanceof ODataInlineFeed) {
+        } else if (link instanceof ODataInlineEntitySet) {
             // append inline feed
-            final ODataEntitySet inlineFeed = ((ODataInlineFeed) link).getFeed();
+            final ODataEntitySet inlineFeed = ((ODataInlineEntitySet) link).getEntitySet();
             LOG.debug("Append in-line feed\n{}", inlineFeed);
 
             linkResource.setInlineFeed(getFeed(inlineFeed, ResourceFactory.feedClassForLink(reference)));
@@ -335,10 +335,10 @@ public final class ODataBinder {
                     break;
 
                 default:
-                    res = new ODataProperty(XMLUtils.getSimpleName(property), null);
+                    res = ODataFactory.newPrimitiveProperty(XMLUtils.getSimpleName(property), null);
             }
         } else {
-            res = new ODataProperty(XMLUtils.getSimpleName(property), null);
+            res = ODataFactory.newPrimitiveProperty(XMLUtils.getSimpleName(property), null);
         }
 
         return res;
@@ -434,7 +434,7 @@ public final class ODataBinder {
     }
 
     private static ODataProperty newPrimitiveProperty(final Element prop, final EdmType edmType) {
-        return new ODataProperty(XMLUtils.getSimpleName(prop), newPrimitiveValue(prop, edmType));
+        return ODataFactory.newPrimitiveProperty(XMLUtils.getSimpleName(prop), newPrimitiveValue(prop, edmType));
     }
 
     private static Element newPrimitiveProperty(final ODataProperty prop, final Document doc) {
@@ -479,7 +479,7 @@ public final class ODataBinder {
     }
 
     private static ODataProperty newComplexProperty(final Element prop, final EdmType edmType) {
-        return new ODataProperty(XMLUtils.getSimpleName(prop), newComplexValue(prop, edmType));
+        return ODataFactory.newComplexProperty(XMLUtils.getSimpleName(prop), newComplexValue(prop, edmType));
     }
 
     private static Element newComplexProperty(final ODataProperty prop, final Document doc) {
@@ -521,7 +521,7 @@ public final class ODataBinder {
             }
         }
 
-        return new ODataProperty(XMLUtils.getSimpleName(prop), value);
+        return ODataFactory.newCollectionProperty(XMLUtils.getSimpleName(prop), value);
     }
 
     private static Element newCollectionProperty(final ODataProperty prop, final Document doc) {

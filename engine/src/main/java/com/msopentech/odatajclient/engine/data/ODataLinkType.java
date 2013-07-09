@@ -26,7 +26,7 @@ import org.apache.http.entity.ContentType;
 public enum ODataLinkType {
 
     ENTITY_NAVIGATION(ODataPubFormat.ATOM + ";type=entry"),
-    FEED_NAVIGATION(ODataPubFormat.ATOM + ";type=feed"),
+    ENTITY_SET_NAVIGATION(ODataPubFormat.ATOM + ";type=feed"),
     ASSOCIATION(ContentType.APPLICATION_XML.getMimeType()),
     MEDIA_EDIT("*/*");
 
@@ -50,8 +50,8 @@ public enum ODataLinkType {
             return ENTITY_NAVIGATION;
         }
 
-        if (ODataLinkType.FEED_NAVIGATION.type.equals(type)) {
-            return FEED_NAVIGATION;
+        if (ODataLinkType.ENTITY_SET_NAVIGATION.type.equals(type)) {
+            return ENTITY_SET_NAVIGATION;
         }
 
         if (ODataLinkType.ASSOCIATION.type.equals(type)) {

@@ -17,18 +17,26 @@ package com.msopentech.odatajclient.engine.data;
 
 import java.net.URI;
 
+/**
+ * Entry point for generating OData domain objects.
+ *
+ * @see ODataEntitySet
+ * @see ODataEntity
+ * @see ODataProperty
+ * @see ODataLink
+ */
 public final class ODataFactory {
 
     private ODataFactory() {
         // Empty private constructor for static utility classes
     }
 
-    public static ODataEntitySet newFeed() {
-        return new FeedImpl();
+    public static ODataEntitySet newEntitySet() {
+        return new EntitySetImpl();
     }
 
-    public static ODataEntitySet newFeed(final URI next) {
-        return new FeedImpl(next);
+    public static ODataEntitySet newEntitySet(final URI next) {
+        return new EntitySetImpl(next);
     }
 
     public static ODataEntity newEntity(final String name) {
@@ -39,48 +47,24 @@ public final class ODataFactory {
         return new EntityImpl(name, link);
     }
 
-    public static ODataLink newLink(final String name, final URI link, final ODataLinkType type) {
-        return new LinkImpl(link, type, name);
+    public static ODataLink newInlineEntitySet(final String name, final URI link, final ODataEntitySet entitySet) {
+        return new InlineEntitySetImpl(link, ODataLinkType.ENTITY_SET_NAVIGATION, name, entitySet);
     }
 
-    public static ODataLink newLink(final String name, final URI baseURI, final String href, final ODataLinkType type) {
-        return new LinkImpl(baseURI, href, type, name);
-    }
+    public static ODataLink newInlineEntitySet(final String name, final URI baseURI, final String href,
+            final ODataEntitySet entitySet) {
 
-    public static ODataLink newInlineFeed(final String name, final URI link, final ODataEntitySet feed) {
-        return new ODataInlineFeed(link, ODataLinkType.FEED_NAVIGATION, name, feed) {
-
-            private static final long serialVersionUID = -8829134406268153228L;
-
-        };
-    }
-
-    public static ODataLink newInlineFeed(
-            final String name, final URI baseURI, final String href, final ODataEntitySet feed) {
-
-        return new ODataInlineFeed(baseURI, href, ODataLinkType.FEED_NAVIGATION, name, feed) {
-
-            private static final long serialVersionUID = -1267690133705251052L;
-
-        };
+        return new InlineEntitySetImpl(baseURI, href, ODataLinkType.ENTITY_SET_NAVIGATION, name, entitySet);
     }
 
     public static ODataLink newInlineEntity(final String name, final URI link, final ODataEntity entity) {
-        return new ODataInlineEntity(link, ODataLinkType.ENTITY_NAVIGATION, name, entity) {
-
-            private static final long serialVersionUID = 1215279359077303412L;
-
-        };
+        return new InlineEntityImpl(link, ODataLinkType.ENTITY_NAVIGATION, name, entity);
     }
 
-    public static ODataLink newInlineEntity(
-            final String name, final URI baseURI, final String href, final ODataEntity entity) {
+    public static ODataLink newInlineEntity(final String name, final URI baseURI, final String href,
+            final ODataEntity entity) {
 
-        return new ODataInlineEntity(baseURI, href, ODataLinkType.ENTITY_NAVIGATION, name, entity) {
-
-            private static final long serialVersionUID = 1604155965416337032L;
-
-        };
+        return new InlineEntityImpl(baseURI, href, ODataLinkType.ENTITY_NAVIGATION, name, entity);
     }
 
     public static ODataLink newEntityNavigationLink(final String name, final URI link) {
@@ -92,11 +76,11 @@ public final class ODataFactory {
     }
 
     public static ODataLink newFeedNavigationLink(final String name, final URI link) {
-        return new LinkImpl(link, ODataLinkType.FEED_NAVIGATION, name);
+        return new LinkImpl(link, ODataLinkType.ENTITY_SET_NAVIGATION, name);
     }
 
     public static ODataLink newFeedNavigationLink(final String name, final URI baseURI, final String href) {
-        return new LinkImpl(baseURI, href, ODataLinkType.FEED_NAVIGATION, name);
+        return new LinkImpl(baseURI, href, ODataLinkType.ENTITY_SET_NAVIGATION, name);
     }
 
     public static ODataLink newAssociationLink(final String name, final URI link) {
@@ -115,15 +99,27 @@ public final class ODataFactory {
         return new LinkImpl(baseURI, href, ODataLinkType.MEDIA_EDIT, name);
     }
 
-    private static class FeedImpl extends ODataEntitySet {
+    public static ODataProperty newPrimitiveProperty(final String name, final ODataPrimitiveValue value) {
+        return new PropertyImpl(name, value);
+    }
+
+    public static ODataProperty newComplexProperty(final String name, final ODataComplexValue value) {
+        return new PropertyImpl(name, value);
+    }
+
+    public static ODataProperty newCollectionProperty(final String name, final ODataCollectionValue value) {
+        return new PropertyImpl(name, value);
+    }
+
+    private static class EntitySetImpl extends ODataEntitySet {
 
         private static final long serialVersionUID = 1632243717538685102L;
 
-        public FeedImpl() {
+        public EntitySetImpl() {
             super();
         }
 
-        public FeedImpl(final URI next) {
+        public EntitySetImpl(final URI next) {
             super();
             this.next = next;
         }
@@ -143,6 +139,38 @@ public final class ODataFactory {
         }
     }
 
+    private static class InlineEntitySetImpl extends ODataInlineEntitySet {
+
+        private static final long serialVersionUID = 3193897540346153417L;
+
+        public InlineEntitySetImpl(final URI uri, final ODataLinkType type, final String title,
+                final ODataEntitySet entitySet) {
+
+            super(uri, type, title, entitySet);
+        }
+
+        public InlineEntitySetImpl(final URI baseURI, final String href, final ODataLinkType type, final String title,
+                final ODataEntitySet entitySet) {
+
+            super(baseURI, href, type, title, entitySet);
+        }
+    }
+
+    private static class InlineEntityImpl extends ODataInlineEntity {
+
+        private static final long serialVersionUID = 3193897540346153417L;
+
+        public InlineEntityImpl(final URI uri, final ODataLinkType type, final String title, final ODataEntity entity) {
+            super(uri, type, title, entity);
+        }
+
+        public InlineEntityImpl(final URI baseURI, final String href, final ODataLinkType type, final String title,
+                final ODataEntity entity) {
+
+            super(baseURI, href, type, title, entity);
+        }
+    }
+
     private static class LinkImpl extends ODataLink {
 
         private static final long serialVersionUID = -2533925527313767001L;
@@ -153,6 +181,15 @@ public final class ODataFactory {
 
         public LinkImpl(final URI baseURI, final String href, final ODataLinkType type, final String title) {
             super(baseURI, href, type, title);
+        }
+    }
+
+    private static class PropertyImpl extends ODataProperty {
+
+        private static final long serialVersionUID = -8408352153010787473L;
+
+        public PropertyImpl(final String name, final ODataValue value) {
+            super(name, value);
         }
     }
 }

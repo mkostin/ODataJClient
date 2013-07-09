@@ -208,10 +208,8 @@ public abstract class AbstractTest {
                 ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.CustomerInfo");
         entity.setMediaEntity(true);
 
-        final ODataPrimitiveValue informationValue = new ODataPrimitiveValue.Builder().
-                setText(sampleinfo).setType(EdmSimpleType.STRING).build();
-        final ODataProperty information = new ODataProperty("Information", informationValue);
-        entity.addProperty(information);
+        entity.addProperty(ODataFactory.newPrimitiveProperty("Information",
+                new ODataPrimitiveValue.Builder().setText(sampleinfo).setType(EdmSimpleType.STRING).build()));
 
         return entity;
     }
@@ -223,22 +221,18 @@ public abstract class AbstractTest {
                 ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
 
         // add name attribute
-        final ODataPrimitiveValue nameValue = new ODataPrimitiveValue.Builder().
-                setText(sampleName).setType(EdmSimpleType.STRING).build();
-        final ODataProperty name = new ODataProperty("Name", nameValue);
-        entity.addProperty(name);
+        entity.addProperty(ODataFactory.newPrimitiveProperty("Name",
+                new ODataPrimitiveValue.Builder().setText(sampleName).setType(EdmSimpleType.STRING).build()));
 
         // add key attribute
-        final ODataPrimitiveValue keyValue = new ODataPrimitiveValue.Builder().
-                setText(String.valueOf(id)).setType(EdmSimpleType.INT_32).build();
-        final ODataProperty key = new ODataProperty("CustomerId", keyValue);
-        entity.addProperty(key);
+        entity.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
+                new ODataPrimitiveValue.Builder().setText(String.valueOf(id)).setType(EdmSimpleType.INT_32).build()));
 
         // add BackupContactInfo attribute (collection)
         final ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
                 "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails)");
-        final ODataProperty backupContactInfo = new ODataProperty("BackupContactInfo", backupContactInfoValue);
-        entity.addProperty(backupContactInfo);
+        entity.addProperty(ODataFactory.newCollectionProperty("BackupContactInfo",
+                backupContactInfoValue));
 
         // add BackupContactInfo.ContactDetails attribute (complex)
         final ODataComplexValue contactDetails = new ODataComplexValue(
@@ -249,24 +243,24 @@ public abstract class AbstractTest {
         final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
         altNamesValue.add(new ODataPrimitiveValue.Builder().
                 setText("myname").setType(EdmSimpleType.STRING).build());
-        contactDetails.add(new ODataProperty("AlternativeNames", altNamesValue));
+        contactDetails.add(ODataFactory.newCollectionProperty("AlternativeNames", altNamesValue));
 
         // add BackupContactInfo.ContactDetails.EmailBag attribute (collection)
         final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
         emailBagValue.add(new ODataPrimitiveValue.Builder().
                 setText("myname@mydomain.com").setType(EdmSimpleType.STRING).build());
-        contactDetails.add(new ODataProperty("EmailBag", emailBagValue));
+        contactDetails.add(ODataFactory.newCollectionProperty("EmailBag", emailBagValue));
 
         // add BackupContactInfo.ContactDetails.ContactAlias attribute (complex)
         final ODataComplexValue contactAliasValue = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Aliases");
-        contactDetails.add(new ODataProperty("ContactAlias", contactAliasValue));
+        contactDetails.add(ODataFactory.newComplexProperty("ContactAlias", contactAliasValue));
 
         // add BackupContactInfo.ContactDetails.ContactAlias.AlternativeNames attribute (collection)
         final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
         aliasAltNamesValue.add(new ODataPrimitiveValue.Builder().
                 setText("myAlternativeName").setType(EdmSimpleType.STRING).build());
-        contactAliasValue.add(new ODataProperty("AlternativeNames", aliasAltNamesValue));
+        contactAliasValue.add(ODataFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
 
         if (withInlineInfo) {
             entity.addLink(ODataFactory.newInlineEntity(
@@ -343,15 +337,15 @@ public abstract class AbstractTest {
         final ODataEntity employee = ODataFactory.newEntity(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Employee");
 
-        employee.addProperty(new ODataProperty("PersonId", new ODataPrimitiveValue.Builder().
+        employee.addProperty(ODataFactory.newPrimitiveProperty("PersonId", new ODataPrimitiveValue.Builder().
                 setText("1244").setType(EdmSimpleType.INT_32).build()));
-        employee.addProperty(new ODataProperty("Name", new ODataPrimitiveValue.Builder().
+        employee.addProperty(ODataFactory.newPrimitiveProperty("Name", new ODataPrimitiveValue.Builder().
                 setText("Test employee").build()));
-        employee.addProperty(new ODataProperty("ManagersPersonId", new ODataPrimitiveValue.Builder().
+        employee.addProperty(ODataFactory.newPrimitiveProperty("ManagersPersonId", new ODataPrimitiveValue.Builder().
                 setText("3777").setType(EdmSimpleType.INT_32).build()));
-        employee.addProperty(new ODataProperty("Salary", new ODataPrimitiveValue.Builder().
+        employee.addProperty(ODataFactory.newPrimitiveProperty("Salary", new ODataPrimitiveValue.Builder().
                 setText("1000").setType(EdmSimpleType.INT_32).build()));
-        employee.addProperty(new ODataProperty("Title", new ODataPrimitiveValue.Builder().
+        employee.addProperty(ODataFactory.newPrimitiveProperty("Title", new ODataPrimitiveValue.Builder().
                 setText("CEO").build()));
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).

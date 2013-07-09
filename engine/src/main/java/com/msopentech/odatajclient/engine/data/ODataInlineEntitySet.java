@@ -18,27 +18,29 @@ package com.msopentech.odatajclient.engine.data;
 import java.net.URI;
 
 /**
- * OData inline feed.
+ * OData inline entity set.
  */
-public abstract class ODataInlineFeed extends ODataLink {
+public abstract class ODataInlineEntitySet extends ODataLink {
 
     private static final long serialVersionUID = -77628001615355449L;
 
-    private ODataEntitySet feed;
+    private ODataEntitySet entitySet;
 
-    public ODataInlineFeed(final URI uri, final ODataLinkType type, final String title, final ODataEntitySet feed) {
+    public ODataInlineEntitySet(final URI uri, final ODataLinkType type, final String title,
+            final ODataEntitySet entitySet) {
+
         super(uri, type, title);
-        this.feed = feed;
+        this.entitySet = entitySet;
     }
 
-    public ODataInlineFeed(final URI baseURI, final String href, final ODataLinkType type, final String title,
-            final ODataEntitySet feed) {
+    public ODataInlineEntitySet(final URI baseURI, final String href, final ODataLinkType type, final String title,
+            final ODataEntitySet entitySet) {
 
         super(baseURI, href, type, title);
-        this.feed = feed;
+        this.entitySet = entitySet;
     }
 
-    public ODataEntitySet getFeed() {
-        return feed;
+    public ODataEntitySet getEntitySet() {
+        return entitySet;
     }
 }

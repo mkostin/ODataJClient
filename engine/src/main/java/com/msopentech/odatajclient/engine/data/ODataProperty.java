@@ -24,7 +24,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * OData entity property.
  */
-public class ODataProperty implements Serializable, ODataInvokeResult {
+public abstract class ODataProperty implements Serializable, ODataInvokeResult {
 
     public enum PropertyType {
 

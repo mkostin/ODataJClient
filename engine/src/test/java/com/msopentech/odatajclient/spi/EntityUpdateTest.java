@@ -125,7 +125,8 @@ public class EntityUpdateTest extends AbstractTest {
 
         assertNotEquals(newm, oldm);
 
-        changes.addProperty(new ODataProperty("Description", new ODataPrimitiveValue.Builder().setText(newm).build()));
+        changes.addProperty(ODataFactory.newPrimitiveProperty("Description",
+                new ODataPrimitiveValue.Builder().setText(newm).build()));
 
         ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(editLink, type, changes);
         req.setFormat(format);

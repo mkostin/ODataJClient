@@ -32,7 +32,7 @@ import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.data.ODataInlineFeed;
+import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -257,8 +257,8 @@ public class EntityRetrieveTest extends AbstractTest {
         boolean found = false;
 
         for (ODataLink link : entity.getNavigationLinks()) {
-            if (link instanceof ODataInlineFeed) {
-                final ODataEntitySet inline = ((ODataInlineFeed) link).getFeed();
+            if (link instanceof ODataInlineEntitySet) {
+                final ODataEntitySet inline = ((ODataInlineEntitySet) link).getEntitySet();
                 assertNotNull(inline);
 
                 debugFeed(ODataBinder.getFeed(inline, ResourceFactory.feedClassForFormat(format)), "Just read");

@@ -30,7 +30,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperat
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.IOException;
@@ -80,8 +79,8 @@ public class LinkTest extends AbstractTest {
         assertEquals(2, before.size());
 
         // 2. create new link
-        final ODataLink newLink = ODataFactory.newLink(null, URI.create(testODataServiceRootURL + "/Login('3')"),
-                ODataLinkType.ASSOCIATION);
+        final ODataLink newLink = ODataFactory.
+                newAssociationLink(null, URI.create(testODataServiceRootURL + "/Login('3')"));
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendLinksSegment("Logins");
@@ -119,8 +118,8 @@ public class LinkTest extends AbstractTest {
         final URI before = doRetrieveLinkURIs(format, "Info").get(0);
 
         // 2. update the link
-        ODataLink newLink = ODataFactory.newLink(null, URI.create(testODataServiceRootURL + "/CustomerInfo(12)"),
-                ODataLinkType.ASSOCIATION);
+        ODataLink newLink = ODataFactory.
+                newAssociationLink(null, URI.create(testODataServiceRootURL + "/CustomerInfo(12)"));
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendLinksSegment("Info");
@@ -137,7 +136,7 @@ public class LinkTest extends AbstractTest {
         assertEquals(newLink.getLink(), after);
 
         // 3. reset back the link value
-        newLink = ODataFactory.newLink(null, before, ODataLinkType.ASSOCIATION);
+        newLink = ODataFactory.newAssociationLink(null, before);
         req = ODataCUDRequestFactory.getLinkUpdateRequest(uriBuilder.build(), updateType, newLink);
         req.setFormat(format);
 
@@ -147,8 +146,8 @@ public class LinkTest extends AbstractTest {
         after = doRetrieveLinkURIs(format, "Info").get(0);
         assertEquals(before, after);
     }
-    
-        @Test
+
+    @Test
     public void updateXMLLink() throws IOException {
         updateLink(ODataFormat.XML, UpdateType.MERGE);
         updateLink(ODataFormat.XML, UpdateType.PATCH);

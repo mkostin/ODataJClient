@@ -44,7 +44,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.IOException;
@@ -175,15 +174,15 @@ public class StreamingTest extends AbstractTest {
 
         // Update Product into the changeset
         targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)");
-        URI editLink = targetURI.build();
+        final URI editLink = targetURI.build();
 
         final ODataEntity merge = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
         merge.setEditLink(editLink);
 
-        merge.addProperty(new ODataProperty(
+        merge.addProperty(ODataFactory.newPrimitiveProperty(
                 "Description", new ODataPrimitiveValue.Builder().setText("new description from batch").build()));
 
-        ODataEntityUpdateRequest changes =
+        final ODataEntityUpdateRequest changes =
                 ODataCUDRequestFactory.getEntityUpdateRequest(editLink, UpdateType.MERGE, merge);
         changes.setFormat(ODataPubFormat.JSON_FULL_METADATA);
         changes.setIfMatch(getETag(editLink));

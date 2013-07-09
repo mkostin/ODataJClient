@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.data.ODataInlineFeed;
+import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.ArrayList;
@@ -165,6 +165,6 @@ public class QueryOptionsTest extends AbstractTest {
         final ODataEntity customer = req.execute().getBody();
         assertEquals(1, customer.getProperties().size());
         assertEquals(1, customer.getNavigationLinks().size());
-        assertTrue((customer.getNavigationLinks().get(0) instanceof ODataInlineFeed));
+        assertTrue((customer.getNavigationLinks().get(0) instanceof ODataInlineEntitySet));
     }
 }

@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.data;
 
 import static com.msopentech.odatajclient.engine.data.ODataLinkType.ASSOCIATION;
 import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_NAVIGATION;
-import static com.msopentech.odatajclient.engine.data.ODataLinkType.FEED_NAVIGATION;
+import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_SET_NAVIGATION;
 import static com.msopentech.odatajclient.engine.data.ODataLinkType.MEDIA_EDIT;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
@@ -46,7 +46,7 @@ public abstract class ODataLink extends ODataItem {
                 break;
 
             case ENTITY_NAVIGATION:
-            case FEED_NAVIGATION:
+            case ENTITY_SET_NAVIGATION:
                 this.rel = ODataConstants.NAVIGATION_LINK_REL + title;
                 break;
 
