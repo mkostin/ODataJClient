@@ -18,9 +18,13 @@ package com.msopentech.odatajclient.engine.communication.request.batch;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 
 /**
- * OData request factory class.
+ * OData batch request factory class.
  */
-public class ODataBatchRequestFactory {
+public final class ODataBatchRequestFactory {
+
+    private ODataBatchRequestFactory() {
+        // Empty private constructor for static utility classes
+    }
 
     /**
      * Gets a batch request object instance.

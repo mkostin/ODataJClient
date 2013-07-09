@@ -19,6 +19,8 @@ import com.msopentech.odatajclient.engine.client.http.HttpMerge;
 import com.msopentech.odatajclient.engine.client.http.HttpPatch;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
 import java.net.URI;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -91,5 +93,17 @@ public final class URIUtils {
         }
 
         return result;
+    }
+
+    public static String functionImportURISegment(
+            final EntityContainer entityContainer, final FunctionImport functionImport) {
+
+        final StringBuilder result = new StringBuilder();
+        if (!entityContainer.isDefaultEntityContainer()) {
+            result.append(entityContainer.getName()).append('.');
+        }
+        result.append(functionImport.getName());
+
+        return result.toString();
     }
 }

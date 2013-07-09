@@ -35,23 +35,30 @@ public class EdmMetadata implements Serializable {
 
     private static final long serialVersionUID = -1214173426671503187L;
 
-    private DataServices dataservices;
+    private final DataServices dataservices;
 
-    private Map<String, Schema> schemaByNsOrAlias;
+    private final Map<String, Schema> schemaByNsOrAlias;
 
-    public EdmMetadata(final InputStream inputStream) throws JAXBException {
-        final JAXBContext context = JAXBContext.newInstance(Edmx.class);
-        @SuppressWarnings("unchecked")
-        final Edmx edmx = ((JAXBElement<Edmx>) context.createUnmarshaller().unmarshal(inputStream)).getValue();
+    @SuppressWarnings("unchecked")
+    public EdmMetadata(final InputStream inputStream) {
+        final Edmx edmx;
+        try {
+            final JAXBContext context = JAXBContext.newInstance(Edmx.class);
+            edmx = ((JAXBElement<Edmx>) context.createUnmarshaller().unmarshal(inputStream)).getValue();
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException("Could not parse as Edmx document", e);
+        }
 
+        DataServices ds = null;
         for (JAXBElement<?> edmxContent : edmx.getContent()) {
             if (DataServices.class.equals(edmxContent.getDeclaredType())) {
-                this.dataservices = (DataServices) edmxContent.getValue();
+                ds = (DataServices) edmxContent.getValue();
             }
         }
-        if (this.dataservices == null) {
+        if (ds == null) {
             throw new IllegalArgumentException("No <DataServices/> element found");
         }
+        this.dataservices = ds;
 
         this.schemaByNsOrAlias = new HashMap<String, Schema>();
         for (Schema schema : this.dataservices.getSchema()) {
@@ -64,6 +71,7 @@ public class EdmMetadata implements Serializable {
 
     /**
      * Checks whether the given key is a valid namespace or alias in the EdM metadata document.
+     *
      * @param key namespace or alias
      * @return true if key is valid namespace or alias
      */
@@ -72,29 +80,29 @@ public class EdmMetadata implements Serializable {
     }
 
     /**
-     * Returns the TSchema at the specified position in the EdM metadata document.
+     * Returns the Schema at the specified position in the EdM metadata document.
      *
-     * @param index index of the TSchema to return
-     * @return the TSchema at the specified position in the EdM metadata document
+     * @param index index of the Schema to return
+     * @return the Schema at the specified position in the EdM metadata document
      */
     public Schema getSchema(final int index) {
         return this.dataservices.getSchema().get(index);
     }
 
     /**
-     * Returns the TSchema with the specified key (namespace or alias) in the EdM metadata document.
+     * Returns the Schema with the specified key (namespace or alias) in the EdM metadata document.
      *
      * @param key namespace or alias
-     * @return the TSchema with the specified key in the EdM metadata document
+     * @return the Schema with the specified key in the EdM metadata document
      */
     public Schema getSchema(final String key) {
         return this.schemaByNsOrAlias.get(key);
     }
 
     /**
-     * Returns all TSchema objects defined in the EdM metadata document.
+     * Returns all Schema objects defined in the EdM metadata document.
      *
-     * @return all TSchema objects defined in the EdM metadata document
+     * @return all Schema objects defined in the EdM metadata document
      */
     public List<Schema> getSchemas() {
         return this.dataservices.getSchema();

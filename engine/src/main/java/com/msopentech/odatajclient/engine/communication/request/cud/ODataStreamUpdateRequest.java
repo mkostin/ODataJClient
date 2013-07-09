@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
@@ -29,9 +28,9 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData stream create/update request.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using ODataCUDRequestFactory.
  *
- * @see ODataRequestFactory#getStreamRequest(com.msopentech.odatajclient.engine.data.ODataURI, java.io.InputStream)
+ * @see ODataCUDRequestFactory#getStreamUpdateRequest(java.net.URI, java.io.InputStream)
  */
 public class ODataStreamUpdateRequest
         extends ODataStreamedRequestImpl<ODataStreamUpdateResponse, StreamUpdateRequestPayload>

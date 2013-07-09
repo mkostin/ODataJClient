@@ -15,10 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import static com.msopentech.odatajclient.engine.format.ODataPubFormat.ATOM;
-import static com.msopentech.odatajclient.engine.format.ODataPubFormat.JSON;
-import static com.msopentech.odatajclient.engine.format.ODataPubFormat.JSON_FULL_METADATA;
-import static com.msopentech.odatajclient.engine.format.ODataPubFormat.JSON_NO_METADATA;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.atom.AtomLink;

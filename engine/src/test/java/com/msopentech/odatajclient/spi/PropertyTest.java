@@ -15,15 +15,13 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.TEST_CUSTOMER;
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataValueUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
@@ -192,7 +190,7 @@ public class PropertyTest extends AbstractTest {
         ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setText(newMsg).build();
 
         final ODataValueUpdateRequest updateReq =
-                ODataRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
+                ODataCUDRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
         updateReq.setFormat(format);
 
         ODataValueUpdateResponse updateRes = updateReq.execute();
@@ -234,7 +232,7 @@ public class PropertyTest extends AbstractTest {
         assertEquals(origSize + 1, originalValue.size());
 
         final ODataPropertyUpdateRequest updateReq =
-                ODataRequestFactory.getComplexUpdateRequest(uriBuilder.build(), type, primaryContactInfo);
+                ODataCUDRequestFactory.getComplexUpdateRequest(uriBuilder.build(), type, primaryContactInfo);
         updateReq.setFormat(format);
 
         ODataPropertyUpdateResponse updateRes = updateReq.execute();
@@ -275,7 +273,7 @@ public class PropertyTest extends AbstractTest {
         assertEquals(origSize + 1, originalValue.size());
 
         final ODataPropertyUpdateRequest updateReq =
-                ODataRequestFactory.getCollectionUpdateRequest(uriBuilder.build(), alternativeNames);
+                ODataCUDRequestFactory.getCollectionUpdateRequest(uriBuilder.build(), alternativeNames);
         updateReq.setFormat(format);
 
         ODataPropertyUpdateResponse updateRes = updateReq.execute();
@@ -314,7 +312,7 @@ public class PropertyTest extends AbstractTest {
         phoneNumber = new ODataProperty("PhoneNumber", new ODataPrimitiveValue.Builder().setText(newMsg).build());
 
         final ODataPropertyUpdateRequest updateReq =
-                ODataRequestFactory.getPrimitiveUpdateRequest(uriBuilder.build(), phoneNumber);
+                ODataCUDRequestFactory.getPrimitiveUpdateRequest(uriBuilder.build(), phoneNumber);
         updateReq.setFormat(format);
 
         ODataPropertyUpdateResponse updateRes = updateReq.execute();

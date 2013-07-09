@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
@@ -56,14 +56,14 @@ public class EntityCreateTest extends AbstractTest {
         debugODataEntity(original, "About to create");
 
         final ODataEntityCreateRequest createReq =
-                ODataRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
+                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
         createReq.setFormat(format);
 
         final ODataEntityCreateResponse createRes = createReq.execute();
         assertEquals(201, createRes.getStatusCode());
         assertEquals("Created", createRes.getStatusMessage());
 
-        ODataEntity created = createRes.getBody();
+        final ODataEntity created = createRes.getBody();
         assertNotNull(created);
 
         debugODataEntity(created, "Just created");
@@ -114,7 +114,7 @@ public class EntityCreateTest extends AbstractTest {
         if (includeInline) {
             for (ODataLink link : created.getNavigationLinks()) {
                 if (link instanceof ODataInlineEntity) {
-                    ODataEntity inline = ((ODataInlineEntity) link).getEntity();
+                    final ODataEntity inline = ((ODataInlineEntity) link).getEntity();
                     toBeDeleted.add(inline);
                 }
             }
@@ -129,7 +129,7 @@ public class EntityCreateTest extends AbstractTest {
             final URI editLink = entity.getEditLink();
             assertNotNull(editLink);
 
-            final ODataDeleteRequest deleteReq = ODataRequestFactory.getDeleteRequest(editLink);
+            final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(editLink);
             ODataDeleteResponse deleteRes = deleteReq.execute();
 
             assertEquals(204, deleteRes.getStatusCode());

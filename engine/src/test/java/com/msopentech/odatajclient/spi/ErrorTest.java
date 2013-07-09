@@ -43,7 +43,7 @@ public class ErrorTest extends AbstractTest {
 
     private class ErrorGeneratingRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse, ODataPubFormat> {
 
-        public ErrorGeneratingRequest(Method method, URI uri) {
+        public ErrorGeneratingRequest(final Method method, final URI uri) {
             super(method, uri);
         }
 

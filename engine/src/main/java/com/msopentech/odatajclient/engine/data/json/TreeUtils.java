@@ -58,7 +58,12 @@ final class TreeUtils {
                 parent.appendChild(element);
 
                 if (child.isValueNode()) {
-                    element.appendChild(document.createTextNode(child.asText()));
+                    if (child.isNull()) {
+                        element.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_NULL,
+                                Boolean.toString(true));
+                    } else {
+                        element.appendChild(document.createTextNode(child.asText()));
+                    }
                 }
 
                 if (child.isContainerNode()) {

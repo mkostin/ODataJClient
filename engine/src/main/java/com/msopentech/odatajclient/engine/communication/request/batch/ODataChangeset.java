@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.util.UUID;
@@ -24,9 +23,6 @@ import org.apache.http.HttpHeaders;
 
 /**
  * Changeset wrapper for the corresponding batch item.
- * Get instance by using ODataRequestFactory.
- *
- * @see ODataRequestFactory#getChangesetRequest()
  */
 public class ODataChangeset extends ODataBatchRequestItem {
 

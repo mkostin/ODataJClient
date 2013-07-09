@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
@@ -35,11 +34,11 @@ import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData update request.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using ODataCUDRequestFactory.
  *
- * @see ODataRequestFactory#getUpdateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * com.msopentech.odatajclient.engine.data.ODataEntity,
- * com.msopentech.odatajclient.engine.communication.request.UpdateType)
+ * @see ODataCUDRequestFactory#getEntityUpdateRequest(java.net.URI,
+ * com.msopentech.odatajclient.engine.communication.request.UpdateType,
+ * com.msopentech.odatajclient.engine.data.ODataEntity)
  */
 public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityUpdateResponse, ODataPubFormat>
         implements ODataBatchableRequest {

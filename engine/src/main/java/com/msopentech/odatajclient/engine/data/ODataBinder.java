@@ -67,7 +67,7 @@ public final class ODataBinder {
         return properties;
     }
 
-    public static <T extends FeedResource> T getFeed(final ODataFeed feed, final Class<T> reference) {
+    public static <T extends FeedResource> T getFeed(final ODataEntitySet feed, final Class<T> reference) {
         final T feedResource = ResourceFactory.newFeed(reference);
 
         final List<EntryResource> entries = new ArrayList<EntryResource>();
@@ -180,28 +180,35 @@ public final class ODataBinder {
         return serviceDocument;
     }
 
-    public static ODataFeed getODataFeed(final FeedResource resource) {
-        return getODataFeed(resource, null);
+    public static ODataEntitySet getODataEntitySet(final FeedResource resource) {
+        return getODataEntitySet(resource, null);
     }
 
-    public static ODataFeed getODataFeed(final FeedResource resource, final URI defaultBaseURI) {
+    public static ODataEntitySet getODataEntitySet(final FeedResource resource, final URI defaultBaseURI) {
+        if (LOG.isDebugEnabled()) {
+            final StringWriter writer = new StringWriter();
+            Serializer.feed(resource, writer);
+            writer.flush();
+            LOG.debug("FeedResource -> ODataEntitySet:\n{}", writer.toString());
+        }
+
         final URI base = defaultBaseURI == null ? resource.getBaseURI() : defaultBaseURI;
 
         final LinkResource next = resource.getNext();
 
-        final ODataFeed feed = next == null || StringUtils.isBlank(next.getHref())
+        final ODataEntitySet entitySet = next == null || StringUtils.isBlank(next.getHref())
                 ? ODataFactory.newFeed()
                 : ODataFactory.newFeed(URIUtils.getURI(base, next.getHref()));
 
         if (resource.getCount() != null) {
-            feed.setCount(resource.getCount());
+            entitySet.setCount(resource.getCount());
         }
 
         for (EntryResource entryResource : resource.getEntries()) {
-            feed.addEntity(getODataEntity(entryResource));
+            entitySet.addEntity(getODataEntity(entryResource));
         }
 
-        return feed;
+        return entitySet;
     }
 
     public static ODataEntity getODataEntity(final EntryResource resource) {
@@ -213,7 +220,7 @@ public final class ODataBinder {
             final StringWriter writer = new StringWriter();
             Serializer.entry(resource, writer);
             writer.flush();
-            LOG.debug("Processing entity:\n{}", writer.toString());
+            LOG.debug("EntryResource -> ODataEntity:\n{}", writer.toString());
         }
 
         final URI base = defaultBaseURI == null ? resource.getBaseURI() : defaultBaseURI;
@@ -243,7 +250,7 @@ public final class ODataBinder {
             } else {
                 entity.addLink(ODataFactory.newInlineFeed(
                         link.getTitle(), base, link.getHref(),
-                        getODataFeed(inlineFeed, inlineFeed.getBaseURI() == null ? base : inlineFeed.getBaseURI())));
+                        getODataEntitySet(inlineFeed, inlineFeed.getBaseURI() == null ? base : inlineFeed.getBaseURI())));
             }
         }
 
@@ -295,7 +302,7 @@ public final class ODataBinder {
             linkResource.setInlineEntry(getEntry(inlineEntity, ResourceFactory.entryClassForLink(reference)));
         } else if (link instanceof ODataInlineFeed) {
             // append inline feed
-            final ODataFeed inlineFeed = ((ODataInlineFeed) link).getFeed();
+            final ODataEntitySet inlineFeed = ((ODataInlineFeed) link).getFeed();
             LOG.debug("Append in-line feed\n{}", inlineFeed);
 
             linkResource.setInlineFeed(getFeed(inlineFeed, ResourceFactory.feedClassForLink(reference)));
@@ -311,7 +318,6 @@ public final class ODataBinder {
 
         if (nullNode == null) {
             final Node typeNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
-
             final EdmType edmType = typeNode == null ? null : new EdmType(typeNode.getTextContent());
 
             switch (getPropertyType(property)) {
@@ -350,8 +356,7 @@ public final class ODataBinder {
                 if (child.getNodeType() == Node.ELEMENT_NODE
                         && !child.getNodeName().startsWith(ODataConstants.PREFIX_GML)) {
 
-                    res = (ODataConstants.PREFIX_DATASERVICES + ODataConstants.ELEM_ELEMENT).
-                            equals(child.getNodeName())
+                    res = ODataConstants.ELEM_ELEMENT.equals(XMLUtils.getSimpleName(child))
                             ? PropertyType.COLLECTION
                             : PropertyType.COMPLEX;
                 }

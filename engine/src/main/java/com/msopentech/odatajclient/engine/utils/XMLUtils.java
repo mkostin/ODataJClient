@@ -17,7 +17,11 @@ package com.msopentech.odatajclient.engine.utils;
 
 import org.w3c.dom.Node;
 
-public class XMLUtils {
+public final class XMLUtils {
+
+    private XMLUtils() {
+        // Empty private constructor for static utility classes       
+    }
 
     public static String getSimpleName(final Node node) {
         return node.getLocalName() == null

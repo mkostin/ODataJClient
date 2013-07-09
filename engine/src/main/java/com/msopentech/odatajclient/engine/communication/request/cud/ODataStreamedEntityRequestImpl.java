@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request.cud;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.net.URI;
 
 public abstract class ODataStreamedEntityRequestImpl<V extends ODataResponse, T extends ODataStreamingManagement<V>>
@@ -37,7 +38,7 @@ public abstract class ODataStreamedEntityRequestImpl<V extends ODataResponse, T 
      * differently specified).
      */
     public final ODataPubFormat getFormat() {
-        return format == null ? ODataPubFormat.JSON_FULL_METADATA : format;
+        return format == null ? Configuration.getFormat() : format;
     }
 
     /**

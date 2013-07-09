@@ -15,13 +15,18 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
@@ -43,7 +48,9 @@ import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.Serializer;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -62,6 +69,9 @@ public abstract class AbstractTest {
     protected static final Logger LOG = LoggerFactory.getLogger(AbstractTest.class);
 
     protected static final String TEST_CUSTOMER = "Customer(-10)";
+
+    protected static final String servicesODataServiceRootURL =
+            "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/";
 
     protected static String testODataServiceRootURL;
 
@@ -327,5 +337,42 @@ public abstract class AbstractTest {
         res.close();
 
         return etag == null || etag.isEmpty() ? null : etag.iterator().next();
+    }
+
+    protected ODataEntity createEmployee(final ODataPubFormat format) {
+        final ODataEntity employee = ODataFactory.newEntity(
+                "Microsoft.Test.OData.Services.AstoriaDefaultService.Employee");
+
+        employee.addProperty(new ODataProperty("PersonId", new ODataPrimitiveValue.Builder().
+                setText("1244").setType(EdmSimpleType.INT_32).build()));
+        employee.addProperty(new ODataProperty("Name", new ODataPrimitiveValue.Builder().
+                setText("Test employee").build()));
+        employee.addProperty(new ODataProperty("ManagersPersonId", new ODataPrimitiveValue.Builder().
+                setText("3777").setType(EdmSimpleType.INT_32).build()));
+        employee.addProperty(new ODataProperty("Salary", new ODataPrimitiveValue.Builder().
+                setText("1000").setType(EdmSimpleType.INT_32).build()));
+        employee.addProperty(new ODataProperty("Title", new ODataPrimitiveValue.Builder().
+                setText("CEO").build()));
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntityTypeSegment("Person");
+
+        final ODataEntityCreateRequest createReq =
+                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), employee);
+        createReq.setFormat(format);
+        final ODataEntityCreateResponse createRes = createReq.execute();
+        assertEquals(201, createRes.getStatusCode());
+
+        return createRes.getBody();
+    }
+
+    protected void deleteEmployee(final ODataPubFormat format, final Integer id) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntityTypeSegment("Person(" + id + ")");
+
+        final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(uriBuilder.build());
+        deleteReq.setFormat(format);
+        final ODataDeleteResponse deleteRes = deleteReq.execute();
+        assertEquals(204, deleteRes.getStatusCode());
     }
 }

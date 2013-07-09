@@ -105,6 +105,8 @@ public class ODataConstants {
 
     public static final String ELEM_ACTION = PREFIX_METADATA + "action";
 
+    public static final String ELEM_FUNCTION = PREFIX_METADATA + "function";
+
     public final static String JSON_METADATA = "odata.metadata";
 
     public final static String JSON_TYPE = "odata.type";

@@ -19,8 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
@@ -127,7 +127,7 @@ public class EntityUpdateTest extends AbstractTest {
 
         changes.addProperty(new ODataProperty("Description", new ODataPrimitiveValue.Builder().setText(newm).build()));
 
-        ODataEntityUpdateRequest req = ODataRequestFactory.getEntityUpdateRequest(editLink, type, changes);
+        ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(editLink, type, changes);
         req.setFormat(format);
 
         if (StringUtils.isNotBlank(etag)) {

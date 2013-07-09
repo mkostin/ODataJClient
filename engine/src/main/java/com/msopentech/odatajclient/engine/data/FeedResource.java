@@ -19,9 +19,9 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * REST resource for an <tt>ODataFeed</tt>.
+ * REST resource for an <tt>ODataEntitySet</tt>.
  *
- * @see ODataFeed
+ * @see ODataEntitySet
  */
 public interface FeedResource {
 

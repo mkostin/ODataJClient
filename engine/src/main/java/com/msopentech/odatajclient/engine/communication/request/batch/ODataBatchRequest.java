@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamedRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
@@ -35,9 +34,9 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements a batch request.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using ODataBatchRequestFactory.
  *
- * @see ODataRequestFactory#getBatchRequest().
+ * @see ODataBatchRequestFactory#getBatchRequest(java.lang.String)
  */
 public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchResponse, BatchRequestPayload> {
 

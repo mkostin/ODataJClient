@@ -23,7 +23,7 @@ import java.util.List;
  * OData entity collection.
  * If pagination was used to get this instance, forward page navigation URI will be available.
  */
-public class ODataFeed extends ODataItem {
+public class ODataEntitySet extends ODataItem implements ODataInvokeResult {
 
     private static final long serialVersionUID = 9039605899821494024L;
 
@@ -43,7 +43,7 @@ public class ODataFeed extends ODataItem {
      */
     protected List<ODataEntity> entities = new ArrayList<ODataEntity>();
 
-    public ODataFeed() {
+    public ODataEntitySet() {
         super(null);
     }
 

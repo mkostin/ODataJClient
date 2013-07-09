@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
@@ -34,10 +33,9 @@ import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData create request.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using ODataCUDRequestFactory.
  *
- * @see ODataRequestFactory#getCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * com.msopentech.odatajclient.engine.data.ODataEntity)
+ * @see ODataCUDRequestFactory#getEntityCreateRequest(java.net.URI, com.msopentech.odatajclient.engine.data.ODataEntity)
  */
 public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse, ODataPubFormat>
         implements ODataBatchableRequest {
@@ -63,6 +61,14 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      * {@inheritDoc }
      */
     @Override
+    protected InputStream getPayload() {
+        return ODataWriter.writeEntity(entity, ODataPubFormat.valueOf(getFormat()));
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public ODataEntityCreateResponse execute() {
         final InputStream input = getPayload();
         ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
@@ -73,14 +79,6 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         } finally {
             IOUtils.closeQuietly(input);
         }
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    protected InputStream getPayload() {
-        return ODataWriter.writeEntity(entity, ODataPubFormat.valueOf(getFormat()));
     }
 
     private class ODataEntityCreateResponseImpl extends ODataResponseImpl implements ODataEntityCreateResponse {

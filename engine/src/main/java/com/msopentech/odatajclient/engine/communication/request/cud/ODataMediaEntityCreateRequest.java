@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest.MediaEntityCreateRequestPayload;
@@ -31,10 +30,9 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData Media Entity create request.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using ODataCUDRequestFactory.
  *
- * @see ODataRequestFactory#getMediaEntityCreateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * java.io.InputStream)
+ * @see ODataCUDRequestFactory#getMediaEntityCreateRequest(java.net.URI, java.io.InputStream)
  */
 public class ODataMediaEntityCreateRequest
         extends ODataStreamedEntityRequestImpl<ODataMediaEntityCreateResponse, MediaEntityCreateRequestPayload>

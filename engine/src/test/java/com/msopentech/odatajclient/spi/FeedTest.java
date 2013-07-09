@@ -24,7 +24,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
-import com.msopentech.odatajclient.engine.data.ODataFeed;
+import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -50,34 +50,34 @@ public class FeedTest extends AbstractTest {
     }
 
     @Test
-    public void readODataFeedFromAtom() {
-        readODataFeed(ODataPubFormat.ATOM);
+    public void readODataEntitySetFromAtom() {
+        readODataEntitySet(ODataPubFormat.ATOM);
     }
 
     @Test
-    public void readODataFeedFromJSON() {
-        readODataFeed(ODataPubFormat.JSON);
+    public void readODataEntitySetFromJSON() {
+        readODataEntitySet(ODataPubFormat.JSON);
     }
 
     @Test
-    public void readODataFeedWithNextFromAtom() {
-        readFeedWithNextLink(ODataPubFormat.ATOM);
+    public void readODataEntitySetWithNextFromAtom() {
+        readEntitySetWithNextLink(ODataPubFormat.ATOM);
     }
 
     @Test
-    public void readODataFeedWithNextFromJSON() {
-        readFeedWithNextLink(ODataPubFormat.JSON_FULL_METADATA);
+    public void readODataEntitySetWithNextFromJSON() {
+        readEntitySetWithNextLink(ODataPubFormat.JSON_FULL_METADATA);
     }
 
-    private void readFeedWithNextLink(final ODataPubFormat format) {
+    private void readEntitySetWithNextLink(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataRetrieveResponse<ODataFeed> res = req.execute();
-        final ODataFeed feed = res.getBody();
+        final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+        final ODataEntitySet feed = res.getBody();
 
         assertNotNull(feed);
 
@@ -111,15 +111,15 @@ public class FeedTest extends AbstractTest {
         is.close();
     }
 
-    private void readODataFeed(final ODataPubFormat format) {
+    private void readODataEntitySet(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Car").top(3);
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
 
-        final ODataRetrieveResponse<ODataFeed> res = req.execute();
-        final ODataFeed feed = res.getBody();
+        final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+        final ODataEntitySet feed = res.getBody();
 
         assertNotNull(feed);
 

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request;
+package com.msopentech.odatajclient.engine.data;
 
 /**
- * OData operation type.
+ * Marker interface for any OData domain object that can be returned by an operation invocation.
+ *
+ * @see ODataEntitySet
+ * @see ODataEntity
+ * @see ODataProperty
+ * @see ODataNoContent
  */
-public enum OperationType {
-
-    FUNCTION,
-    ACTION,
-    LEGACY
-
+public interface ODataInvokeResult {
 }

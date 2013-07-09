@@ -17,7 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.ODataFeed;
+import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.IOException;
@@ -31,9 +31,9 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getEntitySetRequest(java.net.URI)
  */
-public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataFeed, ODataPubFormat> {
+public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataEntitySet, ODataPubFormat> {
 
-    private ODataFeed feed = null;
+    private ODataEntitySet feed = null;
 
     /**
      * Private constructor.
@@ -48,7 +48,7 @@ public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataFeed, OData
      * {@inheritDoc }
      */
     @Override
-    public ODataRetrieveResponse<ODataFeed> execute() {
+    public ODataRetrieveResponse<ODataEntitySet> execute() {
         final HttpResponse res = doExecute();
         return new ODataEntitySetResponseImpl(client, res);
     }
@@ -61,10 +61,10 @@ public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataFeed, OData
 
         @Override
         @SuppressWarnings("unchecked")
-        public ODataFeed getBody() {
+        public ODataEntitySet getBody() {
             if (feed == null) {
                 try {
-                    feed = ODataReader.readFeed(res.getEntity().getContent(), ODataPubFormat.valueOf(getFormat()));
+                    feed = ODataReader.readEntitySet(res.getEntity().getContent(), ODataPubFormat.valueOf(getFormat()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

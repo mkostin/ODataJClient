@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
 import com.msopentech.odatajclient.engine.data.metadata.edm.codegeneration.PublicOrInternalAccess;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -371,5 +372,10 @@ public class EntityType extends AbstractAnnotated {
      */
     public Map<QName, String> getOtherAttributes() {
         return otherAttributes;
+    }
+
+    public boolean hasStream() {
+        final String result = otherAttributes.get(new QName(ODataConstants.NS_METADATA, "HasStream"));
+        return result == null ? false : Boolean.valueOf(result);
     }
 }

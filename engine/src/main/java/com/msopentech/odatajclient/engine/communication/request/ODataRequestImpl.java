@@ -22,7 +22,7 @@ import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -226,7 +226,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getAccept() {
         final String acceptHead = odataHeaders.getHeader(ODataHeaders.HeaderName.accept);
-        return StringUtils.isBlank(acceptHead) ? ODataPubFormat.JSON.toString() : acceptHead;
+        return StringUtils.isBlank(acceptHead) ? Configuration.getFormat().toString() : acceptHead;
     }
 
     /**
@@ -259,7 +259,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getContentType() {
         final String contentTypeHead = odataHeaders.getHeader(ODataHeaders.HeaderName.contentType);
-        return StringUtils.isBlank(contentTypeHead) ? ODataPubFormat.JSON.toString() : contentTypeHead;
+        return StringUtils.isBlank(contentTypeHead) ? Configuration.getFormat().toString() : contentTypeHead;
     }
 
     /**
@@ -302,6 +302,14 @@ public class ODataRequestImpl implements ODataRequest {
 
             baos.write(ODataStreamer.CRLF);
 
+            // Set Content-Type and Accept headers with default values, if not yet set
+            if (StringUtils.isBlank(odataHeaders.getHeader(ODataHeaders.HeaderName.contentType))) {
+                setContentType(getContentType());
+            }
+            if (StringUtils.isBlank(odataHeaders.getHeader(ODataHeaders.HeaderName.accept))) {
+                setAccept(getAccept());
+            }
+
             for (String name : getHeaderNames()) {
                 final String value = getHeader(name);
 
@@ -336,7 +344,16 @@ public class ODataRequestImpl implements ODataRequest {
     }
 
     protected HttpResponse doExecute() {
-        for (String key : odataHeaders.getHeaderNames()) {
+        // Set Content-Type and Accept headers with default values, if not yet set
+        if (StringUtils.isBlank(odataHeaders.getHeader(ODataHeaders.HeaderName.contentType))) {
+            setContentType(getContentType());
+        }
+        if (StringUtils.isBlank(odataHeaders.getHeader(ODataHeaders.HeaderName.accept))) {
+            setAccept(getAccept());
+        }
+
+        // Add all available headers
+        for (String key : getHeaderNames()) {
             this.request.addHeader(key, odataHeaders.getHeader(key));
         }
 
@@ -383,7 +400,7 @@ public class ODataRequestImpl implements ODataRequest {
         for (Class<?> clazz : this.getClass().getDeclaredClasses()) {
             if (ODataResponse.class.isAssignableFrom(clazz)) {
                 try {
-                    final Constructor constructor = clazz.getDeclaredConstructor(this.getClass());
+                    final Constructor<?> constructor = clazz.getDeclaredConstructor(this.getClass());
                     constructor.setAccessible(true);
                     return (V) constructor.newInstance(this);
                 } catch (Exception e) {

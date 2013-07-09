@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.TEST_CUSTOMER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -122,9 +121,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void geographyPoint() {
-        final ODataPrimitiveValue opv = readPropertyValue(
-                "http://services.odata.org/v3/(S(ds4nnexwejbv4fq3nqsx5vd1))/OData/OData.svc/",
-                "Suppliers(1)", "Location");
+        final ODataPrimitiveValue opv = readPropertyValue(servicesODataServiceRootURL, "Suppliers(1)", "Location");
         assertEquals(EdmSimpleType.GEOGRAPHY_POINT.toString(), opv.getTypeName());
 
         final Point value = opv.<Point>toCastValue();

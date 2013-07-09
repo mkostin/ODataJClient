@@ -35,6 +35,7 @@ import javax.xml.namespace.QName;
 import com.msopentech.odatajclient.engine.data.metadata.edm.codegeneration.Access;
 import com.msopentech.odatajclient.engine.data.metadata.edm.codegeneration.PublicOrInternalAccess;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import org.w3c.dom.Element;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -213,11 +214,11 @@ public class EntityContainer extends AbstractAnnotated {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link TTypeAnnotation }
+     * {@link TypeAnnotation }
      * {@link EntityContainer.EntitySet }
      * {@link EntityContainer.AssociationSet }
      * {@link EntityContainer.FunctionImport }
-     * {@link TValueAnnotation }
+     * {@link ValueAnnotation }
      *
      *
      */
@@ -346,7 +347,7 @@ public class EntityContainer extends AbstractAnnotated {
      * {@link String }
      *
      */
-    public void setExtends(String value) {
+    public void setExtends(final String value) {
         this._extends = value;
     }
 
@@ -355,7 +356,7 @@ public class EntityContainer extends AbstractAnnotated {
      *
      * @return
      * possible object is
-     * {@link TPublicOrInternalAccess }
+     * {@link PublicOrInternalAccess }
      *
      */
     public PublicOrInternalAccess getTypeAccess() {
@@ -367,10 +368,10 @@ public class EntityContainer extends AbstractAnnotated {
      *
      * @param value
      * allowed object is
-     * {@link TPublicOrInternalAccess }
+     * {@link PublicOrInternalAccess }
      *
      */
-    public void setTypeAccess(PublicOrInternalAccess value) {
+    public void setTypeAccess(final PublicOrInternalAccess value) {
         this.typeAccess = value;
     }
 
@@ -394,7 +395,7 @@ public class EntityContainer extends AbstractAnnotated {
      * {@link Boolean }
      *
      */
-    public void setLazyLoadingEnabled(Boolean value) {
+    public void setLazyLoadingEnabled(final Boolean value) {
         this.lazyLoadingEnabled = value;
     }
 
@@ -414,6 +415,11 @@ public class EntityContainer extends AbstractAnnotated {
      */
     public Map<QName, String> getOtherAttributes() {
         return otherAttributes;
+    }
+
+    public boolean isDefaultEntityContainer() {
+        final String result = otherAttributes.get(new QName(ODataConstants.NS_METADATA, "IsDefaultEntityContainer"));
+        return result == null ? false : Boolean.valueOf(result);
     }
 
     /**
@@ -875,8 +881,8 @@ public class EntityContainer extends AbstractAnnotated {
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Object }
-         * {@link JAXBElement }{@code <}{@link TValueAnnotation }{@code >}
-         * {@link JAXBElement }{@code <}{@link TTypeAnnotation }{@code >}
+         * {@link JAXBElement }{@code <}{@link ValueAnnotation }{@code >}
+         * {@link JAXBElement }{@code <}{@link TypeAnnotation }{@code >}
          * {@link Element }
          *
          *
@@ -942,7 +948,7 @@ public class EntityContainer extends AbstractAnnotated {
          *
          * @return
          * possible object is
-         * {@link TAccess }
+         * {@link Access }
          *
          */
         public Access getGetterAccess() {
@@ -954,7 +960,7 @@ public class EntityContainer extends AbstractAnnotated {
          *
          * @param value
          * allowed object is
-         * {@link TAccess }
+         * {@link Access }
          *
          */
         public void setGetterAccess(Access value) {
@@ -1101,12 +1107,12 @@ public class EntityContainer extends AbstractAnnotated {
          *
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link JAXBElement }{@code <}{@link TFunctionImportParameter }{@code >}
+         * {@link JAXBElement }{@code <}{@link FunctionImportParameter }{@code >}
          * {@link Object }
-         * {@link JAXBElement }{@code <}{@link TTypeAnnotation }{@code >}
-         * {@link JAXBElement }{@code <}{@link TValueAnnotation }{@code >}
+         * {@link JAXBElement }{@code <}{@link TypeAnnotation }{@code >}
+         * {@link JAXBElement }{@code <}{@link ValueAnnotation }{@code >}
          * {@link Element }
-         * {@link JAXBElement }{@code <}{@link TFunctionImportReturnType }{@code >}
+         * {@link JAXBElement }{@code <}{@link FunctionImportReturnType }{@code >}
          *
          *
          */
@@ -1302,7 +1308,7 @@ public class EntityContainer extends AbstractAnnotated {
          *
          * @return
          * possible object is
-         * {@link TAccess }
+         * {@link Access }
          *
          */
         public Access getMethodAccess() {
@@ -1314,7 +1320,7 @@ public class EntityContainer extends AbstractAnnotated {
          *
          * @param value
          * allowed object is
-         * {@link TAccess }
+         * {@link Access }
          *
          */
         public void setMethodAccess(final Access value) {

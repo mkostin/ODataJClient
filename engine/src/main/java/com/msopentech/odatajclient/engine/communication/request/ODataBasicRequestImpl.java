@@ -43,7 +43,8 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      */
     private T format = null;
 
-    private final ExecutorService pool = Executors.newFixedThreadPool(10);
+    private final ExecutorService pool = Executors.newFixedThreadPool(
+            Integer.valueOf(Configuration.getProperty(Configuration.REQ_EXEC_POOL_SIZE, "10")));
 
     /**
      * Constructor.
@@ -60,7 +61,7 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      */
     @Override
     public String getFormat() {
-        return format == null ? new Configuration().getProperty("format", "ATOM") : format.name();
+        return format == null ? Configuration.getFormat().name() : format.name();
     }
 
     /**
@@ -113,7 +114,6 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
             if (payload != null) {
                 req.rawAppend(IOUtils.toByteArray(getPayload()));
             }
-
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

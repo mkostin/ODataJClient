@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
@@ -32,7 +33,7 @@ import org.junit.Test;
 public class MetadataTest extends AbstractTest {
 
     @Test
-    public void retrieveAndParseEdmTypes() throws Exception {
+    public void retrieveAndParseEdmTypes() {
         final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(testODataServiceRootURL);
 
         final EdmMetadata metadata = new EdmMetadata(req.rawExecute());
@@ -66,9 +67,9 @@ public class MetadataTest extends AbstractTest {
         int actions = 0;
         int functions = 0;
         for (FunctionImport functionImport : functionImports) {
-            if ("GET".equals(functionImport.getHttpMethod())) {
+            if (Method.GET.name().equals(functionImport.getHttpMethod())) {
                 legacyGetters++;
-            } else if ("POST".equals(functionImport.getHttpMethod())) {
+            } else if (Method.POST.name().equals(functionImport.getHttpMethod())) {
                 legacyPosters++;
             } else if (functionImport.getHttpMethod() == null) {
                 if (functionImport.isIsSideEffecting()) {

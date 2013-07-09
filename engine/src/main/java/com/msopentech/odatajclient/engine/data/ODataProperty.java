@@ -24,7 +24,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * OData entity property.
  */
-public class ODataProperty implements Serializable {
+public class ODataProperty implements Serializable, ODataInvokeResult {
 
     public enum PropertyType {
 
@@ -105,7 +105,7 @@ public class ODataProperty implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 

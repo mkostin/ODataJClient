@@ -467,11 +467,13 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
     public List<ODataOperation> getOperations() {
         final List<ODataOperation> result = new ArrayList<ODataOperation>();
 
-        for (Element action : getAnyOtherElementsByName(ODataConstants.ELEM_ACTION)) {
+        final List<Element> operations = getAnyOtherElementsByName(ODataConstants.ELEM_ACTION);
+        operations.addAll(getAnyOtherElementsByName(ODataConstants.ELEM_FUNCTION));
+        for (Element elemOperation : operations) {
             final ODataOperation operation = new ODataOperation();
-            operation.setMetadataAnchor(action.getAttribute(ODataConstants.ATTR_METADATA));
-            operation.setTitle(action.getAttribute(ODataConstants.ATTR_TITLE));
-            operation.setTarget(URI.create(action.getAttribute(ODataConstants.ATTR_TARGET)));
+            operation.setMetadataAnchor(elemOperation.getAttribute(ODataConstants.ATTR_METADATA));
+            operation.setTitle(elemOperation.getAttribute(ODataConstants.ATTR_TITLE));
+            operation.setTarget(URI.create(elemOperation.getAttribute(ODataConstants.ATTR_TARGET)));
 
             result.add(operation);
         }

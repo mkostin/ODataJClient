@@ -15,14 +15,11 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.LOG;
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
@@ -33,6 +30,7 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataChang
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangesetResponseItem;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataRetrieve;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataRetrieveResponseItem;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
@@ -107,7 +105,7 @@ public class StreamingTest extends AbstractTest {
         for (int i = 1; i <= 2; i++) {
             // Create Customer into the changeset
             targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntitySetSegment("Customer");
-            create = ODataRequestFactory.getEntityCreateRequest(
+            create = ODataCUDRequestFactory.getEntityCreateRequest(
                     targetURI.build(),
                     getSampleCustomerProfile(100 + i, "Sample customer", false));
             create.setFormat(ODataPubFormat.JSON);
@@ -115,7 +113,7 @@ public class StreamingTest extends AbstractTest {
         }
 
         targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntitySetSegment("WrongEntitySet");
-        create = ODataRequestFactory.getEntityCreateRequest(
+        create = ODataCUDRequestFactory.getEntityCreateRequest(
                 targetURI.build(),
                 getSampleCustomerProfile(105, "Sample customer", false));
         create.setFormat(ODataPubFormat.JSON_FULL_METADATA);
@@ -124,7 +122,7 @@ public class StreamingTest extends AbstractTest {
         for (int i = 3; i <= 4; i++) {
             // Create Customer into the changeset
             targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntitySetSegment("Customer");
-            create = ODataRequestFactory.getEntityCreateRequest(
+            create = ODataCUDRequestFactory.getEntityCreateRequest(
                     targetURI.build(),
                     getSampleCustomerProfile(100 + i, "Sample customer", false));
             create.setFormat(ODataPubFormat.ATOM);
@@ -159,7 +157,7 @@ public class StreamingTest extends AbstractTest {
 
         // prepare URI
         ODataURIBuilder targetURI = new ODataURIBuilder(testODataServiceRootURL);
-        targetURI.appendEntityTypeSegment("Customer(-10)").expand("Logins").select("CustomerId,Logins/Username");
+        targetURI.appendEntityTypeSegment(TEST_CUSTOMER).expand("Logins").select("CustomerId,Logins/Username");
 
         // create new request
         ODataEntityRequest query = ODataRetrieveRequestFactory.getEntityRequest(targetURI.build());
@@ -185,7 +183,8 @@ public class StreamingTest extends AbstractTest {
         merge.addProperty(new ODataProperty(
                 "Description", new ODataPrimitiveValue.Builder().setText("new description from batch").build()));
 
-        ODataEntityUpdateRequest changes = ODataRequestFactory.getEntityUpdateRequest(editLink, UpdateType.MERGE, merge);
+        ODataEntityUpdateRequest changes =
+                ODataCUDRequestFactory.getEntityUpdateRequest(editLink, UpdateType.MERGE, merge);
         changes.setFormat(ODataPubFormat.JSON_FULL_METADATA);
         changes.setIfMatch(getETag(editLink));
 
@@ -194,7 +193,8 @@ public class StreamingTest extends AbstractTest {
         // Create Customer into the changeset
         targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntitySetSegment("Customer");
         final ODataEntity original = getSampleCustomerProfile(100, "Sample customer", false);
-        final ODataEntityCreateRequest create = ODataRequestFactory.getEntityCreateRequest(targetURI.build(), original);
+        final ODataEntityCreateRequest create =
+                ODataCUDRequestFactory.getEntityCreateRequest(targetURI.build(), original);
         create.setFormat(ODataPubFormat.ATOM);
         changeset.addRequest(create);
         // -------------------------------------------
@@ -355,8 +355,7 @@ public class StreamingTest extends AbstractTest {
                 LOG.debug("Batch request {}", builder.toString());
 
                 assertTrue(builder.toString().contains("Content-Id:2"));
-                assertTrue(builder.toString().contains("GET http://services.odata.org/OData/Odata.svc"));
-
+                assertTrue(builder.toString().contains("GET " + servicesODataServiceRootURL));
             } catch (IOException e) {
                 fail();
             }

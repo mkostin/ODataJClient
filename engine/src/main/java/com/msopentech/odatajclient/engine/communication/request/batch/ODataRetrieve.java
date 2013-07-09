@@ -16,14 +16,10 @@
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 
 /**
  * Retrieve request wrapper for the corresponding batch item.
- * Get instance by using ODataRequestFactory.
- *
- * @see ODataRequestFactory#getRetrieveBatchItem()
  */
 public class ODataRetrieve extends ODataBatchRequestItem {
 

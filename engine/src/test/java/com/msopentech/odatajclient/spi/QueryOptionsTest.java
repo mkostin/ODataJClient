@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +24,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEn
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFeed;
+import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineFeed;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -58,7 +57,7 @@ public class QueryOptionsTest extends AbstractTest {
 
         // 1. check that filtered entity set looks as expected
         ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-        ODataFeed feed = req.execute().getBody();
+        ODataEntitySet feed = req.execute().getBody();
         assertNotNull(feed);
         assertEquals(5, feed.getEntities().size());
 
@@ -130,7 +129,7 @@ public class QueryOptionsTest extends AbstractTest {
         uriBuilder.appendEntityTypeSegment("Customer").skipToken("-10");
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-        final ODataFeed feed = req.execute().getBody();
+        final ODataEntitySet feed = req.execute().getBody();
         assertNotNull(feed);
         assertEquals(2, feed.getEntities().size());
 
@@ -149,7 +148,7 @@ public class QueryOptionsTest extends AbstractTest {
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
-        final ODataFeed feed = req.execute().getBody();
+        final ODataEntitySet feed = req.execute().getBody();
         assertNotNull(feed);
         assertEquals(feed.getEntities().size(), feed.getCount());
     }

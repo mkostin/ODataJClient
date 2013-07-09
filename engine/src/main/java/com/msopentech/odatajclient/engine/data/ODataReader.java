@@ -19,12 +19,16 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
-import javax.xml.bind.JAXBException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * OData reader.
@@ -45,14 +49,14 @@ public final class ODataReader {
     }
 
     /**
-     * De-Serializes a stream into an OData feed.
+     * De-Serializes a stream into an OData entity set.
      *
      * @param input stream to de-serialize.
-     * @param format de-serialize as AtomEntry or JSONEntry
-     * @return de-serialized feed.
+     * @param format de-serialize as AtomFeed or JSONFeed
+     * @return de-serialized entity set.
      */
-    public static ODataFeed readFeed(final InputStream input, final ODataPubFormat format) {
-        return ODataBinder.getODataFeed(Deserializer.toFeed(input, ResourceFactory.feedClassForFormat(format)));
+    public static ODataEntitySet readEntitySet(final InputStream input, final ODataPubFormat format) {
+        return ODataBinder.getODataEntitySet(Deserializer.toFeed(input, ResourceFactory.feedClassForFormat(format)));
     }
 
     /**
@@ -67,14 +71,41 @@ public final class ODataReader {
     }
 
     /**
-     * Parses a stream taking care to de-serializes the first OData entity property found.
+     * Parses a stream taking care to de-serialize the first OData entity property found.
      *
      * @param input stream to de-serialize.
      * @param format de-serialize as XML or JSON
      * @return OData entity property de-serialized.
      */
     public static ODataProperty readProperty(final InputStream input, final ODataFormat format) {
-        return ODataBinder.getProperty(Deserializer.toDOM(input, format));
+        final Element property = Deserializer.toDOM(input, format);
+
+        // The ODataProperty object is used either for actual entity properties and for invoke result (when return type
+        // is neither an entity nor a collection of entities).
+        // Such formats are mostly the same except for collections: an entity property looks like
+        //     <aproperty m:type="Collection(AType)">
+        //       <element>....</element>
+        //     </aproperty>
+        //
+        // while an invoke result with returnType="Collection(AnotherType)" looks like
+        //     <functionImportName>
+        //       <element m:type="AnotherType">...</element>
+        //     <functionImportName>
+        //
+        // The code below is meant for "normalizing" the latter into
+        //     <functionImportName m:type="Collection(AnotherType)">
+        //       <element m:type="AnotherType">...</element>
+        //     <functionImportName>
+        final String type = property.getAttribute(ODataConstants.ATTR_TYPE);
+        final NodeList elements = property.getElementsByTagName(ODataConstants.ELEM_ELEMENT);
+        if (StringUtils.isBlank(type) && elements != null && elements.getLength() > 0) {
+            final Node elementType = elements.item(0).getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
+            if (elementType != null) {
+                property.setAttribute(ODataConstants.ATTR_TYPE, "Collection(" + elementType.getTextContent() + ")");
+            }
+        }
+
+        return ODataBinder.getProperty(property);
     }
 
     /**
@@ -108,12 +139,7 @@ public final class ODataReader {
      * @return metadata representation.
      */
     public static EdmMetadata readMetadata(final InputStream inputStream) {
-        try {
-            return new EdmMetadata(inputStream);
-        } catch (JAXBException e) {
-            LOG.error("Error unmarshalling metadata info", e);
-            throw new IllegalStateException(e);
-        }
+        return new EdmMetadata(inputStream);
     }
 
     public static ODataError readError(final InputStream inputStream, final boolean isXML) {

@@ -23,11 +23,11 @@ public final class ODataFactory {
         // Empty private constructor for static utility classes
     }
 
-    public static ODataFeed newFeed() {
+    public static ODataEntitySet newFeed() {
         return new FeedImpl();
     }
 
-    public static ODataFeed newFeed(final URI next) {
+    public static ODataEntitySet newFeed(final URI next) {
         return new FeedImpl(next);
     }
 
@@ -47,7 +47,7 @@ public final class ODataFactory {
         return new LinkImpl(baseURI, href, type, name);
     }
 
-    public static ODataLink newInlineFeed(final String name, final URI link, final ODataFeed feed) {
+    public static ODataLink newInlineFeed(final String name, final URI link, final ODataEntitySet feed) {
         return new ODataInlineFeed(link, ODataLinkType.FEED_NAVIGATION, name, feed) {
 
             private static final long serialVersionUID = -8829134406268153228L;
@@ -56,7 +56,7 @@ public final class ODataFactory {
     }
 
     public static ODataLink newInlineFeed(
-            final String name, final URI baseURI, final String href, final ODataFeed feed) {
+            final String name, final URI baseURI, final String href, final ODataEntitySet feed) {
 
         return new ODataInlineFeed(baseURI, href, ODataLinkType.FEED_NAVIGATION, name, feed) {
 
@@ -115,7 +115,7 @@ public final class ODataFactory {
         return new LinkImpl(baseURI, href, ODataLinkType.MEDIA_EDIT, name);
     }
 
-    private static class FeedImpl extends ODataFeed {
+    private static class FeedImpl extends ODataEntitySet {
 
         private static final long serialVersionUID = 1632243717538685102L;
 

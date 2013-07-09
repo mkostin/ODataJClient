@@ -24,21 +24,21 @@ public abstract class ODataInlineFeed extends ODataLink {
 
     private static final long serialVersionUID = -77628001615355449L;
 
-    private ODataFeed feed;
+    private ODataEntitySet feed;
 
-    public ODataInlineFeed(final URI uri, final ODataLinkType type, final String title, final ODataFeed feed) {
+    public ODataInlineFeed(final URI uri, final ODataLinkType type, final String title, final ODataEntitySet feed) {
         super(uri, type, title);
         this.feed = feed;
     }
 
     public ODataInlineFeed(final URI baseURI, final String href, final ODataLinkType type, final String title,
-            final ODataFeed feed) {
+            final ODataEntitySet feed) {
 
         super(baseURI, href, type, title);
         this.feed = feed;
     }
 
-    public ODataFeed getFeed() {
+    public ODataEntitySet getFeed() {
         return feed;
     }
 }

@@ -31,7 +31,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
-import com.msopentech.odatajclient.engine.data.ODataFeed;
+import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineFeed;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
@@ -170,8 +170,7 @@ public class EntityRetrieveTest extends AbstractTest {
     @Test
     public void withGeospatial() {
         final ODataURIBuilder uriBuilder =
-                new ODataURIBuilder("http://services.odata.org/v3/(S(ds4nnexwejbv4fq3nqsx5vd1))/OData/OData.svc/");
-        uriBuilder.appendEntityTypeSegment("Suppliers(1)");
+                new ODataURIBuilder(servicesODataServiceRootURL).appendEntityTypeSegment("Suppliers(1)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
@@ -259,7 +258,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
         for (ODataLink link : entity.getNavigationLinks()) {
             if (link instanceof ODataInlineFeed) {
-                final ODataFeed inline = ((ODataInlineFeed) link).getFeed();
+                final ODataEntitySet inline = ((ODataInlineFeed) link).getFeed();
                 assertNotNull(inline);
 
                 debugFeed(ODataBinder.getFeed(inline, ResourceFactory.feedClassForFormat(format)), "Just read");
@@ -284,8 +283,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
     private void withActions(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder =
-                new ODataURIBuilder("http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc").
-                appendEntityTypeSegment("Products(3)");
+                new ODataURIBuilder(servicesODataServiceRootURL).appendEntityTypeSegment("Products(3)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);

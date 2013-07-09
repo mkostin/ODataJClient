@@ -16,10 +16,18 @@
 package com.msopentech.odatajclient.engine.communication.request.invoke;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
-import com.msopentech.odatajclient.engine.communication.request.OperationType;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataEntitySet;
+import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
+import com.msopentech.odatajclient.engine.data.ODataNoContent;
+import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
 import java.net.URI;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * OData request factory class.
@@ -27,35 +35,67 @@ import java.util.Map;
 public class ODataInvokeRequestFactory {
 
     /**
-     * Gets an invoke action request instance.
+     * Gets an invoke request instance.
      *
-     * @param uri URI that identifies the action.
-     * @param parameters required input parameters.
+     * @param <T> OData domain object result, derived from return type defined in the function import
+     * @param uri URI that identifies the function import
+     * @param metadata Edm metadata
+     * @param functionImport function import to be invoked
      * @return new ODataInvokeRequest instance.
      */
-    public static ODataInvokeRequest getInvokeActionRequest(final URI uri, final Map<String, ODataValue> parameters) {
-        return new ODataInvokeRequest(Method.POST, uri, OperationType.ACTION, parameters);
+    @SuppressWarnings("unchecked")
+    public static <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
+            final URI uri, final EdmMetadata metadata, final FunctionImport functionImport) {
+
+        Method method = null;
+        if (Method.GET.name().equals(functionImport.getHttpMethod())) {
+            method = Method.GET;
+        } else if (Method.POST.name().equals(functionImport.getHttpMethod())) {
+            method = Method.POST;
+        } else if (functionImport.getHttpMethod() == null) {
+            if (functionImport.isIsSideEffecting()) {
+                method = Method.POST;
+            } else {
+                method = Method.GET;
+            }
+        }
+
+        ODataInvokeRequest<T> result;
+        if (StringUtils.isBlank(functionImport.getReturnType())) {
+            result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataNoContent>(ODataNoContent.class, method, uri);
+        } else {
+            final EdmType returnType = new EdmType(metadata, functionImport.getReturnType());
+
+            if (returnType.isCollection() && returnType.isEntityType()) {
+                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntitySet>(ODataEntitySet.class, method, uri);
+            } else if (!returnType.isCollection() && returnType.isEntityType()) {
+                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntity>(ODataEntity.class, method, uri);
+            } else {
+                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataProperty>(ODataProperty.class, method, uri);
+            }
+        }
+
+        return result;
     }
 
     /**
-     * Gets an invoke function request instance.
+     * Gets an invoke request instance.
      *
-     * @param uri URI that identifies the function.
+     * @param <T> OData domain object result, derived from return type defined in the function import
+     * @param uri URI that identifies the function import
+     * @param metadata Edm metadata
+     * @param functionImport function import to be invoked
+     * @param parameters parameters to pass to function import invocation
      * @return new ODataInvokeRequest instance.
      */
-    public static ODataInvokeRequest getInvokeFunctionRequest(final URI uri) {
-        return new ODataInvokeRequest(Method.GET, uri, OperationType.FUNCTION);
-    }
+    @SuppressWarnings("unchecked")
+    public static <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
+            final URI uri, final EdmMetadata metadata, final FunctionImport functionImport,
+            final Map<String, ODataValue> parameters) {
 
-    /**
-     * Gets an invoke legacy operation request instance.
-     *
-     * @param method HTTP method of the request.
-     * @param uri URI that identifies the function.
-     * @param parameters required input parameters.
-     * @return new ODataInvokeRequest instance.
-     */
-    public static ODataInvokeRequest getInvokeLegacyRequest(final Method method, final URI uri) {
-        return new ODataInvokeRequest(method, uri, OperationType.LEGACY);
+        final ODataInvokeRequest<T> result = getInvokeRequest(uri, metadata, functionImport);
+        result.setParameters(parameters);
+
+        return result;
     }
 }

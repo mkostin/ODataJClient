@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -28,9 +27,9 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData delete request.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using ODataCUDRequestFactory.
  *
- * @see ODataRequestFactory#getDeleteRequest(com.msopentech.odatajclient.engine.data.ODataURI)
+ * @see ODataCUDRequestFactory#getDeleteRequest(java.net.URI)
  */
 public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteResponse, ODataPubFormat>
         implements ODataBatchableRequest {
@@ -65,9 +64,6 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
     }
 
     private static class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
-
-        private ODataDeleteResponseImpl() {
-        }
 
         private ODataDeleteResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);

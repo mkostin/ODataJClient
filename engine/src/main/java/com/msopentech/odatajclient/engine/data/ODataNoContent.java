@@ -13,21 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.response;
+package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
+import java.io.Serializable;
 
 /**
- * This class implements a response to a specific invoke request.
- *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataInvokeRequest
+ * Marker class for invoke with no return type.
  */
-public interface ODataInvokeResponse<T extends ODataInvokeResult> extends ODataResponse {
+public class ODataNoContent implements Serializable, ODataInvokeResult {
 
-    /**
-     * Gets operation return value if exists.
-     *
-     * @return operation return value.
-     */
-    T getBody();
+    private static final long serialVersionUID = 2780193571934253136L;
+
 }

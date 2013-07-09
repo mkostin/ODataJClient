@@ -49,4 +49,20 @@ public enum ODataFormat {
     public String toString() {
         return format;
     }
+
+    public static ODataFormat fromString(final String format) {
+        ODataFormat result = null;
+
+        for (ODataFormat value : values()) {
+            if (format.equals(value.toString())) {
+                result = value;
+            }
+        }
+
+        if (result == null) {
+            throw new IllegalArgumentException(format);
+        }
+
+        return result;
+    }
 }

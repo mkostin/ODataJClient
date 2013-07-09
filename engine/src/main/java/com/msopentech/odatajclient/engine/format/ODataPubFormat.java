@@ -49,4 +49,20 @@ public enum ODataPubFormat {
     public String toString() {
         return format;
     }
+
+    public static ODataPubFormat fromString(final String format) {
+        ODataPubFormat result = null;
+
+        for (ODataPubFormat value : values()) {
+            if (format.equals(value.toString())) {
+                result = value;
+            }
+        }
+
+        if (result == null) {
+            throw new IllegalArgumentException(format);
+        }
+
+        return result;
+    }
 }

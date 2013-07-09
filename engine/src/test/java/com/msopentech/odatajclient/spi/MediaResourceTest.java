@@ -15,11 +15,10 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest.MediaEntityCreateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityUpdateRequest;
@@ -70,7 +69,8 @@ public class MediaResourceTest extends AbstractTest {
         final String TO_BE_UPDATED = "buffered stream sample";
         final InputStream input = new ByteArrayInputStream(TO_BE_UPDATED.getBytes());
 
-        final ODataStreamUpdateRequest updateReq = ODataRequestFactory.getStreamUpdateRequest(builder.build(), input);
+        final ODataStreamUpdateRequest updateReq = 
+                ODataCUDRequestFactory.getStreamUpdateRequest(builder.build(), input);
 
         final StreamUpdateRequestPayload payload = updateReq.execute();
         ODataStreamUpdateResponse updateRes = payload.getResponse();
@@ -92,7 +92,7 @@ public class MediaResourceTest extends AbstractTest {
         final InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);
 
         final ODataMediaEntityUpdateRequest updateReq =
-                ODataRequestFactory.getMediaEntityUpdateRequest(builder.build(), input);
+                ODataCUDRequestFactory.getMediaEntityUpdateRequest(builder.build(), input);
         updateReq.setFormat(format);
 
         final MediaEntityUpdateRequestPayload payload = updateReq.execute();
@@ -117,7 +117,7 @@ public class MediaResourceTest extends AbstractTest {
         final InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);
 
         final ODataMediaEntityCreateRequest createReq =
-                ODataRequestFactory.getMediaEntityCreateRequest(builder.build(), input);
+                ODataCUDRequestFactory.getMediaEntityCreateRequest(builder.build(), input);
         createReq.setFormat(format);
 
         final MediaEntityCreateRequestPayload payload = createReq.execute();

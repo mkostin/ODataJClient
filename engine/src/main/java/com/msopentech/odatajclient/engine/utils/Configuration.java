@@ -20,7 +20,15 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 /**
  * Configuration wrapper.
  */
-public class Configuration {
+public final class Configuration {
+
+    public static final String FORMAT = "format";
+
+    public static final String REQ_EXEC_POOL_SIZE = "REQ_EXEC_POOL_SIZE";
+
+    private Configuration() {
+        // Empty private constructor for static utility classes
+    }
 
     /**
      * Get given configuration property.
@@ -29,17 +37,18 @@ public class Configuration {
      * @param def default value to be used in case of the given key doesn't exist.
      * @return property value if exists; default value if does not exist.
      */
-    public String getProperty(final String key, final String def) {
+    public static String getProperty(final String key, final String def) {
         return def;
     }
 
     /**
      * Get configured OData format.
-     * If this configuration parameter doesn't exist the JSON format will be used as default.
+     * If this configuration parameter doesn't exist the JSON_FULL_METADATA format will be used as default.
      *
-     * @return configured OData format if exists; JSON format otherwise.
+     * @return configured OData format if exists; JSON_FULL_METADATA format otherwise.
+     * @see ODataPubFormat#JSON_FULL_METADATA
      */
-    public ODataPubFormat getFormat() {
-        return ODataPubFormat.valueOf(getProperty("format", "JSON"));
+    public static ODataPubFormat getFormat() {
+        return ODataPubFormat.valueOf(getProperty(FORMAT, "JSON_FULL_METADATA"));
     }
 }

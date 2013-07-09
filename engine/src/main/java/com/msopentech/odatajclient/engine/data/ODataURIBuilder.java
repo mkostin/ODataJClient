@@ -40,9 +40,7 @@ public class ODataURIBuilder implements Serializable {
         NAVIGATION,
         STRUCTURAL,
         VALUE("$value"),
-        FUNCTION,
-        LEGACY,
-        ACTION,
+        FUNCTIONIMPORT,
         METADATA("$metadata"),
         BATCH("$batch"),
         LINKS("$links"),
@@ -286,35 +284,13 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Append function segment to the URI.
+     * Append function import segment to the URI.
      *
      * @param segmentValue segment value.
      * @return current ODataURI object.
      */
-    public ODataURIBuilder appendFunctionSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.FUNCTION, segmentValue));
-        return this;
-    }
-
-    /**
-     * Append legacy operation segment to the URI.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURI object.
-     */
-    public ODataURIBuilder appendLegacySegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.LEGACY, segmentValue));
-        return this;
-    }
-
-    /**
-     * Append action segment to the URI.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURI object.
-     */
-    public ODataURIBuilder appendActionSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.ACTION, segmentValue));
+    public ODataURIBuilder appendFunctionImportSegment(final String segmentValue) {
+        segments.add(new Segment(SegmentType.FUNCTIONIMPORT, segmentValue));
         return this;
     }
 

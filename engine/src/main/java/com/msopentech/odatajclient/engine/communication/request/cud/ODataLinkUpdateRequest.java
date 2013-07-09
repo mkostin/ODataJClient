@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
@@ -36,10 +35,11 @@ import org.apache.http.entity.InputStreamEntity;
  * This class implements an update link OData request.
  * It encapsulates two different request: the former remove link request and the latter add link request.
  * <p>
- * Get instance by using ODataRequestFactory.
+ * Get instance by using ODataCUDRequestFactory.
  *
- * @see ODataRequestFactory#getLinkUpdateRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * com.msopentech.odatajclient.engine.data.ODataURI, com.msopentech.odatajclient.engine.data.ODataLink)
+ * @see ODataCUDRequestFactory#getLinkUpdateRequest(java.net.URI,
+ * com.msopentech.odatajclient.engine.communication.request.UpdateType,
+ * com.msopentech.odatajclient.engine.data.ODataLink)
  */
 public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
         implements ODataBatchableRequest {
