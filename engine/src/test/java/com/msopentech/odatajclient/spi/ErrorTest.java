@@ -23,12 +23,19 @@ import com.msopentech.odatajclient.engine.communication.ODataClientErrorExceptio
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
+import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequest;
+import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
@@ -134,5 +141,34 @@ public class ErrorTest extends AbstractTest {
     @Test
     public void jsonNotfoundError() {
         notfoundError(ODataPubFormat.JSON);
+    }
+
+    private void instreamError(final ODataPubFormat format) {
+        final EdmMetadata metadata =
+                ODataRetrieveRequestFactory.getMetadataRequest(testODataServiceRootURL).execute().getBody();
+        assertNotNull(metadata);
+
+        final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
+        final EntityContainer.FunctionImport funcImp = container.getFunctionImport("InStreamErrorGetCustomer");
+
+        final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
+                appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
+
+        final ODataInvokeRequest<ODataEntitySet> req =
+                ODataInvokeRequestFactory.getInvokeRequest(builder.build(), metadata, funcImp);
+        req.setFormat(format);
+
+        final ODataInvokeResponse<ODataEntitySet> res = req.execute();
+        res.getBody();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void atomInstreamError() {
+        instreamError(ODataPubFormat.ATOM);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void jsonInstreamError() {
+        instreamError(ODataPubFormat.JSON);
     }
 }
