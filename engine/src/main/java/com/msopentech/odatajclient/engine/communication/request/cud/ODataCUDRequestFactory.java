@@ -53,7 +53,9 @@ public final class ODataCUDRequestFactory {
      * @param entity entity blob to be created.
      * @return new ODataMediaEntityCreateRequest instance.
      */
-    public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(final URI targetURI, final InputStream media) {
+    public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(
+            final URI targetURI, final InputStream media) {
+
         return new ODataMediaEntityCreateRequest(targetURI, media);
     }
 
@@ -71,6 +73,20 @@ public final class ODataCUDRequestFactory {
     }
 
     /**
+     * Gets an update request object instance.
+     *
+     * @param targetURI edit link of the object to be updated.
+     * @param changes changes to be applied.
+     * @param type type of update to be performed.
+     * @return new ODataUpdateEntityRequest instance.
+     */
+    public static ODataEntityUpdateRequest getEntityUpdateRequest(
+            final URI targetURI, final UpdateType type, final ODataEntity changes) {
+
+        return new ODataEntityUpdateRequest(targetURI, type, changes);
+    }
+
+    /**
      * Gets a media entity update request object instance.
      * <p>
      * Use this kind of request to update a media entity.
@@ -79,7 +95,9 @@ public final class ODataCUDRequestFactory {
      * @param entity entity blob to be updated.
      * @return new ODataMediaEntityUpdateRequest instance.
      */
-    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(final URI editURI, final InputStream media) {
+    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(
+            final URI editURI, final InputStream media) {
+
         return new ODataMediaEntityUpdateRequest(editURI, media);
     }
 
@@ -110,6 +128,7 @@ public final class ODataCUDRequestFactory {
      */
     public static ODataPropertyUpdateRequest getComplexUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataProperty property) {
+
         return new ODataPropertyUpdateRequest(targetURI, type, property);
     }
 
@@ -125,6 +144,7 @@ public final class ODataCUDRequestFactory {
      */
     public static ODataPropertyUpdateRequest getPrimitiveUpdateRequest(
             final URI targetURI, final ODataProperty property) {
+
         return new ODataPropertyUpdateRequest(targetURI, UpdateType.REPLACE, property);
     }
 
@@ -140,6 +160,7 @@ public final class ODataCUDRequestFactory {
      */
     public static ODataPropertyUpdateRequest getCollectionUpdateRequest(
             final URI targetURI, final ODataProperty property) {
+
         return new ODataPropertyUpdateRequest(targetURI, UpdateType.REPLACE, property);
     }
 
@@ -185,18 +206,5 @@ public final class ODataCUDRequestFactory {
      */
     public static ODataDeleteRequest getDeleteRequest(final URI targetURI) {
         return new ODataDeleteRequest(targetURI);
-    }
-
-    /**
-     * Gets an update request object instance.
-     *
-     * @param targetURI edit link of the object to be updated.
-     * @param entity changes to be applied.
-     * @param type type of update to be performed.
-     * @return new ODataUpdateEntityRequest instance.
-     */
-    public static ODataEntityUpdateRequest getEntityUpdateRequest(
-            final URI targetURI, final UpdateType type, final ODataEntity changes) {
-        return new ODataEntityUpdateRequest(targetURI, type, changes);
     }
 }
