@@ -34,19 +34,11 @@ import org.apache.http.client.HttpClient;
 public class ODataPropertyRequest extends ODataRetrieveRequest<ODataProperty, ODataFormat> {
 
     /**
-     * Private constructor.
-     *
-     * @param query query to be executed.
-     */
-    ODataPropertyRequest(final URI query) {
-        super(query);
-    }
-
-    /**
      * {@inheritDoc }
      */
     @Override
     public ODataRetrieveResponse<ODataProperty> execute() {
+        validate();
         final HttpResponse res = doExecute();
         return new ODataPropertyResponseImpl(client, res);
     }

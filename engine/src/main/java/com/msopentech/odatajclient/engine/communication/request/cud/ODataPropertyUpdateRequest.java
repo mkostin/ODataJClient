@@ -24,7 +24,6 @@ import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.InputStream;
-import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -50,17 +49,17 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
      * Constructor.
      *
      * @param method request method.
-     * @param targetURI entity set or entity or entity property URI.
      * @param property value to be created.
      */
-    ODataPropertyUpdateRequest(final Method method, final URI targetURI, final ODataProperty property) {
-        super(method, targetURI);
+    ODataPropertyUpdateRequest(final Method method, final ODataProperty property) {
+        super(method);
         // set request body
         this.property = property;
     }
 
     @Override
     public ODataPropertyUpdateResponse execute() {
+        validate();
         final InputStream input = getPayload();
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
 

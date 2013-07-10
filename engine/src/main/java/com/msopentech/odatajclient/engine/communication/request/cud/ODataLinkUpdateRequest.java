@@ -52,12 +52,11 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      * Constructor.
      *
      * @param method request method.
-     * @param targetURI entity URI.
      * @param linkToBeRemoved link to be removed.
      * @param link entity to be linked.
      */
-    ODataLinkUpdateRequest(final Method method, final URI targetURI, final ODataLink link) {
-        super(method, targetURI);
+    ODataLinkUpdateRequest(final Method method, final ODataLink link) {
+        super(method);
         // set request body
         this.link = link;
     }
@@ -67,6 +66,7 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     public ODataLinkOperationResponse execute() {
+        validate();
         final InputStream input = getPayload();
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
 

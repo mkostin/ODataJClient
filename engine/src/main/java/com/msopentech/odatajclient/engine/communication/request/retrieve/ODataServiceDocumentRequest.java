@@ -21,7 +21,6 @@ import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
 import java.io.IOException;
-import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
@@ -34,19 +33,11 @@ import org.apache.http.client.HttpClient;
 public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServiceDocument, ODataServiceDocumentFormat> {
 
     /**
-     * Constructor.
-     *
-     * @param serviceRoot query URI.
-     */
-    ODataServiceDocumentRequest(final URI uri) {
-        super(uri);
-    }
-
-    /**
      * {@inheritDoc }
      */
     @Override
     public ODataRetrieveResponse<ODataServiceDocument> execute() {
+        validate();
         final HttpResponse res = doExecute();
         return new ODataServiceResponseImpl(client, res);
     }

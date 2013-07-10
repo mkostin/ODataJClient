@@ -39,10 +39,9 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      *
      * @param method HTTP method to be used (<tt>DELETE</tt> or </tt>POST</tt> in case of <tt>X-HTTP-METHOD</tt>
      * header usage)
-     * @param uri URI of the entity to be deleted.
      */
-    ODataDeleteRequest(final Method method, final URI uri) {
-        super(method, uri);
+    ODataDeleteRequest(final Method method) {
+        super(method);
     }
 
     /**
@@ -60,6 +59,7 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      */
     @Override
     public ODataDeleteResponse execute() {
+        validate();
         final HttpResponse res = doExecute();
         return new ODataDeleteResponseImpl(client, res);
     }

@@ -24,7 +24,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,10 +58,9 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      * Constructor.
      *
      * @param method OData request HTTP method.
-     * @param uri OData request URI.
      */
-    public ODataStreamedRequestImpl(final Method method, final URI uri) {
-        super(method, uri);
+    public ODataStreamedRequestImpl(final Method method) {
+        super(method);
         setAccept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
         setContentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
     }
@@ -80,6 +78,8 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     @Override
     @SuppressWarnings("unchecked")
     public T execute() {
+        validate();
+
         payload = getPayload();
 
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(payload.getBody(), -1));
@@ -108,7 +108,7 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
             // finalize the body
             getPayload().finalizeBody();
 
-            req.rawAppend(toByteArray());
+            req.rawAppend(getFullHeaders());
             if (StringUtils.isNotBlank(contentId)) {
                 req.rawAppend((ODataBatchConstants.CHANGESET_CONTENT_ID_NAME + ": " + contentId).getBytes());
                 req.rawAppend(ODataStreamer.CRLF);

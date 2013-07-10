@@ -26,7 +26,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -52,17 +51,17 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
      * Constructor.
      *
      * @param method request method.
-     * @param targetURI entity set or entity or entity property URI.
      * @param value value to be created.
      */
-    ODataValueUpdateRequest(final Method method, final URI targetURI, final ODataValue value) {
-        super(method, targetURI);
+    ODataValueUpdateRequest(final Method method, final ODataValue value) {
+        super(method);
         // set request body
         this.value = value;
     }
 
     @Override
-    public ODataValueUpdateResponseImpl execute() {
+    public ODataValueUpdateResponse execute() {
+        validate();
         final InputStream input = getPayload();
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
 

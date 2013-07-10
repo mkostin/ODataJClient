@@ -39,7 +39,6 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.junit.Test;
@@ -51,8 +50,8 @@ public class ErrorTest extends AbstractTest {
 
     private class ErrorGeneratingRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse, ODataPubFormat> {
 
-        public ErrorGeneratingRequest(final Method method, final URI uri) {
-            super(method, uri);
+        public ErrorGeneratingRequest(final Method method) {
+            super(method);
         }
 
         @Override
@@ -62,6 +61,7 @@ public class ErrorTest extends AbstractTest {
 
         @Override
         public ODataEntityCreateResponse execute() {
+            validate();
             final HttpResponse res = doExecute();
             return new ODataEntityCreateResponseImpl(client, res);
         }
@@ -83,8 +83,8 @@ public class ErrorTest extends AbstractTest {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
-        final ErrorGeneratingRequest errorReq =
-                new ErrorGeneratingRequest(ODataRequest.Method.POST, uriBuilder.build());
+        final ErrorGeneratingRequest errorReq = new ErrorGeneratingRequest(ODataRequest.Method.POST);
+        errorReq.setURI(uriBuilder.build());
         errorReq.setFormat(format);
 
         ODataClientErrorException ocee = null;

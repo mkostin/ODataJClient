@@ -48,12 +48,10 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
     /**
      * Constructor.
      *
-     * @param targetURI entity set URI.
      * @param entity entity to be created.
      */
-    ODataEntityCreateRequest(final URI targetURI, final ODataEntity entity) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST, targetURI);
+    ODataEntityCreateRequest(final ODataEntity entity) {
+        super(Method.POST);
         this.entity = entity;
     }
 
@@ -70,6 +68,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     public ODataEntityCreateResponse execute() {
+        validate();
         final InputStream input = getPayload();
         ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
 

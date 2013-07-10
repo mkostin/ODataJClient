@@ -43,11 +43,10 @@ public class ODataMediaEntityCreateRequest
     /**
      * Constructor.
      *
-     * @param targetURI target entity set.
      * @param media media entity blob to be created.
      */
-    ODataMediaEntityCreateRequest(final URI targetURI, final InputStream media) {
-        super(Method.POST, targetURI);
+    ODataMediaEntityCreateRequest(final InputStream media) {
+        super(Method.POST);
         this.media = media;
     }
 

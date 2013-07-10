@@ -23,7 +23,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponseIm
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
 import java.io.PipedOutputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -49,11 +48,9 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
 
     /**
      * Constructor.
-     *
-     * @param uri batch request URI (http://serviceRoot/$batch)
      */
-    ODataBatchRequest(final URI uri) {
-        super(Method.POST, uri);
+    ODataBatchRequest() {
+        super(Method.POST);
 
         // create a random UUID value for boundary
         boundary = "batch_" + UUID.randomUUID().toString();

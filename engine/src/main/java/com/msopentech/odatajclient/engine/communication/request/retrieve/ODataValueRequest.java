@@ -22,7 +22,6 @@ import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import java.io.IOException;
-import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -36,19 +35,11 @@ import org.apache.http.client.HttpClient;
 public class ODataValueRequest extends ODataRetrieveRequest<ODataValue, ODataValueFormat> {
 
     /**
-     * Private constructor.
-     *
-     * @param query query to be executed.
-     */
-    ODataValueRequest(final URI query) {
-        super(query);
-    }
-
-    /**
      * {@inheritDoc }
      */
     @Override
     public ODataRetrieveResponse<ODataValue> execute() {
+        validate();
         final HttpResponse res = doExecute();
         return new ODataValueResponseImpl(client, res);
     }

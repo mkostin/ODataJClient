@@ -64,7 +64,7 @@ public abstract class ODataBatchRequestItem extends ODataStreamer {
         newLine();
         newLine();
 
-        stream(request.toByteArray());
+        stream(request.getFullHeaders());
         newLine();
     }
 

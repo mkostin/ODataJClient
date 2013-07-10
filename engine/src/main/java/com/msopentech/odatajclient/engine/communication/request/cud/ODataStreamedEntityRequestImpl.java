@@ -17,17 +17,17 @@ package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
-import java.net.URI;
 
 public abstract class ODataStreamedEntityRequestImpl<V extends ODataResponse, T extends ODataStreamingManagement<V>>
         extends ODataStreamedRequestImpl<V, T> {
 
     private ODataPubFormat format;
 
-    public ODataStreamedEntityRequestImpl(final Method method, URI uri) {
-        super(method, uri);
+    public ODataStreamedEntityRequestImpl(final Method method) {
+        super(method);
         setAccept(getFormat().toString());
     }
 

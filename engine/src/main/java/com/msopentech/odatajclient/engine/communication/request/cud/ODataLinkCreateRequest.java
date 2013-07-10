@@ -47,12 +47,10 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
     /**
      * Constructor.
      *
-     * @param targetURI entity set URI.
      * @param link entity to be linked.
      */
-    ODataLinkCreateRequest(final URI targetURI, final ODataLink link) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST, targetURI);
+    ODataLinkCreateRequest(final ODataLink link) {
+        super(Method.POST);
         // set request body
         this.link = link;
     }
@@ -62,6 +60,7 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     public ODataLinkOperationResponse execute() {
+        validate();
         final InputStream input = getPayload();
         ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
 
