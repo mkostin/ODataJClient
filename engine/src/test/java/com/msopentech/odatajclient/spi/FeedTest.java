@@ -15,9 +15,12 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static org.junit.Assert.assertNotNull;
+import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetIteratorRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
@@ -25,6 +28,7 @@ import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
+import com.msopentech.odatajclient.engine.data.ODataEntitySetIterator;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -57,6 +61,26 @@ public class FeedTest extends AbstractTest {
     @Test
     public void readODataEntitySetFromJSON() {
         readODataEntitySet(ODataPubFormat.JSON);
+    }
+
+    @Test
+    public void readODataEntitySetIteratorFromAtom() {
+        readODataEntitySetIterator(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void readODataEntitySetIteratorFromJSON() {
+        readODataEntitySetIterator(ODataPubFormat.JSON);
+    }
+
+    @Test
+    public void readODataEntitySetIteratorFromJSONFullMeta() {
+        readODataEntitySetIterator(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    @Test
+    public void readODataEntitySetIteratorFromJSONNoMeta() {
+        readODataEntitySetIterator(ODataPubFormat.JSON_NO_METADATA);
     }
 
     @Test
@@ -126,5 +150,28 @@ public class FeedTest extends AbstractTest {
         debugFeed(ODataBinder.getFeed(feed, ResourceFactory.feedClassForFormat(format)), "Just retrieved feed");
 
         assertEquals(3, feed.getEntities().size());
+    }
+
+    private void readODataEntitySetIterator(final ODataPubFormat format) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntitySetSegment("Customer");
+
+        final ODataEntitySetIteratorRequest req =
+                ODataRetrieveRequestFactory.getEntitySetIteratorRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataRetrieveResponse<ODataEntitySetIterator> res = req.execute();
+        final ODataEntitySetIterator feedIterator = res.getBody();
+
+        assertNotNull(feedIterator);
+
+        int count = 0;
+
+        while (feedIterator.hasNext()) {
+            assertNotNull(feedIterator.next());
+            count++;
+        }
+        assertEquals(2, count);
+        assertTrue(feedIterator.getNext().toASCIIString().endsWith("Customer?$skiptoken=-9"));
     }
 }

@@ -16,8 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.data.ODataEntitySetIterator;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
@@ -29,37 +28,33 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getEntitySetRequest(java.net.URI)
  */
-public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataEntitySet, ODataPubFormat> {
+public class ODataEntitySetIteratorRequest extends ODataRetrieveRequest<ODataEntitySetIterator, ODataPubFormat> {
 
-    private ODataEntitySet feed = null;
+    private ODataEntitySetIterator feedIterator = null;
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public ODataRetrieveResponse<ODataEntitySet> execute() {
+    public ODataRetrieveResponse<ODataEntitySetIterator> execute() {
         validate();
         final HttpResponse res = doExecute();
-        return new ODataEntitySetResponseImpl(client, res);
+        return new ODataEntitySetIteratorResponseImpl(client, res);
     }
 
-    protected class ODataEntitySetResponseImpl extends ODataRetrieveResponseImpl {
+    protected class ODataEntitySetIteratorResponseImpl extends ODataRetrieveResponseImpl {
 
-        private ODataEntitySetResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataEntitySetIteratorResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        public ODataEntitySet getBody() {
-            if (feed == null) {
-                try {
-                    feed = ODataReader.readEntitySet(getRawResponse(), ODataPubFormat.valueOf(getFormat()));
-                } finally {
-                    this.close();
-                }
+        public ODataEntitySetIterator getBody() {
+            if (feedIterator == null) {
+                feedIterator = new ODataEntitySetIterator(getRawResponse(), ODataPubFormat.valueOf(getFormat()));
             }
-            return feed;
+            return feedIterator;
         }
     }
 }
