@@ -37,20 +37,12 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
     /**
      * Constructor.
      *
+     * @param method HTTP method to be used (<tt>DELETE</tt> or </tt>POST</tt> in case of <tt>X-HTTP-METHOD</tt>
+     * header usage)
      * @param uri URI of the entity to be deleted.
      */
-    ODataDeleteRequest(final URI uri) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.DELETE, uri);
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public ODataDeleteResponse execute() {
-        final HttpResponse res = doExecute();
-        return new ODataDeleteResponseImpl(client, res);
+    ODataDeleteRequest(final Method method, final URI uri) {
+        super(method, uri);
     }
 
     /**
@@ -61,6 +53,15 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
     @Override
     protected InputStream getPayload() {
         return null;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public ODataDeleteResponse execute() {
+        final HttpResponse res = doExecute();
+        return new ODataDeleteResponseImpl(client, res);
     }
 
     private static class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {

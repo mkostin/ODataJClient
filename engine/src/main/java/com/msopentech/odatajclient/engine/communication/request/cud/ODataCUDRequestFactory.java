@@ -15,11 +15,13 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
+import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.InputStream;
 import java.net.URI;
 
@@ -69,7 +71,16 @@ public final class ODataCUDRequestFactory {
      * @return new ODataUpdateStreamRequest instance.
      */
     public static ODataStreamUpdateRequest getStreamUpdateRequest(final URI targetURI, final InputStream stream) {
-        return new ODataStreamUpdateRequest(targetURI, stream);
+        final ODataStreamUpdateRequest req;
+
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataStreamUpdateRequest(Method.POST, targetURI, stream);
+            req.setXHTTPMethod(Method.PUT.name());
+        } else {
+            req = new ODataStreamUpdateRequest(Method.PUT, targetURI, stream);
+        }
+
+        return req;
     }
 
     /**
@@ -83,7 +94,16 @@ public final class ODataCUDRequestFactory {
     public static ODataEntityUpdateRequest getEntityUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataEntity changes) {
 
-        return new ODataEntityUpdateRequest(targetURI, type, changes);
+        final ODataEntityUpdateRequest req;
+
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataEntityUpdateRequest(Method.POST, targetURI, changes);
+            req.setXHTTPMethod(type.getMethod().name());
+        } else {
+            req = new ODataEntityUpdateRequest(type.getMethod(), targetURI, changes);
+        }
+
+        return req;
     }
 
     /**
@@ -98,7 +118,16 @@ public final class ODataCUDRequestFactory {
     public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(
             final URI editURI, final InputStream media) {
 
-        return new ODataMediaEntityUpdateRequest(editURI, media);
+        final ODataMediaEntityUpdateRequest req;
+
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataMediaEntityUpdateRequest(Method.POST, editURI, media);
+            req.setXHTTPMethod(Method.PUT.name());
+        } else {
+            req = new ODataMediaEntityUpdateRequest(Method.PUT, editURI, media);
+        }
+
+        return req;
     }
 
     /**
@@ -114,22 +143,16 @@ public final class ODataCUDRequestFactory {
     public static ODataValueUpdateRequest getValueUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataPrimitiveValue value) {
 
-        return new ODataValueUpdateRequest(targetURI, type, value);
-    }
+        final ODataValueUpdateRequest req;
 
-    /**
-     * Gets an update request object instance.
-     * <p>
-     * Use this kind of request to update a complex property value
-     *
-     * @param targetURI entity set or entity or entity property URI.
-     * @param property value to be update.
-     * @return new ODataCreatePrimitiveRequest instance.
-     */
-    public static ODataPropertyUpdateRequest getComplexUpdateRequest(
-            final URI targetURI, final UpdateType type, final ODataProperty property) {
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataValueUpdateRequest(Method.POST, targetURI, value);
+            req.setXHTTPMethod(type.getMethod().name());
+        } else {
+            req = new ODataValueUpdateRequest(type.getMethod(), targetURI, value);
+        }
 
-        return new ODataPropertyUpdateRequest(targetURI, type, property);
+        return req;
     }
 
     /**
@@ -142,10 +165,51 @@ public final class ODataCUDRequestFactory {
      * @param property value to be update.
      * @return new ODataCreatePrimitiveRequest instance.
      */
-    public static ODataPropertyUpdateRequest getPrimitiveUpdateRequest(
+    public static ODataPropertyUpdateRequest getPropertyPrimitiveValueUpdateRequest(
             final URI targetURI, final ODataProperty property) {
 
-        return new ODataPropertyUpdateRequest(targetURI, UpdateType.REPLACE, property);
+        if (!property.hasPrimitiveValue()) {
+            throw new IllegalArgumentException("A primitive value is required");
+        }
+
+        final ODataPropertyUpdateRequest req;
+
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataPropertyUpdateRequest(Method.POST, targetURI, property);
+            req.setXHTTPMethod(Method.PUT.name());
+        } else {
+            req = new ODataPropertyUpdateRequest(Method.PUT, targetURI, property);
+        }
+
+        return req;
+    }
+
+    /**
+     * Gets an update request object instance.
+     * <p>
+     * Use this kind of request to update a complex property value
+     *
+     * @param targetURI entity set or entity or entity property URI.
+     * @param property value to be update.
+     * @return new ODataCreatePrimitiveRequest instance.
+     */
+    public static ODataPropertyUpdateRequest getPropertyComplexValueUpdateRequest(
+            final URI targetURI, final UpdateType type, final ODataProperty property) {
+
+        if (!property.hasComplexValue()) {
+            throw new IllegalArgumentException("A complex value is required");
+        }
+
+        final ODataPropertyUpdateRequest req;
+
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataPropertyUpdateRequest(Method.POST, targetURI, property);
+            req.setXHTTPMethod(type.getMethod().name());
+        } else {
+            req = new ODataPropertyUpdateRequest(type.getMethod(), targetURI, property);
+        }
+
+        return req;
     }
 
     /**
@@ -158,10 +222,23 @@ public final class ODataCUDRequestFactory {
      * @param property value to be update.
      * @return new ODataCreatePrimitiveRequest instance.
      */
-    public static ODataPropertyUpdateRequest getCollectionUpdateRequest(
+    public static ODataPropertyUpdateRequest getPropertyCollectionValueUpdateRequest(
             final URI targetURI, final ODataProperty property) {
 
-        return new ODataPropertyUpdateRequest(targetURI, UpdateType.REPLACE, property);
+        if (!property.hasCollectionValue()) {
+            throw new IllegalArgumentException("A collection value is required");
+        }
+
+        final ODataPropertyUpdateRequest req;
+
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataPropertyUpdateRequest(Method.POST, targetURI, property);
+            req.setXHTTPMethod(Method.PUT.name());
+        } else {
+            req = new ODataPropertyUpdateRequest(Method.PUT, targetURI, property);
+        }
+
+        return req;
     }
 
     /**
@@ -193,7 +270,16 @@ public final class ODataCUDRequestFactory {
     public static ODataLinkUpdateRequest getLinkUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataLink link) {
 
-        return new ODataLinkUpdateRequest(targetURI, type, link);
+        final ODataLinkUpdateRequest req;
+
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataLinkUpdateRequest(Method.POST, targetURI, link);
+            req.setXHTTPMethod(type.getMethod().name());
+        } else {
+            req = new ODataLinkUpdateRequest(type.getMethod(), targetURI, link);
+        }
+
+        return req;
     }
 
     /**
@@ -205,6 +291,15 @@ public final class ODataCUDRequestFactory {
      * @return new ODataDeleteRequest instance.
      */
     public static ODataDeleteRequest getDeleteRequest(final URI targetURI) {
-        return new ODataDeleteRequest(targetURI);
+        final ODataDeleteRequest req;
+
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataDeleteRequest(Method.POST, targetURI);
+            req.setXHTTPMethod(Method.DELETE.name());
+        } else {
+            req = new ODataDeleteRequest(Method.DELETE, targetURI);
+        }
+
+        return req;
     }
 }

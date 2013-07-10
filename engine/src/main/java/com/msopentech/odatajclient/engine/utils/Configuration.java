@@ -16,6 +16,8 @@
 package com.msopentech.odatajclient.engine.utils;
 
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Configuration wrapper.
@@ -26,6 +28,10 @@ public final class Configuration {
 
     public static final String REQ_EXEC_POOL_SIZE = "REQ_EXEC_POOL_SIZE";
 
+    public static final String USE_XHTTP_METHOD = "USE_XHTTP_METHOD";
+
+    private static final Map<String, String> conf = new HashMap<String, String>();
+
     private Configuration() {
         // Empty private constructor for static utility classes
     }
@@ -34,11 +40,15 @@ public final class Configuration {
      * Get given configuration property.
      *
      * @param key key value of the property to be retrieved.
-     * @param def default value to be used in case of the given key doesn't exist.
+     * @param defaultValue default value to be used in case of the given key doesn't exist.
      * @return property value if exists; default value if does not exist.
      */
-    public static String getProperty(final String key, final String def) {
-        return def;
+    public static String getProperty(final String key, final String defaultValue) {
+        return conf.containsKey(key) ? conf.get(key) : defaultValue;
+    }
+
+    public static String setProperty(final String key, final String value) {
+        return conf.put(key, value);
     }
 
     /**
@@ -50,5 +60,23 @@ public final class Configuration {
      */
     public static ODataPubFormat getFormat() {
         return ODataPubFormat.valueOf(getProperty(FORMAT, "JSON_FULL_METADATA"));
+    }
+
+    public static void setFormat(final ODataPubFormat format) {
+        setProperty(FORMAT, format.name());
+    }
+
+    /**
+     * Gets whether <tt>PUT</tt>, <tt>MERGE</tt>, <tt>PATCH</tt>, <tt>DELETE</tt> HTTP methods need to be translated to
+     * <tt>POST</tt> with additional <tt>X-HTTTP-Method</tt> header.
+     *
+     * @return whether <tt>X-HTTTP-Method</tt> header is to be used
+     */
+    public static boolean isUseXHTTPMethod() {
+        return Boolean.valueOf(getProperty(USE_XHTTP_METHOD, "false"));
+    }
+
+    public static void setUseXHTTPMethod(final boolean value) {
+        setProperty(USE_XHTTP_METHOD, Boolean.toString(value));
     }
 }

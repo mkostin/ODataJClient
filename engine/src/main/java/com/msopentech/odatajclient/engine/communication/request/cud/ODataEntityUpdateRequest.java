@@ -51,13 +51,12 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
     /**
      * Constructor.
      *
+     * @param method request method.
      * @param uri URI of the entity to be updated.
-     * @param type update type.
      * @param changes changes to be applied.
      */
-    ODataEntityUpdateRequest(final URI uri, final UpdateType type, final ODataEntity changes) {
-        // set method .... If cofigured X-HTTP-METHOD header will be used.
-        super(type.getMethod(), uri);
+    ODataEntityUpdateRequest(final Method method, final URI uri, final ODataEntity changes) {
+        super(method, uri);
         this.changes = changes;
     }
 

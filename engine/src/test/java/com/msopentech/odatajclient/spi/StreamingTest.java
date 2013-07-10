@@ -173,7 +173,7 @@ public class StreamingTest extends AbstractTest {
         final ODataChangeset changeset = payload.addChangeset();
 
         // Update Product into the changeset
-        targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)");
+        targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT);
         final URI editLink = targetURI.build();
 
         final ODataEntity merge = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
@@ -204,7 +204,7 @@ public class StreamingTest extends AbstractTest {
         retrieve = payload.addRetrieve();
 
         // prepare URI
-        targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("Product(-10)");
+        targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT);
 
         // create new request
         query = ODataRetrieveRequestFactory.getEntityRequest(targetURI.build());

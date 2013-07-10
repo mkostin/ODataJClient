@@ -77,7 +77,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void decimal() {
-        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, "Product(-10)", "Dimensions/Width");
+        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, TEST_PRODUCT, "Dimensions/Width");
         assertEquals(EdmSimpleType.DECIMAL.toString(), opv.getTypeName());
 
         final Float value = opv.<Float>toCastValue();
@@ -88,7 +88,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void datetime() {
         final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
-                "Product(-10)", "ComplexConcurrency/QueriedDateTime");
+                TEST_PRODUCT, "ComplexConcurrency/QueriedDateTime");
         assertEquals(EdmSimpleType.DATE_TIME.toString(), opv.getTypeName());
 
         final Timestamp value = opv.<Timestamp>toCastValue();

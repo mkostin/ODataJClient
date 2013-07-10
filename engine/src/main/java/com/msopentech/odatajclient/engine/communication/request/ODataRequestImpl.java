@@ -176,7 +176,7 @@ public class ODataRequestImpl implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
-    public void setHTTPMethod(final String value) {
+    public void setXHTTPMethod(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.xHttpMethod, value);
     }
 

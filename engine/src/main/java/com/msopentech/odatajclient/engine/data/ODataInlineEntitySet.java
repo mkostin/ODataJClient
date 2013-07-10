@@ -20,20 +20,20 @@ import java.net.URI;
 /**
  * OData inline entity set.
  */
-public abstract class ODataInlineEntitySet extends ODataLink {
+public class ODataInlineEntitySet extends ODataLink {
 
     private static final long serialVersionUID = -77628001615355449L;
 
     private ODataEntitySet entitySet;
 
-    public ODataInlineEntitySet(final URI uri, final ODataLinkType type, final String title,
+    ODataInlineEntitySet(final URI uri, final ODataLinkType type, final String title,
             final ODataEntitySet entitySet) {
 
         super(uri, type, title);
         this.entitySet = entitySet;
     }
 
-    public ODataInlineEntitySet(final URI baseURI, final String href, final ODataLinkType type, final String title,
+    ODataInlineEntitySet(final URI baseURI, final String href, final ODataLinkType type, final String title,
             final ODataEntitySet entitySet) {
 
         super(baseURI, href, type, title);

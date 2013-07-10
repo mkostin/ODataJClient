@@ -70,6 +70,8 @@ public abstract class AbstractTest {
 
     protected static final String TEST_CUSTOMER = "Customer(-10)";
 
+    protected static final String TEST_PRODUCT = "Product(-10)";
+
     protected static final String servicesODataServiceRootURL =
             "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/";
 

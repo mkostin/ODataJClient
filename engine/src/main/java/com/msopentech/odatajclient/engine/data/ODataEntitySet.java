@@ -43,8 +43,13 @@ public class ODataEntitySet extends ODataItem implements ODataInvokeResult {
      */
     protected List<ODataEntity> entities = new ArrayList<ODataEntity>();
 
-    public ODataEntitySet() {
+    ODataEntitySet() {
         super(null);
+    }
+
+    ODataEntitySet(final URI next) {
+        super(null);
+        this.next = next;
     }
 
     /**

@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.engine.communication.request.cud;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
@@ -52,12 +51,12 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
     /**
      * Constructor.
      *
+     * @param method request method.
      * @param targetURI entity set or entity or entity property URI.
      * @param value value to be created.
      */
-    ODataValueUpdateRequest(final URI targetURI, final UpdateType type, final ODataValue value) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(type.getMethod(), targetURI);
+    ODataValueUpdateRequest(final Method method, final URI targetURI, final ODataValue value) {
+        super(method, targetURI);
         // set request body
         this.value = value;
     }

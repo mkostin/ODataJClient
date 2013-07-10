@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
@@ -38,6 +39,7 @@ import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
+import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.IOException;
 import org.junit.Test;
 
@@ -219,8 +221,8 @@ public class PropertyTest extends AbstractTest {
         ODataRetrieveResponse<ODataProperty> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
 
-        ODataProperty primaryContactInfo = retrieveRes.getBody();
-        primaryContactInfo = ODataFactory.newComplexProperty("PrimaryContactInfo", primaryContactInfo.getComplexValue());
+        ODataProperty primaryContactInfo = ODataFactory.newComplexProperty("PrimaryContactInfo",
+                retrieveRes.getBody().getComplexValue());
 
         final String newItem = "new item " + System.currentTimeMillis();
 
@@ -232,11 +234,16 @@ public class PropertyTest extends AbstractTest {
         originalValue.add(new ODataPrimitiveValue.Builder().setText(newItem).build());
         assertEquals(origSize + 1, originalValue.size());
 
-        final ODataPropertyUpdateRequest updateReq =
-                ODataCUDRequestFactory.getComplexUpdateRequest(uriBuilder.build(), type, primaryContactInfo);
+        final ODataPropertyUpdateRequest updateReq = ODataCUDRequestFactory.getPropertyComplexValueUpdateRequest(
+                uriBuilder.build(), type, primaryContactInfo);
+        if (Configuration.isUseXHTTPMethod()) {
+            assertEquals(ODataRequest.Method.POST, updateReq.getMethod());
+        } else {
+            assertEquals(type.getMethod(), updateReq.getMethod());
+        }
         updateReq.setFormat(format);
 
-        ODataPropertyUpdateResponse updateRes = updateReq.execute();
+        final ODataPropertyUpdateResponse updateRes = updateReq.execute();
         assertEquals(204, updateRes.getStatusCode());
 
         retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
@@ -261,8 +268,8 @@ public class PropertyTest extends AbstractTest {
         ODataRetrieveResponse<ODataProperty> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
 
-        ODataProperty alternativeNames = retrieveRes.getBody();
-        alternativeNames = ODataFactory.newCollectionProperty("AlternativeNames", alternativeNames.getCollectionValue());
+        ODataProperty alternativeNames = ODataFactory.newCollectionProperty("AlternativeNames",
+                retrieveRes.getBody().getCollectionValue());
 
         final String newItem = "new item " + System.currentTimeMillis();
 
@@ -274,7 +281,12 @@ public class PropertyTest extends AbstractTest {
         assertEquals(origSize + 1, originalValue.size());
 
         final ODataPropertyUpdateRequest updateReq =
-                ODataCUDRequestFactory.getCollectionUpdateRequest(uriBuilder.build(), alternativeNames);
+                ODataCUDRequestFactory.getPropertyCollectionValueUpdateRequest(uriBuilder.build(), alternativeNames);
+        if (Configuration.isUseXHTTPMethod()) {
+            assertEquals(ODataRequest.Method.POST, updateReq.getMethod());
+        } else {
+            assertEquals(ODataRequest.Method.PUT, updateReq.getMethod());
+        }
         updateReq.setFormat(format);
 
         ODataPropertyUpdateResponse updateRes = updateReq.execute();
@@ -314,7 +326,12 @@ public class PropertyTest extends AbstractTest {
                 new ODataPrimitiveValue.Builder().setText(newMsg).build());
 
         final ODataPropertyUpdateRequest updateReq =
-                ODataCUDRequestFactory.getPrimitiveUpdateRequest(uriBuilder.build(), phoneNumber);
+                ODataCUDRequestFactory.getPropertyPrimitiveValueUpdateRequest(uriBuilder.build(), phoneNumber);
+        if (Configuration.isUseXHTTPMethod()) {
+            assertEquals(ODataRequest.Method.POST, updateReq.getMethod());
+        } else {
+            assertEquals(ODataRequest.Method.PUT, updateReq.getMethod());
+        }
         updateReq.setFormat(format);
 
         ODataPropertyUpdateResponse updateRes = updateReq.execute();

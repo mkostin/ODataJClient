@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
@@ -52,13 +51,13 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
     /**
      * Constructor.
      *
+     * @param method request method.
      * @param targetURI entity URI.
      * @param linkToBeRemoved link to be removed.
      * @param link entity to be linked.
      */
-    ODataLinkUpdateRequest(final URI targetURI, final UpdateType type, final ODataLink link) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(type.getMethod(), targetURI);
+    ODataLinkUpdateRequest(final Method method, final URI targetURI, final ODataLink link) {
+        super(method, targetURI);
         // set request body
         this.link = link;
     }

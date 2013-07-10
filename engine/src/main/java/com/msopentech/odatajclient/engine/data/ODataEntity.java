@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * OData entity.
  */
-public abstract class ODataEntity extends ODataItem implements ODataInvokeResult {
+public class ODataEntity extends ODataItem implements ODataInvokeResult {
 
     private static final long serialVersionUID = 8360640095932811034L;
 
@@ -70,7 +70,7 @@ public abstract class ODataEntity extends ODataItem implements ODataInvokeResult
      *
      * @param name OData entity name.
      */
-    public ODataEntity(final String name) {
+    ODataEntity(final String name) {
         super(name);
     }
 

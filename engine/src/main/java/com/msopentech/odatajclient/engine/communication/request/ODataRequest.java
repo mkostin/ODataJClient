@@ -221,7 +221,7 @@ public interface ODataRequest {
      * @param value header value.
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#xHttpMethod
      */
-    void setHTTPMethod(final String value);
+    void setXHTTPMethod(final String value);
 
     /**
      * Adds a custom OData request header.

@@ -31,6 +31,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataEntityCrea
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
@@ -73,11 +74,7 @@ public class ErrorTest extends AbstractTest {
 
             @Override
             public ODataEntity getBody() {
-                return new ODataEntity("Invalid") {
-
-                    private static final long serialVersionUID = 5538299138211283825L;
-
-                };
+                return ODataFactory.newEntity("Invalid");
             }
         }
     }

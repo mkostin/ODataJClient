@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
@@ -50,12 +49,12 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
     /**
      * Constructor.
      *
+     * @param method request method.
      * @param targetURI entity set or entity or entity property URI.
      * @param property value to be created.
      */
-    ODataPropertyUpdateRequest(final URI targetURI, final UpdateType type, final ODataProperty property) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(type.getMethod(), targetURI);
+    ODataPropertyUpdateRequest(final Method method, final URI targetURI, final ODataProperty property) {
+        super(method, targetURI);
         // set request body
         this.property = property;
     }
