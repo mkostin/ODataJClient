@@ -106,7 +106,6 @@ public class InvokeTest extends AbstractTest {
         assertNotNull(metadata);
 
         EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
-
         FunctionImport funcImp = container.getFunctionImport("GetArgumentPlusOne");
 
         ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
@@ -138,7 +137,6 @@ public class InvokeTest extends AbstractTest {
         assertNotNull(metadata);
 
         container = metadata.getSchema(0).getEntityContainers().get(0);
-
         funcImp = container.getFunctionImport("GetProductsByRating");
 
         builder = new ODataURIBuilder(servicesODataServiceRootURL).
@@ -195,7 +193,6 @@ public class InvokeTest extends AbstractTest {
         assertNotNull(metadata);
 
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
-
         final FunctionImport funcImp = container.getFunctionImport(action.getTitle());
 
         final ODataInvokeRequest<ODataNoContent> req = ODataInvokeRequestFactory.getInvokeRequest(
@@ -240,7 +237,6 @@ public class InvokeTest extends AbstractTest {
         assertNotNull(metadata);
 
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
-
         final FunctionImport funcImp = container.getFunctionImport("IncreaseSalaries");
 
         final ODataInvokeRequest<ODataNoContent> req = ODataInvokeRequestFactory.getInvokeRequest(
