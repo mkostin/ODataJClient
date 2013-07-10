@@ -41,7 +41,7 @@ import org.junit.Test;
 /**
  * This is the unit test class to check basic feed operations.
  */
-public class FeedTest extends AbstractTest {
+public class EntitySetTest extends AbstractTest {
 
     @Test
     public void readAtomFeed() throws IOException {

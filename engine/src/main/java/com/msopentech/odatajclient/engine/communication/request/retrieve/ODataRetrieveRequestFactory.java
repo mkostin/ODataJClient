@@ -58,7 +58,7 @@ public final class ODataRetrieveRequestFactory {
     }
 
     /**
-     * Gets a query request returning a set of one or more OData entity.
+     * Gets a query request returning a set of one or more OData entities.
      *
      * @param query query to be performed.
      * @return new ODataEntitySetRequest instance.
