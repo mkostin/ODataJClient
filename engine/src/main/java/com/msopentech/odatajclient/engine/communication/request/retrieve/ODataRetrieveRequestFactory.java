@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import java.net.URI;
 import org.apache.http.entity.ContentType;
 
@@ -125,6 +126,8 @@ public final class ODataRetrieveRequestFactory {
     public static ODataMediaRequest getMediaRequest(final URI query) {
         final ODataMediaRequest req = new ODataMediaRequest();
         req.setURI(query);
+        req.setAccept(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
+        req.setContentType(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
         return req;
     }
 }

@@ -33,15 +33,6 @@ import org.apache.http.client.HttpClient;
 public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMediaFormat> {
 
     /**
-     * Private constructor.
-     */
-    ODataMediaRequest() {
-        super();
-        setAccept(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
-        setContentType(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
-    }
-
-    /**
      * {@inheritDoc }
      */
     @Override
