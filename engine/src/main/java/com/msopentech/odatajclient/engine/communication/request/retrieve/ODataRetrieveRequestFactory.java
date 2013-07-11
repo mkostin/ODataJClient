@@ -76,9 +76,7 @@ public final class ODataRetrieveRequestFactory {
      * @return new ODataEntitySetIteratorRequest instance.
      */
     public static ODataEntitySetIteratorRequest getEntitySetIteratorRequest(final URI query) {
-        final ODataEntitySetIteratorRequest req = new ODataEntitySetIteratorRequest();
-        req.setURI(query);
-        return req;
+        return new ODataEntitySetIteratorRequest(query);
     }
 
     /**
