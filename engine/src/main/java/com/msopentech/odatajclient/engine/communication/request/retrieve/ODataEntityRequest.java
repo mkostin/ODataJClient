@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
@@ -31,11 +32,19 @@ import org.apache.http.client.HttpClient;
 public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataPubFormat> {
 
     /**
+     * Private constructor.
+     *
+     * @param query query to be executed.
+     */
+    ODataEntityRequest(final URI query) {
+        super(query);
+    }
+
+    /**
      * {@inheritDoc }
      */
     @Override
     public ODataRetrieveResponse<ODataEntity> execute() {
-        validate();
         final HttpResponse res = doExecute();
         return new ODataEntityResponseImpl(client, res);
     }

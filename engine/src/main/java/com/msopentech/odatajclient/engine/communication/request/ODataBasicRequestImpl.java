@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,8 +52,8 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      * @param method request method.
      * @param uri OData request URI.
      */
-    public ODataBasicRequestImpl(final Method method) {
-        super(method);
+    public ODataBasicRequestImpl(final Method method, final URI uri) {
+        super(method, uri);
     }
 
     /**
@@ -102,7 +103,7 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
 
     public void batch(final ODataBatchRequest req, final String contentId) {
         try {
-            req.rawAppend(getFullHeaders());
+            req.rawAppend(toByteArray());
             if (StringUtils.isNotBlank(contentId)) {
                 req.rawAppend((ODataBatchConstants.CHANGESET_CONTENT_ID_NAME + ": " + contentId).getBytes());
                 req.rawAppend(ODataStreamer.CRLF);

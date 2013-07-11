@@ -44,10 +44,11 @@ public class ODataMediaEntityUpdateRequest
      * Constructor.
      *
      * @param method request method.
+     * @param editURI edit URI of the entity to be updated.
      * @param media media entity blob to be created.
      */
-    ODataMediaEntityUpdateRequest(final Method method, final InputStream media) {
-        super(method);
+    ODataMediaEntityUpdateRequest(final Method method, final URI editURI, final InputStream media) {
+        super(method, editURI);
         this.media = media;
     }
 

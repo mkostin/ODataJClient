@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import java.net.URI;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
 
 /**
@@ -36,9 +37,8 @@ public final class ODataRetrieveRequestFactory {
      * @return new ODataServiceDocumentRequest instance.
      */
     public static ODataServiceDocumentRequest getServiceDocumentRequest(final String serviceRoot) {
-        final ODataServiceDocumentRequest req = new ODataServiceDocumentRequest();
-        req.setURI(URI.create(serviceRoot));
-        return req;
+        return new ODataServiceDocumentRequest(StringUtils.isNotBlank(serviceRoot) && serviceRoot.endsWith("/")
+                ? new ODataURIBuilder(serviceRoot).build() : new ODataURIBuilder(serviceRoot + "/").build());
     }
 
     /**
@@ -49,11 +49,11 @@ public final class ODataRetrieveRequestFactory {
      * @return new ODataMetadataRequest instance.
      */
     public static ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
-        final ODataMetadataRequest req = new ODataMetadataRequest();
-        req.setURI(new ODataURIBuilder(serviceRoot).appendMetadataSegment().build());
-        req.setAccept(ContentType.APPLICATION_XML.getMimeType());
-        req.setContentType(ContentType.APPLICATION_XML.getMimeType());
-        return req;
+        final ODataMetadataRequest request =
+                new ODataMetadataRequest(new ODataURIBuilder(serviceRoot).appendMetadataSegment().build());
+        request.setAccept(ContentType.APPLICATION_XML.getMimeType());
+        request.setContentType(ContentType.APPLICATION_XML.getMimeType());
+        return request;
     }
 
     /**
@@ -63,9 +63,7 @@ public final class ODataRetrieveRequestFactory {
      * @return new ODataEntitySetRequest instance.
      */
     public static ODataEntitySetRequest getEntitySetRequest(final URI query) {
-        final ODataEntitySetRequest req = new ODataEntitySetRequest();
-        req.setURI(query);
-        return req;
+        return new ODataEntitySetRequest(query);
     }
 
     /**
@@ -90,9 +88,7 @@ public final class ODataRetrieveRequestFactory {
      * @return new ODataEntityRequest instance.
      */
     public static ODataEntityRequest getEntityRequest(final URI query) {
-        final ODataEntityRequest req = new ODataEntityRequest();
-        req.setURI(query);
-        return req;
+        return new ODataEntityRequest(query);
     }
 
     /**
@@ -102,9 +98,7 @@ public final class ODataRetrieveRequestFactory {
      * @return new ODataPropertyRequest instance.
      */
     public static ODataPropertyRequest getPropertyRequest(final URI query) {
-        final ODataPropertyRequest req = new ODataPropertyRequest();
-        req.setURI(query);
-        return req;
+        return new ODataPropertyRequest(query);
     }
 
     /**
@@ -114,9 +108,7 @@ public final class ODataRetrieveRequestFactory {
      * @return new ODataValueRequest instance.
      */
     public static ODataValueRequest getValueRequest(final URI query) {
-        final ODataValueRequest req = new ODataValueRequest();
-        req.setURI(query);
-        return req;
+        return new ODataValueRequest(query);
     }
 
     /**
@@ -126,9 +118,7 @@ public final class ODataRetrieveRequestFactory {
      * @return new ODataLinkRequest instance.
      */
     public static ODataLinkRequest getLinkRequest(final URI query, final String linkName) {
-        final ODataLinkRequest req = new ODataLinkRequest();
-        req.setURI(new ODataURIBuilder(query.toASCIIString()).appendLinksSegment(linkName).build());
-        return req;
+        return new ODataLinkRequest(query, linkName);
     }
 
     /**
@@ -138,8 +128,17 @@ public final class ODataRetrieveRequestFactory {
      * @return new ODataMediaRequest instance.
      */
     public static ODataMediaRequest getMediaRequest(final URI query) {
-        final ODataMediaRequest req = new ODataMediaRequest();
-        req.setURI(query);
-        return req;
+        return new ODataMediaRequest(query);
+    }
+
+    /**
+     * Implements a raw request returning a stream.
+     *
+     * @param query query to be performed.
+     * @return new ODataRawRetrieveRequest instance.
+     */
+    public static ODataRawRequest getRawRetrieveRequest(final URI uri) {
+        return new ODataRawRequest(uri);
+
     }
 }

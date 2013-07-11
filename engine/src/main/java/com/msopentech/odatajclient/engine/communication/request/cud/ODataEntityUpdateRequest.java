@@ -52,10 +52,11 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
      * Constructor.
      *
      * @param method request method.
+     * @param uri URI of the entity to be updated.
      * @param changes changes to be applied.
      */
-    ODataEntityUpdateRequest(final Method method, final ODataEntity changes) {
-        super(method);
+    ODataEntityUpdateRequest(final Method method, final URI uri, final ODataEntity changes) {
+        super(method, uri);
         this.changes = changes;
     }
 
@@ -64,7 +65,6 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
      */
     @Override
     public ODataEntityUpdateResponse execute() {
-        validate();
         final InputStream input = getPayload();
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
 

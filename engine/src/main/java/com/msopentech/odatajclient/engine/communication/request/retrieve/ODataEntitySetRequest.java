@@ -34,11 +34,19 @@ public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataEntitySet, 
     private ODataEntitySet feed = null;
 
     /**
+     * Private constructor.
+     *
+     * @param query query to be executed.
+     */
+    ODataEntitySetRequest(final URI query) {
+        super(query);
+    }
+
+    /**
      * {@inheritDoc }
      */
     @Override
     public ODataRetrieveResponse<ODataEntitySet> execute() {
-        validate();
         final HttpResponse res = doExecute();
         return new ODataEntitySetResponseImpl(client, res);
     }

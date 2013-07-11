@@ -36,7 +36,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +69,11 @@ public class ODataRequestImpl implements ODataRequest {
     protected final ODataHeaders odataHeaders;
 
     /**
+     * Target URI.
+     */
+    protected final URI uri;
+
+    /**
      * HTTP client.
      */
     protected final HttpClient client;
@@ -76,30 +81,23 @@ public class ODataRequestImpl implements ODataRequest {
     /**
      * HTTP request.
      */
-    protected final HttpRequestBase request;
-
-    /**
-     * Target URI.
-     */
-    protected URI uri;
+    protected final HttpUriRequest request;
 
     /**
      * Constructor.
      *
      * @param method HTTP request method. If configured X-HTTP-METHOD header will be used.
+     * @param uri OData request URI.
      */
-    protected ODataRequestImpl(final Method method) {
+    protected ODataRequestImpl(final Method method, final URI uri) {
         this.method = method;
         // initialize a default header from configuration
         this.odataHeaders = new ODataHeaders();
+        // target uri
+        this.uri = uri;
 
         this.client = new DefaultHttpClient();
-        this.request = URIUtils.toHttpRequest(this.method);
-    }
-
-    @Override
-    public void setURI(final URI uri) {
-        this.uri = uri;
+        this.request = URIUtils.toHttpURIRequest(this.method, this.uri);
     }
 
     /**
@@ -293,7 +291,7 @@ public class ODataRequestImpl implements ODataRequest {
      * {@inheritDoc }
      */
     @Override
-    public byte[] getFullHeaders() {
+    public byte[] toByteArray() {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             final StringBuilder requestBuilder = new StringBuilder();
@@ -329,20 +327,11 @@ public class ODataRequestImpl implements ODataRequest {
         }
     }
 
-    protected void validate() {
-        if (this.uri == null) {
-            throw new IllegalStateException("No target URI provided");
-        }
-        this.request.setURI(this.uri);
-    }
-
     /**
      * {@inheritDoc }
      */
     @Override
     public InputStream rawExecute() {
-        validate();
-
         try {
             final HttpEntity httpEntity = doExecute().getEntity();
             return httpEntity == null ? null : httpEntity.getContent();

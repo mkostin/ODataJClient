@@ -42,10 +42,11 @@ public class ODataStreamUpdateRequest
      * Constructor.
      *
      * @param method request method.
+     * @param targetURI target URI.
      * @param stream stream to be updated.
      */
-    ODataStreamUpdateRequest(final Method method, final InputStream stream) {
-        super(method);
+    ODataStreamUpdateRequest(final Method method, final URI targetURI, final InputStream stream) {
+        super(method, targetURI);
         this.stream = stream;
     }
 

@@ -41,8 +41,6 @@ public interface ODataRequest {
 
     }
 
-    void setURI(URI uri);
-    
     /**
      * Returns OData request target URI.
      *
@@ -238,7 +236,7 @@ public interface ODataRequest {
      *
      * @return full request header.
      */
-    byte[] getFullHeaders();
+    byte[] toByteArray();
 
     /**
      * Request raw execute.

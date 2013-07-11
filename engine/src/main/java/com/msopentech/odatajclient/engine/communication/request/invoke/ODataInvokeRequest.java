@@ -71,9 +71,14 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
      *
      * @param reference reference class for invoke result
      * @param method HTTP method of the request. If configured X-HTTP-METHOD header will be used.
+     * @param uri URI that identifies the operation.
      */
-    ODataInvokeRequest(final Class<T> reference, final Method method) {
-        super(method);
+    ODataInvokeRequest(
+            final Class<T> reference,
+            final Method method,
+            final URI uri) {
+
+        super(method, uri);
 
         this.reference = reference;
         this.parameters = new HashMap<String, ODataValue>();
@@ -139,8 +144,6 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
      */
     @Override
     public ODataInvokeResponse<T> execute() {
-        validate();
-
         final InputStream input = getPayload();
 
         if (!this.parameters.isEmpty()) {

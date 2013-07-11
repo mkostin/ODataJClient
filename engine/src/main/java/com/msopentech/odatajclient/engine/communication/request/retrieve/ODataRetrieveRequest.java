@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Met
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import java.io.InputStream;
+import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
@@ -37,8 +38,8 @@ abstract class ODataRetrieveRequest<V, T extends Enum<T>>
      *
      * @param query query to be executed.
      */
-    ODataRetrieveRequest() {
-        super(Method.GET);
+    ODataRetrieveRequest(final URI query) {
+        super(Method.GET, query);
     }
 
     /**

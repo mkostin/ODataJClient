@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.IOException;
+import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
@@ -33,11 +34,19 @@ import org.apache.http.client.HttpClient;
 public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODataPubFormat> {
 
     /**
+     * Constructor.
+     *
+     * @param serviceRoot query URI.
+     */
+    ODataMetadataRequest(final URI uri) {
+        super(uri);
+    }
+
+    /**
      * {@inheritDoc }
      */
     @Override
     public ODataRetrieveResponse<EdmMetadata> execute() {
-        validate();
         final HttpResponse res = doExecute();
         return new ODataMetadataResponsImpl(client, res);
     }

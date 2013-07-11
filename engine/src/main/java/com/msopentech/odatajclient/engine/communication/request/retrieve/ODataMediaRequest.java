@@ -34,9 +34,11 @@ public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMe
 
     /**
      * Private constructor.
+     *
+     * @param query query to be executed.
      */
-    ODataMediaRequest() {
-        super();
+    ODataMediaRequest(final URI query) {
+        super(query);
         setAccept(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
         setContentType(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
     }
@@ -46,7 +48,6 @@ public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMe
      */
     @Override
     public ODataRetrieveResponse<InputStream> execute() {
-        validate();
         final HttpResponse res = doExecute();
         return new ODataMediaResponseImpl(client, res);
     }

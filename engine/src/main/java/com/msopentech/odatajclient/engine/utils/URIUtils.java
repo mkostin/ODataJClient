@@ -26,7 +26,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 
 public final class URIUtils {
 
@@ -62,33 +62,33 @@ public final class URIUtils {
         return uri.normalize();
     }
 
-    public static HttpRequestBase toHttpRequest(final ODataRequest.Method method) {
-        HttpRequestBase result;
+    public static HttpUriRequest toHttpURIRequest(final ODataRequest.Method method, final URI uri) {
+        HttpUriRequest result;
 
         switch (method) {
             case POST:
-                result = new HttpPost();
+                result = new HttpPost(uri);
                 break;
 
             case PUT:
-                result = new HttpPut();
+                result = new HttpPut(uri);
                 break;
 
             case PATCH:
-                result = new HttpPatch();
+                result = new HttpPatch(uri);
                 break;
 
             case MERGE:
-                result = new HttpMerge();
+                result = new HttpMerge(uri);
                 break;
 
             case DELETE:
-                result = new HttpDelete();
+                result = new HttpDelete(uri);
                 break;
 
             case GET:
             default:
-                result = new HttpGet();
+                result = new HttpGet(uri);
                 break;
         }
 

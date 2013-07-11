@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.IOException;
 import java.net.URI;
@@ -34,11 +35,19 @@ import org.apache.http.client.HttpClient;
 public class ODataLinkRequest extends ODataRetrieveRequest<List<URI>, ODataFormat> {
 
     /**
+     * Private constructor.
+     *
+     * @param query query to be executed.
+     */
+    ODataLinkRequest(final URI targetURI, final String linkName) {
+        super(new ODataURIBuilder(targetURI.toASCIIString()).appendLinksSegment(linkName).build());
+    }
+
+    /**
      * {@inheritDoc }
      */
     @Override
     public ODataRetrieveResponse<List<URI>> execute() {
-        validate();
         final HttpResponse res = doExecute();
         return new ODataEntitySetResponseImpl(client, res);
     }

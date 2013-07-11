@@ -32,8 +32,6 @@ public final class ODataBatchRequestFactory {
      * @return new ODataBatchRequest instance.
      */
     public static ODataBatchRequest getBatchRequest(final String serviceRoot) {
-        final ODataBatchRequest req = new ODataBatchRequest();
-        req.setURI(new ODataURIBuilder(serviceRoot).appendBatchSegment().build());
-        return req;
+        return new ODataBatchRequest(new ODataURIBuilder(serviceRoot).appendBatchSegment().build());
     }
 }
