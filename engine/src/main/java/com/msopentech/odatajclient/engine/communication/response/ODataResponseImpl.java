@@ -17,8 +17,8 @@ package com.msopentech.odatajclient.engine.communication.response;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchUtilities;
-import com.msopentech.odatajclient.engine.utils.BatchController;
-import com.msopentech.odatajclient.engine.utils.BatchLineIterator;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchController;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchLineIterator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -58,7 +58,7 @@ public abstract class ODataResponseImpl implements ODataResponse {
 
     private boolean hasBeenInitialized = false;
 
-    private BatchController batchInfo = null;
+    private ODataBatchController batchInfo = null;
 
     public ODataResponseImpl() {
         this.client = null;
@@ -110,12 +110,28 @@ public abstract class ODataResponseImpl implements ODataResponse {
         return headers.get(name);
     }
 
+    @Override
+    public Collection<String> getHeader(final ODataHeaders.HeaderName name) {
+        return headers.get(name.toString());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getEtag() {
+        final Collection<String> etag = getHeader(ODataHeaders.HeaderName.etag);
+        return etag == null || etag.isEmpty()
+                ? null
+                : etag.iterator().next();
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public String getContentType() {
-        final Collection<String> contentTypes = getHeader(ODataHeaders.HeaderName.contentType.toString());
+        final Collection<String> contentTypes = getHeader(ODataHeaders.HeaderName.contentType);
         return contentTypes == null || contentTypes.isEmpty()
                 ? null
                 : contentTypes.iterator().next();
@@ -141,7 +157,7 @@ public abstract class ODataResponseImpl implements ODataResponse {
     public ODataResponse initFromBatch(
             final Map.Entry<Integer, String> responseLine,
             final Map<String, Collection<String>> headers,
-            final BatchLineIterator batchLineIterator,
+            final ODataBatchLineIterator batchLineIterator,
             final String boundary) {
 
         if (hasBeenInitialized) {
@@ -150,7 +166,7 @@ public abstract class ODataResponseImpl implements ODataResponse {
 
         this.hasBeenInitialized = true;
 
-        this.batchInfo = new BatchController(batchLineIterator, boundary);
+        this.batchInfo = new ODataBatchController(batchLineIterator, boundary);
 
         this.statusCode = responseLine.getKey();
         this.statusMessage = responseLine.getValue();

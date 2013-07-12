@@ -46,6 +46,7 @@ import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
@@ -138,7 +139,8 @@ public class StreamingTest extends AbstractTest {
         ODataResponse res = chgResponseItem.next();
         assertEquals(404, res.getStatusCode());
         assertEquals("Not Found", res.getStatusMessage());
-        assertEquals(new Integer(3), Integer.valueOf(res.getHeader("Content-ID").iterator().next()));
+        assertEquals(new Integer(3), Integer.valueOf(
+                res.getHeader(ODataBatchConstants.CHANGESET_CONTENT_ID_NAME).iterator().next()));
         assertFalse(chgResponseItem.hasNext());
     }
 
@@ -174,7 +176,7 @@ public class StreamingTest extends AbstractTest {
         targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT);
         final URI editLink = targetURI.build();
 
-        final ODataEntity merge = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
+        final ODataEntity merge = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
         merge.setEditLink(editLink);
 
         merge.addProperty(ODataFactory.newPrimitiveProperty(

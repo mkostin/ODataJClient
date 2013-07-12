@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
-import com.msopentech.odatajclient.engine.utils.BatchLineIterator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -39,7 +38,7 @@ public abstract class ODataBatchResponseItem implements Iterator<ODataResponse> 
 
     private final boolean changeset;
 
-    protected BatchLineIterator batchLineIterator;
+    protected ODataBatchLineIterator batchLineIterator;
 
     protected String boundary;
 
@@ -56,7 +55,7 @@ public abstract class ODataBatchResponseItem implements Iterator<ODataResponse> 
         responses.put(contentId, res);
     }
 
-    void initFromBatch(final BatchLineIterator batchLineIterator, final String boundary) {
+    void initFromBatch(final ODataBatchLineIterator batchLineIterator, final String boundary) {
         if (closed) {
             throw new IllegalStateException("Invalid batch item because explicitely closed");
         }

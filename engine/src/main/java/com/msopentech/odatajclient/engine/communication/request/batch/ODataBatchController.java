@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.utils;
+package com.msopentech.odatajclient.engine.communication.request.batch;
 
-public class BatchController {
+public class ODataBatchController {
 
     private boolean validBatch = true;
 
     private final String boundary;
 
-    private final BatchLineIterator batchLineIterator;
+    private final ODataBatchLineIterator batchLineIterator;
 
-    public BatchController(final BatchLineIterator batchLineIterator, final String boundary) {
+    public ODataBatchController(final ODataBatchLineIterator batchLineIterator, final String boundary) {
         this.batchLineIterator = batchLineIterator;
         this.boundary = boundary;
     }
@@ -32,7 +32,7 @@ public class BatchController {
         return validBatch;
     }
 
-    public void setValidBatch(boolean validBatch) {
+    public void setValidBatch(final boolean validBatch) {
         this.validBatch = validBatch;
     }
 
@@ -40,7 +40,7 @@ public class BatchController {
         return boundary;
     }
 
-    public BatchLineIterator getBatchLineIterator() {
+    public ODataBatchLineIterator getBatchLineIterator() {
         return batchLineIterator;
     }
 }

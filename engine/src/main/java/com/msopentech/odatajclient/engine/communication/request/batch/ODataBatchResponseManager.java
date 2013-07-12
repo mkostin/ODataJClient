@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
-import com.msopentech.odatajclient.engine.utils.BatchLineIterator;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +34,7 @@ public class ODataBatchResponseManager implements Iterator<ODataBatchResponseIte
      */
     private static final Logger LOG = LoggerFactory.getLogger(ODataBatchResponseManager.class);
 
-    private final BatchLineIterator batchLineIterator;
+    private final ODataBatchLineIterator batchLineIterator;
 
     private final String batchBoundary;
 
@@ -46,10 +45,11 @@ public class ODataBatchResponseManager implements Iterator<ODataBatchResponseIte
     public ODataBatchResponseManager(final ODataBatchResponse res, final List<ODataBatchResponseItem> expectedItems) {
         try {
             this.expectedItemsIterator = expectedItems.iterator();
-            this.batchLineIterator = new BatchLineIterator(IOUtils.lineIterator(res.getRawResponse(), "UTF-8"));
+            this.batchLineIterator = new ODataBatchLineIterator(IOUtils.lineIterator(res.getRawResponse(), "UTF-8"));
 
             // search for boundary
-            batchBoundary = ODataBatchUtilities.getBoundaryFromHeader(res.getHeader(HttpHeaders.CONTENT_TYPE));
+            batchBoundary = ODataBatchUtilities.getBoundaryFromHeader(
+                    res.getHeader(ODataHeaders.HeaderName.contentType));
             LOG.debug("Retrieved batch response bondary '{}'", batchBoundary);
         } catch (IOException e) {
             LOG.error("Error parsing batch response", e);
@@ -85,7 +85,8 @@ public class ODataBatchResponseManager implements Iterator<ODataBatchResponseIte
 
                 current.initFromBatch(
                         batchLineIterator,
-                        ODataBatchUtilities.getBoundaryFromHeader(nextItemHeaders.get(HttpHeaders.CONTENT_TYPE)));
+                        ODataBatchUtilities.getBoundaryFromHeader(
+                        nextItemHeaders.get(ODataHeaders.HeaderName.contentType.toString())));
                 break;
 
             case RETRIEVE:

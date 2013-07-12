@@ -23,7 +23,6 @@ import static org.junit.Assert.assertNotNull;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
@@ -71,6 +70,8 @@ public abstract class AbstractTest {
     protected static final String TEST_CUSTOMER = "Customer(-10)";
 
     protected static final String TEST_PRODUCT = "Product(-10)";
+
+    protected static final String TEST_PRODUCT_TYPE = "Microsoft.Test.OData.Services.AstoriaDefaultService.Product";
 
     protected static final String servicesODataServiceRootURL =
             "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/";
@@ -327,12 +328,12 @@ public abstract class AbstractTest {
     }
 
     protected String getETag(final URI uri) {
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uri);
-        final ODataRetrieveResponse<ODataEntity> res = req.execute();
-        final Collection<String> etag = res.getHeader("ETag");
-        res.close();
-
-        return etag == null || etag.isEmpty() ? null : etag.iterator().next();
+        final ODataRetrieveResponse<ODataEntity> res = ODataRetrieveRequestFactory.getEntityRequest(uri).execute();
+        try {
+            return res.getEtag();
+        } finally {
+            res.close();
+        }
     }
 
     protected ODataEntity createEmployee(final ODataPubFormat format) {

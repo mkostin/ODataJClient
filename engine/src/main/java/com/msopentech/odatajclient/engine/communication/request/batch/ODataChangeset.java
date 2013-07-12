@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.util.UUID;
-import org.apache.http.HttpHeaders;
 
 /**
  * Changeset wrapper for the corresponding batch item.
@@ -79,7 +79,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
         }
 
         if (!hasStreamedSomething) {
-            stream((HttpHeaders.CONTENT_TYPE + ": "
+            stream((ODataHeaders.HeaderName.contentType.toString() + ": "
                     + ODataBatchConstants.MULTIPART_CONTENT_TYPE + ";boundary=" + boundary).getBytes());
 
             newLine();

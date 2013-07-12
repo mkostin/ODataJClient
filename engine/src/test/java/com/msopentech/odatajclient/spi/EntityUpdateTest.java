@@ -48,7 +48,7 @@ public class EntityUpdateTest extends AbstractTest {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT).build();
         final String etag = getETag(uri);
-        final ODataEntity merge = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
+        final ODataEntity merge = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
         merge.setEditLink(uri);
         updateEntityDescription(format, merge, UpdateType.MERGE, etag);
     }
@@ -58,7 +58,7 @@ public class EntityUpdateTest extends AbstractTest {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT).build();
         final String etag = getETag(uri);
-        final ODataEntity merge = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
+        final ODataEntity merge = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
         merge.setEditLink(uri);
         updateEntityDescription(format, merge, UpdateType.MERGE, etag);
     }
@@ -68,7 +68,7 @@ public class EntityUpdateTest extends AbstractTest {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT).build();
         final String etag = getETag(uri);
-        final ODataEntity patch = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
+        final ODataEntity patch = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
         patch.setEditLink(uri);
         updateEntityDescription(format, patch, UpdateType.PATCH, etag);
     }
@@ -78,7 +78,7 @@ public class EntityUpdateTest extends AbstractTest {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT).build();
         final String etag = getETag(uri);
-        final ODataEntity patch = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
+        final ODataEntity patch = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
         patch.setEditLink(uri);
         updateEntityDescription(format, patch, UpdateType.PATCH, etag);
     }

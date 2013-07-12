@@ -15,9 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
-import com.msopentech.odatajclient.engine.utils.BatchController;
-import com.msopentech.odatajclient.engine.utils.BatchLineIterator;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,34 +32,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ODataBatchUtilities {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(ODataBatchUtilities.class);
-
-    private static final Pattern RESPONSE_PATTERN =
-            Pattern.compile("HTTP/\\d\\.\\d (\\d+) (.*)", Pattern.CASE_INSENSITIVE);
-
-    public static String readBatchPart(
-            final BatchController batchController, final boolean checkCurrent) {
-        return readBatchPart(batchController, null, -1, checkCurrent);
-    }
-
-    public static String readBatchPart(
-            final BatchController batchController, final int count) {
-        return readBatchPart(batchController, null, count, true);
-    }
-
-    public static String readBatchPart(
-            final BatchController controller, final OutputStream os, final boolean checkCurrent) {
-        return readBatchPart(controller, os, -1, checkCurrent);
-    }
 
     public static enum BatchItemType {
 
@@ -70,8 +45,30 @@ public class ODataBatchUtilities {
 
     }
 
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ODataBatchUtilities.class);
+
+    private static final Pattern RESPONSE_PATTERN =
+            Pattern.compile("HTTP/\\d\\.\\d (\\d+) (.*)", Pattern.CASE_INSENSITIVE);
+
+    public static String readBatchPart(final ODataBatchController batchController, final boolean checkCurrent) {
+        return readBatchPart(batchController, null, -1, checkCurrent);
+    }
+
+    public static String readBatchPart(final ODataBatchController batchController, final int count) {
+        return readBatchPart(batchController, null, count, true);
+    }
+
     public static String readBatchPart(
-            final BatchController controller, final OutputStream os, final int count, final boolean checkCurrent) {
+            final ODataBatchController controller, final OutputStream os, final boolean checkCurrent) {
+
+        return readBatchPart(controller, os, -1, checkCurrent);
+    }
+
+    public static String readBatchPart(
+            final ODataBatchController controller, final OutputStream os, final int count, final boolean checkCurrent) {
 
         String currentLine;
 
@@ -112,7 +109,7 @@ public class ODataBatchUtilities {
         return currentLine;
     }
 
-    public static Map<String, Collection<String>> readHeaders(final BatchLineIterator iterator) {
+    public static Map<String, Collection<String>> readHeaders(final ODataBatchLineIterator iterator) {
         final Map<String, Collection<String>> target =
                 new TreeMap<String, Collection<String>>(String.CASE_INSENSITIVE_ORDER);
 
@@ -120,13 +117,14 @@ public class ODataBatchUtilities {
         return target;
     }
 
-    public static void readHeaders(final BatchLineIterator iterator, final Map<String, Collection<String>> target) {
+    public static void readHeaders(
+            final ODataBatchLineIterator iterator, final Map<String, Collection<String>> target) {
 
         try {
-            final ByteArrayOutputStream os = new ByteArrayOutputStream();
-            readBatchPart(new BatchController(iterator, null), os, true);
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            readBatchPart(new ODataBatchController(iterator, null), baos, true);
 
-            final LineIterator headers = IOUtils.lineIterator(new ByteArrayInputStream(os.toByteArray()), "UTF-8");
+            final LineIterator headers = IOUtils.lineIterator(new ByteArrayInputStream(baos.toByteArray()), "UTF-8");
             while (headers.hasNext()) {
                 final String line = headers.nextLine().trim();
                 if (StringUtils.isNotBlank(line)) {
@@ -140,7 +138,7 @@ public class ODataBatchUtilities {
     }
 
     public static void addHeaderLine(final String headerLine, final Map<String, Collection<String>> targetMap) {
-        int sep = headerLine.indexOf(":");
+        final int sep = headerLine.indexOf(':');
         if (sep > 0 && sep < headerLine.length() - 1) {
             final String key = headerLine.substring(0, sep).trim();
             final Collection<String> value;
@@ -164,18 +162,18 @@ public class ODataBatchUtilities {
         final String headerValue = contentType.toString();
 
         final int start = headerValue.indexOf(boundaryKey) + boundaryKey.length();
-        int end = headerValue.indexOf(";", start);
+        int end = headerValue.indexOf(';', start);
 
         if (end < 0) {
-            end = headerValue.indexOf("]", start);
+            end = headerValue.indexOf(']', start);
         }
 
         final String res = headerValue.substring(start, end);
         return res.startsWith("--") ? res : "--" + res;
     }
 
-    public static Map.Entry<Integer, String> readResponseLine(final BatchLineIterator iterator) {
-        final String line = readBatchPart(new BatchController(iterator, null), 1);
+    public static Map.Entry<Integer, String> readResponseLine(final ODataBatchLineIterator iterator) {
+        final String line = readBatchPart(new ODataBatchController(iterator, null), 1);
         LOG.debug("Response line '{}'", line);
 
         final Matcher matcher = RESPONSE_PATTERN.matcher(line.trim());
@@ -188,12 +186,12 @@ public class ODataBatchUtilities {
     }
 
     public static Map<String, Collection<String>> nextItemHeaders(
-            final BatchLineIterator iterator, final String boundary) {
+            final ODataBatchLineIterator iterator, final String boundary) {
 
         final Map<String, Collection<String>> headers =
                 new TreeMap<String, Collection<String>>(String.CASE_INSENSITIVE_ORDER);
 
-        final String line = ODataBatchUtilities.readBatchPart(new BatchController(iterator, boundary), true);
+        final String line = ODataBatchUtilities.readBatchPart(new ODataBatchController(iterator, boundary), true);
 
         if (line != null && line.trim().equals(boundary)) {
             ODataBatchUtilities.readHeaders(iterator, headers);
@@ -207,8 +205,8 @@ public class ODataBatchUtilities {
 
         final BatchItemType nextItemType;
 
-        final String contentType = headers.containsKey(HttpHeaders.CONTENT_TYPE)
-                ? headers.get(HttpHeaders.CONTENT_TYPE).toString() : StringUtils.EMPTY;
+        final String contentType = headers.containsKey(ODataHeaders.HeaderName.contentType.toString())
+                ? headers.get(ODataHeaders.HeaderName.contentType.toString()).toString() : StringUtils.EMPTY;
 
         if (contentType.contains(ODataBatchConstants.MULTIPART_CONTENT_TYPE)) {
             nextItemType = BatchItemType.CHANGESET;
@@ -222,7 +220,7 @@ public class ODataBatchUtilities {
         return nextItemType;
     }
 
-    private static boolean isNotEndLine(final BatchController controller, final String line) {
+    private static boolean isNotEndLine(final ODataBatchController controller, final String line) {
         return line == null
                 || (StringUtils.isBlank(controller.getBoundary()) && StringUtils.isNotBlank(line))
                 || (StringUtils.isNotBlank(controller.getBoundary()) && !line.startsWith(controller.getBoundary()));

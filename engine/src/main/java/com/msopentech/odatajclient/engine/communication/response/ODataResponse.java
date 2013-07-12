@@ -15,7 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.utils.BatchLineIterator;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchLineIterator;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
@@ -41,6 +42,28 @@ public interface ODataResponse {
     Collection<String> getHeader(final String name);
 
     /**
+     * Gets header value of the given header.
+     *
+     * @param name header to be retrieved.
+     * @return response header value.
+     */
+    Collection<String> getHeader(final ODataHeaders.HeaderName name);
+
+    /**
+     * Gets 'ETag' header value.
+     *
+     * @return ETag header value, if provided
+     */
+    String getEtag();
+
+    /**
+     * Gets the content type.
+     *
+     * @return content type
+     */
+    String getContentType();
+
+    /**
      * Gets status code.
      *
      * @return status code.
@@ -53,13 +76,6 @@ public interface ODataResponse {
      * @return status message.
      */
     String getStatusMessage();
-
-    /**
-     * Gets the content type.
-     *
-     * @return content type
-     */
-    String getContentType();
 
     /**
      * Gets response body as InputStream.
@@ -79,7 +95,7 @@ public interface ODataResponse {
     ODataResponse initFromBatch(
             final Map.Entry<Integer, String> responseLine,
             final Map<String, Collection<String>> headers,
-            final BatchLineIterator batchLineIterator,
+            final ODataBatchLineIterator batchLineIterator,
             final String boundary);
 
     /**

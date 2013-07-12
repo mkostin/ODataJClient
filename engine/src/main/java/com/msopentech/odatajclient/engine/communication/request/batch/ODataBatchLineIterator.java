@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.utils;
+package com.msopentech.odatajclient.engine.communication.request.batch;
 
 import java.util.Iterator;
 import org.apache.commons.io.LineIterator;
 
-public class BatchLineIterator implements Iterator<String> {
+public class ODataBatchLineIterator implements Iterator<String> {
 
     private final LineIterator batchLineIterator;
 
     private String current;
 
-    public BatchLineIterator(final LineIterator batchLineIterator) {
+    public ODataBatchLineIterator(final LineIterator batchLineIterator) {
         this.batchLineIterator = batchLineIterator;
         this.current = null;
     }
