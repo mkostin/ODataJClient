@@ -46,7 +46,6 @@
     <url>https://github.com/MSOpenTech/ODataJClient.git</url>
     <connection>scm:git:git@github.com:MSOpenTech/ODataJClient.git</connection>
     <developerConnection>scm:git:git@github.com:MSOpenTech/ODataJClient.git</developerConnection>
-    <tag>HEAD</tag>
   </scm>
 
   <prerequisites>
