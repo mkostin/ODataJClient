@@ -18,9 +18,12 @@ package com.msopentech.odatajclient.engine.data;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -148,8 +151,11 @@ public class ODataPrimitiveValue extends ODataValue {
                 }
                 break;
 
-            case SINGLE:
             case DECIMAL:
+                this.value = new BigDecimal(this.toString());
+                break;
+
+            case SINGLE:
                 this.value = Float.parseFloat(this.toString());
                 break;
 
@@ -250,13 +256,19 @@ public class ODataPrimitiveValue extends ODataValue {
                 this.text = formatted.toString();
                 break;
 
-            case SINGLE:
             case DECIMAL:
-                this.text = this.<Float>toCastValue().toString();
+                final DecimalFormat decf = new DecimalFormat(this.type.pattern());
+                this.text = decf.format(this.<BigDecimal>toCastValue());
+                break;
+
+            case SINGLE:
+                final DecimalFormat sf = new DecimalFormat(this.type.pattern());
+                this.text = sf.format(this.<Float>toCastValue());
                 break;
 
             case DOUBLE:
-                this.text = this.<Double>toCastValue().toString();
+                final DecimalFormat df = new DecimalFormat(this.type.pattern());
+                this.text = df.format(this.<Double>toCastValue());
                 break;
 
             case GUID:

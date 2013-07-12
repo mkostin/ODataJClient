@@ -23,6 +23,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -133,17 +134,17 @@ public enum EdmSimpleType {
      * Numeric values with fixed precision and scale.
      */
     @XmlEnumValue("Decimal")
-    DECIMAL("Decimal", Float.class, "[0-9]+.[0-9]+M|m"),
+    DECIMAL("Decimal", BigDecimal.class, "#.#######################"),
     /**
      * A floating point number with 7 digits precision.
      */
     @XmlEnumValue("Single")
-    SINGLE("Single", Float.class, "[0-9]+.[0-9]+f"),
+    SINGLE("Single", Float.class, "#.#######"),
     /**
      * A 64-bit double-precision floating point value.
      */
     @XmlEnumValue("Double")
-    DOUBLE("Double", Double.class),
+    DOUBLE("Double", Double.class, "#.#######################"),
     @XmlEnumValue("Geography")
     GEOGRAPHY("Geography", Geospatial.class, "GEOGRAPHY|"),
     @XmlEnumValue("GeographyPoint")

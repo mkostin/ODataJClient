@@ -40,12 +40,12 @@ public class ODataProperty implements Serializable, ODataInvokeResult {
     /**
      * Property name.
      */
-    final String name;
+    private final String name;
 
     /**
      * Property value.
      */
-    final ODataValue value;
+    private ODataValue value;
 
     /**
      * Constructor.
@@ -74,6 +74,15 @@ public class ODataProperty implements Serializable, ODataInvokeResult {
      */
     public ODataValue getValue() {
         return value;
+    }
+
+    /**
+     * Updates property value.
+     *
+     * @param value property value that replaces current.
+     */
+    public void setValue(final ODataValue value) {
+        this.value = value;
     }
 
     public boolean hasNullValue() {
