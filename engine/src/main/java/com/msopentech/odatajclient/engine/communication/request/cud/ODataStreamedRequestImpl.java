@@ -21,13 +21,12 @@ import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
@@ -52,8 +51,6 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     protected ODataStreamingManagement<V> payload = null;
 
     private Future<HttpResponse> futureRes = null;
-
-    private final ExecutorService threadpool = Executors.newFixedThreadPool(1);
 
     /**
      * Constructor.
@@ -84,7 +81,7 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
 
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(payload.getBody(), -1));
 
-        futureRes = threadpool.submit(new Executor());
+        futureRes = Configuration.getExecutor().submit(new Executor());
 
         // return the payload object
         return (T) payload;
@@ -129,8 +126,6 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
         } catch (Exception e) {
             LOG.error("Failure executing request");
             throw new HttpClientException(e);
-        } finally {
-            threadpool.shutdownNow();
         }
     }
 

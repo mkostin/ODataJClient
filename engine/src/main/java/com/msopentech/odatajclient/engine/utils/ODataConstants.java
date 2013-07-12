@@ -139,4 +139,6 @@ public class ODataConstants {
 
     public final static String JSON_URL = "url";
 
+    public final static String UTF8  = "UTF-8";
+
 }

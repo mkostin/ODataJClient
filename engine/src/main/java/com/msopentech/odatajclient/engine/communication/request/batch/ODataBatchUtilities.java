@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request.batch;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -88,7 +89,7 @@ public class ODataBatchUtilities {
                         notEndLine = isNotEndLine(controller, currentLine);
 
                         if (notEndLine && os != null) {
-                            os.write(currentLine.getBytes("UTF-8"));
+                            os.write(currentLine.getBytes(ODataConstants.UTF8));
                             os.write(ODataStreamer.CRLF);
                         }
                     }
@@ -124,7 +125,8 @@ public class ODataBatchUtilities {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             readBatchPart(new ODataBatchController(iterator, null), baos, true);
 
-            final LineIterator headers = IOUtils.lineIterator(new ByteArrayInputStream(baos.toByteArray()), "UTF-8");
+            final LineIterator headers = IOUtils.lineIterator(new ByteArrayInputStream(baos.toByteArray()),
+                    ODataConstants.UTF8);
             while (headers.hasNext()) {
                 final String line = headers.nextLine().trim();
                 if (StringUtils.isNotBlank(line)) {

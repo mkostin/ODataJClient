@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -42,9 +40,6 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      * OData resource representation format.
      */
     private T format = null;
-
-    private final ExecutorService pool = Executors.newFixedThreadPool(
-            Integer.valueOf(Configuration.getProperty(Configuration.REQ_EXEC_POOL_SIZE, "10")));
 
     /**
      * Constructor.
@@ -76,7 +71,7 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
 
     @Override
     public final Future<V> asyncExecute() {
-        return pool.submit(new Callable<V>() {
+        return Configuration.getExecutor().submit(new Callable<V>() {
 
             @Override
             public V call() throws Exception {

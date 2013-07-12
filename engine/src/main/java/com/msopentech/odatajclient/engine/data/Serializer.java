@@ -130,7 +130,7 @@ public final class Serializer {
     private static Marshaller getMarshaller(final Class<?> reference) throws JAXBException {
         final JAXBContext context = JAXBContext.newInstance(reference);
         final Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, ODataConstants.UTF8);
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
         return marshaller;

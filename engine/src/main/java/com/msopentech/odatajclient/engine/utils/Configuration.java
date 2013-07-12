@@ -18,6 +18,8 @@ package com.msopentech.odatajclient.engine.utils;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Configuration wrapper.
@@ -26,11 +28,11 @@ public final class Configuration {
 
     public static final String DEFAULT_FORMAT = "format";
 
-    public static final String REQ_EXEC_POOL_SIZE = "REQ_EXEC_POOL_SIZE";
-
     public static final String USE_XHTTP_METHOD = "USE_XHTTP_METHOD";
 
     private static final Map<String, String> conf = new HashMap<String, String>();
+
+    private static ExecutorService EXECUTOR = Executors.newFixedThreadPool(10);
 
     private Configuration() {
         // Empty private constructor for static utility classes
@@ -78,5 +80,13 @@ public final class Configuration {
 
     public static void setUseXHTTPMethod(final boolean value) {
         setProperty(USE_XHTTP_METHOD, Boolean.toString(value));
+    }
+
+    public static ExecutorService getExecutor() {
+        return EXECUTOR;
+    }
+
+    public static void setExecutor(final ExecutorService executorService) {
+        EXECUTOR = executorService;
     }
 }

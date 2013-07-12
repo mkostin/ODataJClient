@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;

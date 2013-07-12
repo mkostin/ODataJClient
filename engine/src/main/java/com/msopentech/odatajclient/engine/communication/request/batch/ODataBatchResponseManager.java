@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.communication.request.batch;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -45,7 +46,8 @@ public class ODataBatchResponseManager implements Iterator<ODataBatchResponseIte
     public ODataBatchResponseManager(final ODataBatchResponse res, final List<ODataBatchResponseItem> expectedItems) {
         try {
             this.expectedItemsIterator = expectedItems.iterator();
-            this.batchLineIterator = new ODataBatchLineIterator(IOUtils.lineIterator(res.getRawResponse(), "UTF-8"));
+            this.batchLineIterator = new ODataBatchLineIterator(
+                    IOUtils.lineIterator(res.getRawResponse(), ODataConstants.UTF8));
 
             // search for boundary
             batchBoundary = ODataBatchUtilities.getBoundaryFromHeader(

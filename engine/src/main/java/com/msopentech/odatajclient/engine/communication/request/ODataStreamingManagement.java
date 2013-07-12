@@ -22,8 +22,6 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.concurrent.Future;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * OData request payload management abstract class.
@@ -31,11 +29,6 @@ import org.slf4j.LoggerFactory;
  * @param <T> OData response type corresponding to the request implementation.
  */
 public abstract class ODataStreamingManagement<T extends ODataResponse> extends ODataStreamer {
-
-    /**
-     * Logger.
-     */
-    protected static final Logger LOG = LoggerFactory.getLogger(ODataStreamingManagement.class);
 
     /**
      * Body input stream.
