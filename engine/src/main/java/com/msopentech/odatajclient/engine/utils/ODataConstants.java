@@ -22,6 +22,8 @@ import javax.xml.XMLConstants;
  */
 public class ODataConstants {
 
+    public static final String V30 = "3.0";
+
     public static final String NS_DATASERVICES = "http://schemas.microsoft.com/ado/2007/08/dataservices";
 
     public static final String NS_METADATA = NS_DATASERVICES + "/metadata";

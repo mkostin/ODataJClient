@@ -23,6 +23,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Met
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -91,8 +92,13 @@ public class ODataRequestImpl implements ODataRequest {
      */
     protected ODataRequestImpl(final Method method, final URI uri) {
         this.method = method;
-        // initialize a default header from configuration
+
+        // initialize default headers
         this.odataHeaders = new ODataHeaders();
+        this.odataHeaders.setHeader(ODataHeaders.HeaderName.minDataServiceVersion, ODataConstants.V30);
+        this.odataHeaders.setHeader(ODataHeaders.HeaderName.maxDataServiceVersion, ODataConstants.V30);
+        this.odataHeaders.setHeader(ODataHeaders.HeaderName.dataServiceVersion, ODataConstants.V30);
+
         // target uri
         this.uri = uri;
 
@@ -226,7 +232,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getAccept() {
         final String acceptHead = odataHeaders.getHeader(ODataHeaders.HeaderName.accept);
-        return StringUtils.isBlank(acceptHead) ? Configuration.getFormat().toString() : acceptHead;
+        return StringUtils.isBlank(acceptHead) ? Configuration.getDefaultFormat().toString() : acceptHead;
     }
 
     /**
@@ -259,7 +265,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getContentType() {
         final String contentTypeHead = odataHeaders.getHeader(ODataHeaders.HeaderName.contentType);
-        return StringUtils.isBlank(contentTypeHead) ? Configuration.getFormat().toString() : contentTypeHead;
+        return StringUtils.isBlank(contentTypeHead) ? Configuration.getDefaultFormat().toString() : contentTypeHead;
     }
 
     /**

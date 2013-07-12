@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public final class Configuration {
 
-    public static final String FORMAT = "format";
+    public static final String DEFAULT_FORMAT = "format";
 
     public static final String REQ_EXEC_POOL_SIZE = "REQ_EXEC_POOL_SIZE";
 
@@ -58,12 +58,12 @@ public final class Configuration {
      * @return configured OData format if exists; JSON_FULL_METADATA format otherwise.
      * @see ODataPubFormat#JSON_FULL_METADATA
      */
-    public static ODataPubFormat getFormat() {
-        return ODataPubFormat.valueOf(getProperty(FORMAT, "JSON_FULL_METADATA"));
+    public static ODataPubFormat getDefaultFormat() {
+        return ODataPubFormat.valueOf(getProperty(DEFAULT_FORMAT, "JSON_FULL_METADATA"));
     }
 
-    public static void setFormat(final ODataPubFormat format) {
-        setProperty(FORMAT, format.name());
+    public static void setDefaultFormat(final ODataPubFormat format) {
+        setProperty(DEFAULT_FORMAT, format.name());
     }
 
     /**

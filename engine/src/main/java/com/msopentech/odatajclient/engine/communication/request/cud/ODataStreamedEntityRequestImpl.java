@@ -38,7 +38,7 @@ public abstract class ODataStreamedEntityRequestImpl<V extends ODataResponse, T 
      * differently specified).
      */
     public final ODataPubFormat getFormat() {
-        return format == null ? Configuration.getFormat() : format;
+        return format == null ? Configuration.getDefaultFormat() : format;
     }
 
     /**

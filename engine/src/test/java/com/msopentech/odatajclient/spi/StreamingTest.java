@@ -160,8 +160,6 @@ public class StreamingTest extends AbstractTest {
 
         // create new request
         ODataEntityRequest query = ODataRetrieveRequestFactory.getEntityRequest(targetURI.build());
-        query.setDataServiceVersion("2.0");
-        query.setMaxDataServiceVersion("3.0");
         query.setFormat(ODataPubFormat.ATOM);
 
         retrieve.setRequest(query);
@@ -208,7 +206,6 @@ public class StreamingTest extends AbstractTest {
 
         // create new request
         query = ODataRetrieveRequestFactory.getEntityRequest(targetURI.build());
-        query.setDataServiceVersion("3.0");
 
         retrieve.setRequest(query);
         // -------------------------------------------
