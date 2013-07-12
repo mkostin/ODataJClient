@@ -107,6 +107,30 @@ public final class ODataCUDRequestFactory {
     }
 
     /**
+     * Gets an update request object instance; uses entity's edit link as endpoint.
+     *
+     * @param entity changes to be applied.
+     * @param type type of update to be performed.
+     * @return new ODataUpdateEntityRequest instance.
+     */
+    public static ODataEntityUpdateRequest getEntityUpdateRequest(final UpdateType type, final ODataEntity entity) {
+        if (entity.getEditLink() == null) {
+            throw new IllegalArgumentException("No edit link found");
+        }
+
+        final ODataEntityUpdateRequest req;
+
+        if (Configuration.isUseXHTTPMethod()) {
+            req = new ODataEntityUpdateRequest(Method.POST, entity.getEditLink(), entity);
+            req.setXHTTPMethod(type.getMethod().name());
+        } else {
+            req = new ODataEntityUpdateRequest(type.getMethod(), entity.getEditLink(), entity);
+        }
+
+        return req;
+    }
+
+    /**
      * Gets a media entity update request object instance.
      * <p>
      * Use this kind of request to update a media entity.

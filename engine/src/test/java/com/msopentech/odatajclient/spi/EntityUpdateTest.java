@@ -133,7 +133,7 @@ public class EntityUpdateTest extends AbstractTest {
         changes.addProperty(ODataFactory.newPrimitiveProperty("Description",
                 new ODataPrimitiveValue.Builder().setText(newm).build()));
 
-        final ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(editLink, type, changes);
+        final ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(type, changes);
         if (Configuration.isUseXHTTPMethod()) {
             assertEquals(Method.POST, req.getMethod());
         } else {

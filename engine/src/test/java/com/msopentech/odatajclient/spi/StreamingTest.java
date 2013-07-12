@@ -183,7 +183,7 @@ public class StreamingTest extends AbstractTest {
                 "Description", new ODataPrimitiveValue.Builder().setText("new description from batch").build()));
 
         final ODataEntityUpdateRequest changes =
-                ODataCUDRequestFactory.getEntityUpdateRequest(editLink, UpdateType.MERGE, merge);
+                ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.MERGE, merge);
         changes.setFormat(ODataPubFormat.JSON_FULL_METADATA);
         changes.setIfMatch(getETag(editLink));
 

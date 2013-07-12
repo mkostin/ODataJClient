@@ -36,7 +36,7 @@ public enum UpdateType {
 
     private final ODataRequest.Method method;
 
-    private UpdateType(ODataRequest.Method method) {
+    private UpdateType(final ODataRequest.Method method) {
         this.method = method;
     }
 
