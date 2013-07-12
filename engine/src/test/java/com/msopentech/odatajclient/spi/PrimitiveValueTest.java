@@ -28,7 +28,9 @@ import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
@@ -80,9 +82,9 @@ public class PrimitiveValueTest extends AbstractTest {
         final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, TEST_PRODUCT, "Dimensions/Width");
         assertEquals(EdmSimpleType.DECIMAL.toString(), opv.getTypeName());
 
-        final Float value = opv.<Float>toCastValue();
+        final BigDecimal value = opv.<BigDecimal>toCastValue();
         assertNotNull(value);
-        assertTrue(-79228162514264337593543950335F == value);
+        assertTrue(new BigDecimal("-79228162514264337593543950335").equals(value));
     }
 
     @Test
