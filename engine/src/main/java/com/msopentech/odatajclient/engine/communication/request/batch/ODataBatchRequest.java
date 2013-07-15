@@ -15,12 +15,14 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
-import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
+import com.msopentech.odatajclient.engine.utils.Wrapper;
 import java.io.IOException;
 import java.io.PipedOutputStream;
 import java.net.URI;
@@ -29,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
@@ -38,7 +41,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataBatchRequestFactory#getBatchRequest(java.lang.String)
  */
-public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchResponse, BatchRequestPayload> {
+public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchResponse, BatchStreamManager> {
 
     /**
      * Batch request boundary.
@@ -66,31 +69,31 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
      * {@inheritDoc }
      */
     @Override
-    protected BatchRequestPayload getPayload() {
-        if (payload == null) {
-            payload = new BatchRequestPayload(this);
+    protected BatchStreamManager getStreamManager() {
+        if (streamManager == null) {
+            streamManager = new BatchStreamManager(this);
         }
-        return (BatchRequestPayload) payload;
+        return (BatchStreamManager) streamManager;
     }
 
     PipedOutputStream getOutputStream() {
-        return getPayload().getBodyStreamWriter();
+        return getStreamManager().getBodyStreamWriter();
     }
 
     public ODataBatchRequest rawAppend(final byte[] toBeStreamed) throws IOException {
-        getPayload().getBodyStreamWriter().write(toBeStreamed);
+        getStreamManager().getBodyStreamWriter().write(toBeStreamed);
         return this;
     }
 
     public ODataBatchRequest rawAppend(final byte[] toBeStreamed, int off, int len) throws IOException {
-        getPayload().getBodyStreamWriter().write(toBeStreamed, off, len);
+        getStreamManager().getBodyStreamWriter().write(toBeStreamed, off, len);
         return this;
     }
 
     /**
      * Batch request payload management.
      */
-    public class BatchRequestPayload extends ODataStreamingManagement<ODataBatchResponse> {
+    public class BatchStreamManager extends ODataStreamManager<ODataBatchResponse> {
 
         /**
          * Batch request current item.
@@ -107,7 +110,8 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
          *
          * @param req batch request reference.
          */
-        private BatchRequestPayload(final ODataBatchRequest req) {
+        private BatchStreamManager(final ODataBatchRequest req) {
+            super(ODataBatchRequest.this.futureWrapper);
             this.req = req;
         }
 
@@ -166,24 +170,11 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
          * @return batch response.
          */
         @Override
-        public ODataBatchResponse getResponse() {
+        protected ODataBatchResponse getResponse(final long timeout, final TimeUnit unit) {
             closeCurrentItem();
             streamCloseDelimiter();
             finalizeBody();
-            return new ODataBatchResponseImpl(client, ODataBatchRequest.this.getResponse());
-        }
-
-        /**
-         * Closes the stream and asks for an asynchronous response.
-         *
-         * @return Future object of the async batch response.
-         */
-        @Override
-        public Future<ODataBatchResponse> asyncResponse() {
-            closeCurrentItem();
-            streamCloseDelimiter();
-            finalizeBody();
-            return null;
+            return new ODataBatchResponseImpl(client, getHttpResponse(timeout, unit));
         }
 
         /**

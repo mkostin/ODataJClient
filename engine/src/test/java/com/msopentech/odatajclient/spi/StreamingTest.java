@@ -21,8 +21,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
-import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchStreamManager;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchResponseItem;
@@ -47,10 +47,13 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
+import com.msopentech.odatajclient.engine.utils.Wrapper;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import org.apache.http.HttpResponse;
 
 public class StreamingTest extends AbstractTest {
 
@@ -62,7 +65,7 @@ public class StreamingTest extends AbstractTest {
 
     @Test
     public void stringStreaming() {
-        final ODataStreamingMgt streaming = new ODataStreamingMgt();
+        final TestStreamManager streaming = new TestStreamManager();
 
         new StreamingThread(streaming).start();
 
@@ -81,7 +84,7 @@ public class StreamingTest extends AbstractTest {
         // create your request
         final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testODataServiceRootURL);
 
-        final BatchRequestPayload payload = request.execute();
+        final BatchStreamManager payload = request.execute();
         final ODataBatchResponse response = payload.getResponse();
 
         assertEquals(202, response.getStatusCode());
@@ -96,7 +99,7 @@ public class StreamingTest extends AbstractTest {
         // create your request
         final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testODataServiceRootURL);
 
-        final BatchRequestPayload payload = request.execute();
+        final BatchStreamManager payload = request.execute();
         final ODataChangeset changeset = payload.addChangeset();
 
         ODataURIBuilder targetURI;
@@ -149,7 +152,7 @@ public class StreamingTest extends AbstractTest {
         // create your request
         final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testODataServiceRootURL);
 
-        final BatchRequestPayload payload = request.execute();
+        final BatchStreamManager payload = request.execute();
 
         // -------------------------------------------
         // Add retrieve item
@@ -269,24 +272,19 @@ public class StreamingTest extends AbstractTest {
         assertFalse(iter.hasNext());
     }
 
-    private static class ODataStreamingMgt extends ODataStreamingManagement<ODataBatchResponse> {
+    private static class TestStreamManager extends ODataStreamManager<ODataBatchResponse> {
 
-        public ODataStreamingMgt() {
-            super();
+        public TestStreamManager() {
+            super(new Wrapper<Future<HttpResponse>>());
         }
 
-        public ODataStreamingManagement<ODataBatchResponse> addObject(byte[] src) {
+        public ODataStreamManager<ODataBatchResponse> addObject(byte[] src) {
             stream(src);
             return this;
         }
 
         @Override
-        public ODataBatchResponse getResponse() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public Future<ODataBatchResponse> asyncResponse() {
+        protected ODataBatchResponse getResponse(long timeout, TimeUnit unit) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     };
@@ -296,9 +294,9 @@ public class StreamingTest extends AbstractTest {
      */
     private static class StreamingThread extends Thread {
 
-        private final ODataStreamingMgt streaming;
+        private final TestStreamManager streaming;
 
-        public StreamingThread(final ODataStreamingMgt streaming) {
+        public StreamingThread(final TestStreamManager streaming) {
             this.streaming = streaming;
         }
 
@@ -331,9 +329,9 @@ public class StreamingTest extends AbstractTest {
 
     private static class BatchStreamingThread extends Thread {
 
-        private final BatchRequestPayload streaming;
+        private final BatchStreamManager streaming;
 
-        public BatchStreamingThread(final BatchRequestPayload streaming) {
+        public BatchStreamingThread(final BatchStreamManager streaming) {
             this.streaming = streaming;
         }
 

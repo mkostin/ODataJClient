@@ -15,14 +15,15 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamUpdateRequest.StreamUpdateStreamManager;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
@@ -33,7 +34,7 @@ import org.apache.http.client.HttpClient;
  * @see ODataCUDRequestFactory#getStreamUpdateRequest(java.net.URI, java.io.InputStream)
  */
 public class ODataStreamUpdateRequest
-        extends ODataStreamedRequestImpl<ODataStreamUpdateResponse, StreamUpdateRequestPayload>
+        extends ODataStreamedRequestImpl<ODataStreamUpdateResponse, StreamUpdateStreamManager>
         implements ODataBatchableRequest {
 
     private final InputStream stream;
@@ -54,41 +55,29 @@ public class ODataStreamUpdateRequest
      * {@inheritDoc }
      */
     @Override
-    protected StreamUpdateRequestPayload getPayload() {
-        if (payload == null) {
-            payload = new StreamUpdateRequestPayload(this.stream);
+    protected StreamUpdateStreamManager getStreamManager() {
+        if (streamManager == null) {
+            streamManager = new StreamUpdateStreamManager(this.stream);
         }
 
-        return (StreamUpdateRequestPayload) payload;
+        return (StreamUpdateStreamManager) streamManager;
     }
 
-    public class StreamUpdateRequestPayload extends ODataStreamingManagement<ODataStreamUpdateResponse> {
+    public class StreamUpdateStreamManager extends ODataStreamManager<ODataStreamUpdateResponse> {
 
         /**
          * Private constructor.
          *
          * @param input payload input stream.
          */
-        private StreamUpdateRequestPayload(final InputStream input) {
-            super(input);
+        private StreamUpdateStreamManager(final InputStream input) {
+            super(ODataStreamUpdateRequest.this.futureWrapper, input);
         }
 
-        /**
-         * {@inheritDoc }
-         */
         @Override
-        public ODataStreamUpdateResponse getResponse() {
+        protected ODataStreamUpdateResponse getResponse(final long timeout, final TimeUnit unit) {
             finalizeBody();
-            return new ODataStreamUpdateResponseImpl(client, ODataStreamUpdateRequest.this.getResponse());
-        }
-
-        /**
-         * {@inheritDoc }
-         */
-        @Override
-        public Future<ODataStreamUpdateResponse> asyncResponse() {
-            finalizeBody();
-            return null;
+            return new ODataStreamUpdateResponseImpl(client, getHttpResponse(timeout, unit));
         }
     }
 

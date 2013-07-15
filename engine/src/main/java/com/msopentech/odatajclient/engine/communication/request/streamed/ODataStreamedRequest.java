@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
-import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 
 /**
@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
  * @param <V> OData response type corresponding to the request implementation.
  * @param <T> OData request payload type corresponding to the request implementation.
  */
-public interface ODataStreamedRequest<V extends ODataResponse, T extends ODataStreamingManagement<V>>
+public interface ODataStreamedRequest<V extends ODataResponse, T extends ODataStreamManager<V>>
         extends ODataRequest {
 
     /**

@@ -15,16 +15,17 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest.MediaEntityUpdateRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
+import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest.MediaEntityUpdateStreamManager;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
@@ -35,7 +36,7 @@ import org.apache.http.client.HttpClient;
  * @see ODataCUDRequestFactory#getMediaEntityUpdateRequest(java.net.URI, java.io.InputStream)
  */
 public class ODataMediaEntityUpdateRequest
-        extends ODataStreamedEntityRequestImpl<ODataMediaEntityUpdateResponse, MediaEntityUpdateRequestPayload>
+        extends ODataStreamedEntityRequestImpl<ODataMediaEntityUpdateResponse, MediaEntityUpdateStreamManager>
         implements ODataBatchableRequest {
 
     private final InputStream media;
@@ -56,43 +57,34 @@ public class ODataMediaEntityUpdateRequest
      * {@inheritDoc }
      */
     @Override
-    protected MediaEntityUpdateRequestPayload getPayload() {
-        if (payload == null) {
-            payload = new MediaEntityUpdateRequestPayload(media);
+    protected MediaEntityUpdateStreamManager getStreamManager() {
+        if (streamManager == null) {
+            streamManager = new MediaEntityUpdateStreamManager(media);
         }
-        return (MediaEntityUpdateRequestPayload) payload;
+        return (MediaEntityUpdateStreamManager) streamManager;
     }
 
     /**
      * Media entity payload object.
      */
-    public class MediaEntityUpdateRequestPayload extends ODataStreamingManagement<ODataMediaEntityUpdateResponse> {
+    public class MediaEntityUpdateStreamManager extends ODataStreamManager<ODataMediaEntityUpdateResponse> {
 
         /**
          * Private constructor.
          *
-         * @param is media stream.
+         * @param input media stream.
          */
-        private MediaEntityUpdateRequestPayload(final InputStream is) {
-            super(is);
+        private MediaEntityUpdateStreamManager(final InputStream input) {
+            super(ODataMediaEntityUpdateRequest.this.futureWrapper, input);
         }
 
         /**
          * {@inheritDoc }
          */
         @Override
-        public ODataMediaEntityUpdateResponse getResponse() {
+        protected ODataMediaEntityUpdateResponse getResponse(final long timeout, final TimeUnit unit) {
             finalizeBody();
-            return new ODataMediaEntityUpdateResponseImpl(client, ODataMediaEntityUpdateRequest.this.getResponse());
-        }
-
-        /**
-         * {@inheritDoc }
-         */
-        @Override
-        public Future<ODataMediaEntityUpdateResponse> asyncResponse() {
-            finalizeBody();
-            return null;
+            return new ODataMediaEntityUpdateResponseImpl(client, getHttpResponse(timeout, unit));
         }
     }
 
