@@ -45,8 +45,7 @@ public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataP
      */
     @Override
     public ODataRetrieveResponse<ODataEntity> execute() {
-        final HttpResponse res = doExecute();
-        return new ODataEntityResponseImpl(client, res);
+        return new ODataEntityResponseImpl(client, doExecute());
     }
 
     public class ODataEntityResponseImpl extends ODataRetrieveResponseImpl {

@@ -74,8 +74,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
 
         try {
-            final HttpResponse res = doExecute();
-            return new ODataEntityCreateResponseImpl(client, res);
+            return new ODataEntityCreateResponseImpl(client, doExecute());
         } finally {
             IOUtils.closeQuietly(input);
         }

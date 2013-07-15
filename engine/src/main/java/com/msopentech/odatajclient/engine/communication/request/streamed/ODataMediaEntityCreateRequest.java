@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request.cud;
+package com.msopentech.odatajclient.engine.communication.request.streamed;
 
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityUpdateRequest.MediaEntityUpdateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamingManagement;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
-import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest.MediaEntityCreateRequestPayload;
+import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
@@ -32,10 +32,10 @@ import org.apache.http.client.HttpClient;
  * This class implements an OData Media Entity create request.
  * Get instance by using ODataCUDRequestFactory.
  *
- * @see ODataCUDRequestFactory#getMediaEntityUpdateRequest(java.net.URI, java.io.InputStream)
+ * @see ODataCUDRequestFactory#getMediaEntityCreateRequest(java.net.URI, java.io.InputStream)
  */
-public class ODataMediaEntityUpdateRequest
-        extends ODataStreamedEntityRequestImpl<ODataMediaEntityUpdateResponse, MediaEntityUpdateRequestPayload>
+public class ODataMediaEntityCreateRequest
+        extends ODataStreamedEntityRequestImpl<ODataMediaEntityCreateResponse, MediaEntityCreateRequestPayload>
         implements ODataBatchableRequest {
 
     private final InputStream media;
@@ -43,12 +43,11 @@ public class ODataMediaEntityUpdateRequest
     /**
      * Constructor.
      *
-     * @param method request method.
-     * @param editURI edit URI of the entity to be updated.
+     * @param targetURI target entity set.
      * @param media media entity blob to be created.
      */
-    ODataMediaEntityUpdateRequest(final Method method, final URI editURI, final InputStream media) {
-        super(method, editURI);
+    ODataMediaEntityCreateRequest(final URI targetURI, final InputStream media) {
+        super(Method.POST, targetURI);
         this.media = media;
     }
 
@@ -56,24 +55,24 @@ public class ODataMediaEntityUpdateRequest
      * {@inheritDoc }
      */
     @Override
-    protected MediaEntityUpdateRequestPayload getPayload() {
+    protected MediaEntityCreateRequestPayload getPayload() {
         if (payload == null) {
-            payload = new MediaEntityUpdateRequestPayload(media);
+            payload = new MediaEntityCreateRequestPayload(media);
         }
-        return (MediaEntityUpdateRequestPayload) payload;
+        return (MediaEntityCreateRequestPayload) payload;
     }
 
     /**
      * Media entity payload object.
      */
-    public class MediaEntityUpdateRequestPayload extends ODataStreamingManagement<ODataMediaEntityUpdateResponse> {
+    public class MediaEntityCreateRequestPayload extends ODataStreamingManagement<ODataMediaEntityCreateResponse> {
 
         /**
          * Private constructor.
          *
          * @param is media stream.
          */
-        private MediaEntityUpdateRequestPayload(final InputStream is) {
+        private MediaEntityCreateRequestPayload(final InputStream is) {
             super(is);
         }
 
@@ -81,30 +80,30 @@ public class ODataMediaEntityUpdateRequest
          * {@inheritDoc }
          */
         @Override
-        public ODataMediaEntityUpdateResponse getResponse() {
+        public ODataMediaEntityCreateResponse getResponse() {
             finalizeBody();
-            return new ODataMediaEntityUpdateResponseImpl(client, ODataMediaEntityUpdateRequest.this.getResponse());
+            return new ODataMediaEntityCreateResponseImpl(client, ODataMediaEntityCreateRequest.this.getResponse());
         }
 
         /**
          * {@inheritDoc }
          */
         @Override
-        public Future<ODataMediaEntityUpdateResponse> asyncResponse() {
+        public Future<ODataMediaEntityCreateResponse> asyncResponse() {
             finalizeBody();
             return null;
         }
     }
 
-    private class ODataMediaEntityUpdateResponseImpl extends ODataResponseImpl
-            implements ODataMediaEntityUpdateResponse {
+    private class ODataMediaEntityCreateResponseImpl extends ODataResponseImpl
+            implements ODataMediaEntityCreateResponse {
 
         private ODataEntity entity = null;
 
-        private ODataMediaEntityUpdateResponseImpl() {
+        private ODataMediaEntityCreateResponseImpl() {
         }
 
-        private ODataMediaEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataMediaEntityCreateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

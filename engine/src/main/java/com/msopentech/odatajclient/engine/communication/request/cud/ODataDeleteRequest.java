@@ -60,8 +60,7 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      */
     @Override
     public ODataDeleteResponse execute() {
-        final HttpResponse res = doExecute();
-        return new ODataDeleteResponseImpl(client, res);
+        return new ODataDeleteResponseImpl(client, doExecute());
     }
 
     private static class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {

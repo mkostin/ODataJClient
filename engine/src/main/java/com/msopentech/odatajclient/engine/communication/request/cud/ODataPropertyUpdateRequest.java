@@ -65,8 +65,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
 
         try {
-            final HttpResponse res = doExecute();
-            return new ODataPropertyUpdateResponseImpl(client, res);
+            return new ODataPropertyUpdateResponseImpl(client, doExecute());
         } finally {
             IOUtils.closeQuietly(input);
         }

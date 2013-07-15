@@ -18,15 +18,15 @@ package com.msopentech.odatajclient.spi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityCreateRequest.MediaEntityCreateRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataMediaEntityUpdateRequest.MediaEntityUpdateRequestPayload;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest.MediaEntityCreateRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest.MediaEntityUpdateRequestPayload;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamUpdateRequest;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamUpdateRequest.StreamUpdateRequestPayload;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
@@ -69,8 +69,8 @@ public class MediaResourceTest extends AbstractTest {
         final String TO_BE_UPDATED = "buffered stream sample";
         final InputStream input = new ByteArrayInputStream(TO_BE_UPDATED.getBytes());
 
-        final ODataStreamUpdateRequest updateReq = 
-                ODataCUDRequestFactory.getStreamUpdateRequest(builder.build(), input);
+        final ODataStreamUpdateRequest updateReq =
+                ODataStreamedRequestFactory.getStreamUpdateRequest(builder.build(), input);
 
         final StreamUpdateRequestPayload payload = updateReq.execute();
         ODataStreamUpdateResponse updateRes = payload.getResponse();
@@ -92,7 +92,7 @@ public class MediaResourceTest extends AbstractTest {
         final InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);
 
         final ODataMediaEntityUpdateRequest updateReq =
-                ODataCUDRequestFactory.getMediaEntityUpdateRequest(builder.build(), input);
+                ODataStreamedRequestFactory.getMediaEntityUpdateRequest(builder.build(), input);
         updateReq.setFormat(format);
 
         final MediaEntityUpdateRequestPayload payload = updateReq.execute();
@@ -117,7 +117,7 @@ public class MediaResourceTest extends AbstractTest {
         final InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);
 
         final ODataMediaEntityCreateRequest createReq =
-                ODataCUDRequestFactory.getMediaEntityCreateRequest(builder.build(), input);
+                ODataStreamedRequestFactory.getMediaEntityCreateRequest(builder.build(), input);
         createReq.setFormat(format);
 
         final MediaEntityCreateRequestPayload payload = createReq.execute();

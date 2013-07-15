@@ -71,8 +71,7 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
 
         try {
-            final HttpResponse res = doExecute();
-            return new ODataLinkUpdateResponseImpl(client, res);
+            return new ODataLinkUpdateResponseImpl(client, doExecute());
         } finally {
             IOUtils.closeQuietly(input);
         }

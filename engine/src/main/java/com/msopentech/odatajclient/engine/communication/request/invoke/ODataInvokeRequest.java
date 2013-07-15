@@ -169,8 +169,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
         }
 
         try {
-            final HttpResponse res = doExecute();
-            return new ODataInvokeResponseImpl(client, res);
+            return new ODataInvokeResponseImpl(client, doExecute());
         } finally {
             IOUtils.closeQuietly(input);
         }

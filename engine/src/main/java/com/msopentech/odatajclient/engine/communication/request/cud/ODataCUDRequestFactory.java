@@ -22,7 +22,6 @@ import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.utils.Configuration;
-import java.io.InputStream;
 import java.net.URI;
 
 /**
@@ -44,43 +43,6 @@ public final class ODataCUDRequestFactory {
      */
     public static ODataEntityCreateRequest getEntityCreateRequest(final URI targetURI, final ODataEntity entity) {
         return new ODataEntityCreateRequest(targetURI, entity);
-    }
-
-    /**
-     * Gets a media entity create request object instance.
-     * <p>
-     * Use this kind of request to create a new media entity.
-     *
-     * @param targetURI entity set URI.
-     * @param entity entity blob to be created.
-     * @return new ODataMediaEntityCreateRequest instance.
-     */
-    public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(
-            final URI targetURI, final InputStream media) {
-
-        return new ODataMediaEntityCreateRequest(targetURI, media);
-    }
-
-    /**
-     * Gets a stream update request object instance.
-     * <p>
-     * Use this kind of request to update a named stream property.
-     *
-     * @param targetURI target URI.
-     * @param stream stream to be updated.
-     * @return new ODataUpdateStreamRequest instance.
-     */
-    public static ODataStreamUpdateRequest getStreamUpdateRequest(final URI targetURI, final InputStream stream) {
-        final ODataStreamUpdateRequest req;
-
-        if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataStreamUpdateRequest(Method.POST, targetURI, stream);
-            req.setXHTTPMethod(Method.PUT.name());
-        } else {
-            req = new ODataStreamUpdateRequest(Method.PUT, targetURI, stream);
-        }
-
-        return req;
     }
 
     /**
@@ -125,30 +87,6 @@ public final class ODataCUDRequestFactory {
             req.setXHTTPMethod(type.getMethod().name());
         } else {
             req = new ODataEntityUpdateRequest(type.getMethod(), entity.getEditLink(), entity);
-        }
-
-        return req;
-    }
-
-    /**
-     * Gets a media entity update request object instance.
-     * <p>
-     * Use this kind of request to update a media entity.
-     *
-     * @param editURI media entity edit link URI.
-     * @param entity entity blob to be updated.
-     * @return new ODataMediaEntityUpdateRequest instance.
-     */
-    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(
-            final URI editURI, final InputStream media) {
-
-        final ODataMediaEntityUpdateRequest req;
-
-        if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataMediaEntityUpdateRequest(Method.POST, editURI, media);
-            req.setXHTTPMethod(Method.PUT.name());
-        } else {
-            req = new ODataMediaEntityUpdateRequest(Method.PUT, editURI, media);
         }
 
         return req;
