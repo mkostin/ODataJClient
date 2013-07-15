@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
@@ -145,7 +146,20 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
             } else if (link.getInlineFeed() != null) {
                 jgen.writeObjectField(link.getTitle(), link.getInlineFeed());
             } else {
-                jgen.writeStringField(link.getTitle() + ODataConstants.JSON_BIND_LINK_SUFFIX, link.getHref());
+                ODataLinkType type = null;
+                try {
+                    type = ODataLinkType.fromString(link.getRel(), link.getType());
+                } catch (IllegalArgumentException e) {
+                    // ignore   
+                }
+
+                if (type == ODataLinkType.ENTITY_SET_NAVIGATION) {
+                    jgen.writeArrayFieldStart(link.getTitle() + ODataConstants.JSON_BIND_LINK_SUFFIX);
+                    jgen.writeString(link.getHref());
+                    jgen.writeEndArray();
+                } else {
+                    jgen.writeStringField(link.getTitle() + ODataConstants.JSON_BIND_LINK_SUFFIX, link.getHref());
+                }
             }
         }
         for (JSONLink link : entry.getMediaEditLinks()) {

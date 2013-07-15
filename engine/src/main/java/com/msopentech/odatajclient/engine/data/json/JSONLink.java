@@ -32,18 +32,11 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
 
     private String href;
 
+    private String type;
+
     private JSONEntry entry;
 
     private JSONFeed feed;
-
-    public JSONLink() {
-    }
-
-    public JSONLink(final String title, final String rel, final String href) {
-        this.title = title;
-        this.rel = rel;
-        this.href = href;
-    }
 
     @Override
     public String getTitle() {
@@ -77,11 +70,12 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
 
     @Override
     public String getType() {
-        return null;
+        return type;
     }
 
     @Override
     public void setType(final String type) {
+        this.type = type;
     }
 
     @Override

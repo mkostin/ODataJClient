@@ -41,7 +41,7 @@ public enum ODataLinkType {
         return this;
     }
 
-    public static ODataLinkType evaluate(final String rel, final String type) {
+    public static ODataLinkType fromString(final String rel, final String type) {
         if (StringUtils.isNotBlank(rel) && rel.startsWith(ODataConstants.MEDIA_EDIT_LINK_REL)) {
             return MEDIA_EDIT.setType(StringUtils.isBlank(type) ? "*/*" : type);
         }
