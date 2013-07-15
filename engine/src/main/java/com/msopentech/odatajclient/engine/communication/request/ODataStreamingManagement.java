@@ -44,14 +44,7 @@ public abstract class ODataStreamingManagement<T extends ODataResponse> extends 
      * Constructor.
      */
     public ODataStreamingManagement() {
-        super(new PipedOutputStream());
-
-        try {
-            this.body = new PipedInputStream(getBodyStreamWriter());
-            this.def = this.body;
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        this(new PipedOutputStream());
     }
 
     /**

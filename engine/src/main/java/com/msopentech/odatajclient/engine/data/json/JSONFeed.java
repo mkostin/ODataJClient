@@ -95,6 +95,9 @@ public class JSONFeed extends AbstractJSONMetadataObject implements FeedResource
     @JsonIgnore
     @Override
     public JSONLink getNext() {
-        return new JSONLink(null, ODataConstants.NEXT_LINK_REL, next);
+        final JSONLink nextLink = new JSONLink();
+        nextLink.setRel(ODataConstants.NEXT_LINK_REL);
+        nextLink.setHref(next);
+        return nextLink;
     }
 }
