@@ -34,6 +34,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * OData entity set iterator class.
+ */
 public class ODataEntitySetIterator implements Iterator<ODataEntity> {
 
     /**
@@ -57,6 +60,12 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
 
     private boolean available = true;
 
+    /**
+     * Constructor.
+     *
+     * @param stream source stream.
+     * @param format OData format.
+     */
     public ODataEntitySetIterator(final InputStream stream, final ODataPubFormat format) {
         this.stream = stream;
         this.format = format;
@@ -80,6 +89,9 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean hasNext() {
         if (available && cached == null) {
@@ -99,6 +111,9 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
         return available;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataEntity next() {
         if (hasNext()) {
@@ -110,16 +125,27 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
         throw new NoSuchElementException("No entity found");
     }
 
+    /**
+     * Unsupported operation.
+     */
     @Override
     public void remove() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
+    /**
+     * Closes the current iterator.
+     */
     public void close() {
         IOUtils.closeQuietly(stream);
         IOUtils.closeQuietly(osFeed);
     }
 
+    /**
+     * Gets the next link if exists.
+     *
+     * @return next link if exists; null otherwise.
+     */
     public URI getNext() {
         if (entitySet == null) {
             throw new IllegalStateException("Iteration must be completed in order to retrieve the link for next page");
@@ -127,6 +153,11 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
         return entitySet.getNext();
     }
 
+    /**
+     * Finalize object closing all managed resources.
+     *
+     * @throws Throwable
+     */
     @Override
     protected void finalize() throws Throwable {
         close();

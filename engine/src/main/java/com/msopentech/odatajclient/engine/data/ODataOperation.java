@@ -35,40 +35,79 @@ public class ODataOperation implements Serializable {
 
     private URI target;
 
+    /**
+     * Gets metadata anchor.
+     *
+     * @return metadata anchor.
+     */
     public String getMetadataAnchor() {
         return metadataAnchor;
     }
 
+    /**
+     * Sets metadata anchor.
+     *
+     * @param metadataAnchor metadata anchor.
+     */
     public void setMetadataAnchor(final String metadataAnchor) {
         this.metadataAnchor = metadataAnchor;
     }
 
+    /**
+     * Gets title.
+     *
+     * @return title.
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets title.
+     *
+     * @param title title.
+     */
     public void setTitle(final String title) {
         this.title = title;
     }
 
+    /**
+     * Gets target.
+     *
+     * @return target.
+     */
     public URI getTarget() {
         return target;
     }
 
+    /**
+     * Sets target.
+     *
+     * @param target target.
+     */
     public void setTarget(final URI target) {
         this.target = target;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);

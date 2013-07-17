@@ -25,15 +25,46 @@ import java.util.List;
  */
 public interface FeedResource {
 
+    /**
+     * Gets base URI.
+     *
+     * @return base URI.
+     */
     URI getBaseURI();
 
+    /**
+     * Gets number of entries if an
+     * <code>inlinecount</code> has been required.
+     *
+     * @return number of entries into the feed.
+     */
     Integer getCount();
 
+    /**
+     * Gets entries.
+     *
+     * @return entries.
+     */
     List<? extends EntryResource> getEntries();
 
+    /**
+     * Sets entries.
+     *
+     * @param entries entries.
+     */
     void setEntries(List<EntryResource> entries);
 
+    /**
+     * Sets next link.
+     *
+     * @param next next link.
+     */
     void setNext(LinkResource next);
 
+    /**
+     * Gets next link if exists.
+     *
+     * @return next link if exists; null otherwise.
+     */
     LinkResource getNext();
 }

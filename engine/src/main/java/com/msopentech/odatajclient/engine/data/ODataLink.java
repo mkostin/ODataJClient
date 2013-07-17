@@ -30,10 +30,23 @@ public class ODataLink extends ODataItem {
 
     private static final long serialVersionUID = 7274966414277952124L;
 
+    /**
+     * Link type.
+     */
     protected final ODataLinkType type;
 
+    /**
+     * Link rel.
+     */
     protected final String rel;
 
+    /**
+     * Constructor.
+     *
+     * @param uri URI.
+     * @param type type.
+     * @param title title.
+     */
     ODataLink(final URI uri, final ODataLinkType type, final String title) {
         super(title);
         this.link = uri;
@@ -57,6 +70,14 @@ public class ODataLink extends ODataItem {
         }
     }
 
+    /**
+     * Constructor.
+     *
+     * @param baseURI base URI.
+     * @param href href.
+     * @param type type.
+     * @param title title.
+     */
     ODataLink(final URI baseURI, final String href, final ODataLinkType type, final String title) {
         this(URIUtils.getURI(baseURI, href), type, title);
     }

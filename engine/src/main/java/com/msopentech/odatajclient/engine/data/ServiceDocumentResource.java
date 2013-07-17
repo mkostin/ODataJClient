@@ -25,7 +25,17 @@ import java.util.Map;
  */
 public interface ServiceDocumentResource {
 
+    /**
+     * Gets base URI.
+     *
+     * @return base URI.
+     */
     URI getBaseURI();
 
+    /**
+     * Gets top level entity sets.
+     *
+     * @return top level entity sets.
+     */
     Map<String, String> getToplevelEntitySets();
 }

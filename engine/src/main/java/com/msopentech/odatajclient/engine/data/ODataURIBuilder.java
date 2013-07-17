@@ -32,6 +32,9 @@ public class ODataURIBuilder implements Serializable {
 
     private static final long serialVersionUID = -3267515371720408124L;
 
+    /**
+     * Segment types.
+     */
     public enum SegmentType {
 
         ENTITYSET,
@@ -144,7 +147,7 @@ public class ODataURIBuilder implements Serializable {
         }
     }
 
-    final List<Segment> segments;
+    private final List<Segment> segments;
 
     /**
      * Case-insensitive map of query parameters.

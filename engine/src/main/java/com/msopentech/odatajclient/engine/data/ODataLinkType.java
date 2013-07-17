@@ -25,9 +25,21 @@ import org.apache.http.entity.ContentType;
  */
 public enum ODataLinkType {
 
+    /**
+     * Entity navigation link.
+     */
     ENTITY_NAVIGATION(ODataPubFormat.ATOM + ";type=entry"),
+    /**
+     * Entity set navigation link.
+     */
     ENTITY_SET_NAVIGATION(ODataPubFormat.ATOM + ";type=feed"),
+    /**
+     * Association link.
+     */
     ASSOCIATION(ContentType.APPLICATION_XML.getMimeType()),
+    /**
+     * Media-edit link.
+     */
     MEDIA_EDIT("*/*");
 
     private String type;
@@ -41,6 +53,14 @@ public enum ODataLinkType {
         return this;
     }
 
+    /**
+     * Gets
+     * <code>ODataLinkType</code> instance from the given rel and type.
+     *
+     * @param rel rel.
+     * @param type type.
+     * @return <code>ODataLinkType</code> object.
+     */
     public static ODataLinkType fromString(final String rel, final String type) {
         if (StringUtils.isNotBlank(rel) && rel.startsWith(ODataConstants.MEDIA_EDIT_LINK_REL)) {
             return MEDIA_EDIT.setType(StringUtils.isBlank(type) ? "*/*" : type);
@@ -61,6 +81,9 @@ public enum ODataLinkType {
         throw new IllegalArgumentException("Invalid link type: " + type);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String toString() {
         return type;

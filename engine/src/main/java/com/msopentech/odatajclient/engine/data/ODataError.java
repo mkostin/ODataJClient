@@ -20,15 +20,45 @@ package com.msopentech.odatajclient.engine.data;
  */
 public interface ODataError {
 
+    /**
+     * Gets error code.
+     *
+     * @return error code.
+     */
     String getCode();
 
+    /**
+     * Gets error message language.
+     *
+     * @return error message language.
+     */
     String getMessageLang();
 
+    /**
+     * Gets error message.
+     *
+     * @return error message.
+     */
     String getMessageValue();
 
+    /**
+     * Gets inner error message.
+     *
+     * @return inner error message.
+     */
     String getInnerErrorMessage();
 
+    /**
+     * Gets inner error type.
+     *
+     * @return inner error type.
+     */
     String getInnerErrorType();
 
+    /**
+     * Gets inner error stack-trace.
+     *
+     * @return inner error stack-trace
+     */
     String getInnerErrorStacktrace();
 }

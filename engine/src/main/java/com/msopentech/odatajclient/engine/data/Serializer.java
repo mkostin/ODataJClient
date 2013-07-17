@@ -49,10 +49,26 @@ public final class Serializer {
         // Empty private constructor for static utility classes
     }
 
+    /**
+     * Writes
+     * <code>FeedResource</code> object onto the given stream.
+     *
+     * @param <T> feed resource type.
+     * @param obj object to be streamed.
+     * @param out output stream.
+     */
     public static <T extends FeedResource> void feed(final T obj, final OutputStream out) {
         feed(obj, new OutputStreamWriter(out));
     }
 
+    /**
+     * Writes
+     * <code>FeedResource</code> object by the given writer.
+     *
+     * @param <T> feed resource type.
+     * @param obj object to be streamed.
+     * @param writer writer.
+     */
     public static <T extends FeedResource> void feed(final T obj, final Writer writer) {
         if (obj.getClass().equals(AtomFeed.class)) {
             atom(obj, obj.getClass(), writer);
@@ -61,10 +77,26 @@ public final class Serializer {
         }
     }
 
+    /**
+     * Writes
+     * <code>EntryResource</code> object onto the given stream.
+     *
+     * @param <T> entry resource type.
+     * @param obj object to be streamed.
+     * @param out output stream.
+     */
     public static <T extends EntryResource> void entry(final T obj, final OutputStream out) {
         entry(obj, new OutputStreamWriter(out));
     }
 
+    /**
+     * Writes
+     * <code>EntryResource</code> object by the given writer.
+     *
+     * @param <T> entry resource type.
+     * @param obj object to be streamed.
+     * @param writer writer.
+     */
     public static <T extends EntryResource> void entry(final T obj, final Writer writer) {
         if (obj.getClass().equals(AtomEntry.class)) {
             atom(obj, obj.getClass(), writer);
@@ -73,10 +105,24 @@ public final class Serializer {
         }
     }
 
+    /**
+     * Writes entry content onto the given stream.
+     *
+     * @param element element to be streamed.
+     * @param format streaming format.
+     * @param out output stream.
+     */
     public static void property(final Element element, final ODataFormat format, final OutputStream out) {
         property(element, format, new OutputStreamWriter(out));
     }
 
+    /**
+     * Writes entry content by the given writer.
+     *
+     * @param element element to be streamed.
+     * @param format streaming format.
+     * @param writer writer.
+     */
     public static void property(final Element element, final ODataFormat format, final Writer writer) {
         if (format == ODataFormat.XML) {
             dom(element, writer);
@@ -85,10 +131,24 @@ public final class Serializer {
         }
     }
 
+    /**
+     * Writes OData link onto the given stream.
+     *
+     * @param link OData link to be streamed.
+     * @param format streaming format.
+     * @param out output stream.
+     */
     public static void link(final ODataLink link, final ODataFormat format, final OutputStream out) {
         link(link, format, new OutputStreamWriter(out));
     }
 
+    /**
+     * Writes OData link by the given writer.
+     *
+     * @param link OData link to be streamed.
+     * @param format streaming format.
+     * @param writer writer.
+     */
     public static void link(final ODataLink link, final ODataFormat format, final Writer writer) {
         if (format == ODataFormat.XML) {
             xmlLink(link, writer);
@@ -97,10 +157,22 @@ public final class Serializer {
         }
     }
 
+    /**
+     * Writes DOM object onto the given stream.
+     *
+     * @param content DOM to be streamed.
+     * @param out output stream.
+     */
     public static void dom(final Element content, final OutputStream out) {
         dom(content, new OutputStreamWriter(out));
     }
 
+    /**
+     * Writes DOM object by the given writer.
+     *
+     * @param content DOM to be streamed.
+     * @param writer writer.
+     */
     public static void dom(final Element content, final Writer writer) {
         try {
             final DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
@@ -114,6 +186,13 @@ public final class Serializer {
         }
     }
 
+    /**
+     * Adds atom element as child element of the given node.
+     *
+     * @param obj atom object.
+     * @param reference reference.
+     * @param root destination node (parent of the new one).
+     */
     public static void atom(final Object obj, final Class<?> reference, final Node root) {
         try {
             final Marshaller marshaller = getMarshaller(reference);

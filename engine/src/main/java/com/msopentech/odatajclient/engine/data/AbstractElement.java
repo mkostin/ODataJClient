@@ -19,10 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
 
+/**
+ * Abstract representation of an Atom element.
+ */
 public abstract class AbstractElement {
 
     public abstract List<Object> getValues();
 
+    /**
+     * Gets JAXB elements matching the given type.
+     *
+     * @param <T> element type to be retrieved.
+     * @param reference reference class.
+     * @return list of JABX elements.
+     */
     @SuppressWarnings("unchecked")
     protected <T> List<T> getJAXBElements(Class<T> reference) {
         List<T> result = new ArrayList<T>();
@@ -37,6 +47,14 @@ public abstract class AbstractElement {
         return result;
     }
 
+    /**
+     * Gets JAXB elements matching the given type and the given name.
+     *
+     * @param <T> element type to be retrieved.
+     * @param localName element name to be retrieved.
+     * @param reference reference class.
+     * @return list of JABX elements.
+     */
     @SuppressWarnings("unchecked")
     protected <T> List<T> getJAXBElements(final String localName, final Class<T> reference) {
         List<T> result = new ArrayList<T>();
@@ -52,6 +70,14 @@ public abstract class AbstractElement {
         return result;
     }
 
+    /**
+     * Removes JAXB elements matching the given type and the given name.
+     *
+     * @param <T> element type to be retrieved.
+     * @param localName element name to be retrieved.
+     * @param reference reference class.
+     * @return 'TRUE' if the element has been removed; 'FALSE' otherwise.
+     */
     @SuppressWarnings({"unchecked"})
     protected <T> boolean removeJAXBElements(final String localName, final Class<T> reference) {
 
@@ -75,6 +101,13 @@ public abstract class AbstractElement {
         return res;
     }
 
+    /**
+     * Gets elements matching the given type.
+     *
+     * @param <T> element type to be retrieved.
+     * @param reference reference class.
+     * @return list of elements.
+     */
     @SuppressWarnings("unchecked")
     protected <T> List<T> getElements(final Class<T> reference) {
         final List<T> result = new ArrayList<T>();

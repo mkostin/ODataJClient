@@ -91,6 +91,11 @@ public class ODataCollectionValue extends ODataValue implements Iterable<ODataVa
         return values.size();
     }
 
+    /**
+     * Checks if collection is empty.
+     *
+     * @return 'TRUE' if empty; 'FALSE' otherwise.
+     */
     public boolean isEmpty() {
         return values.isEmpty();
     }

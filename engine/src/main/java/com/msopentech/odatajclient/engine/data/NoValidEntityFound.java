@@ -15,6 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+/**
+ * Exception indicating that no valid object has been found.
+ */
 public class NoValidEntityFound extends Exception {
 
     private static final long serialVersionUID = -3078954221364213688L;
@@ -37,6 +40,12 @@ public class NoValidEntityFound extends Exception {
         super(msg);
     }
 
+    /**
+     * Constructs an instance of
+     * <code>NoSuchEntityFound</code> with the specified cause.
+     *
+     * @param t cause.
+     */
     public NoValidEntityFound(final Throwable t) {
         this.initCause(t);
     }

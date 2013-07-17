@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.data;
 import java.net.URI;
 
 /**
- * OData inline entity.
+ * OData in-line entity.
  */
 public class ODataInlineEntity extends ODataLink {
 
@@ -26,11 +26,28 @@ public class ODataInlineEntity extends ODataLink {
 
     private final ODataEntity entity;
 
+    /**
+     * Constructor.
+     *
+     * @param uri edit link.
+     * @param type type.
+     * @param title title.
+     * @param entity entity.
+     */
     ODataInlineEntity(final URI uri, final ODataLinkType type, final String title, final ODataEntity entity) {
         super(uri, type, title);
         this.entity = entity;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param baseURI base URI.
+     * @param href href.
+     * @param type type.
+     * @param title title.
+     * @param entity entity.
+     */
     ODataInlineEntity(final URI baseURI, final String href, final ODataLinkType type, final String title,
             final ODataEntity entity) {
 
@@ -38,6 +55,11 @@ public class ODataInlineEntity extends ODataLink {
         this.entity = entity;
     }
 
+    /**
+     * Gets wrapped entity.
+     *
+     * @return wrapped entity.
+     */
     public ODataEntity getEntity() {
         return entity;
     }

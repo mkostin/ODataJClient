@@ -25,6 +25,14 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 
 public class ResourceFactory {
 
+    /**
+     * Gets a new instance of
+     * <code>FeedResource</code>.
+     *
+     * @param <T> resource type.
+     * @param resourceClass reference class.
+     * @return <code>FeedResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends FeedResource> T newFeed(final Class<T> resourceClass) {
         T result = null;
@@ -39,6 +47,14 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets a new instance of
+     * <code>EntryResource</code>.
+     *
+     * @param <T> resource type.
+     * @param resourceClass reference class.
+     * @return <code>EntryResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends EntryResource> T newEntry(final Class<T> resourceClass) {
         T result = null;
@@ -53,6 +69,14 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets a new instance of
+     * <code>LinkResource</code>.
+     *
+     * @param <T> resource type.
+     * @param resourceClass reference class.
+     * @return <code>LinkResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends LinkResource> T newLink(final Class<T> resourceClass) {
         T result = null;
@@ -67,6 +91,13 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets feed reference class from the given format.
+     *
+     * @param <T> resource type.
+     * @param format format.
+     * @return resource reference class.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends FeedResource> Class<T> feedClassForFormat(final ODataPubFormat format) {
         Class<T> result = null;
@@ -86,6 +117,13 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets entry reference class from the given format.
+     *
+     * @param <T> resource type.
+     * @param format format.
+     * @return resource reference class.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends EntryResource> Class<T> entryClassForFormat(final ODataPubFormat format) {
         Class<T> result = null;
@@ -105,6 +143,15 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets
+     * <code>LinkResource</code> object from feed resource.
+     *
+     * @param <T> link resource type.
+     * @param <K> feed resource type.
+     * @param resourceClass feed reference class.
+     * @return <code>LinkResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends LinkResource, K extends FeedResource> T newLinkForFeed(final Class<K> resourceClass) {
         T result = null;
@@ -119,6 +166,15 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets
+     * <code>LinkResource</code> object from entry resource.
+     *
+     * @param <T> link resource type.
+     * @param <K> entry resource type.
+     * @param resourceClass entry reference class.
+     * @return <code>LinkResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends LinkResource, K extends EntryResource> T newLinkForEntry(final Class<K> resourceClass) {
         T result = null;
@@ -133,6 +189,15 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets
+     * <code>FeedResource</code> object from link resource.
+     *
+     * @param <T> link resource type.
+     * @param <K> feed resource type.
+     * @param resourceClass link reference class.
+     * @return <code>FeedResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends LinkResource, K extends FeedResource> Class<K> feedClassForLink(
             final Class<T> resourceClass) {
@@ -149,6 +214,15 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets
+     * <code>LinkResource</code> object from entry resource.
+     *
+     * @param <T> link resource type.
+     * @param <K> entry resource type.
+     * @param resourceClass entry reference class.
+     * @return <code>LinkResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends LinkResource, K extends EntryResource> Class<T> linkClassForEntry(
             final Class<K> resourceClass) {
@@ -165,6 +239,15 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets
+     * <code>EntryResource</code> object from link resource.
+     *
+     * @param <T> link resource type.
+     * @param <K> entry resource type.
+     * @param resourceClass link reference class.
+     * @return <code>EntryResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends LinkResource, K extends EntryResource> Class<K> entryClassForLink(
             final Class<T> resourceClass) {
@@ -181,6 +264,15 @@ public class ResourceFactory {
         return result;
     }
 
+    /**
+     * Gets
+     * <code>EntryResource</code> object from feed resource.
+     *
+     * @param <T> feed resource type.
+     * @param <K> entry resource type.
+     * @param resourceClass feed reference class.
+     * @return <code>EntryResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends FeedResource, K extends EntryResource> Class<K> entryClassForFeed(
             final Class<T> resourceClass) {

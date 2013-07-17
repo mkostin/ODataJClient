@@ -31,8 +31,14 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
      */
     private boolean mediaEntity = false;
 
+    /**
+     * In case of media entity, media content type.
+     */
     private String mediaContentType;
 
+    /**
+     * In case of media entity, media content source.
+     */
     private String mediaContentSource;
 
     /**
@@ -74,6 +80,11 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
         super(name);
     }
 
+    /**
+     * Sets operations.
+     *
+     * @param operations operations.
+     */
     public void setOperations(final List<ODataOperation> operations) {
         this.operations.clear();
         if (operations != null && !operations.isEmpty()) {
@@ -81,6 +92,11 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
         }
     }
 
+    /**
+     * Gets operations.
+     *
+     * @return operations.
+     */
     public List<ODataOperation> getOperations() {
         return this.operations;
     }
@@ -232,26 +248,56 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
         return super.getLink() != null;
     }
 
+    /**
+     * Checks if the current entity is a media entity.
+     *
+     * @return 'TRUE' if media entity; 'FALSE' otherwise.
+     */
     public boolean isMediaEntity() {
         return mediaEntity;
     }
 
+    /**
+     * Sets media entity flag.
+     *
+     * @param isMediaEntity media entity flag value.
+     */
     public void setMediaEntity(boolean isMediaEntity) {
         this.mediaEntity = isMediaEntity;
     }
 
+    /**
+     * Gets media content type.
+     *
+     * @return media content type.
+     */
     public String getMediaContentType() {
         return mediaContentType;
     }
 
+    /**
+     * Sets media content type.
+     *
+     * @param mediaContentType media content type.
+     */
     public void setMediaContentType(String mediaContentType) {
         this.mediaContentType = mediaContentType;
     }
 
+    /**
+     * Gets media content source.
+     *
+     * @return media content source.
+     */
     public String getMediaContentSource() {
         return mediaContentSource;
     }
 
+    /**
+     * Sets media content source.
+     *
+     * @param mediaContentSource media content source.
+     */
     public void setMediaContentSource(String mediaContentSource) {
         this.mediaContentSource = mediaContentSource;
     }

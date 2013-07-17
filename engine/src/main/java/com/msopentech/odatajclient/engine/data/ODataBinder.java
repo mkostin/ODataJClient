@@ -67,6 +67,15 @@ public final class ODataBinder {
         return properties;
     }
 
+    /**
+     * Gets a
+     * <code>FeedResource</code> from the given OData entity set.
+     *
+     * @param <T> feed resource type.
+     * @param feed OData entity set.
+     * @param reference reference class.
+     * @return <code>FeedResource</code> object.
+     */
     public static <T extends FeedResource> T getFeed(final ODataEntitySet feed, final Class<T> reference) {
         final T feedResource = ResourceFactory.newFeed(reference);
 
@@ -91,6 +100,15 @@ public final class ODataBinder {
         return feedResource;
     }
 
+    /**
+     * Gets an
+     * <code>EntryResource</code> from the given OData entity.
+     *
+     * @param <T> entry resource type.
+     * @param entity OData entity.
+     * @param reference reference class.
+     * @return <code>EntryResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference) {
         final T entry = ResourceFactory.newEntry(reference);
@@ -161,6 +179,12 @@ public final class ODataBinder {
         return entry;
     }
 
+    /**
+     * Gets content from the given OData property.
+     *
+     * @param prop OData property.
+     * @return <code>Element</code> object.
+     */
     public static Element getProperty(final ODataProperty prop) {
         try {
             return newProperty(prop, DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
@@ -170,6 +194,13 @@ public final class ODataBinder {
         }
     }
 
+    /**
+     * Gets
+     * <code>ODataServiceDocument</code> from the given service document resource.
+     *
+     * @param resource service document resource.
+     * @return <code>ODataServiceDocument</code> object.
+     */
     public static ODataServiceDocument getODataServiceDocument(final ServiceDocumentResource resource) {
         final ODataServiceDocument serviceDocument = new ODataServiceDocument();
 
@@ -180,10 +211,25 @@ public final class ODataBinder {
         return serviceDocument;
     }
 
+    /**
+     * Gets
+     * <code>ODataEntitySet</code> from the given feed resource.
+     *
+     * @param resource feed resource.
+     * @return <code>ODataEntitySet</code> object.
+     */
     public static ODataEntitySet getODataEntitySet(final FeedResource resource) {
         return getODataEntitySet(resource, null);
     }
 
+    /**
+     * Gets
+     * <code>ODataEntitySet</code> from the given feed resource.
+     *
+     * @param resource feed resource.
+     * @param defaultBaseURI default base URI.
+     * @return <code>ODataEntitySet</code> object.
+     */
     public static ODataEntitySet getODataEntitySet(final FeedResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
@@ -211,10 +257,25 @@ public final class ODataBinder {
         return entitySet;
     }
 
+    /**
+     * Gets
+     * <code>ODataEntity</code> from the given entry resource.
+     *
+     * @param resource entry resource.
+     * @return <code>ODataEntity</code> object.
+     */
     public static ODataEntity getODataEntity(final EntryResource resource) {
         return getODataEntity(resource, null);
     }
 
+    /**
+     * Gets
+     * <code>ODataEntity</code> from the given entry resource.
+     *
+     * @param resource entry resource.
+     * @param defaultBaseURI default base URI.
+     * @return <code>ODataEntity</code> object.
+     */
     public static ODataEntity getODataEntity(final EntryResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
@@ -286,6 +347,15 @@ public final class ODataBinder {
         return entity;
     }
 
+    /**
+     * Gets a
+     * <code>LinkResource</code> from the given OData link.
+     *
+     * @param <T> link resource type.
+     * @param link OData link.
+     * @param reference reference class.
+     * @return <code>LinkResource</code> object.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends LinkResource> T getLinkResource(final ODataLink link, final Class<T> reference) {
         final T linkResource = ResourceFactory.newLink(reference);
@@ -311,6 +381,13 @@ public final class ODataBinder {
         return linkResource;
     }
 
+    /**
+     * Gets an
+     * <code>ODataProperty</code> from the given content.
+     *
+     * @param property content.
+     * @return <code>ODataProperty</code> object.
+     */
     public static ODataProperty getProperty(final Element property) {
         final ODataProperty res;
 

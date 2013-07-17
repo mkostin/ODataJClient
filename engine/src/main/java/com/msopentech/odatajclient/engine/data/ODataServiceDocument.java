@@ -20,30 +20,65 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Representation of an OData service document.
+ */
 public class ODataServiceDocument {
 
     private final Map<String, URI> toplevelEntitySets = new HashMap<String, URI>();
 
+    /**
+     * Add entity set.
+     *
+     * @param name name.
+     * @param uri URI.
+     */
     public void addEntitySet(final String name, final URI uri) {
         toplevelEntitySets.put(name, uri);
     }
 
+    /**
+     * Removes entity set.
+     *
+     * @param name name.
+     */
     public void removeEntitySet(final String name) {
         toplevelEntitySets.remove(name);
     }
 
+    /**
+     * Gets entity set names.
+     *
+     * @return entity set names.
+     */
     public Collection<String> getEntitySetNames() {
         return toplevelEntitySets.keySet();
     }
 
+    /**
+     * Gets entity set URIs.
+     *
+     * @return entity set URIs.
+     */
     public Collection<URI> getEntitySetURIs() {
         return toplevelEntitySets.values();
     }
 
+    /**
+     * Gets URI about the given entity set.
+     *
+     * @param name name.
+     * @return URI.
+     */
     public URI getEntitySetURI(final String name) {
         return toplevelEntitySets.get(name);
     }
 
+    /**
+     * Gets the number of all top level entity sets.
+     *
+     * @return number of all top level entity sets.
+     */
     public int count() {
         return toplevelEntitySets.size();
     }

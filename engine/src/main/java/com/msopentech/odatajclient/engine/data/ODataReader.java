@@ -138,10 +138,17 @@ public final class ODataReader {
      * @param input stream to de-serialize.
      * @return metadata representation.
      */
-    public static EdmMetadata readMetadata(final InputStream inputStream) {
-        return new EdmMetadata(inputStream);
+    public static EdmMetadata readMetadata(final InputStream input) {
+        return new EdmMetadata(input);
     }
 
+    /**
+     * Parses a stream into an OData error.
+     *
+     * @param inputStream stream to de-serialize.
+     * @param isXML 'TRUE' if the error is in XML format.
+     * @return OData error.
+     */
     public static ODataError readError(final InputStream inputStream, final boolean isXML) {
         return Deserializer.toODataError(inputStream, isXML);
     }

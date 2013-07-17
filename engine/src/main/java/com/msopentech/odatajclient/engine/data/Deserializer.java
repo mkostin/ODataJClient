@@ -47,7 +47,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Utility class for deserialization.
+ * Utility class for serialization.
  */
 public final class Deserializer {
 
@@ -55,6 +55,14 @@ public final class Deserializer {
         // Empty private constructor for static utility classes
     }
 
+    /**
+     * Gets a feed object from the given InputStream.
+     *
+     * @param <T> reference class type
+     * @param input stream to be de-serialized.
+     * @param reference reference class (AtomFeed.class, JSONFeed.class).
+     * @return FeedResource instance.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends FeedResource> T toFeed(final InputStream input, final Class<T> reference) {
         T entry;
@@ -68,6 +76,12 @@ public final class Deserializer {
         return entry;
     }
 
+    /**
+     * Gets the AtomFeed object represented by the given XML node.
+     *
+     * @param node XML node representing an Atom feed.
+     * @return AtomFeed object.
+     */
     @SuppressWarnings("unchecked")
     public static AtomFeed toAtomFeed(final Node node) {
         try {
@@ -78,6 +92,14 @@ public final class Deserializer {
         }
     }
 
+    /**
+     * Gets an entry object from the given InputStream.
+     *
+     * @param <T> reference class type
+     * @param input stream to be de-serialized.
+     * @param reference reference class (AtomEntry.class, JSONEntry.class).
+     * @return EntryResource instance.
+     */
     @SuppressWarnings("unchecked")
     public static <T extends EntryResource> T toEntry(final InputStream input, final Class<T> reference) {
         T entry;
@@ -91,6 +113,12 @@ public final class Deserializer {
         return entry;
     }
 
+    /**
+     * Gets the AtomEntry object represented by the given XML node.
+     *
+     * @param node XML node representing an Atom entry.
+     * @return AtomEntry object.
+     */
     @SuppressWarnings("unchecked")
     public static AtomEntry toAtomEntry(final Node node) {
         try {
@@ -101,12 +129,26 @@ public final class Deserializer {
         }
     }
 
+    /**
+     * Gets a DOM representation of the given InputStream.
+     *
+     * @param input stream to be de-serialized.
+     * @param format OData format.
+     * @return DOM.
+     */
     public static Element toDOM(final InputStream input, final ODataFormat format) {
         return format == ODataFormat.XML
                 ? toDOMFromXML(input)
                 : toDOMFromJSON(input);
     }
 
+    /**
+     * Gets the ServiceDocumentResource object represented by the given InputStream.
+     *
+     * @param input stream to be de-serialized.
+     * @param format OData service document format.
+     * @return ServiceDocumentResource object.
+     */
     public static ServiceDocumentResource toServiceDocument(
             final InputStream input, final ODataServiceDocumentFormat format) {
 
@@ -115,12 +157,26 @@ public final class Deserializer {
                 : toServiceDocumentFromJSON(input);
     }
 
+    /**
+     * Gets a list of links from the given InputStream.
+     *
+     * @param input stream to be de-serialized.
+     * @param format OData format.
+     * @return de-serialized links.
+     */
     public static List<URI> toLinks(final InputStream input, final ODataFormat format) {
         return format == ODataFormat.XML
                 ? toLinksFromXML(input)
                 : toLinksFromJSON(input);
     }
 
+    /**
+     * Gets the ODataError object represented by the given InputStream.
+     *
+     * @param input stream to be parsed and de-serialized.
+     * @param isXML 'TRUE' if the error is represented by XML; 'FALSE' otherwise.
+     * @return
+     */
     public static ODataError toODataError(final InputStream input, final boolean isXML) {
         return isXML
                 ? toODataErrorFromXML(input)

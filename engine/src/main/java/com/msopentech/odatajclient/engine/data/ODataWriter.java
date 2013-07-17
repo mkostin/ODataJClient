@@ -41,7 +41,7 @@ public final class ODataWriter {
      * Writes a collection of OData entities.
      *
      * @param entities entities to be serialized.
-     * @param format serialize as AtomEntry or JSONEntry
+     * @param format serialization format.
      * @return stream of serialized objects.
      */
     public static InputStream writeEntities(final Collection<ODataEntity> entities, final ODataPubFormat format) {
@@ -61,7 +61,7 @@ public final class ODataWriter {
      * Serializes a single OData entity.
      *
      * @param entity entity to be serialized.
-     * @param format serialize as AtomEntry or JSONEntry
+     * @param format serialization format.
      * @return stream of serialized object.
      */
     public static InputStream writeEntity(final ODataEntity entity, final ODataPubFormat format) {
@@ -72,7 +72,7 @@ public final class ODataWriter {
      * Writes a single OData entity property.
      *
      * @param property entity property to be serialized.
-     * @param format serialize as AtomEntry or JSONEntry
+     * @param format serialization format.
      * @return stream of serialized object.
      */
     public static InputStream writeProperty(final ODataProperty property, final ODataFormat format) {
@@ -86,6 +86,13 @@ public final class ODataWriter {
         }
     }
 
+    /**
+     * Writes an OData link.
+     *
+     * @param link link to be serialized.
+     * @param format serialization format.
+     * @return stream of serialized object.
+     */
     public static InputStream writeLink(final ODataLink link, final ODataFormat format) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {

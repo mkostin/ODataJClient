@@ -26,11 +26,26 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class ODataProperty implements Serializable, ODataInvokeResult {
 
+    /**
+     * Property type.
+     */
     public enum PropertyType {
 
+        /**
+         * Primitive.
+         */
         PRIMITIVE,
+        /**
+         * Collection
+         */
         COLLECTION,
+        /**
+         * Complex.
+         */
         COMPLEX,
+        /**
+         * Empty property (maybe no type can be retrieved).
+         */
         EMPTY
 
     }
@@ -85,44 +100,88 @@ public class ODataProperty implements Serializable, ODataInvokeResult {
         this.value = value;
     }
 
+    /**
+     * Checks if has null value.
+     *
+     * @return 'TRUE' if has null value; 'FALSE' otherwise.
+     */
     public boolean hasNullValue() {
         return this.value == null;
     }
 
+    /**
+     * Checks if has primitive value.
+     *
+     * @return 'TRUE' if has primitive value; 'FALSE' otherwise.
+     */
     public boolean hasPrimitiveValue() {
         return !hasNullValue() && this.value.isPrimitive();
     }
 
+    /**
+     * Gets primitive value.
+     *
+     * @return primitive value if exists; null otherwise.
+     */
     public ODataPrimitiveValue getPrimitiveValue() {
         return hasPrimitiveValue() ? this.value.asPrimitive() : null;
     }
 
+    /**
+     * Checks if has complex value.
+     *
+     * @return 'TRUE' if has complex value; 'FALSE' otherwise.
+     */
     public boolean hasComplexValue() {
         return !hasNullValue() && this.value.isComplex();
     }
 
+    /**
+     * Gets complex value.
+     *
+     * @return complex value if exists; null otherwise.
+     */
     public ODataComplexValue getComplexValue() {
         return hasComplexValue() ? this.value.asComplex() : null;
     }
 
+    /**
+     * Checks if has collection value.
+     *
+     * @return 'TRUE' if has collection value; 'FALSE' otherwise.
+     */
     public boolean hasCollectionValue() {
         return !hasNullValue() && this.value.isCollection();
     }
 
+    /**
+     * Gets collection value.
+     *
+     * @return collection value if exists; null otherwise.
+     */
     public ODataCollectionValue getCollectionValue() {
         return hasCollectionValue() ? this.value.asCollection() : null;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);

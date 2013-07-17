@@ -23,7 +23,6 @@ import java.net.URI;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -35,24 +34,48 @@ public class ODataPrimitiveValue extends ODataValue {
 
     private static final long serialVersionUID = 2841837627899878223L;
 
+    /**
+     * Primitive value builder.
+     */
     public static class Builder {
 
         private final ODataPrimitiveValue opv;
 
+        /**
+         * Constructor.
+         */
         public Builder() {
             this.opv = new ODataPrimitiveValue();
         }
 
+        /**
+         * Sets the given value provided as a text.
+         *
+         * @param text value.
+         * @return the current builder.
+         */
         public Builder setText(final String text) {
             this.opv.text = text;
             return this;
         }
 
+        /**
+         * Sets the actual object value.
+         *
+         * @param value value.
+         * @return the current builder.
+         */
         public Builder setValue(final Object value) {
             this.opv.value = value;
             return this;
         }
 
+        /**
+         * Sets actual value type.
+         *
+         * @param type type.
+         * @return the current builder.
+         */
         public Builder setType(final EdmSimpleType type) {
             if (type == EdmSimpleType.STREAM) {
                 throw new IllegalArgumentException("Cannot build a primitive value for "
@@ -62,6 +85,11 @@ public class ODataPrimitiveValue extends ODataValue {
             return this;
         }
 
+        /**
+         * Builds the primitive value.
+         *
+         * @return <code>ODataPrimitiveValue</code> object.
+         */
         public ODataPrimitiveValue build() {
             if (this.opv.text == null && this.opv.value == null) {
                 throw new IllegalArgumentException("Must provide either text or value");
@@ -328,15 +356,29 @@ public class ODataPrimitiveValue extends ODataValue {
         return type.toString();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String toString() {
         return this.text;
     }
 
+    /**
+     * Gets actual primitive value.
+     *
+     * @return
+     */
     public Object toValue() {
         return this.value;
     }
 
+    /**
+     * Casts primitive value.
+     *
+     * @param <T> cast.
+     * @return casted value.
+     */
     @SuppressWarnings("unchecked")
     public <T> T toCastValue() {
         return (T) type.javaType().cast(toValue());
