@@ -22,6 +22,7 @@ import java.util.concurrent.Future;
  * Basic OData request.
  *
  * @param <V> OData response type corresponding to the request implementation.
+ * @param <T> Accepted content-type formats by the request in object.
  */
 public interface ODataBasicRequest<V extends ODataResponse, T extends Enum<T>> extends ODataRequest {
 
@@ -42,8 +43,9 @@ public interface ODataBasicRequest<V extends ODataResponse, T extends Enum<T>> e
     /**
      * Returns resource representation format.
      *
-     * @return the configured format (<tt>com.msopentech.odatajclient.engine.types.ODataFormat.ATOM</tt> will be
+     * @return the configured format (<tt>com.msopentech.odatajclient.engine.format.ODataFormat.JSON</tt> will be
      * the default value unless differently specified).
+     * @see com.msopentech.odatajclient.engine.format.ODataFormat
      */
     String getFormat();
 
@@ -51,8 +53,8 @@ public interface ODataBasicRequest<V extends ODataResponse, T extends Enum<T>> e
      * Override configured request format.
      *
      * @param format request format.
-     * @see com.msopentech.odatajclient.engine.types.ODataFormat
-     * @see com.msopentech.odatajclient.engine.types.ODataPubFormat
+     * @see com.msopentech.odatajclient.engine.format.ODataFormat
+     * @see com.msopentech.odatajclient.engine.format.ODataPubFormat
      */
     void setFormat(T format);
 }

@@ -20,7 +20,7 @@ import java.io.InputStream;
 /**
  * This class implements the response to an Odata stream create/update request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataStreamRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamUpdateRequest
  */
 public interface ODataStreamUpdateResponse extends ODataResponse {
 

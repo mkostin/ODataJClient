@@ -35,7 +35,7 @@ public final class ODataStreamedRequestFactory {
      * Use this kind of request to create a new media entity.
      *
      * @param targetURI entity set URI.
-     * @param entity entity blob to be created.
+     * @param media entity blob to be created.
      * @return new ODataMediaEntityCreateRequest instance.
      */
     public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(
@@ -51,7 +51,7 @@ public final class ODataStreamedRequestFactory {
      *
      * @param targetURI target URI.
      * @param stream stream to be updated.
-     * @return new ODataUpdateStreamRequest instance.
+     * @return new ODataStreamUpdateRequest instance.
      */
     public static ODataStreamUpdateRequest getStreamUpdateRequest(final URI targetURI, final InputStream stream) {
         final ODataStreamUpdateRequest req;
@@ -72,7 +72,7 @@ public final class ODataStreamedRequestFactory {
      * Use this kind of request to update a media entity.
      *
      * @param editURI media entity edit link URI.
-     * @param entity entity blob to be updated.
+     * @param media entity blob to be updated.
      * @return new ODataMediaEntityUpdateRequest instance.
      */
     public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(

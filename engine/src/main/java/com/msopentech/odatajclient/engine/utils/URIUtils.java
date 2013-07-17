@@ -28,12 +28,24 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 
+/**
+ * URI utilities.
+ */
 public final class URIUtils {
 
     private URIUtils() {
         // Empty private constructor for static utility classes
     }
 
+    /**
+     * Build URI starting from the given base and href.
+     * <p>
+     * If href is absolute or base is null then base will be ignored.
+     *
+     * @param base URI prefix.
+     * @param href URI suffix.
+     * @return built URI.
+     */
     public static URI getURI(final String base, final String href) {
         if (href == null) {
             throw new IllegalArgumentException("Null link provided");
@@ -48,6 +60,15 @@ public final class URIUtils {
         return uri.normalize();
     }
 
+    /**
+     * Build URI starting from the given base and href.
+     * <p>
+     * If href is absolute or base is null then base will be ignored.
+     *
+     * @param base URI prefix.
+     * @param href URI suffix.
+     * @return built URI.
+     */
     public static URI getURI(final URI base, final String href) {
         if (href == null) {
             throw new IllegalArgumentException("Null link provided");
@@ -62,6 +83,13 @@ public final class URIUtils {
         return uri.normalize();
     }
 
+    /**
+     * Retrieves HTTP request method wrapper from the given HTTP request method and URI.
+     *
+     * @param method
+     * @param uri
+     * @return
+     */
     public static HttpUriRequest toHttpURIRequest(final ODataRequest.Method method, final URI uri) {
         HttpUriRequest result;
 
@@ -95,6 +123,13 @@ public final class URIUtils {
         return result;
     }
 
+    /**
+     * Gets function import URI segment.
+     *
+     * @param entityContainer entity container.
+     * @param functionImport function import.
+     * @return URI segment.
+     */
     public static String functionImportURISegment(
             final EntityContainer entityContainer, final FunctionImport functionImport) {
 

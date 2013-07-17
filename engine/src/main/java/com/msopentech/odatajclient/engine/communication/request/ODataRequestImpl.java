@@ -20,6 +20,11 @@ import com.msopentech.odatajclient.engine.communication.ODataClientErrorExceptio
 import com.msopentech.odatajclient.engine.communication.ODataServerErrorException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.utils.Configuration;
@@ -44,9 +49,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract representation of an OData request.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using factories.
  *
- * @see ODataRequestFactory.
+ * @see ODataCUDRequestFactory
+ * @see ODataRetrieveRequestFactory
+ * @see ODataBatchRequestFactory
+ * @see ODataInvokeRequestFactory
+ * @see ODataStreamedRequestFactory
  */
 public class ODataRequestImpl implements ODataRequest {
 
@@ -285,9 +294,9 @@ public class ODataRequestImpl implements ODataRequest {
     }
 
     /**
-     * Gets request header.
+     * Gets request headers.
      *
-     * @return request header.
+     * @return request headers.
      */
     public ODataHeaders getHeader() {
         return odataHeaders;
@@ -349,6 +358,11 @@ public class ODataRequestImpl implements ODataRequest {
         }
     }
 
+    /**
+     * Builds the request and execute it.
+     *
+     * @return HttpReponse object.
+     */
     protected HttpResponse doExecute() {
         // Set Content-Type and Accept headers with default values, if not yet set
         if (StringUtils.isBlank(odataHeaders.getHeader(ODataHeaders.HeaderName.contentType))) {
@@ -400,6 +414,14 @@ public class ODataRequestImpl implements ODataRequest {
         return response;
     }
 
+    /**
+     * Gets an empty response that can be initialized by a stream.
+     * <p>
+     * This method has to be used to build response items about a batch request.
+     *
+     * @param <V> ODataResppnse type.
+     * @return empty OData response instance.
+     */
     @SuppressWarnings("unchecked")
     public <V extends ODataResponse> V getResponseTemplate() {
 

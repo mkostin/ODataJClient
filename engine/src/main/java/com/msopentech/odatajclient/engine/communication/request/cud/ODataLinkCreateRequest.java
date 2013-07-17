@@ -85,9 +85,20 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     private class ODataLinkCreateResponseImpl extends ODataResponseImpl implements ODataLinkOperationResponse {
 
-        public ODataLinkCreateResponseImpl() {
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataLinkCreateResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataLinkCreateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }

@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
-import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchLineIterator;
 import java.io.InputStream;
 import java.util.Collection;
@@ -47,7 +47,7 @@ public interface ODataResponse {
      * @param name header to be retrieved.
      * @return response header value.
      */
-    Collection<String> getHeader(final ODataHeaders.HeaderName name);
+    Collection<String> getHeader(final HeaderName name);
 
     /**
      * Gets 'ETag' header value.
@@ -89,7 +89,7 @@ public interface ODataResponse {
      *
      * @param responseLine response line.
      * @param headers response headers.
-     * @param batchLineIterator payload line iterator.
+     * @param batchLineIterator batch line iterator.
      * @param boundary batch boundary.
      */
     ODataResponse initFromBatch(

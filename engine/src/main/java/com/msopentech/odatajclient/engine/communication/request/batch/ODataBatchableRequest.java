@@ -31,5 +31,14 @@ public interface ODataBatchableRequest extends ODataRequest {
      */
     void batch(final ODataBatchRequest req);
 
+    /**
+     * Writes (and consume) the request onto the given batch stream.
+     * <p>
+     * Please note that this method will consume the request (execution won't be possible anymore).
+     *
+     * @param req destination batch request.
+     * @param contentId ContentId header value to be added to the serialization.
+     * Use this in case of changeset items.
+     */
     void batch(final ODataBatchRequest req, final String contentId);
 }

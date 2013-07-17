@@ -31,7 +31,7 @@ public interface ODataStreamedRequest<V extends ODataResponse, T extends ODataSt
     /**
      * Streamed request execute.
      *
-     * @return OData request payload management object.
+     * @return OData request payload manager object.
      */
     T execute();
 }

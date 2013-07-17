@@ -24,6 +24,11 @@ public class ODataServerErrorException extends RuntimeException {
 
     private static final long serialVersionUID = -6423014532618680135L;
 
+    /**
+     * Constructor.
+     *
+     * @param statusLine request status info.
+     */
     public ODataServerErrorException(final StatusLine statusLine) {
         super(statusLine.toString());
     }

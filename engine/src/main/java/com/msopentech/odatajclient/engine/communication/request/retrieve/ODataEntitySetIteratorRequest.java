@@ -50,12 +50,24 @@ public class ODataEntitySetIteratorRequest extends ODataRetrieveRequest<ODataEnt
         return new ODataEntitySetIteratorResponseImpl(client, res);
     }
 
+    /**
+     * Response class about an ODataEntitySetIteratorRequest.
+     */
     protected class ODataEntitySetIteratorResponseImpl extends ODataRetrieveResponseImpl {
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataEntitySetIteratorResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         @SuppressWarnings("unchecked")
         public ODataEntitySetIterator getBody() {

@@ -52,12 +52,32 @@ public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMe
         return new ODataMediaResponseImpl(client, res);
     }
 
+    /**
+     * Response class about an ODataMediaRequest.
+     */
     protected class ODataMediaResponseImpl extends ODataRetrieveResponseImpl {
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataMediaResponseImpl() {
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataMediaResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public InputStream getBody() {
             try {

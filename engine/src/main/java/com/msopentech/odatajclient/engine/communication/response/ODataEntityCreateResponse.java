@@ -18,9 +18,9 @@ package com.msopentech.odatajclient.engine.communication.response;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 
 /**
- * This class implements the response to an Odata entity create request.
+ * This class implements the response to an OData entity create request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataCreateEntityRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest
  */
 public interface ODataEntityCreateResponse extends ODataResponse {
 

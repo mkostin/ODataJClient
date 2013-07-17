@@ -37,6 +37,11 @@ public enum ODataValueFormat {
         this.format = format;
     }
 
+    /**
+     * Gets format as a string.
+     *
+     * @return format as a string.
+     */
     @Override
     public String toString() {
         return format;

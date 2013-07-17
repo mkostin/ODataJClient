@@ -27,10 +27,9 @@ public class ODataRetrieve extends ODataBatchRequestItem {
 
     /**
      * Constructor.
-     * <p>
-     * Send GET request header.
      *
-     * @param os piped output stream to be used to serialize.
+     * @param req batch request.
+     * @param expectedResItem expected batch response item.
      */
     ODataRetrieve(final ODataBatchRequest req, final ODataRetrieveResponseItem expectedResItem) {
         super(req);
@@ -38,7 +37,7 @@ public class ODataRetrieve extends ODataBatchRequestItem {
     }
 
     /**
-     * Close retrieve statement an send retrieve request footer.
+     * Close item.
      */
     @Override
     protected void closeItem() {
@@ -48,10 +47,10 @@ public class ODataRetrieve extends ODataBatchRequestItem {
     /**
      * Serialize and send the given request.
      * <p>
-     * An IllegalArgumentException is thrown in case of the given request is not a GET.
+     * An IllegalArgumentException is thrown in case of no GET request.
      *
      * @param request request to be serialized.
-     * @return current retrieve item instance.
+     * @return current item instance.
      */
     public ODataRetrieve setRequest(final ODataBatchableRequest request) {
         if (!isOpen()) {

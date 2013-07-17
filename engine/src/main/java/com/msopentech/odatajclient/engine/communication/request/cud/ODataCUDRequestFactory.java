@@ -29,6 +29,9 @@ import java.net.URI;
  */
 public final class ODataCUDRequestFactory {
 
+    /**
+     * Private constructor.
+     */
     private ODataCUDRequestFactory() {
         // Empty private constructor for static utility classes
     }
@@ -39,7 +42,8 @@ public final class ODataCUDRequestFactory {
      * Use this kind of request to create a new entity.
      *
      * @param targetURI entity set URI.
-     * @return new ODataCreateEntityRequest instance.
+     * @param entity entity to be created.
+     * @return new ODataEntityCreateRequest instance.
      */
     public static ODataEntityCreateRequest getEntityCreateRequest(final URI targetURI, final ODataEntity entity) {
         return new ODataEntityCreateRequest(targetURI, entity);
@@ -49,9 +53,9 @@ public final class ODataCUDRequestFactory {
      * Gets an update request object instance.
      *
      * @param targetURI edit link of the object to be updated.
-     * @param changes changes to be applied.
      * @param type type of update to be performed.
-     * @return new ODataUpdateEntityRequest instance.
+     * @param changes changes to be applied.
+     * @return new ODataEntityUpdateRequest instance.
      */
     public static ODataEntityUpdateRequest getEntityUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataEntity changes) {
@@ -71,9 +75,9 @@ public final class ODataCUDRequestFactory {
     /**
      * Gets an update request object instance; uses entity's edit link as endpoint.
      *
-     * @param entity changes to be applied.
      * @param type type of update to be performed.
-     * @return new ODataUpdateEntityRequest instance.
+     * @param entity changes to be applied.
+     * @return new ODataEntityUpdateRequest instance.
      */
     public static ODataEntityUpdateRequest getEntityUpdateRequest(final UpdateType type, final ODataEntity entity) {
         if (entity.getEditLink() == null) {
@@ -100,7 +104,7 @@ public final class ODataCUDRequestFactory {
      * @param targetURI entity set or entity or entity property URI.
      * @param type type of update to be performed.
      * @param value value to be created.
-     * @return new ODataCreatePrimitiveRequest instance.
+     * @return new ODataValueUpdateRequest instance.
      */
     public static ODataValueUpdateRequest getValueUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataPrimitiveValue value) {
@@ -123,9 +127,8 @@ public final class ODataCUDRequestFactory {
      * Use this kind of request to update a primitive property value
      *
      * @param targetURI entity set or entity or entity property URI.
-     * @param type type of update to be performed.
      * @param property value to be update.
-     * @return new ODataCreatePrimitiveRequest instance.
+     * @return new ODataPropertyUpdateRequest instance.
      */
     public static ODataPropertyUpdateRequest getPropertyPrimitiveValueUpdateRequest(
             final URI targetURI, final ODataProperty property) {
@@ -152,8 +155,9 @@ public final class ODataCUDRequestFactory {
      * Use this kind of request to update a complex property value
      *
      * @param targetURI entity set or entity or entity property URI.
+     * @param type type of update to be performed.
      * @param property value to be update.
-     * @return new ODataCreatePrimitiveRequest instance.
+     * @return new ODataPropertyUpdateRequest instance.
      */
     public static ODataPropertyUpdateRequest getPropertyComplexValueUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataProperty property) {
@@ -180,9 +184,8 @@ public final class ODataCUDRequestFactory {
      * Use this kind of request to update a collection property value
      *
      * @param targetURI entity set or entity or entity property URI.
-     * @param type type of update to be performed.
      * @param property value to be update.
-     * @return new ODataCreatePrimitiveRequest instance.
+     * @return new ODataPropertyUpdateRequest instance.
      */
     public static ODataPropertyUpdateRequest getPropertyCollectionValueUpdateRequest(
             final URI targetURI, final ODataProperty property) {
@@ -225,7 +228,6 @@ public final class ODataCUDRequestFactory {
      *
      * @param targetURI navigation property's link collection.
      * @param type type of update to be performed.
-     * @param linkToBeRemoved navigation link to be removed.
      * @param link URL that identifies the entity to be linked.
      * @return new ODataLinkUpdateRequest instance.
      */

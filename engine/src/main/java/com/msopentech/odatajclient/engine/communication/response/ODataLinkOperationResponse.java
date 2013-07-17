@@ -18,8 +18,8 @@ package com.msopentech.odatajclient.engine.communication.response;
 /**
  * This interface defines the response to an OData link operation request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataLinkCreateRequest
- * @see com.msopentech.odatajclient.engine.communication.request.ODataLinkUpdateRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkCreateRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkUpdateRequest
  */
 public interface ODataLinkOperationResponse extends ODataResponse {
 }

@@ -28,10 +28,16 @@ public class ODataRetrieveResponseItem extends ODataBatchResponseItem {
 
     public static final String RETRIEVE_CONTENT_ID = "__RETRIEVE__";
 
+    /**
+     * Constructor.
+     */
     public ODataRetrieveResponseItem() {
         super(false);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean hasNext() {
         if (closed) {
@@ -45,6 +51,9 @@ public class ODataRetrieveResponseItem extends ODataBatchResponseItem {
         return expectedItemsIterator.hasNext();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataResponse next() {
         if (closed) {
@@ -64,6 +73,9 @@ public class ODataRetrieveResponseItem extends ODataBatchResponseItem {
         return expectedItemsIterator.next().initFromBatch(responseLine, headers, batchLineIterator, boundary);
     }
 
+    /**
+     * Unsupported operation.
+     */
     @Override
     public void remove() {
         throw new UnsupportedOperationException("Operation not supported.");

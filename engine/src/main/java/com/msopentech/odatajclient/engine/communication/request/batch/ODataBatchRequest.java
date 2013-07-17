@@ -22,7 +22,6 @@ import com.msopentech.odatajclient.engine.communication.request.streamed.ODataSt
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
-import com.msopentech.odatajclient.engine.utils.Wrapper;
 import java.io.IOException;
 import java.io.PipedOutputStream;
 import java.net.URI;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -48,6 +46,9 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
      */
     private final String boundary;
 
+    /**
+     * Expected batch response items.
+     */
     private final List<ODataBatchResponseItem> expectedResItems = new ArrayList<ODataBatchResponseItem>();
 
     /**
@@ -76,15 +77,36 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
         return (BatchStreamManager) streamManager;
     }
 
+    /**
+     * Gets piped stream to be used to stream batch items.
+     *
+     * @return piped stream for the payload.
+     */
     PipedOutputStream getOutputStream() {
         return getStreamManager().getBodyStreamWriter();
     }
 
+    /**
+     * Appends the given byte array to the payload.
+     *
+     * @param toBeStreamed byte array to be appended.
+     * @return the current batch request.
+     * @throws IOException in case of write errors.
+     */
     public ODataBatchRequest rawAppend(final byte[] toBeStreamed) throws IOException {
         getStreamManager().getBodyStreamWriter().write(toBeStreamed);
         return this;
     }
 
+    /**
+     * Appends the given byte array to the payload.
+     *
+     * @param toBeStreamed byte array to be appended.
+     * @param off byte array offset.
+     * @param len number of byte to be streamed.
+     * @return the current batch request.
+     * @throws IOException in case of write errors.
+     */
     public ODataBatchRequest rawAppend(final byte[] toBeStreamed, int off, int len) throws IOException {
         getStreamManager().getBodyStreamWriter().write(toBeStreamed, off, len);
         return this;
@@ -165,9 +187,7 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
         }
 
         /**
-         * Closes the stream and returns OData response.
-         *
-         * @return batch response.
+         * {@inheritDoc }
          */
         @Override
         protected ODataBatchResponse getResponse(final long timeout, final TimeUnit unit) {
@@ -216,6 +236,12 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
      */
     private class ODataBatchResponseImpl extends ODataResponseImpl implements ODataBatchResponse {
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataBatchResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }

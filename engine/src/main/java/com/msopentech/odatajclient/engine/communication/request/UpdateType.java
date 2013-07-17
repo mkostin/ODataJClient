@@ -40,6 +40,11 @@ public enum UpdateType {
         this.method = method;
     }
 
+    /**
+     * Gets HTTP request method.
+     *
+     * @return HTTP request method.
+     */
     public ODataRequest.Method getMethod() {
         return method;
     }

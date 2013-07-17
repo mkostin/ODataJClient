@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 /**
  * This class implements the response to an Odata media entity update request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataMediaEntityUpdateRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest
  */
 public interface ODataMediaEntityUpdateResponse extends ODataResponse {
 

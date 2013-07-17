@@ -36,12 +36,12 @@ public class ODataBatchConstants {
     public static final String BOUNDARY = "boundary";
 
     /**
-     * item content type.
+     * Item content type.
      */
     public static String ITEM_CONTENT_TYPE_LINE = "Content-Type: application/http";
 
     /**
-     * item transfer encoding.
+     * Item transfer encoding.
      */
     public static String ITEM_TRANSFER_ENCODING_LINE = "Content-Transfer-Encoding: binary";
 

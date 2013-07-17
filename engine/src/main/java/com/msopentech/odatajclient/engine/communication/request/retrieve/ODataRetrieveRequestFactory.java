@@ -112,11 +112,12 @@ public final class ODataRetrieveRequestFactory {
     /**
      * Gets a query request returning a single OData link.
      *
-     * @param query query to be performed.
+     * @param targetURI target URI.
+     * @param linkName link name.
      * @return new ODataLinkRequest instance.
      */
-    public static ODataLinkRequest getLinkRequest(final URI query, final String linkName) {
-        return new ODataLinkRequest(query, linkName);
+    public static ODataLinkRequest getLinkRequest(final URI targetURI, final String linkName) {
+        return new ODataLinkRequest(targetURI, linkName);
     }
 
     /**
@@ -132,10 +133,10 @@ public final class ODataRetrieveRequestFactory {
     /**
      * Implements a raw request returning a stream.
      *
-     * @param query query to be performed.
-     * @return new ODataRawRetrieveRequest instance.
+     * @param uri query to be performed.
+     * @return new ODataRawRequest instance.
      */
-    public static ODataRawRequest getRawRetrieveRequest(final URI uri) {
+    public static ODataRawRequest getRawRequest(final URI uri) {
         return new ODataRawRequest(uri);
 
     }

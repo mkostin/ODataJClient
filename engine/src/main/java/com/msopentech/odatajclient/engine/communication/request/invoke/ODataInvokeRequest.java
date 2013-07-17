@@ -84,6 +84,11 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
         this.parameters = new HashMap<String, ODataValue>();
     }
 
+    /**
+     * Sets operation parameters.
+     *
+     * @param parameters operation parameters.
+     */
     public void setParameters(final Map<String, ODataValue> parameters) {
         this.parameters.clear();
         if (parameters != null && !parameters.isEmpty()) {
@@ -91,6 +96,9 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setFormat(final ODataPubFormat format) {
         this.format = (reference.isAssignableFrom(ODataProperty.class) && format == ODataPubFormat.ATOM)
@@ -100,6 +108,9 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
         setContentType(this.format);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getFormat() {
         if (this.format == null) {
@@ -175,14 +186,34 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
         }
     }
 
+    /**
+     * Response class about an ODataInvokeRequest.
+     */
     protected class ODataInvokeResponseImpl extends ODataResponseImpl implements ODataInvokeResponse<T> {
 
         private T invokeResult = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataInvokeResponseImpl() {
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataInvokeResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         @SuppressWarnings("unchecked")
         public T getBody() {

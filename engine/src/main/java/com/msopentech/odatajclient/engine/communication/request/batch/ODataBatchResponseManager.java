@@ -28,6 +28,9 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Batch response manager class.
+ */
 public class ODataBatchResponseManager implements Iterator<ODataBatchResponseItem> {
 
     /**
@@ -35,14 +38,32 @@ public class ODataBatchResponseManager implements Iterator<ODataBatchResponseIte
      */
     private static final Logger LOG = LoggerFactory.getLogger(ODataBatchResponseManager.class);
 
+    /**
+     * Batch response line iterator.
+     */
     private final ODataBatchLineIterator batchLineIterator;
 
+    /**
+     * Batch boundary.
+     */
     private final String batchBoundary;
 
+    /**
+     * Expected batch response items iterator.
+     */
     private final Iterator<ODataBatchResponseItem> expectedItemsIterator;
 
+    /**
+     * Last retrieved batch response item.
+     */
     private ODataBatchResponseItem current = null;
 
+    /**
+     * Constructor.
+     *
+     * @param res OData batch response.
+     * @param expectedItems expected batch response items.
+     */
     public ODataBatchResponseManager(final ODataBatchResponse res, final List<ODataBatchResponseItem> expectedItems) {
         try {
             this.expectedItemsIterator = expectedItems.iterator();
@@ -59,11 +80,17 @@ public class ODataBatchResponseManager implements Iterator<ODataBatchResponseIte
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean hasNext() {
         return expectedItemsIterator.hasNext();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataBatchResponseItem next() {
         if (current != null) {

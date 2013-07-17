@@ -23,15 +23,15 @@ public class ODataHeaderValues {
     /**
      * <code>Prefer</code> header, return content.
      *
-     * @see ODataHeader.HeaderName#prefer
+     * @see ODataHeaders.HeaderName#prefer
      */
     public static String preferReturnContent = "return-content";
 
     /**
      * <code>Prefer</code> header, return no content.
      *
-     * @see ODataHeader.HeaderName#prefer
+     * @see ODataHeaders.HeaderName#prefer
      */
-    public static String preferReturnNoContent = "return-no-Content";
+    public static String preferReturnNoContent = "return-no-content";
 
 }

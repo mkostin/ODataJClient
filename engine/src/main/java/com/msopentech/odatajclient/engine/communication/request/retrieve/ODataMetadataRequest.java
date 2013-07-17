@@ -36,7 +36,7 @@ public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODat
     /**
      * Constructor.
      *
-     * @param serviceRoot query URI.
+     * @param uri metadata URI.
      */
     ODataMetadataRequest(final URI uri) {
         super(uri);
@@ -51,14 +51,34 @@ public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODat
         return new ODataMetadataResponsImpl(client, res);
     }
 
+    /**
+     * Response class about an ODataMetadataRequest.
+     */
     protected class ODataMetadataResponsImpl extends ODataRetrieveResponseImpl {
 
         private EdmMetadata metadata = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        public ODataMetadataResponsImpl() {
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataMetadataResponsImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public EdmMetadata getBody() {
             if (metadata == null) {

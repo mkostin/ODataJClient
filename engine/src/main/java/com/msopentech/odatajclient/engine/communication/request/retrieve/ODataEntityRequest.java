@@ -27,7 +27,7 @@ import org.apache.http.client.HttpClient;
  * This class implements an OData retrieve query request returning a single entity.
  * Get instance by using ODataRetrieveRequestFactory.
  *
- * @see ODataRetrieveRequestFactory#getEntityRequest(java.lang.String)
+ * @see ODataRetrieveRequestFactory#getEntityRequest(java.net.URI)
  */
 public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataPubFormat> {
 
@@ -48,18 +48,34 @@ public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataP
         return new ODataEntityResponseImpl(client, doExecute());
     }
 
+    /**
+     * Response class about an ODataEntityRequest.
+     */
     public class ODataEntityResponseImpl extends ODataRetrieveResponseImpl {
 
         private ODataEntity entity = null;
 
-        public ODataEntityResponseImpl() {
-            super();
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataEntityResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataEntityResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataEntity getBody() {
             if (entity == null) {

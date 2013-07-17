@@ -41,6 +41,11 @@ public abstract class ODataStreamer {
      */
     private final PipedOutputStream bodyStreamWriter;
 
+    /**
+     * Constructor.
+     *
+     * @param bodyStreamWriter piped stream to be used to retrieve the payload.
+     */
     public ODataStreamer(final PipedOutputStream bodyStreamWriter) {
         this.bodyStreamWriter = bodyStreamWriter;
     }
@@ -61,6 +66,11 @@ public abstract class ODataStreamer {
         stream(CRLF);
     }
 
+    /**
+     * Gets the piped stream to be used to stream the payload.
+     *
+     * @return piped stream.
+     */
     public PipedOutputStream getBodyStreamWriter() {
         return bodyStreamWriter;
     }

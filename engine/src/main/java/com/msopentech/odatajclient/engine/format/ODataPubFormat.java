@@ -45,11 +45,22 @@ public enum ODataPubFormat {
         this.format = format;
     }
 
+    /**
+     * Gets format as a string.
+     *
+     * @return format as a string.
+     */
     @Override
     public String toString() {
         return format;
     }
 
+    /**
+     * Gets OData format from its string representation.
+     *
+     * @param format string representation of the format.
+     * @return OData format.
+     */
     public static ODataPubFormat fromString(final String format) {
         ODataPubFormat result = null;
 

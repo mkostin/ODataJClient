@@ -52,7 +52,6 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      * @param entity entity to be created.
      */
     ODataEntityCreateRequest(final URI targetURI, final ODataEntity entity) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
         super(Method.POST, targetURI);
         this.entity = entity;
     }
@@ -80,17 +79,34 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         }
     }
 
+    /**
+     * Response class about an ODataEntityCreateRequest.
+     */
     private class ODataEntityCreateResponseImpl extends ODataResponseImpl implements ODataEntityCreateResponse {
 
         private ODataEntity entity = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
         private ODataEntityCreateResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataEntityCreateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataEntity getBody() {
             if (entity == null) {

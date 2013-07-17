@@ -26,18 +26,26 @@ import java.util.UUID;
  */
 public class ODataChangeset extends ODataBatchRequestItem {
 
+    /**
+     * ContentId.
+     */
     private int contentId = 0;
 
+    /**
+     * Changeset boundary.
+     */
     private final String boundary;
 
+    /**
+     * Expected changeset response items.
+     */
     private final ODataChangesetResponseItem expectedResItem;
 
     /**
      * Constructor.
-     * <p>
-     * Send a changeset header.
      *
-     * @param os piped output stream to be used to serialize.
+     * @param req batch request.
+     * @param expectedResItem expected OData response items.
      */
     ODataChangeset(final ODataBatchRequest req, final ODataChangesetResponseItem expectedResItem) {
         super(req);
@@ -64,10 +72,10 @@ public class ODataChangeset extends ODataBatchRequestItem {
     /**
      * Serialize and send the given request.
      * <p>
-     * An IllegalArgumentException is thrown in case of the given request is a GET.
+     * An IllegalArgumentException is thrown in case of GET request.
      *
      * @param request request to be serialized.
-     * @return current changeset item instance.
+     * @return current item instance.
      */
     public ODataChangeset addRequest(final ODataBatchableRequest request) {
         if (!isOpen()) {

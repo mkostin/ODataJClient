@@ -27,7 +27,7 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This is an abstract representation of an OData retrieve query request returning one or more result item.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using ODataRetrieveRequestFactory.
  */
 abstract class ODataRetrieveRequest<V, T extends Enum<T>>
         extends ODataBasicRequestImpl<ODataRetrieveResponse<V>, T>
@@ -58,15 +58,32 @@ abstract class ODataRetrieveRequest<V, T extends Enum<T>>
         return null;
     }
 
+    /**
+     * Response abstract class about an ODataRetrieveRequest.
+     */
     protected abstract class ODataRetrieveResponseImpl extends ODataResponseImpl implements ODataRetrieveResponse<V> {
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
         protected ODataRetrieveResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         protected ODataRetrieveResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public abstract V getBody();
     }

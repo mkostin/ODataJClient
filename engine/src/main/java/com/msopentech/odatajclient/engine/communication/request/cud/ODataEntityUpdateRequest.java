@@ -83,17 +83,37 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
         return ODataWriter.writeEntity(changes, ODataPubFormat.valueOf(getFormat()));
     }
 
+    /**
+     * Response class about an ODataEntityUpdateRequest.
+     */
     private class ODataEntityUpdateResponseImpl extends ODataResponseImpl implements ODataEntityUpdateResponse {
 
+        /**
+         * Changes.
+         */
         private ODataEntity entity = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
         private ODataEntityUpdateResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc ]
+         */
         @Override
         public ODataEntity getBody() {
             if (entity == null) {

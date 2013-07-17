@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request.streamed;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamUpdateRequest.StreamUpdateStreamManager;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
@@ -29,9 +28,9 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData stream create/update request.
- * Get instance by using ODataCUDRequestFactory.
+ * Get instance by using ODataStreamedRequestFactory.
  *
- * @see ODataCUDRequestFactory#getStreamUpdateRequest(java.net.URI, java.io.InputStream)
+ * @see ODataStreamedRequestFactory#getStreamUpdateRequest(java.net.URI, java.io.InputStream)
  */
 public class ODataStreamUpdateRequest
         extends ODataStreamedRequestImpl<ODataStreamUpdateResponse, StreamUpdateStreamManager>
@@ -74,6 +73,9 @@ public class ODataStreamUpdateRequest
             super(ODataStreamUpdateRequest.this.futureWrapper, input);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         protected ODataStreamUpdateResponse getResponse(final long timeout, final TimeUnit unit) {
             finalizeBody();
@@ -81,17 +83,34 @@ public class ODataStreamUpdateRequest
         }
     }
 
+    /**
+     * Response class about an ODataStreamUpdateRequest.
+     */
     private class ODataStreamUpdateResponseImpl extends ODataResponseImpl implements ODataStreamUpdateResponse {
 
         private InputStream input = null;
 
-        public ODataStreamUpdateResponseImpl() {
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataStreamUpdateResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataStreamUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public InputStream getBody() {
             if (input == null) {

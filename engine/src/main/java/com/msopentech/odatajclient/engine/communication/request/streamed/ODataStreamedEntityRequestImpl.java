@@ -17,15 +17,28 @@ package com.msopentech.odatajclient.engine.communication.request.streamed;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.net.URI;
 
+/**
+ * Abstract class representing a request concerning a streamed entity.
+ *
+ * @param <V> OData response type corresponding to the request implementation.
+ * @param <T> OData request payload type corresponding to the request implementation.
+ */
 public abstract class ODataStreamedEntityRequestImpl<V extends ODataResponse, T extends ODataStreamManager<V>>
         extends ODataStreamedRequestImpl<V, T> {
 
     private ODataPubFormat format;
 
+    /**
+     * Constructor.
+     *
+     * @param method HTTP request method.
+     * @param uri request URI.
+     */
     public ODataStreamedEntityRequestImpl(final Method method, URI uri) {
         super(method, uri);
         setAccept(getFormat().toString());

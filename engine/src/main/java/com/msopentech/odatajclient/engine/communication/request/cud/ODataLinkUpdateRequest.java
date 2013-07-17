@@ -32,7 +32,6 @@ import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an update link OData request.
- * It encapsulates two different request: the former remove link request and the latter add link request.
  * <p>
  * Get instance by using ODataCUDRequestFactory.
  *
@@ -53,7 +52,6 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      *
      * @param method request method.
      * @param targetURI entity URI.
-     * @param linkToBeRemoved link to be removed.
      * @param link entity to be linked.
      */
     ODataLinkUpdateRequest(final Method method, final URI targetURI, final ODataLink link) {
@@ -90,9 +88,20 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     public class ODataLinkUpdateResponseImpl extends ODataResponseImpl implements ODataLinkOperationResponse {
 
-        public ODataLinkUpdateResponseImpl() {
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataLinkUpdateResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         public ODataLinkUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }

@@ -51,12 +51,32 @@ public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataEntitySet, 
         return new ODataEntitySetResponseImpl(client, res);
     }
 
+    /**
+     * Response class about an ODataEntitySetRequest.
+     */
     protected class ODataEntitySetResponseImpl extends ODataRetrieveResponseImpl {
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataEntitySetResponseImpl() {
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataEntitySetResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         @SuppressWarnings("unchecked")
         public ODataEntitySet getBody() {

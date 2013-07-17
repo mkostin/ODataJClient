@@ -18,38 +18,74 @@ package com.msopentech.odatajclient.engine.communication.request.batch;
 import java.util.Iterator;
 import org.apache.commons.io.LineIterator;
 
+/**
+ * Batch line iterator class.
+ */
 public class ODataBatchLineIterator implements Iterator<String> {
 
+    /**
+     * Stream line iterator.
+     */
     private final LineIterator batchLineIterator;
 
+    /**
+     * Last cached line.
+     */
     private String current;
 
+    /**
+     * Constructor.
+     *
+     * @param batchLineIterator stream line iterator.
+     */
     public ODataBatchLineIterator(final LineIterator batchLineIterator) {
         this.batchLineIterator = batchLineIterator;
         this.current = null;
     }
 
+    /**
+     * Checks if batch has next line.
+     *
+     * @return 'TRUE' if has next line; 'FALSE' otherwise.
+     */
     @Override
     public boolean hasNext() {
         return batchLineIterator.hasNext();
     }
 
+    /**
+     * Gets next line.
+     *
+     * @return next line.
+     */
     @Override
     public String next() {
-        current = batchLineIterator.next();
-        return current;
+        return nextLine();
     }
 
+    /**
+     * Gets next line.
+     *
+     * @return next line.
+     */
     public String nextLine() {
         current = batchLineIterator.nextLine();
         return current;
     }
 
+    /**
+     * Unsupported operation.
+     */
     @Override
     public void remove() {
-        batchLineIterator.remove();
+        throw new UnsupportedOperationException("Unsupported operation");
     }
 
+    /**
+     * Gets last cached line (the current one).
+     *
+     * @return last cached line; null if <code>next()</code> method never called
+     */
     public String getCurrent() {
         return current;
     }

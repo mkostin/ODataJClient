@@ -61,6 +61,9 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataValueUpdateResponseImpl execute() {
         final InputStream input = getPayload();
@@ -81,17 +84,34 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
         return IOUtils.toInputStream(value.toString());
     }
 
+    /**
+     * Response class about an ODataValueUpdateRequest.
+     */
     private class ODataValueUpdateResponseImpl extends ODataResponseImpl implements ODataValueUpdateResponse {
 
         private ODataValue value = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
         private ODataValueUpdateResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataValueUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataValue getBody() {
             if (value == null) {

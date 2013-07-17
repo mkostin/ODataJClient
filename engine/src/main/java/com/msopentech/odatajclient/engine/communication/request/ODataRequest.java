@@ -15,15 +15,24 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
 
 /**
  * Abstract representation of an OData request.
- * Get instance by using ODataRequestFactory.
+ * Get instance by using factories.
  *
- * @see ODataRequestFactory.
+ * @see ODataCUDRequestFactory
+ * @see ODataRetrieveRequestFactory
+ * @see ODataBatchRequestFactory
+ * @see ODataInvokeRequestFactory
+ * @see ODataStreamedRequestFactory
  */
 public interface ODataRequest {
 
@@ -75,7 +84,7 @@ public interface ODataRequest {
      * <code>MaxDataServiceVersion</code> OData request header.
      *
      * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#maxDataServiceVersion
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#maxDataServiceVersion
      */
     void setMaxDataServiceVersion(final String value);
 
@@ -84,7 +93,7 @@ public interface ODataRequest {
      * <code>MaxDataServiceVersion</code> OData request header.
      *
      * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#maxDataServiceVersion
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#maxDataServiceVersion
      */
     String getMaxDataServiceVersion();
 
@@ -93,7 +102,7 @@ public interface ODataRequest {
      * <code>MinDataServiceVersion</code> OData request header.
      *
      * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#minDataServiceVersion
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#minDataServiceVersion
      */
     void setMinDataServiceVersion(final String value);
 
@@ -102,7 +111,7 @@ public interface ODataRequest {
      * <code>MinDataServiceVersion</code> OData request header.
      *
      * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#minDataServiceVersion
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#minDataServiceVersion
      */
     String getMinDataServiceVersion();
 
@@ -111,7 +120,7 @@ public interface ODataRequest {
      * <code>Accept</code> OData request header.
      *
      * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#accept
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#accept
      */
     void setAccept(final String value);
 
@@ -120,7 +129,7 @@ public interface ODataRequest {
      * <code>Accept</code> OData request header.
      *
      * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#accept
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#accept
      */
     String getAccept();
 
@@ -129,7 +138,7 @@ public interface ODataRequest {
      * <code>If-Match</code> OData request header.
      *
      * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifMatch
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#ifMatch
      */
     void setIfMatch(final String value);
 
@@ -138,7 +147,7 @@ public interface ODataRequest {
      * <code>If-Match</code> OData request header.
      *
      * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifMatch
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#ifMatch
      */
     String getIfMatch();
 
@@ -147,7 +156,7 @@ public interface ODataRequest {
      * <code>If-None-Match</code> OData request header.
      *
      * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifNoneMatch
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#ifNoneMatch
      */
     void setIfNoneMatch(final String value);
 
@@ -156,7 +165,7 @@ public interface ODataRequest {
      * <code>If-None-Match</code> OData request header.
      *
      * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#ifNoneMatch
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#ifNoneMatch
      */
     String getIfNoneMatch();
 
@@ -165,7 +174,7 @@ public interface ODataRequest {
      * <code>Prefer</code> OData request header.
      *
      * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#prefer
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#prefer
      */
     void setPrefer(final String value);
 
@@ -174,7 +183,7 @@ public interface ODataRequest {
      * <code>Prefer</code> OData request header.
      *
      * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#prefer
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#prefer
      */
     String getPrefer();
 
@@ -183,7 +192,7 @@ public interface ODataRequest {
      * <code>contentType</code> OData request header.
      *
      * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#contentType
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#contentType
      */
     void setContentType(final String value);
 
@@ -192,7 +201,7 @@ public interface ODataRequest {
      * <code>contentType</code> OData request header.
      *
      * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#contentType
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#contentType
      */
     String getContentType();
 
@@ -201,7 +210,7 @@ public interface ODataRequest {
      * <code>dataServiceVersion</code> OData request header.
      *
      * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#dataServiceVersion
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#dataServiceVersion
      */
     void setDataServiceVersion(final String value);
 
@@ -210,7 +219,7 @@ public interface ODataRequest {
      * <code>dataServiceVersion</code> OData request header.
      *
      * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#dataServiceVersion
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#dataServiceVersion
      */
     String getDataServiceVersion();
 
@@ -219,7 +228,7 @@ public interface ODataRequest {
      * <code>X-HTTP-METHOD</code> OData request header.
      *
      * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeader.HeaderName#xHttpMethod
+     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#xHttpMethod
      */
     void setXHTTPMethod(final String value);
 

@@ -37,6 +37,11 @@ public class ODataClientErrorException extends RuntimeException {
 
     private final ODataError error;
 
+    /**
+     * Constructor.
+     *
+     * @param statusLine request status info.
+     */
     public ODataClientErrorException(final StatusLine statusLine) {
         super(statusLine.toString());
 
@@ -44,6 +49,12 @@ public class ODataClientErrorException extends RuntimeException {
         this.error = null;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param statusLine request status info.
+     * @param error OData error to be wrapped.
+     */
     public ODataClientErrorException(final StatusLine statusLine, final ODataError error) {
         super((StringUtils.isBlank(error.getCode()) ? StringUtils.EMPTY : "(" + error.getCode() + ") ")
                 + error.getMessageValue() + " [" + statusLine.toString() + "]");
@@ -76,10 +87,20 @@ public class ODataClientErrorException extends RuntimeException {
         }
     }
 
+    /**
+     * Gets request status info.
+     *
+     * @return request status info.
+     */
     public StatusLine getStatusLine() {
         return statusLine;
     }
 
+    /**
+     * Gets OData error.
+     *
+     * @return OData error.
+     */
     public ODataError getODataError() {
         return error;
     }

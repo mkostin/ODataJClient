@@ -69,6 +69,9 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
         setContentType(format.toString());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final Future<V> asyncExecute() {
         return Configuration.getExecutor().submit(new Callable<V>() {
@@ -81,9 +84,9 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
     }
 
     /**
-     * Gets payload as a byte array.
+     * Gets payload as an InputStream.
      *
-     * @return byte array representation of the entire payload.
+     * @return InputStream for entire payload.
      */
     protected abstract InputStream getPayload();
 
@@ -96,6 +99,14 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
         batch(req, null);
     }
 
+    /**
+     * Serializes the full request into the given batch request.
+     * <p>
+     * This method have to be used to serialize a changeset item with the specified contentId.
+     *
+     * @param req destination batch request.
+     * @param contentId contentId of the changeset item.
+     */
     public void batch(final ODataBatchRequest req, final String contentId) {
         try {
             req.rawAppend(toByteArray());

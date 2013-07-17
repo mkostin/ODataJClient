@@ -29,6 +29,7 @@ public final class ODataBatchRequestFactory {
     /**
      * Gets a batch request object instance.
      *
+     * @param serviceRoot service root.
      * @return new ODataBatchRequest instance.
      */
     public static ODataBatchRequest getBatchRequest(final String serviceRoot) {

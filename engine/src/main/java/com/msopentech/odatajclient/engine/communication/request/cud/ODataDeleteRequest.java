@@ -63,8 +63,25 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
         return new ODataDeleteResponseImpl(client, doExecute());
     }
 
+    /**
+     * Response class about an ODataDeleteRequest.
+     */
     private static class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataDeleteResponseImpl() {
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataDeleteResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
             this.close();

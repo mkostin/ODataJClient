@@ -21,14 +21,14 @@ import java.util.Iterator;
 /**
  * This class implements a response to a batch request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataBatchRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest
  */
 public interface ODataBatchResponse extends ODataResponse {
 
     /**
      * Get all the batch response items.
      *
-     * @return a result set of ODataResponse instances.
+     * @return an iterator on batch response items.
      */
     Iterator<ODataBatchResponseItem> getBody();
 }

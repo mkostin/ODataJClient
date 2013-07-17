@@ -30,14 +30,15 @@ import org.apache.http.client.HttpClient;
  * This class implements an OData link query request.
  * Get instance by using ODataRetrieveRequestFactory.
  *
- * @see ODataRetrieveRequestFactory#getLinkRequest(java.net.URI)
+ * @see ODataRetrieveRequestFactory#getLinkRequest(java.net.URI, java.lang.String)
  */
 public class ODataLinkRequest extends ODataRetrieveRequest<List<URI>, ODataFormat> {
 
     /**
      * Private constructor.
      *
-     * @param query query to be executed.
+     * @param targetURI target URI.
+     * @param linkName link name.
      */
     ODataLinkRequest(final URI targetURI, final String linkName) {
         super(new ODataURIBuilder(targetURI.toASCIIString()).appendLinksSegment(linkName).build());
@@ -56,10 +57,27 @@ public class ODataLinkRequest extends ODataRetrieveRequest<List<URI>, ODataForma
 
         private List<URI> links = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataEntitySetResponseImpl() {
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataEntitySetResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public List<URI> getBody() {
             if (links == null) {

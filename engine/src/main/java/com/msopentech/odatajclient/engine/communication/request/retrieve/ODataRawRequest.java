@@ -19,8 +19,19 @@ import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Met
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import java.net.URI;
 
+/**
+ * This class implements a generic OData request.
+ * Get instance by using ODataRetrieveRequestFactory.
+ *
+ * @see ODataRetrieveRequestFactory#getRawquest(java.net.URI)
+ */
 public class ODataRawRequest extends ODataRequestImpl {
 
+    /**
+     * Constructor.
+     *
+     * @param uri request URI.
+     */
     ODataRawRequest(final URI uri) {
         super(Method.GET, uri);
     }

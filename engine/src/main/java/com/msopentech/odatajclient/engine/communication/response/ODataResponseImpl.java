@@ -43,28 +43,61 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataResponse.class);
 
+    /**
+     * HTTP client.
+     */
     protected final HttpClient client;
 
+    /**
+     * HTTP response.
+     */
     protected final HttpResponse res;
 
+    /**
+     * Response headers.
+     */
     protected final Map<String, Collection<String>> headers =
             new TreeMap<String, Collection<String>>(String.CASE_INSENSITIVE_ORDER);
 
+    /**
+     * Response code.
+     */
     private int statusCode = -1;
 
+    /**
+     * Response message.
+     */
     private String statusMessage = null;
 
+    /**
+     * Response body/payload.
+     */
     private InputStream payload = null;
 
+    /**
+     * Initialization check.
+     */
     private boolean hasBeenInitialized = false;
 
+    /**
+     * Batch info (if to be batched).
+     */
     private ODataBatchController batchInfo = null;
 
+    /**
+     * Constructor.
+     */
     public ODataResponseImpl() {
         this.client = null;
         this.res = null;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param client HTTP client.
+     * @param res HTTP response.
+     */
     public ODataResponseImpl(final HttpClient client, final HttpResponse res) {
         this.client = client;
         this.res = res;
@@ -110,6 +143,9 @@ public abstract class ODataResponseImpl implements ODataResponse {
         return headers.get(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<String> getHeader(final ODataHeaders.HeaderName name) {
         return headers.get(name.toString());
@@ -153,6 +189,9 @@ public abstract class ODataResponseImpl implements ODataResponse {
         return statusMessage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ODataResponse initFromBatch(
             final Map.Entry<Integer, String> responseLine,
@@ -191,6 +230,9 @@ public abstract class ODataResponseImpl implements ODataResponse {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public InputStream getRawResponse() {
         if (payload == null && batchInfo.isValidBatch()) {

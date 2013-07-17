@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.communication.response;
 /**
  * This class implements the response to an OData delete request.
  *
- * @see com.msopentech.odatajclient.engine.communication.request.ODataDeleteRequest
+ * @see com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest
  */
 public interface ODataDeleteResponse extends ODataResponse {
 }

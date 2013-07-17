@@ -36,6 +36,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Utility class for batch requests and responses.
+ */
 public class ODataBatchUtilities {
 
     public static enum BatchItemType {
@@ -51,23 +54,65 @@ public class ODataBatchUtilities {
      */
     private static final Logger LOG = LoggerFactory.getLogger(ODataBatchUtilities.class);
 
+    /**
+     * Response line syntax.
+     */
     private static final Pattern RESPONSE_PATTERN =
             Pattern.compile("HTTP/\\d\\.\\d (\\d+) (.*)", Pattern.CASE_INSENSITIVE);
 
+    /**
+     * Reads batch part taking source and delimiter (boundary) from given batch controller.
+     * <p>
+     * Usually used to consume/discard useless lines.
+     *
+     * @param batchController batch controller.
+     * @param checkCurrent if 'TRUE' the current line will be included into the delimiter verification.
+     * @return latest read line.
+     */
     public static String readBatchPart(final ODataBatchController batchController, final boolean checkCurrent) {
         return readBatchPart(batchController, null, -1, checkCurrent);
     }
 
+    /**
+     * Reads the given number of line from the given batch wrapped into the batch controller.
+     * <p>
+     * Usually used to consume/discard useless lines.
+     *
+     * @param batchController batch controller.
+     * @param count number of batch line to be read.
+     * @return latest read line.
+     */
     public static String readBatchPart(final ODataBatchController batchController, final int count) {
         return readBatchPart(batchController, null, count, true);
     }
 
+    /**
+     * Reads batch part taking source and delimiter (boundary) from given batch controller.
+     * <p>
+     * Usually used to read an entire batch part.
+     *
+     * @param batchController batch controller.
+     * @param os destination stream of batch part (null to discard).
+     * @param checkCurrent if 'TRUE' the current line will be included into the delimiter verification.
+     * @return latest read line.
+     */
     public static String readBatchPart(
             final ODataBatchController controller, final OutputStream os, final boolean checkCurrent) {
 
         return readBatchPart(controller, os, -1, checkCurrent);
     }
 
+    /**
+     * Reads batch part taking source and delimiter (boundary) from given batch controller.
+     * <p>
+     * Usually used to read an entire batch part.
+     *
+     * @param batchController batch controller.
+     * @param os destination stream of batch part (null to discard).
+     * @param count number of batch line to be read.
+     * @param checkCurrent if 'TRUE' the current line will be included into the delimiter verification.
+     * @return latest read line.
+     */
     public static String readBatchPart(
             final ODataBatchController controller, final OutputStream os, final int count, final boolean checkCurrent) {
 
@@ -110,6 +155,12 @@ public class ODataBatchUtilities {
         return currentLine;
     }
 
+    /**
+     * Reads headers from the batch starting from the given position.
+     *
+     * @param iterator batch iterator.
+     * @return Map of header name in header values.
+     */
     public static Map<String, Collection<String>> readHeaders(final ODataBatchLineIterator iterator) {
         final Map<String, Collection<String>> target =
                 new TreeMap<String, Collection<String>>(String.CASE_INSENSITIVE_ORDER);
@@ -118,6 +169,14 @@ public class ODataBatchUtilities {
         return target;
     }
 
+    /**
+     * Reads headers from the batch starting from the given position.
+     * <p>
+     * Retrieved headers will be added to the map given by target parameter.
+     *
+     * @param iterator batch iterator.
+     * @param target destination of the retrieved headers.
+     */
     public static void readHeaders(
             final ODataBatchLineIterator iterator, final Map<String, Collection<String>> target) {
 
@@ -139,6 +198,12 @@ public class ODataBatchUtilities {
         }
     }
 
+    /**
+     * Parses and adds the given header line to the given target map.
+     *
+     * @param headerLine header line to be added.
+     * @param targetMap target map.
+     */
     public static void addHeaderLine(final String headerLine, final Map<String, Collection<String>> targetMap) {
         final int sep = headerLine.indexOf(':');
         if (sep > 0 && sep < headerLine.length() - 1) {
@@ -154,6 +219,12 @@ public class ODataBatchUtilities {
         }
     }
 
+    /**
+     * Retrieved batch boundary from the given content-type header values.
+     *
+     * @param contentType content-types.
+     * @return batch boundary.
+     */
     public static String getBoundaryFromHeader(final Collection<String> contentType) {
         final String boundaryKey = ODataBatchConstants.BOUNDARY + "=";
 
@@ -174,6 +245,12 @@ public class ODataBatchUtilities {
         return res.startsWith("--") ? res : "--" + res;
     }
 
+    /**
+     * Retrieves response line from the given position.
+     *
+     * @param iterator batch iterator.
+     * @return retrieved response line.
+     */
     public static Map.Entry<Integer, String> readResponseLine(final ODataBatchLineIterator iterator) {
         final String line = readBatchPart(new ODataBatchController(iterator, null), 1);
         LOG.debug("Response line '{}'", line);
@@ -187,6 +264,13 @@ public class ODataBatchUtilities {
         throw new IllegalArgumentException("Invalid response line '" + line + "'");
     }
 
+    /**
+     * Retrieves headers of the next batch item.
+     *
+     * @param iterator batch line iterator.
+     * @param boundary batch boundary.
+     * @return batch item headers.
+     */
     public static Map<String, Collection<String>> nextItemHeaders(
             final ODataBatchLineIterator iterator, final String boundary) {
 
@@ -203,6 +287,12 @@ public class ODataBatchUtilities {
         return headers;
     }
 
+    /**
+     * Retrieves item type from item headers.
+     *
+     * @param headers batch item headers.
+     * @return batch item type.
+     */
     public static BatchItemType getItemType(final Map<String, Collection<String>> headers) {
 
         final BatchItemType nextItemType;
@@ -222,6 +312,13 @@ public class ODataBatchUtilities {
         return nextItemType;
     }
 
+    /**
+     * Checks if the given line is the expected end-line.
+     *
+     * @param controller batch controller.
+     * @param line line to be checked.
+     * @return 'TRUE' if the line is not the end-line; 'FALSE' otherwise.
+     */
     private static boolean isNotEndLine(final ODataBatchController controller, final String line) {
         return line == null
                 || (StringUtils.isBlank(controller.getBoundary()) && StringUtils.isNotBlank(line))

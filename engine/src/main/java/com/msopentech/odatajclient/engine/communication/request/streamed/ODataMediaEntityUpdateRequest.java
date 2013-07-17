@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.communication.request.streamed;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest.MediaEntityUpdateStreamManager;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
@@ -31,9 +30,9 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData Media Entity create request.
- * Get instance by using ODataCUDRequestFactory.
+ * Get instance by using ODataStreamedRequestFactory.
  *
- * @see ODataCUDRequestFactory#getMediaEntityUpdateRequest(java.net.URI, java.io.InputStream)
+ * @see ODataStreamedRequestFactory#getMediaEntityUpdateRequest(java.net.URI, java.io.InputStream)
  */
 public class ODataMediaEntityUpdateRequest
         extends ODataStreamedEntityRequestImpl<ODataMediaEntityUpdateResponse, MediaEntityUpdateStreamManager>
@@ -88,18 +87,35 @@ public class ODataMediaEntityUpdateRequest
         }
     }
 
+    /**
+     * Response class about an ODataMediaEntityUpdateRequest.
+     */
     private class ODataMediaEntityUpdateResponseImpl extends ODataResponseImpl
             implements ODataMediaEntityUpdateResponse {
 
         private ODataEntity entity = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
         private ODataMediaEntityUpdateResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataMediaEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataEntity getBody() {
             if (entity == null) {

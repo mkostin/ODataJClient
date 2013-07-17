@@ -28,12 +28,21 @@ import java.util.NoSuchElementException;
  */
 public class ODataChangesetResponseItem extends ODataBatchResponseItem {
 
+    /**
+     * Last cached OData response.
+     */
     private ODataResponse current = null;
 
+    /**
+     * Constructor.
+     */
     public ODataChangesetResponseItem() {
         super(true);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean hasNext() {
         if (closed) {
@@ -47,6 +56,9 @@ public class ODataChangesetResponseItem extends ODataBatchResponseItem {
         return expectedItemsIterator.hasNext();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataResponse next() {
 
@@ -106,6 +118,9 @@ public class ODataChangesetResponseItem extends ODataBatchResponseItem {
         return current;
     }
 
+    /**
+     * Unsupported operation.
+     */
     @Override
     public void remove() {
         throw new UnsupportedOperationException("Not supported operation.");

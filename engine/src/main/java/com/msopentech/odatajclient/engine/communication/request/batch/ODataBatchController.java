@@ -15,31 +15,69 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
+/**
+ * Utility class used to communicate batch info.
+ */
 public class ODataBatchController {
 
+    /**
+     * Batch validity.
+     */
     private boolean validBatch = true;
 
+    /**
+     * Batch boundary.
+     */
     private final String boundary;
 
+    /**
+     * Batch line iterator.
+     */
     private final ODataBatchLineIterator batchLineIterator;
 
+    /**
+     * Constructor.
+     *
+     * @param batchLineIterator batch line iterator.
+     * @param boundary batch boundary.
+     */
     public ODataBatchController(final ODataBatchLineIterator batchLineIterator, final String boundary) {
         this.batchLineIterator = batchLineIterator;
         this.boundary = boundary;
     }
 
+    /**
+     * Checks if batch is valid.
+     *
+     * @return batch validity.
+     */
     public boolean isValidBatch() {
         return validBatch;
     }
 
+    /**
+     * Sets batch validity.
+     *
+     * @param validBatch validity.
+     */
     public void setValidBatch(final boolean validBatch) {
         this.validBatch = validBatch;
     }
 
+    /**
+     * Gest batch boundary.
+     *
+     * @return batch boundary.
+     */
     public String getBoundary() {
         return boundary;
     }
 
+    /**
+     * Gest batch line iterator.
+     *
+     * @return batch line iterator.
+     */
     public ODataBatchLineIterator getBatchLineIterator() {
         return batchLineIterator;
     }

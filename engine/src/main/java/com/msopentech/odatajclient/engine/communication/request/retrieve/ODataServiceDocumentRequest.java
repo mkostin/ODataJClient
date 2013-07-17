@@ -36,7 +36,7 @@ public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServi
     /**
      * Constructor.
      *
-     * @param serviceRoot query URI.
+     * @param uri request URI.
      */
     ODataServiceDocumentRequest(final URI uri) {
         super(uri);
@@ -51,14 +51,34 @@ public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServi
         return new ODataServiceResponseImpl(client, res);
     }
 
+    /**
+     * Response class about an ODataServiceDocumentRequest.
+     */
     protected class ODataServiceResponseImpl extends ODataRetrieveResponseImpl {
 
         private ODataServiceDocument serviceDocument = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataServiceResponseImpl() {
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataServiceResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataServiceDocument getBody() {
             if (serviceDocument == null) {

@@ -55,10 +55,27 @@ public class ODataPropertyRequest extends ODataRetrieveRequest<ODataProperty, OD
 
         private ODataProperty property = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataPropertyResponseImpl() {
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataPropertyResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataProperty getBody() {
             if (property == null) {

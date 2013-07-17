@@ -59,6 +59,9 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
         this.property = property;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ODataPropertyUpdateResponse execute() {
         final InputStream input = getPayload();
@@ -79,17 +82,34 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
         return ODataWriter.writeProperty(property, ODataFormat.valueOf(getFormat()));
     }
 
+    /**
+     * Response class about an ODataPropertyUpdateRequest.
+     */
     private class ODataPropertyUpdateResponseImpl extends ODataResponseImpl implements ODataPropertyUpdateResponse {
 
         private ODataProperty property = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
         private ODataPropertyUpdateResponseImpl() {
         }
 
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataPropertyUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataProperty getBody() {
             if (property == null) {

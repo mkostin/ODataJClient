@@ -53,6 +53,8 @@ public abstract class ODataStreamManager<T extends ODataResponse> extends ODataS
 
     /**
      * Constructor.
+     *
+     * @param futureWrap wrapper of the Future object of the HttpResponse.
      */
     public ODataStreamManager(final Wrapper<Future<HttpResponse>> futureWrap) {
         this(futureWrap, new PipedOutputStream());
@@ -61,7 +63,8 @@ public abstract class ODataStreamManager<T extends ODataResponse> extends ODataS
     /**
      * Constructor.
      *
-     * @param output piped output stream.
+     * @param futureWrap wrapper of the Future object of the HttpResponse.
+     * @param output stream to be piped to retrieve the payload.
      */
     public ODataStreamManager(final Wrapper<Future<HttpResponse>> futureWrap, final PipedOutputStream output) {
         super(output);
@@ -78,7 +81,8 @@ public abstract class ODataStreamManager<T extends ODataResponse> extends ODataS
     /**
      * Constructor.
      *
-     * @param input payload input stream.
+     * @param futureWrap wrapper of the Future object of the HttpResponse.
+     * @param input stream to be used to retrieve the content.
      */
     public ODataStreamManager(final Wrapper<Future<HttpResponse>> futureWrap, final InputStream input) {
         super(null);
@@ -104,6 +108,13 @@ public abstract class ODataStreamManager<T extends ODataResponse> extends ODataS
         IOUtils.closeQuietly(getBodyStreamWriter());
     }
 
+    /**
+     * Gets HttpResponse.
+     *
+     * @param timeout maximum delay after which the request must be aborted.
+     * @param unit time unit.
+     * @return HttpResponse.
+     */
     protected HttpResponse getHttpResponse(final long timeout, final TimeUnit unit) {
         try {
             return futureWrap.getWrapped().get(timeout, unit);
@@ -113,6 +124,13 @@ public abstract class ODataStreamManager<T extends ODataResponse> extends ODataS
         }
     }
 
+    /**
+     * Gets OData response.
+     *
+     * @param timeout maximum delay after which the request must be aborted.
+     * @param unit time unit.
+     * @return ODataResponse instance.
+     */
     protected abstract T getResponse(long timeout, TimeUnit unit);
 
     /**

@@ -39,7 +39,7 @@ public final class Configuration {
     }
 
     /**
-     * Get given configuration property.
+     * Gets given configuration property.
      *
      * @param key key value of the property to be retrieved.
      * @param defaultValue default value to be used in case of the given key doesn't exist.
@@ -49,12 +49,19 @@ public final class Configuration {
         return conf.containsKey(key) ? conf.get(key) : defaultValue;
     }
 
+    /**
+     * Sets new configuration property.
+     *
+     * @param key configuration property key.
+     * @param value configuration property value.
+     * @return given value.
+     */
     public static String setProperty(final String key, final String value) {
         return conf.put(key, value);
     }
 
     /**
-     * Get configured OData format.
+     * Gets configured OData format.
      * If this configuration parameter doesn't exist the JSON_FULL_METADATA format will be used as default.
      *
      * @return configured OData format if exists; JSON_FULL_METADATA format otherwise.
@@ -64,6 +71,11 @@ public final class Configuration {
         return ODataPubFormat.valueOf(getProperty(DEFAULT_FORMAT, "JSON_FULL_METADATA"));
     }
 
+    /**
+     * Sets default format.
+     *
+     * @param format default format.
+     */
     public static void setDefaultFormat(final ODataPubFormat format) {
         setProperty(DEFAULT_FORMAT, format.name());
     }
@@ -78,14 +90,30 @@ public final class Configuration {
         return Boolean.valueOf(getProperty(USE_XHTTP_METHOD, "false"));
     }
 
+    /**
+     * Sets whether <tt>PUT</tt>, <tt>MERGE</tt>, <tt>PATCH</tt>, <tt>DELETE</tt> HTTP methods need to be translated to
+     * <tt>POST</tt> with additional <tt>X-HTTTP-Method</tt> header.
+     *
+     * @param value 'TRUE' to use tunneling.
+     */
     public static void setUseXHTTPMethod(final boolean value) {
         setProperty(USE_XHTTP_METHOD, Boolean.toString(value));
     }
 
+    /**
+     * Retrieves request executor service.
+     *
+     * @return request executor service.
+     */
     public static ExecutorService getExecutor() {
         return EXECUTOR;
     }
 
+    /**
+     * Sets request executor service.
+     *
+     * @param executorService new executor services.
+     */
     public static void setExecutor(final ExecutorService executorService) {
         EXECUTOR = executorService;
     }

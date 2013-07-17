@@ -53,14 +53,34 @@ public class ODataValueRequest extends ODataRetrieveRequest<ODataValue, ODataVal
         return new ODataValueResponseImpl(client, res);
     }
 
+    /**
+     * Response class about an ODataDeleteReODataValueRequestquest.
+     */
     protected class ODataValueResponseImpl extends ODataRetrieveResponseImpl {
 
         private ODataValue value = null;
 
+        /**
+         * Constructor.
+         * <p>
+         * Just to create response templates to be initialized from batch.
+         */
+        private ODataValueResponseImpl() {
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param client HTTP client.
+         * @param res HTTP response.
+         */
         private ODataValueResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
+        /**
+         * {@inheritDoc }
+         */
         @Override
         public ODataValue getBody() {
             if (value == null) {
