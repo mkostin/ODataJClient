@@ -36,7 +36,7 @@ public class ServiceDocumentTest extends AbstractTest {
         assertEquals(200, res.getStatusCode());
 
         final ODataServiceDocument serviceDocument = res.getBody();
-        assertEquals(22, serviceDocument.count());
+        assertEquals(24, serviceDocument.count());
 
         assertEquals(URI.create(testODataServiceRootURL + "/ComputerDetail"),
                 serviceDocument.getEntitySetURI("ComputerDetail"));

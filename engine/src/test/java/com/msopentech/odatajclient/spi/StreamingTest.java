@@ -105,9 +105,9 @@ public class StreamingTest extends AbstractTest {
         ODataURIBuilder targetURI;
         ODataEntityCreateRequest create;
 
+        targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntitySetSegment("Customer");
         for (int i = 1; i <= 2; i++) {
             // Create Customer into the changeset
-            targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntitySetSegment("Customer");
             create = ODataCUDRequestFactory.getEntityCreateRequest(
                     targetURI.build(),
                     getSampleCustomerProfile(100 + i, "Sample customer", false));
@@ -119,12 +119,12 @@ public class StreamingTest extends AbstractTest {
         create = ODataCUDRequestFactory.getEntityCreateRequest(
                 targetURI.build(),
                 getSampleCustomerProfile(105, "Sample customer", false));
-        create.setFormat(ODataPubFormat.JSON_FULL_METADATA);
+        create.setFormat(ODataPubFormat.JSON);
         changeset.addRequest(create);
 
+        targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntitySetSegment("Customer");
         for (int i = 3; i <= 4; i++) {
             // Create Customer into the changeset
-            targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntitySetSegment("Customer");
             create = ODataCUDRequestFactory.getEntityCreateRequest(
                     targetURI.build(),
                     getSampleCustomerProfile(100 + i, "Sample customer", false));
@@ -139,10 +139,10 @@ public class StreamingTest extends AbstractTest {
         final Iterator<ODataBatchResponseItem> iter = response.getBody();
         final ODataChangesetResponseItem chgResponseItem = (ODataChangesetResponseItem) iter.next();
 
-        ODataResponse res = chgResponseItem.next();
+        final ODataResponse res = chgResponseItem.next();
         assertEquals(404, res.getStatusCode());
         assertEquals("Not Found", res.getStatusMessage());
-        assertEquals(new Integer(3), Integer.valueOf(
+        assertEquals(Integer.valueOf(3), Integer.valueOf(
                 res.getHeader(ODataBatchConstants.CHANGESET_CONTENT_ID_NAME).iterator().next()));
         assertFalse(chgResponseItem.hasNext());
     }

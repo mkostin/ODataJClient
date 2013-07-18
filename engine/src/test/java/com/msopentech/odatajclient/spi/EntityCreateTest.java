@@ -130,15 +130,17 @@ public class EntityCreateTest extends AbstractTest {
             assertNotNull(editLink);
 
             final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(editLink);
-            ODataDeleteResponse deleteRes = deleteReq.execute();
+            final ODataDeleteResponse deleteRes = deleteReq.execute();
 
             assertEquals(204, deleteRes.getStatusCode());
             assertEquals("No Content", deleteRes.getStatusMessage());
 
             deleteRes.close();
-
+            
             final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(selflLink);
-            retrieveReq.setFormat(format);
+            // bug that needs to be fixed on the SampleService - cannot get entity not found with header
+            // Accept: application/json;odata=minimalmetadata
+            retrieveReq.setFormat(format == ODataPubFormat.JSON_FULL_METADATA? ODataPubFormat.JSON: format);
 
             Exception exception = null;
             try {
