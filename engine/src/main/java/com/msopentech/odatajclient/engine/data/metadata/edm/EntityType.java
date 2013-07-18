@@ -189,10 +189,20 @@ public class EntityType extends AbstractAnnotated {
         return this.propertyOrNavigationPropertyOrValueAnnotation;
     }
 
+    /**
+     * Gets entity properties.
+     *
+     * @return properties.
+     */
     public List<EntityProperty> getProperties() {
         return getElements(EntityProperty.class);
     }
 
+    /**
+     * Gets navigation properties.
+     *
+     * @return navigation properties.
+     */
     public List<NavigationProperty> getNavigationProperties() {
         return getElements(NavigationProperty.class);
     }

@@ -17,8 +17,17 @@ package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
 import java.util.List;
 
+/**
+ * Wrapper for a collection of geospatials info.
+ */
 public class GeospatialCollection extends ComposedGeospatial<Geospatial> {
 
+    /**
+     * Constructor.
+     *
+     * @param dimension dimension.
+     * @param geospatials geospatials info.
+     */
     public GeospatialCollection(final Dimension dimension, final List<Geospatial> geospatials) {
         super(dimension, Type.GEOSPATIALCOLLECTION, geospatials);
     }

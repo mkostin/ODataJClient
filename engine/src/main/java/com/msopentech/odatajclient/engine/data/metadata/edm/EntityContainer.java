@@ -230,10 +230,21 @@ public class EntityContainer extends AbstractAnnotated {
         return this.functionImportOrEntitySetOrAssociationSet;
     }
 
+    /**
+     * Gets top-level entity sets.
+     *
+     * @return top-level entity sets.
+     */
     public List<EntitySet> getEntitySets() {
         return getElements(EntitySet.class);
     }
 
+    /**
+     * Gets entity set with the given name.
+     *
+     * @param name name.
+     * @return entity set.
+     */
     public EntitySet getEntitySet(final String name) {
         EntitySet result = null;
         for (EntitySet entitySet : getEntitySets()) {
@@ -244,10 +255,21 @@ public class EntityContainer extends AbstractAnnotated {
         return result;
     }
 
+    /**
+     * Gets association sets.
+     *
+     * @return association sets.
+     */
     public List<AssociationSet> getAssociationSets() {
         return getElements(AssociationSet.class);
     }
 
+    /**
+     * Gets association set with the given name.
+     *
+     * @param name name.
+     * @return association set.
+     */
     public AssociationSet getAssociationSet(final String name) {
         AssociationSet result = null;
         for (AssociationSet associationSet : getAssociationSets()) {
@@ -258,10 +280,21 @@ public class EntityContainer extends AbstractAnnotated {
         return result;
     }
 
+    /**
+     * Gets function imports.
+     *
+     * @return function imports.
+     */
     public List<FunctionImport> getFunctionImports() {
         return getElements(FunctionImport.class);
     }
 
+    /**
+     * Get function import with the given name.
+     *
+     * @param name name.
+     * @return function import.
+     */
     public FunctionImport getFunctionImport(final String name) {
         FunctionImport result = null;
         for (FunctionImport functionImport : getFunctionImports()) {
@@ -417,6 +450,11 @@ public class EntityContainer extends AbstractAnnotated {
         return otherAttributes;
     }
 
+    /**
+     * Checks if is a default container.
+     *
+     * @return 'TRUE' if is a default container; 'FALSE' otherwise.
+     */
     public boolean isDefaultEntityContainer() {
         final String result = otherAttributes.get(new QName(ODataConstants.NS_METADATA, "IsDefaultEntityContainer"));
         return result == null ? false : Boolean.valueOf(result);
@@ -1124,10 +1162,20 @@ public class EntityContainer extends AbstractAnnotated {
             return this.returnTypeOrParameterOrValueAnnotation;
         }
 
+        /**
+         * Gets function import parameters.
+         *
+         * @return parameters.
+         */
         public List<FunctionImportParameter> getParameters() {
             return getJAXBElements(FunctionImportParameter.class);
         }
 
+        /**
+         * Gets function import return type.
+         *
+         * @return return type.
+         */
         public String getFunctionImportReturnType() {
             final List<FunctionImportReturnType> returnTypes = getJAXBElements(FunctionImportReturnType.class);
             return returnTypes.isEmpty()
@@ -1345,11 +1393,21 @@ public class EntityContainer extends AbstractAnnotated {
             return otherAttributes;
         }
 
+        /**
+         * Checks if is always bindable.
+         *
+         * @return 'TRUE' if always bindable; 'FALSE' otherwise.
+         */
         public boolean isIsAlwaysBindable() {
             final String result = otherAttributes.get(new QName(ODataConstants.NS_METADATA, "IsAlwaysBindable"));
             return result == null ? false : Boolean.valueOf(result);
         }
 
+        /**
+         * Gets HTTP method.
+         *
+         * @return HTTP method as a string.
+         */
         public String getHttpMethod() {
             return otherAttributes.get(new QName(ODataConstants.NS_METADATA, "HttpMethod"));
         }

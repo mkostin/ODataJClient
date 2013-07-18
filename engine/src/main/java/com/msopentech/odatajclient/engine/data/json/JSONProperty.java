@@ -33,18 +33,38 @@ public class JSONProperty extends AbstractJSONObject {
 
     private Element content;
 
+    /**
+     * Gets metadata URI.
+     *
+     * @return metadata URI.
+     */
     public URI getMetadata() {
         return metadata;
     }
 
+    /**
+     * Sets metadata URI.
+     *
+     * @param metadata metadata URI.
+     */
     public void setMetadata(final URI metadata) {
         this.metadata = metadata;
     }
 
+    /**
+     * Gets content.
+     *
+     * @return content as DOM element.
+     */
     public Element getContent() {
         return content;
     }
 
+    /**
+     * Sets content.
+     *
+     * @param content content as DOM element.
+     */
     public void setContent(final Element content) {
         this.content = content;
     }

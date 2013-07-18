@@ -18,12 +18,25 @@ package com.msopentech.odatajclient.engine.data.metadata.edm;
 import com.msopentech.odatajclient.engine.data.AbstractElement;
 import java.util.List;
 
+/**
+ * Abstract representation of elements that support annotations.
+ */
 public abstract class AbstractAnnotated extends AbstractElement {
 
+    /**
+     * Gest type annotations.
+     *
+     * @return type annotations.
+     */
     public List<TypeAnnotation> getTypeAnnotations() {
         return getJAXBElements(TypeAnnotation.class);
     }
 
+    /**
+     * Gets value annotations.
+     *
+     * @return value annotations.
+     */
     public List<ValueAnnotation> getValueAnnotations() {
         return getJAXBElements(ValueAnnotation.class);
     }

@@ -41,10 +41,21 @@ public class EdmType {
 
     private EntityType entityType;
 
+    /**
+     * Constructor.
+     *
+     * @param typeExpression type expression.
+     */
     public EdmType(final String typeExpression) {
         this(null, typeExpression);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param metadata metadata.
+     * @param typeExpression type expression.
+     */
     public EdmType(final EdmMetadata metadata, final String typeExpression) {
         this.typeExpression = typeExpression;
 
@@ -105,14 +116,29 @@ public class EdmType {
         }
     }
 
+    /**
+     * Checks if is a collection.
+     *
+     * @return 'TRUE' if is a collection; 'FALSE' otherwise.
+     */
     public final boolean isCollection() {
         return this.collection;
     }
 
+    /**
+     * Checks if is a simple type.
+     *
+     * @return 'TRUE' if is a simple type; 'FALSE' otherwise.
+     */
     public final boolean isSimpleType() {
         return this.simpleType != null;
     }
 
+    /**
+     * Gets type as a simple type.
+     *
+     * @return simple type. An <tt>EdmTypeNotFoundException</tt> will be raised if it is not a simple type.
+     */
     public final EdmSimpleType getSimpleType() {
         if (!isSimpleType()) {
             throw new EdmTypeNotFoundException(EdmSimpleType.class, this.typeExpression);
@@ -121,10 +147,20 @@ public class EdmType {
         return this.simpleType;
     }
 
+    /**
+     * Checks if is an enum type.
+     *
+     * @return 'TRUE' if is an enum type; 'FALSE' otherwise.
+     */
     public final boolean isEnumType() {
         return this.enumType != null;
     }
 
+    /**
+     * Gets type as enum type.
+     *
+     * @return enum type. An <tt>EdmTypeNotFoundException</tt> will be raised if it is not an enum type.
+     */
     public final EnumType getEnumType() {
         if (!isEnumType()) {
             throw new EdmTypeNotFoundException(EnumType.class, this.typeExpression);
@@ -133,10 +169,20 @@ public class EdmType {
         return this.enumType;
     }
 
+    /**
+     * Checks if is a complex type.
+     *
+     * @return 'TRUE' if is a complex type; 'FALSE' otherwise.
+     */
     public final boolean isComplexType() {
         return this.complexType != null;
     }
 
+    /**
+     * Gets type as complex type.
+     *
+     * @return complex type. An <tt>EdmTypeNotFoundException</tt> will be raised if it is not a complex type.
+     */
     public final ComplexType getComplexType() {
         if (!isComplexType()) {
             throw new EdmTypeNotFoundException(ComplexType.class, this.typeExpression);
@@ -145,10 +191,20 @@ public class EdmType {
         return this.complexType;
     }
 
+    /**
+     * Checks if is an entity type.
+     *
+     * @return 'TRUE' if is an entity type; 'FALSE' otherwise.
+     */
     public final boolean isEntityType() {
         return this.entityType != null;
     }
 
+    /**
+     * Gets type as entity type.
+     *
+     * @return entity type. An <tt>EdmTypeNotFoundException</tt> will be raised if it is not an entity type.
+     */
     public final EntityType getEntityType() {
         if (!isEntityType()) {
             throw new EdmTypeNotFoundException(EntityType.class, this.typeExpression);
@@ -157,10 +213,20 @@ public class EdmType {
         return this.entityType;
     }
 
+    /**
+     * Gets base type.
+     *
+     * @return base type.
+     */
     public String getBaseType() {
         return baseType;
     }
 
+    /**
+     * Gets type expression.
+     *
+     * @return type expression.
+     */
     public String getTypeExpression() {
         return typeExpression;
     }

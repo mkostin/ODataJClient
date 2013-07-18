@@ -335,6 +335,9 @@ public class AtomLink extends UndefinedContent implements LinkResource {
         return properties;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public EntryResource getInlineEntry() {
         if (getAnyOther().isEmpty()) {
@@ -353,6 +356,9 @@ public class AtomLink extends UndefinedContent implements LinkResource {
         return inlineEntry;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setInlineEntry(final EntryResource entry) {
         final Element inlineEntryContent = newInlineContent();
@@ -361,6 +367,9 @@ public class AtomLink extends UndefinedContent implements LinkResource {
         getAnyOther().add(inlineEntryContent);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public FeedResource getInlineFeed() {
         if (getAnyOther().isEmpty()) {
@@ -379,6 +388,9 @@ public class AtomLink extends UndefinedContent implements LinkResource {
         return inlineFeed;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setInlineFeed(final FeedResource feed) {
         final Element inlineEntryContent = newInlineContent();

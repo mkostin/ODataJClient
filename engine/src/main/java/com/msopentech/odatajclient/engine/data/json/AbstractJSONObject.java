@@ -21,20 +21,32 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Abstract representation of a JSON object.
+ */
 public abstract class AbstractJSONObject implements Serializable {
 
     private static final long serialVersionUID = 1634654241914156675L;
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);

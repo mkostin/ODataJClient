@@ -46,35 +46,61 @@ public class JSONFeed extends AbstractJSONMetadataObject implements FeedResource
     @JsonProperty(value = "odata.nextLink", required = false)
     private String next;
 
+    /**
+     * Constructor.
+     */
     public JSONFeed() {
         super();
         entries = new ArrayList<JSONEntry>();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public URI getMetadata() {
         return metadata;
     }
 
+    /**
+     * Sets metadata URI.
+     *
+     * @param metadata metadata URI.
+     */
     public void setMetadata(final URI metadata) {
         this.metadata = metadata;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @JsonIgnore
     @Override
     public Integer getCount() {
         return count;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<JSONEntry> getEntries() {
         return entries;
     }
 
+    /**
+     * Add entry.
+     *
+     * @param entry entry.
+     * @return 'TRUE' in case of success; 'FALSE' otherwise.
+     */
     public boolean addEntry(final JSONEntry entry) {
         return this.entries.add(entry);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @JsonIgnore
     @Override
     public void setEntries(final List<EntryResource> entries) {
@@ -86,12 +112,18 @@ public class JSONFeed extends AbstractJSONMetadataObject implements FeedResource
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @JsonIgnore
     @Override
     public void setNext(final LinkResource next) {
         this.next = next.getHref();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @JsonIgnore
     @Override
     public JSONLink getNext() {

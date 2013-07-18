@@ -215,35 +215,72 @@ public enum EdmSimpleType {
 
     private final String pattern;
 
+    /**
+     * Constructor.
+     *
+     * @param value value.
+     * @param clazz type.
+     */
     EdmSimpleType(final String value, final Class<?> clazz) {
         this.value = value;
         this.clazz = clazz;
         this.pattern = null;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param value value.
+     * @param clazz type.
+     * @param pattern pattern.
+     */
     EdmSimpleType(final String value, final Class<?> clazz, final String pattern) {
         this.value = value;
         this.clazz = clazz;
         this.pattern = pattern;
     }
 
+    /**
+     * Gets value.
+     *
+     * @return value.
+     */
     public String value() {
         return value;
     }
 
+    /**
+     * Gets pattern.
+     *
+     * @return pattern.
+     */
     public String pattern() {
         return pattern;
     }
 
+    /**
+     * Gets corresponding java type.
+     *
+     * @return java type.
+     */
     public Class<?> javaType() {
         return this.clazz;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String toString() {
         return namespace() + "." + value;
     }
 
+    /**
+     * Gets <tt>EdmSimpleType</tt> from string.
+     *
+     * @param value string value type.
+     * @return <tt>EdmSimpleType</tt> object.
+     */
     public static EdmSimpleType fromValue(String value) {
         for (EdmSimpleType edmSimpleType : EdmSimpleType.values()) {
             if (edmSimpleType.value.equals(value)) {
@@ -253,6 +290,11 @@ public enum EdmSimpleType {
         throw new IllegalArgumentException(value);
     }
 
+    /**
+     * Gets namespace.
+     *
+     * @return namespace.
+     */
     public static String namespace() {
         return "Edm";
     }

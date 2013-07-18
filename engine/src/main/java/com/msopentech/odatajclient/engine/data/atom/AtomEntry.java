@@ -154,6 +154,11 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         return this.items;
     }
 
+    /**
+     * Gets summary.
+     *
+     * @return summary.
+     */
     public String getSummary() {
         final AtomText value = getTextProperty("summary");
         return value == null || value.getContent().isEmpty() ? null : value.getContent().get(0).toString();
@@ -164,11 +169,19 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         return prop.isEmpty() ? null : prop.get(0);
     }
 
+    /**
+     * Gets author.
+     *
+     * @return author.
+     */
     public String getAuthor() {
         final AtomPerson author = getPersonProperty("author");
         return author == null ? null : author.getName();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public LinkResource getEditLink() {
         AtomLink link = getLinkWithRel(ODataConstants.EDIT_LINK_REL);
@@ -187,38 +200,61 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         return relLinks;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<? extends LinkResource> getAssociationLinks() {
         return getLinksWithRelPrefix(ODataConstants.ASSOCIATION_LINK_REL);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<? extends LinkResource> getNavigationLinks() {
         return getLinksWithRelPrefix(ODataConstants.NAVIGATION_LINK_REL);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<? extends LinkResource> getMediaEditLinks() {
         return getLinksWithRelPrefix(ODataConstants.MEDIA_EDIT_LINK_REL);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getType() {
         final List<Category> categories = getElements(Category.class);
         return categories.isEmpty() ? null : categories.get(0).getTerm();
     }
 
+    /**
+     * Gets source.
+     *
+     * @return source.
+     */
     public Source getSource() {
         final List<Source> sources = getElements(Source.class);
         return sources.isEmpty() ? null : sources.get(0);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Element getContent() {
         final List<AtomContent> contents = getElements(AtomContent.class);
         return contents.isEmpty() ? null : contents.get(0).getXMLContent();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Element getMediaEntryProperties() {
         List<Element> properties = getAnyOtherElementsByName(ODataConstants.ELEM_PROPERTIES);
@@ -313,6 +349,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         return base;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public URI getBaseURI() {
         return base == null ? null : URI.create(base);
@@ -372,6 +411,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         return otherAttributes;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getEtag() {
         String etag = null;
@@ -384,6 +426,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         return etag;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setType(final String type) {
         getValues().removeAll(getElements(Category.class));
@@ -394,6 +439,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         getValues().add(category);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setId(final String uri) {
         getValues().removeAll(getElements(Id.class));
@@ -403,6 +451,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         getValues().add(id);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean setSelfLink(final LinkResource selfLink) {
         final AtomLink link = getLinkWithRel(ODataConstants.SELF_LINK_REL);
@@ -413,6 +464,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         return (selfLink instanceof AtomLink) && getValues().add(selfLink);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean setEditLink(final LinkResource editLink) {
         final AtomLink link = getLinkWithRel(ODataConstants.EDIT_LINK_REL);
@@ -433,36 +487,57 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean addAssociationLink(final LinkResource associationLink) {
         return (associationLink instanceof AtomLink) ? getValues().add(associationLink) : false;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setAssociationLinks(final List<LinkResource> associationLinks) {
         setLinksWithRelPrefix(ODataConstants.ASSOCIATION_LINK_REL, associationLinks);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean addNavigationLink(final LinkResource associationLink) {
         return (associationLink instanceof AtomLink) ? getValues().add(associationLink) : false;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setNavigationLinks(final List<LinkResource> navigationLinks) {
         setLinksWithRelPrefix(ODataConstants.NAVIGATION_LINK_REL, navigationLinks);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean addMediaEditLink(final LinkResource associationLink) {
         return (associationLink instanceof AtomLink) ? getValues().add(associationLink) : false;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setMediaEditLinks(final List<LinkResource> mediaEditLinks) {
         setLinksWithRelPrefix(ODataConstants.MEDIA_EDIT_LINK_REL, mediaEditLinks);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<ODataOperation> getOperations() {
         final List<ODataOperation> result = new ArrayList<ODataOperation>();
@@ -481,6 +556,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         return result;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setContent(final Element content) {
         final AtomContent atomContent = new AtomContent();
@@ -488,6 +566,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         getValues().add(atomContent);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setMediaEntryProperties(final Element content) {
         final Element old = getMediaEntryProperties();
@@ -498,6 +579,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         getAnyOther().add(content);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getMediaContentType() {
         final List<AtomContent> contents = getElements(AtomContent.class);
@@ -505,12 +589,18 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
                 : contents.get(0).type == null || contents.get(0).type.isEmpty() ? null : contents.get(0).type.get(0);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getMediaContentSource() {
         final List<AtomContent> contents = getElements(AtomContent.class);
         return contents.isEmpty() || StringUtils.isBlank(contents.get(0).src) ? null : contents.get(0).src;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setMediaContent(final String src, final String type) {
         final AtomContent atomContent = new AtomContent();
@@ -526,6 +616,9 @@ public class AtomEntry extends AbstractAtomElement implements EntryResource {
         getValues().add(atomContent);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean isMediaEntry() {
         final List<AtomContent> contents = getElements(AtomContent.class);

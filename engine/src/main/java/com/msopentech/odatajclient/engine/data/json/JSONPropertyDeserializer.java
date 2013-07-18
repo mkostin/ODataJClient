@@ -38,6 +38,9 @@ import org.w3c.dom.Element;
  */
 public class JSONPropertyDeserializer extends JsonDeserializer<JSONProperty> {
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public JSONProperty deserialize(final JsonParser parser, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {

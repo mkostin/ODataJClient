@@ -20,10 +20,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.msopentech.odatajclient.engine.data.ODataError;
 import com.msopentech.odatajclient.engine.data.json.AbstractJSONObject;
 
+/**
+ * This class represents an OData error returned as JSON.
+ */
 public class JSONODataError extends AbstractJSONObject implements ODataError {
 
     private static final long serialVersionUID = -3476499168507242932L;
 
+    /**
+     * Error message.
+     */
     static class Message extends AbstractJSONObject {
 
         private static final long serialVersionUID = 2577818040815637859L;
@@ -32,23 +38,46 @@ public class JSONODataError extends AbstractJSONObject implements ODataError {
 
         private String value;
 
+        /**
+         * Gets language.
+         *
+         * @return language.
+         */
         public String getLang() {
             return lang;
         }
 
+        /**
+         * Sets language.
+         *
+         * @param lang language.
+         */
         public void setLang(final String lang) {
             this.lang = lang;
         }
 
+        /**
+         * Gets message.
+         *
+         * @return message.
+         */
         public String getValue() {
             return value;
         }
 
+        /**
+         * Sets message.
+         *
+         * @param value message.
+         */
         public void setValue(final String value) {
             this.value = value;
         }
     }
 
+    /**
+     * Inner error.
+     */
     static class InnerError extends AbstractJSONObject {
 
         private static final long serialVersionUID = -3920947476143537640L;
@@ -59,26 +88,56 @@ public class JSONODataError extends AbstractJSONObject implements ODataError {
 
         private String stacktrace;
 
+        /**
+         * Gets inner message.
+         *
+         * @return message.
+         */
         public String getMessage() {
             return message;
         }
 
+        /**
+         * Sets inner message.
+         *
+         * @param message message.
+         */
         public void setMessage(final String message) {
             this.message = message;
         }
 
+        /**
+         * Gets type.
+         *
+         * @return type.
+         */
         public String getType() {
             return type;
         }
 
+        /**
+         * Sets type.
+         *
+         * @param type type.
+         */
         public void setType(final String type) {
             this.type = type;
         }
 
+        /**
+         * Gets stack-trace.
+         *
+         * @return stack-trace.
+         */
         public String getStacktrace() {
             return stacktrace;
         }
 
+        /**
+         * Sets stack-trace.
+         *
+         * @param stacktrace stack-trace.
+         */
         public void setStacktrace(final String stacktrace) {
             this.stacktrace = stacktrace;
         }
@@ -92,39 +151,62 @@ public class JSONODataError extends AbstractJSONObject implements ODataError {
     @JsonProperty(value = "innererror", required = false)
     private InnerError innererror;
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getCode() {
         return code;
     }
 
+    /**
+     * Sets error code.
+     *
+     * @param code error code.
+     */
     public void setCode(final String code) {
         this.code = code;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @JsonIgnore
     @Override
     public String getMessageLang() {
         return this.message == null ? null : this.message.getLang();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @JsonIgnore
     @Override
     public String getMessageValue() {
         return this.message == null ? null : this.message.getValue();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @JsonIgnore
     @Override
     public String getInnerErrorMessage() {
         return this.innererror == null ? null : this.innererror.getMessage();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @JsonIgnore
     @Override
     public String getInnerErrorType() {
         return this.innererror == null ? null : this.innererror.getType();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @JsonIgnore
     @Override
     public String getInnerErrorStacktrace() {

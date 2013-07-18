@@ -26,20 +26,38 @@ public abstract class ComposedGeospatial<T extends Geospatial> extends Geospatia
 
     protected final List<T> geospatials;
 
+    /**
+     * Constructor.
+     *
+     * @param dimension dimension.
+     * @param type type.
+     * @param geospatials geospatials info.
+     */
     protected ComposedGeospatial(final Dimension dimension, final Type type, final List<T> geospatials) {
         super(dimension, type);
         this.geospatials = new ArrayList<T>(geospatials);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Iterator<T> iterator() {
         return this.geospatials.iterator();
     }
 
+    /**
+     * Checks if is empty.
+     *
+     * @return 'TRUE' if is empty; 'FALSE' otherwise.
+     */
     public boolean isEmpty() {
         return geospatials.isEmpty();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setSrid(final Integer srid) {
         for (Geospatial geospatial : this.geospatials) {

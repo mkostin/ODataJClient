@@ -221,6 +221,9 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
         return this.anyLocal;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Integer getCount() {
         Element count = null;
@@ -290,6 +293,9 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
         this.base = value;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public URI getBaseURI() {
         return base == null ? null : URI.create(base);
@@ -337,6 +343,9 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
         return otherAttributes;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setEntries(final List<EntryResource> entries) {
         getEntries().clear();
@@ -347,6 +356,9 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setNext(final LinkResource next) {
         final AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);
@@ -359,6 +371,9 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public AtomLink getNext() {
         final AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);

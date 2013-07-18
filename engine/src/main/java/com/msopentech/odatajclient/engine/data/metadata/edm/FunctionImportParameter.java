@@ -380,26 +380,41 @@ public class FunctionImportParameter extends AbstractFaceteable {
         return otherAttributes;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Boolean isFixedLength() {
         return null;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Boolean isUnicode() {
         return null;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public ConcurrencyMode getConcurrencyMode() {
         return null;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getDefaultValue() {
         return null;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getCollation() {
         return null;

@@ -70,49 +70,83 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
         operations = new ArrayList<ODataOperation>();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public URI getMetadata() {
         return metadata;
     }
 
+    /**
+     * Sets metadata URI.
+     *
+     * @param metadata metadata URI.
+     */
     public void setMetadata(final URI metadata) {
         this.metadata = metadata;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getType() {
         return type;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setType(final String type) {
         this.type = type;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getId() {
         return id;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setId(final String id) {
         this.id = id;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getEtag() {
         return etag;
     }
 
+    /**
+     * Sets ETag.
+     *
+     * @param etag ETag.
+     */
     public void setEtag(final String etag) {
         this.etag = etag;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public LinkResource getSelfLink() {
         return readLink;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean setSelfLink(final LinkResource readLink) {
         final boolean result = (readLink instanceof JSONLink);
@@ -123,11 +157,17 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
         return result;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public LinkResource getEditLink() {
         return editLink;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean setEditLink(LinkResource editLink) {
         final boolean result = (editLink instanceof JSONLink);
@@ -138,11 +178,17 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
         return result;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean addAssociationLink(final LinkResource link) {
         return (link instanceof JSONLink) ? associationLinks.add((JSONLink) link) : false;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<JSONLink> getAssociationLinks() {
         return associationLinks;
@@ -157,50 +203,85 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean addNavigationLink(final LinkResource link) {
         return (link instanceof JSONLink) ? navigationLinks.add((JSONLink) link) : false;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setAssociationLinks(final List<LinkResource> associationLinks) {
         setLinks(this.associationLinks, associationLinks);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<JSONLink> getNavigationLinks() {
         return navigationLinks;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean addMediaEditLink(final LinkResource link) {
         return (link instanceof JSONLink) ? mediaEditLinks.add((JSONLink) link) : false;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setNavigationLinks(final List<LinkResource> navigationLinks) {
         setLinks(this.navigationLinks, navigationLinks);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<JSONLink> getMediaEditLinks() {
         return mediaEditLinks;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setMediaEditLinks(final List<LinkResource> mediaEditLinks) {
         setLinks(this.mediaEditLinks, mediaEditLinks);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<ODataOperation> getOperations() {
         return operations;
     }
 
+    /**
+     * Adds operation.
+     *
+     * @param operation operation.
+     * @return 'TRUE' in case of success; 'FALSE' otherwise.
+     */
     public boolean addOperation(final ODataOperation operation) {
         return this.operations.add(operation);
     }
 
+    /**
+     * Sets operations.
+     *
+     * @param operations operations.
+     */
     public void setOperations(final List<ODataOperation> operations) {
         this.operations.clear();
         if (operations != null && !operations.isEmpty()) {
@@ -208,50 +289,84 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Element getContent() {
         return content;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setContent(final Element content) {
         this.content = content;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Element getMediaEntryProperties() {
         return mediaEntryProperties;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setMediaEntryProperties(final Element mediaEntryProperties) {
         this.mediaEntryProperties = mediaEntryProperties;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getMediaContentType() {
         return this.mediaContentType;
     }
 
+    /**
+     * Sets media content type.
+     *
+     * @param mediaContentType media content type.
+     */
     public void setMediaContentType(final String mediaContentType) {
         this.mediaContentType = mediaContentType;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getMediaContentSource() {
         return this.mediaContentSource;
     }
 
+    /**
+     * Sets media content source.
+     *
+     * @param mediaContentSource media content source.
+     */
     public void setMediaContentSource(final String mediaContentSource) {
         this.mediaContentSource = mediaContentSource;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setMediaContent(final String mediaContentSource, final String mediaContentType) {
         setMediaContentSource(mediaContentSource);
         setMediaContentType(mediaContentType);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean isMediaEntry() {
         return StringUtils.isNotBlank(this.mediaContentSource);

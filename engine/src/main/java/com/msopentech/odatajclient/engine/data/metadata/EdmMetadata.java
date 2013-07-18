@@ -39,6 +39,11 @@ public class EdmMetadata implements Serializable {
 
     private final Map<String, Schema> schemaByNsOrAlias;
 
+    /**
+     * Constructor.
+     *
+     * @param inputStream source stream.
+     */
     @SuppressWarnings("unchecked")
     public EdmMetadata(final InputStream inputStream) {
         final Edmx edmx;

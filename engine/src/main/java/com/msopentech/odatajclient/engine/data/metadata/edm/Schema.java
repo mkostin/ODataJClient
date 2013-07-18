@@ -123,14 +123,30 @@ public class Schema extends AbstractElement {
         return this.gSchemaBodyElements;
     }
 
+    /**
+     * Gets using statements.
+     *
+     * @return using statements.
+     */
     public List<Using> getUsings() {
         return getElements(Using.class);
     }
 
+    /**
+     * Gets enum types.
+     *
+     * @return enum types.
+     */
     public List<EnumType> getEnumTypes() {
         return getElements(EnumType.class);
     }
 
+    /**
+     * Gets enum type with the given name.
+     *
+     * @param name name.
+     * @return enum type.
+     */
     public EnumType getEnumType(final String name) {
         EnumType result = null;
         for (EnumType enumType : getEnumTypes()) {
@@ -141,10 +157,21 @@ public class Schema extends AbstractElement {
         return result;
     }
 
+    /**
+     * Gets complex types.
+     *
+     * @return complex types.
+     */
     public List<ComplexType> getComplexTypes() {
         return getElements(ComplexType.class);
     }
 
+    /**
+     * Gets complex type with the given name.
+     *
+     * @param name name.
+     * @return complex type.
+     */
     public ComplexType getComplexType(final String name) {
         ComplexType result = null;
         for (ComplexType complexType : getComplexTypes()) {
@@ -155,14 +182,30 @@ public class Schema extends AbstractElement {
         return result;
     }
 
+    /**
+     * Gets row types.
+     *
+     * @return row types.
+     */
     public List<RowType> getRowTypes() {
         return getElements(RowType.class);
     }
 
+    /**
+     * Gets entity types.
+     *
+     * @return entity types.
+     */
     public List<EntityType> getEntityTypes() {
         return getElements(EntityType.class);
     }
 
+    /**
+     * Gets entity type with the given name.
+     *
+     * @param name name.
+     * @return entity type.
+     */
     public EntityType getEntityType(final String name) {
         EntityType result = null;
         for (EntityType complexType : getEntityTypes()) {
@@ -173,10 +216,21 @@ public class Schema extends AbstractElement {
         return result;
     }
 
+    /**
+     * Gets associations.
+     *
+     * @return associations.
+     */
     public List<Association> getAssociations() {
         return getElements(Association.class);
     }
 
+    /**
+     * Gets association with the given name.
+     *
+     * @param name name.
+     * @return association.
+     */
     public Association getAssociation(final String name) {
         Association result = null;
         for (Association association : getAssociations()) {
@@ -187,10 +241,21 @@ public class Schema extends AbstractElement {
         return result;
     }
 
+    /**
+     * Gets entity containers.
+     *
+     * @return entity containers.
+     */
     public List<EntityContainer> getEntityContainers() {
         return getElements(EntityContainer.class);
     }
 
+    /**
+     * Gets entity container with the given name.
+     *
+     * @param name name.
+     * @return entity container.
+     */
     public EntityContainer getEntityContainer(final String name) {
         EntityContainer result = null;
         for (EntityContainer container : getEntityContainers()) {

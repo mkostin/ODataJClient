@@ -29,19 +29,36 @@ public class XMLServiceDocument implements ServiceDocumentResource {
 
     private final Map<String, String> toplevelEntitySets = new HashMap<String, String>();
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public URI getBaseURI() {
         return this.baseURI;
     }
 
+    /**
+     * Sets base URI.
+     *
+     * @param baseURI base URI.
+     */
     public void setBaseURI(final URI baseURI) {
         this.baseURI = baseURI;
     }
 
+    /**
+     * Add top-level entity set.
+     *
+     * @param title title.
+     * @param href href.
+     */
     public void addToplevelEntitySet(final String title, final String href) {
         this.toplevelEntitySets.put(title, href);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Map<String, String> getToplevelEntitySets() {
         return this.toplevelEntitySets;

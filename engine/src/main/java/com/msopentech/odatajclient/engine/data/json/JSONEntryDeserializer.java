@@ -75,6 +75,9 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
         return entryNamePrefix;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public JSONEntry deserialize(final JsonParser parser, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
@@ -155,10 +158,10 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
                     link.setType(ODataLinkType.ENTITY_NAVIGATION.toString());
                 }
                 // NOTE: this should be expected to happen, but it isn't - at least up to OData 4.0
-                /*if (field.getValue().isArray()) {
-                    link.setHref(field.getValue().asText());
-                    link.setType(ODataLinkType.ENTITY_SET_NAVIGATION.toString());
-                }*/
+                /* if (field.getValue().isArray()) {
+                 * link.setHref(field.getValue().asText());
+                 * link.setType(ODataLinkType.ENTITY_SET_NAVIGATION.toString());
+                 * } */
                 entry.addNavigationLink(link);
 
                 toRemove.add(field.getKey());

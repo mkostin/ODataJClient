@@ -22,12 +22,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import java.net.URI;
 
+/**
+ * Abstract representation of a JSON metadata object.
+ */
 public abstract class AbstractJSONMetadataObject extends AbstractJSONObject {
 
     private static final long serialVersionUID = 8419977434428745822L;
 
+    /**
+     * Gets metadata URI.
+     *
+     * @return metadata URI.
+     */
     public abstract URI getMetadata();
 
+    /**
+     * Gets base URI.
+     *
+     * @return base URI.
+     */
     @JsonIgnore
     public URI getBaseURI() {
         URI baseURI = null;

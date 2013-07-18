@@ -28,6 +28,9 @@ public class JSONLinks extends AbstractJSONMetadataObject {
 
     private static final long serialVersionUID = -5006368367235783907L;
 
+    /**
+     * JSON link URL representation.
+     */
     static class JSONLinkURL extends AbstractJSONObject {
 
         private static final long serialVersionUID = 5365055617973271468L;
@@ -52,10 +55,18 @@ public class JSONLinks extends AbstractJSONMetadataObject {
     @JsonProperty(value = "value", required = false)
     private final List<JSONLinkURL> links = new ArrayList<JSONLinkURL>();
 
+    /**
+     * Sets metadata URI.
+     *
+     * @param metadata metadata URI.
+     */
     public void setMetadata(final URI metadata) {
         this.metadata = metadata;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public URI getMetadata() {
         return this.metadata;

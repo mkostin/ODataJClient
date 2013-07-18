@@ -29,6 +29,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * DOM tree utilities class.
+ */
 final class TreeUtils {
 
     private TreeUtils() {
@@ -102,6 +105,13 @@ final class TreeUtils {
         }
     }
 
+    /**
+     * Gets the given node's children of the given type.
+     *
+     * @param node parent.
+     * @param nodetype searched child type.
+     * @return children.
+     */
     public static List<Node> getChildNodes(final Node node, final short nodetype) {
         final List<Node> result = new ArrayList<Node>();
         final NodeList children = node.getChildNodes();
@@ -114,6 +124,12 @@ final class TreeUtils {
         return result;
     }
 
+    /**
+     * Checks if the given node has <tt>element</tt> children.
+     *
+     * @param node parent.
+     * @return 'TRUE' if the given node has at least one <tt>element</tt> child; 'FALSE' otherwise.
+     */
     public static boolean hasElementsChildNode(final Node node) {
         boolean found = false;
 
@@ -126,6 +142,12 @@ final class TreeUtils {
         return found;
     }
 
+    /**
+     * Checks if the given node has only text children.
+     *
+     * @param node parent.
+     * @return 'TRUE' if the given node has only text children; 'FALSE' otherwise.
+     */
     public static boolean hasOnlyTextChildNodes(final Node node) {
         boolean result = true;
         final NodeList children = node.getChildNodes();
@@ -139,6 +161,13 @@ final class TreeUtils {
         return result;
     }
 
+    /**
+     * Serializes content as JSON.
+     *
+     * @param jgen JSON generator.
+     * @param content content.
+     * @throws IOException in case of write error.
+     */
     public static void writeContent(final JsonGenerator jgen, final Node content) throws IOException {
         for (Node child : getChildNodes(content, Node.ELEMENT_NODE)) {
             final String childName = XMLUtils.getSimpleName(child);

@@ -18,6 +18,9 @@ package com.msopentech.odatajclient.engine.data.json.error;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.msopentech.odatajclient.engine.data.json.AbstractJSONObject;
 
+/**
+ * This class represents a bundle for an OData error returned as JSON.
+ */
 public class JSONODataErrorBundle extends AbstractJSONObject {
 
     private static final long serialVersionUID = -4784910226259754450L;
@@ -25,10 +28,20 @@ public class JSONODataErrorBundle extends AbstractJSONObject {
     @JsonProperty("odata.error")
     private JSONODataError error;
 
+    /**
+     * Gets error.
+     *
+     * @return OData error object.
+     */
     public JSONODataError getError() {
         return error;
     }
 
+    /**
+     * Sets error.
+     *
+     * @param error OData error object.
+     */
     public void setError(final JSONODataError error) {
         this.error = error;
     }

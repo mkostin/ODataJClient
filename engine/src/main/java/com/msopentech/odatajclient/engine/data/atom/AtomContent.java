@@ -134,6 +134,11 @@ public class AtomContent extends AbstractElement {
         return this.content;
     }
 
+    /**
+     * Gets XML content.
+     *
+     * @return DOM element.
+     */
     public Element getXMLContent() {
         if (!getType().contains(ContentType.APPLICATION_XML.getMimeType()) && !getType().contains("*/*")) {
             throw new IllegalStateException("No XML content found");
@@ -143,6 +148,11 @@ public class AtomContent extends AbstractElement {
         return elements.isEmpty() ? null : elements.get(0);
     }
 
+    /**
+     * Sets XML content.
+     *
+     * @param element DOM element.
+     */
     public void setXMLContent(final Element element) {
         getType().clear();
         getType().add(ContentType.APPLICATION_XML.getMimeType());

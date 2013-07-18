@@ -38,51 +38,81 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
 
     private JSONFeed feed;
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getTitle() {
         return title;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setTitle(final String title) {
         this.title = title;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getRel() {
         return rel;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setRel(final String rel) {
         this.rel = rel;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getHref() {
         return href;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setHref(final String href) {
         this.href = href;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getType() {
         return type;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setType(final String type) {
         this.type = type;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public EntryResource getInlineEntry() {
         return entry;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setInlineEntry(final EntryResource entry) {
         if (entry instanceof JSONEntry) {
@@ -90,11 +120,17 @@ public class JSONLink extends AbstractJSONObject implements LinkResource {
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public FeedResource getInlineFeed() {
         return feed;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setInlineFeed(final FeedResource feed) {
         if (feed instanceof JSONFeed) {

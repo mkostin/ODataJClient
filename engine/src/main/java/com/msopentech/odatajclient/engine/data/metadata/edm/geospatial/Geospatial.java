@@ -74,37 +74,74 @@ public abstract class Geospatial {
      */
     protected Integer srid;
 
+    /**
+     * Constructor.
+     *
+     * @param dimension dimension.
+     * @param type type.
+     */
     protected Geospatial(final Dimension dimension, final Type type) {
         this.dimension = dimension;
         this.type = type;
     }
 
+    /**
+     * Gets dimension.
+     *
+     * @return dimension.
+     * @see Dimension
+     */
     public Dimension getDimension() {
         return dimension;
     }
 
+    /**
+     * Gets type.
+     *
+     * @return type.
+     * @see Type
+     */
     public Type getType() {
         return type;
     }
 
+    /**
+     * Gets s-rid.
+     *
+     * @return s-rid.
+     */
     public Integer getSrid() {
         return srid;
     }
 
+    /**
+     * Sets s-rid.
+     *
+     * @param srid s-rid.
+     */
     public void setSrid(final Integer srid) {
         this.srid = srid;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);

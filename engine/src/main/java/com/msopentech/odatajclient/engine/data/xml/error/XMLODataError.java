@@ -222,11 +222,17 @@ public class XMLODataError implements ODataError {
         this.any = value;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getMessageLang() {
         return this.message == null ? null : this.message.getLang();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getMessageValue() {
         return this.message == null ? null : this.message.getValue();
@@ -246,16 +252,25 @@ public class XMLODataError implements ODataError {
         return result;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getInnerErrorMessage() {
         return getElementContent("m:message");
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getInnerErrorType() {
         return getElementContent("m:type");
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String getInnerErrorStacktrace() {
         return getElementContent("m:stacktrace");

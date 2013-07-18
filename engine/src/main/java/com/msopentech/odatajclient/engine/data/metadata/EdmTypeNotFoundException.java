@@ -15,10 +15,19 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata;
 
+/**
+ * This exception indicates that a certain type is not found.
+ */
 public class EdmTypeNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 1685118875699966611L;
 
+    /**
+     * Constructor.
+     *
+     * @param type type in object.
+     * @param typeExpression type expression.
+     */
     public EdmTypeNotFoundException(final Class<?> type, final String typeExpression) {
         super("No " + type.getSimpleName() + " found in " + typeExpression);
     }

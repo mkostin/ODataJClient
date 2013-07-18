@@ -19,29 +19,92 @@ import java.math.BigInteger;
 import java.util.Map;
 import javax.xml.namespace.QName;
 
+/**
+ * Abstract representation of elements that supports facets.
+ */
 public abstract class AbstractFaceteable extends AbstractAnnotated {
 
+    /**
+     * Gets name facet.
+     *
+     * @return name.
+     */
     public abstract String getName();
 
+    /**
+     * Gets type facet.
+     *
+     * @return type.
+     */
     public abstract String getType();
 
+    /**
+     * Gets other attributes facet.
+     *
+     * @return other attributes.
+     */
     public abstract Map<QName, String> getOtherAttributes();
 
+    /**
+     * Gets is-nullable facet.
+     *
+     * @return is-nullable facet value.
+     */
     public abstract boolean isNullable();
 
+    /**
+     * Gets max-length facet.
+     *
+     * @return max-length.
+     */
     public abstract String getMaxLength();
 
+    /**
+     * Gets precision facet.
+     *
+     * @return precision.
+     */
     public abstract BigInteger getPrecision();
 
+    /**
+     * Gets scale facet.
+     *
+     * @return scale.
+     */
     public abstract BigInteger getScale();
 
+    /**
+     * Gets is-fixed-length facet.
+     *
+     * @return is-fixed-length value.
+     */
     public abstract Boolean isFixedLength();
 
+    /**
+     * Gets is-unicode facet.
+     *
+     * @return is-unicode value.
+     */
     public abstract Boolean isUnicode();
 
+    /**
+     * Gets concurrency mode facet.
+     *
+     * @return concurrency mode.
+     */
     public abstract ConcurrencyMode getConcurrencyMode();
 
+    /**
+     * Gets default value facet.
+     *
+     * @return default value.
+     */
     public abstract String getDefaultValue();
 
+    /**
+     * Gets collation facet.
+     *
+     * @return collation.
+     */
     public abstract String getCollation();
 }

@@ -106,6 +106,9 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void serialize(final JSONEntry entry, final JsonGenerator jgen, final SerializerProvider provider)
             throws IOException, JsonProcessingException {

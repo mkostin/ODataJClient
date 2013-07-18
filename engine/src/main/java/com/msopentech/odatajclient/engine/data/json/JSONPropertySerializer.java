@@ -35,6 +35,9 @@ import org.w3c.dom.Element;
  */
 public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void serialize(final JSONProperty property, final JsonGenerator jgen, final SerializerProvider provider)
             throws IOException, JsonProcessingException {
