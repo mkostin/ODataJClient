@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -26,11 +27,14 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.LineString;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
@@ -123,13 +127,91 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void geographyPoint() {
-        final ODataPrimitiveValue opv = readPropertyValue(servicesODataServiceRootURL, "Suppliers(1)", "Location");
+        final ODataPrimitiveValue opv =
+                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-10)", "GeogPoint");
         assertEquals(EdmSimpleType.GEOGRAPHY_POINT.toString(), opv.getTypeName());
 
-        final Point value = opv.<Point>toCastValue();
-        assertNotNull(value);
-        assertEquals(47.6472206115723, value.getX(), 0);
-        assertEquals(-122.107711791992, value.getY(), 0);
-        assertEquals("47.6472206115723 -122.107711791992", opv.toString());
+        final Point point = opv.<Point>toCastValue();
+        assertNotNull(point);
+        assertEquals(Geospatial.Dimension.GEOGRAPHY, point.getDimension());
+
+        assertEquals(52.8606, point.getX(), 0);
+        assertEquals(173.334, point.getY(), 0);
+    }
+
+    @Test
+    public void geometryPoint() {
+        final ODataPrimitiveValue opv =
+                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-9)", "GeomPoint");
+        assertEquals(EdmSimpleType.GEOMETRY_POINT.toString(), opv.getTypeName());
+
+        final Point point = opv.<Point>toCastValue();
+        assertNotNull(point);
+        assertEquals(Geospatial.Dimension.GEOMETRY, point.getDimension());
+
+        assertEquals(4369367.0586663447, point.getX(), 0);
+        assertEquals(6352015.6916818349, point.getY(), 0);
+    }
+
+    @Test
+    public void geographyLineString() {
+        final ODataPrimitiveValue opv =
+                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-10)", "GeogLine");
+        assertEquals(EdmSimpleType.GEOGRAPHY_LINE_STRING.toString(), opv.getTypeName());
+
+        final LineString lineString = opv.<LineString>toCastValue();
+        assertNotNull(lineString);
+        assertEquals(Geospatial.Dimension.GEOGRAPHY, lineString.getDimension());
+
+        final List<Point> points = new ArrayList<Point>();
+
+        for (Point point : lineString) {
+            points.add(point);
+        }
+
+        assertEquals(4, points.size());
+
+        assertEquals(40.5, points.get(0).getX(), 0);
+        assertEquals(40.5, points.get(0).getY(), 0);
+
+        assertEquals(30.5, points.get(1).getX(), 0);
+        assertEquals(30.5, points.get(1).getY(), 0);
+
+        assertEquals(20.5, points.get(2).getX(), 0);
+        assertEquals(40.5, points.get(2).getY(), 0);
+
+        assertEquals(10.5, points.get(3).getX(), 0);
+        assertEquals(30.5, points.get(3).getY(), 0);
+    }
+
+    @Test
+    public void geometryLineString() {
+        final ODataPrimitiveValue opv =
+                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-10)", "Geom");
+        assertEquals(EdmSimpleType.GEOMETRY_LINE_STRING.toString(), opv.getTypeName());
+
+        final LineString lineString = opv.<LineString>toCastValue();
+        assertNotNull(lineString);
+        assertEquals(Geospatial.Dimension.GEOMETRY, lineString.getDimension());
+
+        final List<Point> points = new ArrayList<Point>();
+
+        for (Point point : lineString) {
+            points.add(point);
+        }
+
+        assertEquals(4, points.size());
+
+        assertEquals(1, points.get(0).getX(), 0);
+        assertEquals(1, points.get(0).getY(), 0);
+
+        assertEquals(3, points.get(1).getX(), 0);
+        assertEquals(3, points.get(1).getY(), 0);
+
+        assertEquals(2, points.get(2).getX(), 0);
+        assertEquals(4, points.get(2).getY(), 0);
+
+        assertEquals(2, points.get(3).getX(), 0);
+        assertEquals(0, points.get(3).getY(), 0);
     }
 }

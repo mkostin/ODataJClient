@@ -15,14 +15,20 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_LINE_STRING;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_LINE_STRING;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial.Dimension;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.LineString;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -218,11 +224,11 @@ public class ODataPrimitiveValue extends ODataValue {
 
             case GEOGRAPHY_POINT:
             case GEOMETRY_POINT:
-                final String[] points = this.toString().split("\\|");
+                String[] points = this.toString().split("\\|");
                 if (points == null || points.length == 0) {
                     throw new IllegalArgumentException("No points found in " + this.toString());
                 }
-                final String[] point = points[0].split(" ");
+                String[] point = points[0].split(" ");
                 if (point == null || point.length != 2) {
                     throw new IllegalArgumentException("No X Y coordinates found in " + point);
                 }
@@ -233,15 +239,40 @@ public class ODataPrimitiveValue extends ODataValue {
                 this.<Point>toCastValue().setY(Double.parseDouble(point[1]));
                 break;
 
-            case GEOGRAPHY:
             case GEOGRAPHY_LINE_STRING:
+            case GEOMETRY_LINE_STRING:
+                points = this.toString().split("\\|");
+                if (points == null || points.length == 0) {
+                    throw new IllegalArgumentException("No points found in " + this.toString());
+                }
+
+                final List<Point> linePoints = new ArrayList<Point>();
+                Dimension dimension = this.type == EdmSimpleType.GEOGRAPHY_LINE_STRING
+                        ? Geospatial.Dimension.GEOGRAPHY
+                        : Geospatial.Dimension.GEOMETRY;
+
+                for (String coordinates : points) {
+                    point = coordinates.split(" ");
+                    if (point == null || point.length != 2) {
+                        throw new IllegalArgumentException("No X Y coordinates found in " + point);
+                    }
+                    final Point linePoint = new Point(dimension);
+                    linePoint.setX(Double.parseDouble(point[0].trim()));
+                    linePoint.setY(Double.parseDouble(point[1].trim()));
+                    linePoints.add(linePoint);
+                }
+
+                this.value = new LineString(dimension, linePoints);
+                break;
+
+            case GEOGRAPHY:
             case GEOGRAPHY_POLYGON:
             case GEOGRAPHY_MULTI_POINT:
             case GEOGRAPHY_MULTI_LINE_STRING:
             case GEOGRAPHY_MULTI_POLYGON:
             case GEOGRAPHY_COLLECTION:
             case GEOMETRY:
-            case GEOMETRY_LINE_STRING:
+
             case GEOMETRY_POLYGON:
             case GEOMETRY_MULTI_POINT:
             case GEOMETRY_MULTI_LINE_STRING:
@@ -329,15 +360,25 @@ public class ODataPrimitiveValue extends ODataValue {
                 this.text = this.<Point>toCastValue().getX() + " " + this.<Point>toCastValue().getY();
                 break;
 
-            case GEOGRAPHY:
+            case GEOMETRY_LINE_STRING:
             case GEOGRAPHY_LINE_STRING:
+                StringBuilder textBuilder = new StringBuilder();
+                for (Point point : this.<LineString>toCastValue()) {
+                    if (textBuilder.length() > 0) {
+                        textBuilder.append("\\|");
+                    }
+                    textBuilder.append(point.getX()).append(" ").append(point.getY());
+                }
+                this.text = textBuilder.toString();
+                break;
+
+            case GEOGRAPHY:
             case GEOGRAPHY_POLYGON:
             case GEOGRAPHY_MULTI_POINT:
             case GEOGRAPHY_MULTI_LINE_STRING:
             case GEOGRAPHY_MULTI_POLYGON:
             case GEOGRAPHY_COLLECTION:
             case GEOMETRY:
-            case GEOMETRY_LINE_STRING:
             case GEOMETRY_POLYGON:
             case GEOMETRY_MULTI_POINT:
             case GEOMETRY_MULTI_LINE_STRING:

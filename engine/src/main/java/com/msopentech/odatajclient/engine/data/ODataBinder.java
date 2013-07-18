@@ -487,7 +487,8 @@ public final class ODataBinder {
             final Node point = points.item(i);
 
             if (point.getNodeType() == Node.ELEMENT_NODE
-                    && point.getNodeName().equals(ODataConstants.ELEM_POINT)) {
+                    && (point.getNodeName().equals(ODataConstants.ELEM_POINT)
+                    || point.getNodeName().equals(ODataConstants.ELEM_LINESTRING))) {
 
                 final NodeList poses = point.getChildNodes();
                 for (int j = 0; j < poses.getLength(); j++) {

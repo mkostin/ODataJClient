@@ -99,6 +99,8 @@ public class ODataConstants {
 
     public static final String ELEM_POINT = PREFIX_GML + "Point";
 
+    public static final String ELEM_LINESTRING = PREFIX_GML + "LineString";
+
     public static final String ELEM_POS = PREFIX_GML + "pos";
 
     public static final String ELEM_PROPERTY = "property";
@@ -139,6 +141,6 @@ public class ODataConstants {
 
     public final static String JSON_URL = "url";
 
-    public final static String UTF8  = "UTF-8";
+    public final static String UTF8 = "UTF-8";
 
 }
