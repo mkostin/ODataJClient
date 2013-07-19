@@ -262,7 +262,7 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
      *
      * @param isMediaEntity media entity flag value.
      */
-    public void setMediaEntity(boolean isMediaEntity) {
+    public void setMediaEntity(final boolean isMediaEntity) {
         this.mediaEntity = isMediaEntity;
     }
 
@@ -280,7 +280,7 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
      *
      * @param mediaContentType media content type.
      */
-    public void setMediaContentType(String mediaContentType) {
+    public void setMediaContentType(final String mediaContentType) {
         this.mediaContentType = mediaContentType;
     }
 
@@ -298,7 +298,7 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
      *
      * @param mediaContentSource media content source.
      */
-    public void setMediaContentSource(String mediaContentSource) {
+    public void setMediaContentSource(final String mediaContentSource) {
         this.mediaContentSource = mediaContentSource;
     }
 }

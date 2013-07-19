@@ -55,7 +55,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpResponse;
 
-public class StreamingTest extends AbstractTest {
+public class BatchTest extends AbstractTest {
 
     private static String PREFIX = "!!PREFIX!!";
 
@@ -152,12 +152,12 @@ public class StreamingTest extends AbstractTest {
         // create your request
         final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testODataServiceRootURL);
 
-        final BatchStreamManager payload = request.execute();
+        final BatchStreamManager streamManager = request.execute();
 
         // -------------------------------------------
         // Add retrieve item
         // -------------------------------------------
-        ODataRetrieve retrieve = payload.addRetrieve();
+        ODataRetrieve retrieve = streamManager.addRetrieve();
 
         // prepare URI
         ODataURIBuilder targetURI = new ODataURIBuilder(testODataServiceRootURL);
@@ -173,7 +173,7 @@ public class StreamingTest extends AbstractTest {
         // -------------------------------------------
         // Add changeset item
         // -------------------------------------------
-        final ODataChangeset changeset = payload.addChangeset();
+        final ODataChangeset changeset = streamManager.addChangeset();
 
         // Update Product into the changeset
         targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT);
@@ -204,7 +204,7 @@ public class StreamingTest extends AbstractTest {
         // -------------------------------------------
         // Add retrieve item
         // -------------------------------------------
-        retrieve = payload.addRetrieve();
+        retrieve = streamManager.addRetrieve();
 
         // prepare URI
         targetURI = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT);
@@ -215,7 +215,7 @@ public class StreamingTest extends AbstractTest {
         retrieve.setRequest(query);
         // -------------------------------------------
 
-        final ODataBatchResponse response = payload.getResponse();
+        final ODataBatchResponse response = streamManager.getResponse();
         assertEquals(202, response.getStatusCode());
         assertEquals("Accepted", response.getStatusMessage());
 
@@ -235,11 +235,11 @@ public class StreamingTest extends AbstractTest {
         ODataEntity entity = entres.getBody();
         assertEquals(new Integer(-10), entity.getProperty("CustomerId").getPrimitiveValue().<Integer>toCastValue());
 
-        // retrive the second item (ODataChangeset)
+        // retrieve the second item (ODataChangeset)
         item = iter.next();
         assertTrue(item instanceof ODataChangesetResponseItem);
 
-        ODataChangesetResponseItem chgitem = (ODataChangesetResponseItem) item;
+        final ODataChangesetResponseItem chgitem = (ODataChangesetResponseItem) item;
         res = chgitem.next();
         assertTrue(res instanceof ODataEntityUpdateResponse);
         assertEquals(204, res.getStatusCode());
@@ -250,7 +250,7 @@ public class StreamingTest extends AbstractTest {
         assertEquals(201, res.getStatusCode());
         assertEquals("Created", res.getStatusMessage());
 
-        ODataEntityCreateResponse createres = (ODataEntityCreateResponse) res;
+        final ODataEntityCreateResponse createres = (ODataEntityCreateResponse) res;
         entity = createres.getBody();
         assertEquals(new Integer(100), entity.getProperty("CustomerId").getPrimitiveValue().<Integer>toCastValue());
 

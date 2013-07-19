@@ -112,13 +112,7 @@ public class EntityUpdateTest extends AbstractTest {
 
         final String newm = "New description(" + System.currentTimeMillis() + ")";
 
-        ODataProperty description = null;
-
-        for (ODataProperty prop : changes.getProperties()) {
-            if (prop.getName().equals("Description")) {
-                description = prop;
-            }
-        }
+        ODataProperty description = changes.getProperty("Description");
 
         final String oldm;
         if (description == null) {

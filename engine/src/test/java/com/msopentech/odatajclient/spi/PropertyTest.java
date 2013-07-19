@@ -190,13 +190,13 @@ public class PropertyTest extends AbstractTest {
 
         assertNotEquals(newMsg, oldMsg);
 
-        ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setText(newMsg).build();
+        final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setText(newMsg).build();
 
         final ODataValueUpdateRequest updateReq =
                 ODataCUDRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
         updateReq.setFormat(format);
 
-        ODataValueUpdateResponse updateRes = updateReq.execute();
+        final ODataValueUpdateResponse updateRes = updateReq.execute();
         assertEquals(204, updateRes.getStatusCode());
 
         retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());

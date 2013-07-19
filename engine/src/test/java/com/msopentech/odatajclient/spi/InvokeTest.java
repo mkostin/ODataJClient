@@ -71,7 +71,7 @@ public class InvokeTest extends AbstractTest {
         assertNotNull(property);
         assertEquals("Foo", property.getPrimitiveValue().<String>toCastValue());
 
-        // 3. get collection of complex type property
+        // 2. get collection of complex type property
         funcImp = container.getFunctionImport("EntityProjectionReturnsCollectionOfComplexTypes");
 
         builder = new ODataURIBuilder(testODataServiceRootURL).

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
@@ -35,8 +36,9 @@ public class MetadataTest extends AbstractTest {
     @Test
     public void retrieveAndParseEdmTypes() {
         final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(testODataServiceRootURL);
-
-        final EdmMetadata metadata = new EdmMetadata(req.rawExecute());
+        
+        final ODataRetrieveResponse<EdmMetadata> res = req.execute();
+        final EdmMetadata metadata = res.getBody();
         assertNotNull(metadata);
 
         final EdmType orderCollection =
