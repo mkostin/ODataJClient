@@ -15,9 +15,12 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
+import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest;
@@ -33,6 +36,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -40,6 +44,41 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 public class MediaEntityTest extends AbstractTest {
+
+    @Test
+    public void readMediaEntity() throws Exception {
+        final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntityTypeSegment("Car(12)").appendValueSegment();
+
+        final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
+        retrieveReq.setFormat(ODataMediaFormat.WILDCARD);
+
+        final ODataRetrieveResponse<InputStream> retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
+        assertTrue(IOUtils.toString(retrieveRes.getBody()).isEmpty());
+    }
+
+    @Test(expected = ODataClientErrorException.class)
+    public void readMediaWithXmlError() throws Exception {
+        final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntityTypeSegment("Car(12)").appendValueSegment();
+
+        final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
+        retrieveReq.setFormat(ODataMediaFormat.APPLICATION_OCTET_STREAM);
+
+        retrieveReq.execute();
+    }
+
+    @Test(expected = ODataClientErrorException.class)
+    public void readMediaWithJsonError() throws Exception {
+        final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntityTypeSegment("Car(12)").appendValueSegment();
+
+        final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
+        retrieveReq.setFormat(ODataMediaFormat.APPLICATION_JSON);
+
+        retrieveReq.execute();
+    }
 
     @Test
     public void updateMediaEntityAsAtom() throws Exception {

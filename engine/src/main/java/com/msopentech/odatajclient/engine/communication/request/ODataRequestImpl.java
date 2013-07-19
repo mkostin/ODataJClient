@@ -403,7 +403,7 @@ public class ODataRequestImpl implements ODataRequest {
                     throw new ODataClientErrorException(response.getStatusLine());
                 } else {
                     throw new ODataClientErrorException(response.getStatusLine(),
-                            ODataReader.readError(httpEntity.getContent(), getAccept().indexOf("xml") != -1));
+                            ODataReader.readError(httpEntity.getContent(), getAccept().indexOf("json") == -1));
                 }
             } catch (IOException e) {
                 throw new HttpClientException(
