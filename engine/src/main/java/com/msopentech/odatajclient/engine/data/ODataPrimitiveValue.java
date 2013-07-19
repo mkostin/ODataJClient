@@ -15,20 +15,44 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_COLLECTION;
 import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_LINE_STRING;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_MULTI_LINE_STRING;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_MULTI_POINT;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_MULTI_POLYGON;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_POINT;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_POLYGON;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_COLLECTION;
 import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_LINE_STRING;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_MULTI_LINE_STRING;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_MULTI_POINT;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_MULTI_POLYGON;
+import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_POLYGON;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.ComposedGeospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial.Dimension;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.LineString;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiLineString;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoint;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -224,60 +248,62 @@ public class ODataPrimitiveValue extends ODataValue {
 
             case GEOGRAPHY_POINT:
             case GEOMETRY_POINT:
-                String[] points = this.toString().split("\\|");
+                final String[] points = getGeospatialsInfo(this.toString()).getValue().split("\\|");
+
                 if (points == null || points.length == 0) {
                     throw new IllegalArgumentException("No points found in " + this.toString());
                 }
-                String[] point = points[0].split(" ");
-                if (point == null || point.length != 2) {
-                    throw new IllegalArgumentException("No X Y coordinates found in " + point);
-                }
-                this.value = new Point(this.type == EdmSimpleType.GEOGRAPHY_POINT
-                        ? Geospatial.Dimension.GEOGRAPHY
-                        : Geospatial.Dimension.GEOMETRY);
-                this.<Point>toCastValue().setX(Double.parseDouble(point[0]));
-                this.<Point>toCastValue().setY(Double.parseDouble(point[1]));
+                this.value = getPoint(points[0], getDimension());
                 break;
 
             case GEOGRAPHY_LINE_STRING:
             case GEOMETRY_LINE_STRING:
-                points = this.toString().split("\\|");
-                if (points == null || points.length == 0) {
-                    throw new IllegalArgumentException("No points found in " + this.toString());
-                }
+                Dimension dimension = getDimension();
+                this.value = new LineString(
+                        dimension, getPoints(getGeospatialsInfo(this.toString()).getValue(), dimension));
+                break;
 
-                final List<Point> linePoints = new ArrayList<Point>();
-                Dimension dimension = this.type == EdmSimpleType.GEOGRAPHY_LINE_STRING
-                        ? Geospatial.Dimension.GEOGRAPHY
-                        : Geospatial.Dimension.GEOMETRY;
+            case GEOGRAPHY_MULTI_POINT:
+            case GEOMETRY_MULTI_POINT:
+                dimension = getDimension();
+                this.value = new MultiPoint(
+                        dimension, getPoints(getGeospatialsInfo(this.toString()).getValue(), dimension));
+                break;
 
-                for (String coordinates : points) {
-                    point = coordinates.split(" ");
-                    if (point == null || point.length != 2) {
-                        throw new IllegalArgumentException("No X Y coordinates found in " + point);
-                    }
-                    final Point linePoint = new Point(dimension);
-                    linePoint.setX(Double.parseDouble(point[0].trim()));
-                    linePoint.setY(Double.parseDouble(point[1].trim()));
-                    linePoints.add(linePoint);
-                }
+            case GEOGRAPHY_MULTI_LINE_STRING:
+            case GEOMETRY_MULTI_LINE_STRING:
+                dimension = getDimension();
+                this.value = new MultiLineString(
+                        dimension, getLineStrings(getGeospatialsInfo(this.toString()).getValue(), dimension));
+                break;
 
-                this.value = new LineString(dimension, linePoints);
+            case GEOGRAPHY_POLYGON:
+            case GEOMETRY_POLYGON:
+                dimension = getDimension();
+                this.value = getPolygon(getGeospatialsInfo(this.toString()).getValue(), dimension);
+                break;
+
+            case GEOGRAPHY_MULTI_POLYGON:
+            case GEOMETRY_MULTI_POLYGON:
+                dimension = getDimension();
+                this.value = new MultiPolygon(
+                        dimension, getPolygons(getGeospatialsInfo(this.toString()).getValue(), dimension));
+                break;
+
+            case GEOGRAPHY_COLLECTION:
+            case GEOMETRY_COLLECTION:
+                dimension = getDimension();
+                this.value = getCollection(getGeospatialsInfo(this.toString()).getValue(), dimension);
                 break;
 
             case GEOGRAPHY:
-            case GEOGRAPHY_POLYGON:
-            case GEOGRAPHY_MULTI_POINT:
-            case GEOGRAPHY_MULTI_LINE_STRING:
-            case GEOGRAPHY_MULTI_POLYGON:
-            case GEOGRAPHY_COLLECTION:
             case GEOMETRY:
+                throw new IllegalArgumentException(
+                        "Geometry is not an instantiable type. "
+                        + "An entity can declare a property to be of type Geometry. "
+                        + "An instance of an entity MUST NOT have a value of type Geometry. "
+                        + "Each value MUST be of some subtype.");
 
-            case GEOMETRY_POLYGON:
-            case GEOMETRY_MULTI_POINT:
-            case GEOMETRY_MULTI_LINE_STRING:
-            case GEOMETRY_MULTI_POLYGON:
-            case GEOMETRY_COLLECTION:
             default:
         }
     }
@@ -357,33 +383,47 @@ public class ODataPrimitiveValue extends ODataValue {
 
             case GEOGRAPHY_POINT:
             case GEOMETRY_POINT:
-                this.text = this.<Point>toCastValue().getX() + " " + this.<Point>toCastValue().getY();
+                this.text = getGeospatialAsString(this.<Point>toCastValue());
                 break;
 
             case GEOMETRY_LINE_STRING:
             case GEOGRAPHY_LINE_STRING:
-                StringBuilder textBuilder = new StringBuilder();
-                for (Point point : this.<LineString>toCastValue()) {
-                    if (textBuilder.length() > 0) {
-                        textBuilder.append("\\|");
-                    }
-                    textBuilder.append(point.getX()).append(" ").append(point.getY());
-                }
-                this.text = textBuilder.toString();
+                this.text = getGeospatialAsString(this.<LineString>toCastValue());
+                break;
+
+            case GEOMETRY_MULTI_POINT:
+            case GEOGRAPHY_MULTI_POINT:
+                this.text = getGeospatialAsString(this.<MultiPoint>toCastValue());
+                break;
+
+            case GEOMETRY_MULTI_LINE_STRING:
+            case GEOGRAPHY_MULTI_LINE_STRING:
+                this.text = getGeospatialAsString(this.<MultiLineString>toCastValue());
+                break;
+
+            case GEOGRAPHY_POLYGON:
+            case GEOMETRY_POLYGON:
+                this.text = getGeospatialAsString(this.<Polygon>toCastValue());
+                break;
+
+            case GEOGRAPHY_MULTI_POLYGON:
+            case GEOMETRY_MULTI_POLYGON:
+                this.text = getGeospatialAsString(this.<MultiPolygon>toCastValue());
+                break;
+
+            case GEOGRAPHY_COLLECTION:
+            case GEOMETRY_COLLECTION:
+                this.text = getGeospatialAsString(this.<GeospatialCollection>toCastValue());
                 break;
 
             case GEOGRAPHY:
-            case GEOGRAPHY_POLYGON:
-            case GEOGRAPHY_MULTI_POINT:
-            case GEOGRAPHY_MULTI_LINE_STRING:
-            case GEOGRAPHY_MULTI_POLYGON:
-            case GEOGRAPHY_COLLECTION:
             case GEOMETRY:
-            case GEOMETRY_POLYGON:
-            case GEOMETRY_MULTI_POINT:
-            case GEOMETRY_MULTI_LINE_STRING:
-            case GEOMETRY_MULTI_POLYGON:
-            case GEOMETRY_COLLECTION:
+                throw new IllegalArgumentException(
+                        "Geometry is not an instantiable type. "
+                        + "An entity can declare a property to be of type Geometry. "
+                        + "An instance of an entity MUST NOT have a value of type Geometry. "
+                        + "Each value MUST be of some subtype.");
+
             default:
         }
     }
@@ -423,5 +463,247 @@ public class ODataPrimitiveValue extends ODataValue {
     @SuppressWarnings("unchecked")
     public <T> T toCastValue() {
         return (T) type.javaType().cast(toValue());
+    }
+
+    private Dimension getDimension() {
+        switch (this.type) {
+            case GEOGRAPHY:
+            case GEOGRAPHY_COLLECTION:
+            case GEOGRAPHY_LINE_STRING:
+            case GEOGRAPHY_MULTI_LINE_STRING:
+            case GEOGRAPHY_POINT:
+            case GEOGRAPHY_MULTI_POINT:
+            case GEOGRAPHY_POLYGON:
+            case GEOGRAPHY_MULTI_POLYGON:
+                return Geospatial.Dimension.GEOGRAPHY;
+            default:
+                return Geospatial.Dimension.GEOMETRY;
+        }
+    }
+
+    private Map.Entry<String, String> getGeospatialsInfo(final String src) {
+        int last = src.lastIndexOf(":");
+
+        if (last < 0) {
+            throw new IllegalArgumentException("Invalid geospatials data " + src);
+        }
+
+        try {
+            return new AbstractMap.SimpleEntry<String, String>(
+                    src.substring(0, last).trim(),
+                    URLDecoder.decode(src.substring(last + 1, src.length()), "UTF-8").trim());
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private Point getPoint(final String src, final Dimension dimension) {
+        final String[] element = src.split(" ");
+        if (element == null || element.length != 2) {
+            throw new IllegalArgumentException("No X Y coordinates found in " + src);
+        }
+        final Point point = new Point(dimension);
+        point.setX(Double.parseDouble(element[0].trim()));
+        point.setY(Double.parseDouble(element[1].trim()));
+
+        return point;
+    }
+
+    private List<Point> getPoints(final String src, final Dimension dimension) {
+        final String[] elements = src.split("\\|");
+        if (elements == null || elements.length == 0) {
+            throw new IllegalArgumentException("No points found in " + src);
+        }
+
+        final List<Point> points = new ArrayList<Point>();
+
+        for (String coordinates : elements) {
+            points.add(getPoint(coordinates, dimension));
+        }
+
+        return points;
+    }
+
+    private String getPointsAsString(final ComposedGeospatial<Point> points) {
+        final StringBuilder textBuilder = new StringBuilder();
+        for (Point point : points) {
+            if (textBuilder.length() > 0) {
+                textBuilder.append('|');
+            }
+            textBuilder.append(point.getX()).append(' ').append(point.getY());
+        }
+        return textBuilder.toString();
+    }
+
+    private List<LineString> getLineStrings(final String src, final Dimension dimension) {
+        final String[] elements = src.split(";");
+        if (elements == null || elements.length == 0) {
+            throw new IllegalArgumentException("No lineString found in " + src);
+        }
+
+        final List<LineString> strings = new ArrayList<LineString>();
+
+        for (String points : elements) {
+            strings.add(new LineString(dimension, getPoints(points, dimension)));
+        }
+
+        return strings;
+    }
+
+    private String getLineStringsAsString(final ComposedGeospatial<LineString> strings) {
+        final StringBuilder textBuilder = new StringBuilder();
+        for (LineString string : strings) {
+            if (textBuilder.length() > 0) {
+                textBuilder.append(';');
+            }
+            textBuilder.append(getPointsAsString(string));
+        }
+        return textBuilder.toString();
+    }
+
+    private Polygon getPolygon(final String src, final Dimension dimension) {
+        final String[] elements = src.split(":");
+        if (elements == null || elements.length != 2) {
+            throw new IllegalArgumentException("Invalid polygon found in " + src);
+        }
+
+        return new Polygon(dimension,
+                elements[0].trim().isEmpty() ? Collections.<Point>emptyList() : getPoints(elements[0], dimension),
+                elements[1].trim().isEmpty() ? Collections.<Point>emptyList() : getPoints(elements[1], dimension));
+    }
+
+    private String getPolygonAsString(final Polygon polygon) {
+        final StringBuilder textBuilder = new StringBuilder();
+
+        final ComposedGeospatial<Point> interior = polygon.getInterior();
+        final ComposedGeospatial<Point> exterior = polygon.getExterior();
+
+        if (!interior.isEmpty()) {
+            textBuilder.append(getPointsAsString(interior));
+        }
+
+        textBuilder.append(":");
+
+        if (!exterior.isEmpty()) {
+            textBuilder.append(getPointsAsString(exterior));
+        }
+
+        return textBuilder.toString();
+    }
+
+    private List<Polygon> getPolygons(final String src, final Dimension dimension) {
+        final String[] elements = src.split(";");
+        if (elements == null || elements.length == 0) {
+            throw new IllegalArgumentException("No polygons found in " + src);
+        }
+
+        final List<Polygon> polygons = new ArrayList<Polygon>();
+
+        for (String element : elements) {
+            polygons.add(getPolygon(element, dimension));
+        }
+
+        return polygons;
+    }
+
+    private String getPolygonsAsString(final ComposedGeospatial<Polygon> polygons) {
+        final StringBuilder textBuilder = new StringBuilder();
+        for (Polygon polygon : polygons) {
+            if (textBuilder.length() > 0) {
+                textBuilder.append(';');
+            }
+            textBuilder.append(getPolygonAsString(polygon));
+        }
+        return textBuilder.toString();
+    }
+
+    private GeospatialCollection getCollection(final String src, final Dimension dimension) {
+        final String[] elements = src.split(",");
+        if (elements == null || elements.length == 0) {
+            throw new IllegalArgumentException("No geo collection found in " + src);
+        }
+
+        final List<Geospatial> geo = new ArrayList<Geospatial>();
+
+        for (String element : elements) {
+            final Map.Entry<String, String> info = getGeospatialsInfo(element);
+            if (ODataConstants.ELEM_POINT.equals(info.getKey())) {
+                geo.add(getPoint(info.getValue(), dimension));
+            } else if (ODataConstants.ELEM_LINESTRING.equals(info.getKey())) {
+                geo.add(new LineString(dimension, getPoints(info.getValue(), dimension)));
+            } else if (ODataConstants.ELEM_MULTIPOINT.equals(info.getKey())) {
+                geo.add(new MultiPoint(dimension, getPoints(info.getValue(), dimension)));
+            } else if (ODataConstants.ELEM_MULTILINESTRING.equals(info.getKey())) {
+                geo.add(new MultiLineString(dimension, getLineStrings(info.getValue(), dimension)));
+            } else if (ODataConstants.ELEM_POLYGON.equals(info.getKey())) {
+                geo.add(getPolygon(info.getValue(), dimension));
+            } else if (ODataConstants.ELEM_MULTIPOLYGON.equals(info.getKey())) {
+                geo.add(new MultiPolygon(dimension, getPolygons(info.getValue(), dimension)));
+            } else if (ODataConstants.ELEM_GEOCOLLECTION.equals(info.getKey())) {
+                final List<Geospatial> geospatials = new ArrayList<Geospatial>();
+                if (!info.getValue().isEmpty()) {
+                    for (Geospatial geospatial : getCollection(info.getValue(), dimension)) {
+                        geospatials.add(geospatial);
+                    }
+                }
+                geo.add(new GeospatialCollection(dimension, geospatials));
+            }
+        }
+
+        return new GeospatialCollection(dimension, geo);
+    }
+
+    private String getCollectionAsString(final ComposedGeospatial<Geospatial> geospatials) {
+        final StringBuilder textBuilder = new StringBuilder();
+        for (Geospatial geospatial : geospatials) {
+            if (textBuilder.length() > 0) {
+                textBuilder.append(',');
+            }
+            textBuilder.append(getGeospatialAsString(geospatial));
+        }
+        return textBuilder.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    private String getGeospatialAsString(final Geospatial geospatial) {
+        final String name;
+        final String info;
+        switch (geospatial.getType()) {
+            case GEOSPATIALCOLLECTION:
+                name = ODataConstants.ELEM_GEOCOLLECTION;
+                info = getCollectionAsString((ComposedGeospatial<Geospatial>) geospatial);
+                break;
+            case LINESTRING:
+                name = ODataConstants.ELEM_LINESTRING;
+                info = getPointsAsString((ComposedGeospatial<Point>) geospatial);
+                break;
+            case MULTILINESTRING:
+                name = ODataConstants.ELEM_MULTILINESTRING;
+                info = getLineStringsAsString((ComposedGeospatial<LineString>) geospatial);
+                break;
+            case MULTIPOINT:
+                name = ODataConstants.ELEM_MULTIPOINT;
+                info = getPointsAsString((ComposedGeospatial<Point>) geospatial);
+                break;
+            case MULTIPOLYGON:
+                name = ODataConstants.ELEM_MULTIPOLYGON;
+                info = getPolygonsAsString((ComposedGeospatial<Polygon>) geospatial);
+                break;
+            case POINT:
+                name = ODataConstants.ELEM_POINT;
+                info = ((Point) geospatial).getX() + " " + ((Point) geospatial).getY();
+                break;
+            case POLYGON:
+                name = ODataConstants.ELEM_POLYGON;
+                info = getPolygonAsString((Polygon) geospatial);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid geospatial");
+        }
+        try {
+            return name + ":" + URLEncoder.encode(info, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

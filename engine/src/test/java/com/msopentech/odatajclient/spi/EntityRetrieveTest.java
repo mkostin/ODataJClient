@@ -170,7 +170,7 @@ public class EntityRetrieveTest extends AbstractTest {
     @Test
     public void withGeospatial() {
         final ODataURIBuilder uriBuilder =
-                new ODataURIBuilder(servicesODataServiceRootURL).appendEntityTypeSegment("Suppliers(1)");
+                new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("AllGeoTypesSet(-6)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
@@ -182,10 +182,11 @@ public class EntityRetrieveTest extends AbstractTest {
 
         boolean found = false;
         for (ODataProperty property : entity.getProperties()) {
-            if ("Location".equals(property.getName())) {
+            if ("GeogMultiLine".equals(property.getName())) {
                 found = true;
                 assertTrue(property.hasPrimitiveValue());
-                assertEquals(EdmSimpleType.GEOGRAPHY_POINT.toString(), property.getPrimitiveValue().getTypeName());
+                assertEquals(EdmSimpleType.GEOGRAPHY_MULTI_LINE_STRING.toString(),
+                        property.getPrimitiveValue().getTypeName());
             }
         }
         assertTrue(found);

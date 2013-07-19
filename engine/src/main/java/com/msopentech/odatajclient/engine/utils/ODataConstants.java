@@ -99,7 +99,23 @@ public class ODataConstants {
 
     public static final String ELEM_POINT = PREFIX_GML + "Point";
 
+    public static final String ELEM_MULTIPOINT = PREFIX_GML + "MultiPoint";
+
     public static final String ELEM_LINESTRING = PREFIX_GML + "LineString";
+
+    public static final String ELEM_MULTILINESTRING = PREFIX_GML + "MultiCurve";
+
+    public static final String ELEM_POLYGON = PREFIX_GML + "Polygon";
+
+    public static final String ELEM_POLYGON_EXTERIOR = PREFIX_GML + "exterior";
+
+    public static final String ELEM_POLYGON_INTERIOR = PREFIX_GML + "interior";
+
+    public static final String ELEM_MULTIPOLYGON = PREFIX_GML + "MultiSurface";
+
+    public static final String ELEM_GEOCOLLECTION = PREFIX_GML + "MultiGeometry";
+
+    public static final String ELEM_GEOCOLLECTION_MEMBERS = PREFIX_GML + "geometryMembers";
 
     public static final String ELEM_POS = PREFIX_GML + "pos";
 

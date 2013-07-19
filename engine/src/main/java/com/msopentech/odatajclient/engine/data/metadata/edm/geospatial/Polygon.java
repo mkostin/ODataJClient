@@ -17,9 +17,43 @@ package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
 import java.util.List;
 
-public class Polygon extends ComposedGeospatial<Point> {
+/**
+ * Polygon.
+ */
+public class Polygon extends Geospatial {
 
-    public Polygon(final Dimension dimension, final List<Point> points) {
-        super(dimension, Type.POLYGON, points);
+    final ComposedGeospatial<Point> interior;
+
+    final ComposedGeospatial<Point> exterior;
+
+    /**
+     * Constructor.
+     *
+     * @param dimension dimension.
+     * @param interior interior points.
+     * @param exterior exterior points.
+     */
+    public Polygon(final Dimension dimension, final List<Point> interior, final List<Point> exterior) {
+        super(dimension, Type.POLYGON);
+        this.interior = new MultiPoint(dimension, interior);
+        this.exterior = new MultiPoint(dimension, exterior);
+    }
+
+    /**
+     * Gest interior points.
+     *
+     * @return interior points.
+     */
+    public ComposedGeospatial<Point> getInterior() {
+        return interior;
+    }
+
+    /**
+     * Gets exterior points.
+     *
+     * @return exterior points.I
+     */
+    public ComposedGeospatial<Point> getExterior() {
+        return exterior;
     }
 }

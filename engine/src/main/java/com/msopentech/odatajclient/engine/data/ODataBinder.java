@@ -22,7 +22,9 @@ import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -479,30 +481,163 @@ public final class ODataBinder {
         return element;
     }
 
+    private static String getPoints(final NodeList points) {
+        final StringBuilder builder = new StringBuilder();
+
+        for (int j = 0; j < points.getLength(); j++) {
+            final Node point = points.item(j);
+
+            if (point.getNodeName().equals(ODataConstants.ELEM_POINT)) {
+
+                if (builder.length() > 0) {
+                    builder.append('|');
+                }
+
+                builder.append(getPoses(point.getChildNodes()));
+            }
+        }
+
+        return builder.toString();
+    }
+
+    private static String getLineStrings(final NodeList lines) {
+        final StringBuilder builder = new StringBuilder();
+
+        for (int j = 0; j < lines.getLength(); j++) {
+            final Node line = lines.item(j);
+
+            if (line.getNodeName().equals(ODataConstants.ELEM_LINESTRING)) {
+
+                if (builder.length() > 0) {
+                    builder.append(';');
+                }
+                builder.append(getPoses(line.getChildNodes()));
+            }
+        }
+
+        return builder.toString();
+    }
+
+    private static String getPolygon(final Node polygon) {
+        final StringBuilder builder = new StringBuilder();
+
+        NodeList exterior = ((Element) polygon).getElementsByTagName(ODataConstants.ELEM_POLYGON_EXTERIOR);
+        NodeList interior = ((Element) polygon).getElementsByTagName(ODataConstants.ELEM_POLYGON_INTERIOR);
+
+        if (interior.getLength() > 0) {
+            builder.append(getPoses(((Element) interior.item(0)).getElementsByTagName(ODataConstants.ELEM_POS)));
+        }
+
+        builder.append(':');
+
+        if (exterior.getLength() > 0) {
+            builder.append(getPoses(((Element) exterior.item(0)).getElementsByTagName(ODataConstants.ELEM_POS)));
+        }
+
+        return builder.toString();
+    }
+
+    private static String getPolygons(final NodeList polygons) {
+        final StringBuilder builder = new StringBuilder();
+
+        for (int j = 0; j < polygons.getLength(); j++) {
+            final Node polygon = polygons.item(j);
+
+            if (polygon.getNodeName().equals(ODataConstants.ELEM_POLYGON)) {
+
+                if (builder.length() > 0) {
+                    builder.append(';');
+                }
+                builder.append(getPolygon(polygon));
+            }
+        }
+
+        return builder.toString();
+    }
+
+    private static String getPoses(final NodeList poses) {
+        final StringBuilder builder = new StringBuilder();
+
+        for (int j = 0; j < poses.getLength(); j++) {
+            final Node pos = poses.item(j);
+
+            if (pos.getNodeName().equals(ODataConstants.ELEM_POS)) {
+
+                if (builder.length() > 0) {
+                    builder.append('|');
+                }
+                builder.append(pos.getTextContent());
+            }
+        }
+
+        return builder.toString();
+    }
+
+    private static String getGeoCollection(final Node collection) {
+        final StringBuilder builder = new StringBuilder();
+
+        final NodeList memberListss = collection.getChildNodes();
+
+        for (int i = 0; i < memberListss.getLength(); i++) {
+            final Node memberList = memberListss.item(i);
+            if (memberList.getNodeName().equals(ODataConstants.ELEM_GEOCOLLECTION_MEMBERS)) {
+                final NodeList members = memberList.getChildNodes();
+
+                for (int j = 0; j < members.getLength(); j++) {
+                    final Node member = members.item(j);
+                    if (member.getNodeType() == Node.ELEMENT_NODE) {
+                        if (builder.length() > 0) {
+                            builder.append(',');
+                        }
+                        builder.append(geospatialsNodeAsString(member));
+                    }
+                }
+            }
+        }
+
+        return builder.toString();
+    }
+
+    private static String geospatialsNodeAsString(final Node node) {
+        final StringBuilder geoData = new StringBuilder();
+
+        final String name = node.getNodeName();
+
+        if (ODataConstants.ELEM_POINT.equals(name) || ODataConstants.ELEM_LINESTRING.equals(name)) {
+            geoData.append(getPoses(node.getChildNodes()));
+        } else if (ODataConstants.ELEM_MULTIPOINT.equals(name)) {
+            geoData.append(getPoints(((Element) node).getElementsByTagName(ODataConstants.ELEM_POINT)));
+        } else if (ODataConstants.ELEM_MULTILINESTRING.equals(name)) {
+            geoData.append(getLineStrings(((Element) node).getElementsByTagName(ODataConstants.ELEM_LINESTRING)));
+        } else if (ODataConstants.ELEM_POLYGON.equals(name)) {
+            geoData.append(getPolygon(node));
+        } else if (ODataConstants.ELEM_MULTIPOLYGON.equals(name)) {
+            geoData.append(getPolygons(((Element) node).getElementsByTagName(ODataConstants.ELEM_POLYGON)));
+        } else if (ODataConstants.ELEM_GEOCOLLECTION.equals(name)) {
+            geoData.append(getGeoCollection(node));
+        } else {
+            throw new IllegalArgumentException("Invalid geospatial node " + node.getNodeName());
+        }
+
+        try {
+            return name + ":" + URLEncoder.encode(geoData.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     private static ODataPrimitiveValue newPrimitiveValue(final Element prop, final EdmType edmType) {
         // Geospatial types value management
         final StringBuilder geoData = new StringBuilder();
         final NodeList points = prop.getChildNodes();
+
         for (int i = 0; i < points.getLength(); i++) {
             final Node point = points.item(i);
 
-            if (point.getNodeType() == Node.ELEMENT_NODE
-                    && (point.getNodeName().equals(ODataConstants.ELEM_POINT)
-                    || point.getNodeName().equals(ODataConstants.ELEM_LINESTRING))) {
-
-                final NodeList poses = point.getChildNodes();
-                for (int j = 0; j < poses.getLength(); j++) {
-                    final Node pos = poses.item(j);
-
-                    if (pos.getNodeType() == Node.ELEMENT_NODE
-                            && pos.getNodeName().equals(ODataConstants.ELEM_POS)) {
-
-                        if (geoData.length() > 0) {
-                            geoData.append('|');
-                        }
-                        geoData.append(pos.getTextContent());
-                    }
-                }
+            try {
+                geoData.append(geospatialsNodeAsString(point));
+            } catch (IllegalArgumentException ignore) {
+                //ignore: is not a geospatial data
             }
         }
 
