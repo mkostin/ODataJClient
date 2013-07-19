@@ -132,27 +132,25 @@ public class InvokeTest extends AbstractTest {
         assertEquals(Integer.valueOf(155), property.getPrimitiveValue().<Integer>toCastValue());
 
         // 2. feed result
-        metadata = ODataRetrieveRequestFactory.
-                getMetadataRequest(servicesODataServiceRootURL).execute().getBody();
+        metadata = ODataRetrieveRequestFactory.getMetadataRequest(testODataServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
         container = metadata.getSchema(0).getEntityContainers().get(0);
-        funcImp = container.getFunctionImport("GetProductsByRating");
+        funcImp = container.getFunctionImport("GetSpecificCustomer");
 
-        builder = new ODataURIBuilder(servicesODataServiceRootURL).
+        builder = new ODataURIBuilder(testODataServiceRootURL).
                 appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
 
         type = new EdmType(funcImp.getParameters().get(0).getType());
         argument = new ODataPrimitiveValue.Builder().
                 setType(type.getSimpleType()).
-                setText("1").
+                setText("").
                 build();
         parameters = new HashMap<String, ODataValue>();
         parameters.put(funcImp.getParameters().get(0).getName(), argument);
 
         final ODataInvokeRequest<ODataEntitySet> feedReq =
-                ODataInvokeRequestFactory.getInvokeRequest(builder.build(), metadata, funcImp,
-                parameters);
+                ODataInvokeRequestFactory.getInvokeRequest(builder.build(), metadata, funcImp, parameters);
         feedReq.setFormat(format);
 
         final ODataInvokeResponse<ODataEntitySet> feedRes = feedReq.execute();
@@ -160,11 +158,10 @@ public class InvokeTest extends AbstractTest {
 
         final ODataEntitySet feed = feedRes.getBody();
         assertNotNull(feed);
-        assertEquals(1, feed.getCount());
 
-        final ODataProperty id = feed.getEntities().get(0).getProperty("ID");
+        final ODataProperty id = feed.getEntities().get(0).getProperty("CustomerId");
         assertNotNull(id);
-        assertEquals(Integer.valueOf(10), id.getPrimitiveValue().<Integer>toCastValue());
+        assertEquals(Integer.valueOf(-8), id.getPrimitiveValue().<Integer>toCastValue());
     }
 
     @Test

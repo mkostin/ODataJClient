@@ -284,7 +284,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
     private void withActions(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder =
-                new ODataURIBuilder(servicesODataServiceRootURL).appendEntityTypeSegment("Products(3)");
+                new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("ComputerDetail(-10)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
@@ -294,7 +294,7 @@ public class EntityRetrieveTest extends AbstractTest {
         assertNotNull(entity);
 
         assertEquals(1, entity.getOperations().size());
-        assertEquals("Discount", entity.getOperations().get(0).getTitle());
+        assertEquals("ResetComputerDetailsSpecifications", entity.getOperations().get(0).getTitle());
     }
 
     @Test
