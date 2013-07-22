@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.data.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.msopentech.odatajclient.engine.data.LinkCollectionResource;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * Link from an entry, represented via JSON.
  */
-public class JSONLinks extends AbstractJSONMetadataObject {
+public class JSONLinkCollection extends AbstractJSONMetadataObject implements LinkCollectionResource {
 
     private static final long serialVersionUID = -5006368367235783907L;
 
@@ -55,6 +56,9 @@ public class JSONLinks extends AbstractJSONMetadataObject {
     @JsonProperty(value = "value", required = false)
     private final List<JSONLinkURL> links = new ArrayList<JSONLinkURL>();
 
+    @JsonProperty(value = "odata.nextLink", required = false)
+    private String next;
+
     /**
      * Sets metadata URI.
      *
@@ -73,12 +77,10 @@ public class JSONLinks extends AbstractJSONMetadataObject {
     }
 
     /**
-     * Smart management of different JSON format produced by OData services when
-     * <tt>$links</tt> is a single or a collection property.
-     *
-     * @return list of URIs for <tt>$links</tt>
+     * {@inheritDoc }
      */
     @JsonIgnore
+    @Override
     public List<URI> getLinks() {
         final List<URI> result = new ArrayList<URI>();
 
@@ -91,5 +93,23 @@ public class JSONLinks extends AbstractJSONMetadataObject {
         }
 
         return result;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @JsonIgnore
+    @Override
+    public void setNext(final URI next) {
+        this.next = next == null ? null : next.toASCIIString();
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @JsonIgnore
+    @Override
+    public URI getNext() {
+        return next == null ? null : URI.create(next);
     }
 }

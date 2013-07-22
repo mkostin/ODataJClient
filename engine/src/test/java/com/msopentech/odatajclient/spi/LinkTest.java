@@ -19,17 +19,19 @@ import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootU
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataLinkRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataLinksRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataLinkCollection;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.IOException;
@@ -43,24 +45,31 @@ import org.junit.Test;
  */
 public class LinkTest extends AbstractTest {
 
-    private List<URI> doRetrieveLinkURIs(final ODataFormat format, final String linkname) throws IOException {
+    private ODataLinkCollection doRetrieveLinkURIs(final ODataFormat format, final String linkname) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER);
 
-        final ODataLinkRequest req = ODataRetrieveRequestFactory.getLinkRequest(uriBuilder.build(), linkname);
+        final ODataLinksRequest req = ODataRetrieveRequestFactory.getLinkRequest(uriBuilder.build(), linkname);
         req.setFormat(format);
 
-        final ODataRetrieveResponse<List<URI>> res = req.execute();
+        final ODataRetrieveResponse<ODataLinkCollection> res = req.execute();
         assertEquals(200, res.getStatusCode());
 
         return res.getBody();
     }
 
     private void retrieveLinkURIs(final ODataFormat format) throws IOException {
-        final List<URI> links = doRetrieveLinkURIs(format, "Logins");
+        final List<URI> links = doRetrieveLinkURIs(format, "Logins").getLinks();
         assertEquals(2, links.size());
         assertTrue(links.contains(URI.create(testODataServiceRootURL + "/Login('1')")));
         assertTrue(links.contains(URI.create(testODataServiceRootURL + "/Login('4')")));
+    }
+
+    @Test
+    public void retrieveXMLLinkURIsWithNext() throws IOException {
+        final ODataLinkCollection uris = doRetrieveLinkURIs(ODataFormat.XML, "Orders");
+        assertEquals(2, uris.getLinks().size());
+        assertNotNull(uris.getNext());
     }
 
     @Test
@@ -75,7 +84,7 @@ public class LinkTest extends AbstractTest {
 
     private void createLink(final ODataFormat format) throws IOException {
         // 1. read current Logins $links (for later usage)
-        final List<URI> before = doRetrieveLinkURIs(format, "Logins");
+        final List<URI> before = doRetrieveLinkURIs(format, "Logins").getLinks();
         assertEquals(2, before.size());
 
         // 2. create new link
@@ -91,7 +100,7 @@ public class LinkTest extends AbstractTest {
         final ODataLinkOperationResponse res = req.execute();
         assertEquals(204, res.getStatusCode());
 
-        final List<URI> after = doRetrieveLinkURIs(format, "Logins");
+        final List<URI> after = doRetrieveLinkURIs(format, "Logins").getLinks();
         assertEquals(before.size() + 1, after.size());
 
         // 3. reset Logins $links as before this test was run
@@ -115,7 +124,7 @@ public class LinkTest extends AbstractTest {
 
     private void updateLink(final ODataFormat format, final UpdateType updateType) throws IOException {
         // 1. read what is the link before the test runs
-        final URI before = doRetrieveLinkURIs(format, "Info").get(0);
+        final URI before = doRetrieveLinkURIs(format, "Info").getLinks().get(0);
 
         // 2. update the link
         ODataLink newLink = ODataFactory.
@@ -131,7 +140,7 @@ public class LinkTest extends AbstractTest {
         ODataLinkOperationResponse res = req.execute();
         assertEquals(204, res.getStatusCode());
 
-        URI after = doRetrieveLinkURIs(format, "Info").get(0);
+        URI after = doRetrieveLinkURIs(format, "Info").getLinks().get(0);
         assertNotEquals(before, after);
         assertEquals(newLink.getLink(), after);
 
@@ -143,7 +152,7 @@ public class LinkTest extends AbstractTest {
         res = req.execute();
         assertEquals(204, res.getStatusCode());
 
-        after = doRetrieveLinkURIs(format, "Info").get(0);
+        after = doRetrieveLinkURIs(format, "Info").getLinks().get(0);
         assertEquals(before, after);
     }
 

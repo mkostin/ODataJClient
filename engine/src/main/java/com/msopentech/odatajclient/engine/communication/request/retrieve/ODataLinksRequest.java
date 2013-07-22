@@ -17,12 +17,12 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
+import com.msopentech.odatajclient.engine.data.ODataLinkCollection;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
@@ -32,7 +32,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getLinkRequest(java.net.URI, java.lang.String)
  */
-public class ODataLinkRequest extends ODataRetrieveRequest<List<URI>, ODataFormat> {
+public class ODataLinksRequest extends ODataRetrieveRequest<ODataLinkCollection, ODataFormat> {
 
     /**
      * Private constructor.
@@ -40,7 +40,7 @@ public class ODataLinkRequest extends ODataRetrieveRequest<List<URI>, ODataForma
      * @param targetURI target URI.
      * @param linkName link name.
      */
-    ODataLinkRequest(final URI targetURI, final String linkName) {
+    ODataLinksRequest(final URI targetURI, final String linkName) {
         super(new ODataURIBuilder(targetURI.toASCIIString()).appendLinksSegment(linkName).build());
     }
 
@@ -48,14 +48,14 @@ public class ODataLinkRequest extends ODataRetrieveRequest<List<URI>, ODataForma
      * {@inheritDoc }
      */
     @Override
-    public ODataRetrieveResponse<List<URI>> execute() {
+    public ODataRetrieveResponse<ODataLinkCollection> execute() {
         final HttpResponse res = doExecute();
         return new ODataEntitySetResponseImpl(client, res);
     }
 
     protected class ODataEntitySetResponseImpl extends ODataRetrieveResponseImpl {
 
-        private List<URI> links = null;
+        private ODataLinkCollection links = null;
 
         /**
          * Constructor.
@@ -79,7 +79,7 @@ public class ODataLinkRequest extends ODataRetrieveRequest<List<URI>, ODataForma
          * {@inheritDoc }
          */
         @Override
-        public List<URI> getBody() {
+        public ODataLinkCollection getBody() {
             if (links == null) {
                 try {
                     links = ODataReader.readLinks(

@@ -19,47 +19,26 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * REST resource for an <tt>ODataEntitySet</tt>.
+ * REST resource for an <tt>ODataLinkCollection</tt>.
  *
- * @see ODataEntitySet
+ * @see ODataLinkCollection
  */
-public interface FeedResource {
+public interface LinkCollectionResource {
 
     /**
-     * Gets base URI.
+     * Smart management of different JSON format produced by OData services when
+     * <tt>$links</tt> is a single or a collection property.
      *
-     * @return base URI.
+     * @return list of URIs for <tt>$links</tt>
      */
-    URI getBaseURI();
-
-    /**
-     * Gets number of entries if an
-     * <code>inlinecount</code> has been required.
-     *
-     * @return number of entries into the feed.
-     */
-    Integer getCount();
-
-    /**
-     * Gets entries.
-     *
-     * @return entries.
-     */
-    List<? extends EntryResource> getEntries();
-
-    /**
-     * Sets entries.
-     *
-     * @param entries entries.
-     */
-    void setEntries(List<EntryResource> entries);
+    List<URI> getLinks();
 
     /**
      * Sets next link.
      *
      * @param next next link.
      */
-    void setNext(URI next);
+    void setNext(final URI next);
 
     /**
      * Gets next link if exists.

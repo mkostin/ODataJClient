@@ -116,8 +116,8 @@ public final class ODataRetrieveRequestFactory {
      * @param linkName link name.
      * @return new ODataLinkRequest instance.
      */
-    public static ODataLinkRequest getLinkRequest(final URI targetURI, final String linkName) {
-        return new ODataLinkRequest(targetURI, linkName);
+    public static ODataLinksRequest getLinkRequest(final URI targetURI, final String linkName) {
+        return new ODataLinksRequest(targetURI, linkName);
     }
 
     /**

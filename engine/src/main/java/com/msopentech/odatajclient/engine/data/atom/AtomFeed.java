@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.data.atom;
 
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
-import com.msopentech.odatajclient.engine.data.LinkResource;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.net.URI;
 import java.util.ArrayList;
@@ -360,23 +359,24 @@ public class AtomFeed extends AbstractAtomElement implements FeedResource {
      * {@inheritDoc }
      */
     @Override
-    public void setNext(final LinkResource next) {
+    public void setNext(final URI next) {
         final AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);
         if (link != null) {
             getValues().remove(link);
         }
 
-        if (next instanceof AtomLink) {
-            getValues().add(next);
-        }
+        final AtomLink nextLink = new AtomLink();
+        nextLink.setRel(ODataConstants.NEXT_LINK_REL);
+        nextLink.setHref(next.toASCIIString());
+        getValues().add(nextLink);
     }
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public AtomLink getNext() {
+    public URI getNext() {
         final AtomLink link = getLinkWithRel(ODataConstants.NEXT_LINK_REL);
-        return link == null ? null : link;
+        return link == null ? null : URI.create(link.getHref());
     }
 }

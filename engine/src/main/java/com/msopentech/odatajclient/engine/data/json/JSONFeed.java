@@ -19,8 +19,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
-import com.msopentech.odatajclient.engine.data.LinkResource;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,8 +115,8 @@ public class JSONFeed extends AbstractJSONMetadataObject implements FeedResource
      */
     @JsonIgnore
     @Override
-    public void setNext(final LinkResource next) {
-        this.next = next.getHref();
+    public void setNext(final URI next) {
+        this.next = next.toASCIIString();
     }
 
     /**
@@ -126,10 +124,7 @@ public class JSONFeed extends AbstractJSONMetadataObject implements FeedResource
      */
     @JsonIgnore
     @Override
-    public JSONLink getNext() {
-        final JSONLink nextLink = new JSONLink();
-        nextLink.setRel(ODataConstants.NEXT_LINK_REL);
-        nextLink.setHref(next);
-        return nextLink;
+    public URI getNext() {
+        return next == null ? null : URI.create(next);
     }
 }

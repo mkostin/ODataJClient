@@ -31,7 +31,6 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -86,11 +85,7 @@ public final class ODataBinder {
 
         final URI next = feed.getNext();
         if (next != null) {
-            final LinkResource nextLink = ResourceFactory.newLinkForFeed(reference);
-            nextLink.setTitle(feed.getName());
-            nextLink.setHref(next.toASCIIString());
-            nextLink.setRel(ODataConstants.NEXT_LINK_REL);
-            feedResource.setNext(nextLink);
+            feedResource.setNext(next);
         }
 
         for (ODataEntity entity : feed.getEntities()) {
@@ -196,6 +191,12 @@ public final class ODataBinder {
         }
     }
 
+    public static ODataLinkCollection getLinkCollection(final LinkCollectionResource linkCollection) {
+        final ODataLinkCollection collection = new ODataLinkCollection(linkCollection.getNext());
+        collection.setLinks(linkCollection.getLinks());
+        return collection;
+    }
+
     /**
      * Gets
      * <code>ODataServiceDocument</code> from the given service document resource.
@@ -242,11 +243,11 @@ public final class ODataBinder {
 
         final URI base = defaultBaseURI == null ? resource.getBaseURI() : defaultBaseURI;
 
-        final LinkResource next = resource.getNext();
+        final URI next = resource.getNext();
 
-        final ODataEntitySet entitySet = next == null || StringUtils.isBlank(next.getHref())
+        final ODataEntitySet entitySet = next == null
                 ? ODataFactory.newEntitySet()
-                : ODataFactory.newEntitySet(URIUtils.getURI(base, next.getHref()));
+                : ODataFactory.newEntitySet(URIUtils.getURI(base, next.toASCIIString()));
 
         if (resource.getCount() != null) {
             entitySet.setCount(resource.getCount());

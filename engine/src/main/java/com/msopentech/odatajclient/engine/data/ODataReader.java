@@ -21,8 +21,6 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.InputStream;
-import java.net.URI;
-import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,8 +113,8 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return List of URIs.
      */
-    public static List<URI> readLinks(final InputStream input, final ODataFormat format) {
-        return Deserializer.toLinks(input, format);
+    public static ODataLinkCollection readLinks(final InputStream input, final ODataFormat format) {
+        return ODataBinder.getLinkCollection(Deserializer.toLinkCollection(input, format));
     }
 
     /**

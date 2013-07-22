@@ -21,11 +21,12 @@ import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONFeed;
-import com.msopentech.odatajclient.engine.data.json.JSONLinks;
+import com.msopentech.odatajclient.engine.data.json.JSONLinkCollection;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.data.json.JSONServiceDocument;
 import com.msopentech.odatajclient.engine.data.json.error.JSONODataError;
 import com.msopentech.odatajclient.engine.data.json.error.JSONODataErrorBundle;
+import com.msopentech.odatajclient.engine.data.xml.XMLLinkCollection;
 import com.msopentech.odatajclient.engine.data.xml.XMLServiceDocument;
 import com.msopentech.odatajclient.engine.data.xml.error.XMLODataError;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
@@ -164,10 +165,10 @@ public final class Deserializer {
      * @param format OData format.
      * @return de-serialized links.
      */
-    public static List<URI> toLinks(final InputStream input, final ODataFormat format) {
+    public static LinkCollectionResource toLinkCollection(final InputStream input, final ODataFormat format) {
         return format == ODataFormat.XML
-                ? toLinksFromXML(input)
-                : toLinksFromJSON(input);
+                ? toLinkCollectionFromXML(input)
+                : toLinkCollectionFromJSON(input);
     }
 
     /**
@@ -289,7 +290,7 @@ public final class Deserializer {
         }
     }
 
-    private static List<URI> toLinksFromXML(final InputStream input) {
+    private static XMLLinkCollection toLinkCollectionFromXML(final InputStream input) {
         try {
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder builder = factory.newDocumentBuilder();
@@ -301,16 +302,22 @@ public final class Deserializer {
             for (int i = 0; i < uris.getLength(); i++) {
                 links.add(URI.create(uris.item(i).getTextContent()));
             }
-            return links;
+
+            final NodeList next = doc.getElementsByTagName("next");
+            URI nextLink = next.getLength() > 0 ? URI.create(next.item(0).getTextContent()) : null;
+
+            XMLLinkCollection res = new XMLLinkCollection(nextLink);
+            res.setLinks(links);
+            return res;
         } catch (Exception e) {
             throw new IllegalArgumentException("Error deserializing XML $links", e);
         }
     }
 
-    private static List<URI> toLinksFromJSON(final InputStream input) {
+    private static JSONLinkCollection toLinkCollectionFromJSON(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            return mapper.readValue(input, JSONLinks.class).getLinks();
+            return mapper.readValue(input, JSONLinkCollection.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON $links", e);
         }
