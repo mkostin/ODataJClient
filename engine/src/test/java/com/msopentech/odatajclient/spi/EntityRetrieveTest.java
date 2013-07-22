@@ -15,11 +15,14 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataGenericRetrieveRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.Deserializer;
@@ -33,6 +36,7 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
+import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -47,6 +51,25 @@ import org.w3c.dom.Node;
  * This is the unit test class to check entity retrieve operations.
  */
 public class EntityRetrieveTest extends AbstractTest {
+
+    private void genericRequest(final ODataPubFormat format) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Car(16)");
+
+        final ODataGenericRetrieveRequest req =
+                ODataRetrieveRequestFactory.getGenericRetrieveRequest(uriBuilder.build());
+        req.setFormat(format.toString());
+
+        final ODataRetrieveResponse<ODataObjectWrapper> res = req.execute();
+
+        ODataObjectWrapper wrapper = res.getBody();
+
+        final ODataEntitySet entitySet = wrapper.getODataEntitySet();
+        assertNull(entitySet);
+
+        final ODataEntity entity = wrapper.getODataEntity();
+        assertNotNull(entity);
+    }
 
     private void readEntry(final ODataPubFormat format) throws IOException {
         // ---------------------------------------------
@@ -306,5 +329,17 @@ public class EntityRetrieveTest extends AbstractTest {
     public void withActionsFromJSON() {
         // this needs to be full, otherwise actions will not be provided
         withActions(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    @Test
+    public void genericRequestAsAtom() {
+        // this needs to be full, otherwise actions will not be provided
+        genericRequest(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    @Test
+    public void genericRequestAsJSON() {
+        // this needs to be full, otherwise actions will not be provided
+        genericRequest(ODataPubFormat.ATOM);
     }
 }

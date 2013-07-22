@@ -88,7 +88,7 @@ public class ODataValueRequest extends ODataRetrieveRequest<ODataValue, ODataVal
                     value = new ODataPrimitiveValue.Builder().
                             setType(ODataValueFormat.valueOf(getFormat()) == ODataValueFormat.TEXT
                             ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
-                            setText(IOUtils.toString(res.getEntity().getContent())).
+                            setText(IOUtils.toString(getRawResponse())).
                             build();
                 } catch (IOException e) {
                     throw new HttpClientException(e);

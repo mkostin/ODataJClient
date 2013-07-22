@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataLinkUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataLinksRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataLinkCollectionRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
@@ -49,7 +49,7 @@ public class LinkTest extends AbstractTest {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
         uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER);
 
-        final ODataLinksRequest req = ODataRetrieveRequestFactory.getLinkRequest(uriBuilder.build(), linkname);
+        final ODataLinkCollectionRequest req = ODataRetrieveRequestFactory.getLinkCollectionRequest(uriBuilder.build(), linkname);
         req.setFormat(format);
 
         final ODataRetrieveResponse<ODataLinkCollection> res = req.execute();

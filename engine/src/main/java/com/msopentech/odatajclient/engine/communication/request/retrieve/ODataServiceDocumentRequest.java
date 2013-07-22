@@ -15,12 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
-import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
-import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -84,9 +82,7 @@ public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServi
             if (serviceDocument == null) {
                 try {
                     serviceDocument = ODataReader.readServiceDocument(
-                            res.getEntity().getContent(), ODataServiceDocumentFormat.valueOf(getFormat()));
-                } catch (IOException e) {
-                    throw new HttpClientException(e);
+                            getRawResponse(), ODataServiceDocumentFormat.valueOf(getFormat()));
                 } finally {
                     this.close();
                 }

@@ -51,4 +51,26 @@ public enum ODataServiceDocumentFormat {
     public String toString() {
         return format;
     }
+
+    /**
+     * Gets format from its string representation.
+     *
+     * @param format string representation of the format.
+     * @return OData format.
+     */
+    public static ODataServiceDocumentFormat fromString(final String format) {
+        ODataServiceDocumentFormat result = null;
+
+        for (ODataServiceDocumentFormat value : values()) {
+            if (format.equals(value.toString())) {
+                result = value;
+            }
+        }
+
+        if (result == null) {
+            throw new IllegalArgumentException(format);
+        }
+
+        return result;
+    }
 }

@@ -15,12 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
-import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -83,9 +81,7 @@ public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODat
         public EdmMetadata getBody() {
             if (metadata == null) {
                 try {
-                    metadata = ODataReader.readMetadata(res.getEntity().getContent());
-                } catch (IOException e) {
-                    throw new HttpClientException(e);
+                    metadata = ODataReader.readMetadata(getRawResponse());
                 } finally {
                     this.close();
                 }

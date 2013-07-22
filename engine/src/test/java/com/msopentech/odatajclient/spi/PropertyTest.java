@@ -15,9 +15,11 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
@@ -25,6 +27,7 @@ import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataValueUpdateRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataGenericRetrieveRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
@@ -33,6 +36,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
@@ -101,6 +105,16 @@ public class PropertyTest extends AbstractTest {
     @Test
     public void mergeComplexPropertyAsJSON() throws IOException {
         updateComplexProperty(ODataFormat.JSON_FULL_METADATA, UpdateType.MERGE);
+    }
+
+    @Test
+    public void genericRequestAsXML() throws IOException {
+        genericRequest(ODataFormat.XML);
+    }
+
+    @Test
+    public void genericRequestAsJSON() throws IOException {
+        genericRequest(ODataFormat.JSON);
     }
 
     @Test
@@ -408,5 +422,21 @@ public class PropertyTest extends AbstractTest {
         assertEquals(9, property.getCollectionValue().size());
 
         return property;
+    }
+
+    private void genericRequest(final ODataFormat format) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).appendStructuralSegment("BackupContactInfo");
+
+        final ODataGenericRetrieveRequest req =
+                ODataRetrieveRequestFactory.getGenericRetrieveRequest(uriBuilder.build());
+        req.setFormat(format.toString());
+
+        final ODataRetrieveResponse<ODataObjectWrapper> res = req.execute();
+
+        ODataObjectWrapper wrapper = res.getBody();
+
+        final ODataProperty property = wrapper.getODataProperty();
+        assertNotNull(property);
     }
 }
