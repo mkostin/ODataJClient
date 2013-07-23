@@ -1,0 +1,143 @@
+/*
+ * Copyright 2013 MS OpenTech.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.msopentech.odatajclient.engine.data;
+
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.LoggerFactory;
+
+public class ODataObjectWrapper {
+
+    /**
+     * Logger.
+     */
+    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataObjectWrapper.class);
+
+    private final byte[] obj;
+
+    private final String format;
+
+    /**
+     * Constructor.
+     *
+     * @param is source input stream.
+     */
+    public ODataObjectWrapper(final InputStream is) {
+        this(is, null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param is source input stream.
+     * @param format source format (<tt>ODataPubFormat</tt>, <tt>ODataFormat</tt>, <tt>ODataValueFormat</tt>,
+     * <tt>ODataServiceDocumentFormat</tt>).
+     */
+    public ODataObjectWrapper(final InputStream is, final String format) {
+        try {
+            this.obj = IOUtils.toByteArray(is);
+            this.format = format;
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Parses stream as <tt>ODataEntitySetIterator</tt>.
+     *
+     * I
+     *
+     * @return <tt>ODataEntitySetIterator</tt> if success; null otherwise.
+     */
+    public ODataEntitySetIterator getODataEntitySetIterator() {
+        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataEntitySetIterator.class);
+    }
+
+    /**
+     * Parses stream as <tt>ODataEntitySet</tt>.
+     *
+     * @return <tt>ODataEntitySet</tt> if success; null otherwise.
+     */
+    public ODataEntitySet getODataEntitySet() {
+        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataEntitySet.class);
+    }
+
+    /**
+     * Parses stream as <tt>ODataEntity</tt>.
+     *
+     * @return <tt>ODataEntity</tt> if success; null otherwise.
+     */
+    public ODataEntity getODataEntity() {
+        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataEntity.class);
+    }
+
+    /**
+     * Parses stream as <tt>ODataProperty</tt>.
+     *
+     * @return <tt>ODataProperty</tt> if success; null otherwise.
+     */
+    public ODataProperty getODataProperty() {
+        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataProperty.class);
+    }
+
+    /**
+     * Parses stream as <tt>ODataLinkCollection</tt>.
+     *
+     * @return <tt>ODataLinkCollection</tt> if success; null otherwise.
+     */
+    public ODataLinkCollection getODataLinkCollection() {
+        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataLinkCollection.class);
+    }
+
+    /**
+     * Parses stream as <tt>ODataValue</tt>.
+     *
+     * @return <tt>ODataValue</tt> if success; null otherwise.
+     */
+    public ODataValue getODataValue() {
+        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataValue.class);
+    }
+
+    /**
+     * Parses stream as <tt>EdmMetadata</tt>.
+     *
+     * @return <tt>EdmMetadata</tt> if success; null otherwise.
+     */
+    public EdmMetadata getEdmMetadata() {
+        return ODataReader.read(new ByteArrayInputStream(obj), null, EdmMetadata.class);
+    }
+
+    /**
+     * Parses stream as <tt>ODataServiceDocument</tt>.
+     *
+     * @return <tt>ODataServiceDocument</tt> if success; null otherwise.
+     */
+    public ODataServiceDocument getODataServiceDocument() {
+        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataServiceDocument.class);
+    }
+
+    /**
+     * Parses stream as <tt>ODataError</tt>.
+     *
+     * @return <tt>ODataError</tt> if success; null otherwise.
+     */
+    public ODataError getODataError() {
+        return ODataReader.read(new ByteArrayInputStream(obj), null, ODataError.class);
+    }
+}

@@ -116,8 +116,8 @@ public final class ODataRetrieveRequestFactory {
      * @param linkName link name.
      * @return new ODataLinkRequest instance.
      */
-    public static ODataLinksRequest getLinkRequest(final URI targetURI, final String linkName) {
-        return new ODataLinksRequest(targetURI, linkName);
+    public static ODataLinkCollectionRequest getLinkCollectionRequest(final URI targetURI, final String linkName) {
+        return new ODataLinkCollectionRequest(targetURI, linkName);
     }
 
     /**
@@ -138,6 +138,15 @@ public final class ODataRetrieveRequestFactory {
      */
     public static ODataRawRequest getRawRequest(final URI uri) {
         return new ODataRawRequest(uri);
+    }
 
+    /**
+     * Implements a generic retrieve request without specifying any return type.
+     *
+     * @param uri query to be performed.
+     * @return new ODataGenericRerieveRequest instance.
+     */
+    public static ODataGenericRetrieveRequest getGenericRetrieveRequest(final URI uri) {
+        return new ODataGenericRetrieveRequest(uri);
     }
 }

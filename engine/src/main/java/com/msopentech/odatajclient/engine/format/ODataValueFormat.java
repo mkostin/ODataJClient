@@ -46,4 +46,26 @@ public enum ODataValueFormat {
     public String toString() {
         return format;
     }
+
+    /**
+     * Gets format from its string representation.
+     *
+     * @param format string representation of the format.
+     * @return OData format.
+     */
+    public static ODataValueFormat fromString(final String format) {
+        ODataValueFormat result = null;
+
+        for (ODataValueFormat value : values()) {
+            if (format.equals(value.toString())) {
+                result = value;
+            }
+        }
+
+        if (result == null) {
+            throw new IllegalArgumentException(format);
+        }
+
+        return result;
+    }
 }

@@ -23,7 +23,7 @@ import java.net.URI;
  * This class implements a generic OData request.
  * Get instance by using ODataRetrieveRequestFactory.
  *
- * @see ODataRetrieveRequestFactory#getRawquest(java.net.URI)
+ * @see ODataRetrieveRequestFactory#getRawRequest(java.net.URI) 
  */
 public class ODataRawRequest extends ODataRequestImpl {
 

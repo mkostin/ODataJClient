@@ -30,9 +30,9 @@ import org.apache.http.client.HttpClient;
  * This class implements an OData link query request.
  * Get instance by using ODataRetrieveRequestFactory.
  *
- * @see ODataRetrieveRequestFactory#getLinkRequest(java.net.URI, java.lang.String)
+ * @see ODataRetrieveRequestFactory#getLinkCollectionRequest(java.net.URI, java.lang.String) 
  */
-public class ODataLinksRequest extends ODataRetrieveRequest<ODataLinkCollection, ODataFormat> {
+public class ODataLinkCollectionRequest extends ODataRetrieveRequest<ODataLinkCollection, ODataFormat> {
 
     /**
      * Private constructor.
@@ -40,7 +40,7 @@ public class ODataLinksRequest extends ODataRetrieveRequest<ODataLinkCollection,
      * @param targetURI target URI.
      * @param linkName link name.
      */
-    ODataLinksRequest(final URI targetURI, final String linkName) {
+    ODataLinkCollectionRequest(final URI targetURI, final String linkName) {
         super(new ODataURIBuilder(targetURI.toASCIIString()).appendLinksSegment(linkName).build());
     }
 
@@ -49,11 +49,10 @@ public class ODataLinksRequest extends ODataRetrieveRequest<ODataLinkCollection,
      */
     @Override
     public ODataRetrieveResponse<ODataLinkCollection> execute() {
-        final HttpResponse res = doExecute();
-        return new ODataEntitySetResponseImpl(client, res);
+        return new ODataLinkCollectionResponseImpl(client, doExecute());
     }
 
-    protected class ODataEntitySetResponseImpl extends ODataRetrieveResponseImpl {
+    protected class ODataLinkCollectionResponseImpl extends ODataRetrieveResponseImpl {
 
         private ODataLinkCollection links = null;
 
@@ -62,7 +61,7 @@ public class ODataLinksRequest extends ODataRetrieveRequest<ODataLinkCollection,
          * <p>
          * Just to create response templates to be initialized from batch.
          */
-        private ODataEntitySetResponseImpl() {
+        private ODataLinkCollectionResponseImpl() {
         }
 
         /**
@@ -71,7 +70,7 @@ public class ODataLinksRequest extends ODataRetrieveRequest<ODataLinkCollection,
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataEntitySetResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataLinkCollectionResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

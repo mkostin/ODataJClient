@@ -15,12 +15,14 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetIteratorRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataGenericRetrieveRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.Deserializer;
@@ -28,6 +30,7 @@ import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataEntitySetIterator;
+import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -41,6 +44,16 @@ import org.junit.Test;
  * This is the unit test class to check basic feed operations.
  */
 public class EntitySetTest extends AbstractTest {
+
+    @Test
+    public void genericRequestAsAtom() throws IOException {
+        genericRequest(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void genericRequestAsJSON() throws IOException {
+        genericRequest(ODataPubFormat.JSON);
+    }
 
     @Test
     public void readAtomFeed() throws IOException {
@@ -172,5 +185,21 @@ public class EntitySetTest extends AbstractTest {
         }
         assertEquals(2, count);
         assertTrue(feedIterator.getNext().toASCIIString().endsWith("Customer?$skiptoken=-9"));
+    }
+
+    private void genericRequest(final ODataPubFormat format) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        uriBuilder.appendEntitySetSegment("Car");
+
+        final ODataGenericRetrieveRequest req =
+                ODataRetrieveRequestFactory.getGenericRetrieveRequest(uriBuilder.build());
+        req.setFormat(format.toString());
+
+        final ODataRetrieveResponse<ODataObjectWrapper> res = req.execute();
+
+        ODataObjectWrapper wrapper = res.getBody();
+
+        final ODataEntitySet entitySet = wrapper.getODataEntitySet();
+        assertNotNull(entitySet);
     }
 }

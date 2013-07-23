@@ -16,11 +16,14 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
+import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,5 +152,60 @@ public final class ODataReader {
      */
     public static ODataError readError(final InputStream inputStream, final boolean isXML) {
         return Deserializer.toODataError(inputStream, isXML);
+    }
+
+    /**
+     * Parses a stream into the object type specified by the given reference.
+     *
+     * @param <V> format type (<tt>ODataPubFormat</tt>, <tt>ODataFormat</tt>, <tt>ODataValueFormat</tt>,
+     * <tt>ODataServiceDocumentFormat</tt>)
+     * @param <T> expected object type.
+     * @param src input stream.
+     * @param format format
+     * @param reference reference.
+     * @return read object.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T read(final InputStream src, final String format, final Class<T> reference) {
+
+        Object res;
+
+        try {
+            if (ODataEntitySetIterator.class.isAssignableFrom(reference)) {
+                res = new ODataEntitySetIterator(src, ODataPubFormat.fromString(format));
+            } else if (ODataEntitySet.class.isAssignableFrom(reference)) {
+                res = ODataReader.readEntitySet(src, ODataPubFormat.fromString(format));
+            } else if (ODataEntity.class.isAssignableFrom(reference)) {
+                res = ODataReader.readEntity(src, ODataPubFormat.fromString(format));
+            } else if (ODataProperty.class.isAssignableFrom(reference)) {
+                res = ODataReader.readProperty(src, ODataFormat.fromString(format));
+            } else if (ODataLinkCollection.class.isAssignableFrom(reference)) {
+                res = ODataReader.readLinks(src, ODataFormat.fromString(format));
+            } else if (ODataValue.class.isAssignableFrom(reference)) {
+                res = new ODataPrimitiveValue.Builder().
+                        setType(ODataValueFormat.fromString(format) == ODataValueFormat.TEXT
+                        ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
+                        setText(IOUtils.toString(src)).
+                        build();
+            } else if (EdmMetadata.class.isAssignableFrom(reference)) {
+                res = ODataReader.readMetadata(src);
+            } else if (ODataServiceDocument.class.isAssignableFrom(reference)) {
+                res = ODataReader.readServiceDocument(src, ODataServiceDocumentFormat.fromString(format));
+            } else if (ODataError.class.isAssignableFrom(reference)) {
+                res = ODataReader.readError(src, !format.toString().contains("json"));
+            } else {
+                throw new IllegalArgumentException("Invalid reference type " + reference);
+            }
+
+        } catch (Exception e) {
+            LOG.warn("Cast error", e);
+            res = null;
+        } finally {
+            if (!ODataEntitySetIterator.class.isAssignableFrom(reference)) {
+                IOUtils.closeQuietly(src);
+            }
+        }
+
+        return (T) res;
     }
 }
