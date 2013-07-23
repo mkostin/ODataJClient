@@ -21,7 +21,7 @@
 
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient</artifactId>
-  <version>M3-SNAPSHOT</version>
+  <version>M4-SNAPSHOT</version>
   <name>Client OData libray for Java</name>
   <description>Java client API for OData 3.0 services</description>
 
@@ -46,6 +46,7 @@
     <url>https://github.com/MSOpenTech/ODataJClient.git</url>
     <connection>scm:git:git@github.com:MSOpenTech/ODataJClient.git</connection>
     <developerConnection>scm:git:git@github.com:MSOpenTech/ODataJClient.git</developerConnection>
+    <tag>HEAD</tag>
   </scm>
 
   <prerequisites>
