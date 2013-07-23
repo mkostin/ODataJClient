@@ -307,4 +307,17 @@ public class EntityRetrieveTest extends AbstractTest {
         // this needs to be full, otherwise actions will not be provided
         withActions(ODataPubFormat.JSON_FULL_METADATA);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void issue99() {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntitySetSegment("Car");
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(ODataPubFormat.JSON);
+
+        // this statement should cause an IllegalArgumentException bearing JsonParseException
+        // since we are attempting to parse an EntitySet as if it was an Entity
+        req.execute().getBody();
+    }
 }

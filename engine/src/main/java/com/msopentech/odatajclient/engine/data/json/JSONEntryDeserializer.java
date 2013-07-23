@@ -84,6 +84,10 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
 
         final ObjectNode tree = (ObjectNode) parser.getCodec().readTree(parser);
 
+        if (tree.has(ODataConstants.JSON_VALUE) && tree.get(ODataConstants.JSON_VALUE).isArray()) {
+            throw new JsonParseException("Expected OData Entity, found EntitySet", parser.getCurrentLocation());
+        }
+
         final boolean isMediaEntry =
                 tree.hasNonNull(ODataConstants.JSON_MEDIAREAD_LINK)
                 && tree.hasNonNull(ODataConstants.JSON_MEDIA_CONTENT_TYPE);
