@@ -15,10 +15,10 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.northwind.model.ProductsAboveAveragePrice;
 
-@EntitySetName("Products_Above_Average_Prices")
-public interface ProductsAboveAveragePrices extends EntitySet<ProductsAboveAveragePrice, String> {
+@EntitySet("Products_Above_Average_Prices")
+public interface ProductsAboveAveragePrices extends AbstractEntitySet<ProductsAboveAveragePrice, String> {
 }

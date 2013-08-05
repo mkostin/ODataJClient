@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.annotations;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark POJO as EDM entity container.
+ * Mark Java enum as EDM enum type.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface EntityContainer {
+public @interface EnumType {
 
-    String name();
+    String value();
 
-    boolean isDefaultEntityContainer() default false;
+    EdmSimpleType underlyingType() default EdmSimpleType.INT_32;
 
-    String baseType() default "";
+    boolean isFlags() default false;
 }

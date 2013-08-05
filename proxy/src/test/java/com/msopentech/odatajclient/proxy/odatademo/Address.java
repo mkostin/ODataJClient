@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.proxy.odatademo;
 
-import com.msopentech.odatajclient.proxy.api.ComplexType;
-import com.msopentech.odatajclient.proxy.api.Property;
+import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
+import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import java.io.Serializable;
 
 @ComplexType("Address")

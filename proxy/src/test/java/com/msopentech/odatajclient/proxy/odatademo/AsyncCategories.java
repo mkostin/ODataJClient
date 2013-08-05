@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.proxy.odatademo;
 
-import com.msopentech.odatajclient.proxy.api.AsyncEntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractAsyncEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 
-@EntitySetName("Categories")
-public interface AsyncCategories extends AsyncEntitySet<Category, Integer> {
+@EntitySet("Categories")
+public interface AsyncCategories extends AbstractAsyncEntitySet<Category, Integer> {
 }

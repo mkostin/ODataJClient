@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.northwind.model.AlphabeticalListOfProduct;
 import com.msopentech.odatajclient.proxy.northwind.model.AlphabeticalListOfProductKey;
 
-@EntitySetName("Alphabetical_list_of_products")
-public interface AlphabeticalListOfProducts extends EntitySet<AlphabeticalListOfProduct, AlphabeticalListOfProductKey> {
+@EntitySet("Alphabetical_list_of_products")
+public interface AlphabeticalListOfProducts extends AbstractEntitySet<AlphabeticalListOfProduct, AlphabeticalListOfProductKey> {
 }

@@ -16,7 +16,7 @@
 package com.msopentech.odatajclient.proxy.api;
 
 /**
- * Entry point for ODataJClient proxy mode, give access to entity container instances.
+ * Entry point for ODataJClient proxy mode, gives access to entity container instances.
  */
 public interface EntityContainerFactory {
 

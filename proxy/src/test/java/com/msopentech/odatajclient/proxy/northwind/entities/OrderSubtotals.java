@@ -15,10 +15,10 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.northwind.model.OrderSubtotal;
 
-@EntitySetName("Order_Subtotals")
-public interface OrderSubtotals extends EntitySet<OrderSubtotal, Integer> {
+@EntitySet("Order_Subtotals")
+public interface OrderSubtotals extends AbstractEntitySet<OrderSubtotal, Integer> {
 }

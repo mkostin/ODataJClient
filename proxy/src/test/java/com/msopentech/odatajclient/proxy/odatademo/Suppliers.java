@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.proxy.odatademo;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 
-@EntitySetName("Suppliers")
-public interface Suppliers extends EntitySet<Supplier, Integer> {
+@EntitySet("Suppliers")
+public interface Suppliers extends AbstractEntitySet<Supplier, Integer> {
 }

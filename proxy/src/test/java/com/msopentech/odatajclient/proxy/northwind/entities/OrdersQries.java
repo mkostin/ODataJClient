@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.northwind.model.OrdersQry;
 import com.msopentech.odatajclient.proxy.northwind.model.OrdersQryKey;
 
-@EntitySetName("Orders_Qries")
-public interface OrdersQries extends EntitySet<OrdersQry, OrdersQryKey> {
+@EntitySet("Orders_Qries")
+public interface OrdersQries extends AbstractEntitySet<OrdersQry, OrdersQryKey> {
 }

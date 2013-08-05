@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.annotations;
 
-import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark Java enum as EDM enum type.
+ * Specifies a composite primary key class that is mapped to multiple fields or properties of an EntityType.
+ * <p>The names of the fields or properties in the primary key class and the primary key fields or properties of the
+ * EntityType must correspond and their types must be the same.</p>
+ *
+ * @see Key
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface EnumType {
+public @interface KeyClass {
 
-    String value();
-
-    EdmSimpleType underlyingType() default EdmSimpleType.INT_32;
-
-    boolean isFlags() default false;
+    Class<? extends Serializable> value();
 }

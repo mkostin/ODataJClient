@@ -22,7 +22,7 @@ import java.io.Serializable;
 /**
  * Interface for synchronous CRUD operations on an EntitySet.
  */
-public abstract interface EntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
+public abstract interface AbstractEntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
 
     /**
      * Returns whether an entity with the given id exists.

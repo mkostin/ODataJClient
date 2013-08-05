@@ -16,4 +16,4 @@
 @Namespace("ODataDemo")
 package com.msopentech.odatajclient.proxy.odatademo;
 
-import com.msopentech.odatajclient.proxy.api.Namespace;
+import com.msopentech.odatajclient.proxy.api.annotations.Namespace;

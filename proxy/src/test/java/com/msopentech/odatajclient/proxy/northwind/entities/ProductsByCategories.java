@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.northwind.model.ProductsByCategory;
 import com.msopentech.odatajclient.proxy.northwind.model.ProductsByCategoryKey;
 
-@EntitySetName("Products_Above_Average_Prices")
-public interface ProductsByCategories extends EntitySet<ProductsByCategory, ProductsByCategoryKey> {
+@EntitySet("Products_Above_Average_Prices")
+public interface ProductsByCategories extends AbstractEntitySet<ProductsByCategory, ProductsByCategoryKey> {
 }

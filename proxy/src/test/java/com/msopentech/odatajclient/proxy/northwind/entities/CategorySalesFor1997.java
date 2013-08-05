@@ -15,10 +15,10 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 
-@EntitySetName("Category_Sales_for_1997")
+@EntitySet("Category_Sales_for_1997")
 public interface CategorySalesFor1997
-        extends EntitySet<com.msopentech.odatajclient.proxy.northwind.model.CategorySalesFor1997, String> {
+        extends AbstractEntitySet<com.msopentech.odatajclient.proxy.northwind.model.CategorySalesFor1997, String> {
 }

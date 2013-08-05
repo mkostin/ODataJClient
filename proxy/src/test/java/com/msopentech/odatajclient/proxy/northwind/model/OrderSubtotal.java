@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.model;
 
-import com.msopentech.odatajclient.proxy.api.EntityType;
-import com.msopentech.odatajclient.proxy.api.Key;
-import com.msopentech.odatajclient.proxy.api.Property;
+import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
+import com.msopentech.odatajclient.proxy.api.annotations.Key;
+import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import java.io.Serializable;
 
 @EntityType("Order_Subtotal")

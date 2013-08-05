@@ -15,10 +15,10 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.northwind.model.SummaryOfSalesByQuarter;
 
-@EntitySetName("Summary_of_Sales_by_Quarters")
-public interface SummaryOfSalesByQuarters extends EntitySet<SummaryOfSalesByQuarter, Integer> {
+@EntitySet("Summary_of_Sales_by_Quarters")
+public interface SummaryOfSalesByQuarters extends AbstractEntitySet<SummaryOfSalesByQuarter, Integer> {
 }

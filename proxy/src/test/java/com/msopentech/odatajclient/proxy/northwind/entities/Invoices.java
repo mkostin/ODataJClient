@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.northwind.model.Invoice;
 import com.msopentech.odatajclient.proxy.northwind.model.InvoiceKey;
 
-@EntitySetName("Invoices")
-public interface Invoices extends EntitySet<Invoice, InvoiceKey> {
+@EntitySet("Invoices")
+public interface Invoices extends AbstractEntitySet<Invoice, InvoiceKey> {
 }

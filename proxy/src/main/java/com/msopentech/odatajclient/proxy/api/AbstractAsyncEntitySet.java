@@ -26,7 +26,7 @@ import java.util.concurrent.Future;
  *
  * @see EntitySet
  */
-public abstract interface AsyncEntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
+public abstract interface AbstractAsyncEntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
 
     /**
      * @see EntitySet#exists(java.io.Serializable)

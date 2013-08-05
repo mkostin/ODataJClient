@@ -13,30 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.annotations;
 
-import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
+import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Bind POJO field to EDM navigation property.
+ * Mark POJO as EDM entity type.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface NavigationProperty {
+@Target(ElementType.TYPE)
+@Inherited
+public @interface EntityType {
 
-    String name();
+    String value();
 
-    String relationship();
+    String baseType() default "";
 
-    String fromRole();
+    boolean isAbstract() default false;
 
-    String toRole();
+    boolean openType() default false;
 
-    boolean containsTarget() default false;
+    boolean hasStream() default false;
 
-    Action onDelete() default Action.NONE;
+    /* -- Feed Customization annotations -- */
+    String fcSourcePath() default "";
+
+    String fcTargetPath() default "";
+
+    EdmContentKind fcContentKind() default EdmContentKind.text;
+
+    String fcNSPrefix() default "";
+
+    String fcNSURI() default "";
+
+    boolean fcKeepInContent() default false;
 }

@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.annotations;
 
+import java.io.Serializable;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotate navigation property with information about referential constraint.
- * @see NavigationProperty
+ * Mark POJO as EDM complex type.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ReferentialConstraint {
+@Target(ElementType.TYPE)
+@Inherited
+public @interface ComplexType {
 
-    Class<?> principalRole();
+    String value();
 
-    String[] principalPropertyRefs();
+    Class<?> baseType() default Serializable.class;
 
-    Class<?> dependentRole();
-
-    String[] dependentPropertyRefs();
+    boolean isAbstract() default false;
 }

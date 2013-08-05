@@ -15,12 +15,12 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.northwind.model.CustomersAndSuppliersByCityKey;
 
-@EntitySetName("Customer_and_Suppliers_by_Cities")
+@EntitySet("Customer_and_Suppliers_by_Cities")
 public interface CustomerAndSuppliersByCities extends
-        EntitySet<
+        AbstractEntitySet<
         com.msopentech.odatajclient.proxy.northwind.model.CustomersAndSuppliersByCity, CustomersAndSuppliersByCityKey> {
 }

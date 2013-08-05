@@ -13,58 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.annotations;
 
-import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
-import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Bind POJO field to EDM property.
+ * Function import parameter information.
+ *
+ * @see FunctionImport
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Property {
+@Target(ElementType.PARAMETER)
+public @interface Parameter {
 
     String name();
 
     String type();
 
-    boolean nullable() default true;
-
-    String defaultValue() default "";
+    ParameterMode mode() default ParameterMode.IN;
 
     int maxLenght() default Integer.MAX_VALUE;
-
-    boolean fixedLenght() default false;
 
     int precision() default 0;
 
     int scale() default 0;
-
-    boolean unicode() default true;
-
-    String collation() default "";
-
-    int srid() default 0;
-
-    ConcurrencyMode concurrencyMode() default ConcurrencyMode.NONE;
-
-    String mimeType() default "";
-
-    /* -- Feed Customization annotations -- */
-    String fcSourcePath() default "";
-
-    String fcTargetPath() default "";
-
-    EdmContentKind fcContentKind() default EdmContentKind.text;
-
-    String fcNSPrefix() default "";
-
-    String fcNSURI() default "";
-
-    boolean fcKeepInContent() default false;
 }

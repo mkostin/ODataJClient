@@ -15,11 +15,11 @@
  */
 package com.msopentech.odatajclient.proxy.northwind.entities;
 
-import com.msopentech.odatajclient.proxy.api.EntitySet;
-import com.msopentech.odatajclient.proxy.api.EntitySetName;
+import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.northwind.model.SalesTotalsByAmount;
 import com.msopentech.odatajclient.proxy.northwind.model.SalesTotalsByAmountKey;
 
-@EntitySetName("Sales_Totals_by_Amounts")
-public interface SalesTotalsByAmounts extends EntitySet<SalesTotalsByAmount, SalesTotalsByAmountKey> {
+@EntitySet("Sales_Totals_by_Amounts")
+public interface SalesTotalsByAmounts extends AbstractEntitySet<SalesTotalsByAmount, SalesTotalsByAmountKey> {
 }
