@@ -20,11 +20,11 @@ import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
-import java.io.Serializable;
+import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
 import java.util.List;
 
 @EntityType("Category")
-public class Category implements Serializable {
+public class Category extends AbstractType {
 
     private static final long serialVersionUID = 7872557425262013627L;
 

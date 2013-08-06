@@ -19,12 +19,12 @@ import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.annotations.ReferentialConstraint;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
-import java.io.Serializable;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
+import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
 
 @EntityType("Supplier")
-public class Supplier implements Serializable {
+public class Supplier extends AbstractType {
 
     private static final long serialVersionUID = 374015664635616215L;
 
@@ -32,12 +32,15 @@ public class Supplier implements Serializable {
     @Property(name = "ID", type = "Edm.Int32", nullable = false)
     private Integer id;
 
-    @Property(name = "Name", type = "Edm.String", nullable = true,
+    @Property(name = "Name", type = "Edm.String",
             fcTargetPath = "SyndicationTitle", fcContentKind = EdmContentKind.text, fcKeepInContent = true)
     private String name;
 
-    @Property(name = "Address", type = "ODataDemo.Address", nullable = false)
+    @Property(name = "Address", type = "ODataDemo.Address")
     private Address address;
+
+    @Property(name = "Location", type = "Edm.GeographyPoint", srid = "Variable")
+    private Point location;
 
     @Property(name = "Concurrency", type = "Edm.Int32", nullable = false)
     private Integer concurrency;
@@ -68,6 +71,14 @@ public class Supplier implements Serializable {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     public Integer getConcurrency() {

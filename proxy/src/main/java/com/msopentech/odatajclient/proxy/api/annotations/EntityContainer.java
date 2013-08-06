@@ -30,6 +30,4 @@ public @interface EntityContainer {
     String name();
 
     boolean isDefaultEntityContainer() default false;
-
-    String baseType() default "";
 }

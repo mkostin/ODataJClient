@@ -17,10 +17,10 @@ package com.msopentech.odatajclient.proxy.odatademo;
 
 import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import java.io.Serializable;
+import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
 
 @ComplexType("Address")
-public class Address implements Serializable {
+public class Address extends AbstractType {
 
     private static final long serialVersionUID = 8670033782646464644L;
 

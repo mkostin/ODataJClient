@@ -22,6 +22,7 @@ import com.msopentech.odatajclient.proxy.odatademo.Category;
 import com.msopentech.odatajclient.proxy.odatademo.DemoService;
 import com.msopentech.odatajclient.proxy.odatademo.Product;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -84,7 +85,7 @@ public class ProxyUsageTest {
         Product product = new Product();
         product.setName("a name");
         product.setDescription("a description");
-        product.setPrice(11F);
+        product.setPrice(BigDecimal.valueOf(11));
         product.setReleaseDate(new Date());
         product = demoService.getProducts().save(product);
 

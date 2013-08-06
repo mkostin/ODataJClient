@@ -67,10 +67,10 @@ public final class ODataRetrieveRequestFactory {
     }
 
     /**
-     * Gets a query request returning a set of one or more OData entity.
+     * Gets a query request returning a set of one or more OData entities.
      * <p>
-     * Returned request give the possibility to consume entities iterating on them without parse and load in memory
-     * the entire feed.
+     * Returned request gives the possibility to consume entities iterating on them without parsing and loading in
+     * memory the entire entity set.
      *
      * @param query query to be performed.
      * @return new ODataEntitySetIteratorRequest instance.

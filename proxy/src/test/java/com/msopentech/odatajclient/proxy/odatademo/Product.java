@@ -20,11 +20,12 @@ import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
-import java.io.Serializable;
+import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @EntityType("Product")
-public class Product implements Serializable {
+public class Product extends AbstractType {
 
     private static final long serialVersionUID = -7176997693842768563L;
 
@@ -50,7 +51,7 @@ public class Product implements Serializable {
     private Integer rating;
 
     @Property(name = "Price", type = "Edm.Decimal", nullable = false)
-    private Float price;
+    private BigDecimal price;
 
     @NavigationProperty(name = "Category", relationship = "ODataDemo.Product_Category_Category_Products",
             fromRole = "Product_Category", toRole = "Category_Products")
@@ -108,11 +109,11 @@ public class Product implements Serializable {
         this.rating = rating;
     }
 
-    public Float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

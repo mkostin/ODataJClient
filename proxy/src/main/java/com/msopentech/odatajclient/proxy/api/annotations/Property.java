@@ -49,7 +49,7 @@ public @interface Property {
 
     String collation() default "";
 
-    int srid() default 0;
+    String srid() default "";
 
     ConcurrencyMode concurrencyMode() default ConcurrencyMode.NONE;
 
