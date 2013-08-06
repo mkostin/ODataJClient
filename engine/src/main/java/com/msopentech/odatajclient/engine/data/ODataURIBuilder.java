@@ -233,8 +233,8 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURI object.
      */
-    public ODataURIBuilder appendKeySegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.KEY, segmentValue));
+    public ODataURIBuilder appendKeySegment(final Object segmentValue) {
+        segments.add(new Segment(SegmentType.KEY, "(" + segmentValue.toString() + ")"));
         return this;
     }
 
@@ -445,7 +445,7 @@ public class ODataURIBuilder implements Serializable {
     public URI build() {
         final StringBuilder segmentsBuilder = new StringBuilder();
         for (Segment seg : segments) {
-            if (segmentsBuilder.length() > 0) {
+            if (segmentsBuilder.length() > 0 && seg.type != SegmentType.KEY) {
                 segmentsBuilder.append("/");
             }
 
@@ -459,7 +459,7 @@ public class ODataURIBuilder implements Serializable {
                 builder.addParameter("$" + option.getKey(), option.getValue());
             }
 
-            return builder.build();
+            return builder.build().normalize();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Could not build valid URI", e);
         }

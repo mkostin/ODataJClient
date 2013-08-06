@@ -365,7 +365,7 @@ public abstract class AbstractTest {
 
     protected void deleteEmployee(final ODataPubFormat format, final Integer id) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Person(" + id + ")");
+                appendEntityTypeSegment("Person").appendKeySegment(id);
 
         final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(uriBuilder.build());
         deleteReq.setFormat(format);

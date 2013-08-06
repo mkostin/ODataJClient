@@ -19,7 +19,6 @@ import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootU
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
@@ -186,7 +185,7 @@ public class PropertyTest extends AbstractTest {
 
     private void updatePropertyValue(final ODataValueFormat format, final UpdateType type) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-9)").
+        uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(-9).
                 appendStructuralSegment("PrimaryContactInfo").
                 appendStructuralSegment("HomePhone").appendStructuralSegment("PhoneNumber").appendValueSegment();
 
@@ -226,8 +225,8 @@ public class PropertyTest extends AbstractTest {
     }
 
     private void updateComplexProperty(final ODataFormat format, final UpdateType type) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-9)").appendStructuralSegment("PrimaryContactInfo");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntityTypeSegment("Customer").appendKeySegment(-9).appendStructuralSegment("PrimaryContactInfo");
 
         ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
@@ -273,7 +272,7 @@ public class PropertyTest extends AbstractTest {
 
     private void updateCollectionProperty(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-9)").
+        uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(-9).
                 appendStructuralSegment("PrimaryContactInfo").appendStructuralSegment("AlternativeNames");
 
         ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
@@ -319,7 +318,7 @@ public class PropertyTest extends AbstractTest {
 
     private void updatePrimitiveProperty(final ODataFormat format) throws IOException {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(-9)").
+        uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(-9).
                 appendStructuralSegment("PrimaryContactInfo").
                 appendStructuralSegment("HomePhone").appendStructuralSegment("PhoneNumber");
 

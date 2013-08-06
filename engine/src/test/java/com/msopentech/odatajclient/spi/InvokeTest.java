@@ -201,7 +201,7 @@ public class InvokeTest extends AbstractTest {
 
         // 2. check that invoked action has effectively run
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Person(" + createdId + ")");
+                appendEntityTypeSegment("Person").appendKeySegment(createdId);
         final ODataEntityRequest retrieveRes = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         retrieveRes.setFormat(ODataPubFormat.JSON_FULL_METADATA);
         final ODataEntity read = retrieveRes.execute().getBody();

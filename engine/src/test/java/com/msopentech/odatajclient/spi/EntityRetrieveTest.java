@@ -54,7 +54,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
     private void genericRequest(final ODataPubFormat format) {
         ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Car(16)");
+        uriBuilder.appendEntityTypeSegment("Car").appendKeySegment(16);
 
         final ODataGenericRetrieveRequest req =
                 ODataRetrieveRequestFactory.getGenericRetrieveRequest(uriBuilder.build());
@@ -76,7 +76,7 @@ public class EntityRetrieveTest extends AbstractTest {
         // Read Car(16)
         // ---------------------------------------------
         ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Car(16)");
+        uriBuilder.appendEntityTypeSegment("Car").appendKeySegment(16);
 
         ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);
@@ -192,8 +192,8 @@ public class EntityRetrieveTest extends AbstractTest {
 
     @Test
     public void withGeospatial() {
-        final ODataURIBuilder uriBuilder =
-                new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("AllGeoTypesSet(-6)");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntityTypeSegment("AllGeoTypesSet").appendKeySegment(-6);
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
@@ -306,8 +306,8 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     private void withActions(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder =
-                new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment("ComputerDetail(-10)");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntityTypeSegment("ComputerDetail").appendKeySegment(-10);
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);

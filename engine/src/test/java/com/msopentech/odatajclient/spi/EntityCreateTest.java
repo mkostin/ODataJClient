@@ -78,7 +78,7 @@ public class EntityCreateTest extends AbstractTest {
             final Collection<String> expands) {
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(" + actualObjectId + ")");
+        uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(actualObjectId);
 
         // search expanded
         if (expands != null) {
@@ -166,7 +166,7 @@ public class EntityCreateTest extends AbstractTest {
         final ODataEntity actual = compareEntities(format, created, id, null);
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer(" + id + ")").appendEntityTypeSegment("Info");
+        uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Info");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(format);

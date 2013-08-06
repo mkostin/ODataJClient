@@ -120,7 +120,7 @@ public class AsyncTest extends AbstractTest {
                 : created.getProperties().get(1).getPrimitiveValue().<Integer>toCastValue();
 
         builder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Car(" + id + ")").appendValueSegment();
+                appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
 

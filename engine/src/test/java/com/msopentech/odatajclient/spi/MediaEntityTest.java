@@ -48,7 +48,7 @@ public class MediaEntityTest extends AbstractTest {
     @Test
     public void readMediaEntity() throws Exception {
         final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Car(12)").appendValueSegment();
+                appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
         retrieveReq.setFormat(ODataMediaFormat.WILDCARD);
@@ -61,7 +61,7 @@ public class MediaEntityTest extends AbstractTest {
     @Test(expected = ODataClientErrorException.class)
     public void readMediaWithXmlError() throws Exception {
         final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Car(12)").appendValueSegment();
+                appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
         retrieveReq.setFormat(ODataMediaFormat.APPLICATION_OCTET_STREAM);
@@ -72,7 +72,7 @@ public class MediaEntityTest extends AbstractTest {
     @Test(expected = ODataClientErrorException.class)
     public void readMediaWithJsonError() throws Exception {
         final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Car(12)").appendValueSegment();
+                appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
         retrieveReq.setFormat(ODataMediaFormat.APPLICATION_JSON);
@@ -103,7 +103,7 @@ public class MediaEntityTest extends AbstractTest {
     @Test
     public void updateNamedStream() throws Exception {
         ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Car(16)").appendStructuralSegment("Photo");
+                appendEntityTypeSegment("Car").appendKeySegment(16).appendStructuralSegment("Photo");
 
         final String TO_BE_UPDATED = "buffered stream sample";
         final InputStream input = new ByteArrayInputStream(TO_BE_UPDATED.getBytes());
@@ -139,7 +139,7 @@ public class MediaEntityTest extends AbstractTest {
         assertEquals(204, updateRes.getStatusCode());
 
         builder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Car(" + id + ")").appendValueSegment();
+                appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
 
@@ -172,7 +172,7 @@ public class MediaEntityTest extends AbstractTest {
                 : created.getProperties().get(1).getPrimitiveValue().<Integer>toCastValue();
 
         builder = new ODataURIBuilder(testODataServiceRootURL);
-        builder.appendEntityTypeSegment("Car(" + id + ")").appendValueSegment();
+        builder.appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
 
