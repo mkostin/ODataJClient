@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,11 +50,11 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
         }
 
         final Element content = property.getContent();
-        if (TreeUtils.hasOnlyTextChildNodes(content)) {
+        if (XMLUtils.hasOnlyTextChildNodes(content)) {
             jgen.writeStringField(ODataConstants.JSON_VALUE, content.getTextContent());
         } else {
             try {
-                if (TreeUtils.hasElementsChildNode(content)) {
+                if (XMLUtils.hasElementsChildNode(content)) {
 
                     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                     final DocumentBuilder builder = factory.newDocumentBuilder();
@@ -63,9 +64,9 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
                     wrapper.appendChild(
                             document.renameNode(document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 
-                    TreeUtils.writeContent(jgen, wrapper);
+                    DOMTreeUtils.writeContent(jgen, wrapper);
                 } else {
-                    TreeUtils.writeContent(jgen, content);
+                    DOMTreeUtils.writeContent(jgen, content);
                 }
             } catch (Exception e) {
                 throw new JsonParseException("Cannot serialize property", JsonLocation.NA, e);

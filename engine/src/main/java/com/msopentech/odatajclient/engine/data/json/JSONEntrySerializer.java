@@ -73,39 +73,6 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         return result;
     }
 
-    private void writeEntryContent(final JsonGenerator jgen, final Node content) throws IOException {
-        for (Node child : getChildNodes(content, Node.ELEMENT_NODE)) {
-            final String childName = XMLUtils.getSimpleName(child);
-            if (hasOnlyTextChildNodes(child)) {
-                if (child.hasChildNodes()) {
-                    jgen.writeStringField(childName, child.getChildNodes().item(0).getNodeValue());
-                } else {
-                    jgen.writeNullField(childName);
-                }
-            } else {
-                if (hasElementsChildNode(child)) {
-                    jgen.writeArrayFieldStart(childName);
-
-                    for (Node nephew : getChildNodes(child, Node.ELEMENT_NODE)) {
-                        if (hasOnlyTextChildNodes(nephew)) {
-                            jgen.writeString(nephew.getChildNodes().item(0).getNodeValue());
-                        } else {
-                            jgen.writeStartObject();
-                            writeEntryContent(jgen, nephew);
-                            jgen.writeEndObject();
-                        }
-                    }
-
-                    jgen.writeEndArray();
-                } else {
-                    jgen.writeObjectFieldStart(childName);
-                    writeEntryContent(jgen, child);
-                    jgen.writeEndObject();
-                }
-            }
-        }
-    }
-
     /**
      * {@inheritDoc }
      */
@@ -179,9 +146,9 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         }
 
         if (entry.getMediaEntryProperties() == null) {
-            writeEntryContent(jgen, entry.getContent());
+            DOMTreeUtils.writeContent(jgen, entry.getContent());
         } else {
-            writeEntryContent(jgen, entry.getMediaEntryProperties());
+            DOMTreeUtils.writeContent(jgen, entry.getMediaEntryProperties());
         }
 
         jgen.writeEndObject();

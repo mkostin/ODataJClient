@@ -22,8 +22,18 @@ import javax.xml.XMLConstants;
  */
 public class ODataConstants {
 
+    // Other stuff
     public static final String V30 = "3.0";
 
+    public final static String UTF8 = "UTF-8";
+
+    public final static String NAME = "name";
+
+    public final static String TYPE = "type";
+
+    public final static String PROPERTIES = "properties";
+
+    // XML namespaces and prefixes
     public static final String NS_DATASERVICES = "http://schemas.microsoft.com/ado/2007/08/dataservices";
 
     public static final String NS_METADATA = NS_DATASERVICES + "/metadata";
@@ -71,13 +81,14 @@ public class ODataConstants {
 
     public static final String NEXT_LINK_REL = "next";
 
-    public static final String ELEM_PROPERTIES = PREFIX_METADATA + "properties";
+    // XML elements and attributes
+    public static final String ELEM_PROPERTIES = PREFIX_METADATA + PROPERTIES;
 
     public static final String ELEM_ELEMENT = "element";
 
     public static final String ELEM_INLINE = PREFIX_METADATA + "inline";
 
-    public static final String ATTR_TYPE = PREFIX_METADATA + "type";
+    public static final String ATTR_TYPE = PREFIX_METADATA + TYPE;
 
     public static final String ATTR_NULL = PREFIX_METADATA + "null";
 
@@ -97,13 +108,19 @@ public class ODataConstants {
 
     public static final String ATTR_ATOM_TITLE = "atom:title";
 
+    public static final String ATTR_SRSNAME = PREFIX_GML + "srsName";
+
     public static final String ELEM_POINT = PREFIX_GML + "Point";
 
     public static final String ELEM_MULTIPOINT = PREFIX_GML + "MultiPoint";
 
+    public static final String ELEM_POINTMEMBERS = PREFIX_GML + "pointMembers";
+
     public static final String ELEM_LINESTRING = PREFIX_GML + "LineString";
 
     public static final String ELEM_MULTILINESTRING = PREFIX_GML + "MultiCurve";
+
+    public static final String ELEM_LINESTRINGMEMBERS = PREFIX_GML + "curveMembers";
 
     public static final String ELEM_POLYGON = PREFIX_GML + "Polygon";
 
@@ -111,13 +128,19 @@ public class ODataConstants {
 
     public static final String ELEM_POLYGON_INTERIOR = PREFIX_GML + "interior";
 
+    public static final String ELEM_POLYGON_LINEARRING = PREFIX_GML + "LinearRing";
+
     public static final String ELEM_MULTIPOLYGON = PREFIX_GML + "MultiSurface";
+
+    public static final String ELEM_SURFACEMEMBERS = PREFIX_GML + "surfaceMembers";
 
     public static final String ELEM_GEOCOLLECTION = PREFIX_GML + "MultiGeometry";
 
-    public static final String ELEM_GEOCOLLECTION_MEMBERS = PREFIX_GML + "geometryMembers";
+    public static final String ELEM_GEOMEMBERS = PREFIX_GML + "geometryMembers";
 
     public static final String ELEM_POS = PREFIX_GML + "pos";
+
+    public static final String ELEM_POSLIST = PREFIX_GML + "posList";
 
     public static final String ELEM_PROPERTY = "property";
 
@@ -127,6 +150,7 @@ public class ODataConstants {
 
     public static final String ELEM_FUNCTION = PREFIX_METADATA + "function";
 
+    // JSON stuff
     public final static String JSON_METADATA = "odata.metadata";
 
     public final static String JSON_TYPE = "odata.type";
@@ -157,6 +181,12 @@ public class ODataConstants {
 
     public final static String JSON_URL = "url";
 
-    public final static String UTF8 = "UTF-8";
+    public final static String JSON_COORDINATES = "coordinates";
+
+    public final static String JSON_GEOMETRIES = "geometries";
+
+    public final static String JSON_CRS = "crs";
+
+    public final static String JSON_GIS_URLPREFIX = "http://www.opengis.net/def/crs/EPSG/0/";
 
 }

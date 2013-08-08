@@ -581,7 +581,7 @@ public final class ODataBinder {
 
         for (int i = 0; i < memberListss.getLength(); i++) {
             final Node memberList = memberListss.item(i);
-            if (memberList.getNodeName().equals(ODataConstants.ELEM_GEOCOLLECTION_MEMBERS)) {
+            if (memberList.getNodeName().equals(ODataConstants.ELEM_GEOMEMBERS)) {
                 final NodeList members = memberList.getChildNodes();
 
                 for (int j = 0; j < members.getLength(); j++) {

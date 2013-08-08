@@ -37,6 +37,7 @@ import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
+import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -53,8 +54,8 @@ import org.w3c.dom.Node;
 public class EntityRetrieveTest extends AbstractTest {
 
     private void genericRequest(final ODataPubFormat format) {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Car").appendKeySegment(16);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntityTypeSegment("Car").appendKeySegment(16);
 
         final ODataGenericRetrieveRequest req =
                 ODataRetrieveRequestFactory.getGenericRetrieveRequest(uriBuilder.build());
@@ -62,7 +63,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
         final ODataRetrieveResponse<ODataObjectWrapper> res = req.execute();
 
-        ODataObjectWrapper wrapper = res.getBody();
+        final ODataObjectWrapper wrapper = res.getBody();
 
         final ODataEntitySet entitySet = wrapper.getODataEntitySet();
         assertNull(entitySet);
@@ -190,13 +191,12 @@ public class EntityRetrieveTest extends AbstractTest {
         read(ODataPubFormat.JSON);
     }
 
-    @Test
-    public void withGeospatial() {
+    private void withGeospatial(final ODataPubFormat format) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("AllGeoTypesSet").appendKeySegment(-6);
+                appendEntityTypeSegment("AllGeoTypesSet").appendKeySegment(-8);
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-        req.setFormat(ODataPubFormat.ATOM);
+        req.setFormat(format);       
 
         final ODataRetrieveResponse<ODataEntity> res = req.execute();
         final ODataEntity entity = res.getBody();
@@ -213,6 +213,17 @@ public class EntityRetrieveTest extends AbstractTest {
             }
         }
         assertTrue(found);
+    }
+
+    @Test
+    public void withGeospatialFromAtom() {
+        withGeospatial(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void withGeospatialFromJSON() {
+        // this needs to be full, otherwise there is no mean to recognize geospatial types
+        withGeospatial(ODataPubFormat.JSON_FULL_METADATA);
     }
 
     private void withInlineEntry(final ODataPubFormat format) {

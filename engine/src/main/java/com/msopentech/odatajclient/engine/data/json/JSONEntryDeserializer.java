@@ -214,7 +214,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
             final Element properties = document.createElementNS(
                     ODataConstants.NS_METADATA, ODataConstants.ELEM_PROPERTIES);
 
-            TreeUtils.buildSubtree(document, properties, tree);
+            DOMTreeUtils.buildSubtree(properties, tree);
 
             if (isMediaEntry) {
                 entry.setMediaEntryProperties(properties);

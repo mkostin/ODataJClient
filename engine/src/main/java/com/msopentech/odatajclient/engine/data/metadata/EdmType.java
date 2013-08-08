@@ -83,7 +83,7 @@ public class EdmType {
         }
 
         if (namespaceOrAlias.equals(EdmSimpleType.namespace())) {
-            this.simpleType = EdmSimpleType.fromValue(typeName);
+            this.simpleType = EdmSimpleType.fromValue(EdmSimpleType.namespace() + "." + typeName);
         } else if (metadata != null) {
             if (!metadata.isNsOrAlias(namespaceOrAlias)) {
                 throw new IllegalArgumentException("Illegal namespace or alias: " + namespaceOrAlias);

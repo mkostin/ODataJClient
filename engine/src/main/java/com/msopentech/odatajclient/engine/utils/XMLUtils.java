@@ -15,7 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * XML utilities.
@@ -36,5 +39,61 @@ public final class XMLUtils {
         return node.getLocalName() == null
                 ? node.getNodeName().substring(node.getNodeName().indexOf(':') + 1)
                 : node.getLocalName();
+    }
+
+    /**
+     * Gets the given node's children of the given type.
+     *
+     * @param node parent.
+     * @param nodetype searched child type.
+     * @return children.
+     */
+    public static List<Node> getChildNodes(final Node node, final short nodetype) {
+        final List<Node> result = new ArrayList<Node>();
+        final NodeList children = node.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            final Node child = children.item(i);
+            if (child.getNodeType() == nodetype) {
+                result.add(child);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Checks if the given node has <tt>element</tt> children.
+     *
+     * @param node parent.
+     * @return 'TRUE' if the given node has at least one <tt>element</tt> child; 'FALSE' otherwise.
+     */
+    public static boolean hasElementsChildNode(final Node node) {
+        boolean found = false;
+
+        for (Node child : getChildNodes(node, Node.ELEMENT_NODE)) {
+            if (ODataConstants.ELEM_ELEMENT.equals(XMLUtils.getSimpleName(child))) {
+                found = true;
+            }
+        }
+
+        return found;
+    }
+
+    /**
+     * Checks if the given node has only text children.
+     *
+     * @param node parent.
+     * @return 'TRUE' if the given node has only text children; 'FALSE' otherwise.
+     */
+    public static boolean hasOnlyTextChildNodes(final Node node) {
+        boolean result = true;
+        final NodeList children = node.getChildNodes();
+        for (int i = 0; result && i < children.getLength(); i++) {
+            final Node child = children.item(i);
+            if (child.getNodeType() != Node.TEXT_NODE) {
+                result = false;
+            }
+        }
+
+        return result;
     }
 }

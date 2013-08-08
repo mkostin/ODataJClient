@@ -15,19 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_COLLECTION;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_LINE_STRING;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_MULTI_LINE_STRING;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_MULTI_POINT;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_MULTI_POLYGON;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_POINT;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOGRAPHY_POLYGON;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_COLLECTION;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_LINE_STRING;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_MULTI_LINE_STRING;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_MULTI_POINT;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_MULTI_POLYGON;
-import static com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType.GEOMETRY_POLYGON;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.ComposedGeospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
@@ -256,17 +243,17 @@ public class ODataPrimitiveValue extends ODataValue {
                 this.value = getPoint(points[0], getDimension());
                 break;
 
-            case GEOGRAPHY_LINE_STRING:
-            case GEOMETRY_LINE_STRING:
+            case GEOGRAPHY_MULTI_POINT:
+            case GEOMETRY_MULTI_POINT:
                 Dimension dimension = getDimension();
-                this.value = new LineString(
+                this.value = new MultiPoint(
                         dimension, getPoints(getGeospatialsInfo(this.toString()).getValue(), dimension));
                 break;
 
-            case GEOGRAPHY_MULTI_POINT:
-            case GEOMETRY_MULTI_POINT:
+            case GEOGRAPHY_LINE_STRING:
+            case GEOMETRY_LINE_STRING:
                 dimension = getDimension();
-                this.value = new MultiPoint(
+                this.value = new LineString(
                         dimension, getPoints(getGeospatialsInfo(this.toString()).getValue(), dimension));
                 break;
 
@@ -386,14 +373,14 @@ public class ODataPrimitiveValue extends ODataValue {
                 this.text = getGeospatialAsString(this.<Point>toCastValue());
                 break;
 
-            case GEOMETRY_LINE_STRING:
-            case GEOGRAPHY_LINE_STRING:
-                this.text = getGeospatialAsString(this.<LineString>toCastValue());
-                break;
-
             case GEOMETRY_MULTI_POINT:
             case GEOGRAPHY_MULTI_POINT:
                 this.text = getGeospatialAsString(this.<MultiPoint>toCastValue());
+                break;
+
+            case GEOMETRY_LINE_STRING:
+            case GEOGRAPHY_LINE_STRING:
+                this.text = getGeospatialAsString(this.<LineString>toCastValue());
                 break;
 
             case GEOMETRY_MULTI_LINE_STRING:

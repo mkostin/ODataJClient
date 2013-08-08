@@ -281,9 +281,10 @@ public enum EdmSimpleType {
      * @param value string value type.
      * @return <tt>EdmSimpleType</tt> object.
      */
-    public static EdmSimpleType fromValue(String value) {
+    public static EdmSimpleType fromValue(final String value) {
+        final String noNsValue = value.substring(4);
         for (EdmSimpleType edmSimpleType : EdmSimpleType.values()) {
-            if (edmSimpleType.value.equals(value)) {
+            if (edmSimpleType.value.equals(noNsValue)) {
                 return edmSimpleType;
             }
         }

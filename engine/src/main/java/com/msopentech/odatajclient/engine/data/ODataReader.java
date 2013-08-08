@@ -196,7 +196,6 @@ public final class ODataReader {
             } else {
                 throw new IllegalArgumentException("Invalid reference type " + reference);
             }
-
         } catch (Exception e) {
             LOG.warn("Cast error", e);
             res = null;

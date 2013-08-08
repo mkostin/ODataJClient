@@ -598,8 +598,8 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void readAllGeoEntitySet() {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntitySetSegment("AllGeoTypesSet");
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntitySetSegment("AllGeoTypesSet");
 
         ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
@@ -617,8 +617,8 @@ public class PrimitiveValueTest extends AbstractTest {
         req.setFormat(ODataPubFormat.JSON_NO_METADATA);
         assertNotNull(req.execute().getBody());
 
-        uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntitySetSegment("AllGeoCollectionTypesSet");
+        uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+                appendEntitySetSegment("AllGeoCollectionTypesSet");
 
         req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
@@ -627,5 +627,14 @@ public class PrimitiveValueTest extends AbstractTest {
         req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.JSON);
         assertNotNull(req.execute().getBody());
+
+        req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(ODataPubFormat.JSON_FULL_METADATA);
+        assertNotNull(req.execute().getBody());
+
+        req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(ODataPubFormat.JSON_NO_METADATA);
+        assertNotNull(req.execute().getBody());
+
     }
 }

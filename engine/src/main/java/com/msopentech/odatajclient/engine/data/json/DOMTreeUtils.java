@@ -21,21 +21,23 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * DOM tree utilities class.
  */
-final class TreeUtils {
+final class DOMTreeUtils {
 
-    private TreeUtils() {
+    private DOMTreeUtils() {
         // Empty private constructor for static utility classes
+    }
+
+    private static boolean isGeospatial(final String type) {
+        return type.startsWith(EdmSimpleType.namespace() + ".Geo");
     }
 
     /**
@@ -47,7 +49,7 @@ final class TreeUtils {
      * @param parent parent of the nodes being generated during this step
      * @param node JSON node to be used as source for DOM elements
      */
-    public static void buildSubtree(final Document document, final Element parent, final JsonNode node) {
+    public static void buildSubtree(final Element parent, final JsonNode node) {
         final Iterator<String> fieldNameItor = node.fieldNames();
         final Iterator<JsonNode> nodeItor = node.elements();
         while (nodeItor.hasNext()) {
@@ -56,7 +58,7 @@ final class TreeUtils {
 
             // no name? array item
             if (name.isEmpty()) {
-                final Element element = document.createElementNS(ODataConstants.NS_DATASERVICES,
+                final Element element = parent.getOwnerDocument().createElementNS(ODataConstants.NS_DATASERVICES,
                         ODataConstants.PREFIX_DATASERVICES + ODataConstants.ELEM_ELEMENT);
                 parent.appendChild(element);
 
@@ -65,15 +67,15 @@ final class TreeUtils {
                         element.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_NULL,
                                 Boolean.toString(true));
                     } else {
-                        element.appendChild(document.createTextNode(child.asText()));
+                        element.appendChild(parent.getOwnerDocument().createTextNode(child.asText()));
                     }
                 }
 
                 if (child.isContainerNode()) {
-                    buildSubtree(document, element, child);
+                    buildSubtree(element, child);
                 }
             } else if (!name.contains("@") && !ODataConstants.JSON_TYPE.equals(name)) {
-                final Element property = document.createElementNS(
+                final Element property = parent.getOwnerDocument().createElementNS(
                         ODataConstants.NS_DATASERVICES, ODataConstants.PREFIX_DATASERVICES + name);
                 parent.appendChild(property);
 
@@ -92,86 +94,56 @@ final class TreeUtils {
                         property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
                                 EdmSimpleType.INT_32.toString());
                     }
-                    property.appendChild(document.createTextNode(child.asText()));
+                    property.appendChild(parent.getOwnerDocument().createTextNode(child.asText()));
                 } else if (child.isContainerNode()) {
-                    if (child.hasNonNull(ODataConstants.JSON_TYPE)) {
+                    if (!typeSet && child.hasNonNull(ODataConstants.JSON_TYPE)) {
                         property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
                                 child.get(ODataConstants.JSON_TYPE).textValue());
                     }
 
-                    buildSubtree(document, property, child);
+                    final String type = property.getAttribute(ODataConstants.ATTR_TYPE);
+                    if (StringUtils.isNotBlank(type) && isGeospatial(type)) {
+                        if (EdmSimpleType.GEOGRAPHY.toString().equals(type)
+                                || EdmSimpleType.GEOMETRY.toString().equals(type)) {
+
+                            final String geoType = child.get(ODataConstants.TYPE).textValue();
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                                    geoType.startsWith("Geo")
+                                    ? EdmSimpleType.namespace() + "." + geoType
+                                    : type + geoType);
+                        }
+
+                        if (child.has(ODataConstants.JSON_COORDINATES) || child.has(ODataConstants.JSON_GEOMETRIES)) {
+                            GeospatialUtils.deserialize(
+                                    child, property, property.getAttribute(ODataConstants.ATTR_TYPE));
+                        }
+                    } else {
+                        buildSubtree(property, child);
+                    }
                 }
             }
         }
     }
 
     /**
-     * Gets the given node's children of the given type.
-     *
-     * @param node parent.
-     * @param nodetype searched child type.
-     * @return children.
-     */
-    public static List<Node> getChildNodes(final Node node, final short nodetype) {
-        final List<Node> result = new ArrayList<Node>();
-        final NodeList children = node.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            final Node child = children.item(i);
-            if (child.getNodeType() == nodetype) {
-                result.add(child);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Checks if the given node has <tt>element</tt> children.
-     *
-     * @param node parent.
-     * @return 'TRUE' if the given node has at least one <tt>element</tt> child; 'FALSE' otherwise.
-     */
-    public static boolean hasElementsChildNode(final Node node) {
-        boolean found = false;
-
-        for (Node child : getChildNodes(node, Node.ELEMENT_NODE)) {
-            if (ODataConstants.ELEM_ELEMENT.equals(XMLUtils.getSimpleName(child))) {
-                found = true;
-            }
-        }
-
-        return found;
-    }
-
-    /**
-     * Checks if the given node has only text children.
-     *
-     * @param node parent.
-     * @return 'TRUE' if the given node has only text children; 'FALSE' otherwise.
-     */
-    public static boolean hasOnlyTextChildNodes(final Node node) {
-        boolean result = true;
-        final NodeList children = node.getChildNodes();
-        for (int i = 0; result && i < children.getLength(); i++) {
-            final Node child = children.item(i);
-            if (child.getNodeType() != Node.TEXT_NODE) {
-                result = false;
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Serializes content as JSON.
+     * Serializes DOM content as JSON.
      *
      * @param jgen JSON generator.
      * @param content content.
      * @throws IOException in case of write error.
      */
     public static void writeContent(final JsonGenerator jgen, final Node content) throws IOException {
-        for (Node child : getChildNodes(content, Node.ELEMENT_NODE)) {
+        for (Node child : XMLUtils.getChildNodes(content, Node.ELEMENT_NODE)) {
             final String childName = XMLUtils.getSimpleName(child);
-            if (hasOnlyTextChildNodes(child)) {
+
+            final Node typeAttr = child.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
+            if (typeAttr != null && isGeospatial(typeAttr.getTextContent())) {
+                jgen.writeObjectFieldStart(childName);
+
+                GeospatialUtils.serialize(jgen, (Element) child, typeAttr.getTextContent());
+
+                jgen.writeEndObject();
+            } else if (XMLUtils.hasOnlyTextChildNodes(child)) {
                 if (child.hasChildNodes()) {
                     jgen.writeStringField(childName, child.getChildNodes().item(0).getNodeValue());
                 } else {
@@ -183,11 +155,11 @@ final class TreeUtils {
                     }
                 }
             } else {
-                if (hasElementsChildNode(child)) {
+                if (XMLUtils.hasElementsChildNode(child)) {
                     jgen.writeArrayFieldStart(childName);
 
-                    for (Node nephew : getChildNodes(child, Node.ELEMENT_NODE)) {
-                        if (hasOnlyTextChildNodes(nephew)) {
+                    for (Node nephew : XMLUtils.getChildNodes(child, Node.ELEMENT_NODE)) {
+                        if (XMLUtils.hasOnlyTextChildNodes(nephew)) {
                             jgen.writeString(nephew.getChildNodes().item(0).getNodeValue());
                         } else {
                             jgen.writeStartObject();

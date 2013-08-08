@@ -163,7 +163,7 @@ public final class Serializer {
      * @param content DOM to be streamed.
      * @param out output stream.
      */
-    public static void dom(final Element content, final OutputStream out) {
+    public static void dom(final Node content, final OutputStream out) {
         dom(content, new OutputStreamWriter(out));
     }
 
@@ -173,7 +173,7 @@ public final class Serializer {
      * @param content DOM to be streamed.
      * @param writer writer.
      */
-    public static void dom(final Element content, final Writer writer) {
+    public static void dom(final Node content, final Writer writer) {
         try {
             final DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
             final DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");

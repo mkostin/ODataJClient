@@ -82,7 +82,7 @@ public class JSONPropertyDeserializer extends JsonDeserializer<JSONProperty> {
             }
 
             if (subtree != null) {
-                TreeUtils.buildSubtree(document, content, subtree);
+                DOMTreeUtils.buildSubtree(content, subtree);
             }
 
             property.setContent(content);
