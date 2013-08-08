@@ -47,7 +47,7 @@ public @interface FunctionImport {
      */
     String entitySetPath() default "";
 
-    String returnType();
+    String returnType() default "";
 
     boolean isBindable() default false;
 
