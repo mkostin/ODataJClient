@@ -31,6 +31,7 @@
   <packaging>maven-plugin</packaging>
 
   <properties>
+    <serviceRootURL>${test.odata.serviceroot.url}</serviceRootURL>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -76,7 +77,7 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <goalPrefix>mvn-plugin</goalPrefix>
+          <goalPrefix>odatajclient</goalPrefix>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
         </configuration>
         <executions>
@@ -120,7 +121,7 @@
   
   <profiles>
     <profile>
-      <id>run-its</id>
+      <id>test</id>
       <build>
 
         <plugins>
