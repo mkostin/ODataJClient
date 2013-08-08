@@ -104,13 +104,13 @@ public class $utility.capitalize($entityType.Name) extends AbstractType {
                 toRole = "$property.ToRole",
                 containsTarget = #if($property.isContainsTarget())$property.isContainsTarget()#{else}false#end,
                 onDelete = Action.$toRoleType.getValue())
-    private $utility.capitalize($toRoleType.getKey()) _$utility.uncapitalize($property.Name);
+    private $utility.getJavaType($toRoleType.getKey()) _$utility.uncapitalize($property.Name);
 
-    public $utility.capitalize($toRoleType.getKey()) get$utility.capitalize($property.Name)() {
+    public $utility.getJavaType($toRoleType.getKey()) get$utility.capitalize($property.Name)() {
         return _$utility.uncapitalize($property.Name);
     }
 
-    public void set$utility.capitalize($property.Name)(final $utility.capitalize($toRoleType.getKey()) _$utility.uncapitalize($property.Name)) {
+    public void set$utility.capitalize($property.Name)(final $utility.getJavaType($toRoleType.getKey()) _$utility.uncapitalize($property.Name)) {
         this._$utility.uncapitalize($property.Name) = _$utility.uncapitalize($property.Name);
     }
 

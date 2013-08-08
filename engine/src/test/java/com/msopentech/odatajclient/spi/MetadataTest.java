@@ -83,7 +83,7 @@ public class MetadataTest extends AbstractTest {
         }
         assertEquals(6, legacyGetters);
         assertEquals(1, legacyPosters);
-        assertEquals(3, actions);
+        assertEquals(5, actions);
         assertEquals(0, functions);
     }
 }

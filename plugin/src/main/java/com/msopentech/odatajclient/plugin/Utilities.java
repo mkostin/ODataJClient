@@ -118,13 +118,13 @@ public class Utilities {
             res.append(edmType.getSimpleType().javaType().getSimpleName());
         } else if (edmType.isComplexType()) {
             res.append(basePackage).append('.').append(schemaName).append('.').append(TYPE_SUB_PKG).append('.').
-                    append(edmType.getComplexType().getName());
+                    append(capitalize(edmType.getComplexType().getName()));
         } else if (edmType.isEntityType()) {
             res.append(basePackage).append('.').append(schemaName).append('.').append(TYPE_SUB_PKG).append('.').
-                    append(edmType.getEntityType().getName());
+                    append(capitalize(edmType.getEntityType().getName()));
         } else if (edmType.isEnumType()) {
             res.append(basePackage).append('.').append(schemaName).append('.').append(TYPE_SUB_PKG).append('.').
-                    append(edmType.getEnumType().getName());
+                    append(capitalize(edmType.getEnumType().getName()));
         } else {
             throw new IllegalArgumentException("Invalid type expression '" + typeExpression + "'");
         }
@@ -196,7 +196,7 @@ public class Utilities {
                 if (end.getRole().equalsIgnoreCase(associationRole)) {
                     final List<OnAction> actions = end.getTOperations();
                     return new AbstractMap.SimpleEntry<String, Action>(
-                            getNameFromNS(end.getType()),
+                            end.getType(),
                             actions.isEmpty() ? Action.NONE : actions.get(0).getAction());
                 }
             }
