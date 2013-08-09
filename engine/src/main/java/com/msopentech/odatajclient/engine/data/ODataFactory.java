@@ -53,7 +53,7 @@ public final class ODataFactory {
     /**
      * Instantiates a new entity.
      *
-     * @param name name.
+     * @param name OData entity name.
      * @return entity.
      */
     public static ODataEntity newEntity(final String name) {
@@ -63,7 +63,7 @@ public final class ODataFactory {
     /**
      * Instantiates a new entity.
      *
-     * @param name name.
+     * @param name OData entity name.
      * @param link self link.
      * @return entity.
      */

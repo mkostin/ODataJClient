@@ -21,7 +21,6 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatch
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.InputStream;
@@ -89,11 +88,6 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
     private class ODataEntityUpdateResponseImpl extends ODataResponseImpl implements ODataEntityUpdateResponse {
 
         /**
-         * Changes.
-         */
-        private ODataEntity entity = null;
-
-        /**
          * Constructor.
          * <p>
          * Just to create response templates to be initialized from batch.
@@ -109,21 +103,7 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
          */
         private ODataEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
-        }
-
-        /**
-         * {@inheritDoc ]
-         */
-        @Override
-        public ODataEntity getBody() {
-            if (entity == null) {
-                try {
-                    entity = ODataReader.readEntity(getRawResponse(), ODataPubFormat.valueOf(getFormat()));
-                } finally {
-                    this.close();
-                }
-            }
-            return entity;
+            this.close();
         }
     }
 }
