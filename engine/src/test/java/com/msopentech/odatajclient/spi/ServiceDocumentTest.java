@@ -29,7 +29,7 @@ public class ServiceDocumentTest extends AbstractTest {
 
     private void retrieveServiceDocument(final ODataServiceDocumentFormat format) {
         final ODataServiceDocumentRequest req =
-                ODataRetrieveRequestFactory.getServiceDocumentRequest(testODataServiceRootURL);
+                ODataRetrieveRequestFactory.getServiceDocumentRequest(testDefaultServiceRootURL);
         req.setFormat(format);
 
         final ODataRetrieveResponse<ODataServiceDocument> res = req.execute();
@@ -38,7 +38,7 @@ public class ServiceDocumentTest extends AbstractTest {
         final ODataServiceDocument serviceDocument = res.getBody();
         assertEquals(24, serviceDocument.count());
 
-        assertEquals(URI.create(testODataServiceRootURL + "/ComputerDetail"),
+        assertEquals(URI.create(testDefaultServiceRootURL + "/ComputerDetail"),
                 serviceDocument.getEntitySetURI("ComputerDetail"));
     }
 

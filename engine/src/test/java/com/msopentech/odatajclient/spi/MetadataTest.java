@@ -35,8 +35,8 @@ public class MetadataTest extends AbstractTest {
 
     @Test
     public void retrieveAndParseEdmTypes() {
-        final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(testODataServiceRootURL);
-        
+        final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(testDefaultServiceRootURL);
+
         final ODataRetrieveResponse<EdmMetadata> res = req.execute();
         final EdmMetadata metadata = res.getBody();
         assertNotNull(metadata);
@@ -85,5 +85,14 @@ public class MetadataTest extends AbstractTest {
         assertEquals(1, legacyPosters);
         assertEquals(5, actions);
         assertEquals(0, functions);
+    }
+
+    @Test
+    public void large() {
+        final EdmMetadata metadata = ODataRetrieveRequestFactory.
+                getMetadataRequest(testLargeModelServiceRootURL).execute().getBody();
+        assertNotNull(metadata);
+        
+        assertEquals(400, metadata.getSchemas().get(0).getEntityContainers().get(0).getEntitySets().size());
     }
 }

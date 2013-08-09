@@ -59,7 +59,7 @@ public class ODataGenericRetrieveRequest extends ODataRawRequest {
      * @return format.
      */
     public String getFormat() {
-        return format == null ? Configuration.getDefaultFormat().toString() : format;
+        return format == null ? Configuration.getDefaultPubFormat().toString() : format;
     }
 
     /**

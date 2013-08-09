@@ -16,32 +16,18 @@
 package com.msopentech.odatajclient.spi;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
+import static org.junit.Assert.assertTrue;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
-import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
-import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import org.junit.Test;
 
 /**
@@ -49,109 +35,55 @@ import org.junit.Test;
  */
 public class EntityCreateTest extends AbstractTest {
 
-    private ODataEntity createODataEntity(final ODataPubFormat format, final ODataEntity original) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntitySetSegment("Customer");
+    @Test
+    public void createAsAtom() {
+        final ODataPubFormat format = ODataPubFormat.ATOM;
+        final int id = 1;
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
-        debugODataEntity(original, "About to create");
+        createEntity(testDefaultServiceRootURL, format, original);
+        final ODataEntity actual = compareEntities(testDefaultServiceRootURL, format, original, id, null);
 
-        final ODataEntityCreateRequest createReq =
-                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
-        createReq.setFormat(format);
-
-        final ODataEntityCreateResponse createRes = createReq.execute();
-        assertEquals(201, createRes.getStatusCode());
-        assertEquals("Created", createRes.getStatusMessage());
-
-        final ODataEntity created = createRes.getBody();
-        assertNotNull(created);
-
-        debugODataEntity(created, "Just created");
-
-        return created;
+        cleanAfterCreate(format, actual, false);
     }
 
-    private ODataEntity compareEntities(
-            final ODataPubFormat format,
-            final ODataEntity original,
-            final int actualObjectId,
-            final Collection<String> expands) {
+    @Test
+    public void createAsJSON() {
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
+        final int id = 2;
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(actualObjectId);
+        createEntity(testDefaultServiceRootURL, format, original);
+        final ODataEntity actual = compareEntities(testDefaultServiceRootURL, format, original, id, null);
 
-        // search expanded
-        if (expands != null) {
-            for (String expand : expands) {
-                uriBuilder.expand(expand);
-            }
-        }
-
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-        req.setFormat(format);
-
-        final ODataRetrieveResponse<ODataEntity> res = req.execute();
-        assertEquals(200, res.getStatusCode());
-
-        final ODataEntity actual = res.getBody();
-        assertNotNull(actual);
-
-        // check defined links
-        checkLinks(original.getAssociationLinks(), actual.getAssociationLinks());
-        checkLinks(original.getEditMediaLinks(), actual.getEditMediaLinks());
-        checkLinks(original.getNavigationLinks(), actual.getNavigationLinks());
-
-        // check defined properties equality
-        checkProperties(original.getProperties(), actual.getProperties());
-
-        return actual;
+        cleanAfterCreate(format, actual, false);
     }
 
-    private void clean(final ODataPubFormat format, final ODataEntity created, final boolean includeInline) {
-        final List<ODataEntity> toBeDeleted = new ArrayList<ODataEntity>();
-        toBeDeleted.add(created);
+    @Test
+    public void createWithInlineAsAtom() {
+        final ODataPubFormat format = ODataPubFormat.ATOM;
+        final int id = 3;
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
-        if (includeInline) {
-            for (ODataLink link : created.getNavigationLinks()) {
-                if (link instanceof ODataInlineEntity) {
-                    final ODataEntity inline = ((ODataInlineEntity) link).getEntity();
-                    toBeDeleted.add(inline);
-                }
-            }
-        }
+        createEntity(testDefaultServiceRootURL, format, original);
+        final ODataEntity actual =
+                compareEntities(testDefaultServiceRootURL, format, original, id, Collections.<String>singleton("Info"));
 
-        assertFalse(toBeDeleted.isEmpty());
+        cleanAfterCreate(format, actual, true);
+    }
 
-        for (ODataEntity entity : toBeDeleted) {
-            final URI selflLink = entity.getLink();
-            assertNotNull(selflLink);
+    @Test
+    public void createWithInlineAsJSON() {
+        // this needs to be full, otherwise there is no mean to recognize links
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
+        final int id = 4;
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
-            final URI editLink = entity.getEditLink();
-            assertNotNull(editLink);
+        createEntity(testDefaultServiceRootURL, format, original);
+        final ODataEntity actual =
+                compareEntities(testDefaultServiceRootURL, format, original, id, Collections.<String>singleton("Info"));
 
-            final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(editLink);
-            final ODataDeleteResponse deleteRes = deleteReq.execute();
-
-            assertEquals(204, deleteRes.getStatusCode());
-            assertEquals("No Content", deleteRes.getStatusMessage());
-
-            deleteRes.close();
-            
-            final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(selflLink);
-            // bug that needs to be fixed on the SampleService - cannot get entity not found with header
-            // Accept: application/json;odata=minimalmetadata
-            retrieveReq.setFormat(format == ODataPubFormat.JSON_FULL_METADATA? ODataPubFormat.JSON: format);
-
-            Exception exception = null;
-            try {
-                retrieveReq.execute();
-                fail();
-            } catch (ODataClientErrorException e) {
-                exception = e;
-                assertEquals(404, e.getStatusLine().getStatusCode());
-            }
-            assertNotNull(exception);
-        }
+        cleanAfterCreate(format, actual, true);
     }
 
     private ODataEntity createWithNavigationLink(final ODataPubFormat format, final int id) {
@@ -159,13 +91,13 @@ public class EntityCreateTest extends AbstractTest {
 
         final ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
         original.addLink(ODataFactory.newEntityNavigationLink(
-                "Info", URI.create(testODataServiceRootURL + "/CustomerInfo(12)")));
+                "Info", URI.create(testDefaultServiceRootURL + "/CustomerInfo(12)")));
 
-        final ODataEntity created = createODataEntity(format, original);
+        final ODataEntity created = createEntity(testDefaultServiceRootURL, format, original);
         // now, compare the created one with the actual one and go deeply into the associated customer info.....
-        final ODataEntity actual = compareEntities(format, created, id, null);
+        final ODataEntity actual = compareEntities(testDefaultServiceRootURL, format, created, id, null);
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Info");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -192,59 +124,10 @@ public class EntityCreateTest extends AbstractTest {
     }
 
     @Test
-    public void createODataEntityAsAtom() {
-        final ODataPubFormat format = ODataPubFormat.ATOM;
-        final int id = 1;
-        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
-
-        createODataEntity(format, original);
-        final ODataEntity actual = compareEntities(format, original, id, null);
-
-        clean(format, actual, false);
-    }
-
-    @Test
-    public void createODataEntityAsJSON() {
-        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
-        final int id = 2;
-        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
-
-        createODataEntity(format, original);
-        final ODataEntity actual = compareEntities(format, original, id, null);
-
-        clean(format, actual, false);
-    }
-
-    @Test
-    public void createWithInlineAsAtom() {
-        final ODataPubFormat format = ODataPubFormat.ATOM;
-        final int id = 3;
-        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
-
-        createODataEntity(format, original);
-        final ODataEntity actual = compareEntities(format, original, id, Collections.<String>singleton("Info"));
-
-        clean(format, actual, true);
-    }
-
-    @Test
-    public void createWithInlineAsJSON() {
-        // this needs to be full, otherwise there is no mean to recognize links
-        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
-        final int id = 4;
-        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
-
-        createODataEntity(format, original);
-        final ODataEntity actual = compareEntities(format, original, id, Collections.<String>singleton("Info"));
-
-        clean(format, actual, true);
-    }
-
-    @Test
     public void createWithNavigationAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final ODataEntity actual = createWithNavigationLink(format, 5);
-        clean(format, actual, false);
+        cleanAfterCreate(format, actual, false);
     }
 
     @Test
@@ -252,6 +135,6 @@ public class EntityCreateTest extends AbstractTest {
         // this needs to be full, otherwise there is no mean to recognize links
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final ODataEntity actual = createWithNavigationLink(format, 6);
-        clean(format, actual, false);
+        cleanAfterCreate(format, actual, false);
     }
 }

@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -70,7 +69,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void string() {
-        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, TEST_CUSTOMER, "CustomerId");
+        final ODataPrimitiveValue opv = readPropertyValue(testDefaultServiceRootURL, "Customer(-10)", "CustomerId");
         assertEquals(EdmSimpleType.INT_32.toString(), opv.getTypeName());
 
         final Integer value = opv.<Integer>toCastValue();
@@ -80,7 +79,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void int32() {
-        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, "Product(-9)", "Description");
+        final ODataPrimitiveValue opv = readPropertyValue(testDefaultServiceRootURL, "Product(-9)", "Description");
         assertEquals(EdmSimpleType.STRING.toString(), opv.getTypeName());
 
         final String value = opv.<String>toCastValue();
@@ -90,7 +89,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void decimal() {
-        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL, TEST_PRODUCT, "Dimensions/Width");
+        final ODataPrimitiveValue opv = readPropertyValue(testDefaultServiceRootURL, "Product(-10)", "Dimensions/Width");
         assertEquals(EdmSimpleType.DECIMAL.toString(), opv.getTypeName());
 
         final BigDecimal value = opv.<BigDecimal>toCastValue();
@@ -100,8 +99,8 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void datetime() {
-        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
-                TEST_PRODUCT, "ComplexConcurrency/QueriedDateTime");
+        final ODataPrimitiveValue opv = readPropertyValue(testDefaultServiceRootURL,
+                "Product(-10)", "ComplexConcurrency/QueriedDateTime");
         assertEquals(EdmSimpleType.DATE_TIME.toString(), opv.getTypeName());
 
         final Timestamp value = opv.<Timestamp>toCastValue();
@@ -111,7 +110,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void guid() {
-        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
+        final ODataPrimitiveValue opv = readPropertyValue(testDefaultServiceRootURL,
                 "MessageAttachment(guid'1126a28b-a4af-4bbd-bf0a-2b2c22635565')", "AttachmentId");
         assertEquals(EdmSimpleType.GUID.toString(), opv.getTypeName());
 
@@ -122,7 +121,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void binary() {
-        final ODataPrimitiveValue opv = readPropertyValue(testODataServiceRootURL,
+        final ODataPrimitiveValue opv = readPropertyValue(testDefaultServiceRootURL,
                 "MessageAttachment(guid'1126a28b-a4af-4bbd-bf0a-2b2c22635565')", "Attachment");
         assertEquals(EdmSimpleType.BINARY.toString(), opv.getTypeName());
 
@@ -135,7 +134,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geographyPoint() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-10)", "GeogPoint");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-10)", "GeogPoint");
         assertEquals(EdmSimpleType.GEOGRAPHY_POINT.toString(), opv.getTypeName());
 
         final Point point = opv.<Point>toCastValue();
@@ -149,7 +148,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geometryPoint() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-9)", "GeomPoint");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-9)", "GeomPoint");
         assertEquals(EdmSimpleType.GEOMETRY_POINT.toString(), opv.getTypeName());
 
         final Point point = opv.<Point>toCastValue();
@@ -163,7 +162,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geographyLineString() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-10)", "GeogLine");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-10)", "GeogLine");
         assertEquals(EdmSimpleType.GEOGRAPHY_LINE_STRING.toString(), opv.getTypeName());
 
         final LineString lineString = opv.<LineString>toCastValue();
@@ -194,7 +193,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geometryLineString() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-10)", "Geom");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-10)", "Geom");
         assertEquals(EdmSimpleType.GEOMETRY_LINE_STRING.toString(), opv.getTypeName());
 
         final LineString lineString = opv.<LineString>toCastValue();
@@ -225,7 +224,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geometryMultiPoint() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-7)", "GeomMultiPoint");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-7)", "GeomMultiPoint");
         assertEquals(EdmSimpleType.GEOMETRY_MULTI_POINT.toString(), opv.getTypeName());
 
         final MultiPoint multiPoint = opv.<MultiPoint>toCastValue();
@@ -247,7 +246,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geographyMultiPoint() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-7)", "GeogMultiPoint");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-7)", "GeogMultiPoint");
         assertEquals(EdmSimpleType.GEOGRAPHY_MULTI_POINT.toString(), opv.getTypeName());
 
         final MultiPoint multiPoint = opv.<MultiPoint>toCastValue();
@@ -269,7 +268,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geometryMultiLine() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-6)", "GeomMultiLine");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-6)", "GeomMultiLine");
         assertEquals(EdmSimpleType.GEOMETRY_MULTI_LINE_STRING.toString(), opv.getTypeName());
 
         final MultiLineString multiLine = opv.<MultiLineString>toCastValue();
@@ -317,7 +316,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geographyMultiLine() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-7)", "GeogMultiLine");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-7)", "GeogMultiLine");
         assertEquals(EdmSimpleType.GEOGRAPHY_MULTI_LINE_STRING.toString(), opv.getTypeName());
 
         final MultiLineString multiLine = opv.<MultiLineString>toCastValue();
@@ -365,7 +364,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geometryPolygon() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-6)", "GeomPolygon");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-6)", "GeomPolygon");
         assertEquals(EdmSimpleType.GEOMETRY_POLYGON.toString(), opv.getTypeName());
 
         final Polygon polygon = opv.<Polygon>toCastValue();
@@ -394,7 +393,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geographyPolygon() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-5)", "GeogPolygon");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-5)", "GeogPolygon");
         assertEquals(EdmSimpleType.GEOGRAPHY_POLYGON.toString(), opv.getTypeName());
 
         final Polygon polygon = opv.<Polygon>toCastValue();
@@ -425,7 +424,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geometryMultiPolygon() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-3)", "GeomMultiPolygon");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-3)", "GeomMultiPolygon");
         assertEquals(EdmSimpleType.GEOMETRY_MULTI_POLYGON.toString(), opv.getTypeName());
 
         final MultiPolygon multiPolygon = opv.<MultiPolygon>toCastValue();
@@ -501,7 +500,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geographyMultiPolygon() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-5)", "GeogMultiPolygon");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-5)", "GeogMultiPolygon");
         assertEquals(EdmSimpleType.GEOGRAPHY_MULTI_POLYGON.toString(), opv.getTypeName());
 
         final MultiPolygon multiPolygon = opv.<MultiPolygon>toCastValue();
@@ -577,7 +576,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geometryCollection() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-1)", "GeomCollection");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-1)", "GeomCollection");
         assertEquals(EdmSimpleType.GEOMETRY_COLLECTION.toString(), opv.getTypeName());
 
         final GeospatialCollection multiPolygon = opv.<GeospatialCollection>toCastValue();
@@ -588,7 +587,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void geographyCollection() {
         final ODataPrimitiveValue opv =
-                readPropertyValue(testODataServiceRootURL, "AllGeoTypesSet(-2)", "GeogCollection");
+                readPropertyValue(testDefaultServiceRootURL, "AllGeoTypesSet(-2)", "GeogCollection");
         assertEquals(EdmSimpleType.GEOGRAPHY_COLLECTION.toString(), opv.getTypeName());
 
         final GeospatialCollection multiPolygon = opv.<GeospatialCollection>toCastValue();
@@ -598,7 +597,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     @Test
     public void readAllGeoEntitySet() {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("AllGeoTypesSet");
 
         ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
@@ -617,7 +616,7 @@ public class PrimitiveValueTest extends AbstractTest {
         req.setFormat(ODataPubFormat.JSON_NO_METADATA);
         assertNotNull(req.execute().getBody());
 
-        uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+        uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("AllGeoCollectionTypesSet");
 
         req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());

@@ -46,7 +46,7 @@ public class AsyncTest extends AbstractTest {
 
     @Test
     public void retrieveEntitySet() throws InterruptedException, ExecutionException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Product");
         final Future<ODataRetrieveResponse<ODataEntitySet>> futureRes =
                 ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build()).asyncExecute();
@@ -66,7 +66,8 @@ public class AsyncTest extends AbstractTest {
         // Products has some numbers, whose formatting is locale-sensitive
         Locale.setDefault(Locale.ENGLISH);
 
-        final URI uri = new ODataURIBuilder(testODataServiceRootURL).appendEntityTypeSegment(TEST_PRODUCT).build();
+        final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Product").appendKeySegment(-10).build();
 
         final ODataRetrieveResponse<ODataEntity> entityRes = ODataRetrieveRequestFactory.getEntityRequest(uri).execute();
         final ODataEntity entity = entityRes.getBody();
@@ -94,7 +95,7 @@ public class AsyncTest extends AbstractTest {
      */
     @Test
     public void createMediaEntity() throws InterruptedException, ExecutionException, IOException {
-        ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).appendEntitySetSegment("Car");
+        ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Car");
 
         final String TO_BE_UPDATED = "async buffered stream sample";
         final InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);
@@ -119,7 +120,7 @@ public class AsyncTest extends AbstractTest {
                 ? created.getProperties().get(0).getPrimitiveValue().<Integer>toCastValue()
                 : created.getProperties().get(1).getPrimitiveValue().<Integer>toCastValue();
 
-        builder = new ODataURIBuilder(testODataServiceRootURL).
+        builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());

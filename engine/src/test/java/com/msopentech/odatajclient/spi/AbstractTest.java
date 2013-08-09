@@ -16,16 +16,24 @@
 package com.msopentech.odatajclient.spi;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
+import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
@@ -50,12 +58,14 @@ import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.Properties;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,26 +77,36 @@ public abstract class AbstractTest {
      */
     protected static final Logger LOG = LoggerFactory.getLogger(AbstractTest.class);
 
-    protected static final String TEST_CUSTOMER = "Customer(-10)";
-
-    protected static final String TEST_PRODUCT = "Product(-10)";
-
     protected static final String TEST_PRODUCT_TYPE = "Microsoft.Test.OData.Services.AstoriaDefaultService.Product";
 
     protected static final String servicesODataServiceRootURL =
             "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/";
 
-    protected static String testODataServiceRootURL;
+    protected static String testDefaultServiceRootURL;
+
+    protected static String testActionOverloadingServiceRootURL;
+
+    protected static String testKeyAsSegmentServiceRootURL;
+
+    protected static String testODataWriterDefaultServiceRootURL;
+
+    protected static String testOpenTypesServiceRootURL;
+
+    protected static String testPrimitiveKeysServiceRootURL;
+
+    protected static String testLargeModelServiceRootURL;
 
     @BeforeClass
     public static void setUpODataServiceRoot() throws IOException {
+        String testBaseURL = null;
+
         InputStream propStream = null;
         try {
             propStream = AbstractTest.class.getResourceAsStream("/test.properties");
             final Properties props = new Properties();
             props.load(propStream);
 
-            testODataServiceRootURL = props.getProperty("test.odata.serviceroot.url");
+            testBaseURL = props.getProperty("test.base.url");
         } catch (Exception e) {
             LOG.error("Could not load test.properties", e);
         } finally {
@@ -94,7 +114,15 @@ public abstract class AbstractTest {
                 propStream.close();
             }
         }
-        assertNotNull("Check value for the 'testODataServiceRootURL' property", testODataServiceRootURL);
+        assertNotNull("Check value for the 'test.base.url' property", testBaseURL);
+
+        testDefaultServiceRootURL = testBaseURL + "/DefaultService.svc";
+        testActionOverloadingServiceRootURL = testBaseURL + "/ActionOverloadingService.svc";
+        testKeyAsSegmentServiceRootURL = testBaseURL + "/KeyAsSegmentService.svc";
+        testODataWriterDefaultServiceRootURL = testBaseURL + "/ODataWriterDefaultService.svc";
+        testOpenTypesServiceRootURL = testBaseURL + "/OpenTypesService.svc";
+        testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeysService.svc";
+        testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
     }
 
     protected void checkLinks(final Collection<ODataLink> original, final Collection<ODataLink> actual) {
@@ -336,40 +364,185 @@ public abstract class AbstractTest {
         }
     }
 
-    protected ODataEntity createEmployee(final ODataPubFormat format) {
-        final ODataEntity employee = ODataFactory.newEntity(
-                "Microsoft.Test.OData.Services.AstoriaDefaultService.Employee");
+    protected ODataEntity read(final ODataPubFormat format, final URI editLink) {
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(editLink);
+        req.setFormat(format);
 
-        employee.addProperty(ODataFactory.newPrimitiveProperty("PersonId", new ODataPrimitiveValue.Builder().
-                setText("1244").setType(EdmSimpleType.INT_32).build()));
-        employee.addProperty(ODataFactory.newPrimitiveProperty("Name", new ODataPrimitiveValue.Builder().
-                setText("Test employee").build()));
-        employee.addProperty(ODataFactory.newPrimitiveProperty("ManagersPersonId", new ODataPrimitiveValue.Builder().
-                setText("3777").setType(EdmSimpleType.INT_32).build()));
-        employee.addProperty(ODataFactory.newPrimitiveProperty("Salary", new ODataPrimitiveValue.Builder().
-                setText("1000").setType(EdmSimpleType.INT_32).build()));
-        employee.addProperty(ODataFactory.newPrimitiveProperty("Title", new ODataPrimitiveValue.Builder().
-                setText("CEO").build()));
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
+        final ODataEntity entity = res.getBody();
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Person");
+        assertNotNull(entity);
 
-        final ODataEntityCreateRequest createReq =
-                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), employee);
-        createReq.setFormat(format);
-        final ODataEntityCreateResponse createRes = createReq.execute();
-        assertEquals(201, createRes.getStatusCode());
+        if (ODataPubFormat.JSON_FULL_METADATA == format || ODataPubFormat.ATOM == format) {
+            assertEquals(req.getURI(), entity.getEditLink());
+        }
 
-        return createRes.getBody();
+        return entity;
     }
 
-    protected void deleteEmployee(final ODataPubFormat format, final Integer id) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL).
-                appendEntityTypeSegment("Person").appendKeySegment(id);
+    protected ODataEntity createEntity(final String serviceRootURL,
+            final ODataPubFormat format, final ODataEntity original) {
 
-        final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(uriBuilder.build());
-        deleteReq.setFormat(format);
-        final ODataDeleteResponse deleteRes = deleteReq.execute();
-        assertEquals(204, deleteRes.getStatusCode());
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(serviceRootURL);
+        uriBuilder.appendEntitySetSegment("Customer");
+
+        debugODataEntity(original, "About to create");
+
+        final ODataEntityCreateRequest createReq =
+                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
+        createReq.setFormat(format);
+
+        final ODataEntityCreateResponse createRes = createReq.execute();
+        assertEquals(201, createRes.getStatusCode());
+        assertEquals("Created", createRes.getStatusMessage());
+
+        final ODataEntity created = createRes.getBody();
+        assertNotNull(created);
+
+        debugODataEntity(created, "Just created");
+
+        return created;
+    }
+
+    protected ODataEntity compareEntities(final String serviceRootURL,
+            final ODataPubFormat format,
+            final ODataEntity original,
+            final int actualObjectId,
+            final Collection<String> expands) {
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(serviceRootURL).
+                appendEntityTypeSegment("Customer").appendKeySegment(actualObjectId);
+
+        // search expanded
+        if (expands != null) {
+            for (String expand : expands) {
+                uriBuilder.expand(expand);
+            }
+        }
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+
+        final ODataEntity actual = res.getBody();
+        assertNotNull(actual);
+
+        // check defined links
+        checkLinks(original.getAssociationLinks(), actual.getAssociationLinks());
+        checkLinks(original.getEditMediaLinks(), actual.getEditMediaLinks());
+        checkLinks(original.getNavigationLinks(), actual.getNavigationLinks());
+
+        // check defined properties equality
+        checkProperties(original.getProperties(), actual.getProperties());
+
+        return actual;
+    }
+
+    protected void cleanAfterCreate(final ODataPubFormat format, final ODataEntity created,
+            final boolean includeInline) {
+
+        final List<ODataEntity> toBeDeleted = new ArrayList<ODataEntity>();
+        toBeDeleted.add(created);
+
+        if (includeInline) {
+            for (ODataLink link : created.getNavigationLinks()) {
+                if (link instanceof ODataInlineEntity) {
+                    final ODataEntity inline = ((ODataInlineEntity) link).getEntity();
+                    toBeDeleted.add(inline);
+                }
+            }
+        }
+
+        assertFalse(toBeDeleted.isEmpty());
+
+        for (ODataEntity entity : toBeDeleted) {
+            final URI selflLink = entity.getLink();
+            assertNotNull(selflLink);
+
+            final URI editLink = entity.getEditLink();
+            assertNotNull(editLink);
+
+            final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(editLink);
+            final ODataDeleteResponse deleteRes = deleteReq.execute();
+
+            assertEquals(204, deleteRes.getStatusCode());
+            assertEquals("No Content", deleteRes.getStatusMessage());
+
+            deleteRes.close();
+
+            final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(selflLink);
+            // bug that needs to be fixed on the SampleService - cannot get entity not found with header
+            // Accept: application/json;odata=minimalmetadata
+            retrieveReq.setFormat(format == ODataPubFormat.JSON_FULL_METADATA ? ODataPubFormat.JSON : format);
+
+            Exception exception = null;
+            try {
+                retrieveReq.execute();
+                fail();
+            } catch (ODataClientErrorException e) {
+                exception = e;
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+            assertNotNull(exception);
+        }
+    }
+
+    protected void updateEntityDescription(
+            final ODataPubFormat format, final ODataEntity changes, final UpdateType type) {
+
+        updateEntityDescription(format, changes, type, null);
+    }
+
+    protected void updateEntityDescription(
+            final ODataPubFormat format, final ODataEntity changes, final UpdateType type, final String etag) {
+
+        final URI editLink = changes.getEditLink();
+
+        final String newm = "New description(" + System.currentTimeMillis() + ")";
+
+        ODataProperty description = changes.getProperty("Description");
+
+        final String oldm;
+        if (description == null) {
+            oldm = null;
+        } else {
+            oldm = description.getValue().toString();
+            changes.removeProperty(description);
+        }
+
+        assertNotEquals(newm, oldm);
+
+        changes.addProperty(ODataFactory.newPrimitiveProperty("Description",
+                new ODataPrimitiveValue.Builder().setText(newm).build()));
+
+        final ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(type, changes);
+        if (Configuration.isUseXHTTPMethod()) {
+            assertEquals(ODataRequest.Method.POST, req.getMethod());
+        } else {
+            assertEquals(type.getMethod(), req.getMethod());
+        }
+        req.setFormat(format);
+
+        if (StringUtils.isNotBlank(etag)) {
+            req.setIfMatch(etag); // Product include ETag header into the response .....
+        }
+
+        final ODataEntityUpdateResponse res = req.execute();
+        assertEquals(204, res.getStatusCode());
+
+        final ODataEntity actual = read(format, editLink);
+
+        description = null;
+
+        for (ODataProperty prop : actual.getProperties()) {
+            if (prop.getName().equals("Description")) {
+                description = prop;
+            }
+        }
+
+        assertNotNull(description);
+        assertEquals(newm, description.getValue().toString());
     }
 }

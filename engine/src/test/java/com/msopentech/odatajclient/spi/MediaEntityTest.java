@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.spi;
 
-import static com.msopentech.odatajclient.spi.AbstractTest.testODataServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
@@ -47,7 +46,7 @@ public class MediaEntityTest extends AbstractTest {
 
     @Test
     public void readMediaEntity() throws Exception {
-        final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
+        final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
@@ -60,7 +59,7 @@ public class MediaEntityTest extends AbstractTest {
 
     @Test(expected = ODataClientErrorException.class)
     public void readMediaWithXmlError() throws Exception {
-        final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
+        final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
@@ -71,7 +70,7 @@ public class MediaEntityTest extends AbstractTest {
 
     @Test(expected = ODataClientErrorException.class)
     public void readMediaWithJsonError() throws Exception {
-        final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
+        final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
@@ -102,7 +101,7 @@ public class MediaEntityTest extends AbstractTest {
 
     @Test
     public void updateNamedStream() throws Exception {
-        ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
+        ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(16).appendStructuralSegment("Photo");
 
         final String TO_BE_UPDATED = "buffered stream sample";
@@ -124,8 +123,8 @@ public class MediaEntityTest extends AbstractTest {
     }
 
     private void updateMediaEntity(final ODataPubFormat format, final int id) throws Exception {
-        ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL);
-        builder.appendEntitySetSegment("Car(" + id + ")").appendValueSegment();
+        ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
         final String TO_BE_UPDATED = "new buffered stream sample";
         final InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);
@@ -138,7 +137,7 @@ public class MediaEntityTest extends AbstractTest {
         final ODataMediaEntityUpdateResponse updateRes = streamManager.getResponse();
         assertEquals(204, updateRes.getStatusCode());
 
-        builder = new ODataURIBuilder(testODataServiceRootURL).
+        builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
@@ -149,7 +148,7 @@ public class MediaEntityTest extends AbstractTest {
     }
 
     private void createMediaEntity(final ODataPubFormat format) throws Exception {
-        ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL);
+        ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL);
         builder.appendEntitySetSegment("Car");
 
         final String TO_BE_UPDATED = "buffered stream sample";
@@ -171,7 +170,7 @@ public class MediaEntityTest extends AbstractTest {
                 ? created.getProperties().get(0).getPrimitiveValue().<Integer>toCastValue()
                 : created.getProperties().get(1).getPrimitiveValue().<Integer>toCastValue();
 
-        builder = new ODataURIBuilder(testODataServiceRootURL);
+        builder = new ODataURIBuilder(testDefaultServiceRootURL);
         builder.appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());

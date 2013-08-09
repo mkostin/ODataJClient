@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.ODataServerErrorException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
@@ -241,7 +242,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getAccept() {
         final String acceptHead = odataHeaders.getHeader(ODataHeaders.HeaderName.accept);
-        return StringUtils.isBlank(acceptHead) ? Configuration.getDefaultFormat().toString() : acceptHead;
+        return StringUtils.isBlank(acceptHead) ? Configuration.getDefaultPubFormat().toString() : acceptHead;
     }
 
     /**
@@ -274,7 +275,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getContentType() {
         final String contentTypeHead = odataHeaders.getHeader(ODataHeaders.HeaderName.contentType);
-        return StringUtils.isBlank(contentTypeHead) ? Configuration.getDefaultFormat().toString() : contentTypeHead;
+        return StringUtils.isBlank(contentTypeHead) ? Configuration.getDefaultPubFormat().toString() : contentTypeHead;
     }
 
     /**
@@ -372,13 +373,19 @@ public class ODataRequestImpl implements ODataRequest {
             setAccept(getAccept());
         }
 
+        // Add header for KeyAsSegment management
+        if (Configuration.isKeyAsSegment()) {
+            addCustomHeader(
+                    ODataHeaders.HeaderName.dataServiceUrlConventions.toString(), ODataHeaderValues.keyAsSegment);
+        }
+
         // Add all available headers
         for (String key : getHeaderNames()) {
             this.request.addHeader(key, odataHeaders.getHeader(key));
         }
 
         if (LOG.isDebugEnabled()) {
-            for (Header header : request.getAllHeaders()) {
+            for (Header header : this.request.getAllHeaders()) {
                 LOG.debug("HTTP header being sent: " + header);
             }
         }

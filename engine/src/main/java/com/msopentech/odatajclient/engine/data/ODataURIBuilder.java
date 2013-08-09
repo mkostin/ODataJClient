@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,6 +41,7 @@ public class ODataURIBuilder implements Serializable {
         ENTITYSET,
         ENTITYTYPE,
         KEY,
+        KEY_AS_SEGMENT,
         NAVIGATION,
         STRUCTURAL,
         VALUE("$value"),
@@ -233,8 +235,27 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURI object.
      */
-    public ODataURIBuilder appendKeySegment(final Object segmentValue) {
-        segments.add(new Segment(SegmentType.KEY, "(" + segmentValue.toString() + ")"));
+    public ODataURIBuilder appendKeySegment(final Object... segmentValue) {
+        if (segmentValue != null && segmentValue.length > 0) {
+            Segment segment;
+            if (Configuration.isKeyAsSegment()) {
+                segment = new Segment(SegmentType.KEY_AS_SEGMENT, segmentValue[0].toString());
+            } else {
+                final StringBuilder keyBuilder = new StringBuilder();
+                for (Object segValue : segmentValue) {
+                    if (keyBuilder.length() > 0) {
+                        keyBuilder.append(',');
+                    }
+
+                    keyBuilder.append(segValue.toString());
+                }
+
+                segment = new Segment(SegmentType.KEY, "(" + keyBuilder.toString() + ")");
+            }
+
+            segments.add(segment);
+        }
+
         return this;
     }
 

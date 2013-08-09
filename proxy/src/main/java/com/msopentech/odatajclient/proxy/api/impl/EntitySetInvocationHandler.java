@@ -15,8 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -24,7 +22,6 @@ import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
@@ -196,22 +193,16 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             throw new IllegalArgumentException("Null key");
         }
 
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.
-                getEntityRequest(this.uriBuilder.appendKeySegment(key.toString()).build());
-        // TODO: keep this until #102 is fixed
-        req.setFormat(ODataPubFormat.ATOM);
-        final ODataEntity entity = req.execute().getBody();
+        final ODataEntity entity = ODataRetrieveRequestFactory.
+                getEntityRequest(this.uriBuilder.appendKeySegment(key.toString()).build()).execute().getBody();
 
         return entity2Bean(entity);
     }
 
     @Override
     public Iterable<T> getAll() {
-        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.
-                getEntitySetRequest(this.uriBuilder.build());
-        // TODO: keep this until #102 is fixed
-        req.setFormat(ODataPubFormat.ATOM);
-        final ODataEntitySet entitySet = req.execute().getBody();
+        final ODataEntitySet entitySet = ODataRetrieveRequestFactory.
+                getEntitySetRequest(this.uriBuilder.build()).execute().getBody();
 
         final List<T> beans = new ArrayList<T>(entitySet.getEntities().size());
         for (ODataEntity entity : entitySet.getEntities()) {

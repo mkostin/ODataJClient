@@ -56,7 +56,7 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      */
     @Override
     public String getFormat() {
-        return format == null ? Configuration.getDefaultFormat().name() : format.name();
+        return format == null ? Configuration.getDefaultPubFormat().name() : format.name();
     }
 
     /**

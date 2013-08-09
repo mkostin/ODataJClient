@@ -52,7 +52,7 @@ public class QueryOptionsTest extends AbstractTest {
      */
     @Test
     public void filterOrderby() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Car").filter("VIN lt 16");
 
         // 1. check that filtered entity set looks as expected
@@ -91,8 +91,8 @@ public class QueryOptionsTest extends AbstractTest {
      */
     @Test
     public void format() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).format("json");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Customer").appendKeySegment(-10).format("json");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
@@ -125,7 +125,7 @@ public class QueryOptionsTest extends AbstractTest {
      */
     @Test
     public void skiptoken() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer").skipToken("-10");
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
@@ -143,7 +143,7 @@ public class QueryOptionsTest extends AbstractTest {
      */
     @Test
     public void inlinecount() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Car").inlineCount();
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
@@ -158,8 +158,8 @@ public class QueryOptionsTest extends AbstractTest {
      */
     @Test
     public void select() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
-        uriBuilder.appendEntityTypeSegment(TEST_CUSTOMER).select("CustomerId,Orders").expand("Orders");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Customer").appendKeySegment(-10).select("CustomerId,Orders").expand("Orders");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         final ODataEntity customer = req.execute().getBody();

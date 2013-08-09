@@ -80,7 +80,7 @@ public class ErrorTest extends AbstractTest {
     }
 
     private void stacktraceError(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
         final ErrorGeneratingRequest errorReq =
@@ -111,7 +111,7 @@ public class ErrorTest extends AbstractTest {
     }
 
     private void notfoundError(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testODataServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer(154)");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -142,13 +142,13 @@ public class ErrorTest extends AbstractTest {
 
     private void instreamError(final ODataPubFormat format) {
         final EdmMetadata metadata =
-                ODataRetrieveRequestFactory.getMetadataRequest(testODataServiceRootURL).execute().getBody();
+                ODataRetrieveRequestFactory.getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
         final EntityContainer.FunctionImport funcImp = container.getFunctionImport("InStreamErrorGetCustomer");
 
-        final ODataURIBuilder builder = new ODataURIBuilder(testODataServiceRootURL).
+        final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
 
         final ODataInvokeRequest<ODataEntitySet> req =

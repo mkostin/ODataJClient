@@ -25,13 +25,18 @@ public class ODataHeaderValues {
      *
      * @see ODataHeaders.HeaderName#prefer
      */
-    public static String preferReturnContent = "return-content";
+    public static final String preferReturnContent = "return-content";
 
     /**
      * <code>Prefer</code> header, return no content.
      *
      * @see ODataHeaders.HeaderName#prefer
      */
-    public static String preferReturnNoContent = "return-no-content";
+    public static final String preferReturnNoContent = "return-no-content";
+
+    /**
+     * @see ODataHeaders.HeaderName#dataServiceUrlConventions
+     */
+    public static final String keyAsSegment = "KeyAsSegment";
 
 }

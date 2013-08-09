@@ -30,6 +30,8 @@ public final class Configuration {
 
     public static final String USE_XHTTP_METHOD = "USE_XHTTP_METHOD";
 
+    public static final String KEY_AS_SEGMENT = "KEY_AS_SEGMENT";
+
     private static final Map<String, String> conf = new HashMap<String, String>();
 
     private static ExecutorService EXECUTOR = Executors.newFixedThreadPool(10);
@@ -67,7 +69,7 @@ public final class Configuration {
      * @return configured OData format if exists; JSON_FULL_METADATA format otherwise.
      * @see ODataPubFormat#JSON_FULL_METADATA
      */
-    public static ODataPubFormat getDefaultFormat() {
+    public static ODataPubFormat getDefaultPubFormat() {
         return ODataPubFormat.valueOf(getProperty(DEFAULT_FORMAT, "JSON_FULL_METADATA"));
     }
 
@@ -76,7 +78,7 @@ public final class Configuration {
      *
      * @param format default format.
      */
-    public static void setDefaultFormat(final ODataPubFormat format) {
+    public static void setDefaultPubFormat(final ODataPubFormat format) {
         setProperty(DEFAULT_FORMAT, format.name());
     }
 
@@ -98,6 +100,14 @@ public final class Configuration {
      */
     public static void setUseXHTTPMethod(final boolean value) {
         setProperty(USE_XHTTP_METHOD, Boolean.toString(value));
+    }
+
+    public static boolean isKeyAsSegment() {
+        return Boolean.valueOf(getProperty(KEY_AS_SEGMENT, "false"));
+    }
+
+    public static void setKeyAsSegment(final boolean value) {
+        setProperty(KEY_AS_SEGMENT, Boolean.toString(value));
     }
 
     /**

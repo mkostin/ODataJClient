@@ -125,6 +125,7 @@ public class ODataHeaders {
          * <code>202 Accepted</code>.
          */
         retryAfter("Retry-After"),
+        dataServiceUrlConventions("DataServiceUrlConventions"),
         /**
          * This header is a custom HTTP request header.
          * <p>

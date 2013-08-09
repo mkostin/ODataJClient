@@ -347,10 +347,10 @@
                 <configuration>
                   <rules>
                     <requireProperty>
-                      <property>test.odata.serviceroot.url</property>
-                      <message>You must set 'test.odata.serviceroot.url' property!</message>
+                      <property>test.base.url</property>
+                      <message>You must set 'test.base.url' property!</message>
                       <regex>http(s)?://.*</regex>
-                      <regexMessage>The test.odata.serviceroot.url property must be a valid HTTP(S) URL.</regexMessage>
+                      <regexMessage>The test.base.url property must be a valid HTTP(S) URL.</regexMessage>
                     </requireProperty>
                   </rules>
                   <fail>true</fail>
