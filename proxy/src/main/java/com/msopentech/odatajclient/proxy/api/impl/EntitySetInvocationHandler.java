@@ -134,15 +134,15 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             } else {
                 try {
                     if (property.hasNullValue()) {
-                        PropertyUtils.setProperty(bean, beanPropName, null);
+                        setPropertyValue(bean, beanPropName, null);
                     }
                     if (property.hasPrimitiveValue()) {
-                        BeanUtils.setProperty(bean, beanPropName, property.getPrimitiveValue().toValue());
+                        setPropertyValue(bean, beanPropName, property.getPrimitiveValue().toValue());
                     }
                     if (property.hasComplexValue()) {
                         final Object complex = bean.getClass().getDeclaredField(beanPropName).getType().newInstance();
                         populate(complex, property.getComplexValue().iterator());
-                        BeanUtils.setProperty(bean, beanPropName, complex);
+                        setPropertyValue(bean, beanPropName, complex);
                     }
                     if (property.hasCollectionValue()) {
                         final ParameterizedType collType =
@@ -169,6 +169,24 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
                     LOG.error("Could not set property {} on {}", beanPropName, bean, e);
                 }
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setPropertyValue(final Object bean, final String beanPropName, final Object value)
+            throws Exception {
+
+        // The following check is required to be stronger against field names prefixed by undercores.
+        // By java beans contract, "_variable" should implie get_variable() and set_variable(...) methods.
+        // Often this contract is not respected: getVariable() and setVariable(...) are generated in place
+        // of the previous one.
+        final String propName = PropertyUtils.getPropertyDescriptor(bean, beanPropName) == null
+                ? beanPropName.replaceFirst("^_+", "") : beanPropName;
+
+        if (value == null) {
+            PropertyUtils.setProperty(bean, propName, value);
+        } else {
+            BeanUtils.setProperty(bean, propName, value);
         }
     }
 

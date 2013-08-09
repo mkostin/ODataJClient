@@ -13,7 +13,7 @@
 ## limitations under the License.
 package $basePackage.$schemaName;
 
-import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.AbstractAsyncEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import $basePackage.${schemaName}.types.*;
 
@@ -34,19 +34,19 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-#set( $keys = $utility.getEntityKeyType($entitySet) )
+#set( $keys = $utility.getEntityKeyType($asyncEntitySet) )
 #if ( $keys.size() > 1 )
-  #set( $type = $utility.getEntityType($entitySet).Name + "Key" )
+  #set( $type = $utility.getEntityType($asyncEntitySet).Name + "Key" )
 import java.io.Serializable;
-import $basePackage.$schemaName.$entitySet.Name.$type;
+import $basePackage.$schemaName.$asyncEntitySet.Name.$type;
 #elseif ( $keys.size() == 1 )
   #set ( $type = $keys.values().iterator().next() )
 #else
   #set ( $type = "" )
 #end
 
-@EntitySet("$entitySet.Name")
-public interface $utility.capitalize($entitySet.Name) extends AbstractEntitySet<$utility.getJavaType($entitySet.EntityType), $type> {
+@EntitySet("$asyncEntitySet.Name")
+public interface Async$utility.capitalize($asyncEntitySet.Name) extends AbstractAsyncEntitySet<$utility.getJavaType($asyncEntitySet.EntityType), $type> {
 
 #if ( $keys.size() > 1 )
     public static class $type implements Serializable {

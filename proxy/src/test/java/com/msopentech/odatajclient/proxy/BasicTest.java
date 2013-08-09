@@ -16,21 +16,20 @@
 package com.msopentech.odatajclient.proxy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.Customer;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.DefaultContainer;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.Message;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AllSpatialTypes;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Car;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
-import com.msopentech.odatajclient.proxy.odatademo.Address;
-import com.msopentech.odatajclient.proxy.odatademo.Categories;
-import com.msopentech.odatajclient.proxy.odatademo.DemoService;
-import com.msopentech.odatajclient.proxy.odatademo.Product;
-import com.msopentech.odatajclient.proxy.odatademo.Products;
-import com.msopentech.odatajclient.proxy.odatademo.Supplier;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,62 +41,66 @@ public class BasicTest {
     @BeforeClass
     public static void setup() {
         entityContainerFactory = new EntityContainerFactory();
-        entityContainerFactory.setServiceRoot(
-                "http://services.odata.org/v3/(S(s41okrymbq32h4l0imhdvhay))/OData/OData.svc/");
+        entityContainerFactory.setServiceRoot("http://10.10.10.6:8080/DefaultService.svc");
     }
 
     @Test
     public void count() {
-        final DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
-        assertNotNull(demoService);
+        final DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
+        assertNotNull(container);
 
-        final Products products = demoService.getProducts();
-        assertNotNull(products);
-        assertTrue(11 == products.count());
+        final Message message = container.getMessage();
 
-        final Categories categories = demoService.getCategories();
-        assertNotNull(categories);
-        assertTrue(3 == categories.count());
+        assertNotNull(message);
+        assertEquals(Long.valueOf(10L), message.count());
+
+        final Customer customers = container.getCustomer();
+        assertNotNull(customers);
+        assertTrue(customers.count() > 0);
     }
 
     @Test
     public void get() {
-        final DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
-        assertNotNull(demoService);
+        final DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
+        assertNotNull(container);
 
-        final Product product = demoService.getProducts().get(1);
-        assertNotNull(product);
-        assertTrue(1 == product.getId());
-        assertNull(product.getDiscontinuedDate());
-        assertEquals("1995-10-01T00:00:00",
-                new SimpleDateFormat(EdmSimpleType.DATE_TIME.pattern()).format(product.getReleaseDate()));
-        assertTrue(3 == product.getRating());
-        assertEquals(BigDecimal.valueOf(3.5), product.getPrice());
+        final Order order = container.getOrder().get(-9);
+        assertNotNull(order);
+        assertTrue(-9 == order.getOrderId());
 
-        final Supplier supplier = demoService.getSuppliers().get(0);
-        assertNotNull(supplier);
-        final Address address = supplier.getAddress();
-        assertNotNull(address);
-        assertEquals("98074", address.getZipCode());
-        final Point location = supplier.getLocation();
-        assertNotNull(location);
-        assertEquals(47.6316604614258, location.getX(), 0);
+        final ConcurrencyInfo concurrency = order.getConcurrency();
+        assertNotNull(concurrency);
+        assertEquals("2012-02-12T11:32:50", new SimpleDateFormat(
+                EdmSimpleType.DATE_TIME.pattern()).format(new Date(concurrency.getQueriedDateTime().getTime())));
+        assertTrue(78 == order.getCustomerId());
+
+        final Car car = container.getCar().get(11);
+        assertNotNull(car);
+        assertEquals("cenbviijieljtrtdslbuiqubcvhxhzenidqdnaopplvlqc", car.getDescription());
+
+        final AllSpatialTypes geo = container.getAllGeoTypesSet().get(-10);
+        assertNotNull(geo);
+        assertEquals(52.8606, geo.getGeogPoint().getY(), 0);
+        assertEquals(173.334, geo.getGeogPoint().getX(), 0);
     }
 
     @Test
     public void getAll() {
-        final DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
-        assertNotNull(demoService);
+        final DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
+        assertNotNull(container);
 
-        final Iterable<Product> products = demoService.getProducts().getAll();
-        assertNotNull(products);
+        final Iterable<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer> customers =
+                container.getCustomer().getAll();
+        assertNotNull(customers);
 
-        final Iterator<Product> itor = products.iterator();
+        final Iterator<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer> itor =
+                customers.iterator();
+
         int count = 0;
         while (itor.hasNext()) {
             assertNotNull(itor.next());
             count++;
         }
-        assertTrue(11 == count);
+        assertTrue(2 == count);
     }
 }

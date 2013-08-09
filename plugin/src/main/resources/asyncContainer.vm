@@ -11,10 +11,13 @@
 ## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
+#set( $clsSuffix = ".class" )
 package $basePackage.$schemaName;
 
-import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
-import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
+import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
+import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
 import $basePackage.${schemaName}.types.*;
 
 // EdmSimpleType property imports
@@ -33,34 +36,28 @@ import java.util.UUID;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
+import java.util.Collection;
+import java.util.concurrent.Future;
 
-#set( $keys = $utility.getEntityKeyType($entitySet) )
-#if ( $keys.size() > 1 )
-  #set( $type = $utility.getEntityType($entitySet).Name + "Key" )
-import java.io.Serializable;
-import $basePackage.$schemaName.$entitySet.Name.$type;
-#elseif ( $keys.size() == 1 )
-  #set ( $type = $keys.values().iterator().next() )
-#else
-  #set ( $type = "" )
+@EntityContainer(name = "$asyncContainer.Name", isDefaultEntityContainer = $asyncContainer.DefaultEntityContainer)
+public interface Async$utility.capitalize($asyncContainer.Name) {
+
+#foreach($entitySet in $asyncContainer.EntitySets)
+    Async$utility.capitalize($entitySet.Name) get$utility.capitalize($entitySet.Name)();
+
 #end
 
-@EntitySet("$entitySet.Name")
-public interface $utility.capitalize($entitySet.Name) extends AbstractEntitySet<$utility.getJavaType($entitySet.EntityType), $type> {
+#foreach($operation in $asyncContainer.FunctionImports)
+    @FunctionImport(name = "$operation.Name"#if($operation.EntitySet), entitySet = $operation.EntitySet$clsSuffix#end #if ($operation.ReturnType), returnType = "$operation.ReturnType"#end)
+    #if ($operation.ReturnType)Future<$utility.getJavaType($operation.ReturnType)>#{else}void#end $utility.uncapitalize($operation.Name)(
+    #if($operation.Parameters)
+      #set( $count = $operation.Parameters.size() )#*
+      *##foreach($param in $operation.Parameters)#*
+        *##set( $count = $count - 1 )#*
+      *#    @Parameter(name = "$param.Name", type = "$param.Type"#if ($param.Mode), mode = ParameterMode.$param.Mode.toString()#end) $utility.getJavaType($param.Type) $utility.uncapitalize($param.Name)#if( $count > 0 ), #end
 
-#if ( $keys.size() > 1 )
-    public static class $type implements Serializable {
-    #foreach ($entry in $keys.entrySet())
+    #end#*
+    *##end);
 
-        private $entry.getValue() _$utility.uncapitalize($entry.getKey());
-
-        public $entry.getValue() get$utility.capitalize($entry.getKey())() {
-            return _$utility.uncapitalize($entry.getKey());
-        }
-
-        public void set$utility.capitalize($entry.getKey())(final $entry.getValue() _$utility.uncapitalize($entry.getKey())) {
-            this._$utility.uncapitalize($entry.getKey()) = _$utility.uncapitalize($entry.getKey());
-        }
-    #end}
 #end
 }

@@ -42,7 +42,7 @@ import java.util.Collection;
 public interface $container.Name {
 
 #foreach($entitySet in $container.EntitySets)
-    $entitySet.Name get$utility.capitalize($entitySet.Name)();
+    $utility.capitalize($entitySet.Name) get$utility.capitalize($entitySet.Name)();
 
 #end
 

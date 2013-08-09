@@ -13,5 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-File basepkg = new File( basedir, "target/generated-sources/ojc-plugin/com/msopentech/odatajclient/tests" );
+File basepkg = new File( basedir, "target/generated-sources/ojc-plugin/com/msopentech/odatajclient/proxy" );
 assert basepkg.isDirectory() && basepkg.listFiles().length>0;

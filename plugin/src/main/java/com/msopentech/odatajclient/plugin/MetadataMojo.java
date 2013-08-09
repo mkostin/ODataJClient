@@ -99,6 +99,14 @@ public class MetadataMojo extends AbstractMojo {
                 for (EntitySet entitySet : container.getEntitySets()) {
                     parseObj(base, pkg, entitySet, "entitySet", StringUtils.capitalize(entitySet.getName()) + ".java");
                 }
+
+                parseObj(base, pkg, container, "asyncContainer",
+                        "Async" + StringUtils.capitalize(container.getName()) + ".java");
+
+                for (EntitySet entitySet : container.getEntitySets()) {
+                    parseObj(base, pkg, entitySet, "asyncEntitySet",
+                            "Async" + StringUtils.capitalize(entitySet.getName()) + ".java");
+                }
             }
 
             // write package-info for types package

@@ -15,11 +15,12 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.AsyncDefaultContainer;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.query.AsyncEntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.AsyncQuery;
-import com.msopentech.odatajclient.proxy.odatademo.AsyncDemoService;
-import com.msopentech.odatajclient.proxy.odatademo.Product;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -31,24 +32,24 @@ public class AsyncProxyUsageTest {
     private EntityContainerFactory entityContainerFactory;
 
     public void entityQuery() {
-        AsyncDemoService demoService = entityContainerFactory.getEntityContainer(AsyncDemoService.class);
+        AsyncDefaultContainer container = entityContainerFactory.getEntityContainer(AsyncDefaultContainer.class);
 
-        // Typed query for products with price < 10.00, to be execute asynchronously
-        AsyncEntityQuery<Product> productQuery = demoService.getProducts().createQuery(Product.class);
-        productQuery.setFilter("Price lt 10.00");
+        // Typed query for orders with id < 10.00, to be execute asynchronously
+        AsyncEntityQuery<Order> orderQuery = container.getOrder().createQuery(Order.class);
+        orderQuery.setFilter("OrderId lt 10.00");
 
-        Future<List<Product>> matchingProductsFuture = productQuery.asyncGetResultList();
+        Future<List<Order>> matchingOrdersFuture = orderQuery.asyncGetResultList();
 
-        // ... do something with matchingProductsFuture
+        // ... do something with matchingOrdersFuture
     }
 
     public void untypedQuery() {
-        AsyncDemoService demoService = entityContainerFactory.getEntityContainer(AsyncDemoService.class);
+        AsyncDefaultContainer container = entityContainerFactory.getEntityContainer(AsyncDefaultContainer.class);
 
-        // Untyped query for names of products with price < 10.00, to be execute asynchronously
-        AsyncQuery query = demoService.getProducts().createQuery();
-        query.setFilter("Price lt 10.00");
-        query.setSelect("Name");
+        // Untyped query for names of order with id < 10.00, to be execute asynchronously
+        AsyncQuery query = container.getOrder().createQuery();
+        query.setFilter("OrderId lt 10.00");
+        query.setSelect("CustomerId");
 
         Future<List<? extends Serializable>> matchFuture = query.asyncGetResultList();
 
@@ -56,20 +57,20 @@ public class AsyncProxyUsageTest {
     }
 
     public void get() {
-        AsyncDemoService demoService = entityContainerFactory.getEntityContainer(AsyncDemoService.class);
+        AsyncDefaultContainer container = entityContainerFactory.getEntityContainer(AsyncDefaultContainer.class);
 
-        // Take the product with key value 3 asynchronously
-        Future<Product> product3 = demoService.getProducts().get(3);
+        // Take the order with key value -9 asynchronously
+        Future<Order> order = container.getOrder().get(-9);
     }
 
     public void invoke() throws InterruptedException, ExecutionException {
-        AsyncDemoService demoService = entityContainerFactory.getEntityContainer(AsyncDemoService.class);
+        AsyncDefaultContainer container = entityContainerFactory.getEntityContainer(AsyncDefaultContainer.class);
 
         // invoke GetProductsByRating asynchronously
-        Future<Collection<Product>> productsFuture = demoService.getProductsByRating(15);
-        while (!productsFuture.isDone()) {
+        Future<Collection<Customer>> customersFuture = container.getSpecificCustomer("xxx");
+        while (!customersFuture.isDone()) {
             Thread.sleep(1000);
         }
-        Collection<Product> products = productsFuture.get();
+        Collection<Customer> customer = customersFuture.get();
     }
 }

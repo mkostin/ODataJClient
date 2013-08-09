@@ -31,7 +31,7 @@
   <packaging>maven-plugin</packaging>
 
   <properties>
-    <serviceRootURL>${test.odata.serviceroot.url}</serviceRootURL>
+    <serviceRootURL>${test.base.url}</serviceRootURL>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 

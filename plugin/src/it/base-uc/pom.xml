@@ -71,8 +71,8 @@
           <execution>
             <configuration>
               <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
-              <serviceRootURL>@serviceRootURL@</serviceRootURL>
-              <basePackage>com.msopentech.odatajclient.tests</basePackage>
+              <serviceRootURL>@serviceRootURL@/DefaultService.svc</serviceRootURL>
+              <basePackage>com.msopentech.odatajclient.proxy</basePackage>
             </configuration>
             <id>pojos</id>
             <phase>generate-sources</phase>
