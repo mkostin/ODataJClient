@@ -15,17 +15,14 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.DefaultContainer;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer;
+import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
-import com.msopentech.odatajclient.proxy.odatademo.Category;
-import com.msopentech.odatajclient.proxy.odatademo.DemoService;
-import com.msopentech.odatajclient.proxy.odatademo.Product;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class ProxyUsageTest {
@@ -33,74 +30,72 @@ public class ProxyUsageTest {
     private EntityContainerFactory entityContainerFactory;
 
     public void entityQuery() {
-        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
+        DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
 
-        // Typed query for products with price < 10.00
-        EntityQuery<Product> productQuery = demoService.getProducts().createQuery(Product.class);
-        productQuery.setFilter("Price lt 10.00");
+        // Typed query for orders with id < 10.00, to be execute
+        EntityQuery<Order> orderQuery = container.getOrder().createQuery(Order.class);
+        orderQuery.setFilter("OrderId lt 10.00");
 
-        List<Product> matchingProducts = productQuery.getResultList();
+        List<Order> matchingOrdersFuture = orderQuery.getResultList();
 
-        // ... do something with matchingProducts
+        // ... do something with matchingOrdersFuture
 
-        // Typed query for categories of products with price < 10.00
-        EntityQuery<Category> categoryQuery = demoService.getProducts().createQuery(Category.class);
-        productQuery.setFilter("Price lt 10.00");
-        productQuery.setSelect("Category");
 
-        List<Category> matchingCategories = categoryQuery.getResultList();
+        // Typed query for CustomerId of orders with OrderId < 10.00
+        orderQuery = container.getOrder().createQuery(Order.class);
+        orderQuery.setFilter("OrderId lt 10.00");
+        orderQuery.setSelect("CustomerId");
 
-        // ... do something with matchingCategories
+        List<Order> matchingCategories = orderQuery.getResultList();
+
+        // ... do something with matchingOrders
     }
 
     public void untypedQuery() {
-        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
+        DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
 
-        // Untyped query for names of products with price < 10.00
-        Query query = demoService.getProducts().createQuery();
-        query.setFilter("Price lt 10.00");
-        query.setSelect("Name");
+        // Untyped query for names of order with id < 10.00, to be execute
+        Query query = container.getOrder().createQuery();
+        query.setFilter("OrderId lt 10.00");
+        query.setSelect("CustomerId");
 
-        List<? extends Serializable> match = query.getResultList();
+        List<? extends Serializable> matchFuture = query.getResultList();
 
-        // ... do something with match
+        // ... do something with results
     }
 
     public void get() {
-        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
+        DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
 
-        // Take the product with key value 3
-        Product product3 = demoService.getProducts().get(3);
+        // Take the order with key value -9
+        Order order = container.getOrder().get(-9);
     }
 
     public void create() {
-        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
+        DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
 
-        // create Category (local)
-        Category category = new Category();
-        category.setName("a category name");
-        category = demoService.getCategories().save(category);
+        // create Order (local)
+        Order order = new Order();
+        order.setCustomerId(-10);
+        order = container.getOrder().save(order);
 
-        // create Product (local)
-        Product product = new Product();
-        product.setName("a name");
-        product.setDescription("a description");
-        product.setPrice(BigDecimal.valueOf(11));
-        product.setReleaseDate(new Date());
-        product = demoService.getProducts().save(product);
+        // create Customer (local)
+        Customer customer = new Customer();
+        customer.setName("a name");
+        customer = container.getCustomer().save(customer);
 
-        // link product and category
-        product.setCategory(category);
-        category.setProducts(Collections.singletonList(product));
+        // link customer and order
+        customer.setOrders(order);
+        order.setCustomer(customer);
 
         // any flush() will generate actual operations on the OData service
-        demoService.getProducts().flush();
+        container.getCustomer().flush();
     }
 
     public void invoke() {
-        DemoService demoService = entityContainerFactory.getEntityContainer(DemoService.class);
+        DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
 
         // invoke GetProductsByRating
-        Collection<Product> products = demoService.getProductsByRating(15);
+        Collection<Customer> customers = container.getSpecificCustomer("xxx");
     }
 }

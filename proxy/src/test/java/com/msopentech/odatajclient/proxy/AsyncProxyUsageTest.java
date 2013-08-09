@@ -71,6 +71,6 @@ public class AsyncProxyUsageTest {
         while (!customersFuture.isDone()) {
             Thread.sleep(1000);
         }
-        Collection<Customer> customer = customersFuture.get();
+        Collection<Customer> customers = customersFuture.get();
     }
 }
