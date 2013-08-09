@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -235,25 +236,34 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURI object.
      */
-    public ODataURIBuilder appendKeySegment(final Object... segmentValue) {
-        if (segmentValue != null && segmentValue.length > 0) {
-            Segment segment;
-            if (Configuration.isKeyAsSegment()) {
-                segment = new Segment(SegmentType.KEY_AS_SEGMENT, segmentValue[0].toString());
-            } else {
-                final StringBuilder keyBuilder = new StringBuilder();
-                for (Object segValue : segmentValue) {
-                    if (keyBuilder.length() > 0) {
-                        keyBuilder.append(',');
-                    }
+    public ODataURIBuilder appendKeySegment(final Object segmentValue) {
+        segments.add(Configuration.isKeyAsSegment()
+                ? new Segment(SegmentType.KEY_AS_SEGMENT, segmentValue.toString())
+                : new Segment(SegmentType.KEY, "(" + segmentValue.toString() + ")"));
+        return this;
+    }
 
-                    keyBuilder.append(segValue.toString());
+    /**
+     * Append key segment to the URI, for multiple keys.
+     *
+     * @param segmentValue segment value.
+     * @return current ODataURI object.
+     */
+    public ODataURIBuilder appendKeySegment(final LinkedHashMap<String, Object> segmentValues) {
+        if (!Configuration.isKeyAsSegment()) {
+            final StringBuilder keyBuilder = new StringBuilder().append('(');
+            for (Map.Entry<String, Object> entry : segmentValues.entrySet()) {
+                keyBuilder.append(entry.getKey()).append('=');
+                if (entry.getValue() instanceof String) {
+                    keyBuilder.append('\'').append((String) entry.getValue()).append('\'');
+                } else {
+                    keyBuilder.append(entry.getValue().toString());
                 }
-
-                segment = new Segment(SegmentType.KEY, "(" + keyBuilder.toString() + ")");
+                keyBuilder.append(',');
             }
-
-            segments.add(segment);
+            keyBuilder.deleteCharAt(keyBuilder.length() - 1).append(')');
+            
+            segments.add(new Segment(SegmentType.KEY, keyBuilder.toString()));
         }
 
         return this;

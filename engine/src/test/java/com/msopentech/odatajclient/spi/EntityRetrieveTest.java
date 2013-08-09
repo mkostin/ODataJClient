@@ -41,6 +41,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
 import java.util.List;
 import org.junit.Test;
 import org.w3c.dom.Element;
@@ -50,25 +51,6 @@ import org.w3c.dom.Node;
  * This is the unit test class to check entity retrieve operations.
  */
 public class EntityRetrieveTest extends AbstractTest {
-
-    private void genericRequest(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-                appendEntityTypeSegment("Car").appendKeySegment(16);
-
-        final ODataGenericRetrieveRequest req =
-                ODataRetrieveRequestFactory.getGenericRetrieveRequest(uriBuilder.build());
-        req.setFormat(format.toString());
-
-        final ODataRetrieveResponse<ODataObjectWrapper> res = req.execute();
-
-        final ODataObjectWrapper wrapper = res.getBody();
-
-        final ODataEntitySet entitySet = wrapper.getODataEntitySet();
-        assertNull(entitySet);
-
-        final ODataEntity entity = wrapper.getODataEntity();
-        assertNotNull(entity);
-    }
 
     private void readEntry(final ODataPubFormat format) throws IOException {
         // ---------------------------------------------
@@ -340,6 +322,25 @@ public class EntityRetrieveTest extends AbstractTest {
         withActions(ODataPubFormat.JSON_FULL_METADATA);
     }
 
+    private void genericRequest(final ODataPubFormat format) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Car").appendKeySegment(16);
+
+        final ODataGenericRetrieveRequest req =
+                ODataRetrieveRequestFactory.getGenericRetrieveRequest(uriBuilder.build());
+        req.setFormat(format.toString());
+
+        final ODataRetrieveResponse<ODataObjectWrapper> res = req.execute();
+
+        final ODataObjectWrapper wrapper = res.getBody();
+
+        final ODataEntitySet entitySet = wrapper.getODataEntitySet();
+        assertNull(entitySet);
+
+        final ODataEntity entity = wrapper.getODataEntity();
+        assertNotNull(entity);
+    }
+
     @Test
     public void genericRequestAsAtom() {
         genericRequest(ODataPubFormat.ATOM);
@@ -349,6 +350,33 @@ public class EntityRetrieveTest extends AbstractTest {
     public void genericRequestAsJSON() {
         // this needs to be full, otherwise actions will not be provided
         genericRequest(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    private void multiKey(final ODataPubFormat format) {
+        final LinkedHashMap<String, Object> multiKey = new LinkedHashMap<String, Object>();
+        multiKey.put("FromUsername", "1");
+        multiKey.put("MessageId", -10);
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Message").appendKeySegment(multiKey);
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
+        final ODataEntity entity = res.getBody();
+        assertNotNull(entity);
+        assertEquals("1", entity.getProperty("FromUsername").getPrimitiveValue().<String>toCastValue());
+    }
+
+    @Test
+    public void multiKeyAsAtom() {
+        multiKey(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void multiKeyAsJSON() {
+        multiKey(ODataPubFormat.JSON_FULL_METADATA);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -15,12 +15,18 @@
  */
 package com.msopentech.odatajclient.spi;
 
+import static org.junit.Assert.assertEquals;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.net.URI;
+import java.util.LinkedHashMap;
 import org.junit.Test;
 
 /**
@@ -29,7 +35,7 @@ import org.junit.Test;
 public class EntityUpdateTest extends AbstractTest {
 
     @Test
-    public void mergeODataEntityAsAtom() {
+    public void mergeAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-10).build();
@@ -40,7 +46,7 @@ public class EntityUpdateTest extends AbstractTest {
     }
 
     @Test
-    public void mergeODataEntityAsJSON() {
+    public void mergeAsJSON() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-10).build();
@@ -51,7 +57,7 @@ public class EntityUpdateTest extends AbstractTest {
     }
 
     @Test
-    public void patchODataEntityAsAtom() {
+    public void patchAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-10).build();
@@ -62,7 +68,7 @@ public class EntityUpdateTest extends AbstractTest {
     }
 
     @Test
-    public void patchODataEntityAsJSON() {
+    public void patchAsJSON() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-10).build();
@@ -73,7 +79,7 @@ public class EntityUpdateTest extends AbstractTest {
     }
 
     @Test
-    public void replaceODataEntityAsAtom() {
+    public void replaceAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final ODataEntity changes = read(format, new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(14).build());
@@ -81,10 +87,39 @@ public class EntityUpdateTest extends AbstractTest {
     }
 
     @Test
-    public void replaceODataEntityAsJSON() {
+    public void replaceAsJSON() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final ODataEntity changes = read(format, new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(14).build());
         updateEntityDescription(format, changes, UpdateType.REPLACE);
+    }
+
+    private void mergeMultiKey(final ODataPubFormat format) {
+        final LinkedHashMap<String, Object> multiKey = new LinkedHashMap<String, Object>();
+        multiKey.put("FromUsername", "1");
+        multiKey.put("MessageId", -10);
+        final ODataEntity message = read(format, new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Message").appendKeySegment(multiKey).build());
+        message.getAssociationLinks().clear();
+        message.getNavigationLinks().clear();
+
+        boolean before = message.getProperty("IsRead").getPrimitiveValue().<Boolean>toCastValue();
+        message.getProperties().remove(message.getProperty("IsRead"));
+        message.addProperty(ODataFactory.newPrimitiveProperty("IsRead",
+                new ODataPrimitiveValue.Builder().setValue(!before).setType(EdmSimpleType.BOOLEAN).build()));
+
+        final ODataEntityUpdateResponse res = ODataCUDRequestFactory.
+                getEntityUpdateRequest(UpdateType.MERGE, message).execute();
+        assertEquals(204, res.getStatusCode());
+    }
+
+    @Test
+    public void mergeMultiKeyAsAtom() {
+        mergeMultiKey(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void mergeMultiKeyAsJSON() {
+        mergeMultiKey(ODataPubFormat.JSON_FULL_METADATA);
     }
 }

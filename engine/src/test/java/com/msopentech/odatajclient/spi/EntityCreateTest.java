@@ -18,16 +18,24 @@ package com.msopentech.odatajclient.spi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.net.URI;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import org.junit.Test;
 
 /**
@@ -136,5 +144,54 @@ public class EntityCreateTest extends AbstractTest {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final ODataEntity actual = createWithNavigationLink(format, 6);
         cleanAfterCreate(format, actual, false);
+    }
+
+    private void multiKey(final ODataPubFormat format) {
+        final ODataEntity message = ODataFactory.newEntity(
+                "Microsoft.Test.OData.Services.AstoriaDefaultService.Message");
+
+        message.addProperty(ODataFactory.newPrimitiveProperty("MessageId",
+                new ODataPrimitiveValue.Builder().setValue(1000).setType(EdmSimpleType.INT_32).build()));
+        message.addProperty(ODataFactory.newPrimitiveProperty("FromUsername",
+                new ODataPrimitiveValue.Builder().setValue("1").
+                setType(EdmSimpleType.STRING).build()));
+        message.addProperty(ODataFactory.newPrimitiveProperty("ToUsername",
+                new ODataPrimitiveValue.Builder().setValue("xlodhxzzusxecbzptxlfxprneoxkn").
+                setType(EdmSimpleType.STRING).build()));
+        message.addProperty(ODataFactory.newPrimitiveProperty("Subject",
+                new ODataPrimitiveValue.Builder().setValue("Test subject").
+                setType(EdmSimpleType.STRING).build()));
+        message.addProperty(ODataFactory.newPrimitiveProperty("Body",
+                new ODataPrimitiveValue.Builder().setValue("Test body").
+                setType(EdmSimpleType.STRING).build()));
+        message.addProperty(ODataFactory.newPrimitiveProperty("IsRead",
+                new ODataPrimitiveValue.Builder().setValue(false).setType(EdmSimpleType.BOOLEAN).build()));
+
+        final ODataURIBuilder builder =
+                new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Message");
+        final ODataEntityCreateRequest req = ODataCUDRequestFactory.getEntityCreateRequest(builder.build(), message);
+        req.setFormat(format);
+
+        final ODataEntityCreateResponse res = req.execute();
+        assertNotNull(res);
+        assertEquals(201, res.getStatusCode());
+
+        final LinkedHashMap<String, Object> multiKey = new LinkedHashMap<String, Object>();
+        multiKey.put("FromUsername", "1");
+        multiKey.put("MessageId", 1000);
+
+        final ODataDeleteResponse deleteRes = ODataCUDRequestFactory.
+                getDeleteRequest(builder.appendKeySegment(multiKey).build()).execute();
+        assertEquals(204, deleteRes.getStatusCode());
+    }
+
+    @Test
+    public void multiKeyAsAtom() {
+        multiKey(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void multiKeyAsJSON() {
+        multiKey(ODataPubFormat.JSON);
     }
 }

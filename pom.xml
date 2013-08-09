@@ -176,7 +176,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.2</version>
+          <version>1.3.1</version>
         </plugin>
         
         <plugin>
@@ -210,8 +210,7 @@
         <version>0.9</version>
         <configuration>
           <excludes>
-            <exclude>nbactions.xml</exclude>
-            <exclude>nb-configuration.xml</exclude>
+            <exclude>nb*.xml</exclude>
             <exclude>**/META-INF/services/**</exclude>
             <exclude>**/META-INF/MANIFEST.MF</exclude>
             <exclude>**/*.css</exclude>
