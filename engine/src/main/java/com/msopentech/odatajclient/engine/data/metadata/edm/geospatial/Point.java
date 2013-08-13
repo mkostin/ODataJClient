@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+
 public class Point extends Geospatial {
 
     /**
@@ -63,5 +65,12 @@ public class Point extends Geospatial {
 
     public void setZ(double z) {
         this.z = z;
+    }
+
+    @Override
+    public EdmSimpleType getEdmSimpleType() {
+        return dimension == Dimension.GEOGRAPHY
+                ? EdmSimpleType.GEOGRAPHY_POINT
+                : EdmSimpleType.GEOMETRY_POINT;
     }
 }

@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
+import com.msopentech.odatajclient.engine.data.ODataDuration;
+import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.LineString;
@@ -25,7 +27,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
@@ -119,17 +120,17 @@ public enum EdmSimpleType {
      * A 64-bit value expressed as Coordinated Universal Time (UTC).
      */
     @XmlEnumValue("DateTime")
-    DATE_TIME("DateTime", Timestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
+    DATE_TIME("DateTime", ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
     /**
      * Date and time as an Offset in minutes from GMT.
      */
     @XmlEnumValue("DateTimeOffset")
-    DATE_TIME_OFFSET("DateTimeOffset", Timestamp.class, "yyyy-MM-dd'T'HH:mm:ssZ"),
+    DATE_TIME_OFFSET("DateTimeOffset", ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
     /**
      * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
      */
     @XmlEnumValue("Time")
-    TIME("Time", Timestamp.class, "HH:mm:ss"),
+    TIME("Time", ODataDuration.class),
     /**
      * Numeric values with fixed precision and scale.
      */
@@ -146,37 +147,37 @@ public enum EdmSimpleType {
     @XmlEnumValue("Double")
     DOUBLE("Double", Double.class, "#.#######################"),
     @XmlEnumValue("Geography")
-    GEOGRAPHY("Geography", Geospatial.class, "GEOGRAPHY|"),
+    GEOGRAPHY("Geography", Geospatial.class),
     @XmlEnumValue("GeographyPoint")
-    GEOGRAPHY_POINT("GeographyPoint", Point.class, "GEOGRAPHY|"),
+    GEOGRAPHY_POINT("GeographyPoint", Point.class),
     @XmlEnumValue("GeographyLineString")
-    GEOGRAPHY_LINE_STRING("GeographyLineString", LineString.class, "GEOGRAPHY|"),
+    GEOGRAPHY_LINE_STRING("GeographyLineString", LineString.class),
     @XmlEnumValue("GeographyPolygon")
-    GEOGRAPHY_POLYGON("GeographyPolygon", Polygon.class, "GEOGRAPHY|"),
+    GEOGRAPHY_POLYGON("GeographyPolygon", Polygon.class),
     @XmlEnumValue("GeographyMultiPoint")
-    GEOGRAPHY_MULTI_POINT("GeographyMultiPoint", MultiPoint.class, "GEOGRAPHY|"),
+    GEOGRAPHY_MULTI_POINT("GeographyMultiPoint", MultiPoint.class),
     @XmlEnumValue("GeographyMultiLineString")
-    GEOGRAPHY_MULTI_LINE_STRING("GeographyMultiLineString", MultiLineString.class, "GEOGRAPHY|"),
+    GEOGRAPHY_MULTI_LINE_STRING("GeographyMultiLineString", MultiLineString.class),
     @XmlEnumValue("GeographyMultiPolygon")
-    GEOGRAPHY_MULTI_POLYGON("GeographyMultiPolygon", MultiPolygon.class, "GEOGRAPHY|"),
+    GEOGRAPHY_MULTI_POLYGON("GeographyMultiPolygon", MultiPolygon.class),
     @XmlEnumValue("GeographyCollection")
-    GEOGRAPHY_COLLECTION("GeographyCollection", GeospatialCollection.class, "GEOGRAPHY|"),
+    GEOGRAPHY_COLLECTION("GeographyCollection", GeospatialCollection.class),
     @XmlEnumValue("Geometry")
-    GEOMETRY("Geometry", Geospatial.class, "GEOMETRY|"),
+    GEOMETRY("Geometry", Geospatial.class),
     @XmlEnumValue("GeometryPoint")
-    GEOMETRY_POINT("GeometryPoint", Point.class, "GEOMETRY|"),
+    GEOMETRY_POINT("GeometryPoint", Point.class),
     @XmlEnumValue("GeometryLineString")
-    GEOMETRY_LINE_STRING("GeometryLineString", LineString.class, "GEOMETRY|"),
+    GEOMETRY_LINE_STRING("GeometryLineString", LineString.class),
     @XmlEnumValue("GeometryPolygon")
-    GEOMETRY_POLYGON("GeometryPolygon", Polygon.class, "GEOMETRY|"),
+    GEOMETRY_POLYGON("GeometryPolygon", Polygon.class),
     @XmlEnumValue("GeometryMultiPoint")
-    GEOMETRY_MULTI_POINT("GeometryMultiPoint", MultiPoint.class, "GEOMETRY|"),
+    GEOMETRY_MULTI_POINT("GeometryMultiPoint", MultiPoint.class),
     @XmlEnumValue("GeometryMultiLineString")
-    GEOMETRY_MULTI_LINE_STRING("GeometryMultiLineString", MultiLineString.class, "GEOMETRY|"),
+    GEOMETRY_MULTI_LINE_STRING("GeometryMultiLineString", MultiLineString.class),
     @XmlEnumValue("GeometryMultiPolygon")
-    GEOMETRY_MULTI_POLYGON("GeometryMultiPolygon", MultiPolygon.class, "GEOMETRY|"),
+    GEOMETRY_MULTI_POLYGON("GeometryMultiPolygon", MultiPolygon.class),
     @XmlEnumValue("GeometryCollection")
-    GEOMETRY_COLLECTION("GeometryCollection", GeospatialCollection.class, "GEOMETRY|"),
+    GEOMETRY_COLLECTION("GeometryCollection", GeospatialCollection.class),
     /**
      * A 128-bit globally unique identifier.
      */
@@ -273,6 +274,14 @@ public enum EdmSimpleType {
     @Override
     public String toString() {
         return namespace() + "." + value;
+    }
+
+    public boolean isGeospatial() {
+        return name().startsWith("GEO");
+    }
+
+    public static boolean isGeospatial(final String type) {
+        return type != null && type.startsWith(namespace() + ".Geo");
     }
 
     /**

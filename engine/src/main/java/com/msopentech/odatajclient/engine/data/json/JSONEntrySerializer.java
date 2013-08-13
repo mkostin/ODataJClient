@@ -146,9 +146,9 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         }
 
         if (entry.getMediaEntryProperties() == null) {
-            DOMTreeUtils.writeContent(jgen, entry.getContent());
+            DOMTreeUtils.writeSubtree(jgen, entry.getContent());
         } else {
-            DOMTreeUtils.writeContent(jgen, entry.getMediaEntryProperties());
+            DOMTreeUtils.writeSubtree(jgen, entry.getMediaEntryProperties());
         }
 
         jgen.writeEndObject();

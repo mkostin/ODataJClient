@@ -15,11 +15,19 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.util.List;
 
 public class MultiPolygon extends ComposedGeospatial<Polygon> {
 
     public MultiPolygon(final Dimension dimension, final List<Polygon> polygons) {
         super(dimension, Type.MULTIPOLYGON, polygons);
+    }
+
+    @Override
+    public EdmSimpleType getEdmSimpleType() {
+        return dimension == Dimension.GEOGRAPHY
+                ? EdmSimpleType.GEOGRAPHY_MULTI_POLYGON
+                : EdmSimpleType.GEOMETRY_MULTI_POLYGON;
     }
 }

@@ -64,9 +64,9 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
                     wrapper.appendChild(
                             document.renameNode(document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 
-                    DOMTreeUtils.writeContent(jgen, wrapper);
+                    DOMTreeUtils.writeSubtree(jgen, wrapper);
                 } else {
-                    DOMTreeUtils.writeContent(jgen, content);
+                    DOMTreeUtils.writeSubtree(jgen, content);
                 }
             } catch (Exception e) {
                 throw new JsonParseException("Cannot serialize property", JsonLocation.NA, e);

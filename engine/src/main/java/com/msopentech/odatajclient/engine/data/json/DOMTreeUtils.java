@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.data.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
@@ -33,10 +34,6 @@ final class DOMTreeUtils {
 
     private DOMTreeUtils() {
         // Empty private constructor for static utility classes
-    }
-
-    private static boolean isGeospatial(final String type) {
-        return type.startsWith(EdmSimpleType.namespace() + ".Geo");
     }
 
     /**
@@ -109,11 +106,11 @@ final class DOMTreeUtils {
                         if (child.isFloat()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
                                     EdmSimpleType.SINGLE.toString());
-                        }                        
+                        }
                         if (child.isDouble()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
                                     EdmSimpleType.DOUBLE.toString());
-                        }  
+                        }
                         if (child.isBoolean()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
                                     EdmSimpleType.BOOLEAN.toString());
@@ -132,7 +129,7 @@ final class DOMTreeUtils {
                     }
 
                     final String type = property.getAttribute(ODataConstants.ATTR_TYPE);
-                    if (StringUtils.isNotBlank(type) && isGeospatial(type)) {
+                    if (StringUtils.isNotBlank(type) && EdmSimpleType.isGeospatial(type)) {
                         if (EdmSimpleType.GEOGRAPHY.toString().equals(type)
                                 || EdmSimpleType.GEOMETRY.toString().equals(type)) {
 
@@ -144,7 +141,7 @@ final class DOMTreeUtils {
                         }
 
                         if (child.has(ODataConstants.JSON_COORDINATES) || child.has(ODataConstants.JSON_GEOMETRIES)) {
-                            GeospatialUtils.deserialize(
+                            GeospatialJSONHandler.deserialize(
                                     child, property, property.getAttribute(ODataConstants.ATTR_TYPE));
                         }
                     } else {
@@ -162,20 +159,31 @@ final class DOMTreeUtils {
      * @param content content.
      * @throws IOException in case of write error.
      */
-    public static void writeContent(final JsonGenerator jgen, final Node content) throws IOException {
+    public static void writeSubtree(final JsonGenerator jgen, final Node content) throws IOException {
         for (Node child : XMLUtils.getChildNodes(content, Node.ELEMENT_NODE)) {
             final String childName = XMLUtils.getSimpleName(child);
 
             final Node typeAttr = child.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
-            if (typeAttr != null && isGeospatial(typeAttr.getTextContent())) {
+            if (typeAttr != null && EdmSimpleType.isGeospatial(typeAttr.getTextContent())) {
+                jgen.writeStringField(childName + "@" + ODataConstants.JSON_TYPE, typeAttr.getTextContent());
+
                 jgen.writeObjectFieldStart(childName);
-
-                GeospatialUtils.serialize(jgen, (Element) child, typeAttr.getTextContent());
-
+                GeospatialJSONHandler.serialize(jgen, (Element) child, typeAttr.getTextContent());
                 jgen.writeEndObject();
             } else if (XMLUtils.hasOnlyTextChildNodes(child)) {
                 if (child.hasChildNodes()) {
-                    jgen.writeStringField(childName, child.getChildNodes().item(0).getNodeValue());
+                    final String out;
+                    if (typeAttr == null) {
+                        out = child.getChildNodes().item(0).getNodeValue();
+                    } else {
+                        final EdmSimpleType type = EdmSimpleType.fromValue(typeAttr.getTextContent());
+                        final ODataPrimitiveValue value = new ODataPrimitiveValue.Builder().setType(type).
+                                setText(child.getChildNodes().item(0).getNodeValue()).build();
+                        out = value.toString();
+
+                        jgen.writeStringField(childName + "@" + ODataConstants.JSON_TYPE, type.toString());
+                    }
+                    jgen.writeStringField(childName, out);
                 } else {
                     if (child.getAttributes().getNamedItem(ODataConstants.ATTR_NULL) == null) {
                         jgen.writeArrayFieldStart(childName);
@@ -193,7 +201,7 @@ final class DOMTreeUtils {
                             jgen.writeString(nephew.getChildNodes().item(0).getNodeValue());
                         } else {
                             jgen.writeStartObject();
-                            writeContent(jgen, nephew);
+                            writeSubtree(jgen, nephew);
                             jgen.writeEndObject();
                         }
                     }
@@ -201,7 +209,12 @@ final class DOMTreeUtils {
                     jgen.writeEndArray();
                 } else {
                     jgen.writeObjectFieldStart(childName);
-                    writeContent(jgen, child);
+                    if (typeAttr != null) {
+                        jgen.writeStringField(ODataConstants.JSON_TYPE, typeAttr.getTextContent());
+                    }
+
+                    writeSubtree(jgen, child);
+                    
                     jgen.writeEndObject();
                 }
             }

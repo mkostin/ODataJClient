@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -123,6 +124,8 @@ public abstract class Geospatial {
         this.srid = srid;
     }
 
+    public abstract EdmSimpleType getEdmSimpleType();
+    
     /**
      * {@inheritDoc }
      */

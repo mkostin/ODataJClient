@@ -25,6 +25,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
+import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
@@ -38,7 +39,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -103,7 +103,7 @@ public class PrimitiveValueTest extends AbstractTest {
                 "Product(-10)", "ComplexConcurrency/QueriedDateTime");
         assertEquals(EdmSimpleType.DATE_TIME.toString(), opv.getTypeName());
 
-        final Timestamp value = opv.<Timestamp>toCastValue();
+        final ODataTimestamp value = opv.<ODataTimestamp>toCastValue();
         assertNotNull(value);
         assertEquals("2013-01-10T06:27:51.1667673", opv.toString());
     }

@@ -15,11 +15,19 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.util.List;
 
 public class LineString extends ComposedGeospatial<Point> {
 
     public LineString(final Dimension dimension, final List<Point> points) {
         super(dimension, Type.LINESTRING, points);
+    }
+
+    @Override
+    public EdmSimpleType getEdmSimpleType() {
+        return dimension == Dimension.GEOGRAPHY
+                ? EdmSimpleType.GEOGRAPHY_LINE_STRING
+                : EdmSimpleType.GEOMETRY_LINE_STRING;
     }
 }

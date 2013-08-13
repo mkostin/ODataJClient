@@ -45,10 +45,25 @@ public final class ODataWriter {
      * @return stream of serialized objects.
      */
     public static InputStream writeEntities(final Collection<ODataEntity> entities, final ODataPubFormat format) {
+        return writeEntities(entities, format, true);
+    }
+
+    /**
+     * Writes a collection of OData entities.
+     *
+     * @param entities entities to be serialized.
+     * @param format serialization format.
+     * @param outputType whether to explicitly output type information.
+     * @return stream of serialized objects.
+     */
+    public static InputStream writeEntities(
+            final Collection<ODataEntity> entities, final ODataPubFormat format, final boolean outputType) {
+
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             for (ODataEntity entity : entities) {
-                Serializer.entry(ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)), output);
+                Serializer.entry(
+                        ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format), outputType), output);
             }
 
             return new ByteArrayInputStream(output.toByteArray());
@@ -65,7 +80,21 @@ public final class ODataWriter {
      * @return stream of serialized object.
      */
     public static InputStream writeEntity(final ODataEntity entity, final ODataPubFormat format) {
-        return writeEntities(Collections.<ODataEntity>singleton(entity), format);
+        return writeEntity(entity, format, true);
+    }
+
+    /**
+     * Serializes a single OData entity.
+     *
+     * @param entity entity to be serialized.
+     * @param format serialization format.
+     * @param outputType whether to explicitly output type information.
+     * @return stream of serialized object.
+     */
+    public static InputStream writeEntity(
+            final ODataEntity entity, final ODataPubFormat format, final boolean outputType) {
+
+        return writeEntities(Collections.<ODataEntity>singleton(entity), format, outputType);
     }
 
     /**
@@ -78,7 +107,7 @@ public final class ODataWriter {
     public static InputStream writeProperty(final ODataProperty property, final ODataFormat format) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
-            Serializer.property(ODataBinder.getProperty(property), format, output);
+            Serializer.property(ODataBinder.toDOMElement(property), format, output);
 
             return new ByteArrayInputStream(output.toByteArray());
         } finally {

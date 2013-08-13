@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.data.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
@@ -28,9 +29,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-final class GeospatialUtils {
+final class GeospatialJSONHandler {
 
-    private GeospatialUtils() {
+    private GeospatialJSONHandler() {
         // Empty private constructor for static utility classes
     }
 
@@ -266,7 +267,7 @@ final class GeospatialUtils {
         if (edmSimpleType.equals(EdmSimpleType.GEOGRAPHY_COLLECTION)
                 || edmSimpleType.equals(EdmSimpleType.GEOMETRY_COLLECTION)) {
 
-            jgen.writeStringField(ODataConstants.TYPE, edmSimpleType.value());
+            jgen.writeStringField(ODataConstants.TYPE, EdmSimpleType.GEOMETRY_COLLECTION.value());
         } else {
             final int yIdx = edmSimpleType.value().indexOf('y');
             final String itemType = edmSimpleType.value().substring(yIdx + 1);
@@ -367,27 +368,22 @@ final class GeospatialUtils {
             case GEOMETRY_COLLECTION:
                 root = (Element) node.getElementsByTagName(ODataConstants.ELEM_GEOCOLLECTION).item(0);
 
-                final Node gMembs = root.getElementsByTagName(ODataConstants.ELEM_GEOMEMBERS).item(0);
-                if (gMembs != null) {
+                final Node cMembs = root.getElementsByTagName(ODataConstants.ELEM_GEOMEMBERS).item(0);
+                if (cMembs != null) {
                     jgen.writeArrayFieldStart(ODataConstants.JSON_GEOMETRIES);
 
-                    for (Node geom : XMLUtils.getChildNodes(gMembs, Node.ELEMENT_NODE)) {
+                    for (Node geom : XMLUtils.getChildNodes(cMembs, Node.ELEMENT_NODE)) {
                         final Element fakeParent = node.getOwnerDocument().createElementNS(
                                 ODataConstants.NS_DATASERVICES, ODataConstants.PREFIX_DATASERVICES + "fake");
                         fakeParent.appendChild(geom);
 
-                        final String collItemType = XMLUtils.getSimpleName(geom);
-                        final String callAsType;
-                        if (ODataConstants.ELEM_GEOCOLLECTION.equals(ODataConstants.PREFIX_GML + collItemType)) {
-                            callAsType = edmSimpleType.toString();
-                        } else {
-                            callAsType = EdmSimpleType.namespace() + "."
-                                    + (edmSimpleType == EdmSimpleType.GEOGRAPHY_COLLECTION ? "Geography" : "Geometry")
-                                    + collItemType;
-                        }
+                        final EdmSimpleType callAsType = XMLUtils.simpleTypeForNode(
+                                edmSimpleType == EdmSimpleType.GEOGRAPHY_COLLECTION
+                                ? Geospatial.Dimension.GEOGRAPHY : Geospatial.Dimension.GEOMETRY,
+                                geom);
 
                         jgen.writeStartObject();
-                        serialize(jgen, fakeParent, callAsType);
+                        serialize(jgen, fakeParent, callAsType.toString());
                         jgen.writeEndObject();
                     }
 
