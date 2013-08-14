@@ -73,19 +73,20 @@ public class ProxyUsageTest {
 
     public void create() {
         DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
-
+        
+        final com.msopentech.odatajclient.proxy.AstoriaDefaultService.Order orders = container.getOrder();
+        
         // create Order (local)
-        Order order = new Order();
+        Order order = orders.newEntity();
         order.setCustomerId(-10);
-        order = container.getOrder().save(order);
-
+        
+        final com.msopentech.odatajclient.proxy.AstoriaDefaultService.Customer customers = container.getCustomer();
         // create Customer (local)
-        Customer customer = new Customer();
+        Customer customer = customers.newEntity();
         customer.setName("a name");
-        customer = container.getCustomer().save(customer);
 
         // link customer and order
-        customer.setOrders(order);
+        customer.getOrders().add(order);
         order.setCustomer(customer);
 
         // any flush() will generate actual operations on the OData service

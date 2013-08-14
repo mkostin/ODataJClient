@@ -25,9 +25,9 @@ import java.util.Collection;
 @ComplexType("Dimensions")
 public class Dimensions extends AbstractType {
 
-    @Property(name = "Width", type = "Edm.Decimal", nullable = false)
     private BigDecimal _width;
 
+    @Property(name = "Width", type = "Edm.Decimal", nullable = false)
     public BigDecimal getWidth() {
         return _width;
     }
@@ -35,9 +35,9 @@ public class Dimensions extends AbstractType {
     public void setWidth(final BigDecimal _width) {
         this._width = _width;
     }
-    @Property(name = "Height", type = "Edm.Decimal", nullable = false)
     private BigDecimal _height;
 
+    @Property(name = "Height", type = "Edm.Decimal", nullable = false)
     public BigDecimal getHeight() {
         return _height;
     }
@@ -45,9 +45,9 @@ public class Dimensions extends AbstractType {
     public void setHeight(final BigDecimal _height) {
         this._height = _height;
     }
-    @Property(name = "Depth", type = "Edm.Decimal", nullable = false)
     private BigDecimal _depth;
 
+    @Property(name = "Depth", type = "Edm.Decimal", nullable = false)
     public BigDecimal getDepth() {
         return _depth;
     }

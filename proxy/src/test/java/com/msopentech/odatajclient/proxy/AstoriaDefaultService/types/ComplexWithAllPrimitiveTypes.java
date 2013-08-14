@@ -25,9 +25,9 @@ import java.util.Collection;
 @ComplexType("ComplexWithAllPrimitiveTypes")
 public class ComplexWithAllPrimitiveTypes extends AbstractType {
 
-    @Property(name = "Binary", type = "Edm.Binary", nullable = true)
     private byte[] _binary;
 
+    @Property(name = "Binary", type = "Edm.Binary", nullable = true)
     public byte[] getBinary() {
         return _binary;
     }
@@ -35,9 +35,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setBinary(final byte[] _binary) {
         this._binary = _binary;
     }
-    @Property(name = "Boolean", type = "Edm.Boolean", nullable = false)
     private Boolean _boolean;
 
+    @Property(name = "Boolean", type = "Edm.Boolean", nullable = false)
     public Boolean getBoolean() {
         return _boolean;
     }
@@ -45,9 +45,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setBoolean(final Boolean _boolean) {
         this._boolean = _boolean;
     }
-    @Property(name = "Byte", type = "Edm.Byte", nullable = false)
     private Integer _byte;
 
+    @Property(name = "Byte", type = "Edm.Byte", nullable = false)
     public Integer getByte() {
         return _byte;
     }
@@ -55,9 +55,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setByte(final Integer _byte) {
         this._byte = _byte;
     }
-    @Property(name = "DateTime", type = "Edm.DateTime", nullable = false)
     private Timestamp _dateTime;
 
+    @Property(name = "DateTime", type = "Edm.DateTime", nullable = false)
     public Timestamp getDateTime() {
         return _dateTime;
     }
@@ -65,9 +65,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setDateTime(final Timestamp _dateTime) {
         this._dateTime = _dateTime;
     }
-    @Property(name = "Decimal", type = "Edm.Decimal", nullable = false)
     private BigDecimal _decimal;
 
+    @Property(name = "Decimal", type = "Edm.Decimal", nullable = false)
     public BigDecimal getDecimal() {
         return _decimal;
     }
@@ -75,9 +75,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setDecimal(final BigDecimal _decimal) {
         this._decimal = _decimal;
     }
-    @Property(name = "Double", type = "Edm.Double", nullable = false)
     private Double _double;
 
+    @Property(name = "Double", type = "Edm.Double", nullable = false)
     public Double getDouble() {
         return _double;
     }
@@ -85,9 +85,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setDouble(final Double _double) {
         this._double = _double;
     }
-    @Property(name = "Int16", type = "Edm.Int16", nullable = false)
     private Short _int16;
 
+    @Property(name = "Int16", type = "Edm.Int16", nullable = false)
     public Short getInt16() {
         return _int16;
     }
@@ -95,9 +95,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setInt16(final Short _int16) {
         this._int16 = _int16;
     }
-    @Property(name = "Int32", type = "Edm.Int32", nullable = false)
     private Integer _int32;
 
+    @Property(name = "Int32", type = "Edm.Int32", nullable = false)
     public Integer getInt32() {
         return _int32;
     }
@@ -105,9 +105,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setInt32(final Integer _int32) {
         this._int32 = _int32;
     }
-    @Property(name = "Int64", type = "Edm.Int64", nullable = false)
     private Long _int64;
 
+    @Property(name = "Int64", type = "Edm.Int64", nullable = false)
     public Long getInt64() {
         return _int64;
     }
@@ -115,9 +115,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setInt64(final Long _int64) {
         this._int64 = _int64;
     }
-    @Property(name = "SByte", type = "Edm.SByte", nullable = false)
     private Byte _sByte;
 
+    @Property(name = "SByte", type = "Edm.SByte", nullable = false)
     public Byte getSByte() {
         return _sByte;
     }
@@ -125,9 +125,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setSByte(final Byte _sByte) {
         this._sByte = _sByte;
     }
-    @Property(name = "String", type = "Edm.String", nullable = true)
     private String _string;
 
+    @Property(name = "String", type = "Edm.String", nullable = true)
     public String getString() {
         return _string;
     }
@@ -135,9 +135,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setString(final String _string) {
         this._string = _string;
     }
-    @Property(name = "Single", type = "Edm.Single", nullable = false)
     private Float _single;
 
+    @Property(name = "Single", type = "Edm.Single", nullable = false)
     public Float getSingle() {
         return _single;
     }
@@ -145,9 +145,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setSingle(final Float _single) {
         this._single = _single;
     }
-    @Property(name = "GeographyPoint", type = "Edm.GeographyPoint", nullable = true)
     private Point _geographyPoint;
 
+    @Property(name = "GeographyPoint", type = "Edm.GeographyPoint", nullable = true)
     public Point getGeographyPoint() {
         return _geographyPoint;
     }
@@ -155,9 +155,9 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setGeographyPoint(final Point _geographyPoint) {
         this._geographyPoint = _geographyPoint;
     }
-    @Property(name = "GeometryPoint", type = "Edm.GeometryPoint", nullable = true)
     private Point _geometryPoint;
 
+    @Property(name = "GeometryPoint", type = "Edm.GeometryPoint", nullable = true)
     public Point getGeometryPoint() {
         return _geometryPoint;
     }

@@ -2,6 +2,8 @@ package com.msopentech.odatajclient.proxy.AstoriaDefaultService;
 
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.*;
 
 // EdmSimpleType property imports
@@ -26,11 +28,13 @@ import com.msopentech.odatajclient.proxy.AstoriaDefaultService.OrderLine.OrderLi
 
 @EntitySet("OrderLine")
 public interface OrderLine extends AbstractEntitySet<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.OrderLine, OrderLineKey> {
-
+    
+    @CompoundKey
     public static class OrderLineKey implements Serializable {
     
         private Integer _orderId;
 
+        @CompoundKeyElement(name = "OrderId", position = 0)
         public Integer getOrderId() {
             return _orderId;
         }
@@ -41,6 +45,7 @@ public interface OrderLine extends AbstractEntitySet<com.msopentech.odatajclient
     
         private Integer _productId;
 
+        @CompoundKeyElement(name = "ProductId", position = 1)
         public Integer getProductId() {
             return _productId;
         }

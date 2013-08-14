@@ -19,31 +19,26 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.data.ODataProperty;
+import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
-import com.msopentech.odatajclient.proxy.api.annotations.Property;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
+import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializable>
-        implements InvocationHandler, AbstractEntitySet<T, KEY> {
+class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializable> extends AbstractInvocationHandler
+        implements AbstractEntitySet<T, KEY> {
 
     private static final long serialVersionUID = 2629912294765040027L;
 
@@ -56,18 +51,25 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
     private final String entitySetName;
 
-    private final ODataURIBuilder uriBuilder;
+    private final URI uri;
 
     static <T extends Serializable, KEY extends Serializable> EntitySetInvocationHandler<T, KEY> getInstance(
-            final Class<T> typeRef, final Class<KEY> keyRef, final String serviceRoot, final String entitySetName) {
+            final Class<T> typeRef,
+            final Class<KEY> keyRef,
+            final String entitySetName,
+            final EntityContainerInvocationHandler container) {
 
-        return new EntitySetInvocationHandler<T, KEY>(typeRef, serviceRoot, entitySetName);
+        return new EntitySetInvocationHandler<T, KEY>(typeRef, entitySetName, container);
     }
 
-    private EntitySetInvocationHandler(final Class<T> typeRef, final String serviceRoot, final String entitySetName) {
+    private EntitySetInvocationHandler(
+            final Class<T> typeRef,
+            final String entitySetName,
+            final EntityContainerInvocationHandler container) {
+        super(container);
         this.typeRef = typeRef;
         this.entitySetName = entitySetName;
-        this.uriBuilder = new ODataURIBuilder(serviceRoot).appendEntitySetSegment(entitySetName);
+        this.uri = new ODataURIBuilder(container.getServiceRoot()).appendEntitySetSegment(entitySetName).build();
     }
 
     @Override
@@ -81,6 +83,8 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             return get((KEY) args[0]);
         } else if ("getAll".equals(method.getName())) {
             return getAll();
+        } else if ("newEntity".equals(method.getName())) {
+            return newEntity();
         }
 
         throw new UnsupportedOperationException("Not supported yet.");
@@ -89,9 +93,8 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
     @Override
     public Long count() {
         final ODataValueRequest req = ODataRetrieveRequestFactory.
-                getValueRequest(this.uriBuilder.appendCountSegment().build());
+                getValueRequest(new ODataURIBuilder(this.uri.toASCIIString()).appendCountSegment().build());
         req.setFormat(ODataValueFormat.TEXT);
-
         return Long.valueOf(req.execute().getBody().asPrimitive().toString());
     }
 
@@ -108,123 +111,47 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         return result;
     }
 
-    private String findPropertyByAnnotatedName(final Class<?> clazz, final String name) {
-        final Field[] fields = clazz.getDeclaredFields();
-
-        String result = null;
-        for (int i = 0; i < fields.length && result == null; i++) {
-            final Annotation annotation = fields[i].getAnnotation(Property.class);
-            if ((annotation instanceof Property) && name.equals(((Property) annotation).name())) {
-                result = fields[i].getName();
-            }
-        }
-
-        return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void populate(final Object bean, final Iterator<ODataProperty> propItor) {
-        while (propItor.hasNext()) {
-            final ODataProperty property = propItor.next();
-
-            final String beanPropName = findPropertyByAnnotatedName(bean.getClass(), property.getName());
-            if (beanPropName == null) {
-                LOG.warn("Could not find any property annotated as {} in {}",
-                        property.getName(), bean.getClass().getName());
-            } else {
-                try {
-                    if (property.hasNullValue()) {
-                        setPropertyValue(bean, beanPropName, null);
-                    }
-                    if (property.hasPrimitiveValue()) {
-                        setPropertyValue(bean, beanPropName, property.getPrimitiveValue().toValue());
-                    }
-                    if (property.hasComplexValue()) {
-                        final Object complex = bean.getClass().getDeclaredField(beanPropName).getType().newInstance();
-                        populate(complex, property.getComplexValue().iterator());
-                        setPropertyValue(bean, beanPropName, complex);
-                    }
-                    if (property.hasCollectionValue()) {
-                        final ParameterizedType collType =
-                                (ParameterizedType) bean.getClass().getDeclaredField(beanPropName).getGenericType();
-                        final Class<?> collItemClass = (Class<?>) collType.getActualTypeArguments()[0];
-
-                        final Method collGetter =
-                                PropertyUtils.getReadMethod(PropertyUtils.getPropertyDescriptor(bean, beanPropName));
-
-                        final Iterator<ODataValue> collPropItor = property.getCollectionValue().iterator();
-                        while (collPropItor.hasNext()) {
-                            final ODataValue value = collPropItor.next();
-                            if (value.isPrimitive()) {
-                                ((Collection) collGetter.invoke(bean)).add(value.asPrimitive().toValue());
-                            }
-                            if (value.isComplex()) {
-                                final Object collItem = collItemClass.newInstance();
-                                populate(collItem, value.asComplex().iterator());
-                                ((Collection) collGetter.invoke(bean)).add(collItem);
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    LOG.error("Could not set property {} on {}", beanPropName, bean, e);
-                }
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void setPropertyValue(final Object bean, final String beanPropName, final Object value)
-            throws Exception {
-
-        // The following check is required to be stronger against field names prefixed by undercores.
-        // By java beans contract, "_variable" should implie get_variable() and set_variable(...) methods.
-        // Often this contract is not respected: getVariable() and setVariable(...) are generated in place
-        // of the previous one.
-        final String propName = PropertyUtils.getPropertyDescriptor(bean, beanPropName) == null
-                ? beanPropName.replaceFirst("^_+", "") : beanPropName;
-
-        if (value == null) {
-            PropertyUtils.setProperty(bean, propName, value);
-        } else {
-            BeanUtils.setProperty(bean, propName, value);
-        }
-    }
-
-    private T entity2Bean(final ODataEntity entity) {
-        T bean;
-
-        try {
-            bean = typeRef.newInstance();
-        } catch (Exception e) {
-            LOG.error("While creating new instance of {}", typeRef.getName(), e);
-            throw new IllegalArgumentException("While creating new instance of " + typeRef.getName(), e);
-        }
-
-        populate(bean, entity.getProperties().iterator());
-
-        return bean;
-    }
-
     @Override
+    @SuppressWarnings("unchecked")
     public T get(final KEY key) throws IllegalArgumentException {
+
         if (key == null) {
             throw new IllegalArgumentException("Null key");
         }
 
-        final ODataEntity entity = ODataRetrieveRequestFactory.
-                getEntityRequest(this.uriBuilder.appendKeySegment(key.toString()).build()).execute().getBody();
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(this.uri.toASCIIString());
 
-        return entity2Bean(entity);
+        if (key.getClass().getAnnotation(CompoundKey.class) == null) {
+            uriBuilder.appendKeySegment(key.toString());
+        } else {
+            uriBuilder.appendKeySegment(getCompoundKey(key));
+        }
+
+        final ODataEntity entity =
+                ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute().getBody();
+
+        return (T) Proxy.newProxyInstance(
+                this.getClass().getClassLoader(),
+                new Class<?>[] {typeRef},
+                EntityTypeInvocationHandler.getInstance(typeRef, entity, entitySetName, container));
     }
 
     @Override
     public Iterable<T> getAll() {
-        final ODataEntitySet entitySet = ODataRetrieveRequestFactory.
-                getEntitySetRequest(this.uriBuilder.build()).execute().getBody();
+        final Annotation annotation = typeRef.getAnnotation(EntityType.class);
+        if (!(annotation instanceof EntityType)) {
+            throw new IllegalArgumentException("Invalid entity set '" + typeRef.getSimpleName() + "'");
+        }
+
+        final ODataEntitySet entitySet = ODataRetrieveRequestFactory.getEntitySetRequest(this.uri).execute().getBody();
 
         final List<T> beans = new ArrayList<T>(entitySet.getEntities().size());
         for (ODataEntity entity : entitySet.getEntities()) {
-            beans.add(entity2Bean(entity));
+            beans.add(
+                    (T) Proxy.newProxyInstance(
+                    this.getClass().getClassLoader(),
+                    new Class<?>[] {typeRef},
+                    EntityTypeInvocationHandler.getInstance(typeRef, entity, entitySetName, container)));
         }
 
         return beans;
@@ -241,23 +168,6 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
     }
 
     @Override
-    public T save(final T entity) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public T saveAndFlush(final T entity) {
-        final T saved = save(entity);
-        flush();
-        return saved;
-    }
-
-    @Override
-    public Iterable<T> save(final Iterable<T> entities) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public void delete(final KEY key) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -270,5 +180,16 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
     @Override
     public void flush() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T newEntity() {
+        final ODataEntity entity = ODataFactory.newEntity(container.getSchemaName() + "." + getEntityName(typeRef));
+
+        return (T) Proxy.newProxyInstance(
+                this.getClass().getClassLoader(),
+                new Class<?>[] {typeRef},
+                EntityTypeInvocationHandler.getInstance(typeRef, entity, entitySetName, container));
     }
 }

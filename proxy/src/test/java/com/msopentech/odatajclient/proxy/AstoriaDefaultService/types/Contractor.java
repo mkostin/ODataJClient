@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Contractor extends AbstractType {
+public interface Contractor extends Serializable {
 
 
     
@@ -61,16 +62,10 @@ public class Contractor extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _contratorCompanyId;
-    
-    public Integer getContratorCompanyId() {
-        return _contratorCompanyId;
-    }
+                fcKeepInContent = false)    
+    public Integer getContratorCompanyId();
 
-    public void setContratorCompanyId(final Integer _contratorCompanyId) {
-        this._contratorCompanyId = _contratorCompanyId;
-    }
+    public void setContratorCompanyId(final Integer _contratorCompanyId);
 
     
     @Property(name = "BillingRate", 
@@ -91,16 +86,10 @@ public class Contractor extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _billingRate;
-    
-    public Integer getBillingRate() {
-        return _billingRate;
-    }
+                fcKeepInContent = false)    
+    public Integer getBillingRate();
 
-    public void setBillingRate(final Integer _billingRate) {
-        this._billingRate = _billingRate;
-    }
+    public void setBillingRate(final Integer _billingRate);
 
     
     @Property(name = "TeamContactPersonId", 
@@ -121,16 +110,10 @@ public class Contractor extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _teamContactPersonId;
-    
-    public Integer getTeamContactPersonId() {
-        return _teamContactPersonId;
-    }
+                fcKeepInContent = false)    
+    public Integer getTeamContactPersonId();
 
-    public void setTeamContactPersonId(final Integer _teamContactPersonId) {
-        this._teamContactPersonId = _teamContactPersonId;
-    }
+    public void setTeamContactPersonId(final Integer _teamContactPersonId);
 
     
     @Property(name = "JobDescription", 
@@ -151,16 +134,10 @@ public class Contractor extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _jobDescription;
-    
-    public String getJobDescription() {
-        return _jobDescription;
-    }
+                fcKeepInContent = false)    
+    public String getJobDescription();
 
-    public void setJobDescription(final String _jobDescription) {
-        this._jobDescription = _jobDescription;
-    }
+    public void setJobDescription(final String _jobDescription);
 
     
 }

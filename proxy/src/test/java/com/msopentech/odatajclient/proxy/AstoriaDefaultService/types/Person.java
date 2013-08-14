@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Person extends AbstractType {
+public interface Person extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class Person extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _personId;
-    
-    public Integer getPersonId() {
-        return _personId;
-    }
+                fcKeepInContent = false)    
+    public Integer getPersonId();
 
-    public void setPersonId(final Integer _personId) {
-        this._personId = _personId;
-    }
+    public void setPersonId(final Integer _personId);
 
     
     @Property(name = "Name", 
@@ -91,16 +86,10 @@ public class Person extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _name;
-    
-    public String getName() {
-        return _name;
-    }
+                fcKeepInContent = false)    
+    public String getName();
 
-    public void setName(final String _name) {
-        this._name = _name;
-    }
+    public void setName(final String _name);
 
     
 
@@ -110,14 +99,8 @@ public class Person extends AbstractType {
                 toRole = "PersonMetadata",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.PersonMetadata _personMetadata;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.PersonMetadata> getPersonMetadata();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.PersonMetadata getPersonMetadata() {
-        return _personMetadata;
-    }
-
-    public void setPersonMetadata(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.PersonMetadata _personMetadata) {
-        this._personMetadata = _personMetadata;
-    }
+    public void setPersonMetadata(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.PersonMetadata> _personMetadata);
 
 }

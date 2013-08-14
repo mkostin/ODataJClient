@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class CustomerInfo extends AbstractType {
+public interface CustomerInfo extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class CustomerInfo extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _customerInfoId;
-    
-    public Integer getCustomerInfoId() {
-        return _customerInfoId;
-    }
+                fcKeepInContent = false)    
+    public Integer getCustomerInfoId();
 
-    public void setCustomerInfoId(final Integer _customerInfoId) {
-        this._customerInfoId = _customerInfoId;
-    }
+    public void setCustomerInfoId(final Integer _customerInfoId);
 
     
     @Property(name = "Information", 
@@ -91,16 +86,10 @@ public class CustomerInfo extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _information;
-    
-    public String getInformation() {
-        return _information;
-    }
+                fcKeepInContent = false)    
+    public String getInformation();
 
-    public void setInformation(final String _information) {
-        this._information = _information;
-    }
+    public void setInformation(final String _information);
 
     
 }

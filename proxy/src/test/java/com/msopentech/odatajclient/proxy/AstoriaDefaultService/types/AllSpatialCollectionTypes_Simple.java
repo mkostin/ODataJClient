@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class AllSpatialCollectionTypes_Simple extends AbstractType {
+public interface AllSpatialCollectionTypes_Simple extends Serializable {
 
 
     
@@ -61,16 +62,10 @@ public class AllSpatialCollectionTypes_Simple extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Point> _manyGeogPoint;
-    
-    public Collection<Point> getManyGeogPoint() {
-        return _manyGeogPoint;
-    }
+                fcKeepInContent = false)    
+    public Collection<Point> getManyGeogPoint();
 
-    public void setManyGeogPoint(final Collection<Point> _manyGeogPoint) {
-        this._manyGeogPoint = _manyGeogPoint;
-    }
+    public void setManyGeogPoint(final Collection<Point> _manyGeogPoint);
 
     
     @Property(name = "ManyGeogLine", 
@@ -91,16 +86,10 @@ public class AllSpatialCollectionTypes_Simple extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<LineString> _manyGeogLine;
-    
-    public Collection<LineString> getManyGeogLine() {
-        return _manyGeogLine;
-    }
+                fcKeepInContent = false)    
+    public Collection<LineString> getManyGeogLine();
 
-    public void setManyGeogLine(final Collection<LineString> _manyGeogLine) {
-        this._manyGeogLine = _manyGeogLine;
-    }
+    public void setManyGeogLine(final Collection<LineString> _manyGeogLine);
 
     
     @Property(name = "ManyGeogPolygon", 
@@ -121,16 +110,10 @@ public class AllSpatialCollectionTypes_Simple extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Polygon> _manyGeogPolygon;
-    
-    public Collection<Polygon> getManyGeogPolygon() {
-        return _manyGeogPolygon;
-    }
+                fcKeepInContent = false)    
+    public Collection<Polygon> getManyGeogPolygon();
 
-    public void setManyGeogPolygon(final Collection<Polygon> _manyGeogPolygon) {
-        this._manyGeogPolygon = _manyGeogPolygon;
-    }
+    public void setManyGeogPolygon(final Collection<Polygon> _manyGeogPolygon);
 
     
     @Property(name = "ManyGeomPoint", 
@@ -151,16 +134,10 @@ public class AllSpatialCollectionTypes_Simple extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Point> _manyGeomPoint;
-    
-    public Collection<Point> getManyGeomPoint() {
-        return _manyGeomPoint;
-    }
+                fcKeepInContent = false)    
+    public Collection<Point> getManyGeomPoint();
 
-    public void setManyGeomPoint(final Collection<Point> _manyGeomPoint) {
-        this._manyGeomPoint = _manyGeomPoint;
-    }
+    public void setManyGeomPoint(final Collection<Point> _manyGeomPoint);
 
     
     @Property(name = "ManyGeomLine", 
@@ -181,16 +158,10 @@ public class AllSpatialCollectionTypes_Simple extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<LineString> _manyGeomLine;
-    
-    public Collection<LineString> getManyGeomLine() {
-        return _manyGeomLine;
-    }
+                fcKeepInContent = false)    
+    public Collection<LineString> getManyGeomLine();
 
-    public void setManyGeomLine(final Collection<LineString> _manyGeomLine) {
-        this._manyGeomLine = _manyGeomLine;
-    }
+    public void setManyGeomLine(final Collection<LineString> _manyGeomLine);
 
     
     @Property(name = "ManyGeomPolygon", 
@@ -211,16 +182,10 @@ public class AllSpatialCollectionTypes_Simple extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Polygon> _manyGeomPolygon;
-    
-    public Collection<Polygon> getManyGeomPolygon() {
-        return _manyGeomPolygon;
-    }
+                fcKeepInContent = false)    
+    public Collection<Polygon> getManyGeomPolygon();
 
-    public void setManyGeomPolygon(final Collection<Polygon> _manyGeomPolygon) {
-        this._manyGeomPolygon = _manyGeomPolygon;
-    }
+    public void setManyGeomPolygon(final Collection<Polygon> _manyGeomPolygon);
 
     
 }

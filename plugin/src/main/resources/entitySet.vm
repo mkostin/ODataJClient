@@ -15,6 +15,8 @@ package $basePackage.$schemaName;
 
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import $basePackage.${schemaName}.types.*;
 
 // EdmSimpleType property imports
@@ -47,20 +49,25 @@ import $basePackage.$schemaName.$entitySet.Name.$type;
 
 @EntitySet("$entitySet.Name")
 public interface $utility.capitalize($entitySet.Name) extends AbstractEntitySet<$utility.getJavaType($entitySet.EntityType), $type> {
-
+#set ( $count = 0 )
 #if ( $keys.size() > 1 )
+    
+    @CompoundKey
     public static class $type implements Serializable {
     #foreach ($entry in $keys.entrySet())
 
         private $entry.getValue() _$utility.uncapitalize($entry.getKey());
 
+        @CompoundKeyElement(name = "$entry.getKey()", position = $count)
         public $entry.getValue() get$utility.capitalize($entry.getKey())() {
             return _$utility.uncapitalize($entry.getKey());
         }
 
         public void set$utility.capitalize($entry.getKey())(final $entry.getValue() _$utility.uncapitalize($entry.getKey())) {
             this._$utility.uncapitalize($entry.getKey()) = _$utility.uncapitalize($entry.getKey());
-        }
+        }#*
+        *##set ( $count = $count + 1 )
+
     #end}
 #end
 }

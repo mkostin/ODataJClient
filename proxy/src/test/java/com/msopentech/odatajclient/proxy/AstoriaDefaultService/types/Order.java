@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Order extends AbstractType {
+public interface Order extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class Order extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _orderId;
-    
-    public Integer getOrderId() {
-        return _orderId;
-    }
+                fcKeepInContent = false)    
+    public Integer getOrderId();
 
-    public void setOrderId(final Integer _orderId) {
-        this._orderId = _orderId;
-    }
+    public void setOrderId(final Integer _orderId);
 
     
     @Property(name = "CustomerId", 
@@ -91,16 +86,10 @@ public class Order extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _customerId;
-    
-    public Integer getCustomerId() {
-        return _customerId;
-    }
+                fcKeepInContent = false)    
+    public Integer getCustomerId();
 
-    public void setCustomerId(final Integer _customerId) {
-        this._customerId = _customerId;
-    }
+    public void setCustomerId(final Integer _customerId);
 
     
     @Property(name = "Concurrency", 
@@ -121,16 +110,10 @@ public class Order extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo _concurrency;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo getConcurrency() {
-        return _concurrency;
-    }
+                fcKeepInContent = false)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo getConcurrency();
 
-    public void setConcurrency(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo _concurrency) {
-        this._concurrency = _concurrency;
-    }
+    public void setConcurrency(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo _concurrency);
 
     
 
@@ -140,15 +123,9 @@ public class Order extends AbstractType {
                 toRole = "Login",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getLogin();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getLogin() {
-        return _login;
-    }
-
-    public void setLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login) {
-        this._login = _login;
-    }
+    public void setLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login);
 
 
     @NavigationProperty(name = "Customer", 
@@ -157,14 +134,8 @@ public class Order extends AbstractType {
                 toRole = "Customer",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _customer;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer getCustomer();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer getCustomer() {
-        return _customer;
-    }
-
-    public void setCustomer(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _customer) {
-        this._customer = _customer;
-    }
+    public void setCustomer(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _customer);
 
 }

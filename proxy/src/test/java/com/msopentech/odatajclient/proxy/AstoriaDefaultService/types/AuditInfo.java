@@ -25,9 +25,9 @@ import java.util.Collection;
 @ComplexType("AuditInfo")
 public class AuditInfo extends AbstractType {
 
-    @Property(name = "ModifiedDate", type = "Edm.DateTime", nullable = false)
     private Timestamp _modifiedDate;
 
+    @Property(name = "ModifiedDate", type = "Edm.DateTime", nullable = false)
     public Timestamp getModifiedDate() {
         return _modifiedDate;
     }
@@ -35,9 +35,9 @@ public class AuditInfo extends AbstractType {
     public void setModifiedDate(final Timestamp _modifiedDate) {
         this._modifiedDate = _modifiedDate;
     }
-    @Property(name = "ModifiedBy", type = "Edm.String", nullable = true)
     private String _modifiedBy;
 
+    @Property(name = "ModifiedBy", type = "Edm.String", nullable = true)
     public String getModifiedBy() {
         return _modifiedBy;
     }
@@ -45,9 +45,9 @@ public class AuditInfo extends AbstractType {
     public void setModifiedBy(final String _modifiedBy) {
         this._modifiedBy = _modifiedBy;
     }
-    @Property(name = "Concurrency", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.ConcurrencyInfo", nullable = true)
     private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo _concurrency;
 
+    @Property(name = "Concurrency", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.ConcurrencyInfo", nullable = true)
     public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo getConcurrency() {
         return _concurrency;
     }

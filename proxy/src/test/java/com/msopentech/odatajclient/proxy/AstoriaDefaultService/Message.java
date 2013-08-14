@@ -2,6 +2,8 @@ package com.msopentech.odatajclient.proxy.AstoriaDefaultService;
 
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.*;
 
 // EdmSimpleType property imports
@@ -26,11 +28,13 @@ import com.msopentech.odatajclient.proxy.AstoriaDefaultService.Message.MessageKe
 
 @EntitySet("Message")
 public interface Message extends AbstractEntitySet<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message, MessageKey> {
-
+    
+    @CompoundKey
     public static class MessageKey implements Serializable {
     
         private String _fromUsername;
 
+        @CompoundKeyElement(name = "FromUsername", position = 0)
         public String getFromUsername() {
             return _fromUsername;
         }
@@ -41,6 +45,7 @@ public interface Message extends AbstractEntitySet<com.msopentech.odatajclient.p
     
         private Integer _messageId;
 
+        @CompoundKeyElement(name = "MessageId", position = 1)
         public Integer getMessageId() {
             return _messageId;
         }

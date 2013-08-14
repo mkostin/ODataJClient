@@ -22,7 +22,7 @@ import java.io.Serializable;
 /**
  * Interface for synchronous CRUD operations on an EntitySet.
  */
-public abstract interface AbstractEntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
+public abstract interface AbstractEntitySet<T, KEY extends Serializable> extends Serializable {
 
     /**
      * Returns whether an entity with the given id exists.
@@ -73,32 +73,6 @@ public abstract interface AbstractEntitySet<T extends Serializable, KEY extends 
     <E extends Serializable> EntityQuery<E> createQuery(Class<E> entityClass);
 
     /**
-     * Saves a given entity.
-     * Use the returned instance for further operations as the save operation might have changed the entity instance
-     * completely.
-     *
-     * @param entity to be saved
-     * @return saved entity
-     */
-    T save(T entity);
-
-    /**
-     * Saves an entity and flushes changes instantly.
-     *
-     * @param entity to be saved
-     * @return saved entity
-     */
-    T saveAndFlush(T entity);
-
-    /**
-     * Saves all given entities.
-     *
-     * @param entities to be saved
-     * @return the saved entities
-     */
-    Iterable<T> save(Iterable<T> entities);
-
-    /**
      * Deletes the entity with the given key.
      *
      * @param key must not be null
@@ -117,4 +91,11 @@ public abstract interface AbstractEntitySet<T extends Serializable, KEY extends 
      * Flushes all pending changes to the OData service.
      */
     void flush();
+
+    /**
+     * Create a new entity instance.
+     *
+     * @return new entity instance.
+     */
+    T newEntity();
 }

@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class LastLogin extends AbstractType {
+public interface LastLogin extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class LastLogin extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _username;
-    
-    public String getUsername() {
-        return _username;
-    }
+                fcKeepInContent = false)    
+    public String getUsername();
 
-    public void setUsername(final String _username) {
-        this._username = _username;
-    }
+    public void setUsername(final String _username);
 
     
     @Property(name = "LoggedIn", 
@@ -91,16 +86,10 @@ public class LastLogin extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _loggedIn;
-    
-    public Timestamp getLoggedIn() {
-        return _loggedIn;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getLoggedIn();
 
-    public void setLoggedIn(final Timestamp _loggedIn) {
-        this._loggedIn = _loggedIn;
-    }
+    public void setLoggedIn(final Timestamp _loggedIn);
 
     
     @Property(name = "LoggedOut", 
@@ -121,16 +110,10 @@ public class LastLogin extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _loggedOut;
-    
-    public Timestamp getLoggedOut() {
-        return _loggedOut;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getLoggedOut();
 
-    public void setLoggedOut(final Timestamp _loggedOut) {
-        this._loggedOut = _loggedOut;
-    }
+    public void setLoggedOut(final Timestamp _loggedOut);
 
     
     @Property(name = "Duration", 
@@ -151,16 +134,10 @@ public class LastLogin extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _duration;
-    
-    public Timestamp getDuration() {
-        return _duration;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getDuration();
 
-    public void setDuration(final Timestamp _duration) {
-        this._duration = _duration;
-    }
+    public void setDuration(final Timestamp _duration);
 
     
 
@@ -170,14 +147,8 @@ public class LastLogin extends AbstractType {
                 toRole = "Login",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getLogin();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getLogin() {
-        return _login;
-    }
-
-    public void setLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login) {
-        this._login = _login;
-    }
+    public void setLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login);
 
 }

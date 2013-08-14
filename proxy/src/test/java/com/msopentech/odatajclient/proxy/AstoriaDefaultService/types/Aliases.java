@@ -25,9 +25,9 @@ import java.util.Collection;
 @ComplexType("Aliases")
 public class Aliases extends AbstractType {
 
-    @Property(name = "AlternativeNames", type = "Collection(Edm.String)", nullable = false)
     private Collection<String> _alternativeNames;
 
+    @Property(name = "AlternativeNames", type = "Collection(Edm.String)", nullable = false)
     public Collection<String> getAlternativeNames() {
         return _alternativeNames;
     }

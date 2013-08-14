@@ -25,9 +25,9 @@ import java.util.Collection;
 @ComplexType("ContactDetails")
 public class ContactDetails extends AbstractType {
 
-    @Property(name = "EmailBag", type = "Collection(Edm.String)", nullable = false)
     private Collection<String> _emailBag;
 
+    @Property(name = "EmailBag", type = "Collection(Edm.String)", nullable = false)
     public Collection<String> getEmailBag() {
         return _emailBag;
     }
@@ -35,9 +35,9 @@ public class ContactDetails extends AbstractType {
     public void setEmailBag(final Collection<String> _emailBag) {
         this._emailBag = _emailBag;
     }
-    @Property(name = "AlternativeNames", type = "Collection(Edm.String)", nullable = false)
     private Collection<String> _alternativeNames;
 
+    @Property(name = "AlternativeNames", type = "Collection(Edm.String)", nullable = false)
     public Collection<String> getAlternativeNames() {
         return _alternativeNames;
     }
@@ -45,9 +45,9 @@ public class ContactDetails extends AbstractType {
     public void setAlternativeNames(final Collection<String> _alternativeNames) {
         this._alternativeNames = _alternativeNames;
     }
-    @Property(name = "ContactAlias", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Aliases", nullable = true)
     private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Aliases _contactAlias;
 
+    @Property(name = "ContactAlias", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Aliases", nullable = true)
     public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Aliases getContactAlias() {
         return _contactAlias;
     }
@@ -55,9 +55,9 @@ public class ContactDetails extends AbstractType {
     public void setContactAlias(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Aliases _contactAlias) {
         this._contactAlias = _contactAlias;
     }
-    @Property(name = "HomePhone", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Phone", nullable = true)
     private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _homePhone;
 
+    @Property(name = "HomePhone", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Phone", nullable = true)
     public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone getHomePhone() {
         return _homePhone;
     }
@@ -65,9 +65,9 @@ public class ContactDetails extends AbstractType {
     public void setHomePhone(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _homePhone) {
         this._homePhone = _homePhone;
     }
-    @Property(name = "WorkPhone", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Phone", nullable = true)
     private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _workPhone;
 
+    @Property(name = "WorkPhone", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Phone", nullable = true)
     public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone getWorkPhone() {
         return _workPhone;
     }
@@ -75,9 +75,9 @@ public class ContactDetails extends AbstractType {
     public void setWorkPhone(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _workPhone) {
         this._workPhone = _workPhone;
     }
-    @Property(name = "MobilePhoneBag", type = "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Phone)", nullable = false)
     private Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone> _mobilePhoneBag;
 
+    @Property(name = "MobilePhoneBag", type = "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Phone)", nullable = false)
     public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone> getMobilePhoneBag() {
         return _mobilePhoneBag;
     }

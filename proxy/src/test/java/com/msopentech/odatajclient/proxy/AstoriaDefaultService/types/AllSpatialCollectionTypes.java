@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class AllSpatialCollectionTypes extends AbstractType {
+public interface AllSpatialCollectionTypes extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class AllSpatialCollectionTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _id;
-    
-    public Integer getId() {
-        return _id;
-    }
+                fcKeepInContent = false)    
+    public Integer getId();
 
-    public void setId(final Integer _id) {
-        this._id = _id;
-    }
+    public void setId(final Integer _id);
 
     
 }

@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class License extends AbstractType {
+public interface License extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class License extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _name;
-    
-    public String getName() {
-        return _name;
-    }
+                fcKeepInContent = false)    
+    public String getName();
 
-    public void setName(final String _name) {
-        this._name = _name;
-    }
+    public void setName(final String _name);
 
     
     @Property(name = "LicenseNumber", 
@@ -91,16 +86,10 @@ public class License extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _licenseNumber;
-    
-    public String getLicenseNumber() {
-        return _licenseNumber;
-    }
+                fcKeepInContent = false)    
+    public String getLicenseNumber();
 
-    public void setLicenseNumber(final String _licenseNumber) {
-        this._licenseNumber = _licenseNumber;
-    }
+    public void setLicenseNumber(final String _licenseNumber);
 
     
     @Property(name = "LicenseClass", 
@@ -121,16 +110,10 @@ public class License extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _licenseClass;
-    
-    public String getLicenseClass() {
-        return _licenseClass;
-    }
+                fcKeepInContent = false)    
+    public String getLicenseClass();
 
-    public void setLicenseClass(final String _licenseClass) {
-        this._licenseClass = _licenseClass;
-    }
+    public void setLicenseClass(final String _licenseClass);
 
     
     @Property(name = "Restrictions", 
@@ -151,16 +134,10 @@ public class License extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _restrictions;
-    
-    public String getRestrictions() {
-        return _restrictions;
-    }
+                fcKeepInContent = false)    
+    public String getRestrictions();
 
-    public void setRestrictions(final String _restrictions) {
-        this._restrictions = _restrictions;
-    }
+    public void setRestrictions(final String _restrictions);
 
     
     @Property(name = "ExpirationDate", 
@@ -181,16 +158,10 @@ public class License extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _expirationDate;
-    
-    public Timestamp getExpirationDate() {
-        return _expirationDate;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getExpirationDate();
 
-    public void setExpirationDate(final Timestamp _expirationDate) {
-        this._expirationDate = _expirationDate;
-    }
+    public void setExpirationDate(final Timestamp _expirationDate);
 
     
 
@@ -200,14 +171,8 @@ public class License extends AbstractType {
                 toRole = "Driver",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Driver _driver;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Driver getDriver();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Driver getDriver() {
-        return _driver;
-    }
-
-    public void setDriver(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Driver _driver) {
-        this._driver = _driver;
-    }
+    public void setDriver(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Driver _driver);
 
 }

@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class PageView extends AbstractType {
+public interface PageView extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class PageView extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _pageViewId;
-    
-    public Integer getPageViewId() {
-        return _pageViewId;
-    }
+                fcKeepInContent = false)    
+    public Integer getPageViewId();
 
-    public void setPageViewId(final Integer _pageViewId) {
-        this._pageViewId = _pageViewId;
-    }
+    public void setPageViewId(final Integer _pageViewId);
 
     
     @Property(name = "Username", 
@@ -91,16 +86,10 @@ public class PageView extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _username;
-    
-    public String getUsername() {
-        return _username;
-    }
+                fcKeepInContent = false)    
+    public String getUsername();
 
-    public void setUsername(final String _username) {
-        this._username = _username;
-    }
+    public void setUsername(final String _username);
 
     
     @Property(name = "Viewed", 
@@ -121,16 +110,10 @@ public class PageView extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _viewed;
-    
-    public Timestamp getViewed() {
-        return _viewed;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getViewed();
 
-    public void setViewed(final Timestamp _viewed) {
-        this._viewed = _viewed;
-    }
+    public void setViewed(final Timestamp _viewed);
 
     
     @Property(name = "TimeSpentOnPage", 
@@ -151,16 +134,10 @@ public class PageView extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _timeSpentOnPage;
-    
-    public Timestamp getTimeSpentOnPage() {
-        return _timeSpentOnPage;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getTimeSpentOnPage();
 
-    public void setTimeSpentOnPage(final Timestamp _timeSpentOnPage) {
-        this._timeSpentOnPage = _timeSpentOnPage;
-    }
+    public void setTimeSpentOnPage(final Timestamp _timeSpentOnPage);
 
     
     @Property(name = "PageUrl", 
@@ -181,16 +158,10 @@ public class PageView extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _pageUrl;
-    
-    public String getPageUrl() {
-        return _pageUrl;
-    }
+                fcKeepInContent = false)    
+    public String getPageUrl();
 
-    public void setPageUrl(final String _pageUrl) {
-        this._pageUrl = _pageUrl;
-    }
+    public void setPageUrl(final String _pageUrl);
 
     
 
@@ -200,14 +171,8 @@ public class PageView extends AbstractType {
                 toRole = "Login",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getLogin();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getLogin() {
-        return _login;
-    }
-
-    public void setLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login) {
-        this._login = _login;
-    }
+    public void setLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login);
 
 }

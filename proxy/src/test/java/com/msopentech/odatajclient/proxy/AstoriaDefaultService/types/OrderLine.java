@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class OrderLine extends AbstractType {
+public interface OrderLine extends Serializable {
 
         
     
@@ -61,16 +62,10 @@ public class OrderLine extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private URI _orderLineStream;
-    
-    public URI getOrderLineStream() {
-        return _orderLineStream;
-    }
+                fcKeepInContent = false)    
+    public URI getOrderLineStream();
 
-    public void setOrderLineStream(final URI _orderLineStream) {
-        this._orderLineStream = _orderLineStream;
-    }
+    public void setOrderLineStream(final URI _orderLineStream);
 
     @Key
     @Property(name = "OrderId", 
@@ -91,16 +86,10 @@ public class OrderLine extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _orderId;
-    
-    public Integer getOrderId() {
-        return _orderId;
-    }
+                fcKeepInContent = false)    
+    public Integer getOrderId();
 
-    public void setOrderId(final Integer _orderId) {
-        this._orderId = _orderId;
-    }
+    public void setOrderId(final Integer _orderId);
 
     @Key
     @Property(name = "ProductId", 
@@ -121,16 +110,10 @@ public class OrderLine extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _productId;
-    
-    public Integer getProductId() {
-        return _productId;
-    }
+                fcKeepInContent = false)    
+    public Integer getProductId();
 
-    public void setProductId(final Integer _productId) {
-        this._productId = _productId;
-    }
+    public void setProductId(final Integer _productId);
 
     
     @Property(name = "Quantity", 
@@ -151,16 +134,10 @@ public class OrderLine extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _quantity;
-    
-    public Integer getQuantity() {
-        return _quantity;
-    }
+                fcKeepInContent = false)    
+    public Integer getQuantity();
 
-    public void setQuantity(final Integer _quantity) {
-        this._quantity = _quantity;
-    }
+    public void setQuantity(final Integer _quantity);
 
     
     @Property(name = "ConcurrencyToken", 
@@ -181,16 +158,10 @@ public class OrderLine extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _concurrencyToken;
-    
-    public String getConcurrencyToken() {
-        return _concurrencyToken;
-    }
+                fcKeepInContent = false)    
+    public String getConcurrencyToken();
 
-    public void setConcurrencyToken(final String _concurrencyToken) {
-        this._concurrencyToken = _concurrencyToken;
-    }
+    public void setConcurrencyToken(final String _concurrencyToken);
 
     
 
@@ -200,15 +171,9 @@ public class OrderLine extends AbstractType {
                 toRole = "Order",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order _order;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order getOrder();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order getOrder() {
-        return _order;
-    }
-
-    public void setOrder(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order _order) {
-        this._order = _order;
-    }
+    public void setOrder(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order _order);
 
 
     @NavigationProperty(name = "Product", 
@@ -217,14 +182,8 @@ public class OrderLine extends AbstractType {
                 toRole = "Product",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _product;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product getProduct();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product getProduct() {
-        return _product;
-    }
-
-    public void setProduct(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _product) {
-        this._product = _product;
-    }
+    public void setProduct(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _product);
 
 }

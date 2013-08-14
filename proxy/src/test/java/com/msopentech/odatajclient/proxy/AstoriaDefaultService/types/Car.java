@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Car extends AbstractType {
+public interface Car extends Serializable {
 
     
     
@@ -61,16 +62,10 @@ public class Car extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private URI _photo;
-    
-    public URI getPhoto() {
-        return _photo;
-    }
+                fcKeepInContent = false)    
+    public URI getPhoto();
 
-    public void setPhoto(final URI _photo) {
-        this._photo = _photo;
-    }
+    public void setPhoto(final URI _photo);
 
     
     @Property(name = "Video", 
@@ -91,16 +86,10 @@ public class Car extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private URI _video;
-    
-    public URI getVideo() {
-        return _video;
-    }
+                fcKeepInContent = false)    
+    public URI getVideo();
 
-    public void setVideo(final URI _video) {
-        this._video = _video;
-    }
+    public void setVideo(final URI _video);
 
     @Key
     @Property(name = "VIN", 
@@ -121,16 +110,10 @@ public class Car extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _vIN;
-    
-    public Integer getVIN() {
-        return _vIN;
-    }
+                fcKeepInContent = false)    
+    public Integer getVIN();
 
-    public void setVIN(final Integer _vIN) {
-        this._vIN = _vIN;
-    }
+    public void setVIN(final Integer _vIN);
 
     
     @Property(name = "Description", 
@@ -151,16 +134,10 @@ public class Car extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _description;
-    
-    public String getDescription() {
-        return _description;
-    }
+                fcKeepInContent = false)    
+    public String getDescription();
 
-    public void setDescription(final String _description) {
-        this._description = _description;
-    }
+    public void setDescription(final String _description);
 
     
 }

@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Product extends AbstractType {
+public interface Product extends Serializable {
 
     
     
@@ -61,16 +62,10 @@ public class Product extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private URI _picture;
-    
-    public URI getPicture() {
-        return _picture;
-    }
+                fcKeepInContent = false)    
+    public URI getPicture();
 
-    public void setPicture(final URI _picture) {
-        this._picture = _picture;
-    }
+    public void setPicture(final URI _picture);
 
     @Key
     @Property(name = "ProductId", 
@@ -91,16 +86,10 @@ public class Product extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _productId;
-    
-    public Integer getProductId() {
-        return _productId;
-    }
+                fcKeepInContent = false)    
+    public Integer getProductId();
 
-    public void setProductId(final Integer _productId) {
-        this._productId = _productId;
-    }
+    public void setProductId(final Integer _productId);
 
     
     @Property(name = "Description", 
@@ -121,16 +110,10 @@ public class Product extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _description;
-    
-    public String getDescription() {
-        return _description;
-    }
+                fcKeepInContent = false)    
+    public String getDescription();
 
-    public void setDescription(final String _description) {
-        this._description = _description;
-    }
+    public void setDescription(final String _description);
 
     
     @Property(name = "Dimensions", 
@@ -151,16 +134,10 @@ public class Product extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions _dimensions;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions getDimensions() {
-        return _dimensions;
-    }
+                fcKeepInContent = false)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions getDimensions();
 
-    public void setDimensions(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions _dimensions) {
-        this._dimensions = _dimensions;
-    }
+    public void setDimensions(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions _dimensions);
 
     
     @Property(name = "BaseConcurrency", 
@@ -181,16 +158,10 @@ public class Product extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _baseConcurrency;
-    
-    public String getBaseConcurrency() {
-        return _baseConcurrency;
-    }
+                fcKeepInContent = false)    
+    public String getBaseConcurrency();
 
-    public void setBaseConcurrency(final String _baseConcurrency) {
-        this._baseConcurrency = _baseConcurrency;
-    }
+    public void setBaseConcurrency(final String _baseConcurrency);
 
     
     @Property(name = "ComplexConcurrency", 
@@ -211,16 +182,10 @@ public class Product extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo _complexConcurrency;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo getComplexConcurrency() {
-        return _complexConcurrency;
-    }
+                fcKeepInContent = false)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo getComplexConcurrency();
 
-    public void setComplexConcurrency(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo _complexConcurrency) {
-        this._complexConcurrency = _complexConcurrency;
-    }
+    public void setComplexConcurrency(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo _complexConcurrency);
 
     
     @Property(name = "NestedComplexConcurrency", 
@@ -241,16 +206,10 @@ public class Product extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo _nestedComplexConcurrency;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo getNestedComplexConcurrency() {
-        return _nestedComplexConcurrency;
-    }
+                fcKeepInContent = false)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo getNestedComplexConcurrency();
 
-    public void setNestedComplexConcurrency(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo _nestedComplexConcurrency) {
-        this._nestedComplexConcurrency = _nestedComplexConcurrency;
-    }
+    public void setNestedComplexConcurrency(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo _nestedComplexConcurrency);
 
     
 
@@ -260,15 +219,9 @@ public class Product extends AbstractType {
                 toRole = "RelatedProducts",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _relatedProducts;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product> getRelatedProducts();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product getRelatedProducts() {
-        return _relatedProducts;
-    }
-
-    public void setRelatedProducts(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _relatedProducts) {
-        this._relatedProducts = _relatedProducts;
-    }
+    public void setRelatedProducts(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product> _relatedProducts);
 
 
     @NavigationProperty(name = "Detail", 
@@ -277,15 +230,9 @@ public class Product extends AbstractType {
                 toRole = "Detail",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductDetail _detail;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductDetail getDetail();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductDetail getDetail() {
-        return _detail;
-    }
-
-    public void setDetail(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductDetail _detail) {
-        this._detail = _detail;
-    }
+    public void setDetail(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductDetail _detail);
 
 
     @NavigationProperty(name = "Reviews", 
@@ -294,15 +241,9 @@ public class Product extends AbstractType {
                 toRole = "Reviews",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductReview _reviews;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductReview> getReviews();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductReview getReviews() {
-        return _reviews;
-    }
-
-    public void setReviews(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductReview _reviews) {
-        this._reviews = _reviews;
-    }
+    public void setReviews(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductReview> _reviews);
 
 
     @NavigationProperty(name = "Photos", 
@@ -311,14 +252,8 @@ public class Product extends AbstractType {
                 toRole = "Photos",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductPhoto _photos;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductPhoto> getPhotos();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductPhoto getPhotos() {
-        return _photos;
-    }
-
-    public void setPhotos(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductPhoto _photos) {
-        this._photos = _photos;
-    }
+    public void setPhotos(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductPhoto> _photos);
 
 }

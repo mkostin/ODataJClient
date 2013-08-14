@@ -59,21 +59,6 @@ public abstract interface AbstractAsyncEntitySet<T extends Serializable, KEY ext
     <E extends Serializable> AsyncEntityQuery<E> createQuery(Class<E> entityClass);
 
     /**
-     * @see EntitySet#save(java.io.Serializable)
-     */
-    Future<T> save(T entity);
-
-    /**
-     * @see EntitySet#saveAndFlush(java.io.Serializable)
-     */
-    Future<T> saveAndFlush(T entity);
-
-    /**
-     * @see EntitySet#save(java.lang.Iterable)
-     */
-    Future<Iterable<T>> save(Iterable<T> entities);
-
-    /**
      * @see EntitySet#delete(java.io.Serializable)
      */
     Future<Void> delete(KEY key) throws IllegalArgumentException;
@@ -87,4 +72,11 @@ public abstract interface AbstractAsyncEntitySet<T extends Serializable, KEY ext
      * @see EntitySet#flush()
      */
     Future<Void> flush();
+    
+    /**
+     * Create a new entity instance.
+     *
+     * @return new entity instance.
+     */
+    T newEntity();
 }

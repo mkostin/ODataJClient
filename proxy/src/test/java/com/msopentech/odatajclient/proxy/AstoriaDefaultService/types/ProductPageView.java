@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class ProductPageView extends AbstractType {
+public interface ProductPageView extends Serializable {
 
 
     
@@ -61,16 +62,10 @@ public class ProductPageView extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _productId;
-    
-    public Integer getProductId() {
-        return _productId;
-    }
+                fcKeepInContent = false)    
+    public Integer getProductId();
 
-    public void setProductId(final Integer _productId) {
-        this._productId = _productId;
-    }
+    public void setProductId(final Integer _productId);
 
     
     @Property(name = "ConcurrencyToken", 
@@ -91,16 +86,10 @@ public class ProductPageView extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _concurrencyToken;
-    
-    public String getConcurrencyToken() {
-        return _concurrencyToken;
-    }
+                fcKeepInContent = false)    
+    public String getConcurrencyToken();
 
-    public void setConcurrencyToken(final String _concurrencyToken) {
-        this._concurrencyToken = _concurrencyToken;
-    }
+    public void setConcurrencyToken(final String _concurrencyToken);
 
     
 }

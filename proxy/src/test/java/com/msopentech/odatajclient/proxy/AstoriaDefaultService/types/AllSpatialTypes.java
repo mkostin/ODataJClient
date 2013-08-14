@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class AllSpatialTypes extends AbstractType {
+public interface AllSpatialTypes extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _id;
-    
-    public Integer getId() {
-        return _id;
-    }
+                fcKeepInContent = false)    
+    public Integer getId();
 
-    public void setId(final Integer _id) {
-        this._id = _id;
-    }
+    public void setId(final Integer _id);
 
     
     @Property(name = "Geog", 
@@ -91,16 +86,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Geospatial _geog;
-    
-    public Geospatial getGeog() {
-        return _geog;
-    }
+                fcKeepInContent = false)    
+    public Geospatial getGeog();
 
-    public void setGeog(final Geospatial _geog) {
-        this._geog = _geog;
-    }
+    public void setGeog(final Geospatial _geog);
 
     
     @Property(name = "GeogPoint", 
@@ -121,16 +110,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Point _geogPoint;
-    
-    public Point getGeogPoint() {
-        return _geogPoint;
-    }
+                fcKeepInContent = false)    
+    public Point getGeogPoint();
 
-    public void setGeogPoint(final Point _geogPoint) {
-        this._geogPoint = _geogPoint;
-    }
+    public void setGeogPoint(final Point _geogPoint);
 
     
     @Property(name = "GeogLine", 
@@ -151,16 +134,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private LineString _geogLine;
-    
-    public LineString getGeogLine() {
-        return _geogLine;
-    }
+                fcKeepInContent = false)    
+    public LineString getGeogLine();
 
-    public void setGeogLine(final LineString _geogLine) {
-        this._geogLine = _geogLine;
-    }
+    public void setGeogLine(final LineString _geogLine);
 
     
     @Property(name = "GeogPolygon", 
@@ -181,16 +158,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Polygon _geogPolygon;
-    
-    public Polygon getGeogPolygon() {
-        return _geogPolygon;
-    }
+                fcKeepInContent = false)    
+    public Polygon getGeogPolygon();
 
-    public void setGeogPolygon(final Polygon _geogPolygon) {
-        this._geogPolygon = _geogPolygon;
-    }
+    public void setGeogPolygon(final Polygon _geogPolygon);
 
     
     @Property(name = "GeogCollection", 
@@ -211,16 +182,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private GeospatialCollection _geogCollection;
-    
-    public GeospatialCollection getGeogCollection() {
-        return _geogCollection;
-    }
+                fcKeepInContent = false)    
+    public GeospatialCollection getGeogCollection();
 
-    public void setGeogCollection(final GeospatialCollection _geogCollection) {
-        this._geogCollection = _geogCollection;
-    }
+    public void setGeogCollection(final GeospatialCollection _geogCollection);
 
     
     @Property(name = "GeogMultiPoint", 
@@ -241,16 +206,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private MultiPoint _geogMultiPoint;
-    
-    public MultiPoint getGeogMultiPoint() {
-        return _geogMultiPoint;
-    }
+                fcKeepInContent = false)    
+    public MultiPoint getGeogMultiPoint();
 
-    public void setGeogMultiPoint(final MultiPoint _geogMultiPoint) {
-        this._geogMultiPoint = _geogMultiPoint;
-    }
+    public void setGeogMultiPoint(final MultiPoint _geogMultiPoint);
 
     
     @Property(name = "GeogMultiLine", 
@@ -271,16 +230,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private MultiLineString _geogMultiLine;
-    
-    public MultiLineString getGeogMultiLine() {
-        return _geogMultiLine;
-    }
+                fcKeepInContent = false)    
+    public MultiLineString getGeogMultiLine();
 
-    public void setGeogMultiLine(final MultiLineString _geogMultiLine) {
-        this._geogMultiLine = _geogMultiLine;
-    }
+    public void setGeogMultiLine(final MultiLineString _geogMultiLine);
 
     
     @Property(name = "GeogMultiPolygon", 
@@ -301,16 +254,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private MultiPolygon _geogMultiPolygon;
-    
-    public MultiPolygon getGeogMultiPolygon() {
-        return _geogMultiPolygon;
-    }
+                fcKeepInContent = false)    
+    public MultiPolygon getGeogMultiPolygon();
 
-    public void setGeogMultiPolygon(final MultiPolygon _geogMultiPolygon) {
-        this._geogMultiPolygon = _geogMultiPolygon;
-    }
+    public void setGeogMultiPolygon(final MultiPolygon _geogMultiPolygon);
 
     
     @Property(name = "Geom", 
@@ -331,16 +278,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Geospatial _geom;
-    
-    public Geospatial getGeom() {
-        return _geom;
-    }
+                fcKeepInContent = false)    
+    public Geospatial getGeom();
 
-    public void setGeom(final Geospatial _geom) {
-        this._geom = _geom;
-    }
+    public void setGeom(final Geospatial _geom);
 
     
     @Property(name = "GeomPoint", 
@@ -361,16 +302,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Point _geomPoint;
-    
-    public Point getGeomPoint() {
-        return _geomPoint;
-    }
+                fcKeepInContent = false)    
+    public Point getGeomPoint();
 
-    public void setGeomPoint(final Point _geomPoint) {
-        this._geomPoint = _geomPoint;
-    }
+    public void setGeomPoint(final Point _geomPoint);
 
     
     @Property(name = "GeomLine", 
@@ -391,16 +326,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private LineString _geomLine;
-    
-    public LineString getGeomLine() {
-        return _geomLine;
-    }
+                fcKeepInContent = false)    
+    public LineString getGeomLine();
 
-    public void setGeomLine(final LineString _geomLine) {
-        this._geomLine = _geomLine;
-    }
+    public void setGeomLine(final LineString _geomLine);
 
     
     @Property(name = "GeomPolygon", 
@@ -421,16 +350,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Polygon _geomPolygon;
-    
-    public Polygon getGeomPolygon() {
-        return _geomPolygon;
-    }
+                fcKeepInContent = false)    
+    public Polygon getGeomPolygon();
 
-    public void setGeomPolygon(final Polygon _geomPolygon) {
-        this._geomPolygon = _geomPolygon;
-    }
+    public void setGeomPolygon(final Polygon _geomPolygon);
 
     
     @Property(name = "GeomCollection", 
@@ -451,16 +374,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private GeospatialCollection _geomCollection;
-    
-    public GeospatialCollection getGeomCollection() {
-        return _geomCollection;
-    }
+                fcKeepInContent = false)    
+    public GeospatialCollection getGeomCollection();
 
-    public void setGeomCollection(final GeospatialCollection _geomCollection) {
-        this._geomCollection = _geomCollection;
-    }
+    public void setGeomCollection(final GeospatialCollection _geomCollection);
 
     
     @Property(name = "GeomMultiPoint", 
@@ -481,16 +398,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private MultiPoint _geomMultiPoint;
-    
-    public MultiPoint getGeomMultiPoint() {
-        return _geomMultiPoint;
-    }
+                fcKeepInContent = false)    
+    public MultiPoint getGeomMultiPoint();
 
-    public void setGeomMultiPoint(final MultiPoint _geomMultiPoint) {
-        this._geomMultiPoint = _geomMultiPoint;
-    }
+    public void setGeomMultiPoint(final MultiPoint _geomMultiPoint);
 
     
     @Property(name = "GeomMultiLine", 
@@ -511,16 +422,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private MultiLineString _geomMultiLine;
-    
-    public MultiLineString getGeomMultiLine() {
-        return _geomMultiLine;
-    }
+                fcKeepInContent = false)    
+    public MultiLineString getGeomMultiLine();
 
-    public void setGeomMultiLine(final MultiLineString _geomMultiLine) {
-        this._geomMultiLine = _geomMultiLine;
-    }
+    public void setGeomMultiLine(final MultiLineString _geomMultiLine);
 
     
     @Property(name = "GeomMultiPolygon", 
@@ -541,16 +446,10 @@ public class AllSpatialTypes extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private MultiPolygon _geomMultiPolygon;
-    
-    public MultiPolygon getGeomMultiPolygon() {
-        return _geomMultiPolygon;
-    }
+                fcKeepInContent = false)    
+    public MultiPolygon getGeomMultiPolygon();
 
-    public void setGeomMultiPolygon(final MultiPolygon _geomMultiPolygon) {
-        this._geomMultiPolygon = _geomMultiPolygon;
-    }
+    public void setGeomMultiPolygon(final MultiPolygon _geomMultiPolygon);
 
     
 }

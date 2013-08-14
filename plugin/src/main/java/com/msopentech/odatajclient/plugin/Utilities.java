@@ -196,7 +196,7 @@ public class Utilities {
                 if (end.getRole().equalsIgnoreCase(associationRole)) {
                     final List<OnAction> actions = end.getTOperations();
                     return new AbstractMap.SimpleEntry<String, Action>(
-                            end.getType(),
+                            "*".equals(end.getMultiplicity()) ? "Collection(" + end.getType() + ")" : end.getType(),
                             actions.isEmpty() ? Action.NONE : actions.get(0).getAction());
                 }
             }

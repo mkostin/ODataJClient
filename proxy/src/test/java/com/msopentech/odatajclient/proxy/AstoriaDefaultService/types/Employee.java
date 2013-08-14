@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Employee extends AbstractType {
+public interface Employee extends Serializable {
 
 
     
@@ -61,16 +62,10 @@ public class Employee extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _managersPersonId;
-    
-    public Integer getManagersPersonId() {
-        return _managersPersonId;
-    }
+                fcKeepInContent = false)    
+    public Integer getManagersPersonId();
 
-    public void setManagersPersonId(final Integer _managersPersonId) {
-        this._managersPersonId = _managersPersonId;
-    }
+    public void setManagersPersonId(final Integer _managersPersonId);
 
     
     @Property(name = "Salary", 
@@ -91,16 +86,10 @@ public class Employee extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _salary;
-    
-    public Integer getSalary() {
-        return _salary;
-    }
+                fcKeepInContent = false)    
+    public Integer getSalary();
 
-    public void setSalary(final Integer _salary) {
-        this._salary = _salary;
-    }
+    public void setSalary(final Integer _salary);
 
     
     @Property(name = "Title", 
@@ -121,16 +110,10 @@ public class Employee extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _title;
-    
-    public String getTitle() {
-        return _title;
-    }
+                fcKeepInContent = false)    
+    public String getTitle();
 
-    public void setTitle(final String _title) {
-        this._title = _title;
-    }
+    public void setTitle(final String _title);
 
     
 
@@ -140,14 +123,8 @@ public class Employee extends AbstractType {
                 toRole = "Manager",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Employee _manager;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Employee getManager();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Employee getManager() {
-        return _manager;
-    }
-
-    public void setManager(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Employee _manager) {
-        this._manager = _manager;
-    }
+    public void setManager(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Employee _manager);
 
 }

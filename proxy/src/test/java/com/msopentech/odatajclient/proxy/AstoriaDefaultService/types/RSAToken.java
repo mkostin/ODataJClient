@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class RSAToken extends AbstractType {
+public interface RSAToken extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class RSAToken extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _serial;
-    
-    public String getSerial() {
-        return _serial;
-    }
+                fcKeepInContent = false)    
+    public String getSerial();
 
-    public void setSerial(final String _serial) {
-        this._serial = _serial;
-    }
+    public void setSerial(final String _serial);
 
     
     @Property(name = "Issued", 
@@ -91,16 +86,10 @@ public class RSAToken extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _issued;
-    
-    public Timestamp getIssued() {
-        return _issued;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getIssued();
 
-    public void setIssued(final Timestamp _issued) {
-        this._issued = _issued;
-    }
+    public void setIssued(final Timestamp _issued);
 
     
 
@@ -110,14 +99,8 @@ public class RSAToken extends AbstractType {
                 toRole = "Login",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getLogin();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getLogin() {
-        return _login;
-    }
-
-    public void setLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login) {
-        this._login = _login;
-    }
+    public void setLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _login);
 
 }

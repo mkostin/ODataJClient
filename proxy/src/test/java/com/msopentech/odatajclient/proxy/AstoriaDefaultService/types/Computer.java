@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Computer extends AbstractType {
+public interface Computer extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class Computer extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _computerId;
-    
-    public Integer getComputerId() {
-        return _computerId;
-    }
+                fcKeepInContent = false)    
+    public Integer getComputerId();
 
-    public void setComputerId(final Integer _computerId) {
-        this._computerId = _computerId;
-    }
+    public void setComputerId(final Integer _computerId);
 
     
     @Property(name = "Name", 
@@ -91,16 +86,10 @@ public class Computer extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _name;
-    
-    public String getName() {
-        return _name;
-    }
+                fcKeepInContent = false)    
+    public String getName();
 
-    public void setName(final String _name) {
-        this._name = _name;
-    }
+    public void setName(final String _name);
 
     
 
@@ -110,14 +99,8 @@ public class Computer extends AbstractType {
                 toRole = "ComputerDetail",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComputerDetail _computerDetail;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComputerDetail getComputerDetail();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComputerDetail getComputerDetail() {
-        return _computerDetail;
-    }
-
-    public void setComputerDetail(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComputerDetail _computerDetail) {
-        this._computerDetail = _computerDetail;
-    }
+    public void setComputerDetail(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComputerDetail _computerDetail);
 
 }

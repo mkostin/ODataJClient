@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class PersonMetadata extends AbstractType {
+public interface PersonMetadata extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class PersonMetadata extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _personMetadataId;
-    
-    public Integer getPersonMetadataId() {
-        return _personMetadataId;
-    }
+                fcKeepInContent = false)    
+    public Integer getPersonMetadataId();
 
-    public void setPersonMetadataId(final Integer _personMetadataId) {
-        this._personMetadataId = _personMetadataId;
-    }
+    public void setPersonMetadataId(final Integer _personMetadataId);
 
     
     @Property(name = "PersonId", 
@@ -91,16 +86,10 @@ public class PersonMetadata extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _personId;
-    
-    public Integer getPersonId() {
-        return _personId;
-    }
+                fcKeepInContent = false)    
+    public Integer getPersonId();
 
-    public void setPersonId(final Integer _personId) {
-        this._personId = _personId;
-    }
+    public void setPersonId(final Integer _personId);
 
     
     @Property(name = "PropertyName", 
@@ -121,16 +110,10 @@ public class PersonMetadata extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _propertyName;
-    
-    public String getPropertyName() {
-        return _propertyName;
-    }
+                fcKeepInContent = false)    
+    public String getPropertyName();
 
-    public void setPropertyName(final String _propertyName) {
-        this._propertyName = _propertyName;
-    }
+    public void setPropertyName(final String _propertyName);
 
     
     @Property(name = "PropertyValue", 
@@ -151,16 +134,10 @@ public class PersonMetadata extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _propertyValue;
-    
-    public String getPropertyValue() {
-        return _propertyValue;
-    }
+                fcKeepInContent = false)    
+    public String getPropertyValue();
 
-    public void setPropertyValue(final String _propertyValue) {
-        this._propertyValue = _propertyValue;
-    }
+    public void setPropertyValue(final String _propertyValue);
 
     
 
@@ -170,14 +147,8 @@ public class PersonMetadata extends AbstractType {
                 toRole = "Person",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Person _person;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Person getPerson();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Person getPerson() {
-        return _person;
-    }
-
-    public void setPerson(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Person _person) {
-        this._person = _person;
-    }
+    public void setPerson(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Person _person);
 
 }

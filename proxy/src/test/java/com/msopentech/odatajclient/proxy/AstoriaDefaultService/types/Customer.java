@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Customer extends AbstractType {
+public interface Customer extends Serializable {
 
     
     
@@ -61,16 +62,10 @@ public class Customer extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private URI _thumbnail;
-    
-    public URI getThumbnail() {
-        return _thumbnail;
-    }
+                fcKeepInContent = false)    
+    public URI getThumbnail();
 
-    public void setThumbnail(final URI _thumbnail) {
-        this._thumbnail = _thumbnail;
-    }
+    public void setThumbnail(final URI _thumbnail);
 
     
     @Property(name = "Video", 
@@ -91,16 +86,10 @@ public class Customer extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private URI _video;
-    
-    public URI getVideo() {
-        return _video;
-    }
+                fcKeepInContent = false)    
+    public URI getVideo();
 
-    public void setVideo(final URI _video) {
-        this._video = _video;
-    }
+    public void setVideo(final URI _video);
 
     @Key
     @Property(name = "CustomerId", 
@@ -121,16 +110,10 @@ public class Customer extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _customerId;
-    
-    public Integer getCustomerId() {
-        return _customerId;
-    }
+                fcKeepInContent = false)    
+    public Integer getCustomerId();
 
-    public void setCustomerId(final Integer _customerId) {
-        this._customerId = _customerId;
-    }
+    public void setCustomerId(final Integer _customerId);
 
     
     @Property(name = "Name", 
@@ -151,16 +134,10 @@ public class Customer extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _name;
-    
-    public String getName() {
-        return _name;
-    }
+                fcKeepInContent = false)    
+    public String getName();
 
-    public void setName(final String _name) {
-        this._name = _name;
-    }
+    public void setName(final String _name);
 
     
     @Property(name = "PrimaryContactInfo", 
@@ -181,16 +158,10 @@ public class Customer extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails _primaryContactInfo;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails getPrimaryContactInfo() {
-        return _primaryContactInfo;
-    }
+                fcKeepInContent = false)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails getPrimaryContactInfo();
 
-    public void setPrimaryContactInfo(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails _primaryContactInfo) {
-        this._primaryContactInfo = _primaryContactInfo;
-    }
+    public void setPrimaryContactInfo(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails _primaryContactInfo);
 
     
     @Property(name = "BackupContactInfo", 
@@ -211,16 +182,10 @@ public class Customer extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails> _backupContactInfo;
-    
-    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails> getBackupContactInfo() {
-        return _backupContactInfo;
-    }
+                fcKeepInContent = false)    
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails> getBackupContactInfo();
 
-    public void setBackupContactInfo(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails> _backupContactInfo) {
-        this._backupContactInfo = _backupContactInfo;
-    }
+    public void setBackupContactInfo(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails> _backupContactInfo);
 
     
     @Property(name = "Auditing", 
@@ -241,16 +206,10 @@ public class Customer extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo _auditing;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo getAuditing() {
-        return _auditing;
-    }
+                fcKeepInContent = false)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo getAuditing();
 
-    public void setAuditing(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo _auditing) {
-        this._auditing = _auditing;
-    }
+    public void setAuditing(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AuditInfo _auditing);
 
     
 
@@ -260,15 +219,9 @@ public class Customer extends AbstractType {
                 toRole = "Orders",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order _orders;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order> getOrders();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order getOrders() {
-        return _orders;
-    }
-
-    public void setOrders(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order _orders) {
-        this._orders = _orders;
-    }
+    public void setOrders(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order> _orders);
 
 
     @NavigationProperty(name = "Logins", 
@@ -277,15 +230,9 @@ public class Customer extends AbstractType {
                 toRole = "Logins",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _logins;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login> getLogins();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getLogins() {
-        return _logins;
-    }
-
-    public void setLogins(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _logins) {
-        this._logins = _logins;
-    }
+    public void setLogins(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login> _logins);
 
 
     @NavigationProperty(name = "Husband", 
@@ -294,15 +241,9 @@ public class Customer extends AbstractType {
                 toRole = "Husband",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _husband;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer getHusband();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer getHusband() {
-        return _husband;
-    }
-
-    public void setHusband(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _husband) {
-        this._husband = _husband;
-    }
+    public void setHusband(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _husband);
 
 
     @NavigationProperty(name = "Wife", 
@@ -311,15 +252,9 @@ public class Customer extends AbstractType {
                 toRole = "Wife",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _wife;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer getWife();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer getWife() {
-        return _wife;
-    }
-
-    public void setWife(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _wife) {
-        this._wife = _wife;
-    }
+    public void setWife(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _wife);
 
 
     @NavigationProperty(name = "Info", 
@@ -328,14 +263,8 @@ public class Customer extends AbstractType {
                 toRole = "Info",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.CustomerInfo _info;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.CustomerInfo getInfo();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.CustomerInfo getInfo() {
-        return _info;
-    }
-
-    public void setInfo(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.CustomerInfo _info) {
-        this._info = _info;
-    }
+    public void setInfo(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.CustomerInfo _info);
 
 }

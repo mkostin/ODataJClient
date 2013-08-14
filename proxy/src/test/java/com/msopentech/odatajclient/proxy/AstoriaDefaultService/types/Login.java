@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Login extends AbstractType {
+public interface Login extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class Login extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _username;
-    
-    public String getUsername() {
-        return _username;
-    }
+                fcKeepInContent = false)    
+    public String getUsername();
 
-    public void setUsername(final String _username) {
-        this._username = _username;
-    }
+    public void setUsername(final String _username);
 
     
     @Property(name = "CustomerId", 
@@ -91,16 +86,10 @@ public class Login extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _customerId;
-    
-    public Integer getCustomerId() {
-        return _customerId;
-    }
+                fcKeepInContent = false)    
+    public Integer getCustomerId();
 
-    public void setCustomerId(final Integer _customerId) {
-        this._customerId = _customerId;
-    }
+    public void setCustomerId(final Integer _customerId);
 
     
 
@@ -110,15 +99,9 @@ public class Login extends AbstractType {
                 toRole = "Customer",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _customer;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer getCustomer();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer getCustomer() {
-        return _customer;
-    }
-
-    public void setCustomer(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _customer) {
-        this._customer = _customer;
-    }
+    public void setCustomer(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer _customer);
 
 
     @NavigationProperty(name = "LastLogin", 
@@ -127,15 +110,9 @@ public class Login extends AbstractType {
                 toRole = "LastLogin",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.LastLogin _lastLogin;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.LastLogin getLastLogin();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.LastLogin getLastLogin() {
-        return _lastLogin;
-    }
-
-    public void setLastLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.LastLogin _lastLogin) {
-        this._lastLogin = _lastLogin;
-    }
+    public void setLastLogin(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.LastLogin _lastLogin);
 
 
     @NavigationProperty(name = "SentMessages", 
@@ -144,15 +121,9 @@ public class Login extends AbstractType {
                 toRole = "SentMessages",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message _sentMessages;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message> getSentMessages();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message getSentMessages() {
-        return _sentMessages;
-    }
-
-    public void setSentMessages(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message _sentMessages) {
-        this._sentMessages = _sentMessages;
-    }
+    public void setSentMessages(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message> _sentMessages);
 
 
     @NavigationProperty(name = "ReceivedMessages", 
@@ -161,15 +132,9 @@ public class Login extends AbstractType {
                 toRole = "ReceivedMessages",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message _receivedMessages;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message> getReceivedMessages();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message getReceivedMessages() {
-        return _receivedMessages;
-    }
-
-    public void setReceivedMessages(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message _receivedMessages) {
-        this._receivedMessages = _receivedMessages;
-    }
+    public void setReceivedMessages(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message> _receivedMessages);
 
 
     @NavigationProperty(name = "Orders", 
@@ -178,14 +143,8 @@ public class Login extends AbstractType {
                 toRole = "Orders",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order _orders;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order> getOrders();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order getOrders() {
-        return _orders;
-    }
-
-    public void setOrders(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order _orders) {
-        this._orders = _orders;
-    }
+    public void setOrders(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order> _orders);
 
 }

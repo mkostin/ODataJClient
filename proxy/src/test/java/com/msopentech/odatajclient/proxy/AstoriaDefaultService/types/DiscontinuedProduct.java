@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class DiscontinuedProduct extends AbstractType {
+public interface DiscontinuedProduct extends Serializable {
 
 
     
@@ -61,16 +62,10 @@ public class DiscontinuedProduct extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _discontinued;
-    
-    public Timestamp getDiscontinued() {
-        return _discontinued;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getDiscontinued();
 
-    public void setDiscontinued(final Timestamp _discontinued) {
-        this._discontinued = _discontinued;
-    }
+    public void setDiscontinued(final Timestamp _discontinued);
 
     
     @Property(name = "ReplacementProductId", 
@@ -91,16 +86,10 @@ public class DiscontinuedProduct extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _replacementProductId;
-    
-    public Integer getReplacementProductId() {
-        return _replacementProductId;
-    }
+                fcKeepInContent = false)    
+    public Integer getReplacementProductId();
 
-    public void setReplacementProductId(final Integer _replacementProductId) {
-        this._replacementProductId = _replacementProductId;
-    }
+    public void setReplacementProductId(final Integer _replacementProductId);
 
     
     @Property(name = "DiscontinuedPhone", 
@@ -121,16 +110,10 @@ public class DiscontinuedProduct extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _discontinuedPhone;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone getDiscontinuedPhone() {
-        return _discontinuedPhone;
-    }
+                fcKeepInContent = false)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone getDiscontinuedPhone();
 
-    public void setDiscontinuedPhone(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _discontinuedPhone) {
-        this._discontinuedPhone = _discontinuedPhone;
-    }
+    public void setDiscontinuedPhone(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _discontinuedPhone);
 
     
     @Property(name = "ChildConcurrencyToken", 
@@ -151,16 +134,10 @@ public class DiscontinuedProduct extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _childConcurrencyToken;
-    
-    public String getChildConcurrencyToken() {
-        return _childConcurrencyToken;
-    }
+                fcKeepInContent = false)    
+    public String getChildConcurrencyToken();
 
-    public void setChildConcurrencyToken(final String _childConcurrencyToken) {
-        this._childConcurrencyToken = _childConcurrencyToken;
-    }
+    public void setChildConcurrencyToken(final String _childConcurrencyToken);
 
     
 }

@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class MessageAttachment extends AbstractType {
+public interface MessageAttachment extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class MessageAttachment extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private UUID _attachmentId;
-    
-    public UUID getAttachmentId() {
-        return _attachmentId;
-    }
+                fcKeepInContent = false)    
+    public UUID getAttachmentId();
 
-    public void setAttachmentId(final UUID _attachmentId) {
-        this._attachmentId = _attachmentId;
-    }
+    public void setAttachmentId(final UUID _attachmentId);
 
     
     @Property(name = "Attachment", 
@@ -91,16 +86,10 @@ public class MessageAttachment extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private byte[] _attachment;
-    
-    public byte[] getAttachment() {
-        return _attachment;
-    }
+                fcKeepInContent = false)    
+    public byte[] getAttachment();
 
-    public void setAttachment(final byte[] _attachment) {
-        this._attachment = _attachment;
-    }
+    public void setAttachment(final byte[] _attachment);
 
     
 }

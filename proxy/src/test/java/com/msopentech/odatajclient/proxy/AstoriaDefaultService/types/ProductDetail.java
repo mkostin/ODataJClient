@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class ProductDetail extends AbstractType {
+public interface ProductDetail extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class ProductDetail extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _productId;
-    
-    public Integer getProductId() {
-        return _productId;
-    }
+                fcKeepInContent = false)    
+    public Integer getProductId();
 
-    public void setProductId(final Integer _productId) {
-        this._productId = _productId;
-    }
+    public void setProductId(final Integer _productId);
 
     
     @Property(name = "Details", 
@@ -91,16 +86,10 @@ public class ProductDetail extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _details;
-    
-    public String getDetails() {
-        return _details;
-    }
+                fcKeepInContent = false)    
+    public String getDetails();
 
-    public void setDetails(final String _details) {
-        this._details = _details;
-    }
+    public void setDetails(final String _details);
 
     
 
@@ -110,14 +99,8 @@ public class ProductDetail extends AbstractType {
                 toRole = "Product",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _product;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product getProduct();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product getProduct() {
-        return _product;
-    }
-
-    public void setProduct(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _product) {
-        this._product = _product;
-    }
+    public void setProduct(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _product);
 
 }

@@ -15,29 +15,57 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 
-public class EntityContainerInvocationHandler implements InvocationHandler {
+public class EntityContainerInvocationHandler extends AbstractInvocationHandler {
 
-    private final String serviceRoot;
+    protected final String serviceRoot;
 
-    private final String schemaName;
+    protected final String schemaName;
 
     private final String entityContainerName;
 
-    public EntityContainerInvocationHandler(final String serviceRoot,
-            final String schemaName, final String entityContainerName) {
+    private final EdmMetadata metadata;
 
+    public EntityContainerInvocationHandler(
+            final String serviceRoot,
+            final String schemaName,
+            final String entityContainerName) {
+        super(null);
         this.serviceRoot = serviceRoot;
         this.schemaName = schemaName;
         this.entityContainerName = entityContainerName;
+
+        final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(serviceRoot);
+
+        final ODataRetrieveResponse<EdmMetadata> res = req.execute();
+        metadata = res.getBody();
+
+        if (metadata == null) {
+            throw new IllegalStateException("No metadata found at URI '" + serviceRoot + "'");
+        }
+    }
+
+    public String getServiceRoot() {
+        return serviceRoot;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public EdmMetadata getMetadata() {
+        return metadata;
     }
 
     @Override
@@ -60,8 +88,10 @@ public class EntityContainerInvocationHandler implements InvocationHandler {
 
             return Proxy.newProxyInstance(returnType.getClassLoader(), new Class<?>[] {returnType},
                     EntitySetInvocationHandler.getInstance(
-                    (Class<Serializable>) abstractEntitySetParams[0], (Class<Serializable>) abstractEntitySetParams[1],
-                    serviceRoot, entitySetName));
+                    (Class<Serializable>) abstractEntitySetParams[0],
+                    (Class<Serializable>) abstractEntitySetParams[1],
+                    entitySetName,
+                    this));
         } // 2. invoke function imports
         else {
             throw new UnsupportedOperationException("Not supported yet.");

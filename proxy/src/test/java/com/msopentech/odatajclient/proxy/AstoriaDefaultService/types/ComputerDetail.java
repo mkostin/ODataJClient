@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class ComputerDetail extends AbstractType {
+public interface ComputerDetail extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class ComputerDetail extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _computerDetailId;
-    
-    public Integer getComputerDetailId() {
-        return _computerDetailId;
-    }
+                fcKeepInContent = false)    
+    public Integer getComputerDetailId();
 
-    public void setComputerDetailId(final Integer _computerDetailId) {
-        this._computerDetailId = _computerDetailId;
-    }
+    public void setComputerDetailId(final Integer _computerDetailId);
 
     
     @Property(name = "Manufacturer", 
@@ -91,16 +86,10 @@ public class ComputerDetail extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)
-    private String _manufacturer;
-    
-    public String getManufacturer() {
-        return _manufacturer;
-    }
+                fcKeepInContent = true)    
+    public String getManufacturer();
 
-    public void setManufacturer(final String _manufacturer) {
-        this._manufacturer = _manufacturer;
-    }
+    public void setManufacturer(final String _manufacturer);
 
     
     @Property(name = "Model", 
@@ -121,16 +110,10 @@ public class ComputerDetail extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)
-    private String _model;
-    
-    public String getModel() {
-        return _model;
-    }
+                fcKeepInContent = true)    
+    public String getModel();
 
-    public void setModel(final String _model) {
-        this._model = _model;
-    }
+    public void setModel(final String _model);
 
     
     @Property(name = "Serial", 
@@ -151,16 +134,10 @@ public class ComputerDetail extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _serial;
-    
-    public String getSerial() {
-        return _serial;
-    }
+                fcKeepInContent = false)    
+    public String getSerial();
 
-    public void setSerial(final String _serial) {
-        this._serial = _serial;
-    }
+    public void setSerial(final String _serial);
 
     
     @Property(name = "SpecificationsBag", 
@@ -181,16 +158,10 @@ public class ComputerDetail extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<String> _specificationsBag;
-    
-    public Collection<String> getSpecificationsBag() {
-        return _specificationsBag;
-    }
+                fcKeepInContent = false)    
+    public Collection<String> getSpecificationsBag();
 
-    public void setSpecificationsBag(final Collection<String> _specificationsBag) {
-        this._specificationsBag = _specificationsBag;
-    }
+    public void setSpecificationsBag(final Collection<String> _specificationsBag);
 
     
     @Property(name = "PurchaseDate", 
@@ -211,16 +182,10 @@ public class ComputerDetail extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _purchaseDate;
-    
-    public Timestamp getPurchaseDate() {
-        return _purchaseDate;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getPurchaseDate();
 
-    public void setPurchaseDate(final Timestamp _purchaseDate) {
-        this._purchaseDate = _purchaseDate;
-    }
+    public void setPurchaseDate(final Timestamp _purchaseDate);
 
     
     @Property(name = "Dimensions", 
@@ -241,16 +206,10 @@ public class ComputerDetail extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions _dimensions;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions getDimensions() {
-        return _dimensions;
-    }
+                fcKeepInContent = false)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions getDimensions();
 
-    public void setDimensions(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions _dimensions) {
-        this._dimensions = _dimensions;
-    }
+    public void setDimensions(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Dimensions _dimensions);
 
     
 
@@ -260,14 +219,8 @@ public class ComputerDetail extends AbstractType {
                 toRole = "Computer",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Computer _computer;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Computer getComputer();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Computer getComputer() {
-        return _computer;
-    }
-
-    public void setComputer(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Computer _computer) {
-        this._computer = _computer;
-    }
+    public void setComputer(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Computer _computer);
 
 }

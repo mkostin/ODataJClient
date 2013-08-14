@@ -39,9 +39,9 @@ import java.util.Collection;
 public class $utility.capitalize($complexType.Name) extends AbstractType {
 
 #foreach ($property in $complexType.Properties)
-    @Property(name = "$property.Name", type = "$property.Type", nullable = $property.Nullable)
     private $utility.getJavaType($property.Type) _$utility.uncapitalize($property.Name);
 
+    @Property(name = "$property.Name", type = "$property.Type", nullable = $property.Nullable)
     public $utility.getJavaType($property.Type) get$utility.capitalize($property.Name)() {
         return _$utility.uncapitalize($property.Name);
     }

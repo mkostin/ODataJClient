@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class ProductPhoto extends AbstractType {
+public interface ProductPhoto extends Serializable {
 
         
     @Key
@@ -61,16 +62,10 @@ public class ProductPhoto extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _productId;
-    
-    public Integer getProductId() {
-        return _productId;
-    }
+                fcKeepInContent = false)    
+    public Integer getProductId();
 
-    public void setProductId(final Integer _productId) {
-        this._productId = _productId;
-    }
+    public void setProductId(final Integer _productId);
 
     @Key
     @Property(name = "PhotoId", 
@@ -91,16 +86,10 @@ public class ProductPhoto extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _photoId;
-    
-    public Integer getPhotoId() {
-        return _photoId;
-    }
+                fcKeepInContent = false)    
+    public Integer getPhotoId();
 
-    public void setPhotoId(final Integer _photoId) {
-        this._photoId = _photoId;
-    }
+    public void setPhotoId(final Integer _photoId);
 
     
     @Property(name = "Photo", 
@@ -121,16 +110,10 @@ public class ProductPhoto extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private byte[] _photo;
-    
-    public byte[] getPhoto() {
-        return _photo;
-    }
+                fcKeepInContent = false)    
+    public byte[] getPhoto();
 
-    public void setPhoto(final byte[] _photo) {
-        this._photo = _photo;
-    }
+    public void setPhoto(final byte[] _photo);
 
     
 }

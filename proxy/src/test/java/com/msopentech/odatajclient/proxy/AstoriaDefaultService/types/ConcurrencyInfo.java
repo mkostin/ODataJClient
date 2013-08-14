@@ -25,9 +25,9 @@ import java.util.Collection;
 @ComplexType("ConcurrencyInfo")
 public class ConcurrencyInfo extends AbstractType {
 
-    @Property(name = "Token", type = "Edm.String", nullable = true)
     private String _token;
 
+    @Property(name = "Token", type = "Edm.String", nullable = true)
     public String getToken() {
         return _token;
     }
@@ -35,9 +35,9 @@ public class ConcurrencyInfo extends AbstractType {
     public void setToken(final String _token) {
         this._token = _token;
     }
-    @Property(name = "QueriedDateTime", type = "Edm.DateTime", nullable = true)
     private Timestamp _queriedDateTime;
 
+    @Property(name = "QueriedDateTime", type = "Edm.DateTime", nullable = true)
     public Timestamp getQueriedDateTime() {
         return _queriedDateTime;
     }

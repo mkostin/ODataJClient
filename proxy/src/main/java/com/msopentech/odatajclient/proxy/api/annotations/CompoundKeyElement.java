@@ -21,11 +21,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark POJO field (property) as key.
+ * Mark multi key class field (property) as multi key element.
  *
  * @see Property
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Key {
+public @interface CompoundKeyElement {
+
+    String name();
+
+    int position();
 }

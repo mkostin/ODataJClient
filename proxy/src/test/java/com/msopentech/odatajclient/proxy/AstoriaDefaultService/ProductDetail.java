@@ -2,6 +2,8 @@ package com.msopentech.odatajclient.proxy.AstoriaDefaultService;
 
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.*;
 
 // EdmSimpleType property imports
@@ -24,5 +26,4 @@ import javax.xml.bind.annotation.XmlType;
 
 @EntitySet("ProductDetail")
 public interface ProductDetail extends AbstractEntitySet<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductDetail, Integer> {
-
 }

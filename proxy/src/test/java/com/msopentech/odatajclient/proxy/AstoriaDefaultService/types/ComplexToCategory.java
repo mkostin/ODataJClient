@@ -25,9 +25,9 @@ import java.util.Collection;
 @ComplexType("ComplexToCategory")
 public class ComplexToCategory extends AbstractType {
 
-    @Property(name = "Term", type = "Edm.String", nullable = true)
     private String _term;
 
+    @Property(name = "Term", type = "Edm.String", nullable = true)
     public String getTerm() {
         return _term;
     }
@@ -35,9 +35,9 @@ public class ComplexToCategory extends AbstractType {
     public void setTerm(final String _term) {
         this._term = _term;
     }
-    @Property(name = "Scheme", type = "Edm.String", nullable = true)
     private String _scheme;
 
+    @Property(name = "Scheme", type = "Edm.String", nullable = true)
     public String getScheme() {
         return _scheme;
     }
@@ -45,9 +45,9 @@ public class ComplexToCategory extends AbstractType {
     public void setScheme(final String _scheme) {
         this._scheme = _scheme;
     }
-    @Property(name = "Label", type = "Edm.String", nullable = true)
     private String _label;
 
+    @Property(name = "Label", type = "Edm.String", nullable = true)
     public String getLabel() {
         return _label;
     }

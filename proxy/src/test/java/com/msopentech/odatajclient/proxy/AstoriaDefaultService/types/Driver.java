@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Driver extends AbstractType {
+public interface Driver extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class Driver extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _name;
-    
-    public String getName() {
-        return _name;
-    }
+                fcKeepInContent = false)    
+    public String getName();
 
-    public void setName(final String _name) {
-        this._name = _name;
-    }
+    public void setName(final String _name);
 
     
     @Property(name = "BirthDate", 
@@ -91,16 +86,10 @@ public class Driver extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Timestamp _birthDate;
-    
-    public Timestamp getBirthDate() {
-        return _birthDate;
-    }
+                fcKeepInContent = false)    
+    public Timestamp getBirthDate();
 
-    public void setBirthDate(final Timestamp _birthDate) {
-        this._birthDate = _birthDate;
-    }
+    public void setBirthDate(final Timestamp _birthDate);
 
     
 
@@ -110,14 +99,8 @@ public class Driver extends AbstractType {
                 toRole = "License",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.License _license;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.License getLicense();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.License getLicense() {
-        return _license;
-    }
-
-    public void setLicense(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.License _license) {
-        this._license = _license;
-    }
+    public void setLicense(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.License _license);
 
 }

@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class Message extends AbstractType {
+public interface Message extends Serializable {
 
         
     @Key
@@ -61,16 +62,10 @@ public class Message extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _messageId;
-    
-    public Integer getMessageId() {
-        return _messageId;
-    }
+                fcKeepInContent = false)    
+    public Integer getMessageId();
 
-    public void setMessageId(final Integer _messageId) {
-        this._messageId = _messageId;
-    }
+    public void setMessageId(final Integer _messageId);
 
     @Key
     @Property(name = "FromUsername", 
@@ -91,16 +86,10 @@ public class Message extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _fromUsername;
-    
-    public String getFromUsername() {
-        return _fromUsername;
-    }
+                fcKeepInContent = false)    
+    public String getFromUsername();
 
-    public void setFromUsername(final String _fromUsername) {
-        this._fromUsername = _fromUsername;
-    }
+    public void setFromUsername(final String _fromUsername);
 
     
     @Property(name = "ToUsername", 
@@ -121,16 +110,10 @@ public class Message extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _toUsername;
-    
-    public String getToUsername() {
-        return _toUsername;
-    }
+                fcKeepInContent = false)    
+    public String getToUsername();
 
-    public void setToUsername(final String _toUsername) {
-        this._toUsername = _toUsername;
-    }
+    public void setToUsername(final String _toUsername);
 
     
     @Property(name = "Sent", 
@@ -151,16 +134,10 @@ public class Message extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)
-    private Timestamp _sent;
-    
-    public Timestamp getSent() {
-        return _sent;
-    }
+                fcKeepInContent = true)    
+    public Timestamp getSent();
 
-    public void setSent(final Timestamp _sent) {
-        this._sent = _sent;
-    }
+    public void setSent(final Timestamp _sent);
 
     
     @Property(name = "Subject", 
@@ -181,16 +158,10 @@ public class Message extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)
-    private String _subject;
-    
-    public String getSubject() {
-        return _subject;
-    }
+                fcKeepInContent = true)    
+    public String getSubject();
 
-    public void setSubject(final String _subject) {
-        this._subject = _subject;
-    }
+    public void setSubject(final String _subject);
 
     
     @Property(name = "Body", 
@@ -211,16 +182,10 @@ public class Message extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _body;
-    
-    public String getBody() {
-        return _body;
-    }
+                fcKeepInContent = false)    
+    public String getBody();
 
-    public void setBody(final String _body) {
-        this._body = _body;
-    }
+    public void setBody(final String _body);
 
     
     @Property(name = "IsRead", 
@@ -241,16 +206,10 @@ public class Message extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Boolean _isRead;
-    
-    public Boolean getIsRead() {
-        return _isRead;
-    }
+                fcKeepInContent = false)    
+    public Boolean getIsRead();
 
-    public void setIsRead(final Boolean _isRead) {
-        this._isRead = _isRead;
-    }
+    public void setIsRead(final Boolean _isRead);
 
     
 
@@ -260,15 +219,9 @@ public class Message extends AbstractType {
                 toRole = "Sender",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _sender;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getSender();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getSender() {
-        return _sender;
-    }
-
-    public void setSender(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _sender) {
-        this._sender = _sender;
-    }
+    public void setSender(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _sender);
 
 
     @NavigationProperty(name = "Recipient", 
@@ -277,15 +230,9 @@ public class Message extends AbstractType {
                 toRole = "Recipient",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _recipient;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getRecipient();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login getRecipient() {
-        return _recipient;
-    }
-
-    public void setRecipient(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _recipient) {
-        this._recipient = _recipient;
-    }
+    public void setRecipient(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Login _recipient);
 
 
     @NavigationProperty(name = "Attachments", 
@@ -294,14 +241,8 @@ public class Message extends AbstractType {
                 toRole = "Attachments",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.MessageAttachment _attachments;
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.MessageAttachment> getAttachments();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.MessageAttachment getAttachments() {
-        return _attachments;
-    }
-
-    public void setAttachments(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.MessageAttachment _attachments) {
-        this._attachments = _attachments;
-    }
+    public void setAttachments(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.MessageAttachment> _attachments);
 
 }

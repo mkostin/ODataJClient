@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * Bind POJO field to EDM property.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(ElementType.METHOD)
 public @interface Property {
 
     String name();

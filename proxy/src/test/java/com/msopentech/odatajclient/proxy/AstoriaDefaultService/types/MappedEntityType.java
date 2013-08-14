@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class MappedEntityType extends AbstractType {
+public interface MappedEntityType extends Serializable {
 
     
     @Key
@@ -61,16 +62,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _id;
-    
-    public Integer getId() {
-        return _id;
-    }
+                fcKeepInContent = false)    
+    public Integer getId();
 
-    public void setId(final Integer _id) {
-        this._id = _id;
-    }
+    public void setId(final Integer _id);
 
     
     @Property(name = "Href", 
@@ -91,16 +86,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _href;
-    
-    public String getHref() {
-        return _href;
-    }
+                fcKeepInContent = false)    
+    public String getHref();
 
-    public void setHref(final String _href) {
-        this._href = _href;
-    }
+    public void setHref(final String _href);
 
     
     @Property(name = "Title", 
@@ -121,16 +110,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _title;
-    
-    public String getTitle() {
-        return _title;
-    }
+                fcKeepInContent = false)    
+    public String getTitle();
 
-    public void setTitle(final String _title) {
-        this._title = _title;
-    }
+    public void setTitle(final String _title);
 
     
     @Property(name = "HrefLang", 
@@ -151,16 +134,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _hrefLang;
-    
-    public String getHrefLang() {
-        return _hrefLang;
-    }
+                fcKeepInContent = false)    
+    public String getHrefLang();
 
-    public void setHrefLang(final String _hrefLang) {
-        this._hrefLang = _hrefLang;
-    }
+    public void setHrefLang(final String _hrefLang);
 
     
     @Property(name = "Type", 
@@ -181,16 +158,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _type;
-    
-    public String getType() {
-        return _type;
-    }
+                fcKeepInContent = false)    
+    public String getType();
 
-    public void setType(final String _type) {
-        this._type = _type;
-    }
+    public void setType(final String _type);
 
     
     @Property(name = "Length", 
@@ -211,16 +182,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _length;
-    
-    public Integer getLength() {
-        return _length;
-    }
+                fcKeepInContent = false)    
+    public Integer getLength();
 
-    public void setLength(final Integer _length) {
-        this._length = _length;
-    }
+    public void setLength(final Integer _length);
 
     
     @Property(name = "BagOfPrimitiveToLinks", 
@@ -241,16 +206,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<String> _bagOfPrimitiveToLinks;
-    
-    public Collection<String> getBagOfPrimitiveToLinks() {
-        return _bagOfPrimitiveToLinks;
-    }
+                fcKeepInContent = false)    
+    public Collection<String> getBagOfPrimitiveToLinks();
 
-    public void setBagOfPrimitiveToLinks(final Collection<String> _bagOfPrimitiveToLinks) {
-        this._bagOfPrimitiveToLinks = _bagOfPrimitiveToLinks;
-    }
+    public void setBagOfPrimitiveToLinks(final Collection<String> _bagOfPrimitiveToLinks);
 
     
     @Property(name = "Logo", 
@@ -271,16 +230,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private byte[] _logo;
-    
-    public byte[] getLogo() {
-        return _logo;
-    }
+                fcKeepInContent = false)    
+    public byte[] getLogo();
 
-    public void setLogo(final byte[] _logo) {
-        this._logo = _logo;
-    }
+    public void setLogo(final byte[] _logo);
 
     
     @Property(name = "BagOfDecimals", 
@@ -301,16 +254,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<BigDecimal> _bagOfDecimals;
-    
-    public Collection<BigDecimal> getBagOfDecimals() {
-        return _bagOfDecimals;
-    }
+                fcKeepInContent = false)    
+    public Collection<BigDecimal> getBagOfDecimals();
 
-    public void setBagOfDecimals(final Collection<BigDecimal> _bagOfDecimals) {
-        this._bagOfDecimals = _bagOfDecimals;
-    }
+    public void setBagOfDecimals(final Collection<BigDecimal> _bagOfDecimals);
 
     
     @Property(name = "BagOfDoubles", 
@@ -331,16 +278,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Double> _bagOfDoubles;
-    
-    public Collection<Double> getBagOfDoubles() {
-        return _bagOfDoubles;
-    }
+                fcKeepInContent = false)    
+    public Collection<Double> getBagOfDoubles();
 
-    public void setBagOfDoubles(final Collection<Double> _bagOfDoubles) {
-        this._bagOfDoubles = _bagOfDoubles;
-    }
+    public void setBagOfDoubles(final Collection<Double> _bagOfDoubles);
 
     
     @Property(name = "BagOfSingles", 
@@ -361,16 +302,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Float> _bagOfSingles;
-    
-    public Collection<Float> getBagOfSingles() {
-        return _bagOfSingles;
-    }
+                fcKeepInContent = false)    
+    public Collection<Float> getBagOfSingles();
 
-    public void setBagOfSingles(final Collection<Float> _bagOfSingles) {
-        this._bagOfSingles = _bagOfSingles;
-    }
+    public void setBagOfSingles(final Collection<Float> _bagOfSingles);
 
     
     @Property(name = "BagOfBytes", 
@@ -391,16 +326,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Integer> _bagOfBytes;
-    
-    public Collection<Integer> getBagOfBytes() {
-        return _bagOfBytes;
-    }
+                fcKeepInContent = false)    
+    public Collection<Integer> getBagOfBytes();
 
-    public void setBagOfBytes(final Collection<Integer> _bagOfBytes) {
-        this._bagOfBytes = _bagOfBytes;
-    }
+    public void setBagOfBytes(final Collection<Integer> _bagOfBytes);
 
     
     @Property(name = "BagOfInt16s", 
@@ -421,16 +350,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Short> _bagOfInt16s;
-    
-    public Collection<Short> getBagOfInt16s() {
-        return _bagOfInt16s;
-    }
+                fcKeepInContent = false)    
+    public Collection<Short> getBagOfInt16s();
 
-    public void setBagOfInt16s(final Collection<Short> _bagOfInt16s) {
-        this._bagOfInt16s = _bagOfInt16s;
-    }
+    public void setBagOfInt16s(final Collection<Short> _bagOfInt16s);
 
     
     @Property(name = "BagOfInt32s", 
@@ -451,16 +374,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Integer> _bagOfInt32s;
-    
-    public Collection<Integer> getBagOfInt32s() {
-        return _bagOfInt32s;
-    }
+                fcKeepInContent = false)    
+    public Collection<Integer> getBagOfInt32s();
 
-    public void setBagOfInt32s(final Collection<Integer> _bagOfInt32s) {
-        this._bagOfInt32s = _bagOfInt32s;
-    }
+    public void setBagOfInt32s(final Collection<Integer> _bagOfInt32s);
 
     
     @Property(name = "BagOfInt64s", 
@@ -481,16 +398,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Long> _bagOfInt64s;
-    
-    public Collection<Long> getBagOfInt64s() {
-        return _bagOfInt64s;
-    }
+                fcKeepInContent = false)    
+    public Collection<Long> getBagOfInt64s();
 
-    public void setBagOfInt64s(final Collection<Long> _bagOfInt64s) {
-        this._bagOfInt64s = _bagOfInt64s;
-    }
+    public void setBagOfInt64s(final Collection<Long> _bagOfInt64s);
 
     
     @Property(name = "BagOfGuids", 
@@ -511,16 +422,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<UUID> _bagOfGuids;
-    
-    public Collection<UUID> getBagOfGuids() {
-        return _bagOfGuids;
-    }
+                fcKeepInContent = false)    
+    public Collection<UUID> getBagOfGuids();
 
-    public void setBagOfGuids(final Collection<UUID> _bagOfGuids) {
-        this._bagOfGuids = _bagOfGuids;
-    }
+    public void setBagOfGuids(final Collection<UUID> _bagOfGuids);
 
     
     @Property(name = "BagOfDateTime", 
@@ -541,16 +446,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<Timestamp> _bagOfDateTime;
-    
-    public Collection<Timestamp> getBagOfDateTime() {
-        return _bagOfDateTime;
-    }
+                fcKeepInContent = false)    
+    public Collection<Timestamp> getBagOfDateTime();
 
-    public void setBagOfDateTime(final Collection<Timestamp> _bagOfDateTime) {
-        this._bagOfDateTime = _bagOfDateTime;
-    }
+    public void setBagOfDateTime(final Collection<Timestamp> _bagOfDateTime);
 
     
     @Property(name = "BagOfComplexToCategories", 
@@ -571,16 +470,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComplexToCategory> _bagOfComplexToCategories;
-    
-    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComplexToCategory> getBagOfComplexToCategories() {
-        return _bagOfComplexToCategories;
-    }
+                fcKeepInContent = false)    
+    public Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComplexToCategory> getBagOfComplexToCategories();
 
-    public void setBagOfComplexToCategories(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComplexToCategory> _bagOfComplexToCategories) {
-        this._bagOfComplexToCategories = _bagOfComplexToCategories;
-    }
+    public void setBagOfComplexToCategories(final Collection<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComplexToCategory> _bagOfComplexToCategories);
 
     
     @Property(name = "ComplexPhone", 
@@ -601,16 +494,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _complexPhone;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone getComplexPhone() {
-        return _complexPhone;
-    }
+                fcKeepInContent = true)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone getComplexPhone();
 
-    public void setComplexPhone(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _complexPhone) {
-        this._complexPhone = _complexPhone;
-    }
+    public void setComplexPhone(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Phone _complexPhone);
 
     
     @Property(name = "ComplexContactDetails", 
@@ -631,16 +518,10 @@ public class MappedEntityType extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails _complexContactDetails;
-    
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails getComplexContactDetails() {
-        return _complexContactDetails;
-    }
+                fcKeepInContent = true)    
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails getComplexContactDetails();
 
-    public void setComplexContactDetails(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails _complexContactDetails) {
-        this._complexContactDetails = _complexContactDetails;
-    }
+    public void setComplexContactDetails(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails _complexContactDetails);
 
     
 }

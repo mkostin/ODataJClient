@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class ProductReview extends AbstractType {
+public interface ProductReview extends Serializable {
 
             
     @Key
@@ -61,16 +62,10 @@ public class ProductReview extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _productId;
-    
-    public Integer getProductId() {
-        return _productId;
-    }
+                fcKeepInContent = false)    
+    public Integer getProductId();
 
-    public void setProductId(final Integer _productId) {
-        this._productId = _productId;
-    }
+    public void setProductId(final Integer _productId);
 
     @Key
     @Property(name = "ReviewId", 
@@ -91,16 +86,10 @@ public class ProductReview extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _reviewId;
-    
-    public Integer getReviewId() {
-        return _reviewId;
-    }
+                fcKeepInContent = false)    
+    public Integer getReviewId();
 
-    public void setReviewId(final Integer _reviewId) {
-        this._reviewId = _reviewId;
-    }
+    public void setReviewId(final Integer _reviewId);
 
     
     @Property(name = "Review", 
@@ -121,16 +110,10 @@ public class ProductReview extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _review;
-    
-    public String getReview() {
-        return _review;
-    }
+                fcKeepInContent = false)    
+    public String getReview();
 
-    public void setReview(final String _review) {
-        this._review = _review;
-    }
+    public void setReview(final String _review);
 
     @Key
     @Property(name = "RevisionId", 
@@ -151,16 +134,10 @@ public class ProductReview extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private String _revisionId;
-    
-    public String getRevisionId() {
-        return _revisionId;
-    }
+                fcKeepInContent = false)    
+    public String getRevisionId();
 
-    public void setRevisionId(final String _revisionId) {
-        this._revisionId = _revisionId;
-    }
+    public void setRevisionId(final String _revisionId);
 
     
 
@@ -170,14 +147,8 @@ public class ProductReview extends AbstractType {
                 toRole = "Product",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _product;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product getProduct();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product getProduct() {
-        return _product;
-    }
-
-    public void setProduct(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _product) {
-        this._product = _product;
-    }
+    public void setProduct(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Product _product);
 
 }

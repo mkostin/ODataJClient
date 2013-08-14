@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Collection;
         fcNSPrefix = "",
         fcNSURI = "",
         fcKeepInContent = false)
-public class SpecialEmployee extends AbstractType {
+public interface SpecialEmployee extends Serializable {
 
 
     
@@ -61,16 +62,10 @@ public class SpecialEmployee extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _carsVIN;
-    
-    public Integer getCarsVIN() {
-        return _carsVIN;
-    }
+                fcKeepInContent = false)    
+    public Integer getCarsVIN();
 
-    public void setCarsVIN(final Integer _carsVIN) {
-        this._carsVIN = _carsVIN;
-    }
+    public void setCarsVIN(final Integer _carsVIN);
 
     
     @Property(name = "Bonus", 
@@ -91,16 +86,10 @@ public class SpecialEmployee extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Integer _bonus;
-    
-    public Integer getBonus() {
-        return _bonus;
-    }
+                fcKeepInContent = false)    
+    public Integer getBonus();
 
-    public void setBonus(final Integer _bonus) {
-        this._bonus = _bonus;
-    }
+    public void setBonus(final Integer _bonus);
 
     
     @Property(name = "IsFullyVested", 
@@ -121,16 +110,10 @@ public class SpecialEmployee extends AbstractType {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
-    private Boolean _isFullyVested;
-    
-    public Boolean getIsFullyVested() {
-        return _isFullyVested;
-    }
+                fcKeepInContent = false)    
+    public Boolean getIsFullyVested();
 
-    public void setIsFullyVested(final Boolean _isFullyVested) {
-        this._isFullyVested = _isFullyVested;
-    }
+    public void setIsFullyVested(final Boolean _isFullyVested);
 
     
 
@@ -140,14 +123,8 @@ public class SpecialEmployee extends AbstractType {
                 toRole = "Car",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    private com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Car _car;
+    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Car getCar();
 
-    public com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Car getCar() {
-        return _car;
-    }
-
-    public void setCar(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Car _car) {
-        this._car = _car;
-    }
+    public void setCar(final com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Car _car);
 
 }

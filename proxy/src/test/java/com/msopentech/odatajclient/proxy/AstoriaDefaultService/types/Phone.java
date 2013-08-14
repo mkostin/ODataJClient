@@ -25,9 +25,9 @@ import java.util.Collection;
 @ComplexType("Phone")
 public class Phone extends AbstractType {
 
-    @Property(name = "PhoneNumber", type = "Edm.String", nullable = true)
     private String _phoneNumber;
 
+    @Property(name = "PhoneNumber", type = "Edm.String", nullable = true)
     public String getPhoneNumber() {
         return _phoneNumber;
     }
@@ -35,9 +35,9 @@ public class Phone extends AbstractType {
     public void setPhoneNumber(final String _phoneNumber) {
         this._phoneNumber = _phoneNumber;
     }
-    @Property(name = "Extension", type = "Edm.String", nullable = true)
     private String _extension;
 
+    @Property(name = "Extension", type = "Edm.String", nullable = true)
     public String getExtension() {
         return _extension;
     }

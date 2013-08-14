@@ -2,6 +2,8 @@ package com.msopentech.odatajclient.proxy.AstoriaDefaultService;
 
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.*;
 
 // EdmSimpleType property imports
@@ -26,11 +28,13 @@ import com.msopentech.odatajclient.proxy.AstoriaDefaultService.ProductPhoto.Prod
 
 @EntitySet("ProductPhoto")
 public interface ProductPhoto extends AbstractEntitySet<com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ProductPhoto, ProductPhotoKey> {
-
+    
+    @CompoundKey
     public static class ProductPhotoKey implements Serializable {
     
         private Integer _photoId;
 
+        @CompoundKeyElement(name = "PhotoId", position = 0)
         public Integer getPhotoId() {
             return _photoId;
         }
@@ -41,6 +45,7 @@ public interface ProductPhoto extends AbstractEntitySet<com.msopentech.odatajcli
     
         private Integer _productId;
 
+        @CompoundKeyElement(name = "ProductId", position = 1)
         public Integer getProductId() {
             return _productId;
         }
