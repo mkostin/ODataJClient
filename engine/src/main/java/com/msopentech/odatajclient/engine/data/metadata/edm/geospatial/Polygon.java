@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.util.List;
 
 /**
@@ -55,5 +56,12 @@ public class Polygon extends Geospatial {
      */
     public ComposedGeospatial<Point> getExterior() {
         return exterior;
+    }
+
+    @Override
+    public EdmSimpleType getEdmSimpleType() {
+        return dimension == Dimension.GEOGRAPHY
+                ? EdmSimpleType.GEOGRAPHY_POLYGON
+                : EdmSimpleType.GEOMETRY_POLYGON;
     }
 }

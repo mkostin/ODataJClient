@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Node;
@@ -95,5 +97,43 @@ public final class XMLUtils {
         }
 
         return result;
+    }
+
+    public static EdmSimpleType simpleTypeForNode(final Geospatial.Dimension dimension, final Node node) {
+        EdmSimpleType type = null;
+
+        if (ODataConstants.ELEM_POINT.equals(node.getNodeName())) {
+            type = dimension == Geospatial.Dimension.GEOGRAPHY
+                    ? EdmSimpleType.GEOGRAPHY_POINT
+                    : EdmSimpleType.GEOMETRY_POINT;
+        } else if (ODataConstants.ELEM_MULTIPOINT.equals(node.getNodeName())) {
+            type = dimension == Geospatial.Dimension.GEOGRAPHY
+                    ? EdmSimpleType.GEOGRAPHY_MULTI_POINT
+                    : EdmSimpleType.GEOMETRY_MULTI_POINT;
+        } else if (ODataConstants.ELEM_LINESTRING.equals(node.getNodeName())) {
+            type = dimension == Geospatial.Dimension.GEOGRAPHY
+                    ? EdmSimpleType.GEOGRAPHY_LINE_STRING
+                    : EdmSimpleType.GEOMETRY_LINE_STRING;
+        } else if (ODataConstants.ELEM_MULTILINESTRING.equals(node.getNodeName())) {
+            type = dimension == Geospatial.Dimension.GEOGRAPHY
+                    ? EdmSimpleType.GEOGRAPHY_MULTI_LINE_STRING
+                    : EdmSimpleType.GEOMETRY_MULTI_LINE_STRING;
+        } else if (ODataConstants.ELEM_POLYGON.equals(node.getNodeName())) {
+            type = dimension == Geospatial.Dimension.GEOGRAPHY
+                    ? EdmSimpleType.GEOGRAPHY_POLYGON
+                    : EdmSimpleType.GEOMETRY_POLYGON;
+        } else if (ODataConstants.ELEM_MULTIPOLYGON.equals(node.getNodeName())) {
+            type = dimension == Geospatial.Dimension.GEOGRAPHY
+                    ? EdmSimpleType.GEOGRAPHY_MULTI_POLYGON
+                    : EdmSimpleType.GEOMETRY_MULTI_POLYGON;
+        } else if (ODataConstants.ELEM_GEOCOLLECTION.equals(node.getNodeName())
+                || ODataConstants.ELEM_GEOMEMBERS.equals(node.getNodeName())) {
+
+            type = dimension == Geospatial.Dimension.GEOGRAPHY
+                    ? EdmSimpleType.GEOGRAPHY_COLLECTION
+                    : EdmSimpleType.GEOMETRY_COLLECTION;
+        }
+
+        return type;
     }
 }

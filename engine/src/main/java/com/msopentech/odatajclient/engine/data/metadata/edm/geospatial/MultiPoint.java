@@ -15,11 +15,19 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.util.List;
 
 public class MultiPoint extends ComposedGeospatial<Point> {
 
     public MultiPoint(final Dimension dimension, final List<Point> points) {
         super(dimension, Type.MULTIPOINT, points);
+    }
+
+    @Override
+    public EdmSimpleType getEdmSimpleType() {
+        return dimension == Dimension.GEOGRAPHY
+                ? EdmSimpleType.GEOGRAPHY_MULTI_POINT
+                : EdmSimpleType.GEOMETRY_MULTI_POINT;
     }
 }

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.util.List;
 
 /**
@@ -30,5 +31,12 @@ public class GeospatialCollection extends ComposedGeospatial<Geospatial> {
      */
     public GeospatialCollection(final Dimension dimension, final List<Geospatial> geospatials) {
         super(dimension, Type.GEOSPATIALCOLLECTION, geospatials);
+    }
+
+    @Override
+    public EdmSimpleType getEdmSimpleType() {
+        return dimension == Dimension.GEOGRAPHY
+                ? EdmSimpleType.GEOGRAPHY_COLLECTION 
+                : EdmSimpleType.GEOMETRY_COLLECTION;
     }
 }

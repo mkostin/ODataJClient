@@ -90,7 +90,7 @@ public abstract class AbstractTest {
 
     protected static String testODataWriterDefaultServiceRootURL;
 
-    protected static String testOpenTypesServiceRootURL;
+    protected static String testOpenTypeServiceRootURL;
 
     protected static String testPrimitiveKeysServiceRootURL;
 
@@ -120,7 +120,7 @@ public abstract class AbstractTest {
         testActionOverloadingServiceRootURL = testBaseURL + "/ActionOverloadingService.svc";
         testKeyAsSegmentServiceRootURL = testBaseURL + "/KeyAsSegmentService.svc";
         testODataWriterDefaultServiceRootURL = testBaseURL + "/ODataWriterDefaultService.svc";
-        testOpenTypesServiceRootURL = testBaseURL + "/OpenTypesService.svc";
+        testOpenTypeServiceRootURL = testBaseURL + "/OpenTypeService.svc";
         testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeysService.svc";
         testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
     }

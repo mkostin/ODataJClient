@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -237,9 +238,13 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURI object.
      */
     public ODataURIBuilder appendKeySegment(final Object segmentValue) {
+        final String segValue = (segmentValue instanceof UUID)
+                ? "guid'" + segmentValue.toString() + "'"
+                : segmentValue.toString();
+
         segments.add(Configuration.isKeyAsSegment()
-                ? new Segment(SegmentType.KEY_AS_SEGMENT, segmentValue.toString())
-                : new Segment(SegmentType.KEY, "(" + segmentValue.toString() + ")"));
+                ? new Segment(SegmentType.KEY_AS_SEGMENT, segValue)
+                : new Segment(SegmentType.KEY, "(" + segValue + ")"));
         return this;
     }
 

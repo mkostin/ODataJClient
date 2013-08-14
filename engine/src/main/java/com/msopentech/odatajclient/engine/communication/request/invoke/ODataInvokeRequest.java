@@ -144,7 +144,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
                 }
             }
 
-            return ODataWriter.writeEntity(tmp, ODataPubFormat.JSON);
+            return ODataWriter.writeEntity(tmp, ODataPubFormat.JSON, false);
         }
 
         return null;
