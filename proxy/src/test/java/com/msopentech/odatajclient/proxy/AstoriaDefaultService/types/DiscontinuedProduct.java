@@ -11,6 +11,8 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.AstoriaDefaultService.*;
 
 // EdmSimpleType property imports
+import com.msopentech.odatajclient.engine.data.ODataDuration;
+import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.LineString;
@@ -19,14 +21,13 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.Collection;
 
 @EntityType(value="DiscontinuedProduct",
@@ -63,9 +64,9 @@ public interface DiscontinuedProduct extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)    
-    public Timestamp getDiscontinued();
+    public ODataTimestamp getDiscontinued();
 
-    public void setDiscontinued(final Timestamp _discontinued);
+    public void setDiscontinued(final ODataTimestamp _discontinued);
 
     
     @Property(name = "ReplacementProductId", 

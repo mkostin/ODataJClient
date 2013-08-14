@@ -11,6 +11,8 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.AstoriaDefaultService.*;
 
 // EdmSimpleType property imports
+import com.msopentech.odatajclient.engine.data.ODataDuration;
+import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.LineString;
@@ -19,14 +21,13 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.Collection;
 
 @EntityType(value="LastLogin",
@@ -87,9 +88,9 @@ public interface LastLogin extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)    
-    public Timestamp getLoggedIn();
+    public ODataTimestamp getLoggedIn();
 
-    public void setLoggedIn(final Timestamp _loggedIn);
+    public void setLoggedIn(final ODataTimestamp _loggedIn);
 
     
     @Property(name = "LoggedOut", 
@@ -111,9 +112,9 @@ public interface LastLogin extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)    
-    public Timestamp getLoggedOut();
+    public ODataTimestamp getLoggedOut();
 
-    public void setLoggedOut(final Timestamp _loggedOut);
+    public void setLoggedOut(final ODataTimestamp _loggedOut);
 
     
     @Property(name = "Duration", 
@@ -135,9 +136,9 @@ public interface LastLogin extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)    
-    public Timestamp getDuration();
+    public ODataDuration getDuration();
 
-    public void setDuration(final Timestamp _duration);
+    public void setDuration(final ODataDuration _duration);
 
     
 

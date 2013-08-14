@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Helper class for handling datetime and datetime-offset primitive values.
- * 
+ *
  * @see com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType#DATE_TIME
  * @see com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType#DATE_TIME_OFFSET
  */
@@ -81,6 +81,14 @@ public final class ODataTimestamp {
     private ODataTimestamp(final SimpleDateFormat sdf, final Date date, final int nanos, final String timezone) {
         this(sdf, date, nanos);
         this.timezone = timezone;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public String getTimezone() {
+        return timezone;
     }
 
     @Override

@@ -68,7 +68,7 @@ public class EntitySetTest extends AbstractTest {
         // TODO: add top(2).skip(4) feature.
         final com.msopentech.odatajclient.proxy.AstoriaDefaultService.Car cars = container.getCar();
         assertNotNull(cars);
-        assertEquals(Long.valueOf(10L), cars.count());
+        assertTrue(cars.count() >= 10);
 
         final Iterable<Car> car = cars.getAll();
         assertNotNull(car);
@@ -80,7 +80,7 @@ public class EntitySetTest extends AbstractTest {
             assertNotNull(itor.next());
             count++;
         }
-        assertEquals(10, count);
+        assertTrue(count>=10);
     }
 
     // TODO: what about etityset iterator?

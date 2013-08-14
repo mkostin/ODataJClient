@@ -5,6 +5,8 @@ import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
 
 // EdmSimpleType property imports
+import com.msopentech.odatajclient.engine.data.ODataDuration;
+import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.LineString;
@@ -15,11 +17,11 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.Collection;
 
 @ComplexType("ComplexWithAllPrimitiveTypes")
@@ -55,14 +57,14 @@ public class ComplexWithAllPrimitiveTypes extends AbstractType {
     public void setByte(final Integer _byte) {
         this._byte = _byte;
     }
-    private Timestamp _dateTime;
+    private ODataTimestamp _dateTime;
 
     @Property(name = "DateTime", type = "Edm.DateTime", nullable = false)
-    public Timestamp getDateTime() {
+    public ODataTimestamp getDateTime() {
         return _dateTime;
     }
 
-    public void setDateTime(final Timestamp _dateTime) {
+    public void setDateTime(final ODataTimestamp _dateTime) {
         this._dateTime = _dateTime;
     }
     private BigDecimal _decimal;

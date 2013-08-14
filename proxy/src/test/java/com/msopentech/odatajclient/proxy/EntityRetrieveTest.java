@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial.Type;
@@ -64,8 +65,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
         final ConcurrencyInfo concurrency = order.getConcurrency();
         assertNotNull(concurrency);
-        assertEquals("2012-02-12T11:32:50", new SimpleDateFormat(
-                EdmSimpleType.DATE_TIME.pattern()).format(new Date(concurrency.getQueriedDateTime().getTime())));
+        assertEquals("2012-02-12T11:32:50.5072026", concurrency.getQueriedDateTime().toString());
         assertEquals(Integer.valueOf(78), order.getCustomerId());
     }
 
@@ -117,7 +117,7 @@ public class EntityRetrieveTest extends AbstractTest {
         try {
             // TODO: assert method resetComputerDetailsSpecifications(....) into computerDetail object
             assertNotNull(container.getClass().getMethod("resetComputerDetailsSpecifications",
-                    ComputerDetail.class, Collection.class, Timestamp.class));
+                    ComputerDetail.class, Collection.class, ODataTimestamp.class));
         } catch (Exception e) {
             fail();
         }
