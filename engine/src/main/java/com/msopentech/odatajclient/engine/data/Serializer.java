@@ -50,8 +50,7 @@ public final class Serializer {
     }
 
     /**
-     * Writes
-     * <code>FeedResource</code> object onto the given stream.
+     * Writes <tt>FeedResource</tt> object onto the given stream.
      *
      * @param <T> feed resource type.
      * @param obj object to be streamed.
@@ -62,8 +61,7 @@ public final class Serializer {
     }
 
     /**
-     * Writes
-     * <code>FeedResource</code> object by the given writer.
+     * Writes <tt>FeedResource</tt> object by the given writer.
      *
      * @param <T> feed resource type.
      * @param obj object to be streamed.
@@ -78,8 +76,7 @@ public final class Serializer {
     }
 
     /**
-     * Writes
-     * <code>EntryResource</code> object onto the given stream.
+     * Writes <tt>EntryResource</tt> object onto the given stream.
      *
      * @param <T> entry resource type.
      * @param obj object to be streamed.
@@ -90,8 +87,7 @@ public final class Serializer {
     }
 
     /**
-     * Writes
-     * <code>EntryResource</code> object by the given writer.
+     * Writes <tt>EntryResource</tt> object by the given writer.
      *
      * @param <T> entry resource type.
      * @param obj object to be streamed.
@@ -201,7 +197,6 @@ public final class Serializer {
             throw new IllegalArgumentException("While serializing Atom object", e);
         }
     }
-
 
     /*
      * ------------------ Private methods ------------------

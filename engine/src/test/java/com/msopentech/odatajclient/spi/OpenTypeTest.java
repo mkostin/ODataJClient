@@ -44,29 +44,10 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class OpenTypeTest extends AbstractTest {
-
-    private static Locale defaultLocale;
-
-    /**
-     * This is needed for correct number handling (Double, for example).
-     */
-    @BeforeClass
-    public static void setEnglishLocale() {
-        defaultLocale = Locale.getDefault();
-        Locale.setDefault(Locale.ENGLISH);
-    }
-
-    @AfterClass
-    public static void resetLocale() {
-        Locale.setDefault(defaultLocale);
-    }
 
     @Test
     public void checkOpenTypeEntityTypesExist() {

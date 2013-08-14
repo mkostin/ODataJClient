@@ -49,6 +49,7 @@ import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Test;
 
@@ -152,7 +153,7 @@ public class InvokeTest extends AbstractTest {
                 setType(type.getSimpleType()).
                 setText("").
                 build();
-        parameters = new HashMap<String, ODataValue>();
+        parameters = new LinkedHashMap<String, ODataValue>();
         parameters.put(funcImp.getParameters().get(0).getName(), argument);
 
         final ODataInvokeRequest<ODataEntitySet> feedReq =

@@ -333,7 +333,10 @@ public final class ODataBinder {
             entity.addLink(ODataFactory.newMediaEditLink(link.getTitle(), base, link.getHref()));
         }
 
-        entity.setOperations(resource.getOperations());
+        for (ODataOperation operation : resource.getOperations()) {
+            operation.setTarget(URIUtils.getURI(base, operation.getTarget()));
+            entity.addOperation(operation);
+        }
 
         final Element content;
         if (resource.isMediaEntry()) {

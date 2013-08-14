@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -81,7 +81,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
         super(method, uri);
 
         this.reference = reference;
-        this.parameters = new HashMap<String, ODataValue>();
+        this.parameters = new LinkedHashMap<String, ODataValue>();
     }
 
     /**

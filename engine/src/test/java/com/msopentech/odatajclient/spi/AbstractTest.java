@@ -63,6 +63,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
+import java.util.Locale;
 import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -123,6 +124,14 @@ public abstract class AbstractTest {
         testOpenTypeServiceRootURL = testBaseURL + "/OpenTypeService.svc";
         testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeysService.svc";
         testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
+    }
+
+    /**
+     * This is needed for correct number handling (Double, for example).
+     */
+    @BeforeClass
+    public static void setEnglishLocale() {
+        Locale.setDefault(Locale.ENGLISH);
     }
 
     protected void checkLinks(final Collection<ODataLink> original, final Collection<ODataLink> actual) {

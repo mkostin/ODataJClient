@@ -81,6 +81,16 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
     }
 
     /**
+     * Adds an operation.
+     *
+     * @param operation to be added.
+     * @return whether operation was actually added or not.
+     */
+    public boolean addOperation(final ODataOperation operation) {
+        return this.operations.add(operation);
+    }
+
+    /**
      * Sets operations.
      *
      * @param operations operations.
@@ -90,6 +100,23 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
         if (operations != null && !operations.isEmpty()) {
             this.operations.addAll(operations);
         }
+    }
+
+    /**
+     * Searches for operation with given title.
+     *
+     * @param title operation to look for
+     * @return operation if found with given title, <tt>null</tt> otherwise
+     */
+    public ODataOperation getOperation(final String title) {
+        ODataOperation result = null;
+        for (ODataOperation operation : operations) {
+            if (title.equals(operation.getTitle())) {
+                result = operation;
+            }
+        }
+
+        return result;
     }
 
     /**

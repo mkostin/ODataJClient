@@ -67,11 +67,14 @@ public class ODataInvokeRequestFactory {
             final EdmType returnType = new EdmType(metadata, functionImport.getReturnType());
 
             if (returnType.isCollection() && returnType.isEntityType()) {
-                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntitySet>(ODataEntitySet.class, method, uri);
+                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntitySet>(
+                        ODataEntitySet.class, method, uri);
             } else if (!returnType.isCollection() && returnType.isEntityType()) {
-                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntity>(ODataEntity.class, method, uri);
+                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntity>(
+                        ODataEntity.class, method, uri);
             } else {
-                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataProperty>(ODataProperty.class, method, uri);
+                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataProperty>(
+                        ODataProperty.class, method, uri);
             }
         }
 

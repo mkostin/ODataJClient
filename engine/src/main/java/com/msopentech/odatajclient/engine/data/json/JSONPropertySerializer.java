@@ -55,7 +55,6 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
         } else {
             try {
                 if (XMLUtils.hasElementsChildNode(content)) {
-
                     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                     final DocumentBuilder builder = factory.newDocumentBuilder();
                     final Document document = builder.newDocument();

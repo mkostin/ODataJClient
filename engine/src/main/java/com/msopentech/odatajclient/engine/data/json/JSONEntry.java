@@ -169,7 +169,7 @@ public class JSONEntry extends AbstractJSONMetadataObject implements EntryResour
      * {@inheritDoc }
      */
     @Override
-    public boolean setEditLink(LinkResource editLink) {
+    public boolean setEditLink(final LinkResource editLink) {
         final boolean result = (editLink instanceof JSONLink);
         if (result) {
             this.editLink = (JSONLink) editLink;

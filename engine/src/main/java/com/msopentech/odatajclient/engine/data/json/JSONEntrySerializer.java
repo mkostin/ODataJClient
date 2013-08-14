@@ -21,13 +21,8 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Writes out JSON string from <tt>JSONEntry</tt>.
@@ -35,43 +30,6 @@ import org.w3c.dom.NodeList;
  * @see JSONEntry
  */
 public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
-
-    private List<Node> getChildNodes(final Node node, final short nodetype) {
-        final List<Node> result = new ArrayList<Node>();
-        final NodeList children = node.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            final Node child = children.item(i);
-            if (child.getNodeType() == nodetype) {
-                result.add(child);
-            }
-        }
-        return result;
-    }
-
-    private boolean hasElementsChildNode(final Node node) {
-        boolean found = false;
-
-        for (Node child : getChildNodes(node, Node.ELEMENT_NODE)) {
-            if (ODataConstants.ELEM_ELEMENT.equals(XMLUtils.getSimpleName(child))) {
-                found = true;
-            }
-        }
-
-        return found;
-    }
-
-    private boolean hasOnlyTextChildNodes(final Node node) {
-        boolean result = true;
-        final NodeList children = node.getChildNodes();
-        for (int i = 0; result && i < children.getLength(); i++) {
-            final Node child = children.item(i);
-            if (child.getNodeType() != Node.TEXT_NODE) {
-                result = false;
-            }
-        }
-
-        return result;
-    }
 
     /**
      * {@inheritDoc }

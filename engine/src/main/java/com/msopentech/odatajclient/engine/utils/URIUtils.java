@@ -69,6 +69,22 @@ public final class URIUtils {
      * @param href URI suffix.
      * @return built URI.
      */
+    public static URI getURI(final URI base, final URI href) {
+        if (href == null) {
+            throw new IllegalArgumentException("Null link provided");
+        }
+        return getURI(base, href.toASCIIString());
+    }
+
+    /**
+     * Build URI starting from the given base and href.
+     * <p>
+     * If href is absolute or base is null then base will be ignored.
+     *
+     * @param base URI prefix.
+     * @param href URI suffix.
+     * @return built URI.
+     */
     public static URI getURI(final URI base, final String href) {
         if (href == null) {
             throw new IllegalArgumentException("Null link provided");

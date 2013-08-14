@@ -36,7 +36,6 @@ import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.apache.commons.io.IOUtils;
@@ -63,9 +62,6 @@ public class AsyncTest extends AbstractTest {
 
     @Test
     public void updateEntity() throws InterruptedException, ExecutionException {
-        // Products has some numbers, whose formatting is locale-sensitive
-        Locale.setDefault(Locale.ENGLISH);
-
         final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-10).build();
 

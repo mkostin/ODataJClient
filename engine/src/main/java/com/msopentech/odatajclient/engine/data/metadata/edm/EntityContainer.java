@@ -35,7 +35,6 @@ import javax.xml.namespace.QName;
 import com.msopentech.odatajclient.engine.data.metadata.edm.codegeneration.Access;
 import com.msopentech.odatajclient.engine.data.metadata.edm.codegeneration.PublicOrInternalAccess;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import org.w3c.dom.Element;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -281,7 +280,7 @@ public class EntityContainer extends AbstractAnnotated {
     }
 
     /**
-     * Gets function imports.
+     * Gets all function imports.
      *
      * @return function imports.
      */
@@ -290,7 +289,7 @@ public class EntityContainer extends AbstractAnnotated {
     }
 
     /**
-     * Get function import with the given name.
+     * Gets the first function import with the given name.
      *
      * @param name name.
      * @return function import.
@@ -300,6 +299,22 @@ public class EntityContainer extends AbstractAnnotated {
         for (FunctionImport functionImport : getFunctionImports()) {
             if (name.equals(functionImport.getName())) {
                 result = functionImport;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Gets all function import with the given name.
+     *
+     * @param name name.
+     * @return function imports.
+     */
+    public List<FunctionImport> getFunctionImports(final String name) {
+        List<FunctionImport> result = new ArrayList<FunctionImport>();
+        for (FunctionImport functionImport : getFunctionImports()) {
+            if (name.equals(functionImport.getName())) {
+                result.add(functionImport);
             }
         }
         return result;

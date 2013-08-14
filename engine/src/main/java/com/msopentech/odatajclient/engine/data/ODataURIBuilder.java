@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -254,7 +253,7 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURI object.
      */
-    public ODataURIBuilder appendKeySegment(final LinkedHashMap<String, Object> segmentValues) {
+    public ODataURIBuilder appendKeySegment(final Map<String, Object> segmentValues) {
         if (!Configuration.isKeyAsSegment()) {
             final StringBuilder keyBuilder = new StringBuilder().append('(');
             for (Map.Entry<String, Object> entry : segmentValues.entrySet()) {
