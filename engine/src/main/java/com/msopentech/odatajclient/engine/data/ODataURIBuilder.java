@@ -262,7 +262,7 @@ public class ODataURIBuilder implements Serializable {
                 keyBuilder.append(',');
             }
             keyBuilder.deleteCharAt(keyBuilder.length() - 1).append(')');
-            
+
             segments.add(new Segment(SegmentType.KEY, keyBuilder.toString()));
         }
 
@@ -474,14 +474,7 @@ public class ODataURIBuilder implements Serializable {
      * @return OData URI.
      */
     public URI build() {
-        final StringBuilder segmentsBuilder = new StringBuilder();
-        for (Segment seg : segments) {
-            if (segmentsBuilder.length() > 0 && seg.type != SegmentType.KEY) {
-                segmentsBuilder.append("/");
-            }
-
-            segmentsBuilder.append(seg.value);
-        }
+        final StringBuilder segmentsBuilder = concatSegments();
 
         try {
             final URIBuilder builder = new URIBuilder(segmentsBuilder.toString());
@@ -494,5 +487,36 @@ public class ODataURIBuilder implements Serializable {
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Could not build valid URI", e);
         }
+    }
+
+    /**
+     * ${@inheritDoc }
+     */
+    @Override
+    public String toString() {
+        final StringBuilder builder = concatSegments();
+
+        if (!queryOptions.isEmpty()) {
+            builder.append('?');
+        }
+
+        for (Map.Entry<String, String> option : queryOptions.entrySet()) {
+            builder.append("$").append(option.getKey()).append("=").append(option.getValue()).append('&');
+        }
+
+        return builder.toString();
+    }
+
+    private StringBuilder concatSegments() {
+        final StringBuilder builder = new StringBuilder();
+        for (Segment seg : segments) {
+            if (builder.length() > 0 && seg.type != SegmentType.KEY) {
+                builder.append("/");
+            }
+
+            builder.append(seg.value);
+        }
+
+        return builder;
     }
 }
