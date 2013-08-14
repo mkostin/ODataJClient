@@ -18,7 +18,11 @@ package com.msopentech.odatajclient.spi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import com.msopentech.odatajclient.engine.client.http.NoContentException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
@@ -197,5 +201,32 @@ public class EntityCreateTest extends AbstractTest {
     @Test
     public void multiKeyAsJSON() {
         multiKey(ODataPubFormat.JSON);
+    }
+
+    @Test
+    public void createReturnNoContent() {
+        final int id = 1;
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
+
+        final ODataEntityCreateRequest createReq = ODataCUDRequestFactory.getEntityCreateRequest(
+                new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer").build(), original);
+        createReq.setPrefer(ODataHeaderValues.preferReturnNoContent);
+
+        final ODataEntityCreateResponse createRes = createReq.execute();
+        assertEquals(204, createRes.getStatusCode());
+        assertEquals(ODataHeaderValues.preferReturnNoContent,
+                createRes.getHeader(ODataHeaders.HeaderName.preferenceApplied).iterator().next());
+
+        try {
+            createRes.getBody();
+            fail();
+        } catch (NoContentException e) {
+            assertNotNull(e);
+        }
+
+        final ODataDeleteResponse deleteRes = ODataCUDRequestFactory.getDeleteRequest(
+                new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer").appendKeySegment(id).build()).
+                execute();
+        assertEquals(204, deleteRes.getStatusCode());
     }
 }

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.response;
 
+import com.msopentech.odatajclient.engine.client.http.NoContentException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchUtilities;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchController;
@@ -30,6 +31,7 @@ import java.util.TreeMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.slf4j.LoggerFactory;
 
@@ -235,6 +237,10 @@ public abstract class ODataResponseImpl implements ODataResponse {
      */
     @Override
     public InputStream getRawResponse() {
+        if (HttpStatus.SC_NO_CONTENT == getStatusCode()) {
+            throw new NoContentException();
+        }
+
         if (payload == null && batchInfo.isValidBatch()) {
             // get input stream till the end of item
             payload = new PipedInputStream();

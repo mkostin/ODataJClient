@@ -16,8 +16,13 @@
 package com.msopentech.odatajclient.spi;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
@@ -25,6 +30,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import org.junit.Test;
@@ -98,7 +104,7 @@ public class EntityUpdateTest extends AbstractTest {
         updateEntityDescription(format, changes, UpdateType.REPLACE);
     }
 
-    private void mergeMultiKey(final ODataPubFormat format) {
+    private ODataEntityUpdateRequest buildMultiKeyUpdateReq(final ODataPubFormat format) {
         final LinkedHashMap<String, Object> multiKey = new LinkedHashMap<String, Object>();
         multiKey.put("FromUsername", "1");
         multiKey.put("MessageId", -10);
@@ -107,13 +113,16 @@ public class EntityUpdateTest extends AbstractTest {
         message.getAssociationLinks().clear();
         message.getNavigationLinks().clear();
 
-        boolean before = message.getProperty("IsRead").getPrimitiveValue().<Boolean>toCastValue();
+        final boolean before = message.getProperty("IsRead").getPrimitiveValue().<Boolean>toCastValue();
         message.getProperties().remove(message.getProperty("IsRead"));
         message.addProperty(ODataFactory.newPrimitiveProperty("IsRead",
                 new ODataPrimitiveValue.Builder().setValue(!before).setType(EdmSimpleType.BOOLEAN).build()));
 
-        final ODataEntityUpdateResponse res = ODataCUDRequestFactory.
-                getEntityUpdateRequest(UpdateType.MERGE, message).execute();
+        return ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.MERGE, message);
+    }
+
+    private void mergeMultiKey(final ODataPubFormat format) {
+        final ODataEntityUpdateResponse res = buildMultiKeyUpdateReq(format).execute();
         assertEquals(204, res.getStatusCode());
     }
 
@@ -125,5 +134,17 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     public void mergeMultiKeyAsJSON() {
         mergeMultiKey(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    @Test
+    public void updateReturnContent() {
+        final ODataEntityUpdateRequest req = buildMultiKeyUpdateReq(Configuration.getDefaultPubFormat());
+        req.setPrefer(ODataHeaderValues.preferReturnContent);
+
+        final ODataEntityUpdateResponse res = req.execute();
+        assertEquals(200, res.getStatusCode());
+        assertEquals(ODataHeaderValues.preferReturnContent,
+                res.getHeader(ODataHeaders.HeaderName.preferenceApplied).iterator().next());
+        assertNotNull(res.getBody());
     }
 }
