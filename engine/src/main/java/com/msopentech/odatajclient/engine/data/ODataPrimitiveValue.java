@@ -257,18 +257,15 @@ public class ODataPrimitiveValue extends ODataValue {
                 break;
 
             case DECIMAL:
-                final DecimalFormat decf = new DecimalFormat(this.type.pattern());
-                this.text = decf.format(this.<BigDecimal>toCastValue());
+                this.text = new DecimalFormat(this.type.pattern()).format(this.<BigDecimal>toCastValue());
                 break;
 
             case SINGLE:
-                final DecimalFormat sdf = new DecimalFormat(this.type.pattern());
-                this.text = sdf.format(this.<Float>toCastValue());
+                this.text = new DecimalFormat(this.type.pattern()).format(this.<Float>toCastValue());
                 break;
 
             case DOUBLE:
-                final DecimalFormat ddf = new DecimalFormat(this.type.pattern());
-                this.text = ddf.format(this.<Double>toCastValue());
+                this.text = new DecimalFormat(this.type.pattern()).format(this.<Double>toCastValue());
                 break;
 
             case GUID:

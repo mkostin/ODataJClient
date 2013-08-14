@@ -122,7 +122,7 @@ public abstract class AbstractTest {
         testKeyAsSegmentServiceRootURL = testBaseURL + "/KeyAsSegmentService.svc";
         testODataWriterDefaultServiceRootURL = testBaseURL + "/ODataWriterDefaultService.svc";
         testOpenTypeServiceRootURL = testBaseURL + "/OpenTypeService.svc";
-        testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeysService.svc";
+        testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeys.svc";
         testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
     }
 

@@ -140,12 +140,12 @@ public enum EdmSimpleType {
      * A floating point number with 7 digits precision.
      */
     @XmlEnumValue("Single")
-    SINGLE("Single", Float.class, "#.#######"),
+    SINGLE("Single", Float.class, "#.#######E0"),
     /**
      * A 64-bit double-precision floating point value.
      */
     @XmlEnumValue("Double")
-    DOUBLE("Double", Double.class, "#.#######################"),
+    DOUBLE("Double", Double.class, "#.#######################E0"),
     @XmlEnumValue("Geography")
     GEOGRAPHY("Geography", Geospatial.class),
     @XmlEnumValue("GeographyPoint")

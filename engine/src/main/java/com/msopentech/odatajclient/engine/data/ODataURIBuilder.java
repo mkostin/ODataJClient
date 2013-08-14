@@ -15,24 +15,30 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * OData URI/Query builder.
  */
 public class ODataURIBuilder implements Serializable {
-
-    private static final long serialVersionUID = -3267515371720408124L;
 
     /**
      * Segment types.
@@ -150,6 +156,13 @@ public class ODataURIBuilder implements Serializable {
         }
     }
 
+    private static final long serialVersionUID = -3267515371720408124L;
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ODataURIBuilder.class);
+
     private final List<Segment> segments;
 
     /**
@@ -233,13 +246,37 @@ public class ODataURIBuilder implements Serializable {
     /**
      * Append key segment to the URI.
      *
-     * @param segmentValue segment value.
+     * @param val segment value.
      * @return current ODataURI object.
      */
-    public ODataURIBuilder appendKeySegment(final Object segmentValue) {
-        final String segValue = (segmentValue instanceof UUID)
-                ? "guid'" + segmentValue.toString() + "'"
-                : segmentValue.toString();
+    public ODataURIBuilder appendKeySegment(final Object val) {
+        String segValue;
+        try {
+            segValue = (val instanceof UUID)
+                    ? "guid'" + val.toString() + "'"
+                    : (val instanceof byte[])
+                    ? "X'" + Hex.encodeHexString((byte[]) val) + "'"
+                    : ((val instanceof ODataTimestamp) && ((ODataTimestamp) val).getTimezone() == null)
+                    ? "datetime'" + URLEncoder.encode(((ODataTimestamp) val).toString(), ODataConstants.UTF8) + "'"
+                    : ((val instanceof ODataTimestamp) && ((ODataTimestamp) val).getTimezone() != null)
+                    ? "datetimeoffset'" + URLEncoder.encode(((ODataTimestamp) val).toString(), ODataConstants.UTF8) + "'"
+                    : (val instanceof ODataDuration)
+                    ? "time'" + ((ODataDuration) val).toString() + "'"
+                    : (val instanceof BigDecimal)
+                    ? new DecimalFormat(EdmSimpleType.DECIMAL.pattern()).format((BigDecimal) val) + "M"
+                    : (val instanceof Double)
+                    ? new DecimalFormat(EdmSimpleType.DOUBLE.pattern()).format((Double) val) + "D"
+                    : (val instanceof Float)
+                    ? new DecimalFormat(EdmSimpleType.SINGLE.pattern()).format((Float) val) + "f"
+                    : (val instanceof Long)
+                    ? ((Long) val).toString() + "L"
+                    : (val instanceof String)
+                    ? "'" + URLEncoder.encode((String) val, ODataConstants.UTF8) + "'"
+                    : val.toString();
+        } catch (Exception e) {
+            LOG.warn("While generating key segment for '{}', using toString()", val, e);
+            segValue = val.toString();
+        }
 
         segments.add(Configuration.isKeyAsSegment()
                 ? new Segment(SegmentType.KEY_AS_SEGMENT, segValue)
