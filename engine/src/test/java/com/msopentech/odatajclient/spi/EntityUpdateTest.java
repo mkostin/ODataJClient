@@ -34,10 +34,14 @@ import org.junit.Test;
  */
 public class EntityUpdateTest extends AbstractTest {
 
+    protected String getServiceRoot() {
+        return testDefaultServiceRootURL;
+    }
+
     @Test
     public void mergeAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
-        final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URI uri = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Product").appendKeySegment(-10).build();
         final String etag = getETag(uri);
         final ODataEntity merge = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
@@ -48,7 +52,7 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     public void mergeAsJSON() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
-        final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URI uri = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Product").appendKeySegment(-10).build();
         final String etag = getETag(uri);
         final ODataEntity merge = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
@@ -59,7 +63,7 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     public void patchAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
-        final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URI uri = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Product").appendKeySegment(-10).build();
         final String etag = getETag(uri);
         final ODataEntity patch = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
@@ -70,7 +74,7 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     public void patchAsJSON() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
-        final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URI uri = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Product").appendKeySegment(-10).build();
         final String etag = getETag(uri);
         final ODataEntity patch = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
@@ -81,7 +85,7 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     public void replaceAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
-        final ODataEntity changes = read(format, new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataEntity changes = read(format, new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Car").appendKeySegment(14).build());
         updateEntityDescription(format, changes, UpdateType.REPLACE);
     }
@@ -89,7 +93,7 @@ public class EntityUpdateTest extends AbstractTest {
     @Test
     public void replaceAsJSON() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
-        final ODataEntity changes = read(format, new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataEntity changes = read(format, new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Car").appendKeySegment(14).build());
         updateEntityDescription(format, changes, UpdateType.REPLACE);
     }
@@ -98,7 +102,7 @@ public class EntityUpdateTest extends AbstractTest {
         final LinkedHashMap<String, Object> multiKey = new LinkedHashMap<String, Object>();
         multiKey.put("FromUsername", "1");
         multiKey.put("MessageId", -10);
-        final ODataEntity message = read(format, new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataEntity message = read(format, new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Message").appendKeySegment(multiKey).build());
         message.getAssociationLinks().clear();
         message.getNavigationLinks().clear();

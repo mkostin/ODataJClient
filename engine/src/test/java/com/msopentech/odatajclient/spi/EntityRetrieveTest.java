@@ -52,11 +52,15 @@ import org.w3c.dom.Node;
  */
 public class EntityRetrieveTest extends AbstractTest {
 
+    protected String getServiceRoot() {
+        return testDefaultServiceRootURL;
+    }
+
     private void readEntry(final ODataPubFormat format) throws IOException {
         // ---------------------------------------------
         // Read Car(16)
         // ---------------------------------------------
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Car").appendKeySegment(16);
 
         ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -76,7 +80,7 @@ public class EntityRetrieveTest extends AbstractTest {
         // ---------------------------------------------
         // Read Customer(-10)
         // ---------------------------------------------
-        uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10);
 
         req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -131,7 +135,7 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     private void read(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10);
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -143,7 +147,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
         if (ODataPubFormat.JSON_FULL_METADATA == format || ODataPubFormat.ATOM == format) {
             assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entity.getName());
-            assertEquals(testDefaultServiceRootURL + "/Customer(-10)", entity.getEditLink().toASCIIString());
+            assertEquals(getServiceRoot() + "/Customer(-10)", entity.getEditLink().toASCIIString());
             assertEquals(5, entity.getNavigationLinks().size());
             assertEquals(2, entity.getEditMediaLinks().size());
 
@@ -151,7 +155,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
             for (ODataLink link : entity.getNavigationLinks()) {
                 if ("Wife".equals(link.getName())
-                        && (testDefaultServiceRootURL + "/Customer(-10)/Wife").equals(link.getLink().toASCIIString())) {
+                        && (getServiceRoot() + "/Customer(-10)/Wife").equals(link.getLink().toASCIIString())) {
 
                     check = true;
                 }
@@ -172,7 +176,7 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     private void withGeospatial(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("AllGeoTypesSet").appendKeySegment(-8);
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -207,7 +211,7 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     private void withInlineEntry(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).expand("Info");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -218,7 +222,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
         assertNotNull(entity);
         assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entity.getName());
-        assertEquals(testDefaultServiceRootURL + "/Customer(-10)", entity.getEditLink().toASCIIString());
+        assertEquals(getServiceRoot() + "/Customer(-10)", entity.getEditLink().toASCIIString());
 
         assertEquals(5, entity.getNavigationLinks().size());
         assertTrue(entity.getAssociationLinks().isEmpty());
@@ -259,7 +263,7 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     private void withInlineFeed(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).expand("Orders");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -297,7 +301,7 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     private void withActions(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("ComputerDetail").appendKeySegment(-10);
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -323,7 +327,7 @@ public class EntityRetrieveTest extends AbstractTest {
     }
 
     private void genericRequest(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Car").appendKeySegment(16);
 
         final ODataGenericRetrieveRequest req =
@@ -357,7 +361,7 @@ public class EntityRetrieveTest extends AbstractTest {
         multiKey.put("FromUsername", "1");
         multiKey.put("MessageId", -10);
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Message").appendKeySegment(multiKey);
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -381,7 +385,7 @@ public class EntityRetrieveTest extends AbstractTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void issue99() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntitySetSegment("Car");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());

@@ -43,14 +43,18 @@ import org.junit.Test;
  */
 public class EntityCreateTest extends AbstractTest {
 
+    protected String getServiceRoot() {
+        return testDefaultServiceRootURL;
+    }
+
     @Test
     public void createAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final int id = 1;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
-        createEntity(testDefaultServiceRootURL, format, original);
-        final ODataEntity actual = compareEntities(testDefaultServiceRootURL, format, original, id, null);
+        createEntity(getServiceRoot(), format, original);
+        final ODataEntity actual = compareEntities(getServiceRoot(), format, original, id, null);
 
         cleanAfterCreate(format, actual, false);
     }
@@ -61,8 +65,8 @@ public class EntityCreateTest extends AbstractTest {
         final int id = 2;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
-        createEntity(testDefaultServiceRootURL, format, original);
-        final ODataEntity actual = compareEntities(testDefaultServiceRootURL, format, original, id, null);
+        createEntity(getServiceRoot(), format, original);
+        final ODataEntity actual = compareEntities(getServiceRoot(), format, original, id, null);
 
         cleanAfterCreate(format, actual, false);
     }
@@ -73,9 +77,9 @@ public class EntityCreateTest extends AbstractTest {
         final int id = 3;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
-        createEntity(testDefaultServiceRootURL, format, original);
+        createEntity(getServiceRoot(), format, original);
         final ODataEntity actual =
-                compareEntities(testDefaultServiceRootURL, format, original, id, Collections.<String>singleton("Info"));
+                compareEntities(getServiceRoot(), format, original, id, Collections.<String>singleton("Info"));
 
         cleanAfterCreate(format, actual, true);
     }
@@ -87,9 +91,9 @@ public class EntityCreateTest extends AbstractTest {
         final int id = 4;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
-        createEntity(testDefaultServiceRootURL, format, original);
+        createEntity(getServiceRoot(), format, original);
         final ODataEntity actual =
-                compareEntities(testDefaultServiceRootURL, format, original, id, Collections.<String>singleton("Info"));
+                compareEntities(getServiceRoot(), format, original, id, Collections.<String>singleton("Info"));
 
         cleanAfterCreate(format, actual, true);
     }
@@ -99,13 +103,13 @@ public class EntityCreateTest extends AbstractTest {
 
         final ODataEntity original = getSampleCustomerProfile(id, sampleName, false);
         original.addLink(ODataFactory.newEntityNavigationLink(
-                "Info", URI.create(testDefaultServiceRootURL + "/CustomerInfo(12)")));
+                "Info", URI.create(getServiceRoot() + "/CustomerInfo(12)")));
 
-        final ODataEntity created = createEntity(testDefaultServiceRootURL, format, original);
+        final ODataEntity created = createEntity(getServiceRoot(), format, original);
         // now, compare the created one with the actual one and go deeply into the associated customer info.....
-        final ODataEntity actual = compareEntities(testDefaultServiceRootURL, format, created, id, null);
+        final ODataEntity actual = compareEntities(getServiceRoot(), format, created, id, null);
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Info");
 
         final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
@@ -168,7 +172,7 @@ public class EntityCreateTest extends AbstractTest {
                 new ODataPrimitiveValue.Builder().setValue(false).setType(EdmSimpleType.BOOLEAN).build()));
 
         final ODataURIBuilder builder =
-                new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Message");
+                new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Message");
         final ODataEntityCreateRequest req = ODataCUDRequestFactory.getEntityCreateRequest(builder.build(), message);
         req.setFormat(format);
 

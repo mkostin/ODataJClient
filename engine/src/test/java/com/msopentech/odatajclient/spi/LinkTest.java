@@ -44,8 +44,12 @@ import org.junit.Test;
  */
 public class LinkTest extends AbstractTest {
 
+    protected String getServiceRoot() {
+        return testDefaultServiceRootURL;
+    }
+
     private ODataLinkCollection doRetrieveLinkURIs(final ODataFormat format, final String linkname) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10);
 
         final ODataLinkCollectionRequest req = ODataRetrieveRequestFactory.getLinkCollectionRequest(uriBuilder.build(),
@@ -61,8 +65,8 @@ public class LinkTest extends AbstractTest {
     private void retrieveLinkURIs(final ODataFormat format) throws IOException {
         final List<URI> links = doRetrieveLinkURIs(format, "Logins").getLinks();
         assertEquals(2, links.size());
-        assertTrue(links.contains(URI.create(testDefaultServiceRootURL + "/Login('1')")));
-        assertTrue(links.contains(URI.create(testDefaultServiceRootURL + "/Login('4')")));
+        assertTrue(links.contains(URI.create(getServiceRoot() + "/Login('1')")));
+        assertTrue(links.contains(URI.create(getServiceRoot() + "/Login('4')")));
     }
 
     @Test
@@ -89,9 +93,9 @@ public class LinkTest extends AbstractTest {
 
         // 2. create new link
         final ODataLink newLink = ODataFactory.
-                newAssociationLink(null, URI.create(testDefaultServiceRootURL + "/Login('3')"));
+                newAssociationLink(null, URI.create(getServiceRoot() + "/Login('3')"));
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).appendLinksSegment("Logins");
 
         final ODataLinkCreateRequest req = ODataCUDRequestFactory.getLinkCreateRequest(uriBuilder.build(), newLink);
@@ -108,7 +112,7 @@ public class LinkTest extends AbstractTest {
         assertEquals(Collections.singletonList(newLink.getLink()), after);
 
         assertEquals(204, ODataCUDRequestFactory.getDeleteRequest(
-                new ODataURIBuilder(testDefaultServiceRootURL).appendEntityTypeSegment("Customer").
+                new ODataURIBuilder(getServiceRoot()).appendEntityTypeSegment("Customer").
                 appendKeySegment(-10).appendLinksSegment("Logins('3')").build()).execute().getStatusCode());
     }
 
@@ -128,9 +132,9 @@ public class LinkTest extends AbstractTest {
 
         // 2. update the link
         ODataLink newLink = ODataFactory.
-                newAssociationLink(null, URI.create(testDefaultServiceRootURL + "/CustomerInfo(12)"));
+                newAssociationLink(null, URI.create(getServiceRoot() + "/CustomerInfo(12)"));
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(-10).appendLinksSegment("Info");
 
         ODataLinkUpdateRequest req =

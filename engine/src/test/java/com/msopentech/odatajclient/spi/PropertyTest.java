@@ -50,6 +50,10 @@ import org.junit.Test;
  */
 public class PropertyTest extends AbstractTest {
 
+    protected String getServiceRoot() {
+        return testDefaultServiceRootURL;
+    }
+
     @Test
     public void replacePropertyValue() throws IOException {
         updatePropertyValue(ODataValueFormat.TEXT, UpdateType.REPLACE);
@@ -147,7 +151,7 @@ public class PropertyTest extends AbstractTest {
 
     @Test
     public void readPropertyValue() throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).
                 appendStructuralSegment("CustomerId").appendValueSegment();
 
@@ -166,7 +170,7 @@ public class PropertyTest extends AbstractTest {
 
     @Test
     public void readCountValue() throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Customer").appendCountSegment();
 
         final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
@@ -184,7 +188,7 @@ public class PropertyTest extends AbstractTest {
     }
 
     private void updatePropertyValue(final ODataValueFormat format, final UpdateType type) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(-9).
                 appendStructuralSegment("PrimaryContactInfo").
                 appendStructuralSegment("HomePhone").appendStructuralSegment("PhoneNumber").appendValueSegment();
@@ -225,7 +229,7 @@ public class PropertyTest extends AbstractTest {
     }
 
     private void updateComplexProperty(final ODataFormat format, final UpdateType type) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-9).appendStructuralSegment("PrimaryContactInfo");
 
         ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
@@ -271,7 +275,7 @@ public class PropertyTest extends AbstractTest {
     }
 
     private void updateCollectionProperty(final ODataFormat format) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(-9).
                 appendStructuralSegment("PrimaryContactInfo").appendStructuralSegment("AlternativeNames");
 
@@ -317,7 +321,7 @@ public class PropertyTest extends AbstractTest {
     }
 
     private void updatePrimitiveProperty(final ODataFormat format) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(-9).
                 appendStructuralSegment("PrimaryContactInfo").
                 appendStructuralSegment("HomePhone").appendStructuralSegment("PhoneNumber");
@@ -364,7 +368,7 @@ public class PropertyTest extends AbstractTest {
      * @see PrimitiveValueTest
      */
     private ODataProperty readPrimitiveProperty(final ODataFormat format) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).appendStructuralSegment("CustomerId");
 
         final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
@@ -384,7 +388,7 @@ public class PropertyTest extends AbstractTest {
     }
 
     private ODataProperty readComplexProperty(final ODataFormat format) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).appendStructuralSegment("PrimaryContactInfo");
 
         final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
@@ -404,7 +408,7 @@ public class PropertyTest extends AbstractTest {
     }
 
     private ODataProperty readCollectionProperty(final ODataFormat format) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).appendStructuralSegment("BackupContactInfo");
 
         final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
@@ -424,7 +428,7 @@ public class PropertyTest extends AbstractTest {
     }
 
     private void genericRequest(final ODataFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).appendStructuralSegment("BackupContactInfo");
 
         final ODataGenericRetrieveRequest req =

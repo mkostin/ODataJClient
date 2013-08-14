@@ -44,6 +44,10 @@ import org.junit.Test;
  */
 public class EntitySetTest extends AbstractTest {
 
+    protected String getServiceRoot() {
+        return testDefaultServiceRootURL;
+    }
+
     @Test
     public void genericRequestAsAtom() throws IOException {
         genericRequest(ODataPubFormat.ATOM);
@@ -105,7 +109,7 @@ public class EntitySetTest extends AbstractTest {
     }
 
     private void readEntitySetWithNextLink(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntitySetSegment("Customer");
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
@@ -121,14 +125,14 @@ public class EntitySetTest extends AbstractTest {
         assertEquals(2, feed.getEntities().size());
         assertNotNull(feed.getNext());
 
-        final URI expected = URI.create(testDefaultServiceRootURL + "/Customer?$skiptoken=-9");
-        final URI found = URIUtils.getURI(testDefaultServiceRootURL, feed.getNext().toASCIIString());
+        final URI expected = URI.create(getServiceRoot() + "/Customer?$skiptoken=-9");
+        final URI found = URIUtils.getURI(getServiceRoot(), feed.getNext().toASCIIString());
 
         assertEquals(expected, found);
     }
 
     private void readFeed(final ODataPubFormat format) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntitySetSegment("Car").top(2).skip(4);
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
@@ -147,7 +151,7 @@ public class EntitySetTest extends AbstractTest {
     }
 
     private void readODataEntitySet(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntitySetSegment("Car").top(3);
 
         final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
@@ -164,7 +168,7 @@ public class EntitySetTest extends AbstractTest {
     }
 
     private void readODataEntitySetIterator(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntitySetSegment("Customer");
 
         final ODataEntitySetIteratorRequest req =
@@ -187,7 +191,7 @@ public class EntitySetTest extends AbstractTest {
     }
 
     private void genericRequest(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntitySetSegment("Car");
 
         final ODataGenericRetrieveRequest req =
