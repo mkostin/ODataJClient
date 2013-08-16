@@ -126,6 +126,7 @@ public class ODataHeaders {
          */
         retryAfter("Retry-After"),
         dataServiceUrlConventions("DataServiceUrlConventions"),
+        slug("Slug"),
         /**
          * This header is a custom HTTP request header.
          * <p>

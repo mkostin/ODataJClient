@@ -148,11 +148,11 @@ public class MediaEntityTest extends AbstractTest {
     }
 
     private void createMediaEntity(final ODataPubFormat format) throws Exception {
-        ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL);
-        builder.appendEntitySetSegment("Car");
+        final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntitySetSegment("Car");
 
-        final String TO_BE_UPDATED = "buffered stream sample";
-        final InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);
+        final String inputValue = "buffered stream sample";
+        final InputStream input = IOUtils.toInputStream(inputValue);
 
         final ODataMediaEntityCreateRequest createReq =
                 ODataStreamedRequestFactory.getMediaEntityCreateRequest(builder.build(), input);
@@ -170,13 +170,12 @@ public class MediaEntityTest extends AbstractTest {
                 ? created.getProperties().get(0).getPrimitiveValue().<Integer>toCastValue()
                 : created.getProperties().get(1).getPrimitiveValue().<Integer>toCastValue();
 
-        builder = new ODataURIBuilder(testDefaultServiceRootURL);
-        builder.appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
+        builder.appendKeySegment(id).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
 
         final ODataRetrieveResponse<InputStream> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
-        assertEquals(TO_BE_UPDATED, IOUtils.toString(retrieveRes.getBody()));
+        assertEquals(inputValue, IOUtils.toString(retrieveRes.getBody()));
     }
 }

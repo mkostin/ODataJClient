@@ -216,6 +216,14 @@ public class ODataRequestImpl implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
+    public void setSlug(final String value) {
+        odataHeaders.setHeader(ODataHeaders.HeaderName.slug, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void addCustomHeader(final String name, final String value) {
         odataHeaders.setHeader(name, value);
     }
