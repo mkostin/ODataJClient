@@ -98,7 +98,7 @@ public final class ODataCUDRequestFactory {
 
     /**
      * Gets a create request object instance.
-     * <p>
+     * <br/>
      * Use this kind of request to create a new value (e.g. http://Northwind.svc/Customer(1)/Picture/$value).
      *
      * @param targetURI entity set or entity or entity property URI.
@@ -123,8 +123,8 @@ public final class ODataCUDRequestFactory {
 
     /**
      * Gets an update request object instance.
-     * <p>
-     * Use this kind of request to update a primitive property value
+     * <br/>
+     * Use this kind of request to update a primitive property value.
      *
      * @param targetURI entity set or entity or entity property URI.
      * @param property value to be update.
@@ -151,8 +151,8 @@ public final class ODataCUDRequestFactory {
 
     /**
      * Gets an update request object instance.
-     * <p>
-     * Use this kind of request to update a complex property value
+     * <br/>
+     * Use this kind of request to update a complex property value.
      *
      * @param targetURI entity set or entity or entity property URI.
      * @param type type of update to be performed.
@@ -180,8 +180,8 @@ public final class ODataCUDRequestFactory {
 
     /**
      * Gets an update request object instance.
-     * <p>
-     * Use this kind of request to update a collection property value
+     * <br/>
+     * Use this kind of request to update a collection property value.
      *
      * @param targetURI entity set or entity or entity property URI.
      * @param property value to be update.

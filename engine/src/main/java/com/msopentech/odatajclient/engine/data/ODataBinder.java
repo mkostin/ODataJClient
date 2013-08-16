@@ -469,7 +469,8 @@ public final class ODataBinder {
         final Element element;
 
         if (prop.hasNullValue()) {
-            element = toNullPropertyElement(prop, doc, setType);
+            // null property handling
+            element = toNullPropertyElement(prop, doc);
         } else if (prop.hasPrimitiveValue()) {
             // primitive property handling
             element = toPrimitivePropertyElement(prop, doc, setType);
@@ -489,7 +490,7 @@ public final class ODataBinder {
         return element;
     }
 
-    private static Element toNullPropertyElement(final ODataProperty prop, final Document doc, final boolean setType) {
+    private static Element toNullPropertyElement(final ODataProperty prop, final Document doc) {
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + prop.getName());
         element.setAttribute(ODataConstants.ATTR_NULL, Boolean.toString(true));
         return element;
@@ -529,7 +530,7 @@ public final class ODataBinder {
         final ODataCollectionValue value = prop.getCollectionValue();
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + prop.getName());
-        if (value.getTypeName() != null) {
+        if (value.getTypeName() != null && setType) {
             element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
         }
 

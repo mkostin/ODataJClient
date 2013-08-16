@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
@@ -29,6 +30,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataGe
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
+import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
@@ -187,11 +189,30 @@ public class PropertyTest extends AbstractTest {
         assertTrue(Integer.valueOf(value.toString()) >= 10);
     }
 
+    @Test
+    public void nullNullableProperty() {
+        final ODataDeleteResponse res = ODataCUDRequestFactory.getDeleteRequest(new ODataURIBuilder(getServiceRoot()).
+                appendEntityTypeSegment("Order").appendKeySegment(-8).
+                appendStructuralSegment("CustomerId").appendValueSegment().build()).
+                execute();
+        assertEquals(204, res.getStatusCode());
+    }
+
+    @Test(expected = ODataClientErrorException.class)
+    public void nullNonNullableProperty() {
+        ODataCUDRequestFactory.getDeleteRequest(new ODataURIBuilder(getServiceRoot()).
+                appendEntityTypeSegment("Driver").appendKeySegment("1").
+                appendStructuralSegment("BirthDate").appendValueSegment().build()).
+                execute();
+    }
+
     private void updatePropertyValue(final ODataValueFormat format, final UpdateType type) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
-        uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(-9).
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
+                appendEntityTypeSegment("Customer").appendKeySegment(-9).
                 appendStructuralSegment("PrimaryContactInfo").
-                appendStructuralSegment("HomePhone").appendStructuralSegment("PhoneNumber").appendValueSegment();
+                appendStructuralSegment("HomePhone").
+                appendStructuralSegment("PhoneNumber").
+                appendValueSegment();
 
         ODataValueRequest retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
         retrieveReq.setFormat(format);

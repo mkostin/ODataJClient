@@ -88,6 +88,8 @@ public class JSONODataError extends AbstractJSONObject implements ODataError {
 
         private String stacktrace;
 
+        private InnerError internalexception;
+
         /**
          * Gets inner message.
          *
@@ -140,6 +142,14 @@ public class JSONODataError extends AbstractJSONObject implements ODataError {
          */
         public void setStacktrace(final String stacktrace) {
             this.stacktrace = stacktrace;
+        }
+
+        public InnerError getInternalexception() {
+            return internalexception;
+        }
+
+        public void setInternalexception(final InnerError internalexception) {
+            this.internalexception = internalexception;
         }
     }
 
