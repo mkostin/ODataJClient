@@ -507,23 +507,29 @@ public abstract class AbstractTest {
     protected void updateEntityDescription(
             final ODataPubFormat format, final ODataEntity changes, final UpdateType type, final String etag) {
 
+        updateEntityStringProperty("Description", format, changes, type, etag);
+    }
+
+    protected void updateEntityStringProperty(final String propertyName,
+            final ODataPubFormat format, final ODataEntity changes, final UpdateType type, final String etag) {
+
         final URI editLink = changes.getEditLink();
 
-        final String newm = "New description(" + System.currentTimeMillis() + ")";
+        final String newm = "New " + propertyName + "(" + System.currentTimeMillis() + ")";
 
-        ODataProperty description = changes.getProperty("Description");
+        ODataProperty propertyValue = changes.getProperty(propertyName);
 
         final String oldm;
-        if (description == null) {
+        if (propertyValue == null) {
             oldm = null;
         } else {
-            oldm = description.getValue().toString();
-            changes.removeProperty(description);
+            oldm = propertyValue.getValue().toString();
+            changes.removeProperty(propertyValue);
         }
 
         assertNotEquals(newm, oldm);
 
-        changes.addProperty(ODataFactory.newPrimitiveProperty("Description",
+        changes.addProperty(ODataFactory.newPrimitiveProperty(propertyName,
                 new ODataPrimitiveValue.Builder().setText(newm).build()));
 
         final ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(type, changes);
@@ -543,15 +549,15 @@ public abstract class AbstractTest {
 
         final ODataEntity actual = read(format, editLink);
 
-        description = null;
+        propertyValue = null;
 
         for (ODataProperty prop : actual.getProperties()) {
-            if (prop.getName().equals("Description")) {
-                description = prop;
+            if (prop.getName().equals(propertyName)) {
+                propertyValue = prop;
             }
         }
 
-        assertNotNull(description);
-        assertEquals(newm, description.getValue().toString());
+        assertNotNull(propertyValue);
+        assertEquals(newm, propertyValue.getValue().toString());
     }
 }

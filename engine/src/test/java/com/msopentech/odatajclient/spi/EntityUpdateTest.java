@@ -17,7 +17,9 @@ package com.msopentech.odatajclient.spi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
@@ -146,5 +148,24 @@ public class EntityUpdateTest extends AbstractTest {
         assertEquals(ODataHeaderValues.preferReturnContent,
                 res.getHeader(ODataHeaders.HeaderName.preferenceApplied).iterator().next());
         assertNotNull(res.getBody());
+    }
+
+    @Test
+    public void concurrentModification() {
+        final URI uri = new ODataURIBuilder(getServiceRoot()).
+                appendEntityTypeSegment("Product").appendKeySegment(-10).build();
+        final String etag = getETag(uri);
+        final ODataEntity product = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
+        product.setEditLink(uri);
+        updateEntityStringProperty("BaseConcurrency",
+                Configuration.getDefaultPubFormat(), product, UpdateType.MERGE, etag);
+
+        try {
+            updateEntityStringProperty("BaseConcurrency",
+                    Configuration.getDefaultPubFormat(), product, UpdateType.MERGE, etag);
+            fail();
+        } catch (ODataClientErrorException e) {
+            assertEquals(412, e.getStatusLine().getStatusCode());
+        }
     }
 }
