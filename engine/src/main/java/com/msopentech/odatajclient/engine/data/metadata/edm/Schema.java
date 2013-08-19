@@ -251,6 +251,21 @@ public class Schema extends AbstractElement {
     }
 
     /**
+     * Gets default entity container.
+     *
+     * @return default entity container.
+     */
+    public EntityContainer getDefaultEntityContainer() {
+        EntityContainer result = null;
+        for (EntityContainer container : getEntityContainers()) {
+            if (container.isDefaultEntityContainer()) {
+                result = container;
+            }
+        }
+        return result;
+    }
+
+    /**
      * Gets entity container with the given name.
      *
      * @param name name.

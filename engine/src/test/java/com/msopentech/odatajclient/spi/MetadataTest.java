@@ -26,8 +26,10 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import java.util.List;
 import org.junit.Test;
 
@@ -92,7 +94,25 @@ public class MetadataTest extends AbstractTest {
         final EdmMetadata metadata = ODataRetrieveRequestFactory.
                 getMetadataRequest(testLargeModelServiceRootURL).execute().getBody();
         assertNotNull(metadata);
-        
+
         assertEquals(400, metadata.getSchemas().get(0).getEntityContainers().get(0).getEntitySets().size());
+    }
+
+    @Test
+    public void multipleSchemas() {
+        final EdmMetadata metadata = ODataRetrieveRequestFactory.
+                getMetadataRequest("http://services.odata.org/v3/(S(ledws2f0sdc3gg2r0h51iex0))/Northwind/Northwind.svc").
+                execute().getBody();
+        assertNotNull(metadata);
+
+        final Schema first = metadata.getSchema("NorthwindModel");
+        assertNotNull(first);
+
+        final Schema second = metadata.getSchema("ODataWebV3.Northwind.Model");
+        assertNotNull(second);
+
+        final EntityContainer entityContainer = second.getDefaultEntityContainer();
+        assertNotNull(entityContainer);
+        assertEquals("NorthwindEntities", entityContainer.getName());
     }
 }
