@@ -15,18 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
-import com.msopentech.odatajclient.engine.client.http.HttpMerge;
-import com.msopentech.odatajclient.engine.client.http.HttpPatch;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
 import java.net.URI;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
 
 /**
  * URI utilities.
@@ -97,46 +89,6 @@ public final class URIUtils {
         }
 
         return uri.normalize();
-    }
-
-    /**
-     * Retrieves HTTP request method wrapper from the given HTTP request method and URI.
-     *
-     * @param method
-     * @param uri
-     * @return
-     */
-    public static HttpUriRequest toHttpURIRequest(final ODataRequest.Method method, final URI uri) {
-        HttpUriRequest result;
-
-        switch (method) {
-            case POST:
-                result = new HttpPost(uri);
-                break;
-
-            case PUT:
-                result = new HttpPut(uri);
-                break;
-
-            case PATCH:
-                result = new HttpPatch(uri);
-                break;
-
-            case MERGE:
-                result = new HttpMerge(uri);
-                break;
-
-            case DELETE:
-                result = new HttpDelete(uri);
-                break;
-
-            case GET:
-            default:
-                result = new HttpGet(uri);
-                break;
-        }
-
-        return result;
     }
 
     /**

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
@@ -37,20 +38,6 @@ import java.util.Collection;
 public interface ODataRequest {
 
     /**
-     * Supported HTTP methods.
-     */
-    public enum Method {
-
-        GET,
-        POST,
-        PUT,
-        PATCH,
-        MERGE,
-        DELETE;
-
-    }
-
-    /**
      * Returns OData request target URI.
      *
      * @return OData request target URI.
@@ -62,7 +49,7 @@ public interface ODataRequest {
      *
      * @return HTTP request method.
      */
-    Method getMethod();
+    HttpMethod getMethod();
 
     /**
      * Gets all OData request header names.

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
@@ -54,7 +55,7 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      * @param targetURI entity URI.
      * @param link entity to be linked.
      */
-    ODataLinkUpdateRequest(final Method method, final URI targetURI, final ODataLink link) {
+    ODataLinkUpdateRequest(final HttpMethod method, final URI targetURI, final ODataLink link) {
         super(method, targetURI);
         // set request body
         this.link = link;

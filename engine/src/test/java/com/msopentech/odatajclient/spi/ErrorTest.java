@@ -19,10 +19,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequest;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
@@ -51,7 +51,7 @@ public class ErrorTest extends AbstractTest {
 
     private class ErrorGeneratingRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse, ODataPubFormat> {
 
-        public ErrorGeneratingRequest(final Method method, final URI uri) {
+        public ErrorGeneratingRequest(final HttpMethod method, final URI uri) {
             super(method, uri);
         }
 
@@ -84,7 +84,7 @@ public class ErrorTest extends AbstractTest {
         uriBuilder.appendEntitySetSegment("Customer");
 
         final ErrorGeneratingRequest errorReq =
-                new ErrorGeneratingRequest(ODataRequest.Method.POST, uriBuilder.build());
+                new ErrorGeneratingRequest(HttpMethod.POST, uriBuilder.build());
         errorReq.setFormat(format);
 
         ODataClientErrorException ocee = null;

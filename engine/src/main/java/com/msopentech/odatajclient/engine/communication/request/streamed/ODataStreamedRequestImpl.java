@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
@@ -61,7 +62,7 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      * @param method OData request HTTP method.
      * @param uri OData request URI.
      */
-    public ODataStreamedRequestImpl(final Method method, final URI uri) {
+    public ODataStreamedRequestImpl(final HttpMethod method, final URI uri) {
         super(method, uri);
         setAccept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
         setContentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());

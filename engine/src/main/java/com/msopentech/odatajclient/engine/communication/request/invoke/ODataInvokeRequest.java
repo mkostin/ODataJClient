@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.communication.request.invoke;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
@@ -70,12 +71,12 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
      * Constructor.
      *
      * @param reference reference class for invoke result
-     * @param method HTTP method of the request. If configured X-HTTP-METHOD header will be used.
+     * @param method HTTP method of the request.
      * @param uri URI that identifies the operation.
      */
     ODataInvokeRequest(
             final Class<T> reference,
-            final Method method,
+            final HttpMethod method,
             final URI uri) {
 
         super(method, uri);
@@ -125,7 +126,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
      */
     @Override
     protected InputStream getPayload() {
-        if (!this.parameters.isEmpty() && this.method == Method.POST) {
+        if (!this.parameters.isEmpty() && this.method == HttpMethod.POST) {
             // Additional, non-binding parameters MUST be sent as JSON
             final ODataEntity tmp = ODataFactory.newEntity("");
             for (Map.Entry<String, ODataValue> param : parameters.entrySet()) {
@@ -158,7 +159,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
         final InputStream input = getPayload();
 
         if (!this.parameters.isEmpty()) {
-            if (this.method == Method.GET) {
+            if (this.method == HttpMethod.GET) {
                 final URIBuilder uriBuilder = new URIBuilder(this.uri);
                 for (Map.Entry<String, ODataValue> param : parameters.entrySet()) {
                     if (!param.getValue().isPrimitive()) {
@@ -172,7 +173,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
                 } catch (URISyntaxException e) {
                     throw new IllegalArgumentException("While adding GET parameters", e);
                 }
-            } else if (this.method == Method.POST) {
+            } else if (this.method == HttpMethod.POST) {
                 ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
 
                 setContentType(ODataPubFormat.JSON.toString());

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.utils.Configuration;
@@ -47,7 +48,7 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      * @param method request method.
      * @param uri OData request URI.
      */
-    public ODataBasicRequestImpl(final Method method, final URI uri) {
+    public ODataBasicRequestImpl(final HttpMethod method, final URI uri) {
         super(method, uri);
     }
 

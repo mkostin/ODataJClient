@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -63,7 +63,7 @@ public final class ODataCUDRequestFactory {
         final ODataEntityUpdateRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataEntityUpdateRequest(Method.POST, targetURI, changes);
+            req = new ODataEntityUpdateRequest(HttpMethod.POST, targetURI, changes);
             req.setXHTTPMethod(type.getMethod().name());
         } else {
             req = new ODataEntityUpdateRequest(type.getMethod(), targetURI, changes);
@@ -87,7 +87,7 @@ public final class ODataCUDRequestFactory {
         final ODataEntityUpdateRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataEntityUpdateRequest(Method.POST, entity.getEditLink(), entity);
+            req = new ODataEntityUpdateRequest(HttpMethod.POST, entity.getEditLink(), entity);
             req.setXHTTPMethod(type.getMethod().name());
         } else {
             req = new ODataEntityUpdateRequest(type.getMethod(), entity.getEditLink(), entity);
@@ -112,7 +112,7 @@ public final class ODataCUDRequestFactory {
         final ODataValueUpdateRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataValueUpdateRequest(Method.POST, targetURI, value);
+            req = new ODataValueUpdateRequest(HttpMethod.POST, targetURI, value);
             req.setXHTTPMethod(type.getMethod().name());
         } else {
             req = new ODataValueUpdateRequest(type.getMethod(), targetURI, value);
@@ -140,10 +140,10 @@ public final class ODataCUDRequestFactory {
         final ODataPropertyUpdateRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataPropertyUpdateRequest(Method.POST, targetURI, property);
-            req.setXHTTPMethod(Method.PUT.name());
+            req = new ODataPropertyUpdateRequest(HttpMethod.POST, targetURI, property);
+            req.setXHTTPMethod(HttpMethod.PUT.name());
         } else {
-            req = new ODataPropertyUpdateRequest(Method.PUT, targetURI, property);
+            req = new ODataPropertyUpdateRequest(HttpMethod.PUT, targetURI, property);
         }
 
         return req;
@@ -169,7 +169,7 @@ public final class ODataCUDRequestFactory {
         final ODataPropertyUpdateRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataPropertyUpdateRequest(Method.POST, targetURI, property);
+            req = new ODataPropertyUpdateRequest(HttpMethod.POST, targetURI, property);
             req.setXHTTPMethod(type.getMethod().name());
         } else {
             req = new ODataPropertyUpdateRequest(type.getMethod(), targetURI, property);
@@ -197,10 +197,10 @@ public final class ODataCUDRequestFactory {
         final ODataPropertyUpdateRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataPropertyUpdateRequest(Method.POST, targetURI, property);
-            req.setXHTTPMethod(Method.PUT.name());
+            req = new ODataPropertyUpdateRequest(HttpMethod.POST, targetURI, property);
+            req.setXHTTPMethod(HttpMethod.PUT.name());
         } else {
-            req = new ODataPropertyUpdateRequest(Method.PUT, targetURI, property);
+            req = new ODataPropertyUpdateRequest(HttpMethod.PUT, targetURI, property);
         }
 
         return req;
@@ -237,7 +237,7 @@ public final class ODataCUDRequestFactory {
         final ODataLinkUpdateRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataLinkUpdateRequest(Method.POST, targetURI, link);
+            req = new ODataLinkUpdateRequest(HttpMethod.POST, targetURI, link);
             req.setXHTTPMethod(type.getMethod().name());
         } else {
             req = new ODataLinkUpdateRequest(type.getMethod(), targetURI, link);
@@ -258,10 +258,10 @@ public final class ODataCUDRequestFactory {
         final ODataDeleteRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataDeleteRequest(Method.POST, targetURI);
-            req.setXHTTPMethod(Method.DELETE.name());
+            req = new ODataDeleteRequest(HttpMethod.POST, targetURI);
+            req.setXHTTPMethod(HttpMethod.DELETE.name());
         } else {
-            req = new ODataDeleteRequest(Method.DELETE, targetURI);
+            req = new ODataDeleteRequest(HttpMethod.DELETE, targetURI);
         }
 
         return req;

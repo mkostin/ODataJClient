@@ -22,8 +22,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
@@ -534,7 +534,7 @@ public abstract class AbstractTest {
 
         final ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(type, changes);
         if (Configuration.isUseXHTTPMethod()) {
-            assertEquals(ODataRequest.Method.POST, req.getMethod());
+            assertEquals(HttpMethod.POST, req.getMethod());
         } else {
             assertEquals(type.getMethod(), req.getMethod());
         }

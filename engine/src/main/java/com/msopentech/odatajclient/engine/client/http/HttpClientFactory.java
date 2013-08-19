@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request.retrieve;
+package com.msopentech.odatajclient.engine.client.http;
 
-import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import java.net.URI;
+import org.apache.http.client.HttpClient;
 
 /**
- * This class implements a generic OData request.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getRawRequest(java.net.URI)
+ * Interface used by ODataRequest implementations to instantiate HttpClient.
  */
-public class ODataRawRequest extends ODataRequestImpl {
+public interface HttpClientFactory {
 
-    /**
-     * Constructor.
-     *
-     * @param uri request URI.
-     */
-    ODataRawRequest(final URI uri) {
-        super(HttpMethod.GET, uri);
-    }
+    HttpClient createHttpClient(HttpMethod method, URI uri);
 }

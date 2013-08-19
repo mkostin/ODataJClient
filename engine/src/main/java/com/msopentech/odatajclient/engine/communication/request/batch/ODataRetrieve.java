@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 
 /**
@@ -57,7 +57,7 @@ public class ODataRetrieve extends ODataBatchRequestItem {
             throw new IllegalStateException("Current batch item is closed");
         }
 
-        if (((ODataRequestImpl) request).getMethod() != ODataRequest.Method.GET) {
+        if (((ODataRequestImpl) request).getMethod() != HttpMethod.GET) {
             throw new IllegalArgumentException("Invalid request. Only GET method is allowed");
         }
 

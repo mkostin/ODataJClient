@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
@@ -52,7 +53,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      * @param entity entity to be created.
      */
     ODataEntityCreateRequest(final URI targetURI, final ODataEntity entity) {
-        super(Method.POST, targetURI);
+        super(HttpMethod.POST, targetURI);
         this.entity = entity;
     }
 

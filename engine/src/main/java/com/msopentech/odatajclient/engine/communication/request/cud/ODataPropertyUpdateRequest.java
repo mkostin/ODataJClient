@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUpdateResponse;
@@ -53,7 +54,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
      * @param targetURI entity set or entity or entity property URI.
      * @param property value to be created.
      */
-    ODataPropertyUpdateRequest(final Method method, final URI targetURI, final ODataProperty property) {
+    ODataPropertyUpdateRequest(final HttpMethod method, final URI targetURI, final ODataProperty property) {
         super(method, targetURI);
         // set request body
         this.property = property;

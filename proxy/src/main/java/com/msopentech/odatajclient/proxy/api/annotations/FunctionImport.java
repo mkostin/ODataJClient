@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.api.annotations;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -55,7 +55,8 @@ public @interface FunctionImport {
 
     /**
      * When httpMethod() is NONE, true: this annotates an action; false: this annotates a function
-     * @return 
+     *
+     * @return
      */
     boolean isSideEffecting() default true;
 
@@ -63,7 +64,8 @@ public @interface FunctionImport {
 
     /**
      * if not NONE, this annotates a legacy service operation.
-     * @return 
+     *
+     * @return
      */
-    ODataRequest.Method httpMethod() default ODataRequest.Method.GET;
+    HttpMethod httpMethod() default HttpMethod.GET;
 }

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
@@ -39,7 +40,7 @@ public abstract class ODataStreamedEntityRequestImpl<V extends ODataResponse, T 
      * @param method HTTP request method.
      * @param uri request URI.
      */
-    public ODataStreamedEntityRequestImpl(final Method method, URI uri) {
+    public ODataStreamedEntityRequestImpl(final HttpMethod method, URI uri) {
         super(method, uri);
         setAccept(getFormat().toString());
     }

@@ -16,11 +16,11 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.ODataServerErrorException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
@@ -30,7 +30,6 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +43,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,12 +65,8 @@ public class ODataRequestImpl implements ODataRequest {
 
     /**
      * OData request method.
-     * <p>
-     * If configured a X-HTTP-METHOD header will be used.
-     * In this case the actual method will be
-     * <code>POST</code>.
      */
-    protected final Method method;
+    protected final HttpMethod method;
 
     /**
      * OData request header.
@@ -100,7 +94,7 @@ public class ODataRequestImpl implements ODataRequest {
      * @param method HTTP request method. If configured X-HTTP-METHOD header will be used.
      * @param uri OData request URI.
      */
-    protected ODataRequestImpl(final Method method, final URI uri) {
+    protected ODataRequestImpl(final HttpMethod method, final URI uri) {
         this.method = method;
 
         // initialize default headers
@@ -112,8 +106,8 @@ public class ODataRequestImpl implements ODataRequest {
         // target uri
         this.uri = uri;
 
-        this.client = new DefaultHttpClient();
-        this.request = URIUtils.toHttpURIRequest(this.method, this.uri);
+        this.client = Configuration.getHttpClientFactory().createHttpClient(this.method, this.uri);
+        this.request = Configuration.getHttpUriRequestFactory().createHttpUriRequest(this.method, this.uri);
     }
 
     /**
@@ -298,7 +292,7 @@ public class ODataRequestImpl implements ODataRequest {
      * ${@inheritDoc }
      */
     @Override
-    public Method getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 

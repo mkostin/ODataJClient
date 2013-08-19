@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest.MediaEntityCreateStreamManager;
@@ -47,7 +48,7 @@ public class ODataMediaEntityCreateRequest
      * @param media media entity blob to be created.
      */
     ODataMediaEntityCreateRequest(final URI targetURI, final InputStream media) {
-        super(Method.POST, targetURI);
+        super(HttpMethod.POST, targetURI);
         this.media = media;
     }
 

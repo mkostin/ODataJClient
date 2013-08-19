@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamUpdateRequest.StreamUpdateStreamManager;
@@ -45,7 +46,7 @@ public class ODataStreamUpdateRequest
      * @param targetURI target URI.
      * @param stream stream to be updated.
      */
-    ODataStreamUpdateRequest(final Method method, final URI targetURI, final InputStream stream) {
+    ODataStreamUpdateRequest(final HttpMethod method, final URI targetURI, final InputStream stream) {
         super(method, targetURI);
         this.stream = stream;
     }

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
@@ -37,11 +38,10 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
     /**
      * Constructor.
      *
-     * @param method HTTP method to be used (<tt>DELETE</tt> or </tt>POST</tt> in case of <tt>X-HTTP-METHOD</tt>
-     * header usage)
+     * @param method HTTP method to be used
      * @param uri URI of the entity to be deleted.
      */
-    ODataDeleteRequest(final Method method, final URI uri) {
+    ODataDeleteRequest(final HttpMethod method, final URI uri) {
         super(method, uri);
     }
 

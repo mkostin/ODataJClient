@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
@@ -71,9 +71,9 @@ public class MetadataTest extends AbstractTest {
         int actions = 0;
         int functions = 0;
         for (FunctionImport functionImport : functionImports) {
-            if (Method.GET.name().equals(functionImport.getHttpMethod())) {
+            if (HttpMethod.GET.name().equals(functionImport.getHttpMethod())) {
                 legacyGetters++;
-            } else if (Method.POST.name().equals(functionImport.getHttpMethod())) {
+            } else if (HttpMethod.POST.name().equals(functionImport.getHttpMethod())) {
                 legacyPosters++;
             } else if (functionImport.getHttpMethod() == null) {
                 if (functionImport.isIsSideEffecting()) {

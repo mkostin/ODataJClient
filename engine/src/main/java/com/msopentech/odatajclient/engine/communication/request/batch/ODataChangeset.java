@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.util.UUID;
@@ -82,7 +82,7 @@ public class ODataChangeset extends ODataBatchRequestItem {
             throw new IllegalStateException("Current batch item is closed");
         }
 
-        if (request.getMethod() == Method.GET) {
+        if (request.getMethod() == HttpMethod.GET) {
             throw new IllegalArgumentException("Invalid request. GET method not allowed in changeset");
         }
 

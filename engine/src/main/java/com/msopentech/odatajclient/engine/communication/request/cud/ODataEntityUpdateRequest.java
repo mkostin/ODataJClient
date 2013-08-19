@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
@@ -55,7 +56,7 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
      * @param uri URI of the entity to be updated.
      * @param changes changes to be applied.
      */
-    ODataEntityUpdateRequest(final Method method, final URI uri, final ODataEntity changes) {
+    ODataEntityUpdateRequest(final HttpMethod method, final URI uri, final ODataEntity changes) {
         super(method, uri);
         this.changes = changes;
     }

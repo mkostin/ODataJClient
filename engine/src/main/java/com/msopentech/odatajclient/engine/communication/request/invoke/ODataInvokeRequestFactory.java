@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.invoke;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
@@ -47,16 +47,16 @@ public class ODataInvokeRequestFactory {
     public static <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
             final URI uri, final EdmMetadata metadata, final FunctionImport functionImport) {
 
-        Method method = null;
-        if (Method.GET.name().equals(functionImport.getHttpMethod())) {
-            method = Method.GET;
-        } else if (Method.POST.name().equals(functionImport.getHttpMethod())) {
-            method = Method.POST;
+        HttpMethod method = null;
+        if (HttpMethod.GET.name().equals(functionImport.getHttpMethod())) {
+            method = HttpMethod.GET;
+        } else if (HttpMethod.POST.name().equals(functionImport.getHttpMethod())) {
+            method = HttpMethod.POST;
         } else if (functionImport.getHttpMethod() == null) {
             if (functionImport.isIsSideEffecting()) {
-                method = Method.POST;
+                method = HttpMethod.POST;
             } else {
-                method = Method.GET;
+                method = HttpMethod.GET;
             }
         }
 

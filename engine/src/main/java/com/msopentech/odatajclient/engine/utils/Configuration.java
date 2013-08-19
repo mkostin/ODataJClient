@@ -15,6 +15,10 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+import com.msopentech.odatajclient.engine.client.http.DefaultHttpClientFactory;
+import com.msopentech.odatajclient.engine.client.http.DefaultHttpUriRequestFactory;
+import com.msopentech.odatajclient.engine.client.http.HttpClientFactory;
+import com.msopentech.odatajclient.engine.client.http.HttpUriRequestFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +32,15 @@ public final class Configuration {
 
     public static final String DEFAULT_FORMAT = "format";
 
-    public static final String USE_XHTTP_METHOD = "USE_XHTTP_METHOD";
+    public static final String HTTP_CLIENT_FACTORY = "httpClientFactory";
 
-    public static final String KEY_AS_SEGMENT = "KEY_AS_SEGMENT";
+    public static final String HTTP_URI_REQUEST_FACTORY = "httpUriRequestFactory";
 
-    private static final Map<String, String> conf = new HashMap<String, String>();
+    public static final String USE_XHTTP_METHOD = "useHTTPMethod";
+
+    public static final String KEY_AS_SEGMENT = "keyAsSegment";
+
+    private static final Map<String, Object> CONF = new HashMap<String, Object>();
 
     private static ExecutorService EXECUTOR = Executors.newFixedThreadPool(10);
 
@@ -47,8 +55,8 @@ public final class Configuration {
      * @param defaultValue default value to be used in case of the given key doesn't exist.
      * @return property value if exists; default value if does not exist.
      */
-    public static String getProperty(final String key, final String defaultValue) {
-        return conf.containsKey(key) ? conf.get(key) : defaultValue;
+    public static Object getProperty(final String key, final Object defaultValue) {
+        return CONF.containsKey(key) ? CONF.get(key) : defaultValue;
     }
 
     /**
@@ -58,8 +66,8 @@ public final class Configuration {
      * @param value configuration property value.
      * @return given value.
      */
-    public static String setProperty(final String key, final String value) {
-        return conf.put(key, value);
+    public static Object setProperty(final String key, final Object value) {
+        return CONF.put(key, value);
     }
 
     /**
@@ -70,7 +78,7 @@ public final class Configuration {
      * @see ODataPubFormat#JSON_FULL_METADATA
      */
     public static ODataPubFormat getDefaultPubFormat() {
-        return ODataPubFormat.valueOf(getProperty(DEFAULT_FORMAT, "JSON_FULL_METADATA"));
+        return ODataPubFormat.valueOf(getProperty(DEFAULT_FORMAT, "JSON_FULL_METADATA").toString());
     }
 
     /**
@@ -83,13 +91,53 @@ public final class Configuration {
     }
 
     /**
+     * Gets the HttpClient factory to be used for executing requests.
+     *
+     * @return provided implementation (if configured via <tt>setHttpClientFactory</tt> or default.
+     * @see DefaultHttpClientFactory
+     */
+    public static HttpClientFactory getHttpClientFactory() {
+        return (HttpClientFactory) getProperty(HTTP_CLIENT_FACTORY, new DefaultHttpClientFactory());
+    }
+
+    /**
+     * Sets the HttpClient factory to be used for executing requests.
+     *
+     * @param factory implementation of <tt>HttpClientFactory</tt>.
+     * @see HttpClientFactory
+     */
+    public static void setHttpClientFactory(final HttpClientFactory factory) {
+        setProperty(HTTP_CLIENT_FACTORY, factory);
+    }
+
+    /**
+     * Gets the HttpUriRequest factory for generating requests to be executed.
+     *
+     * @return provided implementation (if configured via <tt>setHttpUriRequestFactory</tt> or default.
+     * @see DefaultHttpUriRequestFactory
+     */
+    public static HttpUriRequestFactory getHttpUriRequestFactory() {
+        return (HttpUriRequestFactory) getProperty(HTTP_URI_REQUEST_FACTORY, new DefaultHttpUriRequestFactory());
+    }
+
+    /**
+     * Sets the HttpUriRequest factory generating requests to be executed.
+     *
+     * @param factory implementation of <tt>HttpUriRequestFactory</tt>.
+     * @see HttpUriRequestFactory
+     */
+    public static void setHttpUriRequestFactory(final HttpUriRequestFactory factory) {
+        setProperty(HTTP_URI_REQUEST_FACTORY, factory);
+    }
+
+    /**
      * Gets whether <tt>PUT</tt>, <tt>MERGE</tt>, <tt>PATCH</tt>, <tt>DELETE</tt> HTTP methods need to be translated to
      * <tt>POST</tt> with additional <tt>X-HTTTP-Method</tt> header.
      *
      * @return whether <tt>X-HTTTP-Method</tt> header is to be used
      */
     public static boolean isUseXHTTPMethod() {
-        return Boolean.valueOf(getProperty(USE_XHTTP_METHOD, "false"));
+        return (Boolean) getProperty(USE_XHTTP_METHOD, false);
     }
 
     /**
@@ -99,15 +147,15 @@ public final class Configuration {
      * @param value 'TRUE' to use tunneling.
      */
     public static void setUseXHTTPMethod(final boolean value) {
-        setProperty(USE_XHTTP_METHOD, Boolean.toString(value));
+        setProperty(USE_XHTTP_METHOD, value);
     }
 
     public static boolean isKeyAsSegment() {
-        return Boolean.valueOf(getProperty(KEY_AS_SEGMENT, "false"));
+        return (Boolean) getProperty(KEY_AS_SEGMENT, false);
     }
 
     public static void setKeyAsSegment(final boolean value) {
-        setProperty(KEY_AS_SEGMENT, Boolean.toString(value));
+        setProperty(KEY_AS_SEGMENT, value);
     }
 
     /**

@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
+
 /**
  * Update type.
  */
@@ -23,20 +25,20 @@ public enum UpdateType {
     /**
      * Replace all and remove missing attributes.
      */
-    REPLACE(ODataRequest.Method.PUT),
+    REPLACE(HttpMethod.PUT),
     /**
      * Differential update with whole entity as input (non-standard).
      * Differences will be retrieved by the server itself.
      */
-    MERGE(ODataRequest.Method.MERGE),
+    MERGE(HttpMethod.MERGE),
     /**
      * Differential update with only specified input property values to be replaced.
      */
-    PATCH(ODataRequest.Method.PATCH);
+    PATCH(HttpMethod.PATCH);
 
-    private final ODataRequest.Method method;
+    private final HttpMethod method;
 
-    private UpdateType(final ODataRequest.Method method) {
+    private UpdateType(final HttpMethod method) {
         this.method = method;
     }
 
@@ -45,7 +47,7 @@ public enum UpdateType {
      *
      * @return HTTP request method.
      */
-    public ODataRequest.Method getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 }

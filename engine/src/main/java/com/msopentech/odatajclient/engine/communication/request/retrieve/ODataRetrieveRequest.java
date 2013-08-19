@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import java.io.InputStream;
@@ -39,7 +39,7 @@ abstract class ODataRetrieveRequest<V, T extends Enum<T>>
      * @param query query to be executed.
      */
     ODataRetrieveRequest(final URI query) {
-        super(Method.GET, query);
+        super(HttpMethod.GET, query);
     }
 
     /**

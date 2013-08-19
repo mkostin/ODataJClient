@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest.Method;
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.InputStream;
 import java.net.URI;
@@ -57,10 +57,10 @@ public final class ODataStreamedRequestFactory {
         final ODataStreamUpdateRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataStreamUpdateRequest(Method.POST, targetURI, stream);
-            req.setXHTTPMethod(Method.PUT.name());
+            req = new ODataStreamUpdateRequest(HttpMethod.POST, targetURI, stream);
+            req.setXHTTPMethod(HttpMethod.PUT.name());
         } else {
-            req = new ODataStreamUpdateRequest(Method.PUT, targetURI, stream);
+            req = new ODataStreamUpdateRequest(HttpMethod.PUT, targetURI, stream);
         }
 
         return req;
@@ -81,10 +81,10 @@ public final class ODataStreamedRequestFactory {
         final ODataMediaEntityUpdateRequest req;
 
         if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataMediaEntityUpdateRequest(Method.POST, editURI, media);
-            req.setXHTTPMethod(Method.PUT.name());
+            req = new ODataMediaEntityUpdateRequest(HttpMethod.POST, editURI, media);
+            req.setXHTTPMethod(HttpMethod.PUT.name());
         } else {
-            req = new ODataMediaEntityUpdateRequest(Method.PUT, editURI, media);
+            req = new ODataMediaEntityUpdateRequest(HttpMethod.PUT, editURI, media);
         }
 
         return req;

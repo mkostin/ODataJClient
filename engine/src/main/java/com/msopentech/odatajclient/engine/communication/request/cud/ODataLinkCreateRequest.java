@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
@@ -51,8 +52,7 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      * @param link entity to be linked.
      */
     ODataLinkCreateRequest(final URI targetURI, final ODataLink link) {
-        // set method ... . If cofigured X-HTTP-METHOD header will be used.
-        super(Method.POST, targetURI);
+        super(HttpMethod.POST, targetURI);
         // set request body
         this.link = link;
     }

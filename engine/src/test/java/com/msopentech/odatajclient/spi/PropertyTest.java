@@ -20,8 +20,8 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
-import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
@@ -275,7 +275,7 @@ public class PropertyTest extends AbstractTest {
         final ODataPropertyUpdateRequest updateReq = ODataCUDRequestFactory.getPropertyComplexValueUpdateRequest(
                 uriBuilder.build(), type, primaryContactInfo);
         if (Configuration.isUseXHTTPMethod()) {
-            assertEquals(ODataRequest.Method.POST, updateReq.getMethod());
+            assertEquals(HttpMethod.POST, updateReq.getMethod());
         } else {
             assertEquals(type.getMethod(), updateReq.getMethod());
         }
@@ -321,9 +321,9 @@ public class PropertyTest extends AbstractTest {
         final ODataPropertyUpdateRequest updateReq =
                 ODataCUDRequestFactory.getPropertyCollectionValueUpdateRequest(uriBuilder.build(), alternativeNames);
         if (Configuration.isUseXHTTPMethod()) {
-            assertEquals(ODataRequest.Method.POST, updateReq.getMethod());
+            assertEquals(HttpMethod.POST, updateReq.getMethod());
         } else {
-            assertEquals(ODataRequest.Method.PUT, updateReq.getMethod());
+            assertEquals(HttpMethod.PUT, updateReq.getMethod());
         }
         updateReq.setFormat(format);
 
@@ -366,9 +366,9 @@ public class PropertyTest extends AbstractTest {
         final ODataPropertyUpdateRequest updateReq =
                 ODataCUDRequestFactory.getPropertyPrimitiveValueUpdateRequest(uriBuilder.build(), phoneNumber);
         if (Configuration.isUseXHTTPMethod()) {
-            assertEquals(ODataRequest.Method.POST, updateReq.getMethod());
+            assertEquals(HttpMethod.POST, updateReq.getMethod());
         } else {
-            assertEquals(ODataRequest.Method.PUT, updateReq.getMethod());
+            assertEquals(HttpMethod.PUT, updateReq.getMethod());
         }
         updateReq.setFormat(format);
 
