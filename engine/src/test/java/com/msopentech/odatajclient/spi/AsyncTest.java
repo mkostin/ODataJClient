@@ -32,7 +32,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;

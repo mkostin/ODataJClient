@@ -34,7 +34,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntit
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.ByteArrayInputStream;

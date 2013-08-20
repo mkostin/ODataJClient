@@ -39,7 +39,7 @@ import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;

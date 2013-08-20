@@ -26,7 +26,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.ArrayList;
 import java.util.Collections;

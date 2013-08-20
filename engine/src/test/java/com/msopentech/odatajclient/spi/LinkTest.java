@@ -31,7 +31,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataLinkCollection;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.IOException;
 import java.net.URI;

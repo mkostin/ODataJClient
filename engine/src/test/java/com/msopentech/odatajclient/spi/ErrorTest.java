@@ -32,7 +32,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResp
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;

@@ -30,7 +30,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;

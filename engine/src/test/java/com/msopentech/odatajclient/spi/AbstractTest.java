@@ -55,7 +55,7 @@ import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;

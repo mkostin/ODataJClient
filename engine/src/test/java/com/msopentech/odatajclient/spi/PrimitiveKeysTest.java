@@ -24,7 +24,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataDuration;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataTimestamp;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.math.BigDecimal;

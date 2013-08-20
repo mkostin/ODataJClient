@@ -26,7 +26,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataTimestamp;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;

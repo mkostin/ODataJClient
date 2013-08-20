@@ -20,7 +20,7 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataVa
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;

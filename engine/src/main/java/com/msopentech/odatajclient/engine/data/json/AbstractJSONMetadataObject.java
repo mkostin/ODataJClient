@@ -19,7 +19,8 @@
 package com.msopentech.odatajclient.engine.data.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.SegmentType;
 import java.net.URI;
 
 /**
@@ -47,7 +48,7 @@ public abstract class AbstractJSONMetadataObject extends AbstractJSONObject {
         if (getMetadata() != null) {
             final String metadataURI = getMetadata().toASCIIString();
             baseURI = URI.create(
-                    metadataURI.substring(0, metadataURI.indexOf(ODataURIBuilder.SegmentType.METADATA.getValue())));
+                    metadataURI.substring(0, metadataURI.indexOf(SegmentType.METADATA.getValue())));
         }
 
         return baseURI;

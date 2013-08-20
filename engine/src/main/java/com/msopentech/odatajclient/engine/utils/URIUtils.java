@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
 import java.net.URI;

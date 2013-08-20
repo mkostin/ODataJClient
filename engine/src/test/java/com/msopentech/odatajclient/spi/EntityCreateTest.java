@@ -32,7 +32,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataEntityCrea
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;

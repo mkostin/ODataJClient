@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 
 /**
  * OData batch request factory class.

@@ -29,7 +29,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpda
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;

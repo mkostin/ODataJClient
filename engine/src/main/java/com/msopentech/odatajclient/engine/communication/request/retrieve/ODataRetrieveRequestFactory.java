@@ -15,7 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import java.net.URI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;

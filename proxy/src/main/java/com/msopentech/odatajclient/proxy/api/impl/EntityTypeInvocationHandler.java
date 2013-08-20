@@ -21,7 +21,7 @@ import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;

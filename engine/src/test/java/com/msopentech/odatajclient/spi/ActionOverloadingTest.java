@@ -26,7 +26,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataNoContent;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
