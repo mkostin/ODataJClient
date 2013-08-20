@@ -97,6 +97,8 @@ public abstract class AbstractTest {
 
     protected static String testLargeModelServiceRootURL;
 
+    protected static String testAuthServiceRootURL;
+
     @BeforeClass
     public static void setUpODataServiceRoot() throws IOException {
         String testBaseURL = null;
@@ -124,6 +126,7 @@ public abstract class AbstractTest {
         testOpenTypeServiceRootURL = testBaseURL + "/OpenTypeService.svc";
         testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeys.svc";
         testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
+        testAuthServiceRootURL = testDefaultServiceRootURL.replaceAll("8080", "9080");
     }
 
     /**
