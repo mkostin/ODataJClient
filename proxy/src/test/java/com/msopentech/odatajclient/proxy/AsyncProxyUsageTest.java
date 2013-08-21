@@ -15,12 +15,12 @@
  */
 package com.msopentech.odatajclient.proxy;
 
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.AsyncDefaultContainer;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.query.AsyncEntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.AsyncQuery;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.AsyncDefaultContainer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;

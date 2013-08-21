@@ -261,7 +261,7 @@
             <exclude>.idea/**</exclude>
             <exclude>**/.*</exclude>
             <exclude>yworks*/**</exclude>
-            <exclude>**/AstoriaDefaultService/**/*.java</exclude>
+            <exclude>**/astoriadefaultservice/**/*.java</exclude>
           </excludes>
         </configuration>
         <executions>

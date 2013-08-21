@@ -24,13 +24,16 @@ import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,27 +52,75 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
     private final Class<T> typeRef;
 
+    private final Class<KEY> keyRef;
+
     private final String entitySetName;
+
+    private final EntityContainerInvocationHandler container;
 
     private final URI uri;
 
     static <T extends Serializable, KEY extends Serializable> EntitySetInvocationHandler<T, KEY> getInstance(
-            final Class<T> typeRef,
-            final Class<KEY> keyRef,
-            final String entitySetName,
+            final Class<?> ref,
             final EntityContainerInvocationHandler container) {
-
-        return new EntitySetInvocationHandler<T, KEY>(typeRef, entitySetName, container);
+        return new EntitySetInvocationHandler<T, KEY>(ref, container);
     }
 
+    @SuppressWarnings("unchecked")
     private EntitySetInvocationHandler(
-            final Class<T> typeRef,
-            final String entitySetName,
+            final Class<?> ref,
             final EntityContainerInvocationHandler container) {
-        super(container);
-        this.typeRef = typeRef;
-        this.entitySetName = entitySetName;
-        this.uri = new ODataURIBuilder(container.getServiceRoot()).appendEntitySetSegment(entitySetName).build();
+        super(container.getFactory());
+
+        this.container = container;
+
+        final Annotation annotation = ref.getAnnotation(EntitySet.class);
+        if (!(annotation instanceof EntitySet)) {
+            throw new IllegalArgumentException("Return type " + ref.getName()
+                    + " is not annotated as @" + EntitySet.class.getSimpleName());
+        }
+
+        this.entitySetName = ((EntitySet) annotation).name();
+
+        final Type[] abstractEntitySetParams =
+                ((ParameterizedType) ref.getGenericInterfaces()[0]).getActualTypeArguments();
+
+        this.typeRef = (Class<T>) abstractEntitySetParams[0];
+
+        if (typeRef.getAnnotation(EntityType.class) == null) {
+            throw new IllegalArgumentException("Invalid entity '" + typeRef.getSimpleName() + "'");
+        }
+
+        this.keyRef = (Class<KEY>) abstractEntitySetParams[1];
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(container.getFactory().getServiceRoot());
+
+        if (!container.isDefaultEntityContainer()) {
+            uriBuilder.appendStructuralSegment(container.getEntityContainerName()).appendStructuralSegment(".");
+        }
+
+        uriBuilder.appendEntitySetSegment(entitySetName);
+        this.uri = uriBuilder.build();
+    }
+
+    public Class<T> getTypeRef() {
+        return typeRef;
+    }
+
+    public Class<KEY> getKeyRef() {
+        return keyRef;
+    }
+
+    public String getEntitySetName() {
+        return entitySetName;
+    }
+
+    public EntityContainerInvocationHandler getContainer() {
+        return container;
+    }
+
+    public URI getUri() {
+        return uri;
     }
 
     @Override
@@ -133,17 +184,12 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         return (T) Proxy.newProxyInstance(
                 this.getClass().getClassLoader(),
                 new Class<?>[] {typeRef},
-                EntityTypeInvocationHandler.getInstance(typeRef, entity, entitySetName, container));
+                EntityTypeInvocationHandler.getInstance(entity, this));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Iterable<T> getAll() {
-        final Annotation annotation = typeRef.getAnnotation(EntityType.class);
-        if (!(annotation instanceof EntityType)) {
-            throw new IllegalArgumentException("Invalid entity set '" + typeRef.getSimpleName() + "'");
-        }
-
         final ODataEntitySet entitySet = ODataRetrieveRequestFactory.getEntitySetRequest(this.uri).execute().getBody();
 
         final List<T> beans = new ArrayList<T>(entitySet.getEntities().size());
@@ -152,7 +198,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
                     (T) Proxy.newProxyInstance(
                     this.getClass().getClassLoader(),
                     new Class<?>[] {typeRef},
-                    EntityTypeInvocationHandler.getInstance(typeRef, entity, entitySetName, container)));
+                    EntityTypeInvocationHandler.getInstance(entity, this)));
         }
 
         return beans;
@@ -191,6 +237,6 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         return (T) Proxy.newProxyInstance(
                 this.getClass().getClassLoader(),
                 new Class<?>[] {typeRef},
-                EntityTypeInvocationHandler.getInstance(typeRef, entity, entitySetName, container));
+                EntityTypeInvocationHandler.getInstance(entity, this));
     }
 }

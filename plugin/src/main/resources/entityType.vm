@@ -11,17 +11,18 @@
 ## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
-package $basePackage.${schemaName}.types;
+package ${package};
 
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.Key;
+import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
-import $basePackage.${schemaName}.*;
+import ${basePackage}.${namespace.toLowerCase()}.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -44,7 +45,9 @@ import java.io.Serializable;
 import java.util.Collection;
 
 #set( $fcprops = $utility.getFcProperties($entityType))
-@EntityType(value="$entityType.Name",
+#if ( $keyRef )@KeyRef(${keyRef}.class)#end
+
+@EntityType(name = "$entityType.Name",
         openType = $entityType.isOpenType(),
         hasStream = $entityType.hasStream(),
         isAbstract = $entityType.isAbstract(),
@@ -57,7 +60,8 @@ import java.util.Collection;
         fcKeepInContent = #if($fcprops.containsKey("fcKeepInContent"))$fcprops.get("fcKeepInContent")#{else}false#end)#*
 public class $utility.capitalize($entityType.Name) extends AbstractType {
 *#
-public interface $utility.capitalize($entityType.Name) extends Serializable {
+#set($baseTypeName = ${schemaName})
+public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$baseType#{else}Serializable#end {
 
 #set ( $keys = [] )
 #foreach ($key in $entityType.Key.PropertyRef)

@@ -15,11 +15,13 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
-import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.proxy.api.impl.EntityContainerInvocationHandler;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Entry point for ODataJClient proxy mode, gives access to entity container instances.
@@ -28,8 +30,40 @@ public class EntityContainerFactory {
 
     private String serviceRoot;
 
-    public void setServiceRoot(final String serviceRoot) {
+    private EdmMetadata metadata;
+
+    private static Context context = null;
+
+    public static synchronized Context getContext() {
+        if (context == null) {
+            context = new Context();
+        }
+
+        return context;
+    }
+
+    public static EntityContainerFactory newInstance(final String serviceRoot) {
+        return new EntityContainerFactory(serviceRoot);
+    }
+
+    private EntityContainerFactory(final String serviceRoot) {
         this.serviceRoot = serviceRoot;
+        final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(serviceRoot);
+
+        final ODataRetrieveResponse<EdmMetadata> res = req.execute();
+        metadata = res.getBody();
+
+        if (metadata == null) {
+            throw new IllegalStateException("No metadata found at URI '" + serviceRoot + "'");
+        }
+    }
+
+    public String getServiceRoot() {
+        return serviceRoot;
+    }
+
+    public EdmMetadata getMetadata() {
+        return metadata;
     }
 
     /**
@@ -44,29 +78,13 @@ public class EntityContainerFactory {
      */
     @SuppressWarnings("unchecked")
     public <T> T getEntityContainer(final Class<T> reference) throws IllegalStateException, IllegalArgumentException {
-        if (this.serviceRoot == null) {
+        if (StringUtils.isBlank(serviceRoot)) {
             throw new IllegalStateException("serviceRoot was not set");
         }
 
-        if (!reference.isInterface()) {
-            throw new IllegalArgumentException(reference.getName() + " is not an interface");
-        }
-
-        Annotation annotation = reference.getAnnotation(EntityContainer.class);
-        if (!(annotation instanceof EntityContainer)) {
-            throw new IllegalArgumentException(reference.getName()
-                    + " is not annotated as @" + EntityContainer.class.getSimpleName());
-        }
-        final String entityContainerName = ((EntityContainer) annotation).name();
-
-        annotation = reference.getPackage().getAnnotation(Namespace.class);
-        if (!(annotation instanceof Namespace)) {
-            throw new IllegalArgumentException(reference.getPackage().getName()
-                    + " is not annotated as @" + Namespace.class.getSimpleName());
-        }
-        final String schemaName = ((Namespace) annotation).value();
-
-        return (T) Proxy.newProxyInstance(reference.getClassLoader(), new Class<?>[] {reference},
-                new EntityContainerInvocationHandler(serviceRoot, schemaName, entityContainerName));
+        return (T) Proxy.newProxyInstance(
+                reference.getClassLoader(),
+                new Class<?>[] {reference},
+                new EntityContainerInvocationHandler(reference, this));
     }
 }

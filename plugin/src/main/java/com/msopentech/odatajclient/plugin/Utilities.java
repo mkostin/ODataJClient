@@ -117,14 +117,14 @@ public class Utilities {
         if (edmType.isSimpleType()) {
             res.append(edmType.getSimpleType().javaType().getSimpleName());
         } else if (edmType.isComplexType()) {
-            res.append(basePackage).append('.').append(schemaName).append('.').append(TYPE_SUB_PKG).append('.').
-                    append(capitalize(edmType.getComplexType().getName()));
+            res.append(basePackage).append('.').append(edmType.getNamespaceOrAlias().toLowerCase()).append('.').
+                    append(TYPE_SUB_PKG).append('.').append(capitalize(edmType.getComplexType().getName()));
         } else if (edmType.isEntityType()) {
-            res.append(basePackage).append('.').append(schemaName).append('.').append(TYPE_SUB_PKG).append('.').
-                    append(capitalize(edmType.getEntityType().getName()));
+            res.append(basePackage).append('.').append(edmType.getNamespaceOrAlias().toLowerCase()).append('.').
+                    append(TYPE_SUB_PKG).append('.').append(capitalize(edmType.getEntityType().getName()));
         } else if (edmType.isEnumType()) {
-            res.append(basePackage).append('.').append(schemaName).append('.').append(TYPE_SUB_PKG).append('.').
-                    append(capitalize(edmType.getEnumType().getName()));
+            res.append(basePackage).append('.').append(edmType.getNamespaceOrAlias().toLowerCase()).
+                    append('.').append(TYPE_SUB_PKG).append('.').append(capitalize(edmType.getEnumType().getName()));
         } else {
             throw new IllegalArgumentException("Invalid type expression '" + typeExpression + "'");
         }

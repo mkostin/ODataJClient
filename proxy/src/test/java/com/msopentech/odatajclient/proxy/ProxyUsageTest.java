@@ -15,12 +15,12 @@
  */
 package com.msopentech.odatajclient.proxy;
 
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.DefaultContainer;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -73,14 +73,16 @@ public class ProxyUsageTest {
 
     public void create() {
         DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
-        
-        final com.msopentech.odatajclient.proxy.AstoriaDefaultService.Order orders = container.getOrder();
-        
+
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Order orders =
+                container.getOrder();
+
         // create Order (local)
         Order order = orders.newEntity();
         order.setCustomerId(-10);
-        
-        final com.msopentech.odatajclient.proxy.AstoriaDefaultService.Customer customers = container.getCustomer();
+
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
+                container.getCustomer();
         // create Customer (local)
         Customer customer = customers.newEntity();
         customer.setName("a name");

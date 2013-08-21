@@ -131,8 +131,8 @@ public class LinkTestITCase extends AbstractTest {
         final URI before = doRetrieveLinkURIs(format, "Info").getLinks().get(0);
 
         // 2. update the link
-        ODataLink newLink = ODataFactory.
-                newAssociationLink(null, URI.create(getServiceRoot() + "/CustomerInfo(12)"));
+        ODataLink newLink =
+                ODataFactory.newAssociationLink(null, URI.create(getServiceRoot() + "/CustomerInfo(12)"));
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(-10).appendLinksSegment("Info");

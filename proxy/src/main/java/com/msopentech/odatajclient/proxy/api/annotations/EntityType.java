@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface EntityType {
 
-    String value();
+    String name();
 
     String baseType() default "";
 

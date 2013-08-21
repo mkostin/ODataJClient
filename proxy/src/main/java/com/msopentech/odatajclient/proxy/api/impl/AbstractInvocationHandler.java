@@ -25,6 +25,8 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.proxy.api.Context;
+import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
@@ -54,10 +56,14 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
     private static final long serialVersionUID = 358520026931462958L;
 
-    protected final EntityContainerInvocationHandler container;
+    private final EntityContainerFactory factory;
 
-    public AbstractInvocationHandler(EntityContainerInvocationHandler container) {
-        this.container = container;
+    public AbstractInvocationHandler(final EntityContainerFactory factory) {
+        this.factory = factory;
+    }
+
+    public EntityContainerFactory getFactory() {
+        return factory;
     }
 
     protected Method findGetterByAnnotatedName(final Class<?> clazz, final String name) {
@@ -83,7 +89,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
             value = null;
         } else if (type.isCollection()) {
             value = new ODataCollectionValue(type.getTypeExpression());
-            final EdmType intType = new EdmType(container.getMetadata(), type.getBaseType());
+            final EdmType intType = new EdmType(factory.getMetadata(), type.getBaseType());
             for (Object collectionItem : (Collection) obj) {
                 if (intType.isSimpleType()) {
                     ((ODataCollectionValue) value).add((ODataPrimitiveValue) getODataValue(collectionItem, intType));
@@ -106,7 +112,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
                             ((ODataComplexValue) value).add(getODataProperty(method.invoke(obj), complexPropertyAnn));
                         }
                     } catch (Exception ignore) {
-                        // ignore value
+                        // ignore name
                         LOG.warn("Error attaching complex field '{}'", complexPropertyAnn.name(), ignore);
                     }
                 }
@@ -129,7 +135,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
         final ODataProperty oprop;
 
-        final EdmType type = new EdmType(container.getMetadata(), prop.type());
+        final EdmType type = new EdmType(factory.getMetadata(), prop.type());
         try {
             if (type.isCollection()) {
                 // create collection property
@@ -287,23 +293,29 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
     }
 
     @SuppressWarnings("unchecked")
-    protected <T> Collection<T> getEntities(final ODataEntitySet entitySet, final ParameterizedType type) {
+    protected <T> Collection<T> getEntities(
+            final ParameterizedType type, final String entityContainerName, final ODataEntitySet entitySet) {
         final Collection<T> res = new ArrayList<T>();
         final Class<?> enType = (Class<?>) type.getActualTypeArguments()[0];
 
         for (ODataEntity entity : entitySet.getEntities()) {
-            res.add((T) getEntity(entity, enType, entitySet.getName()));
+            res.add((T) getEntity(entity, entityContainerName, entitySet.getName(), enType));
         }
 
         return res;
     }
 
     @SuppressWarnings("unchecked")
-    protected <T> T getEntity(final ODataEntity entity, final Type type, final String entitySetName) {
+    protected <T> T getEntity(
+            final ODataEntity entity,
+            final String entityContainerName,
+            final String entitySetName,
+            final Type type) {
         return (T) Proxy.newProxyInstance(
                 this.getClass().getClassLoader(),
                 new Class<?>[] {(Class<?>) type},
-                EntityTypeInvocationHandler.getInstance((Class<?>) type, entity, entitySetName, container));
+                EntityTypeInvocationHandler.getInstance(
+                entity, entityContainerName, entitySetName, (Class<?>) type, getFactory()));
     }
 
     protected <T> String getEntityName(final Class<T> entityType) {
@@ -311,6 +323,11 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
         if (ann == null) {
             throw new IllegalArgumentException("Invalid entity type " + entityType);
         }
-        return ((EntityType) ann).value();
+        return ((EntityType) ann).name();
+    }
+
+    protected EntityTypeInvocationHandler searchForAttachedEntity(final Object key) {
+        final Context context = EntityContainerFactory.getContext();
+        return context.getEntities().getEntity(key);
     }
 }

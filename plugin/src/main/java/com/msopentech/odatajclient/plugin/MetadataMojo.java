@@ -32,6 +32,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -87,41 +90,76 @@ public class MetadataMojo extends AbstractMojo {
             utility = new Utilities(metadata, schema, basePackage);
 
             // write package-info for the base package
-            File base = mkdir(utility.getSchemaName());
-            String pkg = basePackage + "." + utility.getSchemaName();
-
+            final String schemaPath = utility.getNamespace().toLowerCase().replaceAll("\\.", "/");
+            final File base = mkdir(schemaPath);
+            final String pkg = basePackage + "." + utility.getNamespace().toLowerCase();
             parseObj(base, pkg, "package-info", "package-info.java");
-
-            // write container and top entity sets into the base package
-            for (EntityContainer container : schema.getEntityContainers()) {
-                parseObj(base, pkg, container, "container", StringUtils.capitalize(container.getName()) + ".java");
-
-                for (EntitySet entitySet : container.getEntitySets()) {
-                    parseObj(base, pkg, entitySet, "entitySet", StringUtils.capitalize(entitySet.getName()) + ".java");
-                }
-
-                parseObj(base, pkg, container, "asyncContainer",
-                        "Async" + StringUtils.capitalize(container.getName()) + ".java");
-
-                for (EntitySet entitySet : container.getEntitySets()) {
-                    parseObj(base, pkg, entitySet, "asyncEntitySet",
-                            "Async" + StringUtils.capitalize(entitySet.getName()) + ".java");
-                }
-            }
 
             // write package-info for types package
-            base = mkdir(utility.getSchemaName() + "/types");
-            pkg = basePackage + "." + utility.getSchemaName() + ".types";
-            parseObj(base, pkg, "package-info", "package-info.java");
+            final File typesBaseDir = mkdir(schemaPath + "/types");
+            final String typesPkg = pkg + ".types";
+            parseObj(typesBaseDir, typesPkg, "package-info", "package-info.java");
+
+            final Map<String, Object> objs = new HashMap<String, Object>();
 
             // write types into types package
             for (ComplexType complex : schema.getComplexTypes()) {
-                parseObj(base, pkg, complex, "complexType", StringUtils.capitalize(complex.getName()) + ".java");
+                objs.clear();
+                objs.put("complexType", complex);
+                parseObj(typesBaseDir, typesPkg, "complexType", utility.capitalize(complex.getName()) + ".java", objs);
             }
 
-            // write entities into types package
             for (EntityType entity : schema.getEntityTypes()) {
-                parseObj(base, pkg, entity, "entityType", StringUtils.capitalize(entity.getName()) + ".java");
+                objs.clear();
+                objs.put("entityType", entity);
+
+                final Map<String, String> keys;
+
+                EntityType baseType = null;
+                if (entity.getBaseType() != null) {
+                    baseType = schema.getEntityType(utility.getNameFromNS(entity.getBaseType()));
+                    objs.put("baseType", utility.getJavaType(entity.getBaseType()));
+                    while (baseType.getBaseType() != null) {
+                        baseType = schema.getEntityType(utility.getNameFromNS(baseType.getBaseType()));
+                    }
+                    keys = utility.getEntityKeyType(baseType);
+                } else {
+                    keys = utility.getEntityKeyType(entity);
+                }
+
+                if (keys.size() > 1) {
+                    // create compound key class
+                    final String keyClassName = utility.capitalize(baseType == null
+                            ? entity.getName()
+                            : baseType.getName()) + "Key";
+                    objs.put("keyRef", keyClassName);
+
+                    if (entity.getBaseType() == null) {
+                        objs.put("keys", keys);
+                        parseObj(typesBaseDir, typesPkg, "entityTypeKey", keyClassName + ".java", objs);
+                    }
+                }
+
+                parseObj(typesBaseDir, typesPkg, "entityType", utility.capitalize(entity.getName()) + ".java", objs);
+            }
+
+            // write container and top entity sets into the base package
+            for (EntityContainer container : schema.getEntityContainers()) {
+                objs.clear();
+                objs.put("container", container);
+                parseObj(base, pkg, "container",
+                        utility.capitalize(container.getName()) + ".java", objs);
+                parseObj(base, pkg, "asyncContainer",
+                        "Async" + utility.capitalize(container.getName()) + ".java", objs);
+
+                for (EntitySet entitySet : container.getEntitySets()) {
+                    objs.clear();
+                    objs.put("entitySet", entitySet);
+                    parseObj(base, pkg, "entitySet",
+                            utility.capitalize(entitySet.getName()) + ".java", objs);
+                    parseObj(base, pkg, "asyncEntitySet",
+                            "Async" + utility.capitalize(entitySet.getName()) + ".java", objs);
+                }
             }
         }
     }
@@ -184,16 +222,25 @@ public class MetadataMojo extends AbstractMojo {
 
     private void parseObj(final File base, final String pkg, final String name, final String out)
             throws MojoExecutionException {
-        parseObj(base, pkg, null, name, out);
+        parseObj(base, pkg, name, out, Collections.<String, Object>emptyMap());
     }
 
-    private void parseObj(final File base, final String pkg, final Object obj, final String name, final String out)
+    private void parseObj(
+            final File base,
+            final String pkg,
+            final String name,
+            final String out,
+            final Map<String, Object> objs)
             throws MojoExecutionException {
         VelocityContext ctx = newContext();
         ctx.put("package", pkg);
 
-        if (obj != null) {
-            ctx.put(name, obj);
+        if (objs != null) {
+            for (Map.Entry<String, Object> obj : objs.entrySet()) {
+                if (StringUtils.isNotBlank(obj.getKey()) && obj.getValue() != null) {
+                    ctx.put(obj.getKey(), obj.getValue());
+                }
+            }
         }
 
         Template template = Velocity.getTemplate(name + ".vm");

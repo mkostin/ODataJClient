@@ -17,8 +17,8 @@ package com.msopentech.odatajclient.proxy;
 
 import static org.junit.Assert.assertNotNull;
 
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.DefaultContainer;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -82,10 +82,8 @@ public abstract class AbstractTest {
     }
 
     protected DefaultContainer getDefaultContainer(final String serviceRootURL) {
-        final EntityContainerFactory entityContainerFactory = new EntityContainerFactory();
-        entityContainerFactory.setServiceRoot(testDefaultServiceRootURL);
-
-        final DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
+        final DefaultContainer container = EntityContainerFactory.newInstance(serviceRootURL)
+                .getEntityContainer(DefaultContainer.class);
         assertNotNull(container);
 
         return container;

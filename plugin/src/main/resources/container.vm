@@ -12,13 +12,13 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 #set( $clsSuffix = ".class" )
-package $basePackage.$schemaName;
+package ${package};
 
 import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import $basePackage.${schemaName}.types.*;
+import ${package}.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -40,8 +40,9 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-@EntityContainer(name = "$container.Name", isDefaultEntityContainer = $container.DefaultEntityContainer)
-public interface $container.Name {
+@EntityContainer(name = "$container.Name", 
+  isDefaultEntityContainer = $container.DefaultEntityContainer)
+public interface $utility.capitalize($container.Name) {
 
 #foreach($entitySet in $container.EntitySets)
     $utility.capitalize($entitySet.Name) get$utility.capitalize($entitySet.Name)();

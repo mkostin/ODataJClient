@@ -21,12 +21,17 @@ import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.AssociationSet;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
+import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
+import com.msopentech.odatajclient.proxy.api.Utility;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -35,10 +40,11 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class EntityTypeInvocationHandler<T extends Serializable> extends AbstractInvocationHandler {
+public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private static final long serialVersionUID = 2629912294765040037L;
 
@@ -47,33 +53,63 @@ class EntityTypeInvocationHandler<T extends Serializable> extends AbstractInvoca
      */
     private static final Logger LOG = LoggerFactory.getLogger(EntityTypeInvocationHandler.class);
 
-    private final Class<?> entityType;
-
     private final ODataEntity entity;
 
-    private final URI uri;
+    private final Class<?> typeRef;
+
+    private final String entityContainerName;
 
     private final String entitySetName;
 
-    static <T extends Serializable> EntityTypeInvocationHandler<T> getInstance(
-            final Class<?> entityType,
+    static EntityTypeInvocationHandler getInstance(
             final ODataEntity entity,
-            final String entitySetName,
-            final EntityContainerInvocationHandler container) {
+            final EntitySetInvocationHandler entitySet) {
 
-        return new EntityTypeInvocationHandler<T>(entityType, entity, entitySetName, container);
+        return getInstance(
+                entity,
+                entitySet.getContainer().getEntityContainerName(),
+                entitySet.getEntitySetName(),
+                entitySet.getTypeRef(),
+                entitySet.getContainer().getFactory());
+    }
+
+    static EntityTypeInvocationHandler getInstance(
+            final ODataEntity entity,
+            final String entityContainerName,
+            final String entitySetName,
+            final Class<?> typeRef,
+            final EntityContainerFactory factory) {
+
+        return new EntityTypeInvocationHandler(entity, entityContainerName, entitySetName, typeRef, factory);
     }
 
     private EntityTypeInvocationHandler(
-            final Class<?> entityType,
             final ODataEntity entity,
+            final String entityContainerName,
             final String entitySetName,
-            final EntityContainerInvocationHandler container) {
-        super(container);
-        this.entitySetName = entitySetName;
-        this.entityType = entityType;
+            final Class<?> typeRef,
+            final EntityContainerFactory factory) {
+        super(factory);
         this.entity = entity;
-        this.uri = new ODataURIBuilder(container.getServiceRoot()).appendEntitySetSegment(entitySetName).build();
+        this.entityContainerName = entityContainerName;
+        this.entitySetName = entitySetName;
+        this.typeRef = typeRef;
+    }
+
+    public String getName() {
+        return this.entity.getName();
+    }
+
+    public String getEntityContainerName() {
+        return entityContainerName;
+    }
+
+    public String getEntitySetName() {
+        return entitySetName;
+    }
+
+    public Class<?> getTypeRef() {
+        return typeRef;
     }
 
     @Override
@@ -84,7 +120,7 @@ class EntityTypeInvocationHandler<T extends Serializable> extends AbstractInvoca
         if (method.getName().startsWith("get")) {
             // get method annotation and check if it exists as expected
 
-            final Method getter = entityType.getMethod(method.getName());
+            final Method getter = typeRef.getMethod(method.getName());
 
             final Property property = getAnnotation(Property.class, getter);
             if (property == null) {
@@ -103,7 +139,7 @@ class EntityTypeInvocationHandler<T extends Serializable> extends AbstractInvoca
         } else if (method.getName().startsWith("set")) {
             // get the corresponding getter method (see assumption above)
             final String getterName = method.getName().replaceFirst("set", "get");
-            final Method getter = entityType.getMethod(getterName);
+            final Method getter = typeRef.getMethod(getterName);
 
             final Property property = getAnnotation(Property.class, getter);
             if (property == null) {
@@ -132,28 +168,50 @@ class EntityTypeInvocationHandler<T extends Serializable> extends AbstractInvoca
 
         Type type = getter.getGenericReturnType();
 
+        final EdmMetadata metadata = getFactory().getMetadata();
+        final Schema schema = metadata.getSchema(Utility.getSchemaName(typeRef));
+
         for (ODataLink link : entity.getNavigationLinks()) {
             if (link.getName().equals(property.name())) {
+                // 1) get association
+                final Association association = Utility.getAssociation(schema, property.relationship());
+
+                // 2) get entity container and association set
+                final Map.Entry<EntityContainer, AssociationSet> associationSet =
+                        Utility.getAssociationSet(association, schema.getNamespace(), metadata);
+
+                // 3) get entitySet
+                final String targetEntitySetName = Utility.getEntitySetName(associationSet.getValue(), property.toRole());
+
                 if (link instanceof ODataInlineEntity) {
                     // return entity
-                    res = getEntity(((ODataInlineEntity) link).getEntity(), type, entitySetName);
+                    res = getEntity(
+                            ((ODataInlineEntity) link).getEntity(),
+                            associationSet.getKey().getName(),
+                            targetEntitySetName,
+                            (Class<?>) type);
 
                 } else if (link instanceof ODataInlineEntitySet) {
                     // return entity set
-                    res = getEntities(((ODataInlineEntitySet) link).getEntitySet(), ((ParameterizedType) type));
+                    res = getEntities(
+                            ((ParameterizedType) type),
+                            associationSet.getKey().getName(),
+                            ((ODataInlineEntitySet) link).getEntitySet());
                 } else {
                     // navigate
-                    final URI targetURI = URIUtils.getURI(container.getServiceRoot(), link.getLink().toASCIIString());
+                    final URI uri = URIUtils.getURI(getFactory().getServiceRoot(), link.getLink().toASCIIString());
 
                     if (getter.getReturnType().isAssignableFrom(Collection.class)) {
                         res = getEntities(
-                                ODataRetrieveRequestFactory.getEntitySetRequest(targetURI).execute().getBody(),
-                                ((ParameterizedType) type));
+                                ((ParameterizedType) type),
+                                associationSet.getKey().getName(),
+                                ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute().getBody());
                     } else {
                         res = getEntity(
-                                ODataRetrieveRequestFactory.getEntityRequest(targetURI).execute().getBody(),
-                                type,
-                                entitySetName);
+                                ODataRetrieveRequestFactory.getEntityRequest(uri).execute().getBody(),
+                                associationSet.getKey().getName(),
+                                targetEntitySetName,
+                                (Class<?>) type);
                     }
                 }
             }

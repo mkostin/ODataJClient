@@ -12,13 +12,13 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 #set( $clsSuffix = ".class" )
-package $basePackage.$schemaName;
+package ${package};
 
 import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import $basePackage.${schemaName}.types.*;
+import ${package}.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -41,15 +41,16 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.concurrent.Future;
 
-@EntityContainer(name = "$asyncContainer.Name", isDefaultEntityContainer = $asyncContainer.DefaultEntityContainer)
-public interface Async$utility.capitalize($asyncContainer.Name) {
+@EntityContainer(name = "$container.Name", 
+  isDefaultEntityContainer = $container.DefaultEntityContainer)
+public interface Async$utility.capitalize($container.Name) {
 
-#foreach($entitySet in $asyncContainer.EntitySets)
+#foreach($entitySet in $container.EntitySets)
     Async$utility.capitalize($entitySet.Name) get$utility.capitalize($entitySet.Name)();
 
 #end
 
-#foreach($operation in $asyncContainer.FunctionImports)
+#foreach($operation in $container.FunctionImports)
     @FunctionImport(name = "$operation.Name"#if($operation.EntitySet), entitySet = $operation.EntitySet$clsSuffix#end #if ($operation.ReturnType), returnType = "$operation.ReturnType"#end)
     #if ($operation.ReturnType)Future<$utility.getJavaType($operation.ReturnType)>#{else}void#end $utility.uncapitalize($operation.Name)(
     #if($operation.Parameters)

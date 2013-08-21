@@ -27,16 +27,16 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatia
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial.Type;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiLineString;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.DefaultContainer;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.Message.MessageKey;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.AllSpatialTypes;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ComputerDetail;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ConcurrencyInfo;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.ContactDetails;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.CustomerInfo;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Message;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Order;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialTypes;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -134,7 +134,8 @@ public class EntityRetrieveTestITCase extends AbstractTest {
     @Test
     public void addProperty() {
         final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.AstoriaDefaultService.Customer customers = container.getCustomer();
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
+                container.getCustomer();
         final Customer customer = customers.newEntity();
 
         final ContactDetails cd = new ContactDetails();

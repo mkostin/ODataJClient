@@ -19,9 +19,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.Customer;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.DefaultContainer;
-import com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Car;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Message;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Car;
 import java.io.IOException;
 import java.util.Iterator;
 import org.junit.Test;
@@ -34,12 +35,14 @@ public class EntitySetTestITCase extends AbstractTest {
     @Test
     public void count() {
         final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.AstoriaDefaultService.Message message = container.getMessage();
+        final Message message = container.getMessage();
 
         assertNotNull(message);
         assertEquals(Long.valueOf(10L), message.count());
 
-        final Customer customers = container.getCustomer();
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
+                container.getCustomer();
+
         assertNotNull(customers);
         assertTrue(customers.count() > 0);
     }
@@ -47,10 +50,12 @@ public class EntitySetTestITCase extends AbstractTest {
     @Test
     public void readEntitySetWithNextLink() {
         final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final Customer customers = container.getCustomer();
+
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
+                container.getCustomer();
 
         int count = 0;
-        for (com.msopentech.odatajclient.proxy.AstoriaDefaultService.types.Customer customer : customers.getAll()) {
+        for (Customer customer : customers.getAll()) {
             assertNotNull(customer);
             count++;
         }
@@ -66,7 +71,9 @@ public class EntitySetTestITCase extends AbstractTest {
     public void readODataEntitySet() throws IOException {
         final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         // TODO: add top(2).skip(4) feature.
-        final com.msopentech.odatajclient.proxy.AstoriaDefaultService.Car cars = container.getCar();
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Car cars =
+                container.getCar();
+
         assertNotNull(cars);
         assertTrue(cars.count() >= 10);
 

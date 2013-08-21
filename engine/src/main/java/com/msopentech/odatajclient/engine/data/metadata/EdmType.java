@@ -30,6 +30,8 @@ public class EdmType {
     private final String typeExpression;
 
     private final String baseType;
+    
+    private final String namespaceOrAlias;
 
     private boolean collection;
 
@@ -76,7 +78,7 @@ public class EdmType {
         if (lastDotIdx == -1) {
             throw new IllegalArgumentException("Cannot find namespace or alias in " + typeExpression);
         }
-        final String namespaceOrAlias = baseType.substring(0, lastDotIdx);
+        namespaceOrAlias = baseType.substring(0, lastDotIdx);
         final String typeName = baseType.substring(lastDotIdx + 1);
         if (StringUtils.isBlank(typeName)) {
             throw new IllegalArgumentException("Null or empty type name in " + typeExpression);
@@ -229,5 +231,13 @@ public class EdmType {
      */
     public String getTypeExpression() {
         return typeExpression;
+    }
+
+    /**
+     * Gets namespace or alias retrieved from the provided type expression.
+     * @return namespace or alias.
+     */
+    public String getNamespaceOrAlias() {
+        return namespaceOrAlias;
     }
 }
