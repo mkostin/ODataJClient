@@ -41,6 +41,18 @@ import org.slf4j.LoggerFactory;
  */
 public class ODataURIBuilder implements Serializable {
 
+    private static class Segment {
+
+        private final SegmentType type;
+
+        private final String value;
+
+        public Segment(final SegmentType type, final String value) {
+            this.type = type;
+            this.value = value;
+        }
+    }
+
     private static final long serialVersionUID = -3267515371720408124L;
 
     /**
@@ -67,22 +79,22 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add the specified query option to the URI.
+     * Adds the specified query option to the URI.
      *
      * @param option query option.
      * @param value query option value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder addQueryOption(final QueryOption option, final String value) {
         return addQueryOption(option.toString(), value);
     }
 
     /**
-     * Add the specified (custom) query option to the URI.
+     * Adds the specified (custom) query option to the URI.
      *
      * @param option query option.
      * @param value query option value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder addQueryOption(final String option, final String value) {
         queryOptions.put(option, value);
@@ -93,7 +105,7 @@ public class ODataURIBuilder implements Serializable {
      * Append EntitySet segment to the URI.
      *
      * @param segmentValue segment value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendEntitySetSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.ENTITYSET, segmentValue));
@@ -104,7 +116,7 @@ public class ODataURIBuilder implements Serializable {
      * Append EntityType segment to the URI.
      *
      * @param segmentValue segment value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendEntityTypeSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.ENTITYTYPE, segmentValue));
@@ -115,7 +127,7 @@ public class ODataURIBuilder implements Serializable {
      * Append key segment to the URI.
      *
      * @param val segment value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendKeySegment(final Object val) {
         String segValue;
@@ -157,7 +169,7 @@ public class ODataURIBuilder implements Serializable {
      * Append key segment to the URI, for multiple keys.
      *
      * @param segmentValue segment value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendKeySegment(final Map<String, Object> segmentValues) {
         if (!Configuration.isKeyAsSegment()) {
@@ -183,7 +195,7 @@ public class ODataURIBuilder implements Serializable {
      * Append navigation link segment to the URI.
      *
      * @param segmentValue segment value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendNavigationLinkSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.NAVIGATION, segmentValue));
@@ -194,7 +206,7 @@ public class ODataURIBuilder implements Serializable {
      * Append structural segment to the URI.
      *
      * @param segmentValue segment value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendStructuralSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.STRUCTURAL, segmentValue));
@@ -210,7 +222,7 @@ public class ODataURIBuilder implements Serializable {
     /**
      * Append value segment to the URI.
      *
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendValueSegment() {
         segments.add(new Segment(SegmentType.VALUE, SegmentType.VALUE.getValue()));
@@ -220,7 +232,7 @@ public class ODataURIBuilder implements Serializable {
     /**
      * Append count segment to the URI.
      *
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendCountSegment() {
         segments.add(new Segment(SegmentType.COUNT, SegmentType.COUNT.getValue()));
@@ -231,7 +243,7 @@ public class ODataURIBuilder implements Serializable {
      * Append function import segment to the URI.
      *
      * @param segmentValue segment value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendFunctionImportSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.FUNCTIONIMPORT, segmentValue));
@@ -242,7 +254,7 @@ public class ODataURIBuilder implements Serializable {
      * Append metadata segment to the URI.
      *
      * @param segmentValue segment value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendMetadataSegment() {
         segments.add(new Segment(SegmentType.METADATA, SegmentType.METADATA.getValue()));
@@ -253,7 +265,7 @@ public class ODataURIBuilder implements Serializable {
      * Append batch segment to the URI.
      *
      * @param segmentValue segment value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendBatchSegment() {
         segments.add(new Segment(SegmentType.BATCH, SegmentType.BATCH.getValue()));
@@ -261,10 +273,10 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add expand query option.
+     * Adds expand query option.
      *
      * @param entityName entity object to be in-line expanded.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      * @see QueryOption#EXPAND
      */
     public ODataURIBuilder expand(final String entityName) {
@@ -272,10 +284,10 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add format query option.
+     * Adds format query option.
      *
      * @param format media type acceptable in a response.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      * @see QueryOption#FORMAT
      */
     public ODataURIBuilder format(final String format) {
@@ -283,10 +295,22 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add format query option.
+     * Adds filter builder for filter query option.
+     *
+     * @param builder filter builder: note that <tt>build()</tt> method will be immediately invoked.
+     * @return current ODataURIBuilder object.
+     * @see QueryOption#FILTER
+     * @see ODataFilterBuilder
+     */
+    public ODataURIBuilder filter(final ODataFilterBuilder builder) {
+        return addQueryOption(QueryOption.FILTER, builder.build());
+    }
+
+    /**
+     * Adds filter query option.
      *
      * @param filter filter string.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      * @see QueryOption#FILTER
      */
     public ODataURIBuilder filter(final String filter) {
@@ -294,10 +318,10 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add select query option.
+     * Adds select query option.
      *
      * @param select select query option value.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      * @see QueryOption#SELECT
      */
     public ODataURIBuilder select(final String select) {
@@ -305,10 +329,10 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add orderby query option.
+     * Adds orderby query option.
      *
      * @param order order string.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      * @see QueryOption#ORDERBY
      */
     public ODataURIBuilder orderBy(final String order) {
@@ -316,10 +340,10 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add top query option.
+     * Adds top query option.
      *
      * @param top maximum number of entities to be returned.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      * @see QueryOption#TOP
      */
     public ODataURIBuilder top(final int top) {
@@ -327,10 +351,10 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add skip query option.
+     * Adds skip query option.
      *
      * @param skip number of entities to be skipped into the response.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      * @see QueryOption#SKIP
      */
     public ODataURIBuilder skip(final int skip) {
@@ -338,10 +362,10 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add skiptoken query option.
+     * Adds skiptoken query option.
      *
      * @param skipToken opaque token.
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      * @see QueryOption#SKIPTOKEN
      */
     public ODataURIBuilder skipToken(final String skipToken) {
@@ -349,25 +373,13 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Add inlinecount query option.
+     * Adds inlinecount query option.
      *
-     * @return current ODataURI object.
+     * @return current ODataURIBuilder object.
      * @see QueryOption#INLINECOUNT
      */
     public ODataURIBuilder inlineCount() {
         return addQueryOption(QueryOption.INLINECOUNT, "allpages");
-    }
-
-    private static class Segment {
-
-        private final SegmentType type;
-
-        private final String value;
-
-        public Segment(final SegmentType type, final String value) {
-            this.type = type;
-            this.value = value;
-        }
     }
 
     /**

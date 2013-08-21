@@ -137,6 +137,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Iterable<T> getAll() {
         final Annotation annotation = typeRef.getAnnotation(EntityType.class);
         if (!(annotation instanceof EntityType)) {
