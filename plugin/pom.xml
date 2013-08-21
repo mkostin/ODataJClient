@@ -25,7 +25,7 @@
   </parent>
 
   <name>Client OData libray for Java: POJOs generator </name>
-  <description>Java client API for OData 3.0 services: maven plugin to be used to generate POJOs from metadata.</description>
+  <description>Java client API for OData 3.0 services: Maven plugin generating POJOs from metadata.</description>
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
@@ -75,7 +75,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.2</version>
+        <inherited>true</inherited>
         <configuration>
           <goalPrefix>odatajclient</goalPrefix>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
@@ -121,14 +121,14 @@
   
   <profiles>
     <profile>
-      <id>test</id>
+      <id>it</id>
+      
       <build>
-
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-invoker-plugin</artifactId>
-            <version>1.7</version>
+            <inherited>true</inherited>
             <configuration>
               <debug>true</debug>
               <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
@@ -155,7 +155,6 @@
             </executions>
           </plugin>
         </plugins>
-
       </build>
     </profile>
   </profiles>

@@ -122,7 +122,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(this.uri.toASCIIString());
 
         if (key.getClass().getAnnotation(CompoundKey.class) == null) {
-            uriBuilder.appendKeySegment(key.toString());
+            uriBuilder.appendKeySegment(key);
         } else {
             uriBuilder.appendKeySegment(getCompoundKey(key));
         }

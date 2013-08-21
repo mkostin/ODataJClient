@@ -73,7 +73,7 @@
     <maven.plugin.api.version>3.1.0</maven.plugin.api.version>
     <maven.plugin.tools.version>3.2</maven.plugin.tools.version>
     
-    <maven.test.skip>true</maven.test.skip>
+    <skip.it.tests>true</skip.it.tests>
   </properties>
   
   <dependencyManagement>
@@ -181,13 +181,46 @@
         
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>3.2</version>
+        </plugin>
+              
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-invoker-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+              
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.15</version>
-          <configuration>
+          <version>2.16</version>
+          <configuration>          
             <redirectTestOutputToFile>true</redirectTestOutputToFile>
             <encoding>utf-8</encoding>
             <runOrder>alphabetical</runOrder>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.16</version>
+          <configuration>
+            <skipTests>${skip.it.tests}</skipTests>
+            
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+            <encoding>utf-8</encoding>
+            <runOrder>alphabetical</runOrder>
+          </configuration>
+          <executions>
+            <execution>
+              <id>integration-test</id>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
         
         <!-- mvn release:prepare && mvn release:perform -Dgoals=install -->      
@@ -292,42 +325,10 @@
 
   <profiles>
     <profile>
-      <id>javadoc</id>
+      <id>it</id>
       
       <properties>
-        <yworks.uml.path>${basedir}/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
-      </properties>
-      
-      <build>
-        <defaultGoal>clean verify javadoc:aggregate</defaultGoal>
-        
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9.1</version>
-            <configuration>
-              <!-- Doclet -->
-              <doclet>ydoc.doclets.YStandard</doclet>
-              <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
-              <additionalparam>-umlautogen -umlfileformat SVG</additionalparam>
-
-              <!-- bootclasspath required by Sun's JVM -->
-              <bootclasspath>${sun.boot.class.path}</bootclasspath>
-              <!-- General Javadoc settings -->
-              <doctitle>${project.name} (${project.version})</doctitle>
-              <verbose>true</verbose>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    
-    <profile>
-      <id>test</id>
-      
-      <properties>
-        <maven.test.skip>false</maven.test.skip>
+        <skip.it.tests>false</skip.it.tests>
       </properties>
       
       <build>
@@ -361,6 +362,39 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>javadoc</id>
+      
+      <properties>
+        <maven.test.skip>true</maven.test.skip>
+        <yworks.uml.path>${basedir}/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
+      </properties>
+      
+      <build>
+        <defaultGoal>clean verify javadoc:aggregate</defaultGoal>
+        
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9.1</version>
+            <configuration>
+              <!-- Doclet -->
+              <doclet>ydoc.doclets.YStandard</doclet>
+              <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
+              <additionalparam>-umlautogen -umlfileformat SVG</additionalparam>
+
+              <!-- bootclasspath required by Sun's JVM -->
+              <bootclasspath>${sun.boot.class.path}</bootclasspath>
+              <!-- General Javadoc settings -->
+              <doctitle>${project.name} (${project.version})</doctitle>
+              <verbose>true</verbose>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>    
   </profiles>
 
   <modules>
