@@ -15,7 +15,10 @@ package ${package};
 
 import com.msopentech.odatajclient.proxy.api.AbstractAsyncEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
-import ${package}.types.*;
+#foreach($ns in $namespaces)
+import ${basePackage}.${ns}.*;
+import ${basePackage}.${ns}.types.*;
+#end
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;

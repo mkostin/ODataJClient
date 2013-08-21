@@ -163,22 +163,27 @@ public class Utilities {
     }
 
     public EntityType getEntityType(final EntitySet entitySet) {
-        return schema.getEntityType(getNameFromNS(entitySet.getEntityType()));
+        return new EdmType(metadata, entitySet.getEntityType()).getEntityType();
     }
 
     public Map<String, String> getEntityKeyType(final EntitySet entitySet) {
-        return getEntityKeyType(schema.getEntityType(getNameFromNS(entitySet.getEntityType())));
+        return getEntityKeyType(getEntityType(entitySet));
     }
 
     public Map<String, String> getEntityKeyType(final EntityType entityType) {
+        EntityType baseType = entityType;
+        while (baseType.getKey() == null && baseType.getBaseType() != null) {
+            baseType = new EdmType(metadata, baseType.getBaseType()).getEntityType();
+        }
+
         final List<String> properties = new ArrayList<String>();
-        for (PropertyRef pref : entityType.getKey().getPropertyRef()) {
+        for (PropertyRef pref : baseType.getKey().getPropertyRef()) {
             properties.add(pref.getName());
         }
 
         final Map<String, String> res = new HashMap<String, String>();
 
-        for (EntityProperty prop : entityType.getProperties()) {
+        for (EntityProperty prop : baseType.getProperties()) {
             if (properties.contains(prop.getName())) {
                 res.put(prop.getName(), getJavaType(prop.getType()));
             }

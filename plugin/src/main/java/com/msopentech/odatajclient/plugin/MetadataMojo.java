@@ -34,7 +34,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -63,6 +65,8 @@ public class MetadataMojo extends AbstractMojo {
 
     private Utilities utility = null;
 
+    private final Set<String> namespaces = new HashSet<String>();
+
     private static String TOOL_DIR = "ojc-plugin";
 
     @Override
@@ -84,6 +88,10 @@ public class MetadataMojo extends AbstractMojo {
 
         if (metadata == null) {
             throw new IllegalStateException("Metadata not found");
+        }
+
+        for (Schema schema : metadata.getSchemas()) {
+            namespaces.add(schema.getNamespace().toLowerCase());
         }
 
         for (Schema schema : metadata.getSchemas()) {
@@ -216,6 +224,7 @@ public class MetadataMojo extends AbstractMojo {
         ctx.put("basePackage", basePackage);
         ctx.put("schemaName", utility.getSchemaName());
         ctx.put("namespace", utility.getNamespace());
+        ctx.put("namespaces", namespaces);
 
         return ctx;
     }

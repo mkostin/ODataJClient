@@ -22,7 +22,10 @@ import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
-import ${basePackage}.${namespace.toLowerCase()}.*;
+#foreach($ns in $namespaces)
+import ${basePackage}.${ns}.*;
+import ${basePackage}.${ns}.types.*;
+#end
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -76,7 +79,7 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
                 type = "$property.Type", 
                 nullable = $property.Nullable,
                 defaultValue = "#if($property.getDefaultValue())$property.getDefaultValue()#end",
-                maxLenght = #if($property.getMaxLength())$property.getMaxLength()#{else}Integer.MAX_VALUE#end,
+                maxLenght = #if($property.getMaxLength() && !$property.getMaxLength().equalsIgnoreCase("max"))$property.getMaxLength()#{else}Integer.MAX_VALUE#end,
                 fixedLenght = #if($property.isFixedLength())$property.isFixedLength()#{else}false#end,
                 precision = #if($property.getPrecision())$property.getPrecision()#{else}0#end,
                 scale = #if($property.getScale())$property.getScale()#{else}0#end,
@@ -90,16 +93,10 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
                 fcContentKind = #if($fcprops.containsKey("fcContentKind"))EdmContentKind.$fcprops.get("fcContentKind")#{else}EdmContentKind.text#end,
                 fcNSPrefix = "#if($fcprops.containsKey("fcNSPrefix"))$fcprops.get("fcNSPrefix")#end",
                 fcNSURI = "#if($fcprops.containsKey("fcNSURI"))$fcprops.get("fcNSURI")#end",
-                fcKeepInContent = #if($fcprops.containsKey("fcKeepInContent"))$fcprops.get("fcKeepInContent")#{else}false#end)#*
-    private $utility.getJavaType($property.Type) _$utility.uncapitalize($property.Name);
-*#    
-    public $utility.getJavaType($property.Type) get$utility.capitalize($property.Name)();#* {
-        return _$utility.uncapitalize($property.Name);
-    }*#
+                fcKeepInContent = #if($fcprops.containsKey("fcKeepInContent"))$fcprops.get("fcKeepInContent")#{else}false#end)
+    public $utility.getJavaType($property.Type) get$utility.capitalize($property.Name)();
 
-    public void set$utility.capitalize($property.Name)(final $utility.getJavaType($property.Type) _$utility.uncapitalize($property.Name));#* {
-        this._$utility.uncapitalize($property.Name) = _$utility.uncapitalize($property.Name);
-    }*#
+    public void set$utility.capitalize($property.Name)(final $utility.getJavaType($property.Type) _$utility.uncapitalize($property.Name));
 
 #end
     
@@ -111,16 +108,10 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
                 fromRole = "$property.FromRole", 
                 toRole = "$property.ToRole",
                 containsTarget = #if($property.isContainsTarget())$property.isContainsTarget()#{else}false#end,
-                onDelete = Action.$toRoleType.getValue())#*
-    private $utility.getJavaType($toRoleType.getKey()) _$utility.uncapitalize($property.Name);
-*#
-    public $utility.getJavaType($toRoleType.getKey()) get$utility.capitalize($property.Name)();#* {
-        return _$utility.uncapitalize($property.Name);
-    }*#
+                onDelete = Action.$toRoleType.getValue())
+    public $utility.getJavaType($toRoleType.getKey()) get$utility.capitalize($property.Name)();
 
-    public void set$utility.capitalize($property.Name)(final $utility.getJavaType($toRoleType.getKey()) _$utility.uncapitalize($property.Name));#* {
-        this._$utility.uncapitalize($property.Name) = _$utility.uncapitalize($property.Name);
-    }*#
+    public void set$utility.capitalize($property.Name)(final $utility.getJavaType($toRoleType.getKey()) _$utility.uncapitalize($property.Name));
 
 #end
 }
