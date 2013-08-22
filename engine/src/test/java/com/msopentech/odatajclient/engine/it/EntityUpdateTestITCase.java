@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.it;
 
+import static com.msopentech.odatajclient.engine.it.AbstractTest.TEST_PRODUCT_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -25,6 +26,8 @@ import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
@@ -104,6 +107,72 @@ public class EntityUpdateTestITCase extends AbstractTest {
         final ODataEntity changes = read(format, new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Car").appendKeySegment(14).build());
         updateEntityDescription(format, changes, UpdateType.REPLACE);
+    }
+
+    @Test
+    public void patchLinkAsAtom() {
+        patchLink(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void patchLinkAsJSON() {
+        patchLink(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    public void patchLink(final ODataPubFormat format) {
+        final URI uri = new ODataURIBuilder(getServiceRoot()).
+                appendEntityTypeSegment("Customer").appendKeySegment(-10).build();
+
+        final ODataEntity patch =
+                ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
+        patch.setEditLink(uri);
+
+        // ---------------------------------------
+        // Update to CustomerInfo(12)
+        // ---------------------------------------
+        URI customerInfoURI = new ODataURIBuilder(getServiceRoot()).
+                appendEntityTypeSegment("CustomerInfo").appendKeySegment(12).build();
+
+        patch.addLink(ODataFactory.newEntityNavigationLink("Info", customerInfoURI));
+
+        update(UpdateType.PATCH, patch, format, null);
+
+        customerInfoURI = new ODataURIBuilder(getServiceRoot()).
+                appendEntityTypeSegment("Customer").appendKeySegment(-10).appendStructuralSegment("Info").build();
+
+        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(customerInfoURI);
+        req.setFormat(format);
+
+        ODataEntity newInfo = req.execute().getBody();
+
+        assertEquals(Integer.valueOf(12),
+                newInfo.getProperty("CustomerInfoId").getPrimitiveValue().<Integer>toCastValue());
+        // ---------------------------------------
+
+        // ---------------------------------------
+        // Restore to CustomerInfo(11)
+        // ---------------------------------------
+        patch.getNavigationLinks().clear();
+
+        customerInfoURI = new ODataURIBuilder(getServiceRoot()).
+                appendEntityTypeSegment("CustomerInfo").appendKeySegment(11).build();
+        newInfo = read(format, customerInfoURI);
+
+        patch.addLink(ODataFactory.newEntityNavigationLink("Info", customerInfoURI));
+
+        update(UpdateType.PATCH, patch, format, null);
+
+        customerInfoURI = new ODataURIBuilder(getServiceRoot()).
+                appendEntityTypeSegment("Customer").appendKeySegment(-10).appendStructuralSegment("Info").build();
+
+        req = ODataRetrieveRequestFactory.getEntityRequest(customerInfoURI);
+        req.setFormat(format);
+
+        newInfo = req.execute().getBody();
+
+        assertEquals(Integer.valueOf(11),
+                newInfo.getProperty("CustomerInfoId").getPrimitiveValue().<Integer>toCastValue());
+        // ---------------------------------------
     }
 
     private ODataEntityUpdateRequest buildMultiKeyUpdateReq(final ODataPubFormat format) {

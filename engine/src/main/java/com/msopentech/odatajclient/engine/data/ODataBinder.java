@@ -378,7 +378,7 @@ public final class ODataBinder {
         final T linkResource = ResourceFactory.newLink(reference);
         linkResource.setRel(link.getRel());
         linkResource.setTitle(link.getName());
-        linkResource.setHref(link.getLink().toASCIIString());
+        linkResource.setHref(link.getLink() == null ? null : link.getLink().toASCIIString());
         linkResource.setType(link.getType().toString());
 
         if (link instanceof ODataInlineEntity) {

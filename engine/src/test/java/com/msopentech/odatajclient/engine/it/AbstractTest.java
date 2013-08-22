@@ -126,7 +126,8 @@ public abstract class AbstractTest {
         testOpenTypeServiceRootURL = testBaseURL + "/OpenTypeService.svc";
         testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeys.svc";
         testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
-        testAuthServiceRootURL = testDefaultServiceRootURL.replaceAll("8080", "9080");
+//        testAuthServiceRootURL = testDefaultServiceRootURL.replaceAll("8080", "9080");
+        testAuthServiceRootURL = "http://localhost:9080/DefaultService.svc";
     }
 
     /**
@@ -147,7 +148,8 @@ public abstract class AbstractTest {
             for (ODataLink actualLink : actual) {
 
                 if (actualLink.getType() == originalLink.getType()
-                        && actualLink.getLink().toASCIIString().endsWith(originalLink.getLink().toASCIIString())
+                        && (originalLink.getLink() == null
+                        || actualLink.getLink().toASCIIString().endsWith(originalLink.getLink().toASCIIString()))
                         && actualLink.getName().equals(originalLink.getName())) {
 
                     foundOriginal = originalLink;
@@ -535,6 +537,24 @@ public abstract class AbstractTest {
         changes.addProperty(ODataFactory.newPrimitiveProperty(propertyName,
                 new ODataPrimitiveValue.Builder().setText(newm).build()));
 
+        update(type, changes, format, etag);
+
+        final ODataEntity actual = read(format, editLink);
+
+        propertyValue = null;
+
+        for (ODataProperty prop : actual.getProperties()) {
+            if (prop.getName().equals(propertyName)) {
+                propertyValue = prop;
+            }
+        }
+
+        assertNotNull(propertyValue);
+        assertEquals(newm, propertyValue.getValue().toString());
+    }
+
+    protected void update(
+            final UpdateType type, final ODataEntity changes, final ODataPubFormat format, final String etag) {
         final ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(type, changes);
         if (Configuration.isUseXHTTPMethod()) {
             assertEquals(HttpMethod.POST, req.getMethod());
@@ -549,18 +569,5 @@ public abstract class AbstractTest {
 
         final ODataEntityUpdateResponse res = req.execute();
         assertEquals(204, res.getStatusCode());
-
-        final ODataEntity actual = read(format, editLink);
-
-        propertyValue = null;
-
-        for (ODataProperty prop : actual.getProperties()) {
-            if (prop.getName().equals(propertyName)) {
-                propertyValue = prop;
-            }
-        }
-
-        assertNotNull(propertyValue);
-        assertEquals(newm, propertyValue.getValue().toString());
     }
 }

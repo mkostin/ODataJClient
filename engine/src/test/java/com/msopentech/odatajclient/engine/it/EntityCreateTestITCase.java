@@ -35,6 +35,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import java.net.URI;
@@ -98,6 +99,60 @@ public class EntityCreateTestITCase extends AbstractTest {
         createEntity(getServiceRoot(), format, original);
         final ODataEntity actual =
                 compareEntities(getServiceRoot(), format, original, id, Collections.<String>singleton("Info"));
+
+        cleanAfterCreate(format, actual, true);
+    }
+
+    @Test
+    public void createInlineWithoutLinkAsAtom() {
+        final ODataPubFormat format = ODataPubFormat.ATOM;
+        final int id = 5;
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
+
+        original.addLink(ODataFactory.newInlineEntity(
+                "Info", null, getSampleCustomerInfo(id, "Sample Customer_Info")));
+
+        createEntity(getServiceRoot(), format, original);
+        final ODataEntity actual =
+                compareEntities(getServiceRoot(), format, original, id, Collections.<String>singleton("Info"));
+
+        boolean found = false;
+
+        for (ODataLink link : actual.getNavigationLinks()) {
+            assertNotNull(link.getLink());
+            if (link.getLink().toASCIIString().endsWith("Customer(" + id + ")/Info")) {
+                found = true;
+            }
+        }
+
+        assertTrue(found);
+
+        cleanAfterCreate(format, actual, true);
+    }
+
+    @Test
+    public void createInlineWithoutLinkAsJSON() {
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
+        final int id = 6;
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
+
+        original.addLink(ODataFactory.newInlineEntity(
+                "Info", null, getSampleCustomerInfo(id, "Sample Customer_Info")));
+
+        createEntity(getServiceRoot(), format, original);
+        final ODataEntity actual =
+                compareEntities(getServiceRoot(), format, original, id, Collections.<String>singleton("Info"));
+
+        boolean found = false;
+
+        for (ODataLink link : actual.getNavigationLinks()) {
+            assertNotNull(link.getLink());
+            if (link.getLink().toASCIIString().endsWith("Customer(" + id + ")/Info")) {
+                found = true;
+            }
+        }
+
+        assertTrue(found);
 
         cleanAfterCreate(format, actual, true);
     }
