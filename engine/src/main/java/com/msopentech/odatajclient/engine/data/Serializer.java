@@ -32,6 +32,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,6 +46,11 @@ import org.w3c.dom.ls.LSSerializer;
  * Utility class for serialization.
  */
 public final class Serializer {
+
+    /**
+     * Factory for StAX serialization.
+     */
+    private static final XMLOutputFactory XMLOF = XMLOutputFactory.newFactory();
 
     private Serializer() {
         // Empty private constructor for static utility classes
@@ -212,9 +219,10 @@ public final class Serializer {
 
     private static void atom(final Object obj, final Class<?> reference, final Writer writer) {
         try {
+            final XMLStreamWriter xmler = XMLOF.createXMLStreamWriter(writer);
             final Marshaller marshaller = getMarshaller(reference);
-            marshaller.marshal(obj, writer);
-        } catch (JAXBException e) {
+            marshaller.marshal(obj, xmler);
+        } catch (Exception e) {
             throw new IllegalArgumentException("While serializing Atom object", e);
         }
     }

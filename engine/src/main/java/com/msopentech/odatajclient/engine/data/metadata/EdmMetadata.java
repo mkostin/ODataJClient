@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata;
 
+import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import com.msopentech.odatajclient.engine.data.metadata.edmx.DataServices;
 import com.msopentech.odatajclient.engine.data.metadata.edmx.Edmx;
@@ -23,9 +24,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -46,13 +45,7 @@ public class EdmMetadata implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public EdmMetadata(final InputStream inputStream) {
-        final Edmx edmx;
-        try {
-            final JAXBContext context = JAXBContext.newInstance(Edmx.class);
-            edmx = ((JAXBElement<Edmx>) context.createUnmarshaller().unmarshal(inputStream)).getValue();
-        } catch (JAXBException e) {
-            throw new IllegalArgumentException("Could not parse as Edmx document", e);
-        }
+        final Edmx edmx = Deserializer.toMetadata(inputStream);
 
         DataServices ds = null;
         for (JAXBElement<?> edmxContent : edmx.getContent()) {

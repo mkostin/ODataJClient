@@ -37,15 +37,6 @@ public class ODataObjectWrapper {
      * Constructor.
      *
      * @param is source input stream.
-     */
-    public ODataObjectWrapper(final InputStream is) {
-        this(is, null);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param is source input stream.
      * @param format source format (<tt>ODataPubFormat</tt>, <tt>ODataFormat</tt>, <tt>ODataValueFormat</tt>,
      * <tt>ODataServiceDocumentFormat</tt>).
      */

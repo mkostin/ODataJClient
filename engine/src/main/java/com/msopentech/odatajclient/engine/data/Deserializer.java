@@ -26,12 +26,14 @@ import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.data.json.JSONServiceDocument;
 import com.msopentech.odatajclient.engine.data.json.error.JSONODataError;
 import com.msopentech.odatajclient.engine.data.json.error.JSONODataErrorBundle;
+import com.msopentech.odatajclient.engine.data.metadata.edmx.Edmx;
 import com.msopentech.odatajclient.engine.data.xml.XMLLinkCollection;
 import com.msopentech.odatajclient.engine.data.xml.XMLServiceDocument;
 import com.msopentech.odatajclient.engine.data.xml.error.XMLODataError;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -39,9 +41,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -52,8 +56,25 @@ import org.w3c.dom.NodeList;
  */
 public final class Deserializer {
 
+    /**
+     * Factory for StAX de-serialization.
+     */
+    private static final XMLInputFactory XMLIF = XMLInputFactory.newInstance();
+
     private Deserializer() {
         // Empty private constructor for static utility classes
+    }
+
+    public static Edmx toMetadata(final InputStream input) {
+        try {
+            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(input);
+            final JAXBContext context = JAXBContext.newInstance(Edmx.class);
+
+            return context.createUnmarshaller().unmarshal(xmler, Edmx.class).getValue();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not parse as Edmx document", e);
+        }
+
     }
 
     /**
@@ -86,9 +107,15 @@ public final class Deserializer {
     @SuppressWarnings("unchecked")
     public static AtomFeed toAtomFeed(final Node node) {
         try {
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Serializer.dom(node, baos);
+            baos.close();
+
             final JAXBContext context = JAXBContext.newInstance(AtomFeed.class);
-            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(node)).getValue();
-        } catch (JAXBException e) {
+            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(new ByteArrayInputStream(baos.toByteArray()));
+
+            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(xmler)).getValue();
+        } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing Atom feed", e);
         }
     }
@@ -123,9 +150,15 @@ public final class Deserializer {
     @SuppressWarnings("unchecked")
     public static AtomEntry toAtomEntry(final Node node) {
         try {
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Serializer.dom(node, baos);
+            baos.close();
+
             final JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
-            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(node)).getValue();
-        } catch (JAXBException e) {
+            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(new ByteArrayInputStream(baos.toByteArray()));
+
+            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(xmler)).getValue();
+        } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing Atom entry", e);
         }
     }
@@ -190,9 +223,11 @@ public final class Deserializer {
     @SuppressWarnings("unchecked")
     private static AtomFeed toAtomFeed(final InputStream input) {
         try {
+            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(input);
             final JAXBContext context = JAXBContext.newInstance(AtomFeed.class);
-            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(input)).getValue();
-        } catch (JAXBException e) {
+
+            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(xmler)).getValue();
+        } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing Atom feed", e);
         }
     }
@@ -200,9 +235,11 @@ public final class Deserializer {
     @SuppressWarnings("unchecked")
     private static AtomEntry toAtomEntry(final InputStream input) {
         try {
+            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(input);
             final JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
-            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(input)).getValue();
-        } catch (JAXBException e) {
+
+            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(xmler)).getValue();
+        } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing Atom entry", e);
         }
     }
@@ -323,12 +360,13 @@ public final class Deserializer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private static XMLODataError toODataErrorFromXML(final InputStream input) {
         try {
+            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(input);
             final JAXBContext context = JAXBContext.newInstance(XMLODataError.class);
-            return (XMLODataError) context.createUnmarshaller().unmarshal(input);
-        } catch (JAXBException e) {
+
+            return context.createUnmarshaller().unmarshal(xmler, XMLODataError.class).getValue();
+        } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing XML error", e);
         }
     }
