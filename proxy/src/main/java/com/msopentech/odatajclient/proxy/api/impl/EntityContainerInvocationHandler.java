@@ -44,7 +44,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
         }
         this.entityContainerName = ((EntityContainer) annotation).name();
         this.defaultEntityContainer = ((EntityContainer) annotation).isDefaultEntityContainer();
-        this.schemaName = Utility.getSchemaName(ref);
+        this.schemaName = Utility.getNamespace(ref);
     }
 
     public boolean isDefaultEntityContainer() {

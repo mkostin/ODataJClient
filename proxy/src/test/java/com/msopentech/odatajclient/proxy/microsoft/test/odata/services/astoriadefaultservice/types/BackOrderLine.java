@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;

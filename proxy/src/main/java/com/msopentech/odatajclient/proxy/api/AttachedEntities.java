@@ -39,4 +39,8 @@ public class AttachedEntities {
     public EntityTypeInvocationHandler remove(final Object key) {
         return entities.remove(key);
     }
+
+    public boolean isEmpty() {
+        return entities.isEmpty();
+    }
 }

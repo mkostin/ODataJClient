@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -65,7 +66,7 @@ public interface ComputerDetail extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getComputerDetailId();
 
     public void setComputerDetailId(final Integer _computerDetailId);
@@ -89,7 +90,7 @@ public interface ComputerDetail extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)    
+                fcKeepInContent = true)
     public String getManufacturer();
 
     public void setManufacturer(final String _manufacturer);
@@ -113,7 +114,7 @@ public interface ComputerDetail extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)    
+                fcKeepInContent = true)
     public String getModel();
 
     public void setModel(final String _model);
@@ -137,7 +138,7 @@ public interface ComputerDetail extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getSerial();
 
     public void setSerial(final String _serial);
@@ -161,7 +162,7 @@ public interface ComputerDetail extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<String> getSpecificationsBag();
 
     public void setSpecificationsBag(final Collection<String> _specificationsBag);
@@ -185,7 +186,7 @@ public interface ComputerDetail extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public ODataTimestamp getPurchaseDate();
 
     public void setPurchaseDate(final ODataTimestamp _purchaseDate);
@@ -209,7 +210,7 @@ public interface ComputerDetail extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions getDimensions();
 
     public void setDimensions(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions _dimensions);

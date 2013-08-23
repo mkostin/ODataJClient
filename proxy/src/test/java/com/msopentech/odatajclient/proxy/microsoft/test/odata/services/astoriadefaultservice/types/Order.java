@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -65,7 +66,7 @@ public interface Order extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getOrderId();
 
     public void setOrderId(final Integer _orderId);
@@ -89,7 +90,7 @@ public interface Order extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getCustomerId();
 
     public void setCustomerId(final Integer _customerId);
@@ -113,7 +114,7 @@ public interface Order extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo getConcurrency();
 
     public void setConcurrency(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo _concurrency);

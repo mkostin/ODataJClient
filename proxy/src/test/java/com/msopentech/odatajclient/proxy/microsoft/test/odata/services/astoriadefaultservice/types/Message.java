@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -65,7 +66,7 @@ public interface Message extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getMessageId();
 
     public void setMessageId(final Integer _messageId);
@@ -89,7 +90,7 @@ public interface Message extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getFromUsername();
 
     public void setFromUsername(final String _fromUsername);
@@ -113,7 +114,7 @@ public interface Message extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getToUsername();
 
     public void setToUsername(final String _toUsername);
@@ -137,7 +138,7 @@ public interface Message extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)    
+                fcKeepInContent = true)
     public ODataTimestamp getSent();
 
     public void setSent(final ODataTimestamp _sent);
@@ -161,7 +162,7 @@ public interface Message extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)    
+                fcKeepInContent = true)
     public String getSubject();
 
     public void setSubject(final String _subject);
@@ -185,7 +186,7 @@ public interface Message extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getBody();
 
     public void setBody(final String _body);
@@ -209,7 +210,7 @@ public interface Message extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Boolean getIsRead();
 
     public void setIsRead(final Boolean _isRead);

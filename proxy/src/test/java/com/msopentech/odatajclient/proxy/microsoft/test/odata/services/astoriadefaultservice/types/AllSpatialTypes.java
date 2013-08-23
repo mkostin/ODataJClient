@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -65,7 +66,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getId();
 
     public void setId(final Integer _id);
@@ -89,7 +90,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Geospatial getGeog();
 
     public void setGeog(final Geospatial _geog);
@@ -113,7 +114,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Point getGeogPoint();
 
     public void setGeogPoint(final Point _geogPoint);
@@ -137,7 +138,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public LineString getGeogLine();
 
     public void setGeogLine(final LineString _geogLine);
@@ -161,7 +162,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Polygon getGeogPolygon();
 
     public void setGeogPolygon(final Polygon _geogPolygon);
@@ -185,7 +186,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public GeospatialCollection getGeogCollection();
 
     public void setGeogCollection(final GeospatialCollection _geogCollection);
@@ -209,7 +210,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public MultiPoint getGeogMultiPoint();
 
     public void setGeogMultiPoint(final MultiPoint _geogMultiPoint);
@@ -233,7 +234,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public MultiLineString getGeogMultiLine();
 
     public void setGeogMultiLine(final MultiLineString _geogMultiLine);
@@ -257,7 +258,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public MultiPolygon getGeogMultiPolygon();
 
     public void setGeogMultiPolygon(final MultiPolygon _geogMultiPolygon);
@@ -281,7 +282,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Geospatial getGeom();
 
     public void setGeom(final Geospatial _geom);
@@ -305,7 +306,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Point getGeomPoint();
 
     public void setGeomPoint(final Point _geomPoint);
@@ -329,7 +330,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public LineString getGeomLine();
 
     public void setGeomLine(final LineString _geomLine);
@@ -353,7 +354,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Polygon getGeomPolygon();
 
     public void setGeomPolygon(final Polygon _geomPolygon);
@@ -377,7 +378,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public GeospatialCollection getGeomCollection();
 
     public void setGeomCollection(final GeospatialCollection _geomCollection);
@@ -401,7 +402,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public MultiPoint getGeomMultiPoint();
 
     public void setGeomMultiPoint(final MultiPoint _geomMultiPoint);
@@ -425,7 +426,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public MultiLineString getGeomMultiLine();
 
     public void setGeomMultiLine(final MultiLineString _geomMultiLine);
@@ -449,7 +450,7 @@ public interface AllSpatialTypes extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public MultiPolygon getGeomMultiPolygon();
 
     public void setGeomMultiPolygon(final MultiPolygon _geomMultiPolygon);

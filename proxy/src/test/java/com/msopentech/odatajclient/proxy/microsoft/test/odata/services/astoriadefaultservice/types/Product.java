@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -65,7 +66,7 @@ public interface Product extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public URI getPicture();
 
     public void setPicture(final URI _picture);
@@ -89,7 +90,7 @@ public interface Product extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getProductId();
 
     public void setProductId(final Integer _productId);
@@ -113,7 +114,7 @@ public interface Product extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getDescription();
 
     public void setDescription(final String _description);
@@ -137,7 +138,7 @@ public interface Product extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions getDimensions();
 
     public void setDimensions(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions _dimensions);
@@ -161,7 +162,7 @@ public interface Product extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getBaseConcurrency();
 
     public void setBaseConcurrency(final String _baseConcurrency);
@@ -185,7 +186,7 @@ public interface Product extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo getComplexConcurrency();
 
     public void setComplexConcurrency(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo _complexConcurrency);
@@ -209,7 +210,7 @@ public interface Product extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AuditInfo getNestedComplexConcurrency();
 
     public void setNestedComplexConcurrency(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AuditInfo _nestedComplexConcurrency);

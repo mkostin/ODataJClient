@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
+import com.msopentech.odatajclient.proxy.api.context.Context;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;

@@ -37,9 +37,11 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import org.junit.Test;
 
 /**
@@ -129,6 +131,43 @@ public class EntityRetrieveTestITCase extends AbstractTest {
         final Message message = container.getMessage().get(messageKey);
         assertNotNull(message);
         assertEquals("1", message.getFromUsername());
+    }
+
+    @Test
+    public void addInlineNavigationProperty() {
+        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
+                container.getCustomer();
+        final Customer customer = customers.newEntity();
+
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.CustomerInfo customerInfos =
+                container.getCustomerInfo();
+        final CustomerInfo customerInfo = customerInfos.newEntity();
+
+        customer.setInfo(customerInfo);
+
+        assertNotNull(customer.getInfo());
+    }
+
+    @Test
+    public void addNavigationProperty() {
+        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
+                container.getCustomer();
+        final Customer customer = customers.newEntity();
+
+        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Order orders =
+                container.getOrder();
+
+        final List<Order> toBeLinked = new ArrayList<Order>();
+        toBeLinked.add(orders.newEntity());
+        toBeLinked.add(orders.newEntity());
+        toBeLinked.add(orders.newEntity());
+
+        customer.setOrders(toBeLinked);
+
+        assertNotNull(customer.getOrders());
+        assertEquals(3, customer.getOrders().size());
     }
 
     @Test

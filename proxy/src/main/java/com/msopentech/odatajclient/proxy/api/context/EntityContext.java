@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.context;
 
+import com.msopentech.odatajclient.proxy.api.AttachedEntities;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ public class EntityContext {
         if (entities.containsKey(entity)) {
             throw new IllegalStateException("An entity with the same key has already been attached");
         }
-        entities.put(entity, AttachedEntityStatus.ATTACHED);
+        entities.put(entity, AttachedEntityStatus.NEW);
     }
 
     public void attach(final EntityTypeInvocationHandler entity) {
@@ -47,30 +48,33 @@ public class EntityContext {
 
         entities.put(entity, status);
 
-        final EntityTypeDesc desc = getEntityTypeDesc(entity);
+        if (entity.getKey() != null) {
+            final EntityTypeDesc desc = entity.getDescription();
 
-        final AttachedEntities attachedEntities;
-        if (attached.containsKey(desc)) {
-            attachedEntities = attached.get(desc);
-        } else {
-            attachedEntities = new AttachedEntities();
-            attached.put(desc, attachedEntities);
+            final AttachedEntities attachedEntities;
+            if (attached.containsKey(desc)) {
+                attachedEntities = attached.get(desc);
+            } else {
+                attachedEntities = new AttachedEntities();
+                attached.put(desc, attachedEntities);
+            }
+
+            if (attachedEntities.contains(entity.getKey())) {
+                throw new IllegalStateException("An entity with the same key has already been attached");
+            }
+
+            attachedEntities.add(entity.getKey(), entity);
         }
-
-//        final String key = entity.serializeEntityKey();
-//
-//        if (attachedEntities.contains(key)) {
-//            throw new IllegalStateException("An entity with the same key has already been attached");
-//        }
-//
-//        attachedEntities.add(key, entity);
     }
 
     public void detach(final EntityTypeInvocationHandler entity) {
-        final EntityTypeDesc desc = getEntityTypeDesc(entity);
 
-        if (attached.containsKey(desc)) {
-//            attached.get(desc).remove(entity.serializeEntityKey());
+        if (attached.containsKey(entity.getDescription())) {
+            final AttachedEntities attachedEntities = attached.get(entity.getDescription());
+            attachedEntities.remove(entity.getKey());
+            if(attachedEntities.isEmpty()){
+                attached.remove(entity.getDescription());
+            }
         }
 
         entities.remove(entity);
@@ -86,7 +90,7 @@ public class EntityContext {
 
         if (res.size() > 1) {
             throw new IllegalStateException(
-                    "More than one entities with the specified keay have been found in the context");
+                    "More than one entities with the specified key have been found in the context");
         }
 
         return res.isEmpty() ? null : res.iterator().next();
@@ -100,15 +104,31 @@ public class EntityContext {
         return entities.get(entity);
     }
 
-    public boolean isAttached(final EntityTypeInvocationHandler entity) {
-        return entities.containsKey(entity);
+    public void setStatus(final EntityTypeInvocationHandler entity, final AttachedEntityStatus status) {
+        if (!isAttached(entity)) {
+            throw new IllegalStateException("Entity is not in the context");
+        }
+
+        final AttachedEntityStatus current = entities.get(entity);
+
+        // Previously deleted object cannot be modified anymore.
+        if (current == AttachedEntityStatus.DELETED) {
+            throw new IllegalStateException("Entity has been previously deleted");
+        }
+
+        if (status == AttachedEntityStatus.NEW || status == AttachedEntityStatus.ATTACHED) {
+            throw new IllegalStateException("Entity status has already been initialized");
+        }
+
+        if ((status == AttachedEntityStatus.LINKED && current == AttachedEntityStatus.ATTACHED)
+                || (status == AttachedEntityStatus.CHANGED && current == AttachedEntityStatus.ATTACHED)
+                || (status == AttachedEntityStatus.CHANGED && current == AttachedEntityStatus.LINKED)
+                || (status == AttachedEntityStatus.DELETED)) {
+            entities.put(entity, status);
+        }
     }
 
-    private EntityTypeDesc getEntityTypeDesc(final EntityTypeInvocationHandler entity) {
-        return new EntityTypeDesc(
-                Utility.getSchemaName(entity.getTypeRef()),
-                entity.getEntityContainerName(),
-                entity.getEntitySetName(),
-                entity.getName());
+    public boolean isAttached(final EntityTypeInvocationHandler entity) {
+        return entities.containsKey(entity);
     }
 }

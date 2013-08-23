@@ -15,21 +15,27 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
+import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.AssociationSet;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.AssociationSet.End;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
+import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
+import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.AbstractMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -60,38 +66,6 @@ public class Utility {
         throw new IllegalStateException("Association set not found");
     }
 
-    public static EntityContainer getContainerFromURI(final URI uri, final EdmMetadata metadata) {
-        // Assumptions: 
-        //      1. the name of a container cannot collide among several schemas
-        //      2. schema name is never provided in the URI
-
-        if (uri == null) {
-            throw new IllegalArgumentException("Invalid URI " + uri);
-        }
-
-        final String ascii = uri.toASCIIString();
-        final String lastPart = ascii.substring(ascii.lastIndexOf('/') + 1);
-
-        EntityContainer defaultEntityContainer = null;
-        EntityContainer res = null;
-
-        int firstDotIdx = lastPart.indexOf('.');
-        final String containerName = lastPart.substring(0, firstDotIdx > 0 ? firstDotIdx : 0);
-
-        for (Schema schema : metadata.getSchemas()) {
-            for (EntityContainer ec : schema.getEntityContainers()) {
-                if (ec.isDefaultEntityContainer()) {
-                    defaultEntityContainer = ec;
-                }
-                if (ec.getName().equals(containerName)) {
-                    res = ec;
-                }
-            }
-        }
-
-        return res == null ? defaultEntityContainer : res;
-    }
-
     public static Association getAssociation(final Schema schema, final String relationship) {
         return schema.getAssociation(relationship.substring(relationship.lastIndexOf('.') + 1));
     }
@@ -120,15 +94,75 @@ public class Utility {
         return null;
     }
 
-    public static Class<?> getKeyRef(final Class<?> entityTypeRef) {
-        if (entityTypeRef.getAnnotation(EntityType.class) == null) {
-            throw new IllegalArgumentException("Invalid annotation for entity type " + entityTypeRef.getSimpleName());
+    private static String firstValidEntityKey(final Class<?> entityTypeRef) {
+        for (Method method : entityTypeRef.getDeclaredMethods()) {
+            if (method.getAnnotation(Key.class) != null) {
+                final Annotation ann = method.getAnnotation(Property.class);
+                if (ann != null) {
+                    return ((Property) ann).name();
+                }
+            }
         }
+        return null;
+    }
+
+    public static Class<?> getCompoundKeyRef(final Class<?> entityTypeRef) {
+        if (entityTypeRef.getAnnotation(EntityType.class) == null) {
+            throw new IllegalArgumentException("Invalid annotation for entity type " + entityTypeRef);
+        }
+
         final Annotation ann = entityTypeRef.getAnnotation(KeyRef.class);
 
-        final Class<?> res;
+        return ann == null || ((KeyRef) ann).value().getAnnotation(CompoundKey.class) == null
+                ? null
+                : ((KeyRef) ann).value();
+    }
 
-        if (ann == null) {
+    private static <T> T populateCompoundKey(final Class<T> compoundKeyRef, final ODataEntity entity) {
+        try {
+            T res = compoundKeyRef.newInstance();
+
+            for (Method method : compoundKeyRef.getClass().getDeclaredMethods()) {
+                final Annotation ann = method.getAnnotation(CompoundKeyElement.class);
+                if (ann != null) {
+                    try {
+                        compoundKeyRef.getClass().getDeclaredMethod(
+                                method.getName().replaceFirst("get", "set"), method.getReturnType()).invoke(
+                                res,
+                                entity.getProperty(((CompoundKeyElement) ann).name()));
+                    } catch (Exception e) {
+                        LOG.error("Error populating key element {}", ((CompoundKeyElement) ann).name(), e);
+                    }
+                }
+            }
+            return res;
+        } catch (Exception e) {
+            LOG.error("Error population compound key {}", compoundKeyRef.getSimpleName());
+            throw new IllegalArgumentException("Cannot populate compound key");
+        }
+    }
+
+    public static Object getKey(final Class<?> entityTypeRef, final ODataEntity entity) {
+        final Object res;
+
+        if (entity.getProperties().isEmpty()) {
+            res = null;
+        } else {
+            final Class<?> keyRef = getCompoundKeyRef(entityTypeRef);
+            if (keyRef == null) {
+                res = entity.getProperty(firstValidEntityKey(entityTypeRef));
+            } else {
+                res = populateCompoundKey(keyRef, entity);
+            }
+        }
+
+        return res;
+    }
+
+    public static Class<?> getKeyRef(final Class<?> entityTypeRef) {
+        Class<?> res = getCompoundKeyRef(entityTypeRef);
+
+        if (res == null) {
             final Set<Method> keyGetters = new HashSet<Method>();
 
             for (Method method : entityTypeRef.getDeclaredMethods()) {
@@ -142,19 +176,44 @@ public class Utility {
             } else {
                 res = keyGetters.iterator().next().getReturnType();
             }
-        } else {
-            res = ((KeyRef) ann).value();
         }
 
         return res;
     }
 
-    public static String getSchemaName(final Class<?> ref) {
+    public static String getNamespace(final Class<?> ref) {
         final Annotation annotation = ref.getPackage().getAnnotation(Namespace.class);
         if (!(annotation instanceof Namespace)) {
             throw new IllegalArgumentException(ref.getPackage().getName()
                     + " is not annotated as @" + Namespace.class.getSimpleName());
         }
         return ((Namespace) annotation).value();
+    }
+
+    public static NavigationProperty getNavigationProperty(final Class<?> entityTypeRef, final String relationship) {
+        NavigationProperty res = null;
+        final Method[] methods = entityTypeRef.getClass().getDeclaredMethods();
+
+        for (int i = 0; i < methods.length && res == null; i++) {
+            final Annotation ann = methods[i].getAnnotation(NavigationProperty.class);
+            if ((ann instanceof NavigationProperty)
+                    && ((NavigationProperty) ann).relationship().equalsIgnoreCase(relationship)) {
+                res = (NavigationProperty) ann;
+            }
+        }
+
+        return res;
+    }
+
+    public static ODataLink getNavigationLink(final String name, final ODataEntity entity) {
+        ODataLink res = null;
+        final List<ODataLink> links = entity.getNavigationLinks();
+
+        for (int i = 0; i < links.size() && res == null; i++) {
+            if (links.get(i).getName().equalsIgnoreCase(name)) {
+                res = links.get(i);
+            }
+        }
+        return res;
     }
 }

@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.data;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * OData entity.
@@ -136,9 +137,12 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
      */
     public ODataProperty getProperty(final String name) {
         ODataProperty result = null;
-        for (ODataProperty property : properties) {
-            if (name.equals(property.getName())) {
-                result = property;
+
+        if (StringUtils.isNotBlank(name)) {
+            for (ODataProperty property : properties) {
+                if (name.equals(property.getName())) {
+                    result = property;
+                }
             }
         }
 

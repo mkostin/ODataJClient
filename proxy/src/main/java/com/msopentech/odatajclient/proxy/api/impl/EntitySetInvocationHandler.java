@@ -23,6 +23,7 @@ import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
@@ -194,8 +195,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
         final List<T> beans = new ArrayList<T>(entitySet.getEntities().size());
         for (ODataEntity entity : entitySet.getEntities()) {
-            beans.add(
-                    (T) Proxy.newProxyInstance(
+            beans.add((T) Proxy.newProxyInstance(
                     this.getClass().getClassLoader(),
                     new Class<?>[] {typeRef},
                     EntityTypeInvocationHandler.getInstance(entity, this)));
@@ -234,9 +234,9 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
     public T newEntity() {
         final ODataEntity entity = ODataFactory.newEntity(container.getSchemaName() + "." + getEntityName(typeRef));
 
-        return (T) Proxy.newProxyInstance(
-                this.getClass().getClassLoader(),
-                new Class<?>[] {typeRef},
-                EntityTypeInvocationHandler.getInstance(entity, this));
+        final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
+        EntityContainerFactory.getContext().getEntityContext().attachNew(handler);
+
+        return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class<?>[] {typeRef}, handler);
     }
 }

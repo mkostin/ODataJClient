@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -65,7 +66,7 @@ public interface Contractor extends com.msopentech.odatajclient.proxy.microsoft.
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getContratorCompanyId();
 
     public void setContratorCompanyId(final Integer _contratorCompanyId);
@@ -89,7 +90,7 @@ public interface Contractor extends com.msopentech.odatajclient.proxy.microsoft.
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getBillingRate();
 
     public void setBillingRate(final Integer _billingRate);
@@ -113,7 +114,7 @@ public interface Contractor extends com.msopentech.odatajclient.proxy.microsoft.
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getTeamContactPersonId();
 
     public void setTeamContactPersonId(final Integer _teamContactPersonId);
@@ -137,7 +138,7 @@ public interface Contractor extends com.msopentech.odatajclient.proxy.microsoft.
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getJobDescription();
 
     public void setJobDescription(final String _jobDescription);

@@ -13,14 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.context;
 
 public enum AttachedEntityStatus {
 
+    /**
+     * Explicitely attached.
+     */
     ATTACHED,
+    /**
+     * New object.
+     */
     NEW,
+    /**
+     * Modified object.
+     */
     CHANGED,
+    /**
+     * Deleted object.
+     */
     DELETED,
+    /**
+     * Attached because explicitely liked to another object.
+     */
     LINKED
 
 }

@@ -13,8 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.context;
 
-public class LinkContext {
-    
+public class Context {
+
+    private final EntityContext entities;
+
+    private final LinkContext links;
+
+    public Context() {
+        this.entities = new EntityContext();
+        this.links = new LinkContext();
+
+    }
+
+    public EntityContext getEntityContext() {
+        return entities;
+    }
+
+    public LinkContext getLinkContext() {
+        return links;
+    }
 }

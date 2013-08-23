@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -65,7 +66,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getId();
 
     public void setId(final Integer _id);
@@ -89,7 +90,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getHref();
 
     public void setHref(final String _href);
@@ -113,7 +114,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getTitle();
 
     public void setTitle(final String _title);
@@ -137,7 +138,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getHrefLang();
 
     public void setHrefLang(final String _hrefLang);
@@ -161,7 +162,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getType();
 
     public void setType(final String _type);
@@ -185,7 +186,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getLength();
 
     public void setLength(final Integer _length);
@@ -209,7 +210,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<String> getBagOfPrimitiveToLinks();
 
     public void setBagOfPrimitiveToLinks(final Collection<String> _bagOfPrimitiveToLinks);
@@ -233,7 +234,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public byte[] getLogo();
 
     public void setLogo(final byte[] _logo);
@@ -257,7 +258,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<BigDecimal> getBagOfDecimals();
 
     public void setBagOfDecimals(final Collection<BigDecimal> _bagOfDecimals);
@@ -281,7 +282,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Double> getBagOfDoubles();
 
     public void setBagOfDoubles(final Collection<Double> _bagOfDoubles);
@@ -305,7 +306,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Float> getBagOfSingles();
 
     public void setBagOfSingles(final Collection<Float> _bagOfSingles);
@@ -329,7 +330,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Integer> getBagOfBytes();
 
     public void setBagOfBytes(final Collection<Integer> _bagOfBytes);
@@ -353,7 +354,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Short> getBagOfInt16s();
 
     public void setBagOfInt16s(final Collection<Short> _bagOfInt16s);
@@ -377,7 +378,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Integer> getBagOfInt32s();
 
     public void setBagOfInt32s(final Collection<Integer> _bagOfInt32s);
@@ -401,7 +402,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Long> getBagOfInt64s();
 
     public void setBagOfInt64s(final Collection<Long> _bagOfInt64s);
@@ -425,7 +426,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<UUID> getBagOfGuids();
 
     public void setBagOfGuids(final Collection<UUID> _bagOfGuids);
@@ -449,7 +450,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<ODataTimestamp> getBagOfDateTime();
 
     public void setBagOfDateTime(final Collection<ODataTimestamp> _bagOfDateTime);
@@ -473,7 +474,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComplexToCategory> getBagOfComplexToCategories();
 
     public void setBagOfComplexToCategories(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComplexToCategory> _bagOfComplexToCategories);
@@ -497,7 +498,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)    
+                fcKeepInContent = true)
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Phone getComplexPhone();
 
     public void setComplexPhone(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Phone _complexPhone);
@@ -521,7 +522,7 @@ public interface MappedEntityType extends Serializable {
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = true)    
+                fcKeepInContent = true)
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails getComplexContactDetails();
 
     public void setComplexContactDetails(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails _complexContactDetails);

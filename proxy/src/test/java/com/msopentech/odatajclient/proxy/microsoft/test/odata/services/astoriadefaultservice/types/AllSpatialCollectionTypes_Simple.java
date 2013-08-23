@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -65,7 +66,7 @@ public interface AllSpatialCollectionTypes_Simple extends com.msopentech.odatajc
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Point> getManyGeogPoint();
 
     public void setManyGeogPoint(final Collection<Point> _manyGeogPoint);
@@ -89,7 +90,7 @@ public interface AllSpatialCollectionTypes_Simple extends com.msopentech.odatajc
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<LineString> getManyGeogLine();
 
     public void setManyGeogLine(final Collection<LineString> _manyGeogLine);
@@ -113,7 +114,7 @@ public interface AllSpatialCollectionTypes_Simple extends com.msopentech.odatajc
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Polygon> getManyGeogPolygon();
 
     public void setManyGeogPolygon(final Collection<Polygon> _manyGeogPolygon);
@@ -137,7 +138,7 @@ public interface AllSpatialCollectionTypes_Simple extends com.msopentech.odatajc
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Point> getManyGeomPoint();
 
     public void setManyGeomPoint(final Collection<Point> _manyGeomPoint);
@@ -161,7 +162,7 @@ public interface AllSpatialCollectionTypes_Simple extends com.msopentech.odatajc
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<LineString> getManyGeomLine();
 
     public void setManyGeomLine(final Collection<LineString> _manyGeomLine);
@@ -185,7 +186,7 @@ public interface AllSpatialCollectionTypes_Simple extends com.msopentech.odatajc
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Collection<Polygon> getManyGeomPolygon();
 
     public void setManyGeomPolygon(final Collection<Polygon> _manyGeomPolygon);

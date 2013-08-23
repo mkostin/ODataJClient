@@ -13,9 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.context;
 
-public class EntityTypeDesc {
+import java.io.Serializable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+public class EntityTypeDesc implements Serializable {
+
+    private static final long serialVersionUID = 4855025769803086495L;
 
     private final String schemaName;
 
@@ -50,5 +56,29 @@ public class EntityTypeDesc {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public String toString() {
+        return schemaName + ":" + containerName + ":" + entitySetName + ":" + name;
     }
 }

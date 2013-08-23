@@ -10,6 +10,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
 import com.msopentech.odatajclient.engine.data.ODataDuration;
@@ -65,7 +66,7 @@ public interface DiscontinuedProduct extends com.msopentech.odatajclient.proxy.m
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public ODataTimestamp getDiscontinued();
 
     public void setDiscontinued(final ODataTimestamp _discontinued);
@@ -89,7 +90,7 @@ public interface DiscontinuedProduct extends com.msopentech.odatajclient.proxy.m
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public Integer getReplacementProductId();
 
     public void setReplacementProductId(final Integer _replacementProductId);
@@ -113,7 +114,7 @@ public interface DiscontinuedProduct extends com.msopentech.odatajclient.proxy.m
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Phone getDiscontinuedPhone();
 
     public void setDiscontinuedPhone(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Phone _discontinuedPhone);
@@ -137,7 +138,7 @@ public interface DiscontinuedProduct extends com.msopentech.odatajclient.proxy.m
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)    
+                fcKeepInContent = false)
     public String getChildConcurrencyToken();
 
     public void setChildConcurrencyToken(final String _childConcurrencyToken);

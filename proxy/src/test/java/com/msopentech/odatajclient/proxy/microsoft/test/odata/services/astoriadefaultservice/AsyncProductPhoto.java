@@ -2,6 +2,7 @@ package com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriad
 
 import com.msopentech.odatajclient.proxy.api.AbstractAsyncEntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
 // EdmSimpleType property imports
