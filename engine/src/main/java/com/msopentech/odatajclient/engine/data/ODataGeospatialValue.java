@@ -278,7 +278,7 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
                     geospatials = Collections.<Geospatial>emptyList();
                 } else {
                     geospatials = new ArrayList<Geospatial>();
-                    for (Node geom : XMLUtils.getChildNodes(tree, Node.ELEMENT_NODE)) {
+                    for (Node geom : XMLUtils.getChildNodes(cMembs, Node.ELEMENT_NODE)) {
                         geospatials.add(
                                 parseTree((Element) geom, XMLUtils.simpleTypeForNode(getDimension(), geom)));
                     }
@@ -459,6 +459,18 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
 
     public Element toTree() {
         return this.tree;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ODataGeospatialValue other = (ODataGeospatialValue) obj;
+        return this.tree.isEqualNode(other.tree);
     }
 
     @Override

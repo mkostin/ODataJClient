@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
@@ -54,16 +55,21 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
             jgen.writeStringField(ODataConstants.JSON_VALUE, content.getTextContent());
         } else {
             try {
-                if (XMLUtils.hasElementsChildNode(content)) {
-                    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                    final DocumentBuilder builder = factory.newDocumentBuilder();
-                    final Document document = builder.newDocument();
+                final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                final DocumentBuilder builder = factory.newDocumentBuilder();
+                final Document document = builder.newDocument();
+                final Element wrapper = document.createElement(ODataConstants.ELEM_PROPERTY);
 
-                    final Element wrapper = document.createElement(ODataConstants.ELEM_PROPERTY);
-                    wrapper.appendChild(
-                            document.renameNode(document.importNode(content, true), null, ODataConstants.JSON_VALUE));
+                if (XMLUtils.hasElementsChildNode(content)) {
+                    wrapper.appendChild(document.renameNode(
+                            document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 
                     DOMTreeUtils.writeSubtree(jgen, wrapper);
+                } else if (EdmSimpleType.isGeospatial(content.getAttribute(ODataConstants.ATTR_TYPE))) {
+                    wrapper.appendChild(document.renameNode(
+                            document.importNode(content, true), null, ODataConstants.JSON_VALUE));
+
+                    DOMTreeUtils.writeSubtree(jgen, wrapper, true);
                 } else {
                     DOMTreeUtils.writeSubtree(jgen, content);
                 }

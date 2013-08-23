@@ -19,7 +19,6 @@
 package com.msopentech.odatajclient.engine.data.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.uri.SegmentType;
 import java.net.URI;
 

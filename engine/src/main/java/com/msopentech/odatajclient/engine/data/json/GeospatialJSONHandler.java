@@ -98,8 +98,8 @@ final class GeospatialJSONHandler {
     }
 
     public static void deserialize(final JsonNode node, final Element parent, final String type) {
-        final Iterator<JsonNode> cooItor = node.has("coordinates")
-                ? node.get("coordinates").elements()
+        final Iterator<JsonNode> cooItor = node.has(ODataConstants.JSON_COORDINATES)
+                ? node.get(ODataConstants.JSON_COORDINATES).elements()
                 : Collections.<JsonNode>emptyList().iterator();
 
         Element root = null;

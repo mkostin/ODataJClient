@@ -18,6 +18,8 @@ package com.msopentech.odatajclient.engine.data;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Helper class for handling time (as duration) primitive values.
@@ -46,6 +48,25 @@ public final class ODataDuration {
         return duration;
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String toString() {
         return this.duration.toString();

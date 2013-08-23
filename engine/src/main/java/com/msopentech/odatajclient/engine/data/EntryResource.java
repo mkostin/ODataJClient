@@ -222,7 +222,7 @@ public interface EntryResource {
      * @param mediaContentSource media content source.
      * @param mediaContentType media content type.
      */
-    void setMediaContent(final String mediaContentSource, final String mediaContentType);
+    void setMediaContent(String mediaContentSource, String mediaContentType);
 
     /**
      * Checks if the current entry is a media entry.

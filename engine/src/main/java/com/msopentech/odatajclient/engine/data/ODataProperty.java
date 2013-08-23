@@ -44,7 +44,7 @@ public class ODataProperty implements Serializable, ODataInvokeResult {
          */
         COMPLEX,
         /**
-         * Empty property (maybe no type can be retrieved).
+         * Empty type (possibly, no type information could be retrieved).
          */
         EMPTY
 

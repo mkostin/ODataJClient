@@ -159,13 +159,30 @@ final class DOMTreeUtils {
      * @param content content.
      * @throws IOException in case of write error.
      */
-    public static void writeSubtree(final JsonGenerator jgen, final Node content) throws IOException {
+    public static void writeSubtree(final JsonGenerator jgen, final Node content)
+            throws IOException {
+
+        writeSubtree(jgen, content, false);
+    }
+
+    /**
+     * Serializes DOM content as JSON.
+     *
+     * @param jgen JSON generator.
+     * @param content content.
+     * @param propType whether to output type information in the way needed for property values or not.
+     * @throws IOException in case of write error.
+     */
+    public static void writeSubtree(final JsonGenerator jgen, final Node content, final boolean propType)
+            throws IOException {
+
         for (Node child : XMLUtils.getChildNodes(content, Node.ELEMENT_NODE)) {
             final String childName = XMLUtils.getSimpleName(child);
 
             final Node typeAttr = child.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
             if (typeAttr != null && EdmSimpleType.isGeospatial(typeAttr.getTextContent())) {
-                jgen.writeStringField(childName + "@" + ODataConstants.JSON_TYPE, typeAttr.getTextContent());
+                jgen.writeStringField(propType ? ODataConstants.JSON_TYPE : childName + "@" + ODataConstants.JSON_TYPE,
+                        typeAttr.getTextContent());
 
                 jgen.writeObjectFieldStart(childName);
                 GeospatialJSONHandler.serialize(jgen, (Element) child, typeAttr.getTextContent());
@@ -186,8 +203,13 @@ final class DOMTreeUtils {
                     jgen.writeStringField(childName, out);
                 } else {
                     if (child.getAttributes().getNamedItem(ODataConstants.ATTR_NULL) == null) {
-                        jgen.writeArrayFieldStart(childName);
-                        jgen.writeEndArray();
+                        if (typeAttr != null && EdmSimpleType.STRING.toString().equals(typeAttr.getTextContent())) {
+                            jgen.writeStringField(childName + "@" + ODataConstants.JSON_TYPE, typeAttr.getTextContent());
+                            jgen.writeStringField(childName, StringUtils.EMPTY);
+                        } else {
+                            jgen.writeArrayFieldStart(childName);
+                            jgen.writeEndArray();
+                        }
                     } else {
                         jgen.writeNullField(childName);
                     }
@@ -214,7 +236,7 @@ final class DOMTreeUtils {
                     }
 
                     writeSubtree(jgen, child);
-                    
+
                     jgen.writeEndObject();
                 }
             }

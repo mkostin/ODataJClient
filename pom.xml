@@ -248,7 +248,9 @@
             <exclude>**/META-INF/MANIFEST.MF</exclude>
             <exclude>**/*.css</exclude>
             <exclude>**/*.js</exclude>
+            <exclude>**/*.json</exclude>
             <exclude>**/*.csv</exclude>
+            <exclude>**/*.txt</exclude>
             <exclude>**/archetype-resources/**</exclude>
             <exclude>**/goal.txt</exclude>
             <exclude>**/rat.txt</exclude>
@@ -335,6 +337,15 @@
         <defaultGoal>clean verify</defaultGoal>
         
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <inherited>true</inherited>
+            <configuration>
+              <skipTests>true</skipTests>
+            </configuration>
+          </plugin>
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>

@@ -15,9 +15,9 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 /**
  * OData collection property value.
@@ -34,7 +34,7 @@ public class ODataCollectionValue extends ODataValue implements Iterable<ODataVa
     /**
      * Values.
      */
-    private final Set<ODataValue> values = new HashSet<ODataValue>();
+    private final List<ODataValue> values = new ArrayList<ODataValue>();
 
     /**
      * Constructor.
@@ -46,21 +46,14 @@ public class ODataCollectionValue extends ODataValue implements Iterable<ODataVa
     }
 
     /**
-     * Adds primitive value to the collection.
+     * Adds a value to the collection.
      *
      * @param value value to be added.
      */
-    public void add(final ODataPrimitiveValue value) {
-        values.add(value);
-    }
-
-    /**
-     * Adds complex value to the collection.
-     *
-     * @param value value to be added.
-     */
-    public void add(final ODataComplexValue value) {
-        values.add(value);
+    public void add(final ODataValue value) {
+        if (value.isPrimitive() || value.isComplex()) {
+            values.add(value);
+        }
     }
 
     /**

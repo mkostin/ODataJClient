@@ -20,6 +20,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Helper class for handling datetime and datetime-offset primitive values.
@@ -91,6 +93,25 @@ public final class ODataTimestamp {
         return timezone;
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public String toString() {
         final StringBuilder formatted = new StringBuilder().append(sdf.format(timestamp));

@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -410,11 +411,19 @@ public final class ODataBinder {
         final Node nullNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_NULL);
 
         if (nullNode == null) {
-            final Node typeNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
-            final EdmType edmType = typeNode == null ? null : new EdmType(typeNode.getTextContent());
+            final EdmType edmType = StringUtils.isBlank(property.getAttribute(ODataConstants.ATTR_TYPE))
+                    ? null
+                    : new EdmType(property.getAttribute(ODataConstants.ATTR_TYPE));
 
-            switch (getPropertyType(property)) {
-                case EMPTY:
+            final PropertyType propType = edmType == null
+                    ? guessPropertyType(property)
+                    : edmType.isCollection()
+                    ? PropertyType.COLLECTION
+                    : edmType.isSimpleType()
+                    ? PropertyType.PRIMITIVE
+                    : PropertyType.COMPLEX;
+
+            switch (propType) {
                 case COLLECTION:
                     res = fromCollectionPropertyElement(property, edmType);
                     break;
@@ -427,6 +436,7 @@ public final class ODataBinder {
                     res = fromPrimitivePropertyElement(property, edmType);
                     break;
 
+                case EMPTY:
                 default:
                     res = ODataFactory.newPrimitiveProperty(XMLUtils.getSimpleName(property), null);
             }
@@ -437,7 +447,7 @@ public final class ODataBinder {
         return res;
     }
 
-    private static PropertyType getPropertyType(final Element property) {
+    private static PropertyType guessPropertyType(final Element property) {
         PropertyType res = null;
 
         if (property.hasChildNodes()) {
@@ -570,8 +580,10 @@ public final class ODataBinder {
     private static ODataPrimitiveValue fromPrimitiveValueElement(final Element prop, final EdmType edmType) {
         final ODataPrimitiveValue value;
         if (edmType != null && edmType.getSimpleType().isGeospatial()) {
+            final Element geoProp = ODataConstants.PREFIX_GML.equals(prop.getPrefix())
+                    ? prop : (Element) XMLUtils.getChildNodes(prop, Node.ELEMENT_NODE).get(0);
             value = new ODataGeospatialValue.Builder().
-                    setType(edmType.getSimpleType()).setTree(prop).build();
+                    setType(edmType.getSimpleType()).setTree(geoProp).build();
         } else {
             value = new ODataPrimitiveValue.Builder().
                     setType(edmType == null ? null : edmType.getSimpleType()).setText(prop.getTextContent()).build();
@@ -587,13 +599,8 @@ public final class ODataBinder {
     private static ODataComplexValue fromComplexValueElement(final Element prop, final EdmType edmType) {
         final ODataComplexValue value = new ODataComplexValue(edmType == null ? null : edmType.getTypeExpression());
 
-        final NodeList elements = prop.getChildNodes();
-
-        for (int i = 0; i < elements.getLength(); i++) {
-            final Element child = (Element) elements.item(i);
-            if (child.getNodeType() != Node.TEXT_NODE) {
-                value.add(getProperty(child));
-            }
+        for (Node child : XMLUtils.getChildNodes(prop, Node.ELEMENT_NODE)) {
+            value.add(getProperty((Element) child));
         }
 
         return value;
@@ -613,7 +620,7 @@ public final class ODataBinder {
         for (int i = 0; i < elements.getLength(); i++) {
             final Element child = (Element) elements.item(i);
             if (child.getNodeType() != Node.TEXT_NODE) {
-                switch (getPropertyType(child)) {
+                switch (guessPropertyType(child)) {
                     case COMPLEX:
                         value.add(fromComplexValueElement(child, type));
                         break;

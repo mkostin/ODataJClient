@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -34,7 +34,7 @@ public class ODataComplexValue extends ODataValue implements Iterable<ODataPrope
     /**
      * Complex type fields.
      */
-    private final Map<String, ODataProperty> fields = new HashMap<String, ODataProperty>();
+    private final Map<String, ODataProperty> fields = new LinkedHashMap<String, ODataProperty>();
 
     /**
      * Constructor.

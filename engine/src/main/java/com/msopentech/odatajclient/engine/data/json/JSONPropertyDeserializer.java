@@ -22,14 +22,19 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Parse JSON string into <tt>JSONProperty</tt>.
@@ -59,7 +64,7 @@ public class JSONPropertyDeserializer extends JsonDeserializer<JSONProperty> {
             final DocumentBuilder builder = factory.newDocumentBuilder();
             final Document document = builder.newDocument();
 
-            final Element content = document.createElement(ODataConstants.ELEM_PROPERTY);
+            Element content = document.createElement(ODataConstants.ELEM_PROPERTY);
 
             if (property.getMetadata() != null) {
                 final String metadataURI = property.getMetadata().toASCIIString();
@@ -71,9 +76,23 @@ public class JSONPropertyDeserializer extends JsonDeserializer<JSONProperty> {
 
             JsonNode subtree = null;
             if (tree.has(ODataConstants.JSON_VALUE)) {
+                if (tree.has(ODataConstants.JSON_TYPE)
+                        && StringUtils.isBlank(content.getAttribute(ODataConstants.ATTR_TYPE))) {
+
+                    content.setAttribute(ODataConstants.ATTR_TYPE, tree.get(ODataConstants.JSON_TYPE).asText());
+                }
+
                 final JsonNode value = tree.get(ODataConstants.JSON_VALUE);
                 if (value.isValueNode()) {
                     content.appendChild(document.createTextNode(value.asText()));
+                } else if (EdmSimpleType.isGeospatial(content.getAttribute(ODataConstants.ATTR_TYPE))) {
+                    subtree = tree.objectNode();
+                    ((ObjectNode) subtree).put(ODataConstants.JSON_VALUE, tree.get(ODataConstants.JSON_VALUE));
+                    if (StringUtils.isNotBlank(content.getAttribute(ODataConstants.ATTR_TYPE))) {
+                        ((ObjectNode) subtree).put(
+                                ODataConstants.JSON_VALUE + "@" + ODataConstants.JSON_TYPE,
+                                content.getAttribute(ODataConstants.ATTR_TYPE));
+                    }
                 } else {
                     subtree = tree.get(ODataConstants.JSON_VALUE);
                 }
@@ -83,6 +102,17 @@ public class JSONPropertyDeserializer extends JsonDeserializer<JSONProperty> {
 
             if (subtree != null) {
                 DOMTreeUtils.buildSubtree(content, subtree);
+            }
+
+            final List<Node> children = XMLUtils.getChildNodes(content, Node.ELEMENT_NODE);
+            if (children.size() == 1) {
+                final Element value = (Element) children.iterator().next();
+                if (ODataConstants.JSON_VALUE.equals(XMLUtils.getSimpleName(value))) {
+                    if (StringUtils.isNotBlank(content.getAttribute(ODataConstants.ATTR_TYPE))) {
+                        value.setAttribute(ODataConstants.ATTR_TYPE, content.getAttribute(ODataConstants.ATTR_TYPE));
+                    }
+                    content = value;
+                }
             }
 
             property.setContent(content);
