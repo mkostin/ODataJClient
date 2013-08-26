@@ -348,7 +348,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
 
         AtomEntry inlineEntry = null;
 
-        final NodeList inlineElements = inlineEntryContent.getElementsByTagName("entry");
+        final NodeList inlineElements = inlineEntryContent.getElementsByTagName(ODataConstants.ATOM_ENTRY);
         for (int i = 0; i < inlineElements.getLength(); i++) {
             inlineEntry = Deserializer.toAtomEntry(inlineElements.item(i));
         }
@@ -361,10 +361,12 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      */
     @Override
     public void setInlineEntry(final EntryResource entry) {
-        final Element inlineEntryContent = newInlineContent();
-        Serializer.atom(entry, AtomEntry.class, inlineEntryContent);
-        getAnyOther().clear();
-        getAnyOther().add(inlineEntryContent);
+        if (entry instanceof AtomEntry) {
+            final Element inlineEntry = newInlineContent();
+            Serializer.atom((AtomEntry) entry, inlineEntry);
+            getAnyOther().clear();
+            getAnyOther().add(inlineEntry);
+        }
     }
 
     /**
@@ -380,7 +382,7 @@ public class AtomLink extends UndefinedContent implements LinkResource {
 
         AtomFeed inlineFeed = null;
 
-        final NodeList inlineElements = inlineFeedContent.getElementsByTagName("feed");
+        final NodeList inlineElements = inlineFeedContent.getElementsByTagName(ODataConstants.ATOM_FEED);
         for (int i = 0; i < inlineElements.getLength(); i++) {
             inlineFeed = Deserializer.toAtomFeed(inlineElements.item(i));
         }
@@ -393,9 +395,11 @@ public class AtomLink extends UndefinedContent implements LinkResource {
      */
     @Override
     public void setInlineFeed(final FeedResource feed) {
-        final Element inlineEntryContent = newInlineContent();
-        Serializer.atom(feed, AtomFeed.class, inlineEntryContent);
-        getAnyOther().clear();
-        getAnyOther().add(inlineEntryContent);
+        if (feed instanceof AtomFeed) {
+            final Element inlineFeed = newInlineContent();
+            Serializer.atom((AtomFeed) feed, inlineFeed);
+            getAnyOther().clear();
+            getAnyOther().add(inlineFeed);
+        }
     }
 }

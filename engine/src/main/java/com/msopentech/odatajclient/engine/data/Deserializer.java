@@ -33,7 +33,6 @@ import com.msopentech.odatajclient.engine.data.xml.error.XMLODataError;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -45,7 +44,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -107,14 +105,8 @@ public final class Deserializer {
     @SuppressWarnings("unchecked")
     public static AtomFeed toAtomFeed(final Node node) {
         try {
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Serializer.dom(node, baos);
-            baos.close();
-
             final JAXBContext context = JAXBContext.newInstance(AtomFeed.class);
-            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(new ByteArrayInputStream(baos.toByteArray()));
-
-            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(xmler)).getValue();
+            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(node)).getValue();
         } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing Atom feed", e);
         }
@@ -150,14 +142,8 @@ public final class Deserializer {
     @SuppressWarnings("unchecked")
     public static AtomEntry toAtomEntry(final Node node) {
         try {
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Serializer.dom(node, baos);
-            baos.close();
-
             final JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
-            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(new ByteArrayInputStream(baos.toByteArray()));
-
-            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(xmler)).getValue();
+            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(node)).getValue();
         } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing Atom entry", e);
         }
@@ -244,7 +230,6 @@ public final class Deserializer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private static JSONFeed toJSONFeed(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -254,7 +239,6 @@ public final class Deserializer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private static JSONEntry toJSONEntry(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -333,17 +317,17 @@ public final class Deserializer {
             final DocumentBuilder builder = factory.newDocumentBuilder();
 
             final Document doc = builder.parse(input);
-            final NodeList uris = doc.getElementsByTagName("uri");
+            final NodeList uris = doc.getElementsByTagName(ODataConstants.ELEM_URI);
 
             final List<URI> links = new ArrayList<URI>();
             for (int i = 0; i < uris.getLength(); i++) {
                 links.add(URI.create(uris.item(i).getTextContent()));
             }
 
-            final NodeList next = doc.getElementsByTagName("next");
-            URI nextLink = next.getLength() > 0 ? URI.create(next.item(0).getTextContent()) : null;
-
-            XMLLinkCollection res = new XMLLinkCollection(nextLink);
+            final NodeList next = doc.getElementsByTagName(ODataConstants.NEXT_LINK_REL);
+            final XMLLinkCollection res = next.getLength() > 0
+                    ? new XMLLinkCollection(URI.create(next.item(0).getTextContent()))
+                    : new XMLLinkCollection();
             res.setLinks(links);
             return res;
         } catch (Exception e) {

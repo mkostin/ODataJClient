@@ -189,4 +189,9 @@ public class ODataConstants {
 
     public final static String JSON_GIS_URLPREFIX = "http://www.opengis.net/def/crs/EPSG/0/";
 
+    // Atom stuff
+    public final static String ATOM_ENTRY = "entry";
+
+    public final static String ATOM_FEED = "feed";
+
 }

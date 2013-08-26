@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.engine.data;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.msopentech.odatajclient.engine.data.atom.AbstractAtomElement;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
@@ -75,8 +76,8 @@ public final class Serializer {
      * @param writer writer.
      */
     public static <T extends FeedResource> void feed(final T obj, final Writer writer) {
-        if (obj.getClass().equals(AtomFeed.class)) {
-            atom(obj, obj.getClass(), writer);
+        if (obj instanceof AtomFeed) {
+            atom((AtomFeed) obj, writer);
         } else {
             json(obj, writer);
         }
@@ -101,8 +102,8 @@ public final class Serializer {
      * @param writer writer.
      */
     public static <T extends EntryResource> void entry(final T obj, final Writer writer) {
-        if (obj.getClass().equals(AtomEntry.class)) {
-            atom(obj, obj.getClass(), writer);
+        if (obj instanceof AtomEntry) {
+            atom((AtomEntry) obj, writer);
         } else {
             json(obj, writer);
         }
@@ -190,16 +191,15 @@ public final class Serializer {
     }
 
     /**
-     * Adds atom element as child element of the given node.
+     * Serializes an Atom entry or feed into a DOM tree.
      *
-     * @param obj atom object.
-     * @param reference reference.
-     * @param root destination node (parent of the new one).
+     * @param obj atom object (entry or feed).
+     * @param parent destination node (parent of the streamed DOM tree).
      */
-    public static void atom(final Object obj, final Class<?> reference, final Node root) {
+    public static <T extends AbstractAtomElement> void atom(final T obj, final Element parent) {
         try {
-            final Marshaller marshaller = getMarshaller(reference);
-            marshaller.marshal(obj, root);
+            final Marshaller marshaller = getMarshaller(obj.getClass());
+            marshaller.marshal(obj, parent);
         } catch (JAXBException e) {
             throw new IllegalArgumentException("While serializing Atom object", e);
         }
@@ -217,10 +217,10 @@ public final class Serializer {
         return marshaller;
     }
 
-    private static void atom(final Object obj, final Class<?> reference, final Writer writer) {
+    private static <T extends AbstractAtomElement> void atom(final T obj, final Writer writer) {
         try {
             final XMLStreamWriter xmler = XMLOF.createXMLStreamWriter(writer);
-            final Marshaller marshaller = getMarshaller(reference);
+            final Marshaller marshaller = getMarshaller(obj.getClass());
             marshaller.marshal(obj, xmler);
         } catch (Exception e) {
             throw new IllegalArgumentException("While serializing Atom object", e);
