@@ -67,13 +67,12 @@ public final class ODataBinder {
     }
 
     /**
-     * Gets a
-     * <code>FeedResource</code> from the given OData entity set.
+     * Gets a <tt>FeedResource</tt> from the given OData entity set.
      *
      * @param <T> feed resource type.
      * @param feed OData entity set.
      * @param reference reference class.
-     * @return <code>FeedResource</code> object.
+     * @return <tt>FeedResource</tt> object.
      */
     public static <T extends FeedResource> T getFeed(final ODataEntitySet feed, final Class<T> reference) {
         final T feedResource = ResourceFactory.newFeed(reference);
@@ -210,11 +209,10 @@ public final class ODataBinder {
     }
 
     /**
-     * Gets
-     * <code>ODataServiceDocument</code> from the given service document resource.
+     * Gets <tt>ODataServiceDocument</tt> from the given service document resource.
      *
      * @param resource service document resource.
-     * @return <code>ODataServiceDocument</code> object.
+     * @return <tt>ODataServiceDocument</tt> object.
      */
     public static ODataServiceDocument getODataServiceDocument(final ServiceDocumentResource resource) {
         final ODataServiceDocument serviceDocument = new ODataServiceDocument();
@@ -227,23 +225,21 @@ public final class ODataBinder {
     }
 
     /**
-     * Gets
-     * <code>ODataEntitySet</code> from the given feed resource.
+     * Gets <tt>ODataEntitySet</tt> from the given feed resource.
      *
      * @param resource feed resource.
-     * @return <code>ODataEntitySet</code> object.
+     * @return <tt>ODataEntitySet</tt> object.
      */
     public static ODataEntitySet getODataEntitySet(final FeedResource resource) {
         return getODataEntitySet(resource, null);
     }
 
     /**
-     * Gets
-     * <code>ODataEntitySet</code> from the given feed resource.
+     * Gets <tt>ODataEntitySet</tt> from the given feed resource.
      *
      * @param resource feed resource.
      * @param defaultBaseURI default base URI.
-     * @return <code>ODataEntitySet</code> object.
+     * @return <tt>ODataEntitySet</tt> object.
      */
     public static ODataEntitySet getODataEntitySet(final FeedResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
@@ -273,23 +269,21 @@ public final class ODataBinder {
     }
 
     /**
-     * Gets
-     * <code>ODataEntity</code> from the given entry resource.
+     * Gets <tt>ODataEntity</tt> from the given entry resource.
      *
      * @param resource entry resource.
-     * @return <code>ODataEntity</code> object.
+     * @return <tt>ODataEntity</tt> object.
      */
     public static ODataEntity getODataEntity(final EntryResource resource) {
         return getODataEntity(resource, null);
     }
 
     /**
-     * Gets
-     * <code>ODataEntity</code> from the given entry resource.
+     * Gets <tt>ODataEntity</tt> from the given entry resource.
      *
      * @param resource entry resource.
      * @param defaultBaseURI default base URI.
-     * @return <code>ODataEntity</code> object.
+     * @return <tt>ODataEntity</tt> object.
      */
     public static ODataEntity getODataEntity(final EntryResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
@@ -366,13 +360,12 @@ public final class ODataBinder {
     }
 
     /**
-     * Gets a
-     * <code>LinkResource</code> from the given OData link.
+     * Gets a <tt>LinkResource</tt> from the given OData link.
      *
      * @param <T> link resource type.
      * @param link OData link.
      * @param reference reference class.
-     * @return <code>LinkResource</code> object.
+     * @return <tt>LinkResource</tt> object.
      */
     @SuppressWarnings("unchecked")
     public static <T extends LinkResource> T getLinkResource(final ODataLink link, final Class<T> reference) {

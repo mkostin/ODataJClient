@@ -70,6 +70,16 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.carrotsearch</groupId>
+      <artifactId>junit-benchmarks</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -127,7 +137,7 @@
       <id>perf</id>
 
       <build>
-        <defaultGoal>clean test surefire-report:report</defaultGoal>
+        <defaultGoal>clean test exec:exec</defaultGoal>
         
         <plugins>
           <plugin>
@@ -149,12 +159,32 @@
                   <includes>
                     <include>**/*PerfTest.java</include>
                   </includes>
-                  
-                  <parallel>methods</parallel>
-                  <useUnlimitedThreads>true</useUnlimitedThreads>
                 </configuration>
               </execution>
             </executions>
+          </plugin>          
+                  
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <inherited>true</inherited>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <executable>java</executable>
+              <classpathScope>test</classpathScope>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath/>
+                <argument>com.msopentech.odatajclient.engine.performance.PerfTestReporter</argument>
+                <argument>${project.basedir}</argument>
+              </arguments>
+            </configuration>
           </plugin>
         </plugins>        
       </build>

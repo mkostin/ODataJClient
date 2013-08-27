@@ -16,11 +16,13 @@
 package com.msopentech.odatajclient.engine.performance;
 
 import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
-public class ThousandPerfTest extends SinglePerfTest {
+public class ThousandPerfTest extends BasicPerfTest {
 
     @Override
-    public void readAtomViaLowerlevelLibs() throws Exception {
+    public void readAtomViaLowerlevelLibs() throws ParserConfigurationException, SAXException, IOException {
         for (int i = 0; i < 1000; i++) {
             super.readAtomViaLowerlevelLibs();
         }
@@ -34,14 +36,17 @@ public class ThousandPerfTest extends SinglePerfTest {
     }
 
     @Override
-    public void writeAtomViaLowerlevelLibs() {
+    public void writeAtomViaLowerlevelLibs()
+            throws ParserConfigurationException, ClassNotFoundException,
+            InstantiationException, IllegalAccessException {
+
         for (int i = 0; i < 1000; i++) {
             super.writeAtomViaLowerlevelLibs();
         }
     }
 
     @Override
-    public void writeAtomViaOdataJClient() {
+    public void writeAtomViaOdataJClient() throws IOException {
         for (int i = 0; i < 1000; i++) {
             super.writeAtomViaOdataJClient();
         }
@@ -62,14 +67,14 @@ public class ThousandPerfTest extends SinglePerfTest {
     }
 
     @Override
-    public void writeJSONViaLowerlevelLibs() {
+    public void writeJSONViaLowerlevelLibs() throws IOException {
         for (int i = 0; i < 1000; i++) {
             super.writeJSONViaLowerlevelLibs();
         }
     }
 
     @Override
-    public void writeJSONViaOdataJClient() {
+    public void writeJSONViaOdataJClient() throws IOException {
         for (int i = 0; i < 1000; i++) {
             super.writeJSONViaOdataJClient();
         }
