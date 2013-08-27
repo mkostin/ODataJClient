@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
@@ -37,7 +38,7 @@ import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.proxy.api.context.EntityLinkDesc;
-import com.msopentech.odatajclient.proxy.api.context.EntityTypeDesc;
+import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
 import com.msopentech.odatajclient.proxy.api.context.LinkContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -63,13 +64,11 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
      */
     private static final Logger LOG = LoggerFactory.getLogger(EntityTypeInvocationHandler.class);
 
-    private final ODataEntity entity;
+    private ODataEntity entity;
 
     private final Class<?> typeRef;
 
-    private final EntityTypeDesc description;
-
-    private final Object key;
+    private EntityUUID uuid;
 
     private final EntityContext entityContext = EntityContainerFactory.getContext().getEntityContext();
 
@@ -107,22 +106,27 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         this.entity = entity;
         this.typeRef = typeRef;
 
-        this.description = new EntityTypeDesc(
+        this.uuid = new EntityUUID(
                 Utility.getNamespace(typeRef),
                 entityContainerName,
                 entitySetName,
-                entity.getName());
-
-        this.key = Utility.getKey(typeRef, entity);
-
+                entity.getName(),
+                Utility.getKey(typeRef, entity));
     }
 
-    public Object getKey() {
-        return key;
+    public void setEntity(final ODataEntity entity) {
+        this.entity = entity;
+
+        this.uuid = new EntityUUID(
+                Utility.getNamespace(typeRef),
+                getUUID().getContainerName(),
+                getUUID().getEntitySetName(),
+                entity.getName(),
+                Utility.getKey(typeRef, entity));
     }
 
-    public EntityTypeDesc getDescription() {
-        return description;
+    public EntityUUID getUUID() {
+        return uuid;
     }
 
     public String getName() {
@@ -130,11 +134,11 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     public String getEntityContainerName() {
-        return description.getContainerName();
+        return uuid.getContainerName();
     }
 
     public String getEntitySetName() {
-        return description.getEntitySetName();
+        return uuid.getEntitySetName();
     }
 
     public Class<?> getTypeRef() {
@@ -233,6 +237,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         targets.add(handler);
                     }
 
+                    final ODataLink link = Utility.getNavigationLink(navProperty.name(), entity);
+                    // replace the link
+                    entity.removeLink(link);
+
                     // 4) attach target entities and create links
                     for (EntityTypeInvocationHandler target : targets) {
                         // attach target entity
@@ -258,19 +266,20 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         } else {
                             // if target or source are not new then add a new link into the context
                             // (see EntityCreateTestITCase.createWithNavigationLink())
-                            final NavigationProperty targetNavProperty =
-                                    Utility.getNavigationProperty(target.getTypeRef(), navProperty.relationship());
 
                             linkContext.attach(new EntityLinkDesc(
-                                    navProperty.name(),
-                                    this,
-                                    targetNavProperty == null ? null : targetNavProperty.name(),
-                                    target));
+                                    navProperty.name(), this, target, isCollection
+                                    ? ODataLinkType.ENTITY_SET_NAVIGATION : ODataLinkType.ENTITY_NAVIGATION));
                         }
                     }
                 }
             } else {
                 // if the getter exists and it is annotated as expected then get name/value and add a new property
+                ODataProperty odataProperty = entity.getProperty(property.name());
+                if (odataProperty != null) {
+                    entity.removeProperty(odataProperty);
+                }
+
                 entity.addProperty(getODataProperty(args[0], property));
 
                 if (entityContext.isAttached(this)) {
@@ -318,8 +327,11 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         final ODataLink link = Utility.getNavigationLink(property.name(), entity);
 
         if (link == null) {
-            // search for link in the context
-            res = linkContext.getLinkedEntities(this, property.name());
+            if (Collection.class.isAssignableFrom(getter.getReturnType())) {
+                res = getEntityProxies(linkContext.getLinkedEntities(this, property.name()));
+            } else {
+                res = getEntityProxy(linkContext.getLinkedEntities(this, property.name()));
+            }
         } else {
             if (link instanceof ODataInlineEntity) {
                 // return entity
@@ -337,7 +349,11 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         ((ODataInlineEntitySet) link).getEntitySet());
             } else {
                 if (linkContext.isAttached(this, property.name())) {
-                    res = linkContext.getLinkedEntities(this, property.name());
+                    if (Collection.class.isAssignableFrom(getter.getReturnType())) {
+                        res = getEntityProxies(linkContext.getLinkedEntities(this, property.name()));
+                    } else {
+                        res = getEntityProxy(linkContext.getLinkedEntities(this, property.name()));
+                    }
                 } else {
                     // navigate
                     final URI uri = URIUtils.getURI(getFactory().getServiceRoot(), link.getLink().toASCIIString());
@@ -408,7 +424,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     @Override
     public String toString() {
-        return description + "(" + key + ")";
+        return uuid.toString();
     }
 
     @Override
@@ -417,10 +433,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return obj instanceof EntityTypeInvocationHandler
-                && ((EntityTypeInvocationHandler) obj).getDescription().equals(description)
-                && ((EntityTypeInvocationHandler) obj).getKey() != null
-                && ((EntityTypeInvocationHandler) obj).getKey().equals(key);
+                && ((EntityTypeInvocationHandler) obj).getUUID().getKey() != null
+                && ((EntityTypeInvocationHandler) obj).getUUID().equals(uuid);
     }
 }

@@ -22,6 +22,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -68,6 +72,8 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
             jgen.writeStringField(ODataConstants.JSON_MEDIA_CONTENT_TYPE, entry.getMediaContentType());
         }
 
+        final Map<String, List<String>> entitySetLinks = new HashMap<String, List<String>>();
+
         for (JSONLink link : entry.getNavigationLinks()) {
             if (link.getInlineEntry() != null) {
                 jgen.writeObjectField(link.getTitle(), link.getInlineEntry());
@@ -82,14 +88,27 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
                 }
 
                 if (type == ODataLinkType.ENTITY_SET_NAVIGATION) {
-                    jgen.writeArrayFieldStart(link.getTitle() + ODataConstants.JSON_BIND_LINK_SUFFIX);
-                    jgen.writeString(link.getHref());
-                    jgen.writeEndArray();
+                    final List<String> uris;
+                    if (entitySetLinks.containsKey(link.getTitle())) {
+                        uris = entitySetLinks.get(link.getTitle());
+                    } else {
+                        uris = new ArrayList<String>();
+                        entitySetLinks.put(link.getTitle(), uris);
+                    }
+                    uris.add(link.getHref());
                 } else {
                     jgen.writeStringField(link.getTitle() + ODataConstants.JSON_BIND_LINK_SUFFIX, link.getHref());
                 }
             }
         }
+        for (Map.Entry<String, List<String>> entitySetLink : entitySetLinks.entrySet()) {
+            jgen.writeArrayFieldStart(entitySetLink.getKey() + ODataConstants.JSON_BIND_LINK_SUFFIX);
+            for (String uri : entitySetLink.getValue()) {
+                jgen.writeString(uri);
+            }
+            jgen.writeEndArray();
+        }
+
         for (JSONLink link : entry.getMediaEditLinks()) {
             if (link.getTitle() == null) {
                 jgen.writeStringField(ODataConstants.JSON_MEDIAEDIT_LINK, link.getHref());

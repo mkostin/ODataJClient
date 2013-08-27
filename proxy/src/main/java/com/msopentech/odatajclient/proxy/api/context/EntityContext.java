@@ -15,101 +15,142 @@
  */
 package com.msopentech.odatajclient.proxy.api.context;
 
-import com.msopentech.odatajclient.proxy.api.AttachedEntities;
+import com.msopentech.odatajclient.proxy.api.AttachedEntity;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class EntityContext {
+/**
+ * Entity context.
+ */
+public class EntityContext implements Iterable<AttachedEntity> {
 
-    private final Map<EntityTypeDesc, AttachedEntities> attached = new HashMap<EntityTypeDesc, AttachedEntities>();
+    /**
+     * Attached entities with not null key.
+     * <p>
+     * This map have to be used to search for entities by key.
+     */
+    private final Map<EntityUUID, EntityTypeInvocationHandler> searchableEntities =
+            new HashMap<EntityUUID, EntityTypeInvocationHandler>();
 
-    private final Map<EntityTypeInvocationHandler, AttachedEntityStatus> entities =
+    /**
+     * All attached entities (new entities included).
+     * <p>
+     * Attachment order will be maintained.
+     */
+    private final Map<EntityTypeInvocationHandler, AttachedEntityStatus> allAttachedEntities =
             new LinkedHashMap<EntityTypeInvocationHandler, AttachedEntityStatus>();
 
+    /**
+     * Attaches an entity with status <tt>NEW</tt>.
+     * <p>
+     * Use this method to attach a new created entity.
+     *
+     * @see AttachedEntityStatus
+     * @param entity entity to be attached.
+     */
     public void attachNew(final EntityTypeInvocationHandler entity) {
-        if (entities.containsKey(entity)) {
+        if (allAttachedEntities.containsKey(entity)) {
             throw new IllegalStateException("An entity with the same key has already been attached");
         }
-        entities.put(entity, AttachedEntityStatus.NEW);
+        allAttachedEntities.put(entity, AttachedEntityStatus.NEW);
     }
 
+    /**
+     * Attaches an existing entity with status <tt>ATTACHED</tt>.
+     * <p>
+     * Use this method to attach an existing entity.
+     *
+     * @see AttachedEntityStatus
+     * @param entity entity to be attached.
+     */
     public void attach(final EntityTypeInvocationHandler entity) {
         attach(entity, AttachedEntityStatus.ATTACHED);
     }
 
+    /**
+     * Attaches an entity with specified status.
+     * <p>
+     * Use this method to attach an existing entity.
+     *
+     * @see AttachedEntityStatus
+     * @param entity entity to be attached.
+     * @param status status.
+     */
     public void attach(final EntityTypeInvocationHandler entity, final AttachedEntityStatus status) {
-        if (entities.containsKey(entity)) {
-            throw new IllegalStateException("An entity with the same key has already been attached");
+        if (isAttached(entity)) {
+            throw new IllegalStateException("An entity with the same profile has already been attached");
         }
 
-        entities.put(entity, status);
+        allAttachedEntities.put(entity, status);
 
-        if (entity.getKey() != null) {
-            final EntityTypeDesc desc = entity.getDescription();
-
-            final AttachedEntities attachedEntities;
-            if (attached.containsKey(desc)) {
-                attachedEntities = attached.get(desc);
-            } else {
-                attachedEntities = new AttachedEntities();
-                attached.put(desc, attachedEntities);
-            }
-
-            if (attachedEntities.contains(entity.getKey())) {
-                throw new IllegalStateException("An entity with the same key has already been attached");
-            }
-
-            attachedEntities.add(entity.getKey(), entity);
+        if (entity.getUUID().getKey() != null) {
+            searchableEntities.put(entity.getUUID(), entity);
         }
     }
 
+    /**
+     * Detaches entity.
+     *
+     * @param entity entity to be detached.
+     */
     public void detach(final EntityTypeInvocationHandler entity) {
-
-        if (attached.containsKey(entity.getDescription())) {
-            final AttachedEntities attachedEntities = attached.get(entity.getDescription());
-            attachedEntities.remove(entity.getKey());
-            if(attachedEntities.isEmpty()){
-                attached.remove(entity.getDescription());
-            }
+        if (searchableEntities.containsKey(entity.getUUID())) {
+            searchableEntities.remove(entity.getUUID());
         }
-
-        entities.remove(entity);
+        allAttachedEntities.remove(entity);
     }
 
-    public EntityTypeInvocationHandler getEntity(final Object key) {
-        final Set<EntityTypeInvocationHandler> res = new HashSet<EntityTypeInvocationHandler>();
-        for (AttachedEntities attachedEntities : attached.values()) {
-            if (attachedEntities.contains(key)) {
-                res.add(attachedEntities.getEntity(key));
-            }
-        }
-
-        if (res.size() > 1) {
-            throw new IllegalStateException(
-                    "More than one entities with the specified key have been found in the context");
-        }
-
-        return res.isEmpty() ? null : res.iterator().next();
+    /**
+     * Detaches all attached entities.
+     * <p>
+     * Use this method to clears the entity context.
+     */
+    public void detachAll() {
+        allAttachedEntities.clear();
+        searchableEntities.clear();
     }
 
+    /**
+     * Searches an entity with the specified key.
+     *
+     * @param uuid entity key.
+     * @return retrieved entity.
+     */
+    public EntityTypeInvocationHandler getEntity(final EntityUUID uuid) {
+        return searchableEntities.get(uuid);
+    }
+
+    /**
+     * Gets entity status.
+     *
+     * @param entity entity to be retrieved.
+     * @return attached entity status.
+     */
     public AttachedEntityStatus getStatus(final EntityTypeInvocationHandler entity) {
         if (!isAttached(entity)) {
             throw new IllegalStateException("Entity is not in the context");
         }
 
-        return entities.get(entity);
+        return allAttachedEntities.get(entity);
     }
 
+    /**
+     * Changes attached entity status.
+     *
+     * @param entity attached entity to be modified.
+     * @param status new status.
+     */
     public void setStatus(final EntityTypeInvocationHandler entity, final AttachedEntityStatus status) {
         if (!isAttached(entity)) {
             throw new IllegalStateException("Entity is not in the context");
         }
 
-        final AttachedEntityStatus current = entities.get(entity);
+        final AttachedEntityStatus current = allAttachedEntities.get(entity);
 
         // Previously deleted object cannot be modified anymore.
         if (current == AttachedEntityStatus.DELETED) {
@@ -124,11 +165,33 @@ public class EntityContext {
                 || (status == AttachedEntityStatus.CHANGED && current == AttachedEntityStatus.ATTACHED)
                 || (status == AttachedEntityStatus.CHANGED && current == AttachedEntityStatus.LINKED)
                 || (status == AttachedEntityStatus.DELETED)) {
-            entities.put(entity, status);
+            allAttachedEntities.put(entity, status);
         }
     }
 
+    /**
+     * Checks if an entity is already attached.
+     *
+     * @param entity entity.
+     * @return 'TRUE' if already attached; 'FALSE' otherwise.
+     */
     public boolean isAttached(final EntityTypeInvocationHandler entity) {
-        return entities.containsKey(entity);
+        return allAttachedEntities.containsKey(entity)
+                || (entity.getUUID().getKey() != null && searchableEntities.containsKey(entity.getUUID()));
+    }
+
+    /**
+     * Iterator.
+     *
+     * @return attached entities iterator.
+     */
+    @Override
+    public Iterator<AttachedEntity> iterator() {
+        final List<AttachedEntity> res = new ArrayList<AttachedEntity>();
+        for (Map.Entry<EntityTypeInvocationHandler, AttachedEntityStatus> attachedEntity : allAttachedEntities.
+                entrySet()) {
+            res.add(new AttachedEntity(attachedEntity.getKey(), attachedEntity.getValue()));
+        }
+        return res.iterator();
     }
 }

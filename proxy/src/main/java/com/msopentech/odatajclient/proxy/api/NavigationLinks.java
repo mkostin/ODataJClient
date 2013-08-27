@@ -15,45 +15,62 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
+import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class AttachedLinks {
+public class NavigationLinks {
 
-    private final Map<String, Set<EntityTypeInvocationHandler>> links =
-            new HashMap<String, Set<EntityTypeInvocationHandler>>();
+    private final Map<String, NavigationLink> navigationLinks = new HashMap<String, NavigationLink>();
+
+    public Set<String> getLinkNames() {
+        return navigationLinks.keySet();
+    }
+
+    public ODataLinkType getLinkType(final String sourceName) {
+        return navigationLinks.get(sourceName).getLinkType();
+    }
+
+    public NavigationLink get(final String name) {
+        return navigationLinks.get(name);
+    }
 
     public Set<EntityTypeInvocationHandler> getLinkedEntities(final String name) {
-        return links.get(name);
+        return navigationLinks.get(name).getLinkEntities();
     }
 
     public boolean contains(final String name) {
-        return links.containsKey(name);
+        return navigationLinks.containsKey(name);
     }
 
-    public void add(final String name, final EntityTypeInvocationHandler entity) {
-        add(name, Collections.<EntityTypeInvocationHandler>singleton(entity));
+    public void add(final String name, final EntityTypeInvocationHandler entity, final ODataLinkType type) {
+        add(name, Collections.<EntityTypeInvocationHandler>singleton(entity), type);
     }
 
-    public void add(final String name, final Collection<EntityTypeInvocationHandler> entity) {
-        final Set<EntityTypeInvocationHandler> linked;
+    public void add(final String name, final Collection<EntityTypeInvocationHandler> entity, final ODataLinkType type) {
+        final NavigationLink attachedLink;
+
         if (contains(name)) {
-            linked = getLinkedEntities(name);
+            attachedLink = navigationLinks.get(name);
         } else {
-            linked = new HashSet<EntityTypeInvocationHandler>();
-            links.put(name, linked);
+            attachedLink = new NavigationLink(type);
+            navigationLinks.put(name, new NavigationLink(type));
         }
 
-        linked.addAll(entity);
+        if (attachedLink.getLinkType() != type) {
+            throw new IllegalArgumentException(
+                    "Invalid link type: expected '" + attachedLink.getLinkType() + "'; found '" + type + "'");
+        }
+
+        getLinkedEntities(name).addAll(entity);
     }
 
     public void remove(final String name) {
-        links.remove(name);
+        navigationLinks.remove(name);
     }
 
     public void remove(final String name, final EntityTypeInvocationHandler entity) {
@@ -62,7 +79,7 @@ public class AttachedLinks {
 
     public void remove(final String name, final Collection<EntityTypeInvocationHandler> entities) {
         if (contains(name)) {
-            Set<EntityTypeInvocationHandler> linkedEntities = getLinkedEntities(name);
+            final Set<EntityTypeInvocationHandler> linkedEntities = getLinkedEntities(name);
             linkedEntities.removeAll(entities);
             if (linkedEntities.isEmpty()) {
                 remove(name);
@@ -71,6 +88,6 @@ public class AttachedLinks {
     }
 
     public boolean isEmpty() {
-        return links.isEmpty();
+        return navigationLinks.isEmpty();
     }
 }

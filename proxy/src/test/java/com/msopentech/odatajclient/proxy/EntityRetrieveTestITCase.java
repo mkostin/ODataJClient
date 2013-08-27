@@ -18,7 +18,6 @@ package com.msopentech.odatajclient.proxy;
 import static com.msopentech.odatajclient.proxy.AbstractTest.testDefaultServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -31,17 +30,12 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialTypes;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import org.junit.Test;
 
 /**
@@ -131,68 +125,6 @@ public class EntityRetrieveTestITCase extends AbstractTest {
         final Message message = container.getMessage().get(messageKey);
         assertNotNull(message);
         assertEquals("1", message.getFromUsername());
-    }
-
-    @Test
-    public void addInlineNavigationProperty() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer = customers.newEntity();
-
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.CustomerInfo customerInfos =
-                container.getCustomerInfo();
-        final CustomerInfo customerInfo = customerInfos.newEntity();
-
-        customer.setInfo(customerInfo);
-
-        assertNotNull(customer.getInfo());
-    }
-
-    @Test
-    public void addNavigationProperty() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer = customers.newEntity();
-
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Order orders =
-                container.getOrder();
-
-        final List<Order> toBeLinked = new ArrayList<Order>();
-        toBeLinked.add(orders.newEntity());
-        toBeLinked.add(orders.newEntity());
-        toBeLinked.add(orders.newEntity());
-
-        customer.setOrders(toBeLinked);
-
-        assertNotNull(customer.getOrders());
-        assertEquals(3, customer.getOrders().size());
-    }
-
-    @Test
-    public void addProperty() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer = customers.newEntity();
-
-        final ContactDetails cd = new ContactDetails();
-        cd.setAlternativeNames(Arrays.asList("alternative1", "alternative2"));
-
-        final ContactDetails bcd = new ContactDetails();
-        bcd.setAlternativeNames(Arrays.asList("alternative3", "alternative4"));
-
-        customer.setCustomerId(100);
-        customer.setPrimaryContactInfo(cd);
-        customer.setBackupContactInfo(Collections.<ContactDetails>singletonList(bcd));
-
-        assertEquals(Integer.valueOf(100), customer.getCustomerId());
-        assertNotNull(customer.getPrimaryContactInfo().getAlternativeNames());
-        assertEquals(2, customer.getPrimaryContactInfo().getAlternativeNames().size());
-        assertTrue(customer.getPrimaryContactInfo().getAlternativeNames().contains("alternative1"));
-        assertEquals(2, customer.getBackupContactInfo().iterator().next().getAlternativeNames().size());
-        assertTrue(customer.getBackupContactInfo().iterator().next().getAlternativeNames().contains("alternative4"));
     }
 
     private Customer readCustomer(final DefaultContainer container, int id) {

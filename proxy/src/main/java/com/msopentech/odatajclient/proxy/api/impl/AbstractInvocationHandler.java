@@ -25,11 +25,9 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.proxy.api.context.Context;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
-import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -40,6 +38,7 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -313,10 +312,38 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
             res.add((T) getEntityProxy(entity, entityContainerName, entitySet.getName(), enType, checkInTheContext));
         }
 
-        return res;
+        return Collections.unmodifiableCollection(res);
     }
 
     @SuppressWarnings("unchecked")
+    protected <T> Collection<T> getEntityProxies(final Collection<EntityTypeInvocationHandler> handlers) {
+        final Collection<T> res = new HashSet<T>();
+
+        if (handlers != null) {
+            for (EntityTypeInvocationHandler handler : handlers) {
+                res.add((T) Proxy.newProxyInstance(
+                        handler.getClass().getClassLoader(),
+                        new Class<?>[] {(Class<?>) handler.getTypeRef()},
+                        handler));
+            }
+        }
+
+        return Collections.unmodifiableCollection(res);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T getEntityProxy(final Collection<EntityTypeInvocationHandler> handlers) {
+        if (handlers == null || handlers.isEmpty()) {
+            return null;
+        } else {
+            final EntityTypeInvocationHandler handler = handlers.iterator().next();
+            return (T) Proxy.newProxyInstance(
+                    handler.getClass().getClassLoader(),
+                    new Class<?>[] {(Class<?>) handler.getTypeRef()},
+                    handler);
+        }
+    }
+
     protected <T> T getEntityProxy(
             final ODataEntity entity,
             final String entityContainerName,
@@ -339,25 +366,12 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
         if (checkInTheContext) {
             if (EntityContainerFactory.getContext().getEntityContext().isAttached(handler)) {
-                handler = EntityContainerFactory.getContext().getEntityContext().getEntity(handler.getKey());
+                handler = EntityContainerFactory.getContext().getEntityContext().getEntity(handler.getUUID());
             }
         }
         return (T) Proxy.newProxyInstance(
                 this.getClass().getClassLoader(),
                 new Class<?>[] {(Class<?>) type},
                 handler);
-    }
-
-    protected <T> String getEntityName(final Class<T> entityType) {
-        final Annotation ann = entityType.getAnnotation(EntityType.class);
-        if (ann == null) {
-            throw new IllegalArgumentException("Invalid entity type " + entityType);
-        }
-        return ((EntityType) ann).name();
-    }
-
-    protected EntityTypeInvocationHandler searchForAttachedEntity(final Object key) {
-        final Context context = EntityContainerFactory.getContext();
-        return context.getEntityContext().getEntity(key);
     }
 }

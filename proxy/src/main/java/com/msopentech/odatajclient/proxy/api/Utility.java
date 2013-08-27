@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.proxy.api;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
@@ -150,7 +151,11 @@ public class Utility {
         } else {
             final Class<?> keyRef = getCompoundKeyRef(entityTypeRef);
             if (keyRef == null) {
-                res = entity.getProperty(firstValidEntityKey(entityTypeRef));
+                final ODataProperty property = entity.getProperty(firstValidEntityKey(entityTypeRef));
+                res = property == null || !property.hasPrimitiveValue()
+                        ? null
+                        : property.getPrimitiveValue().toValue();
+
             } else {
                 res = populateCompoundKey(keyRef, entity);
             }
@@ -179,6 +184,15 @@ public class Utility {
         }
 
         return res;
+    }
+
+    public static String getEntityTypeName(final Class<?> ref) {
+        final Annotation annotation = ref.getAnnotation(EntityType.class);
+        if (!(annotation instanceof EntityType)) {
+            throw new IllegalArgumentException(ref.getPackage().getName()
+                    + " is not annotated as @" + EntityType.class.getSimpleName());
+        }
+        return ((EntityType) annotation).name();
     }
 
     public static String getNamespace(final Class<?> ref) {

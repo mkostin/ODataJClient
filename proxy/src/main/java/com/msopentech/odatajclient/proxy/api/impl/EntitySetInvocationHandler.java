@@ -15,28 +15,43 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
+import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
+import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
+import com.msopentech.odatajclient.proxy.api.AttachedEntity;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
+import com.msopentech.odatajclient.proxy.api.Utility;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
+import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
+import com.msopentech.odatajclient.proxy.api.context.EntityContext;
+import com.msopentech.odatajclient.proxy.api.context.EntityLinkDesc;
+import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
+import com.msopentech.odatajclient.proxy.api.context.LinkContext;
 import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +142,13 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
     @Override
     @SuppressWarnings("unchecked")
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        if ("count".equals(method.getName())) {
+        if ("delete".equals(method.getName())) {
+            if (args[0] instanceof Collection) {
+                delete((Collection<T>) args[0]);
+            } else {
+                delete((KEY) args[0]);
+            }
+        } else if ("count".equals(method.getName())) {
             return count();
         } else if ("exists".equals(method.getName())) {
             return exists((KEY) args[0]);
@@ -137,9 +158,15 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             return getAll();
         } else if ("newEntity".equals(method.getName())) {
             return newEntity();
+        } else if ("flush".equals(method.getName())) {
+            flush();
+        } else {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        throw new UnsupportedOperationException("Not supported yet.");
+        final Constructor<Void> cv = Void.class.getDeclaredConstructor();
+        cv.setAccessible(true);
+        return cv.newInstance();
     }
 
     @Override
@@ -171,21 +198,31 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             throw new IllegalArgumentException("Null key");
         }
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(this.uri.toASCIIString());
+        EntityTypeInvocationHandler handler = EntityContainerFactory.getContext().getEntityContext().getEntity(
+                new EntityUUID(
+                Utility.getNamespace(typeRef),
+                container.getEntityContainerName(),
+                entitySetName,
+                Utility.getNamespace(typeRef) + "." + Utility.getEntityTypeName(typeRef),
+                key));
 
-        if (key.getClass().getAnnotation(CompoundKey.class) == null) {
-            uriBuilder.appendKeySegment(key);
-        } else {
-            uriBuilder.appendKeySegment(getCompoundKey(key));
+        if (handler == null) {
+            final ODataURIBuilder uriBuilder = new ODataURIBuilder(this.uri.toASCIIString());
+
+            if (key.getClass().getAnnotation(CompoundKey.class) == null) {
+                uriBuilder.appendKeySegment(key);
+            } else {
+                uriBuilder.appendKeySegment(getCompoundKey(key));
+            }
+
+            handler = EntityTypeInvocationHandler.getInstance(
+                    ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute().getBody(), this);
         }
-
-        final ODataEntity entity =
-                ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute().getBody();
 
         return (T) Proxy.newProxyInstance(
                 this.getClass().getClassLoader(),
                 new Class<?>[] {typeRef},
-                EntityTypeInvocationHandler.getInstance(entity, this));
+                handler);
     }
 
     @Override
@@ -195,10 +232,15 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
         final List<T> beans = new ArrayList<T>(entitySet.getEntities().size());
         for (ODataEntity entity : entitySet.getEntities()) {
+            EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
+
+            EntityTypeInvocationHandler handlerInTheContext =
+                    EntityContainerFactory.getContext().getEntityContext().getEntity(handler.getUUID());
+
             beans.add((T) Proxy.newProxyInstance(
                     this.getClass().getClassLoader(),
                     new Class<?>[] {typeRef},
-                    EntityTypeInvocationHandler.getInstance(entity, this)));
+                    handlerInTheContext == null ? handler : handlerInTheContext));
         }
 
         return beans;
@@ -216,27 +258,141 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
     @Override
     public void delete(final KEY key) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final EntityContext entityContext = EntityContainerFactory.getContext().getEntityContext();
+
+        EntityTypeInvocationHandler entity = entityContext.getEntity(new EntityUUID(
+                Utility.getNamespace(typeRef),
+                container.getEntityContainerName(),
+                entitySetName,
+                Utility.getEntityTypeName(typeRef),
+                key));
+
+        if (entity == null) {
+            // search for entity
+            final T en = get(key);
+            entity = (EntityTypeInvocationHandler) Proxy.getInvocationHandler(en);
+            entityContext.attach(entity, AttachedEntityStatus.DELETED);
+        } else {
+            entityContext.setStatus(entity, AttachedEntityStatus.DELETED);
+        }
     }
 
     @Override
     public void delete(final Iterable<T> entities) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final EntityContext entityContext = EntityContainerFactory.getContext().getEntityContext();
+
+        for (T en : entities) {
+            final EntityTypeInvocationHandler entity = (EntityTypeInvocationHandler) Proxy.getInvocationHandler(en);
+            if (entityContext.isAttached(entity)) {
+                entityContext.setStatus(entity, AttachedEntityStatus.DELETED);
+            } else {
+                entityContext.attach(entity, AttachedEntityStatus.DELETED);
+            }
+        }
     }
 
     @Override
     public void flush() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final EntityContext entityContext = EntityContainerFactory.getContext().getEntityContext();
+        final LinkContext linkContext = EntityContainerFactory.getContext().getLinkContext();
+
+        // process links 
+        // TODO: it should be already attached .... choose the right place
+        for (EntityLinkDesc link : linkContext) {
+            if (!entityContext.isAttached(link.getSource())) {
+                entityContext.attach(link.getSource(), AttachedEntityStatus.CHANGED);
+            }
+
+            for (EntityTypeInvocationHandler target : link.getTargets()) {
+                final ODataEntity entity;
+
+                // if the target is new then create it before and add the link to the source
+                final AttachedEntityStatus status = entityContext.getStatus(target);
+                switch (status) {
+                    case NEW:
+                        // create target
+                        entity = flushCreate(target);
+                        break;
+                    case CHANGED:
+                        entity = target.getEntity();
+                        break;
+                    case DELETED:
+                        // ignore the linnk
+                        entity = null;
+                        break;
+                    default:
+                        entity = target.getEntity();
+                        entityContext.detach(target);
+                }
+
+                if (entity != null) {
+                    final URI uri =
+                            URIUtils.getURI(getFactory().getServiceRoot(), entity.getEditLink().toASCIIString());
+
+                    final ODataLink odataLink = link.getType() == ODataLinkType.ENTITY_NAVIGATION
+                            ? ODataFactory.newEntityNavigationLink(link.getSourceName(), uri)
+                            : ODataFactory.newFeedNavigationLink(link.getSourceName(), uri);
+
+                    // add link to the source
+                    link.getSource().getEntity().addLink(odataLink);
+                }
+            }
+        }
+
+        linkContext.detachAll();
+
+        for (AttachedEntity attachedEntity : entityContext) {
+            switch (attachedEntity.getStatus()) {
+                case NEW:
+                    flushCreate(attachedEntity.getEntity());
+                    break;
+                case CHANGED:
+                    flushUpdate(attachedEntity.getEntity());
+                    break;
+                case DELETED:
+                    flushDelete(attachedEntity.getEntity());
+                    break;
+                default:
+                    entityContext.detach(attachedEntity.getEntity());
+            }
+        }
+
+        entityContext.detachAll();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T newEntity() {
-        final ODataEntity entity = ODataFactory.newEntity(container.getSchemaName() + "." + getEntityName(typeRef));
+        final ODataEntity entity =
+                ODataFactory.newEntity(container.getSchemaName() + "." + Utility.getEntityTypeName(typeRef));
 
         final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
         EntityContainerFactory.getContext().getEntityContext().attachNew(handler);
 
         return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class<?>[] {typeRef}, handler);
+    }
+
+    private ODataEntity flushCreate(final EntityTypeInvocationHandler entity) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(entity.getFactory().getServiceRoot());
+        uriBuilder.appendEntitySetSegment(entity.getEntitySetName());
+
+        final ODataEntityCreateResponse res =
+                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), entity.getEntity())
+                .execute();
+
+        EntityContainerFactory.getContext().getEntityContext().detach(entity);
+        entity.setEntity(res.getBody());
+        return entity.getEntity();
+    }
+
+    private void flushUpdate(final EntityTypeInvocationHandler entity) {
+        ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.REPLACE, entity.getEntity()).execute();
+        EntityContainerFactory.getContext().getEntityContext().detach(entity);
+    }
+
+    private void flushDelete(final EntityTypeInvocationHandler entity) {
+        ODataCUDRequestFactory.getDeleteRequest(URIUtils.getURI(
+                entity.getFactory().getServiceRoot(), entity.getEntity().getEditLink().toASCIIString())).execute();
+        EntityContainerFactory.getContext().getEntityContext().detach(entity);
     }
 }

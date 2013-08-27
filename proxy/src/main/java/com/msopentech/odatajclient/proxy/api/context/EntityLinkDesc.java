@@ -15,8 +15,11 @@
  */
 package com.msopentech.odatajclient.proxy.api.context;
 
+import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -28,37 +31,48 @@ public class EntityLinkDesc implements Serializable {
 
     private final String sourceName;
 
-    private final String targetName;
-
     private final EntityTypeInvocationHandler source;
 
-    private final EntityTypeInvocationHandler target;
+    private final Collection<EntityTypeInvocationHandler> targets;
+
+    private final ODataLinkType type;
 
     public EntityLinkDesc(
             final String sourceName,
             final EntityTypeInvocationHandler source,
-            final String targetName,
-            final EntityTypeInvocationHandler target) {
+            final Collection<EntityTypeInvocationHandler> target,
+            final ODataLinkType type) {
         this.sourceName = sourceName;
-        this.targetName = targetName;
         this.source = source;
-        this.target = target;
+        this.targets = target;
+        this.type = type;
+    }
+
+    public EntityLinkDesc(
+            final String sourceName,
+            final EntityTypeInvocationHandler source,
+            final EntityTypeInvocationHandler target,
+            final ODataLinkType type) {
+        this.sourceName = sourceName;
+        this.source = source;
+        this.targets = Collections.<EntityTypeInvocationHandler>singleton(target);
+        this.type = type;
     }
 
     public String getSourceName() {
         return sourceName;
     }
 
-    public String getTargetName() {
-        return targetName;
-    }
-
     public EntityTypeInvocationHandler getSource() {
         return source;
     }
 
-    public EntityTypeInvocationHandler getTarget() {
-        return target;
+    public Collection<EntityTypeInvocationHandler> getTargets() {
+        return targets;
+    }
+
+    public ODataLinkType getType() {
+        return type;
     }
 
     /**

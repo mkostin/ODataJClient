@@ -19,7 +19,7 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class EntityTypeDesc implements Serializable {
+public class EntityUUID implements Serializable {
 
     private static final long serialVersionUID = 4855025769803086495L;
 
@@ -31,15 +31,27 @@ public class EntityTypeDesc implements Serializable {
 
     private final String name;
 
-    public EntityTypeDesc(
+    private final Object key;
+
+    public EntityUUID(
             final String schemaName,
             final String containerName,
             final String entitySetName,
             final String name) {
+        this(schemaName, containerName, entitySetName, name, null);
+    }
+
+    public EntityUUID(
+            final String schemaName,
+            final String containerName,
+            final String entitySetName,
+            final String name,
+            final Object key) {
         this.schemaName = schemaName;
         this.containerName = containerName;
         this.entitySetName = entitySetName;
         this.name = name;
+        this.key = key;
     }
 
     public String getSchemaName() {
@@ -56,6 +68,10 @@ public class EntityTypeDesc implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public Object getKey() {
+        return key;
     }
 
     /**
@@ -79,6 +95,7 @@ public class EntityTypeDesc implements Serializable {
      */
     @Override
     public String toString() {
-        return schemaName + ":" + containerName + ":" + entitySetName + ":" + name;
+        return schemaName + ":" + containerName + ":" + entitySetName + ":" + name
+                + "(" + (key == null ? null : key.toString()) + ")";
     }
 }

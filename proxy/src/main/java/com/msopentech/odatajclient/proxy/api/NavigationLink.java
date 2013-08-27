@@ -15,32 +15,26 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
+import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
-public class AttachedEntities {
+public class NavigationLink {
 
-    private final Map<Object, EntityTypeInvocationHandler> entities =
-            new HashMap<Object, EntityTypeInvocationHandler>();
+    private final ODataLinkType type;
 
-    public EntityTypeInvocationHandler getEntity(final Object key) {
-        return entities.get(key);
+    private final Set<EntityTypeInvocationHandler> linkedEntities = new HashSet<EntityTypeInvocationHandler>();
+
+    public NavigationLink(final ODataLinkType type) {
+        this.type = type;
     }
 
-    public boolean contains(final Object key) {
-        return entities.containsKey(key);
+    public ODataLinkType getLinkType() {
+        return type;
     }
 
-    public EntityTypeInvocationHandler add(final Object key, final EntityTypeInvocationHandler entity) {
-        return entities.put(key, entity);
-    }
-
-    public EntityTypeInvocationHandler remove(final Object key) {
-        return entities.remove(key);
-    }
-
-    public boolean isEmpty() {
-        return entities.isEmpty();
+    public Set<EntityTypeInvocationHandler> getLinkEntities() {
+        return linkedEntities;
     }
 }
