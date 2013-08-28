@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -118,10 +117,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         this.entity = entity;
 
         this.uuid = new EntityUUID(
-                Utility.getNamespace(typeRef),
+                getUUID().getSchemaName(),
                 getUUID().getContainerName(),
                 getUUID().getEntitySetName(),
-                entity.getName(),
+                getUUID().getName(),
                 Utility.getKey(typeRef, entity));
     }
 
@@ -237,40 +236,28 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         targets.add(handler);
                     }
 
-                    final ODataLink link = Utility.getNavigationLink(navProperty.name(), entity);
                     // replace the link
-                    entity.removeLink(link);
+                    final ODataLink link = Utility.getNavigationLink(navProperty.name(), entity);
+                    if (link != null) {
+                        entity.removeLink(link);
+                    }
+
+                    // be sure to replace previous changes in the link context
+                    if (linkContext.isAttached(this, navProperty.name())) {
+                        linkContext.detach(this, navProperty.name());
+                    }
 
                     // 4) attach target entities and create links
                     for (EntityTypeInvocationHandler target : targets) {
                         // attach target entity
-                        final AttachedEntityStatus targetStatus;
-                        if (entityContext.isAttached(target)) {
-                            targetStatus = entityContext.getStatus(target);
-                        } else {
-                            targetStatus = AttachedEntityStatus.LINKED;
-                            entityContext.attach(target, targetStatus);
+                        if (!entityContext.isAttached(target)) {
+                            entityContext.attach(target, AttachedEntityStatus.LINKED);
                         }
 
                         // create the link
-                        if (!isCollection && targets.size() == 1
-                                && targetStatus == AttachedEntityStatus.NEW
-                                && sourceStatus == AttachedEntityStatus.NEW) {
-                            // if target and source are new make the link inline
-                            // (see EntityCreateTestITCase.createWithInlineAs...())
-
-                            // detach target (new target instance will be created inline)
-                            entityContext.detach(target);
-                            // add target inline
-                            entity.addLink(ODataFactory.newInlineEntity(navProperty.name(), null, target.getEntity()));
-                        } else {
-                            // if target or source are not new then add a new link into the context
-                            // (see EntityCreateTestITCase.createWithNavigationLink())
-
-                            linkContext.attach(new EntityLinkDesc(
-                                    navProperty.name(), this, target, isCollection
-                                    ? ODataLinkType.ENTITY_SET_NAVIGATION : ODataLinkType.ENTITY_NAVIGATION));
-                        }
+                        linkContext.attach(new EntityLinkDesc(
+                                navProperty.name(), this, target, isCollection
+                                ? ODataLinkType.ENTITY_SET_NAVIGATION : ODataLinkType.ENTITY_NAVIGATION));
                     }
                 }
             } else {

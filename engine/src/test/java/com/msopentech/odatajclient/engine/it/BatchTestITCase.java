@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.engine.it;
 
+import static com.msopentech.odatajclient.engine.it.AbstractTest.testAuthServiceRootURL;
+import static com.msopentech.odatajclient.engine.it.AbstractTest.testDefaultServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -47,6 +49,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.engine.utils.Wrapper;
 import java.io.IOException;
 import java.net.URI;
@@ -145,6 +148,82 @@ public class BatchTestITCase extends AbstractTest {
         assertEquals(Integer.valueOf(3), Integer.valueOf(
                 res.getHeader(ODataBatchConstants.CHANGESET_CONTENT_ID_NAME).iterator().next()));
         assertFalse(chgResponseItem.hasNext());
+    }
+
+    @Test
+    public void changesetWithReference() {
+        // create your request
+        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testDefaultServiceRootURL);
+        final BatchStreamManager streamManager = request.execute();
+
+        final ODataChangeset changeset = streamManager.addChangeset();
+        ODataEntity customer = getSampleCustomerProfile(20, "sample customer", false);
+
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testAuthServiceRootURL).appendEntitySetSegment("Customer");
+
+        // add create request
+        final ODataEntityCreateRequest createReq =
+                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), customer);
+
+        changeset.addRequest(createReq);
+
+        // retrieve request reference
+        int createRequestRef = changeset.getLastContentId();
+
+        // add update request: link CustomerInfo(17) to the new customer
+        final ODataEntity customerChanges = ODataFactory.newEntity(customer.getName());
+        customerChanges.addLink(ODataFactory.newEntityNavigationLink(
+                "Info",
+                new ODataURIBuilder(testAuthServiceRootURL).appendEntitySetSegment("CustomerInfo").
+                appendKeySegment(17).build()));
+
+        final ODataEntityUpdateRequest updateReq = ODataCUDRequestFactory.getEntityUpdateRequest(
+                URI.create("$" + createRequestRef), UpdateType.PATCH, customerChanges);
+
+        changeset.addRequest(updateReq);
+
+        final ODataBatchResponse response = streamManager.getResponse();
+        assertEquals(202, response.getStatusCode());
+        assertEquals("Accepted", response.getStatusMessage());
+
+        // verify response payload ...
+
+        final Iterator<ODataBatchResponseItem> iter = response.getBody();
+
+        final ODataBatchResponseItem item = iter.next();
+        assertTrue(item instanceof ODataChangesetResponseItem);
+
+        final ODataChangesetResponseItem chgitem = (ODataChangesetResponseItem) item;
+
+        ODataResponse res = chgitem.next();
+        assertEquals(201, res.getStatusCode());
+        assertTrue(res instanceof ODataEntityCreateResponse);
+
+        customer = ((ODataEntityCreateResponse) res).getBody();
+
+        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(
+                URIUtils.getURI(testDefaultServiceRootURL, customer.getEditLink().toASCIIString() + "/Info"));
+
+        assertEquals(Integer.valueOf(17),
+                req.execute().getBody().getProperty("CustomerInfoId").getPrimitiveValue().<Integer>toCastValue());
+
+        res = chgitem.next();
+        assertEquals(204, res.getStatusCode());
+        assertTrue(res instanceof ODataEntityUpdateResponse);
+
+        // clean ...
+        assertEquals(204, ODataCUDRequestFactory.getDeleteRequest(
+                URIUtils.getURI(testDefaultServiceRootURL, customer.getEditLink().toASCIIString())).execute().
+                getStatusCode());
+
+        try {
+            ODataRetrieveRequestFactory.getEntityRequest(
+                    URIUtils.getURI(testDefaultServiceRootURL, customer.getEditLink().toASCIIString())).
+                    execute().getBody();
+            fail();
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
     @Test

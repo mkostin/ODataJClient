@@ -66,7 +66,7 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
     /**
      * Response class about an ODataDeleteRequest.
      */
-    private static class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
+    private class ODataDeleteResponseImpl extends ODataResponseImpl implements ODataDeleteResponse {
 
         /**
          * Constructor.

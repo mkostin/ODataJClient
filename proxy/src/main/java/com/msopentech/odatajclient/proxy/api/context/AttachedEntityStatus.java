@@ -26,13 +26,25 @@ public enum AttachedEntityStatus {
      */
     NEW,
     /**
+     * New object (already attached in a batch request).
+     */
+    NEW_IN_BATCH,
+    /**
      * Modified object.
      */
     CHANGED,
     /**
+     * Modified object (already attached in a batch request).
+     */
+    CHANGED_IN_BATCH,
+    /**
      * Deleted object.
      */
     DELETED,
+    /**
+     * Deleted object (already attached in a batch request).
+     */
+    DELETED_IN_BATCH,
     /**
      * Attached because explicitely liked to another object.
      */

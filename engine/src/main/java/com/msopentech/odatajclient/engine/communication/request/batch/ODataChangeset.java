@@ -55,6 +55,10 @@ public class ODataChangeset extends ODataBatchRequestItem {
         boundary = "changeset_" + UUID.randomUUID().toString();
     }
 
+    public int getLastContentId() {
+        return contentId;
+    }
+
     /**
      * Close changeset item an send changeset request footer.
      */

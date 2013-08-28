@@ -81,7 +81,7 @@ public abstract class AbstractTest {
         testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
     }
 
-    protected DefaultContainer getDefaultContainer(final String serviceRootURL) {
+    protected static DefaultContainer getDefaultContainer(final String serviceRootURL) {
         final DefaultContainer container = EntityContainerFactory.newInstance(serviceRootURL)
                 .getEntityContainer(DefaultContainer.class);
         assertNotNull(container);

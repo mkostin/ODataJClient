@@ -27,11 +27,24 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Link context.
+ */
 public class LinkContext implements Iterable<EntityLinkDesc> {
 
+    /**
+     * New defined links.
+     */
     private final Map<EntityTypeInvocationHandler, NavigationLinks> attached =
             new LinkedHashMap<EntityTypeInvocationHandler, NavigationLinks>();
 
+    /**
+     * Gets all entities linked by the given source and the given navigation property name.
+     *
+     * @param source source.
+     * @param sourceName navigation property name.
+     * @return linked entity or entity set.
+     */
     public Set<EntityTypeInvocationHandler> getLinkedEntities(
             final EntityTypeInvocationHandler source, final String sourceName) {
         if (isAttached(source, sourceName)) {
@@ -41,6 +54,14 @@ public class LinkContext implements Iterable<EntityLinkDesc> {
         }
     }
 
+    /**
+     * Checks if a link between the given entities has been already attached.
+     *
+     * @param source source entity.
+     * @param sourceName navigation property name.
+     * @param target target entity.
+     * @return <tt>true</tt> if is attached; <tt>false</tt> otherwise.
+     */
     public boolean isAttached(
             final EntityTypeInvocationHandler source,
             final String sourceName,
@@ -50,12 +71,24 @@ public class LinkContext implements Iterable<EntityLinkDesc> {
                 && attached.get(source).getLinkedEntities(sourceName).contains(target);
     }
 
+    /**
+     * Checks if a link between the given source and other entities has been already attached.
+     *
+     * @param source source entity.
+     * @param sourceName navigation link property.
+     * @return <tt>true</tt> if is attached; <tt>false</tt> otherwise.
+     */
     public boolean isAttached(
             final EntityTypeInvocationHandler source,
             final String sourceName) {
         return attached.containsKey(source) && attached.get(source).contains(sourceName);
     }
 
+    /**
+     * Attaches a new link definition.
+     *
+     * @param desc link descriptor.
+     */
     public void attach(final EntityLinkDesc desc) {
         if (desc.getSource() == null
                 || StringUtils.isBlank(desc.getSourceName())
@@ -75,19 +108,49 @@ public class LinkContext implements Iterable<EntityLinkDesc> {
         links.add(desc.getSourceName(), desc.getTargets(), desc.getType());
     }
 
+    /**
+     * Detaches link.
+     *
+     * @param source link source.
+     * @param name navigation property name.
+     */
+    public void detach(final EntityTypeInvocationHandler source, final String name) {
+        if (attached.containsKey(source)) {
+            attached.get(source).remove(name);
+            if (attached.get(source).isEmpty()) {
+                attached.remove(source);
+            }
+        }
+    }
+
+    /**
+     * Detaches link.
+     *
+     * @param desc link descriptor.
+     */
     public void detach(final EntityLinkDesc desc) {
         if (attached.containsKey(desc.getSource())) {
             attached.get(desc.getSource()).remove(desc.getSourceName(), desc.getTargets());
-            if (attached.isEmpty()) {
+            if (attached.get(desc.getSource()).isEmpty()) {
                 attached.remove(desc.getSource());
             }
         }
     }
 
+    /**
+     * Detaches all links.
+     * <p>
+     * Use this method to clean the link context.
+     */
     public void detachAll() {
         attached.clear();
     }
 
+    /**
+     * Gets attached link iterator.
+     *
+     * @return attached link iterator.
+     */
     @Override
     public Iterator<EntityLinkDesc> iterator() {
         final Set<EntityLinkDesc> res = new HashSet<EntityLinkDesc>();

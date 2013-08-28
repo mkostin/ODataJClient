@@ -15,11 +15,23 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
+import static com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus.CHANGED;
+import static com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus.DELETED;
+import static com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus.DELETED_IN_BATCH;
+import static com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus.NEW;
+import static com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus.NEW_IN_BATCH;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchResponseItem;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangeset;
+import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangesetResponseItem;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
+import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
+import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
@@ -52,6 +64,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -198,31 +211,37 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             throw new IllegalArgumentException("Null key");
         }
 
-        EntityTypeInvocationHandler handler = EntityContainerFactory.getContext().getEntityContext().getEntity(
-                new EntityUUID(
+        final EntityUUID uuid = new EntityUUID(
                 Utility.getNamespace(typeRef),
                 container.getEntityContainerName(),
                 entitySetName,
                 Utility.getNamespace(typeRef) + "." + Utility.getEntityTypeName(typeRef),
-                key));
+                key);
 
-        if (handler == null) {
-            final ODataURIBuilder uriBuilder = new ODataURIBuilder(this.uri.toASCIIString());
+        EntityTypeInvocationHandler handler = EntityContainerFactory.getContext().getEntityContext().getEntity(uuid);
 
-            if (key.getClass().getAnnotation(CompoundKey.class) == null) {
-                uriBuilder.appendKeySegment(key);
-            } else {
-                uriBuilder.appendKeySegment(getCompoundKey(key));
+        try {
+            if (handler == null) {
+                final ODataURIBuilder uriBuilder = new ODataURIBuilder(this.uri.toASCIIString());
+
+                if (key.getClass().getAnnotation(CompoundKey.class) == null) {
+                    uriBuilder.appendKeySegment(key);
+                } else {
+                    uriBuilder.appendKeySegment(getCompoundKey(key));
+                }
+
+                handler = EntityTypeInvocationHandler.getInstance(
+                        ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute().getBody(), this);
             }
 
-            handler = EntityTypeInvocationHandler.getInstance(
-                    ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute().getBody(), this);
+            return (T) Proxy.newProxyInstance(
+                    this.getClass().getClassLoader(),
+                    new Class<?>[] {typeRef},
+                    handler);
+        } catch (Exception e) {
+            LOG.info("Entity '" + uuid + "'not found");
+            return null;
         }
-
-        return (T) Proxy.newProxyInstance(
-                this.getClass().getClassLoader(),
-                new Class<?>[] {typeRef},
-                handler);
     }
 
     @Override
@@ -291,43 +310,54 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         }
     }
 
+    /**
+     * Transactional changes commit.
+     */
     @Override
     public void flush() {
+        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(getFactory().getServiceRoot());
+        final ODataBatchRequest.BatchStreamManager streamManager = request.execute();
+        final ODataChangeset changeset = streamManager.addChangeset();
+
         final EntityContext entityContext = EntityContainerFactory.getContext().getEntityContext();
         final LinkContext linkContext = EntityContainerFactory.getContext().getLinkContext();
 
-        // process links 
-        // TODO: it should be already attached .... choose the right place
+        // process link context
         for (EntityLinkDesc link : linkContext) {
             if (!entityContext.isAttached(link.getSource())) {
-                entityContext.attach(link.getSource(), AttachedEntityStatus.CHANGED);
+                throw new IllegalStateException("Link source '" + link.getSource() + "' not attached");
             }
 
             for (EntityTypeInvocationHandler target : link.getTargets()) {
-                final ODataEntity entity;
+                final URI uri;
 
                 // if the target is new then create it before and add the link to the source
                 final AttachedEntityStatus status = entityContext.getStatus(target);
                 switch (status) {
-                    case NEW:
-                        // create target
-                        entity = flushCreate(target);
-                        break;
-                    case CHANGED:
-                        entity = target.getEntity();
-                        break;
                     case DELETED:
-                        // ignore the linnk
-                        entity = null;
+                    case DELETED_IN_BATCH:
+                        // ignore the link
+                        uri = null;
                         break;
-                    default:
-                        entity = target.getEntity();
+                    case NEW:
+                        entityContext.setStatus(target, AttachedEntityStatus.NEW_IN_BATCH);
+                    // follow on with NEW_IN_BATCH case ...
+                    case NEW_IN_BATCH:
+                        // create target
+                        flushCreate(target, changeset);
+                        uri = URI.create("$" + changeset.getLastContentId());
+                        break;
+                    case LINKED:
+                    case ATTACHED:
                         entityContext.detach(target);
+                    default:
+                        uri = URIUtils.getURI(
+                                getFactory().getServiceRoot(),
+                                target.getEntity().getEditLink().toASCIIString());
+
                 }
 
-                if (entity != null) {
-                    final URI uri =
-                            URIUtils.getURI(getFactory().getServiceRoot(), entity.getEditLink().toASCIIString());
+                if (uri != null) {
 
                     final ODataLink odataLink = link.getType() == ODataLinkType.ENTITY_NAVIGATION
                             ? ODataFactory.newEntityNavigationLink(link.getSourceName(), uri)
@@ -339,24 +369,84 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             }
         }
 
-        linkContext.detachAll();
+        // Keep the link context as is in order to be able to perform a second flush in case of errors.
+        // Entity and link references into the context cannot be lost untill the successful "commit".
 
+        // process entity context
         for (AttachedEntity attachedEntity : entityContext) {
             switch (attachedEntity.getStatus()) {
                 case NEW:
-                    flushCreate(attachedEntity.getEntity());
+                    flushCreate(attachedEntity.getEntity(), changeset);
                     break;
                 case CHANGED:
-                    flushUpdate(attachedEntity.getEntity());
+                    flushUpdate(attachedEntity.getEntity(), changeset);
                     break;
                 case DELETED:
-                    flushDelete(attachedEntity.getEntity());
+                    flushDelete(attachedEntity.getEntity(), changeset);
+                    break;
+                case NEW_IN_BATCH:
+                case CHANGED_IN_BATCH:
+                case DELETED_IN_BATCH:
+                    // do nothing (it should be processed before during linkContext scan)
                     break;
                 default:
                     entityContext.detach(attachedEntity.getEntity());
             }
         }
 
+        final ODataBatchResponse response = streamManager.getResponse();
+
+        if (response.getStatusCode() != 202) {
+            throw new IllegalStateException("Operation failed");
+        }
+
+        final Iterator<ODataBatchResponseItem> iter = response.getBody();
+
+        if (!iter.hasNext()) {
+            throw new IllegalStateException("Unexpected operation");
+        }
+
+        final ODataBatchResponseItem item = iter.next();
+        if (!(item instanceof ODataChangesetResponseItem)) {
+            throw new IllegalStateException("Unexpected batch response item " + item.getClass().getSimpleName());
+        }
+
+        final ODataChangesetResponseItem chgres = (ODataChangesetResponseItem) item;
+
+        // update entities
+        for (AttachedEntity attachedEntity : entityContext) {
+            final ODataResponse res = chgres.next();
+            if (res.getStatusCode() >= 400) {
+                throw new IllegalStateException("Transaction failed: " + res.getStatusMessage());
+            }
+
+            switch (attachedEntity.getStatus()) {
+                case NEW:
+                case NEW_IN_BATCH:
+                    if (res instanceof ODataEntityCreateResponse) {
+                        // detach before updating
+                        final EntityTypeInvocationHandler handler = attachedEntity.getEntity();
+                        entityContext.detach(handler);
+                        handler.setEntity(((ODataEntityCreateResponse) res).getBody());
+                    } else {
+                        LOG.error("Cannot update referenced entity " + attachedEntity.getEntity());
+                    }
+                    break;
+                case CHANGED:
+                case CHANGED_IN_BATCH:
+                case DELETED:
+                case DELETED_IN_BATCH:
+                    // nothing to be updated just detach
+                    entityContext.detach(attachedEntity.getEntity());
+                    break;
+                default:
+                    // Maybe an error: default statuses have been removed before.
+                    // Log and ignore anyway ...
+                    LOG.warn("Unexpected attached entity status " + attachedEntity.getStatus());
+            }
+        }
+
+        linkContext.detachAll();
         entityContext.detachAll();
     }
 
@@ -372,27 +462,19 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class<?>[] {typeRef}, handler);
     }
 
-    private ODataEntity flushCreate(final EntityTypeInvocationHandler entity) {
+    private void flushCreate(final EntityTypeInvocationHandler entity, final ODataChangeset changeset) {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(entity.getFactory().getServiceRoot());
         uriBuilder.appendEntitySetSegment(entity.getEntitySetName());
-
-        final ODataEntityCreateResponse res =
-                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), entity.getEntity())
-                .execute();
-
-        EntityContainerFactory.getContext().getEntityContext().detach(entity);
-        entity.setEntity(res.getBody());
-        return entity.getEntity();
+        changeset.addRequest(ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), entity.getEntity()));
     }
 
-    private void flushUpdate(final EntityTypeInvocationHandler entity) {
-        ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.REPLACE, entity.getEntity()).execute();
-        EntityContainerFactory.getContext().getEntityContext().detach(entity);
+    private void flushUpdate(final EntityTypeInvocationHandler entity, final ODataChangeset changeset) {
+        changeset.addRequest(
+                ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.REPLACE, entity.getEntity()));
     }
 
-    private void flushDelete(final EntityTypeInvocationHandler entity) {
-        ODataCUDRequestFactory.getDeleteRequest(URIUtils.getURI(
-                entity.getFactory().getServiceRoot(), entity.getEntity().getEditLink().toASCIIString())).execute();
-        EntityContainerFactory.getContext().getEntityContext().detach(entity);
+    private void flushDelete(final EntityTypeInvocationHandler entity, final ODataChangeset changeset) {
+        changeset.addRequest(ODataCUDRequestFactory.getDeleteRequest(URIUtils.getURI(
+                entity.getFactory().getServiceRoot(), entity.getEntity().getEditLink().toASCIIString())));
     }
 }

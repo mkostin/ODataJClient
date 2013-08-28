@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
@@ -32,6 +33,7 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Phone;
 import java.lang.reflect.Proxy;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -50,13 +53,17 @@ public class ContextTestITCase extends AbstractTest {
 
     private final LinkContext linkContext = EntityContainerFactory.getContext().getLinkContext();
 
+    private static DefaultContainer container;
+
+    @BeforeClass
+    public static void init() {
+        container = getDefaultContainer(testDefaultServiceRootURL);
+    }
+
     @Test
     public void attachDetachNewEntity() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer1 = customers.newEntity();
-        final Customer customer2 = customers.newEntity();
+        final Customer customer1 = container.getCustomer().newEntity();
+        final Customer customer2 = container.getCustomer().newEntity();
 
         final EntityTypeInvocationHandler source1 =
                 (EntityTypeInvocationHandler) Proxy.getInvocationHandler(customer1);
@@ -77,12 +84,9 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void attachDetachExistingEntity() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer1 = customers.get(-10);
-        final Customer customer2 = customers.get(-9);
-        final Customer customer3 = customers.get(-10);
+        final Customer customer1 = container.getCustomer().get(-10);
+        final Customer customer2 = container.getCustomer().get(-9);
+        final Customer customer3 = container.getCustomer().get(-10);
 
         final EntityTypeInvocationHandler source1 =
                 (EntityTypeInvocationHandler) Proxy.getInvocationHandler(customer1);
@@ -124,47 +128,9 @@ public class ContextTestITCase extends AbstractTest {
     }
 
     @Test
-    public void addInlineNavigationProperty() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer = customers.newEntity();
-
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.CustomerInfo customerInfos =
-                container.getCustomerInfo();
-        final CustomerInfo customerInfo = customerInfos.newEntity();
-
-        customer.setInfo(customerInfo);
-
-        assertNotNull(customer.getInfo());
-
-        final EntityTypeInvocationHandler source =
-                (EntityTypeInvocationHandler) Proxy.getInvocationHandler(customer);
-        final EntityTypeInvocationHandler target =
-                (EntityTypeInvocationHandler) Proxy.getInvocationHandler(customerInfo);
-
-        assertTrue(entityContext.isAttached(source));
-        assertEquals(AttachedEntityStatus.NEW, entityContext.getStatus(source));
-        assertFalse(entityContext.isAttached(target));
-        assertFalse(linkContext.isAttached(source, "Info", target));
-        assertFalse(linkContext.isAttached(target, "Customer", source));
-
-        entityContext.detachAll();
-        linkContext.detachAll();
-
-        assertFalse(entityContext.isAttached(source));
-    }
-
-    @Test
     public void linkTargetExisting() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer = customers.newEntity();
-
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.CustomerInfo customerInfos =
-                container.getCustomerInfo();
-        final CustomerInfo customerInfo = customerInfos.get(11);
+        final Customer customer = container.getCustomer().newEntity();
+        final CustomerInfo customerInfo = container.getCustomerInfo().get(11);
 
         customer.setInfo(customerInfo);
 
@@ -192,14 +158,8 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void linkSourceExisting() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer = customers.get(-10);
-
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.CustomerInfo customerInfos =
-                container.getCustomerInfo();
-        final CustomerInfo customerInfo = customerInfos.newEntity();
+        final Customer customer = container.getCustomer().get(-10);;
+        final CustomerInfo customerInfo = container.getCustomerInfo().newEntity();
 
         customer.setInfo(customerInfo);
 
@@ -227,14 +187,8 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void linkBothExisting() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer = customers.get(-10);
-
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.CustomerInfo customerInfos =
-                container.getCustomerInfo();
-        final CustomerInfo customerInfo = customerInfos.get(12);
+        final Customer customer = container.getCustomer().get(-10);
+        final CustomerInfo customerInfo = container.getCustomerInfo().get(12);
 
         customer.setInfo(customerInfo);
 
@@ -261,19 +215,13 @@ public class ContextTestITCase extends AbstractTest {
     }
 
     @Test
-    public void linkEntitySet() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer = customers.newEntity();
-
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Order orders =
-                container.getOrder();
+    public void linkEntitySet() {;
+        final Customer customer = container.getCustomer().newEntity();;
 
         final List<Order> toBeLinked = new ArrayList<Order>();
-        toBeLinked.add(orders.newEntity());
-        toBeLinked.add(orders.newEntity());
-        toBeLinked.add(orders.newEntity());
+        toBeLinked.add(container.getOrder().newEntity());
+        toBeLinked.add(container.getOrder().newEntity());
+        toBeLinked.add(container.getOrder().newEntity());
 
         customer.setOrders(toBeLinked);
 
@@ -310,10 +258,7 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void addProperty() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-        final Customer customer = customers.newEntity();
+        final Customer customer = container.getCustomer().newEntity();
 
         final ContactDetails cd = new ContactDetails();
         cd.setAlternativeNames(Arrays.asList("alternative1", "alternative2"));
@@ -346,7 +291,6 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void readEntityInTheContext() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         CustomerInfo customerInfo = container.getCustomerInfo().get(16);
         customerInfo.setInformation("some other info ...");
 
@@ -362,7 +306,6 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void readAllWithEntityInTheContext() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         CustomerInfo customerInfo = container.getCustomerInfo().get(16);
         customerInfo.setInformation("some other info ...");
 
@@ -394,12 +337,39 @@ public class ContextTestITCase extends AbstractTest {
     }
 
     @Test
+    public void checkContextInCaseOfErrors() {
+        final Login login = container.getLogin().newEntity();
+
+        final EntityTypeInvocationHandler handler = (EntityTypeInvocationHandler) Proxy.getInvocationHandler(login);
+
+        assertTrue(entityContext.isAttached(handler));
+
+        try {
+            container.getLogin().flush();
+            fail();
+        } catch (Exception e) {
+            // ignore
+        }
+
+        assertTrue(entityContext.isAttached(handler));
+
+        login.setCustomerId(-10);
+        login.setUsername("customer");
+
+        container.getLogin().flush();
+        assertFalse(entityContext.isAttached(handler));
+        assertNotNull(container.getLogin().get("customer"));
+
+        container.getLogin().delete(Collections.<Login>singleton(login));
+        assertTrue(entityContext.isAttached(handler));
+
+        container.getLogin().flush();
+        assertFalse(entityContext.isAttached(handler));
+        assertNull(container.getLogin().get("customer"));
+    }
+
+    @Test
     public void flushTest() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Order orders =
-                container.getOrder();
-
         final List<Integer> keys = new ArrayList<Integer>();
         keys.add(-200);
         keys.add(-201);
@@ -407,12 +377,13 @@ public class ContextTestITCase extends AbstractTest {
 
         final List<Order> toBeLinked = new ArrayList<Order>();
         for (Integer key : keys) {
-            Order order = orders.newEntity();
+            Order order = container.getOrder().newEntity();
             order.setOrderId(key);
             toBeLinked.add(order);
         }
 
         Customer customer = container.getCustomer().newEntity();
+        customer.setCustomerId(300);
         customer.setName("samplename");
 
         customer.setOrders(toBeLinked);
@@ -450,7 +421,7 @@ public class ContextTestITCase extends AbstractTest {
 
         assertEquals("some new info ...", container.getCustomerInfo().get(16).getInformation());
 
-        orders.delete(toBeLinked);
+        container.getOrder().delete(toBeLinked);
         container.getCustomer().delete(customer.getCustomerId());
 
         assertTrue(entityContext.isAttached((EntityTypeInvocationHandler) Proxy.getInvocationHandler(customer)));
