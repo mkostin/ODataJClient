@@ -24,6 +24,7 @@ import static org.junit.Assert.fail;
 import com.msopentech.odatajclient.engine.client.http.NoContentException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
+import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
@@ -39,6 +40,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
@@ -65,10 +67,10 @@ public class EntityCreateTestITCase extends AbstractTest {
         final int id = 1;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
-        createEntity(getServiceRoot(), format, original);
+        createEntity(getServiceRoot(), format, original, "Customer");
         final ODataEntity actual = compareEntities(getServiceRoot(), format, original, id, null);
 
-        cleanAfterCreate(format, actual, false);
+        cleanAfterCreate(format, actual, false, getServiceRoot());
     }
 
     @Test
@@ -77,10 +79,10 @@ public class EntityCreateTestITCase extends AbstractTest {
         final int id = 2;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
-        createEntity(getServiceRoot(), format, original);
+        createEntity(getServiceRoot(), format, original, "Customer");
         final ODataEntity actual = compareEntities(getServiceRoot(), format, original, id, null);
 
-        cleanAfterCreate(format, actual, false);
+        cleanAfterCreate(format, actual, false, getServiceRoot());
     }
 
     @Test
@@ -89,11 +91,11 @@ public class EntityCreateTestITCase extends AbstractTest {
         final int id = 3;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
-        createEntity(getServiceRoot(), format, original);
+        createEntity(getServiceRoot(), format, original, "Customer");
         final ODataEntity actual =
                 compareEntities(getServiceRoot(), format, original, id, Collections.<String>singleton("Info"));
 
-        cleanAfterCreate(format, actual, true);
+        cleanAfterCreate(format, actual, true, getServiceRoot());
     }
 
     @Test
@@ -103,11 +105,11 @@ public class EntityCreateTestITCase extends AbstractTest {
         final int id = 4;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", true);
 
-        createEntity(getServiceRoot(), format, original);
+        createEntity(getServiceRoot(), format, original, "Customer");
         final ODataEntity actual =
                 compareEntities(getServiceRoot(), format, original, id, Collections.<String>singleton("Info"));
 
-        cleanAfterCreate(format, actual, true);
+        cleanAfterCreate(format, actual, true, getServiceRoot());
     }
 
     @Test
@@ -119,7 +121,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         original.addLink(ODataFactory.newInlineEntity(
                 "Info", null, getSampleCustomerInfo(id, "Sample Customer_Info")));
 
-        createEntity(getServiceRoot(), format, original);
+        createEntity(getServiceRoot(), format, original, "Customer");
         final ODataEntity actual =
                 compareEntities(getServiceRoot(), format, original, id, Collections.<String>singleton("Info"));
 
@@ -134,7 +136,7 @@ public class EntityCreateTestITCase extends AbstractTest {
 
         assertTrue(found);
 
-        cleanAfterCreate(format, actual, true);
+        cleanAfterCreate(format, actual, true, getServiceRoot());
     }
 
     @Test
@@ -146,7 +148,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         original.addLink(ODataFactory.newInlineEntity(
                 "Info", null, getSampleCustomerInfo(id, "Sample Customer_Info")));
 
-        createEntity(getServiceRoot(), format, original);
+        createEntity(getServiceRoot(), format, original, "Customer");
         final ODataEntity actual =
                 compareEntities(getServiceRoot(), format, original, id, Collections.<String>singleton("Info"));
 
@@ -161,14 +163,14 @@ public class EntityCreateTestITCase extends AbstractTest {
 
         assertTrue(found);
 
-        cleanAfterCreate(format, actual, true);
+        cleanAfterCreate(format, actual, true, getServiceRoot());
     }
 
     @Test
     public void createWithNavigationAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final ODataEntity actual = createWithNavigationLink(format, 5);
-        cleanAfterCreate(format, actual, false);
+        cleanAfterCreate(format, actual, false, getServiceRoot());
     }
 
     @Test
@@ -176,14 +178,14 @@ public class EntityCreateTestITCase extends AbstractTest {
         // this needs to be full, otherwise there is no mean to recognize links
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final ODataEntity actual = createWithNavigationLink(format, 6);
-        cleanAfterCreate(format, actual, false);
+        cleanAfterCreate(format, actual, false, getServiceRoot());
     }
 
     @Test
     public void createWithFeedNavigationAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final ODataEntity actual = createWithFeedNavigationLink(format, 7);
-        cleanAfterCreate(format, actual, false);
+        cleanAfterCreate(format, actual, false, getServiceRoot());
     }
 
     @Test
@@ -191,7 +193,22 @@ public class EntityCreateTestITCase extends AbstractTest {
         // this needs to be full, otherwise there is no mean to recognize links
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final ODataEntity actual = createWithFeedNavigationLink(format, 8);
-        cleanAfterCreate(format, actual, false);
+        cleanAfterCreate(format, actual, false, getServiceRoot());
+    }
+
+    @Test
+    public void createWithBackNavigationAsAtom() {
+        final ODataPubFormat format = ODataPubFormat.ATOM;
+        final ODataEntity actual = createWithBackNavigationLink(format, 9);
+        cleanAfterCreate(format, actual, true, getServiceRoot());
+    }
+
+    @Test
+    public void createWithBackNavigationAsJSON() {
+        // this needs to be full, otherwise there is no mean to recognize links
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
+        final ODataEntity actual = createWithBackNavigationLink(format, 10);
+        cleanAfterCreate(format, actual, true, getServiceRoot());
     }
 
     @Test
@@ -255,7 +272,7 @@ public class EntityCreateTestITCase extends AbstractTest {
                     createReq.execute().getBody().getEditLink()));
         }
 
-        final ODataEntity created = createEntity(getServiceRoot(), format, original);
+        final ODataEntity created = createEntity(getServiceRoot(), format, original, "Customer");
         // now, compare the created one with the actual one and go deeply into the associated customer info.....
         final ODataEntity actual = compareEntities(getServiceRoot(), format, created, id, null);
 
@@ -294,7 +311,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         original.addLink(ODataFactory.newEntityNavigationLink(
                 "Info", URI.create(getServiceRoot() + "/CustomerInfo(12)")));
 
-        final ODataEntity created = createEntity(getServiceRoot(), format, original);
+        final ODataEntity created = createEntity(getServiceRoot(), format, original, "Customer");
         // now, compare the created one with the actual one and go deeply into the associated customer info.....
         final ODataEntity actual = compareEntities(getServiceRoot(), format, created, id, null);
 
@@ -322,6 +339,66 @@ public class EntityCreateTestITCase extends AbstractTest {
         assertTrue(found);
 
         return actual;
+    }
+
+    private ODataEntity createWithBackNavigationLink(final ODataPubFormat format, final int id) {
+        final String sampleName = "Sample customer";
+
+        ODataEntity customer = getSampleCustomerProfile(id, sampleName, false);
+        customer = createEntity(getServiceRoot(), format, customer, "Customer");
+
+        ODataEntity order = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Order");
+        order.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
+                new ODataPrimitiveValue.Builder().setValue(id).setType(EdmSimpleType.INT_32).build()));
+        order.addProperty(ODataFactory.newPrimitiveProperty("OrderId",
+                new ODataPrimitiveValue.Builder().setValue(id).setType(EdmSimpleType.INT_32).build()));
+
+        order.addLink(ODataFactory.newEntityNavigationLink(
+                "Customer", URIUtils.getURI(getServiceRoot(), customer.getEditLink().toASCIIString())));
+
+        order = createEntity(getServiceRoot(), format, order, "Order");
+
+        ODataEntity changes = ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
+        changes.setEditLink(customer.getEditLink());
+        changes.addLink(ODataFactory.newFeedNavigationLink(
+                "Orders", URIUtils.getURI(getServiceRoot(), order.getEditLink().toASCIIString())));
+        update(UpdateType.PATCH, changes, format, null);
+
+        final ODataEntityRequest customerreq = ODataRetrieveRequestFactory.getEntityRequest(
+                URIUtils.getURI(getServiceRoot(), order.getEditLink().toASCIIString() + "/Customer"));
+        customerreq.setFormat(format);
+
+        customer = customerreq.execute().getBody();
+
+        assertEquals(
+                Integer.valueOf(id), customer.getProperty("CustomerId").getPrimitiveValue().<Integer>toCastValue());
+
+        final ODataEntitySetRequest orderreq = ODataRetrieveRequestFactory.getEntitySetRequest(
+                URIUtils.getURI(getServiceRoot(), customer.getEditLink().toASCIIString() + "/Orders"));
+        orderreq.setFormat(format);
+
+        final ODataRetrieveResponse<ODataEntitySet> orderres = orderreq.execute();
+        assertEquals(200, orderres.getStatusCode());
+
+        assertEquals(Integer.valueOf(id),
+                orderres.getBody().getEntities().get(0).getProperty("OrderId").getPrimitiveValue().
+                <Integer>toCastValue());
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(
+                URIUtils.getURI(getServiceRoot(), customer.getEditLink().toASCIIString() + "?$expand=Orders"));
+        req.setFormat(format);
+
+        customer = req.execute().getBody();
+
+        boolean found = false;
+        for (ODataLink link : customer.getNavigationLinks()) {
+            if (link instanceof ODataInlineEntitySet && "Orders".equals(link.getName())) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+
+        return customer;
     }
 
     private void multiKey(final ODataPubFormat format) {

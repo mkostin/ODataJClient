@@ -68,10 +68,10 @@ public class KeyAsSegmentTestITCase extends AbstractTest {
         final int id = 1;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
-        createEntity(testKeyAsSegmentServiceRootURL, format, original);
+        createEntity(testKeyAsSegmentServiceRootURL, format, original, "Customer");
         final ODataEntity actual = compareEntities(testKeyAsSegmentServiceRootURL, format, original, id, null);
 
-        cleanAfterCreate(format, actual, false);
+        cleanAfterCreate(format, actual, false, testKeyAsSegmentServiceRootURL);
     }
 
     @Test
@@ -80,10 +80,10 @@ public class KeyAsSegmentTestITCase extends AbstractTest {
         final int id = 2;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer", false);
 
-        createEntity(testKeyAsSegmentServiceRootURL, format, original);
+        createEntity(testKeyAsSegmentServiceRootURL, format, original, "Customer");
         final ODataEntity actual = compareEntities(testKeyAsSegmentServiceRootURL, format, original, id, null);
 
-        cleanAfterCreate(format, actual, false);
+        cleanAfterCreate(format, actual, false, testKeyAsSegmentServiceRootURL);
     }
 
     @Test

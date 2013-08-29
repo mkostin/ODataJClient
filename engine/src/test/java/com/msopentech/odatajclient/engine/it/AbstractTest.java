@@ -55,10 +55,13 @@ import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataEntitySet;
+import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -397,11 +400,14 @@ public abstract class AbstractTest {
         return entity;
     }
 
-    protected ODataEntity createEntity(final String serviceRootURL,
-            final ODataPubFormat format, final ODataEntity original) {
+    protected ODataEntity createEntity(
+            final String serviceRootURL,
+            final ODataPubFormat format,
+            final ODataEntity original,
+            final String entitySetName) {
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(serviceRootURL);
-        uriBuilder.appendEntitySetSegment("Customer");
+        uriBuilder.appendEntitySetSegment(entitySetName);
 
         debugODataEntity(original, "About to create");
 
@@ -457,8 +463,11 @@ public abstract class AbstractTest {
         return actual;
     }
 
-    protected void cleanAfterCreate(final ODataPubFormat format, final ODataEntity created,
-            final boolean includeInline) {
+    protected void cleanAfterCreate(
+            final ODataPubFormat format,
+            final ODataEntity created,
+            final boolean includeInline,
+            final String baseUri) {
 
         final Set<URI> toBeDeleted = new HashSet<URI>();
         toBeDeleted.add(created.getEditLink());
@@ -468,7 +477,16 @@ public abstract class AbstractTest {
                 if (link instanceof ODataInlineEntity) {
                     final ODataEntity inline = ((ODataInlineEntity) link).getEntity();
                     if (inline.getEditLink() != null) {
-                        toBeDeleted.add(inline.getEditLink());
+                        toBeDeleted.add(URIUtils.getURI(baseUri, inline.getEditLink().toASCIIString()));
+                    }
+                }
+
+                if (link instanceof ODataInlineEntitySet) {
+                    final ODataEntitySet inline = ((ODataInlineEntitySet) link).getEntitySet();
+                    for (ODataEntity entity : inline.getEntities()) {
+                        if (entity.getEditLink() != null) {
+                            toBeDeleted.add(URIUtils.getURI(baseUri, entity.getEditLink().toASCIIString()));
+                        }
                     }
                 }
             }
