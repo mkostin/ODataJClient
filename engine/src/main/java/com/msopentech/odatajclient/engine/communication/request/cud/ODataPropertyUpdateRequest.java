@@ -55,7 +55,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
      * @param property value to be created.
      */
     ODataPropertyUpdateRequest(final HttpMethod method, final URI targetURI, final ODataProperty property) {
-        super(method, targetURI);
+        super(ODataFormat.class, method, targetURI);
         // set request body
         this.property = property;
     }
@@ -80,7 +80,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeProperty(property, ODataFormat.valueOf(getFormat()));
+        return ODataWriter.writeProperty(property, getFormat());
     }
 
     /**
@@ -115,7 +115,7 @@ public class ODataPropertyUpdateRequest extends ODataBasicRequestImpl<ODataPrope
         public ODataProperty getBody() {
             if (property == null) {
                 try {
-                    property = ODataReader.readProperty(getRawResponse(), ODataFormat.valueOf(getFormat()));
+                    property = ODataReader.readProperty(getRawResponse(), getFormat());
                 } finally {
                     this.close();
                 }

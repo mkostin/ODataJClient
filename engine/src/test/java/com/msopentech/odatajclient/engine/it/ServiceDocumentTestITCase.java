@@ -21,13 +21,13 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataSe
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
-import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.net.URI;
 import org.junit.Test;
 
 public class ServiceDocumentTestITCase extends AbstractTest {
 
-    private void retrieveServiceDocument(final ODataServiceDocumentFormat format) {
+    private void retrieveServiceDocument(final ODataFormat format) {
         final ODataServiceDocumentRequest req =
                 ODataRetrieveRequestFactory.getServiceDocumentRequest(testDefaultServiceRootURL);
         req.setFormat(format);
@@ -44,11 +44,11 @@ public class ServiceDocumentTestITCase extends AbstractTest {
 
     @Test
     public void retrieveServiceDocumentAsXML() {
-        retrieveServiceDocument(ODataServiceDocumentFormat.XML);
+        retrieveServiceDocument(ODataFormat.XML);
     }
 
     @Test
     public void retrieveServiceDocumentAsJSON() {
-        retrieveServiceDocument(ODataServiceDocumentFormat.JSON);
+        retrieveServiceDocument(ODataFormat.JSON);
     }
 }

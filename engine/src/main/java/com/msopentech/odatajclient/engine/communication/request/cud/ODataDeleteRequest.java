@@ -42,7 +42,7 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      * @param uri URI of the entity to be deleted.
      */
     ODataDeleteRequest(final HttpMethod method, final URI uri) {
-        super(method, uri);
+        super(ODataPubFormat.class, method, uri);
     }
 
     /**

@@ -38,7 +38,7 @@ public class ODataEntitySetIteratorRequest extends ODataRetrieveRequest<ODataEnt
      * @param query query to be executed.
      */
     ODataEntitySetIteratorRequest(final URI query) {
-        super(query);
+        super(ODataPubFormat.class, query);
     }
 
     /**
@@ -72,7 +72,7 @@ public class ODataEntitySetIteratorRequest extends ODataRetrieveRequest<ODataEnt
         @SuppressWarnings("unchecked")
         public ODataEntitySetIterator getBody() {
             if (feedIterator == null) {
-                feedIterator = new ODataEntitySetIterator(getRawResponse(), ODataPubFormat.valueOf(getFormat()));
+                feedIterator = new ODataEntitySetIterator(getRawResponse(), getFormat());
             }
             return feedIterator;
         }

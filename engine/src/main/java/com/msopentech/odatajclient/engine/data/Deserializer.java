@@ -32,7 +32,6 @@ import com.msopentech.odatajclient.engine.data.xml.XMLLinkCollection;
 import com.msopentech.odatajclient.engine.data.xml.XMLServiceDocument;
 import com.msopentech.odatajclient.engine.data.xml.error.XMLODataError;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
-import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.IOException;
 import java.io.InputStream;
@@ -137,10 +136,8 @@ public final class Deserializer {
      * @param format OData service document format.
      * @return ServiceDocumentResource object.
      */
-    public static ServiceDocumentResource toServiceDocument(
-            final InputStream input, final ODataServiceDocumentFormat format) {
-
-        return format == ODataServiceDocumentFormat.XML
+    public static ServiceDocumentResource toServiceDocument(final InputStream input, final ODataFormat format) {
+        return format == ODataFormat.XML
                 ? toServiceDocumentFromXML(input)
                 : toServiceDocumentFromJSON(input);
     }

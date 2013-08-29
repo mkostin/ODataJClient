@@ -38,8 +38,8 @@ abstract class ODataRetrieveRequest<V, T extends Enum<T>>
      *
      * @param query query to be executed.
      */
-    ODataRetrieveRequest(final URI query) {
-        super(HttpMethod.GET, query);
+    ODataRetrieveRequest(final Class<T> formatRef, final URI query) {
+        super(formatRef, HttpMethod.GET, query);
     }
 
     /**

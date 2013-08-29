@@ -37,7 +37,7 @@ public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODat
      * @param uri metadata URI.
      */
     ODataMetadataRequest(final URI uri) {
-        super(uri);
+        super(ODataPubFormat.class, uri);
     }
 
     /**

@@ -48,8 +48,8 @@ public abstract class ODataStreamedEntityRequestImpl<V extends ODataResponse, T 
     /**
      * Returns resource representation format.
      *
-     * @return the configured format (<code>ODataFormat.JSON_FULL_METADATA</code> will be the default value unless
-     * differently specified).
+     * @return the configured format (or default if not specified).
+     * @see Configuration#getDefaultPubFormat()
      */
     public final ODataPubFormat getFormat() {
         return format == null ? Configuration.getDefaultPubFormat() : format;

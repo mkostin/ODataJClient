@@ -52,7 +52,7 @@ public class ErrorTestITCase extends AbstractTest {
     private class ErrorGeneratingRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse, ODataPubFormat> {
 
         public ErrorGeneratingRequest(final HttpMethod method, final URI uri) {
-            super(method, uri);
+            super(ODataPubFormat.class, method, uri);
         }
 
         @Override

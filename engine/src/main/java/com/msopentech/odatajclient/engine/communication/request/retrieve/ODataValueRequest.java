@@ -41,7 +41,7 @@ public class ODataValueRequest extends ODataRetrieveRequest<ODataValue, ODataVal
      * @param query query to be executed.
      */
     ODataValueRequest(final URI query) {
-        super(query);
+        super(ODataValueFormat.class, query);
     }
 
     /**
@@ -86,8 +86,7 @@ public class ODataValueRequest extends ODataRetrieveRequest<ODataValue, ODataVal
             if (value == null) {
                 try {
                     value = new ODataPrimitiveValue.Builder().
-                            setType(ODataValueFormat.valueOf(getFormat()) == ODataValueFormat.TEXT
-                            ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
+                            setType(getFormat() == ODataValueFormat.TEXT ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
                             setText(IOUtils.toString(getRawResponse())).
                             build();
                 } catch (IOException e) {

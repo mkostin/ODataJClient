@@ -57,7 +57,7 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
      * @param value value to be created.
      */
     ODataValueUpdateRequest(final HttpMethod method, final URI targetURI, final ODataValue value) {
-        super(method, targetURI);
+        super(ODataValueFormat.class, method, targetURI);
         // set request body
         this.value = value;
     }
@@ -118,8 +118,7 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
             if (value == null) {
                 try {
                     value = new ODataPrimitiveValue.Builder().
-                            setType(ODataValueFormat.valueOf(getFormat()) == ODataValueFormat.TEXT
-                            ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
+                            setType(getFormat() == ODataValueFormat.TEXT ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
                             setText(IOUtils.toString(getRawResponse())).
                             build();
                 } catch (IOException e) {

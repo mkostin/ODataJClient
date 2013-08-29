@@ -39,7 +39,7 @@ public class ODataPropertyRequest extends ODataRetrieveRequest<ODataProperty, OD
      * @param query query to be executed.
      */
     ODataPropertyRequest(final URI query) {
-        super(query);
+        super(ODataFormat.class, query);
     }
 
     /**
@@ -80,8 +80,7 @@ public class ODataPropertyRequest extends ODataRetrieveRequest<ODataProperty, OD
         public ODataProperty getBody() {
             if (property == null) {
                 try {
-                    property = ODataReader.readProperty(
-                            res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                    property = ODataReader.readProperty(res.getEntity().getContent(), getFormat());
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

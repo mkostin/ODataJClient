@@ -39,7 +39,7 @@ public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataEntitySet, 
      * @param query query to be executed.
      */
     ODataEntitySetRequest(final URI query) {
-        super(query);
+        super(ODataPubFormat.class, query);
     }
 
     /**
@@ -82,7 +82,7 @@ public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataEntitySet, 
         public ODataEntitySet getBody() {
             if (feed == null) {
                 try {
-                    feed = ODataReader.readEntitySet(getRawResponse(), ODataPubFormat.valueOf(getFormat()));
+                    feed = ODataReader.readEntitySet(getRawResponse(), getFormat());
                 } finally {
                     this.close();
                 }

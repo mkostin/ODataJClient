@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
@@ -127,9 +126,7 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return List of URIs.
      */
-    public static ODataServiceDocument readServiceDocument(
-            final InputStream input, final ODataServiceDocumentFormat format) {
-
+    public static ODataServiceDocument readServiceDocument(final InputStream input, final ODataFormat format) {
         return ODataBinder.getODataServiceDocument(Deserializer.toServiceDocument(input, format));
     }
 
@@ -178,9 +175,9 @@ public final class ODataReader {
             } else if (ODataEntity.class.isAssignableFrom(reference)) {
                 res = ODataReader.readEntity(src, ODataPubFormat.fromString(format));
             } else if (ODataProperty.class.isAssignableFrom(reference)) {
-                res = ODataReader.readProperty(src, ODataFormat.fromString(format));
+                res = ODataReader.readProperty(src, ODataFormat.fromValue(format));
             } else if (ODataLinkCollection.class.isAssignableFrom(reference)) {
-                res = ODataReader.readLinks(src, ODataFormat.fromString(format));
+                res = ODataReader.readLinks(src, ODataFormat.fromValue(format));
             } else if (ODataValue.class.isAssignableFrom(reference)) {
                 res = new ODataPrimitiveValue.Builder().
                         setType(ODataValueFormat.fromString(format) == ODataValueFormat.TEXT
@@ -190,7 +187,7 @@ public final class ODataReader {
             } else if (EdmMetadata.class.isAssignableFrom(reference)) {
                 res = ODataReader.readMetadata(src);
             } else if (ODataServiceDocument.class.isAssignableFrom(reference)) {
-                res = ODataReader.readServiceDocument(src, ODataServiceDocumentFormat.fromString(format));
+                res = ODataReader.readServiceDocument(src, ODataFormat.fromValue(format));
             } else if (ODataError.class.isAssignableFrom(reference)) {
                 res = ODataReader.readError(src, !format.toString().contains("json"));
             } else {

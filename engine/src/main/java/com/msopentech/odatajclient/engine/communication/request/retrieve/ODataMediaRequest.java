@@ -38,7 +38,7 @@ public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMe
      * @param query query to be executed.
      */
     ODataMediaRequest(final URI query) {
-        super(query);
+        super(ODataMediaFormat.class, query);
         setAccept(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
         setContentType(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
     }

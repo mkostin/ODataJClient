@@ -18,6 +18,9 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
@@ -37,6 +40,8 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
         extends ODataRequestImpl
         implements ODataBasicRequest<V, T> {
 
+    protected final Class<T> formatRef;
+
     /**
      * OData resource representation format.
      */
@@ -48,16 +53,26 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      * @param method request method.
      * @param uri OData request URI.
      */
-    public ODataBasicRequestImpl(final HttpMethod method, final URI uri) {
+    public ODataBasicRequestImpl(final Class<T> formatRef, final HttpMethod method, final URI uri) {
         super(method, uri);
+        this.formatRef = formatRef;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getFormat() {
-        return format == null ? Configuration.getDefaultPubFormat().name() : format.name();
+    @SuppressWarnings("unchecked")
+    public T getFormat() {
+        return (T) (format == null
+                ? (formatRef.equals(ODataPubFormat.class)
+                ? Configuration.getDefaultPubFormat()
+                : (formatRef.equals(ODataValueFormat.class)
+                ? Configuration.getDefaultValueFormat()
+                : (formatRef.equals(ODataMediaFormat.class)
+                ? Configuration.getDefaultMediaFormat()
+                : Configuration.getDefaultFormat())))
+                : format);
     }
 
     /**

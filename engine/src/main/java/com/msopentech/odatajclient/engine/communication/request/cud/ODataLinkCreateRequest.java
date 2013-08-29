@@ -52,7 +52,7 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      * @param link entity to be linked.
      */
     ODataLinkCreateRequest(final URI targetURI, final ODataLink link) {
-        super(HttpMethod.POST, targetURI);
+        super(ODataFormat.class, HttpMethod.POST, targetURI);
         // set request body
         this.link = link;
     }
@@ -77,7 +77,7 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeLink(link, ODataFormat.valueOf(getFormat()));
+        return ODataWriter.writeLink(link, getFormat());
     }
 
     /**

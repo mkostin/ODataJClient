@@ -41,13 +41,13 @@ public interface ODataBasicRequest<V extends ODataResponse, T extends Enum<T>> e
     Future<V> asyncExecute();
 
     /**
-     * Returns resource representation format.
+     * Returns resource representation format as string.
      *
-     * @return the configured format (<tt>com.msopentech.odatajclient.engine.format.ODataFormat.JSON</tt> will be
-     * the default value unless differently specified).
-     * @see com.msopentech.odatajclient.engine.format.ODataFormat
+     * @return the configured format (or default if not specified).
+     * @see com.msopentech.odatajclient.engine.utils.Configuration#getDefaultPubFormat()
+     * @see com.msopentech.odatajclient.engine.utils.Configuration#getDefaultFormat()
      */
-    String getFormat();
+    T getFormat();
 
     /**
      * Override configured request format.

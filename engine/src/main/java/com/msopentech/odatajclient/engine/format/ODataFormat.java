@@ -58,20 +58,20 @@ public enum ODataFormat {
     /**
      * Gets OData format from its string representation.
      *
-     * @param format string representation of the format.
+     * @param value string representation of the format.
      * @return OData format.
      */
-    public static ODataFormat fromString(final String format) {
+    public static ODataFormat fromValue(final String value) {
         ODataFormat result = null;
 
-        for (ODataFormat value : values()) {
-            if (format.equals(value.toString())) {
-                result = value;
+        for (ODataFormat format : values()) {
+            if (value.equals(format.toString())) {
+                result = format;
             }
         }
 
         if (result == null) {
-            throw new IllegalArgumentException(format);
+            throw new IllegalArgumentException(value);
         }
 
         return result;

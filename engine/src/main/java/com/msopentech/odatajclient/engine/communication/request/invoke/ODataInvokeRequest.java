@@ -79,7 +79,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
             final HttpMethod method,
             final URI uri) {
 
-        super(method, uri);
+        super(ODataPubFormat.class, method, uri);
 
         this.reference = reference;
         this.parameters = new LinkedHashMap<String, ODataValue>();
@@ -109,13 +109,9 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
         setContentType(this.format);
     }
 
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public String getFormat() {
+    private String getInvokeFormat() {
         if (this.format == null) {
-            setFormat(ODataPubFormat.valueOf(super.getFormat()));
+            setFormat(super.getFormat());
         }
 
         return this.format;
@@ -226,15 +222,15 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
                 try {
                     if (reference.isAssignableFrom(ODataEntitySet.class)) {
                         invokeResult = (T) ODataReader.readEntitySet(res.getEntity().getContent(),
-                                ODataPubFormat.fromString(getFormat()));
+                                ODataPubFormat.fromString(getInvokeFormat()));
                     }
                     if (reference.isAssignableFrom(ODataEntity.class)) {
                         invokeResult = (T) ODataReader.readEntity(res.getEntity().getContent(),
-                                ODataPubFormat.fromString(getFormat()));
+                                ODataPubFormat.fromString(getInvokeFormat()));
                     }
                     if (reference.isAssignableFrom(ODataProperty.class)) {
                         invokeResult = (T) ODataReader.readProperty(res.getEntity().getContent(),
-                                ODataFormat.fromString(getFormat()));
+                                ODataFormat.fromValue(getInvokeFormat()));
                     }
                 } catch (IOException e) {
                     throw new HttpClientException(e);

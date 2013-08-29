@@ -19,7 +19,10 @@ import com.msopentech.odatajclient.engine.client.http.DefaultHttpClientFactory;
 import com.msopentech.odatajclient.engine.client.http.DefaultHttpUriRequestFactory;
 import com.msopentech.odatajclient.engine.client.http.HttpClientFactory;
 import com.msopentech.odatajclient.engine.client.http.HttpUriRequestFactory;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
+import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -30,15 +33,19 @@ import java.util.concurrent.Executors;
  */
 public final class Configuration {
 
-    public static final String DEFAULT_FORMAT = "format";
+    private static final String DEFAULT_PUB_FORMAT = "pubFormat";
 
-    public static final String HTTP_CLIENT_FACTORY = "httpClientFactory";
+    private static final String DEFAULT_VALUE_FORMAT = "valueFormat";
 
-    public static final String HTTP_URI_REQUEST_FACTORY = "httpUriRequestFactory";
+    private static final String DEFAULT_MEDIA_FORMAT = "valueFormat";
 
-    public static final String USE_XHTTP_METHOD = "useHTTPMethod";
+    private static final String HTTP_CLIENT_FACTORY = "httpClientFactory";
 
-    public static final String KEY_AS_SEGMENT = "keyAsSegment";
+    private static final String HTTP_URI_REQUEST_FACTORY = "httpUriRequestFactory";
+
+    private static final String USE_XHTTP_METHOD = "useHTTPMethod";
+
+    private static final String KEY_AS_SEGMENT = "keyAsSegment";
 
     private static final Map<String, Object> CONF = new HashMap<String, Object>();
 
@@ -55,7 +62,7 @@ public final class Configuration {
      * @param defaultValue default value to be used in case of the given key doesn't exist.
      * @return property value if exists; default value if does not exist.
      */
-    public static Object getProperty(final String key, final Object defaultValue) {
+    private static Object getProperty(final String key, final Object defaultValue) {
         return CONF.containsKey(key) ? CONF.get(key) : defaultValue;
     }
 
@@ -66,28 +73,102 @@ public final class Configuration {
      * @param value configuration property value.
      * @return given value.
      */
-    public static Object setProperty(final String key, final Object value) {
+    private static Object setProperty(final String key, final Object value) {
         return CONF.put(key, value);
     }
 
     /**
-     * Gets configured OData format.
+     * Gets the configured OData format for AtomPub exchanges.
      * If this configuration parameter doesn't exist the JSON_FULL_METADATA format will be used as default.
      *
-     * @return configured OData format if exists; JSON_FULL_METADATA format otherwise.
+     * @return configured OData format for AtomPub if specified; JSON_FULL_METADATA format otherwise.
      * @see ODataPubFormat#JSON_FULL_METADATA
      */
     public static ODataPubFormat getDefaultPubFormat() {
-        return ODataPubFormat.valueOf(getProperty(DEFAULT_FORMAT, "JSON_FULL_METADATA").toString());
+        return ODataPubFormat.valueOf(
+                getProperty(DEFAULT_PUB_FORMAT, ODataPubFormat.JSON_FULL_METADATA.name()).toString());
     }
 
     /**
-     * Sets default format.
+     * Sets the default OData format for AtomPub exchanges.
      *
      * @param format default format.
      */
     public static void setDefaultPubFormat(final ODataPubFormat format) {
-        setProperty(DEFAULT_FORMAT, format.name());
+        setProperty(DEFAULT_PUB_FORMAT, format.name());
+    }
+
+    /**
+     * Gets the configured OData format.
+     * This value depends on what is returned from <tt>getDefaultPubFormat()</tt>.
+     *
+     * @return configured OData format
+     * @see #getDefaultPubFormat()
+     */
+    public static ODataFormat getDefaultFormat() {
+        ODataFormat format;
+
+        switch (getDefaultPubFormat()) {
+            case ATOM:
+                format = ODataFormat.XML;
+                break;
+
+            case JSON_FULL_METADATA:
+                format = ODataFormat.JSON_FULL_METADATA;
+                break;
+
+            case JSON_NO_METADATA:
+                format = ODataFormat.JSON_NO_METADATA;
+                break;
+
+            case JSON:
+            default:
+                format = ODataFormat.JSON;
+        }
+
+        return format;
+    }
+
+    /**
+     * Gets the configured OData value format.
+     * If this configuration parameter doesn't exist the TEXT format will be used as default.
+     *
+     * @return configured OData value format if specified; TEXT format otherwise.
+     * @see ODataValueFormat#TEXT
+     */
+    public static ODataValueFormat getDefaultValueFormat() {
+        return ODataValueFormat.valueOf(
+                getProperty(DEFAULT_VALUE_FORMAT, ODataValueFormat.TEXT.name()).toString());
+    }
+
+    /**
+     * Sets the default OData value format.
+     *
+     * @param format default format.
+     */
+    public static void setDefaultValueFormat(final ODataValueFormat format) {
+        setProperty(DEFAULT_VALUE_FORMAT, format.name());
+    }
+
+    /**
+     * Gets the configured OData media format.
+     * If this configuration parameter doesn't exist the APPLICATION_OCTET_STREAM format will be used as default.
+     *
+     * @return configured OData media format if specified; APPLICATION_OCTET_STREAM format otherwise.
+     * @see ODataMediaFormat#WILDCARD
+     */
+    public static ODataMediaFormat getDefaultMediaFormat() {
+        return ODataMediaFormat.valueOf(
+                getProperty(DEFAULT_VALUE_FORMAT, ODataMediaFormat.APPLICATION_OCTET_STREAM.name()).toString());
+    }
+
+    /**
+     * Sets the default OData media format.
+     *
+     * @param format default format.
+     */
+    public static void setDefaultMediaFormat(final ODataMediaFormat format) {
+        setProperty(DEFAULT_MEDIA_FORMAT, format.name());
     }
 
     /**

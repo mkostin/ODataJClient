@@ -18,7 +18,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.format.ODataServiceDocumentFormat;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -29,7 +29,7 @@ import org.apache.http.client.HttpClient;
  *
  * @see ODataRetrieveRequestFactory#getServiceDocumentRequest(java.lang.String)
  */
-public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServiceDocument, ODataServiceDocumentFormat> {
+public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServiceDocument, ODataFormat> {
 
     /**
      * Constructor.
@@ -37,7 +37,7 @@ public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServi
      * @param uri request URI.
      */
     ODataServiceDocumentRequest(final URI uri) {
-        super(uri);
+        super(ODataFormat.class, uri);
     }
 
     /**
@@ -81,8 +81,7 @@ public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServi
         public ODataServiceDocument getBody() {
             if (serviceDocument == null) {
                 try {
-                    serviceDocument = ODataReader.readServiceDocument(
-                            getRawResponse(), ODataServiceDocumentFormat.valueOf(getFormat()));
+                    serviceDocument = ODataReader.readServiceDocument(getRawResponse(), getFormat());
                 } finally {
                     this.close();
                 }

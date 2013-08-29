@@ -53,7 +53,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      * @param entity entity to be created.
      */
     ODataEntityCreateRequest(final URI targetURI, final ODataEntity entity) {
-        super(HttpMethod.POST, targetURI);
+        super(ODataPubFormat.class, HttpMethod.POST, targetURI);
         this.entity = entity;
     }
 
@@ -62,7 +62,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeEntity(entity, ODataPubFormat.valueOf(getFormat()));
+        return ODataWriter.writeEntity(entity, getFormat());
     }
 
     /**
@@ -112,7 +112,7 @@ public class ODataEntityCreateRequest extends ODataBasicRequestImpl<ODataEntityC
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.readEntity(getRawResponse(), ODataPubFormat.valueOf(getFormat()));
+                    entity = ODataReader.readEntity(getRawResponse(), getFormat());
                 } finally {
                     this.close();
                 }

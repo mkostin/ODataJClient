@@ -30,7 +30,7 @@ import org.apache.http.client.HttpClient;
  * This class implements an OData link query request.
  * Get instance by using ODataRetrieveRequestFactory.
  *
- * @see ODataRetrieveRequestFactory#getLinkCollectionRequest(java.net.URI, java.lang.String) 
+ * @see ODataRetrieveRequestFactory#getLinkCollectionRequest(java.net.URI, java.lang.String)
  */
 public class ODataLinkCollectionRequest extends ODataRetrieveRequest<ODataLinkCollection, ODataFormat> {
 
@@ -41,7 +41,7 @@ public class ODataLinkCollectionRequest extends ODataRetrieveRequest<ODataLinkCo
      * @param linkName link name.
      */
     ODataLinkCollectionRequest(final URI targetURI, final String linkName) {
-        super(new ODataURIBuilder(targetURI.toASCIIString()).appendLinksSegment(linkName).build());
+        super(ODataFormat.class, new ODataURIBuilder(targetURI.toASCIIString()).appendLinksSegment(linkName).build());
     }
 
     /**
@@ -81,8 +81,7 @@ public class ODataLinkCollectionRequest extends ODataRetrieveRequest<ODataLinkCo
         public ODataLinkCollection getBody() {
             if (links == null) {
                 try {
-                    links = ODataReader.readLinks(
-                            res.getEntity().getContent(), ODataFormat.valueOf(getFormat()));
+                    links = ODataReader.readLinks(res.getEntity().getContent(), getFormat());
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {
