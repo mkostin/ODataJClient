@@ -18,19 +18,19 @@ package com.msopentech.odatajclient.engine.data.json.error;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.msopentech.odatajclient.engine.data.ODataError;
-import com.msopentech.odatajclient.engine.data.json.AbstractJSONObject;
+import com.msopentech.odatajclient.engine.data.AbstractPayloadObject;
 
 /**
  * This class represents an OData error returned as JSON.
  */
-public class JSONODataError extends AbstractJSONObject implements ODataError {
+public class JSONODataError extends AbstractPayloadObject implements ODataError {
 
     private static final long serialVersionUID = -3476499168507242932L;
 
     /**
      * Error message.
      */
-    static class Message extends AbstractJSONObject {
+    static class Message extends AbstractPayloadObject {
 
         private static final long serialVersionUID = 2577818040815637859L;
 
@@ -78,7 +78,7 @@ public class JSONODataError extends AbstractJSONObject implements ODataError {
     /**
      * Inner error.
      */
-    static class InnerError extends AbstractJSONObject {
+    static class InnerError extends AbstractPayloadObject {
 
         private static final long serialVersionUID = -3920947476143537640L;
 

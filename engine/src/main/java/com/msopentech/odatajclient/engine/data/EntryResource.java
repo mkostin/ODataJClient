@@ -62,13 +62,6 @@ public interface EntryResource {
     void setId(String id);
 
     /**
-     * Gets ETag.
-     *
-     * @return ETag.
-     */
-    String getEtag();
-
-    /**
      * Gets entry self link.
      *
      * @return self link.
@@ -79,9 +72,8 @@ public interface EntryResource {
      * Sets entry self link.
      *
      * @param selfLink self link.
-     * @return 'TRUE' in case of success; false otherwise.
      */
-    boolean setSelfLink(LinkResource selfLink);
+    void setSelfLink(LinkResource selfLink);
 
     /**
      * Gets entry edit link.
@@ -94,9 +86,8 @@ public interface EntryResource {
      * Sets entry edit link.
      *
      * @param editLink edit link.
-     * @return 'TRUE' in case of success; false otherwise.
      */
-    boolean setEditLink(LinkResource editLink);
+    void setEditLink(LinkResource editLink);
 
     /**
      * Gets association links.
@@ -217,12 +208,18 @@ public interface EntryResource {
     String getMediaContentSource();
 
     /**
-     * Set media content.
+     * Set media content source.
      *
      * @param mediaContentSource media content source.
+     */
+    void setMediaContentSource(String mediaContentSource);
+
+    /**
+     * Set media content type.
+     *
      * @param mediaContentType media content type.
      */
-    void setMediaContent(String mediaContentSource, String mediaContentType);
+    void setMediaContentType(String mediaContentType);
 
     /**
      * Checks if the current entry is a media entry.

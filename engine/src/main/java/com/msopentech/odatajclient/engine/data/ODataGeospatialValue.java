@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -370,11 +369,9 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
     }
 
     private Element parseGeospatial(final Geospatial value) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
         final DocumentBuilder builder;
         try {
-            builder = factory.newDocumentBuilder();
+            builder = ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             throw new IllegalStateException("Failure initializing Geospatial DOM tree", e);
         }

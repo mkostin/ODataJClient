@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -107,11 +106,6 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
         if (tree.hasNonNull(ODataConstants.JSON_ID)) {
             entry.setId(tree.get(ODataConstants.JSON_ID).textValue());
             tree.remove(ODataConstants.JSON_ID);
-        }
-
-        if (tree.hasNonNull(ODataConstants.JSON_ETAG)) {
-            entry.setEtag(tree.get(ODataConstants.JSON_ETAG).textValue());
-            tree.remove(ODataConstants.JSON_ETAG);
         }
 
         if (tree.hasNonNull(ODataConstants.JSON_READ_LINK)) {
@@ -207,8 +201,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
         tree.remove(toRemove);
 
         try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder builder = factory.newDocumentBuilder();
+            final DocumentBuilder builder = ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder();
             final Document document = builder.newDocument();
 
             final Element properties = document.createElementNS(

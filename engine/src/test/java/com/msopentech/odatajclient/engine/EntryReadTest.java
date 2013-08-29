@@ -68,7 +68,7 @@ public class EntryReadTest extends AbstractTest {
 
                 if (ODataPubFormat.JSON_FULL_METADATA == format || ODataPubFormat.ATOM == format) {
                     assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails",
-                            ((Element) property).getAttribute(ODataConstants.ATTR_TYPE));
+                            ((Element) property).getAttribute(ODataConstants.ATTR_M_TYPE));
                 }
             }
         }

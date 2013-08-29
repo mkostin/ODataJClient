@@ -53,9 +53,6 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         if (entry.getId() != null) {
             jgen.writeStringField(ODataConstants.JSON_ID, entry.getId());
         }
-        if (StringUtils.isNotBlank(entry.getEtag())) {
-            jgen.writeStringField(ODataConstants.JSON_ETAG, entry.getEtag());
-        }
 
         if (entry.getSelfLink() != null) {
             jgen.writeStringField(ODataConstants.JSON_READ_LINK, entry.getSelfLink().getHref());

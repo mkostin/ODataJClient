@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -48,11 +47,9 @@ public final class ODataBinder {
     }
 
     private static Element newEntryContent() {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
         Element properties = null;
         try {
-            final DocumentBuilder builder = factory.newDocumentBuilder();
+            final DocumentBuilder builder = ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder();
             final Document doc = builder.newDocument();
             properties = doc.createElement(ODataConstants.ELEM_PROPERTIES);
             properties.setAttribute(ODataConstants.XMLNS_METADATA, ODataConstants.NS_METADATA);
@@ -175,7 +172,8 @@ public final class ODataBinder {
         final Element content = newEntryContent();
         if (entity.isMediaEntity()) {
             entry.setMediaEntryProperties(content);
-            entry.setMediaContent(entity.getMediaContentSource(), entity.getMediaContentType());
+            entry.setMediaContentSource(entity.getMediaContentSource());
+            entry.setMediaContentType(entity.getMediaContentType());
         } else {
             entry.setContent(content);
         }
@@ -195,7 +193,7 @@ public final class ODataBinder {
      */
     public static Element toDOMElement(final ODataProperty prop) {
         try {
-            return toDOMElement(prop, DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument(), true);
+            return toDOMElement(prop, ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder().newDocument(), true);
         } catch (ParserConfigurationException e) {
             LOG.error("Error retrieving property DOM", e);
             throw new IllegalArgumentException(e);
@@ -404,9 +402,9 @@ public final class ODataBinder {
         final Node nullNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_NULL);
 
         if (nullNode == null) {
-            final EdmType edmType = StringUtils.isBlank(property.getAttribute(ODataConstants.ATTR_TYPE))
+            final EdmType edmType = StringUtils.isBlank(property.getAttribute(ODataConstants.ATTR_M_TYPE))
                     ? null
-                    : new EdmType(property.getAttribute(ODataConstants.ATTR_TYPE));
+                    : new EdmType(property.getAttribute(ODataConstants.ATTR_M_TYPE));
 
             final PropertyType propType = edmType == null
                     ? guessPropertyType(property)
@@ -510,7 +508,7 @@ public final class ODataBinder {
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
         if (setType) {
-            element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
+            element.setAttribute(ODataConstants.ATTR_M_TYPE, value.getTypeName());
         }
 
         if (value instanceof ODataGeospatialValue) {
@@ -534,7 +532,7 @@ public final class ODataBinder {
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + prop.getName());
         if (value.getTypeName() != null && setType) {
-            element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
+            element.setAttribute(ODataConstants.ATTR_M_TYPE, value.getTypeName());
         }
 
         for (ODataValue el : value) {
@@ -561,7 +559,7 @@ public final class ODataBinder {
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
         if (value.getTypeName() != null && setType) {
-            element.setAttribute(ODataConstants.ATTR_TYPE, value.getTypeName());
+            element.setAttribute(ODataConstants.ATTR_M_TYPE, value.getTypeName());
         }
 
         for (ODataProperty field : value) {

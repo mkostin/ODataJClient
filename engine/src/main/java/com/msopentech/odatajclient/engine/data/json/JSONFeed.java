@@ -17,8 +17,10 @@ package com.msopentech.odatajclient.engine.data.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.msopentech.odatajclient.engine.data.AbstractPayloadObject;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
+import com.msopentech.odatajclient.engine.uri.SegmentType;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ import java.util.List;
  *
  * @see JSONEntry
  */
-public class JSONFeed extends AbstractJSONMetadataObject implements FeedResource {
+public class JSONFeed extends AbstractPayloadObject implements FeedResource {
 
     private static final long serialVersionUID = -3576372289800799417L;
 
@@ -52,16 +54,27 @@ public class JSONFeed extends AbstractJSONMetadataObject implements FeedResource
         entries = new ArrayList<JSONEntry>();
     }
 
-    /**
-     * {@inheritDoc }
-     */
+    @JsonIgnore
     @Override
+    public URI getBaseURI() {
+        URI baseURI = null;
+        if (metadata != null) {
+            final String metadataURI = getMetadata().toASCIIString();
+            baseURI = URI.create(metadataURI.substring(0, metadataURI.indexOf(SegmentType.METADATA.getValue())));
+        }
+
+        return baseURI;
+    }
+
+    /**
+     * Gets the metadata URI.
+     */
     public URI getMetadata() {
         return metadata;
     }
 
     /**
-     * Sets metadata URI.
+     * Sets the metadata URI.
      *
      * @param metadata metadata URI.
      */

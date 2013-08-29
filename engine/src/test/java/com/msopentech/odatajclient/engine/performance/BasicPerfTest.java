@@ -34,6 +34,8 @@ import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.Serializer;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.IOException;
@@ -253,7 +255,7 @@ public class BasicPerfTest extends AbstractTest {
         assertFalse(writer.toString().isEmpty());
     }
 
-    private void writeViaODataJClient(final ODataPubFormat format) throws IOException {
+    private ODataEntity sampleODataEntity() throws IOException {
         final ODataEntity entity = ODataFactory.
                 newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
 
@@ -298,18 +300,20 @@ public class BasicPerfTest extends AbstractTest {
                 setText("myAlternativeName").setType(EdmSimpleType.STRING).build());
         contactAliasValue.add(ODataFactory.newCollectionProperty("AlternativeNames", aanv));
 
-        final StringWriter writer = new StringWriter();
-        Serializer.entry(ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format), true), writer);
-        assertFalse(writer.toString().isEmpty());
+        return entity;
     }
 
     @Test
     public void writeAtomViaOdataJClient() throws IOException {
-        writeViaODataJClient(ODataPubFormat.ATOM);
+        final StringWriter writer = new StringWriter();
+        Serializer.entry(ODataBinder.getEntry(sampleODataEntity(), AtomEntry.class, true), writer);
+        assertFalse(writer.toString().isEmpty());
     }
 
     @Test
     public void writeJSONViaOdataJClient() throws IOException {
-        writeViaODataJClient(ODataPubFormat.JSON);
+        final StringWriter writer = new StringWriter();
+        Serializer.entry(ODataBinder.getEntry(sampleODataEntity(), JSONEntry.class, true), writer);
+        assertFalse(writer.toString().isEmpty());
     }
 }

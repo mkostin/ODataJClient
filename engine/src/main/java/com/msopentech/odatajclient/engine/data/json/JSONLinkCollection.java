@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
+import com.msopentech.odatajclient.engine.data.AbstractPayloadObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.msopentech.odatajclient.engine.data.LinkCollectionResource;
@@ -25,14 +26,14 @@ import java.util.List;
 /**
  * Link from an entry, represented via JSON.
  */
-public class JSONLinkCollection extends AbstractJSONMetadataObject implements LinkCollectionResource {
+public class JSONLinkCollection extends AbstractPayloadObject implements LinkCollectionResource {
 
     private static final long serialVersionUID = -5006368367235783907L;
 
     /**
      * JSON link URL representation.
      */
-    static class JSONLinkURL extends AbstractJSONObject {
+    static class JSONLinkURL extends AbstractPayloadObject {
 
         private static final long serialVersionUID = 5365055617973271468L;
 
@@ -60,20 +61,19 @@ public class JSONLinkCollection extends AbstractJSONMetadataObject implements Li
     private String next;
 
     /**
-     * Sets metadata URI.
+     * Gets the metadata URI.
+     */
+    public URI getMetadata() {
+        return metadata;
+    }
+
+    /**
+     * Sets the metadata URI.
      *
      * @param metadata metadata URI.
      */
     public void setMetadata(final URI metadata) {
         this.metadata = metadata;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public URI getMetadata() {
-        return this.metadata;
     }
 
     /**

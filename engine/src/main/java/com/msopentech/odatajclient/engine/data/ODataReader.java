@@ -79,7 +79,7 @@ public final class ODataReader {
      * @return OData entity property de-serialized.
      */
     public static ODataProperty readProperty(final InputStream input, final ODataFormat format) {
-        final Element property = Deserializer.toDOM(input, format);
+        final Element property = Deserializer.toPropertyDOM(input, format);
 
         // The ODataProperty object is used either for actual entity properties and for invoke result (when return type
         // is neither an entity nor a collection of entities).
@@ -97,12 +97,12 @@ public final class ODataReader {
         //     <functionImportName m:type="Collection(AnotherType)">
         //       <element m:type="AnotherType">...</element>
         //     <functionImportName>
-        final String type = property.getAttribute(ODataConstants.ATTR_TYPE);
+        final String type = property.getAttribute(ODataConstants.ATTR_M_TYPE);
         final NodeList elements = property.getElementsByTagName(ODataConstants.ELEM_ELEMENT);
         if (StringUtils.isBlank(type) && elements != null && elements.getLength() > 0) {
-            final Node elementType = elements.item(0).getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
+            final Node elementType = elements.item(0).getAttributes().getNamedItem(ODataConstants.ATTR_M_TYPE);
             if (elementType != null) {
-                property.setAttribute(ODataConstants.ATTR_TYPE, "Collection(" + elementType.getTextContent() + ")");
+                property.setAttribute(ODataConstants.ATTR_M_TYPE, "Collection(" + elementType.getTextContent() + ")");
             }
         }
 

@@ -18,9 +18,11 @@ package com.msopentech.odatajclient.engine.data;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.msopentech.odatajclient.engine.data.atom.AbstractAtomElement;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
+import com.msopentech.odatajclient.engine.data.atom.AtomSerializer;
+import com.msopentech.odatajclient.engine.data.json.JSONEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -28,13 +30,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,11 +43,6 @@ import org.w3c.dom.ls.LSSerializer;
  * Utility class for serialization.
  */
 public final class Serializer {
-
-    /**
-     * Factory for StAX serialization.
-     */
-    private static final XMLOutputFactory XMLOF = XMLOutputFactory.newFactory();
 
     private Serializer() {
         // Empty private constructor for static utility classes
@@ -79,7 +70,7 @@ public final class Serializer {
         if (obj instanceof AtomFeed) {
             atom((AtomFeed) obj, writer);
         } else {
-            json(obj, writer);
+            json((JSONFeed) obj, writer);
         }
     }
 
@@ -105,7 +96,7 @@ public final class Serializer {
         if (obj instanceof AtomEntry) {
             atom((AtomEntry) obj, writer);
         } else {
-            json(obj, writer);
+            json((JSONEntry) obj, writer);
         }
     }
 
@@ -190,44 +181,18 @@ public final class Serializer {
         }
     }
 
-    /**
-     * Serializes an Atom entry or feed into a DOM tree.
-     *
-     * @param obj atom object (entry or feed).
-     * @param parent destination node (parent of the streamed DOM tree).
-     */
-    public static <T extends AbstractAtomElement> void atom(final T obj, final Element parent) {
-        try {
-            final Marshaller marshaller = getMarshaller(obj.getClass());
-            marshaller.marshal(obj, parent);
-        } catch (JAXBException e) {
-            throw new IllegalArgumentException("While serializing Atom object", e);
-        }
-    }
-
     /*
      * ------------------ Private methods ------------------
      */
-    private static Marshaller getMarshaller(final Class<?> reference) throws JAXBException {
-        final JAXBContext context = JAXBContext.newInstance(reference);
-        final Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, ODataConstants.UTF8);
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-        return marshaller;
-    }
-
-    private static <T extends AbstractAtomElement> void atom(final T obj, final Writer writer) {
+    private static <T extends AbstractPayloadObject> void atom(final T obj, final Writer writer) {
         try {
-            final XMLStreamWriter xmler = XMLOF.createXMLStreamWriter(writer);
-            final Marshaller marshaller = getMarshaller(obj.getClass());
-            marshaller.marshal(obj, xmler);
+            dom(AtomSerializer.serialize(obj), writer);
         } catch (Exception e) {
             throw new IllegalArgumentException("While serializing Atom object", e);
         }
     }
 
-    private static void json(final Object obj, final Writer writer) {
+    private static <T extends AbstractPayloadObject> void json(final T obj, final Writer writer) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             mapper.writeValue(writer, obj);
@@ -243,14 +208,13 @@ public final class Serializer {
             property.setContent(element);
             mapper.writeValue(writer, property);
         } catch (IOException e) {
-            throw new IllegalArgumentException("While serializing JSON object", e);
+            throw new IllegalArgumentException("While serializing JSON property", e);
         }
     }
 
     private static void xmlLink(final ODataLink link, final Writer writer) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
-            final DocumentBuilder builder = factory.newDocumentBuilder();
+            final DocumentBuilder builder = ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder();
             final Document doc = builder.newDocument();
             final Element uri = doc.createElementNS(ODataConstants.NS_DATASERVICES, ODataConstants.ELEM_URI);
             uri.appendChild(doc.createTextNode(link.getLink().toASCIIString()));

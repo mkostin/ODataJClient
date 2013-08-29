@@ -177,7 +177,7 @@ final class GeospatialJSONHandler {
 
                         while (geoItor.hasNext()) {
                             final JsonNode geo = geoItor.next();
-                            final String collItemType = geo.get(ODataConstants.TYPE).asText();
+                            final String collItemType = geo.get(ODataConstants.ATTR_TYPE).asText();
                             final String callAsType;
                             if (EdmSimpleType.GEOGRAPHY_COLLECTION.value().equals(collItemType)
                                     || EdmSimpleType.GEOMETRY_COLLECTION.value().equals(collItemType)) {
@@ -216,7 +216,7 @@ final class GeospatialJSONHandler {
             final String crsValue = srsName.substring(prefIdx + ODataConstants.JSON_GIS_URLPREFIX.length());
 
             jgen.writeObjectFieldStart(ODataConstants.JSON_CRS);
-            jgen.writeStringField(ODataConstants.TYPE, ODataConstants.NAME);
+            jgen.writeStringField(ODataConstants.ATTR_TYPE, ODataConstants.NAME);
             jgen.writeObjectFieldStart(ODataConstants.PROPERTIES);
             jgen.writeStringField(ODataConstants.NAME, "EPSG:" + crsValue);
             jgen.writeEndObject();
@@ -267,11 +267,11 @@ final class GeospatialJSONHandler {
         if (edmSimpleType.equals(EdmSimpleType.GEOGRAPHY_COLLECTION)
                 || edmSimpleType.equals(EdmSimpleType.GEOMETRY_COLLECTION)) {
 
-            jgen.writeStringField(ODataConstants.TYPE, EdmSimpleType.GEOMETRY_COLLECTION.value());
+            jgen.writeStringField(ODataConstants.ATTR_TYPE, EdmSimpleType.GEOMETRY_COLLECTION.value());
         } else {
             final int yIdx = edmSimpleType.value().indexOf('y');
             final String itemType = edmSimpleType.value().substring(yIdx + 1);
-            jgen.writeStringField(ODataConstants.TYPE, itemType);
+            jgen.writeStringField(ODataConstants.ATTR_TYPE, itemType);
         }
 
         Element root = null;

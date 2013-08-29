@@ -15,9 +15,11 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
+import com.msopentech.odatajclient.engine.data.AbstractPayloadObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.msopentech.odatajclient.engine.data.ServiceDocumentResource;
+import com.msopentech.odatajclient.engine.uri.SegmentType;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,12 +29,12 @@ import java.util.Map;
 /**
  * Service document, represented via JSON.
  */
-public class JSONServiceDocument extends AbstractJSONMetadataObject implements ServiceDocumentResource {
+public class JSONServiceDocument extends AbstractPayloadObject implements ServiceDocumentResource {
 
     /**
      * Static representation of a top-level entity set.
      */
-    static class JSONToplevelEntitySet extends AbstractJSONObject {
+    static class JSONToplevelEntitySet extends AbstractPayloadObject {
 
         private static final long serialVersionUID = -972079849037041158L;
 
@@ -93,16 +95,27 @@ public class JSONServiceDocument extends AbstractJSONMetadataObject implements S
         entitySets = new ArrayList<JSONToplevelEntitySet>();
     }
 
-    /**
-     * {@inheritDoc }
-     */
+    @JsonIgnore
     @Override
+    public URI getBaseURI() {
+        URI baseURI = null;
+        if (metadata != null) {
+            final String metadataURI = getMetadata().toASCIIString();
+            baseURI = URI.create(metadataURI.substring(0, metadataURI.indexOf(SegmentType.METADATA.getValue())));
+        }
+
+        return baseURI;
+    }
+
+    /**
+     * Gets the metadata URI.
+     */
     public URI getMetadata() {
         return metadata;
     }
 
     /**
-     * Sets metadata URI.
+     * Sets the metadata URI.
      *
      * @param metadata metadata URI.
      */

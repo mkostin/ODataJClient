@@ -13,6 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.w3.org/2005/Atom",
-        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.msopentech.odatajclient.engine.data.atom;
+
+import java.net.URI;
+import java.util.Date;
+
+/**
+ * Common methods for <tt>AtomEntry</tt> and <tt>AtomFeed</tt>.
+ *
+ * @see AtomEntry
+ * @see AtomFeed
+ */
+public interface AtomObject {
+
+    URI getBaseURI();
+
+    void setBaseURI(String baseURI);
+
+    String getId();
+
+    void setId(String id);
+
+    String getTitle();
+
+    void setTitle(String title);
+
+    String getSummary();
+
+    void setSummary(String summary);
+
+    Date getUpdated();
+
+    void setUpdated(Date updated);
+}

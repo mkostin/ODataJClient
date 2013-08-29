@@ -45,7 +45,7 @@ import org.junit.Test;
 public class MediaEntityTestITCase extends AbstractTest {
 
     @Test
-    public void readMediaEntity() throws Exception {
+    public void read() throws Exception {
         final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 
@@ -58,7 +58,7 @@ public class MediaEntityTestITCase extends AbstractTest {
     }
 
     @Test(expected = ODataClientErrorException.class)
-    public void readMediaWithXmlError() throws Exception {
+    public void readWithXmlError() throws Exception {
         final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 
@@ -69,7 +69,7 @@ public class MediaEntityTestITCase extends AbstractTest {
     }
 
     @Test(expected = ODataClientErrorException.class)
-    public void readMediaWithJsonError() throws Exception {
+    public void readWithJsonError() throws Exception {
         final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 

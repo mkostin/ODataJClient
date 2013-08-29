@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.data.Deserializer;
+import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -40,22 +41,20 @@ public class EntityTest extends AbstractTest {
                 Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
         assertNotNull(entity);
 
-        if (ODataPubFormat.JSON_FULL_METADATA == format || ODataPubFormat.ATOM == format) {
-            assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entity.getName());
-            assertTrue(entity.getEditLink().toASCIIString().endsWith("/Customer(-10)"));
-            assertEquals(5, entity.getNavigationLinks().size());
-            assertEquals(2, entity.getEditMediaLinks().size());
+        assertEquals("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer", entity.getName());
+        assertTrue(entity.getEditLink().toASCIIString().endsWith("/Customer(-10)"));
+        assertEquals(5, entity.getNavigationLinks().size());
+        assertEquals(2, entity.getEditMediaLinks().size());
 
-            boolean check = false;
+        boolean check = false;
 
-            for (ODataLink link : entity.getNavigationLinks()) {
-                if ("Wife".equals(link.getName()) && (link.getLink().toASCIIString().endsWith("/Customer(-10)/Wife"))) {
-                    check = true;
-                }
+        for (ODataLink link : entity.getNavigationLinks()) {
+            if ("Wife".equals(link.getName()) && (link.getLink().toASCIIString().endsWith("/Customer(-10)/Wife"))) {
+                check = true;
             }
-
-            assertTrue(check);
         }
+
+        assertTrue(check);
 
         final ODataEntity written = ODataBinder.getODataEntity(
                 ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)));
@@ -69,7 +68,7 @@ public class EntityTest extends AbstractTest {
 
     @Test
     public void fromJSON() {
-        readAndWrite(ODataPubFormat.JSON);
+        readAndWrite(ODataPubFormat.JSON_FULL_METADATA);
     }
 
     private void readGeospatial(final ODataPubFormat format) {
@@ -129,5 +128,30 @@ public class EntityTest extends AbstractTest {
     public void withActionsFromJSON() {
         // this needs to be full, otherwise actions will not be provided
         withActions(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    private void mediaEntity(final ODataPubFormat format) {
+        final InputStream input = getClass().getResourceAsStream("Car_16." + getSuffix(format));
+        final ODataEntity entity = ODataBinder.getODataEntity(
+                Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
+        assertNotNull(entity);
+        assertTrue(entity.isMediaEntity());
+        assertNotNull(entity.getMediaContentSource());
+        assertNotNull(entity.getMediaContentType());
+
+        
+        final ODataEntity written = ODataBinder.getODataEntity(
+                ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)));
+        assertEquals(entity, written);
+    }
+
+    @Test
+    public void mediaEntityFromAtom() {
+        mediaEntity(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void mediaEntityFromJSON() {
+        mediaEntity(ODataPubFormat.JSON_FULL_METADATA);
     }
 }

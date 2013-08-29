@@ -16,11 +16,17 @@
 package com.msopentech.odatajclient.engine.utils;
 
 import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Constant values related to the OData protocol.
  */
 public class ODataConstants {
+
+    /**
+     * DOM factory.
+     */
+    public static final DocumentBuilderFactory DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
     // Other stuff
     public static final String V30 = "3.0";
@@ -29,11 +35,11 @@ public class ODataConstants {
 
     public final static String NAME = "name";
 
-    public final static String TYPE = "type";
-
     public final static String PROPERTIES = "properties";
 
     // XML namespaces and prefixes
+    public final static String NS_ATOM = "http://www.w3.org/2005/Atom";
+
     public static final String NS_DATASERVICES = "http://schemas.microsoft.com/ado/2007/08/dataservices";
 
     public static final String NS_METADATA = NS_DATASERVICES + "/metadata";
@@ -86,13 +92,15 @@ public class ODataConstants {
 
     public static final String ELEM_ELEMENT = "element";
 
-    public static final String ELEM_INLINE = PREFIX_METADATA + "inline";
+    public final static String ATTR_TYPE = "type";
 
-    public static final String ATTR_TYPE = PREFIX_METADATA + TYPE;
+    public static final String ATTR_M_TYPE = PREFIX_METADATA + ATTR_TYPE;
 
     public static final String ATTR_NULL = PREFIX_METADATA + "null";
 
     public static final String ATTR_XMLBASE = "xml:base";
+
+    public static final String ATTR_REL = "rel";
 
     public static final String ATTR_HREF = "href";
 
@@ -102,11 +110,7 @@ public class ODataConstants {
 
     public static final String ATTR_TARGET = "target";
 
-    public static final String ELEM_SERVICE = "service";
-
     public static final String ELEM_COLLECTION = "collection";
-
-    public static final String ATTR_ATOM_TITLE = "atom:title";
 
     public static final String ATTR_SRSNAME = PREFIX_GML + "srsName";
 
@@ -146,18 +150,12 @@ public class ODataConstants {
 
     public static final String ELEM_URI = "uri";
 
-    public static final String ELEM_ACTION = PREFIX_METADATA + "action";
-
-    public static final String ELEM_FUNCTION = PREFIX_METADATA + "function";
-
     // JSON stuff
     public final static String JSON_METADATA = "odata.metadata";
 
     public final static String JSON_TYPE = "odata.type";
 
     public final static String JSON_ID = "odata.id";
-
-    public final static String JSON_ETAG = "odata.etag";
 
     public final static String JSON_READ_LINK = "odata.readLink";
 
@@ -190,8 +188,46 @@ public class ODataConstants {
     public final static String JSON_GIS_URLPREFIX = "http://www.opengis.net/def/crs/EPSG/0/";
 
     // Atom stuff
-    public final static String ATOM_ENTRY = "entry";
+    public final static String ATOM_ELEM_ENTRY = "entry";
 
-    public final static String ATOM_FEED = "feed";
+    public final static String ATOM_ELEM_FEED = "feed";
+
+    public final static String ATOM_ELEM_CATEGORY = "category";
+
+    public final static String ATOM_ELEM_ID = "id";
+
+    public final static String ATOM_ELEM_LINK = "link";
+
+    public final static String ATOM_ELEM_CONTENT = "content";
+
+    public static final String ATOM_ELEM_TITLE = "title";
+
+    public static final String ATOM_ELEM_SUMMARY = "summary";
+
+    public static final String ATOM_ELEM_UPDATED = "updated";
+
+    public static final String ATOM_ELEM_AUTHOR = "author";
+
+    public static final String ATOM_ELEM_AUTHOR_NAME = "name";
+
+    public static final String ATOM_ELEM_AUTHOR_URI = "uri";
+
+    public static final String ATOM_ELEM_AUTHOR_EMAIL = "email";
+
+    public static final String ATOM_ELEM_ACTION = PREFIX_METADATA + "action";
+
+    public static final String ATOM_ELEM_INLINE = PREFIX_METADATA + "inline";
+
+    public static final String ATOM_ATTR_TITLE = "atom:title";
+
+    public static final String ATOM_ATTR_TERM = "term";
+
+    public static final String ATOM_ATTR_SCHEME = "scheme";
+
+    public static final String ATOM_ATTR_SRC = "src";
+
+    public static final String ATOM_CATEGORY_SCHEME = NS_DATASERVICES + "/" + ATOM_ATTR_SCHEME;
+
+    public static final String ATOM_ATTR_COUNT = PREFIX_METADATA + "count";
 
 }

@@ -26,7 +26,6 @@ import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -55,8 +54,7 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
             jgen.writeStringField(ODataConstants.JSON_VALUE, content.getTextContent());
         } else {
             try {
-                final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                final DocumentBuilder builder = factory.newDocumentBuilder();
+                final DocumentBuilder builder = ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder();
                 final Document document = builder.newDocument();
                 final Element wrapper = document.createElement(ODataConstants.ELEM_PROPERTY);
 
@@ -65,7 +63,7 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
                             document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 
                     DOMTreeUtils.writeSubtree(jgen, wrapper);
-                } else if (EdmSimpleType.isGeospatial(content.getAttribute(ODataConstants.ATTR_TYPE))) {
+                } else if (EdmSimpleType.isGeospatial(content.getAttribute(ODataConstants.ATTR_M_TYPE))) {
                     wrapper.appendChild(document.renameNode(
                             document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 

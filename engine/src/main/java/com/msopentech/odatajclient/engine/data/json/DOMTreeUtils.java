@@ -77,7 +77,7 @@ final class DOMTreeUtils {
 
                 boolean typeSet = false;
                 if (node.hasNonNull(name + "@" + ODataConstants.JSON_TYPE)) {
-                    property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                    property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                             node.get(name + "@" + ODataConstants.JSON_TYPE).textValue());
                     typeSet = true;
                 }
@@ -88,35 +88,35 @@ final class DOMTreeUtils {
                 } else if (child.isValueNode()) {
                     if (!typeSet) {
                         if (child.isShort()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.INT_16.toString());
                         }
                         if (child.isInt()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.INT_32.toString());
                         }
                         if (child.isLong()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.INT_64.toString());
                         }
                         if (child.isBigDecimal()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.DECIMAL.toString());
                         }
                         if (child.isFloat()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.SINGLE.toString());
                         }
                         if (child.isDouble()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.DOUBLE.toString());
                         }
                         if (child.isBoolean()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.BOOLEAN.toString());
                         }
                         if (child.isTextual()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.STRING.toString());
                         }
                     }
@@ -124,17 +124,17 @@ final class DOMTreeUtils {
                     property.appendChild(parent.getOwnerDocument().createTextNode(child.asText()));
                 } else if (child.isContainerNode()) {
                     if (!typeSet && child.hasNonNull(ODataConstants.JSON_TYPE)) {
-                        property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                        property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                 child.get(ODataConstants.JSON_TYPE).textValue());
                     }
 
-                    final String type = property.getAttribute(ODataConstants.ATTR_TYPE);
+                    final String type = property.getAttribute(ODataConstants.ATTR_M_TYPE);
                     if (StringUtils.isNotBlank(type) && EdmSimpleType.isGeospatial(type)) {
                         if (EdmSimpleType.GEOGRAPHY.toString().equals(type)
                                 || EdmSimpleType.GEOMETRY.toString().equals(type)) {
 
-                            final String geoType = child.get(ODataConstants.TYPE).textValue();
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_TYPE,
+                            final String geoType = child.get(ODataConstants.ATTR_TYPE).textValue();
+                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     geoType.startsWith("Geo")
                                     ? EdmSimpleType.namespace() + "." + geoType
                                     : type + geoType);
@@ -142,7 +142,7 @@ final class DOMTreeUtils {
 
                         if (child.has(ODataConstants.JSON_COORDINATES) || child.has(ODataConstants.JSON_GEOMETRIES)) {
                             GeospatialJSONHandler.deserialize(
-                                    child, property, property.getAttribute(ODataConstants.ATTR_TYPE));
+                                    child, property, property.getAttribute(ODataConstants.ATTR_M_TYPE));
                         }
                     } else {
                         buildSubtree(property, child);
@@ -179,7 +179,7 @@ final class DOMTreeUtils {
         for (Node child : XMLUtils.getChildNodes(content, Node.ELEMENT_NODE)) {
             final String childName = XMLUtils.getSimpleName(child);
 
-            final Node typeAttr = child.getAttributes().getNamedItem(ODataConstants.ATTR_TYPE);
+            final Node typeAttr = child.getAttributes().getNamedItem(ODataConstants.ATTR_M_TYPE);
             if (typeAttr != null && EdmSimpleType.isGeospatial(typeAttr.getTextContent())) {
                 jgen.writeStringField(propType ? ODataConstants.JSON_TYPE : childName + "@" + ODataConstants.JSON_TYPE,
                         typeAttr.getTextContent());

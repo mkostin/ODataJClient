@@ -33,8 +33,7 @@ public interface FeedResource {
     URI getBaseURI();
 
     /**
-     * Gets number of entries if an
-     * <code>inlinecount</code> has been required.
+     * Gets number of entries if an <tt>inlinecount</tt> was required.
      *
      * @return number of entries into the feed.
      */

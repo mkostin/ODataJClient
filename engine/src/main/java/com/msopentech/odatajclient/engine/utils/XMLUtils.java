@@ -19,6 +19,8 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -52,6 +54,7 @@ public final class XMLUtils {
      */
     public static List<Node> getChildNodes(final Node node, final short nodetype) {
         final List<Node> result = new ArrayList<Node>();
+
         final NodeList children = node.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             final Node child = children.item(i);
@@ -59,6 +62,30 @@ public final class XMLUtils {
                 result.add(child);
             }
         }
+
+        return result;
+    }
+
+    /**
+     * Gets the given node's children with the given name.
+     *
+     * @param node parent.
+     * @param nodetype searched child name.
+     * @return children.
+     */
+    public static List<Element> getChildElements(final Element node, final String name) {
+        final List<Element> result = new ArrayList<Element>();
+
+        if (StringUtils.isNotBlank(name)) {
+            final NodeList children = node.getChildNodes();
+            for (int i = 0; i < children.getLength(); i++) {
+                final Node child = children.item(i);
+                if ((child instanceof Element) && name.equals(child.getNodeName())) {
+                    result.add((Element) child);
+                }
+            }
+        }
+
         return result;
     }
 

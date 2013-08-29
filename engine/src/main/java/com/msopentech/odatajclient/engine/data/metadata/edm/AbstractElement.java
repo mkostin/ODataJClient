@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data;
+package com.msopentech.odatajclient.engine.data.metadata.edm;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 /**
- * Abstract representation of an Atom element.
+ * Abstract representation of a JAXB element.
  */
 public abstract class AbstractElement {
 

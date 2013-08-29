@@ -24,8 +24,6 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEn
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataGenericRetrieveRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.Deserializer;
-import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataEntitySetIterator;
@@ -35,7 +33,6 @@ import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import org.junit.Test;
 
@@ -56,26 +53,6 @@ public class EntitySetTestITCase extends AbstractTest {
     @Test
     public void genericRequestAsJSON() throws IOException {
         genericRequest(ODataPubFormat.JSON);
-    }
-
-    @Test
-    public void readAtomFeed() throws IOException {
-        readFeed(ODataPubFormat.ATOM);
-    }
-
-    @Test
-    public void readJSONFeed() throws IOException {
-        readFeed(ODataPubFormat.JSON);
-    }
-
-    @Test
-    public void readODataEntitySetFromAtom() {
-        readODataEntitySet(ODataPubFormat.ATOM);
-    }
-
-    @Test
-    public void readODataEntitySetFromJSON() {
-        readODataEntitySet(ODataPubFormat.JSON);
     }
 
     @Test
@@ -129,42 +106,6 @@ public class EntitySetTestITCase extends AbstractTest {
         final URI found = URIUtils.getURI(getServiceRoot(), feed.getNext().toASCIIString());
 
         assertEquals(expected, found);
-    }
-
-    private void readFeed(final ODataPubFormat format) throws IOException {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
-        uriBuilder.appendEntitySetSegment("Car").top(2).skip(4);
-
-        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-        req.setFormat(format);
-
-        final InputStream is = req.rawExecute();
-
-        final FeedResource feed = Deserializer.toFeed(is, ResourceFactory.feedClassForFormat(format));
-        assertNotNull(feed);
-
-        debugFeed(feed, "Just (raw)retrieved feed");
-
-        assertEquals(2, feed.getEntries().size());
-
-        is.close();
-    }
-
-    private void readODataEntitySet(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot());
-        uriBuilder.appendEntitySetSegment("Car").top(3);
-
-        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-        req.setFormat(format);
-
-        final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-        final ODataEntitySet feed = res.getBody();
-
-        assertNotNull(feed);
-
-        debugFeed(ODataBinder.getFeed(feed, ResourceFactory.feedClassForFormat(format)), "Just retrieved feed");
-
-        assertEquals(3, feed.getEntities().size());
     }
 
     private void readODataEntitySetIterator(final ODataPubFormat format) {

@@ -63,8 +63,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
@@ -307,10 +309,12 @@ public abstract class AbstractTest {
         contactAliasValue.add(ODataFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
 
         if (withInlineInfo) {
-            entity.addLink(ODataFactory.newInlineEntity(
+            final ODataInlineEntity inlineInfo = ODataFactory.newInlineEntity(
                     "Info",
                     URI.create("Customer(" + id + ")/Info"),
-                    getSampleCustomerInfo(id, sampleName + "_Info")));
+                    getSampleCustomerInfo(id, sampleName + "_Info"));
+            inlineInfo.getEntity().setMediaEntity(true);
+            entity.addLink(inlineInfo);
         }
 
         return entity;
@@ -456,28 +460,24 @@ public abstract class AbstractTest {
     protected void cleanAfterCreate(final ODataPubFormat format, final ODataEntity created,
             final boolean includeInline) {
 
-        final List<ODataEntity> toBeDeleted = new ArrayList<ODataEntity>();
-        toBeDeleted.add(created);
+        final Set<URI> toBeDeleted = new HashSet<URI>();
+        toBeDeleted.add(created.getEditLink());
 
         if (includeInline) {
             for (ODataLink link : created.getNavigationLinks()) {
                 if (link instanceof ODataInlineEntity) {
                     final ODataEntity inline = ((ODataInlineEntity) link).getEntity();
-                    toBeDeleted.add(inline);
+                    if (inline.getEditLink() != null) {
+                        toBeDeleted.add(inline.getEditLink());
+                    }
                 }
             }
         }
 
         assertFalse(toBeDeleted.isEmpty());
 
-        for (ODataEntity entity : toBeDeleted) {
-            final URI selflLink = entity.getLink();
-            assertNotNull(selflLink);
-
-            final URI editLink = entity.getEditLink();
-            assertNotNull(editLink);
-
-            final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(editLink);
+        for (URI link : toBeDeleted) {
+            final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(link);
             final ODataDeleteResponse deleteRes = deleteReq.execute();
 
             assertEquals(204, deleteRes.getStatusCode());
@@ -485,7 +485,7 @@ public abstract class AbstractTest {
 
             deleteRes.close();
 
-            final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(selflLink);
+            final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(link);
             // bug that needs to be fixed on the SampleService - cannot get entity not found with header
             // Accept: application/json;odata=minimalmetadata
             retrieveReq.setFormat(format == ODataPubFormat.JSON_FULL_METADATA ? ODataPubFormat.JSON : format);

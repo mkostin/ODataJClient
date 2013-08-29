@@ -16,12 +16,12 @@
 package com.msopentech.odatajclient.engine.data.json.error;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.msopentech.odatajclient.engine.data.json.AbstractJSONObject;
+import com.msopentech.odatajclient.engine.data.AbstractPayloadObject;
 
 /**
  * This class represents a bundle for an OData error returned as JSON.
  */
-public class JSONODataErrorBundle extends AbstractJSONObject {
+public class JSONODataErrorBundle extends AbstractPayloadObject {
 
     private static final long serialVersionUID = -4784910226259754450L;
 

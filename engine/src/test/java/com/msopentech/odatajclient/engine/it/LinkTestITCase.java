@@ -52,8 +52,8 @@ public class LinkTestITCase extends AbstractTest {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10);
 
-        final ODataLinkCollectionRequest req = ODataRetrieveRequestFactory.getLinkCollectionRequest(uriBuilder.build(),
-                linkname);
+        final ODataLinkCollectionRequest req =
+                ODataRetrieveRequestFactory.getLinkCollectionRequest(uriBuilder.build(), linkname);
         req.setFormat(format);
 
         final ODataRetrieveResponse<ODataLinkCollection> res = req.execute();

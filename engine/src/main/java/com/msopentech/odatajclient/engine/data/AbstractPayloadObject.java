@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data.json;
+package com.msopentech.odatajclient.engine.data;
 
 import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -22,9 +22,9 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Abstract representation of a JSON object.
+ * Abstract representation of a payload (Atom, JSON) object.
  */
-public abstract class AbstractJSONObject implements Serializable {
+public abstract class AbstractPayloadObject implements Serializable {
 
     private static final long serialVersionUID = 1634654241914156675L;
 

@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.engine.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.msopentech.odatajclient.engine.data.atom.AtomDeserializer;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
@@ -39,15 +40,14 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSParser;
 
 /**
  * Utility class for serialization.
@@ -97,22 +97,6 @@ public final class Deserializer {
     }
 
     /**
-     * Gets the AtomFeed object represented by the given XML node.
-     *
-     * @param node XML node representing an Atom feed.
-     * @return AtomFeed object.
-     */
-    @SuppressWarnings("unchecked")
-    public static AtomFeed toAtomFeed(final Node node) {
-        try {
-            final JAXBContext context = JAXBContext.newInstance(AtomFeed.class);
-            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(node)).getValue();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("While deserializing Atom feed", e);
-        }
-    }
-
-    /**
      * Gets an entry object from the given InputStream.
      *
      * @param <T> reference class type
@@ -134,32 +118,16 @@ public final class Deserializer {
     }
 
     /**
-     * Gets the AtomEntry object represented by the given XML node.
-     *
-     * @param node XML node representing an Atom entry.
-     * @return AtomEntry object.
-     */
-    @SuppressWarnings("unchecked")
-    public static AtomEntry toAtomEntry(final Node node) {
-        try {
-            final JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
-            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(node)).getValue();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("While deserializing Atom entry", e);
-        }
-    }
-
-    /**
      * Gets a DOM representation of the given InputStream.
      *
      * @param input stream to be de-serialized.
      * @param format OData format.
      * @return DOM.
      */
-    public static Element toDOM(final InputStream input, final ODataFormat format) {
+    public static Element toPropertyDOM(final InputStream input, final ODataFormat format) {
         return format == ODataFormat.XML
-                ? toDOMFromXML(input)
-                : toDOMFromJSON(input);
+                ? toPropertyDOMFromXML(input)
+                : toPropertyDOMFromJSON(input);
     }
 
     /**
@@ -203,16 +171,33 @@ public final class Deserializer {
                 : toODataErrorFromJSON(input);
     }
 
+    /**
+     * Parses the given input into a DOM tree.
+     *
+     * @param input stream to be parsed and de-serialized.
+     * @return DOM tree
+     */
+    public static Element toDOM(final InputStream input) {
+        try {
+            final DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
+            final DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");
+            final LSParser parser = impl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
+            final LSInput lsinput = impl.createLSInput();
+            lsinput.setByteStream(input);
+
+            return parser.parse(lsinput).getDocumentElement();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not parse DOM", e);
+        }
+    }
+
     /*
      * ------------------ Private methods ------------------
      */
     @SuppressWarnings("unchecked")
     private static AtomFeed toAtomFeed(final InputStream input) {
         try {
-            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(input);
-            final JAXBContext context = JAXBContext.newInstance(AtomFeed.class);
-
-            return ((JAXBElement<AtomFeed>) context.createUnmarshaller().unmarshal(xmler)).getValue();
+            return AtomDeserializer.feed(toDOM(input));
         } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing Atom feed", e);
         }
@@ -221,10 +206,7 @@ public final class Deserializer {
     @SuppressWarnings("unchecked")
     private static AtomEntry toAtomEntry(final InputStream input) {
         try {
-            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(input);
-            final JAXBContext context = JAXBContext.newInstance(AtomEntry.class);
-
-            return ((JAXBElement<AtomEntry>) context.createUnmarshaller().unmarshal(xmler)).getValue();
+            return AtomDeserializer.entry(toDOM(input));
         } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing Atom entry", e);
         }
@@ -248,17 +230,11 @@ public final class Deserializer {
         }
     }
 
-    private static Element toDOMFromXML(final InputStream input) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        try {
-            final DocumentBuilder builder = factory.newDocumentBuilder();
-            return builder.parse(input).getDocumentElement();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("While deserializing XML property", e);
-        }
+    private static Element toPropertyDOMFromXML(final InputStream input) {
+        return toDOM(input);
     }
 
-    private static Element toDOMFromJSON(final InputStream input) {
+    private static Element toPropertyDOMFromJSON(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             return mapper.readValue(input, JSONProperty.class).getContent();
@@ -268,38 +244,25 @@ public final class Deserializer {
     }
 
     private static ServiceDocumentResource toServiceDocumentFromXML(final InputStream input) {
-        try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder builder = factory.newDocumentBuilder();
+        final Element service = toDOM(input);
 
-            final Document doc = builder.parse(input);
-            final NodeList services = doc.getElementsByTagName(ODataConstants.ELEM_SERVICE);
+        final XMLServiceDocument serviceDoc = new XMLServiceDocument();
+        serviceDoc.setBaseURI(URI.create(service.getAttribute(ODataConstants.ATTR_XMLBASE)));
 
-            if (services.getLength() != 1) {
-                throw new IllegalArgumentException("Invalid service document");
+        final NodeList collections = service.getElementsByTagName(ODataConstants.ELEM_COLLECTION);
+        for (int i = 0; i < collections.getLength(); i++) {
+            final Element collection = (Element) collections.item(i);
+
+            final NodeList title = collection.getElementsByTagName(ODataConstants.ATOM_ATTR_TITLE);
+            if (title.getLength() != 1) {
+                throw new IllegalArgumentException("Invalid collection element found");
             }
 
-            final Element service = (Element) services.item(0);
-
-            final XMLServiceDocument res = new XMLServiceDocument();
-            res.setBaseURI(URI.create(service.getAttribute(ODataConstants.ATTR_XMLBASE)));
-
-            final NodeList collections = service.getElementsByTagName(ODataConstants.ELEM_COLLECTION);
-            for (int i = 0; i < collections.getLength(); i++) {
-                final Element collection = (Element) collections.item(i);
-
-                final NodeList title = collection.getElementsByTagName(ODataConstants.ATTR_ATOM_TITLE);
-                if (title.getLength() != 1) {
-                    throw new IllegalArgumentException("Invalid collection element found");
-                }
-
-                res.addToplevelEntitySet(title.item(0).getTextContent(),
-                        collection.getAttribute(ODataConstants.ATTR_HREF));
-            }
-            return res;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("While deserializing XML service document", e);
+            serviceDoc.addToplevelEntitySet(title.item(0).getTextContent(),
+                    collection.getAttribute(ODataConstants.ATTR_HREF));
         }
+
+        return serviceDoc;
     }
 
     private static ServiceDocumentResource toServiceDocumentFromJSON(final InputStream input) {
@@ -312,27 +275,22 @@ public final class Deserializer {
     }
 
     private static XMLLinkCollection toLinkCollectionFromXML(final InputStream input) {
-        try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder builder = factory.newDocumentBuilder();
+        final Element root = toDOM(input);
 
-            final Document doc = builder.parse(input);
-            final NodeList uris = doc.getElementsByTagName(ODataConstants.ELEM_URI);
+        final NodeList uris = root.getOwnerDocument().getElementsByTagName(ODataConstants.ELEM_URI);
 
-            final List<URI> links = new ArrayList<URI>();
-            for (int i = 0; i < uris.getLength(); i++) {
-                links.add(URI.create(uris.item(i).getTextContent()));
-            }
-
-            final NodeList next = doc.getElementsByTagName(ODataConstants.NEXT_LINK_REL);
-            final XMLLinkCollection res = next.getLength() > 0
-                    ? new XMLLinkCollection(URI.create(next.item(0).getTextContent()))
-                    : new XMLLinkCollection();
-            res.setLinks(links);
-            return res;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error deserializing XML $links", e);
+        final List<URI> links = new ArrayList<URI>();
+        for (int i = 0; i < uris.getLength(); i++) {
+            links.add(URI.create(uris.item(i).getTextContent()));
         }
+
+        final NodeList next = root.getElementsByTagName(ODataConstants.NEXT_LINK_REL);
+        final XMLLinkCollection linkCollection = next.getLength() > 0
+                ? new XMLLinkCollection(URI.create(next.item(0).getTextContent()))
+                : new XMLLinkCollection();
+        linkCollection.setLinks(links);
+
+        return linkCollection;
     }
 
     private static JSONLinkCollection toLinkCollectionFromJSON(final InputStream input) {

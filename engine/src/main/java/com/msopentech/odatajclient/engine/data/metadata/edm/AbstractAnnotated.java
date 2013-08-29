@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import com.msopentech.odatajclient.engine.data.AbstractElement;
 import java.util.List;
 
 /**

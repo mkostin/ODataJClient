@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
+import com.msopentech.odatajclient.engine.data.AbstractPayloadObject;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.net.URI;
@@ -25,7 +26,7 @@ import org.w3c.dom.Element;
  */
 @JsonSerialize(using = JSONPropertySerializer.class)
 @JsonDeserialize(using = JSONPropertyDeserializer.class)
-public class JSONProperty extends AbstractJSONObject {
+public class JSONProperty extends AbstractPayloadObject {
 
     private static final long serialVersionUID = 553414431536637434L;
 
