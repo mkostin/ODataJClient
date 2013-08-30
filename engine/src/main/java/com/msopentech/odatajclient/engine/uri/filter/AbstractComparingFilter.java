@@ -13,32 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.engine.uri;
+package com.msopentech.odatajclient.engine.uri.filter;
 
-import java.io.Serializable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+abstract class AbstractComparingFilter implements ODataFilter {
 
-/**
- * OData filter builder.
- * TODO: complete as per #114
- */
-public class ODataFilterBuilder implements Serializable {
+    private final ODataFilterArg left;
 
-    private static final long serialVersionUID = 6394079782425609496L;
+    private final ODataFilterArg right;
 
-    private StringBuilder filter;
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(ODataFilterBuilder.class);
-
-    public ODataFilterBuilder(final String filter) {
-        this.filter = new StringBuilder(filter);
+    AbstractComparingFilter(final ODataFilterArg left, final ODataFilterArg right) {
+        this.left = left;
+        this.right = right;
     }
 
+    protected abstract String getOp();
+
+    @Override
     public String build() {
-        return this.filter.toString();
+        return new StringBuilder().
+                append('(').append(left.build()).
+                append(' ').append(getOp()).append(' ').
+                append(right.build()).append(')').
+                toString();
     }
 }

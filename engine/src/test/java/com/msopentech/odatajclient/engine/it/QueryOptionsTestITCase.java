@@ -49,11 +49,13 @@ public class QueryOptionsTestITCase extends AbstractTest {
 
     /**
      * Test <tt>$filter</tt> and <tt>orderby</tt>.
+     *
+     * @see FilterFactoryTest for more tests.
      */
     @Test
     public void filterOrderby() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Car").filter("VIN lt 16");
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntitySetSegment("Car").filter("VIN lt 16");
 
         // 1. check that filtered entity set looks as expected
         ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());

@@ -15,23 +15,16 @@
  */
 package com.msopentech.odatajclient.engine.uri;
 
-import com.msopentech.odatajclient.engine.data.ODataDuration;
-import com.msopentech.odatajclient.engine.data.ODataTimestamp;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
+import com.msopentech.odatajclient.engine.uri.filter.ODataFilterFactory;
 import com.msopentech.odatajclient.engine.utils.Configuration;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.UUID;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,34 +123,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendKeySegment(final Object val) {
-        String segValue;
-        try {
-            segValue = (val instanceof UUID)
-                    ? "guid'" + val.toString() + "'"
-                    : (val instanceof byte[])
-                    ? "X'" + Hex.encodeHexString((byte[]) val) + "'"
-                    : ((val instanceof ODataTimestamp) && ((ODataTimestamp) val).getTimezone() == null)
-                    ? "datetime'" + URLEncoder.encode(((ODataTimestamp) val).toString(), ODataConstants.UTF8) + "'"
-                    : ((val instanceof ODataTimestamp) && ((ODataTimestamp) val).getTimezone() != null)
-                    ? "datetimeoffset'" + URLEncoder.encode(((ODataTimestamp) val).toString(), ODataConstants.UTF8)
-                    + "'"
-                    : (val instanceof ODataDuration)
-                    ? "time'" + ((ODataDuration) val).toString() + "'"
-                    : (val instanceof BigDecimal)
-                    ? new DecimalFormat(EdmSimpleType.DECIMAL.pattern()).format((BigDecimal) val) + "M"
-                    : (val instanceof Double)
-                    ? new DecimalFormat(EdmSimpleType.DOUBLE.pattern()).format((Double) val) + "D"
-                    : (val instanceof Float)
-                    ? new DecimalFormat(EdmSimpleType.SINGLE.pattern()).format((Float) val) + "f"
-                    : (val instanceof Long)
-                    ? ((Long) val).toString() + "L"
-                    : (val instanceof String)
-                    ? "'" + URLEncoder.encode((String) val, ODataConstants.UTF8) + "'"
-                    : val.toString();
-        } catch (Exception e) {
-            LOG.warn("While generating key segment for '{}', using toString()", val, e);
-            segValue = val.toString();
-        }
+        final String segValue = PrimitiveValueURIEscaper.escape(val);
 
         segments.add(Configuration.isKeyAsSegment()
                 ? new Segment(SegmentType.KEY_AS_SEGMENT, segValue)
@@ -175,12 +141,7 @@ public class ODataURIBuilder implements Serializable {
         if (!Configuration.isKeyAsSegment()) {
             final StringBuilder keyBuilder = new StringBuilder().append('(');
             for (Map.Entry<String, Object> entry : segmentValues.entrySet()) {
-                keyBuilder.append(entry.getKey()).append('=');
-                if (entry.getValue() instanceof String) {
-                    keyBuilder.append('\'').append((String) entry.getValue()).append('\'');
-                } else {
-                    keyBuilder.append(entry.getValue().toString());
-                }
+                keyBuilder.append(entry.getKey()).append('=').append(PrimitiveValueURIEscaper.escape(entry.getValue()));
                 keyBuilder.append(',');
             }
             keyBuilder.deleteCharAt(keyBuilder.length() - 1).append(')');
@@ -295,15 +256,17 @@ public class ODataURIBuilder implements Serializable {
     }
 
     /**
-     * Adds filter builder for filter query option.
+     * Adds filter for filter query option.
      *
-     * @param builder filter builder: note that <tt>build()</tt> method will be immediately invoked.
+     * @param filter filter instance (to be obtained via <tt>ODataFilterFactory</tt>):
+     * note that <tt>build()</tt> method will be immediately invoked.
      * @return current ODataURIBuilder object.
      * @see QueryOption#FILTER
-     * @see ODataFilterBuilder
+     * @see ODataFilter
+     * @see ODataFilterFactory
      */
-    public ODataURIBuilder filter(final ODataFilterBuilder builder) {
-        return addQueryOption(QueryOption.FILTER, builder.build());
+    public ODataURIBuilder filter(final ODataFilter filter) {
+        return addQueryOption(QueryOption.FILTER, filter.build());
     }
 
     /**
