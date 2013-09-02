@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
-import com.msopentech.odatajclient.proxy.api.Utility;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

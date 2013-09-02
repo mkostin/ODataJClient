@@ -29,15 +29,19 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class EntityContainerFactory {
 
+    private static final Object MONITOR = new Object();
+
     private String serviceRoot;
 
     private EdmMetadata metadata;
 
     private static Context context = null;
 
-    public static synchronized Context getContext() {
-        if (context == null) {
-            context = new Context();
+    public static Context getContext() {
+        synchronized (MONITOR) {
+            if (context == null) {
+                context = new Context();
+            }
         }
 
         return context;
@@ -75,7 +79,7 @@ public class EntityContainerFactory {
      * @return an initialized concrete implementation of the passed reference
      * @throws IllegalStateException if <tt>serviceRoot</tt> was not set
      * @throws IllegalArgumentException if the passed reference is not an interface annotated as EntityContainer
-     * @see EntityContainer
+     * @see com.msopentech.odatajclient.proxy.api.annotations.EntityContainer
      */
     @SuppressWarnings("unchecked")
     public <T> T getEntityContainer(final Class<T> reference) throws IllegalStateException, IllegalArgumentException {

@@ -15,8 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy.api.context;
 
-import com.msopentech.odatajclient.proxy.api.NavigationLink;
-import com.msopentech.odatajclient.proxy.api.NavigationLinks;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import java.util.Collection;
 import java.util.Collections;

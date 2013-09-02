@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
-import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 
 public class AttachedEntity {
 
@@ -24,7 +23,7 @@ public class AttachedEntity {
 
     private final AttachedEntityStatus status;
 
-    public AttachedEntity(EntityTypeInvocationHandler entity, AttachedEntityStatus status) {
+    public AttachedEntity(final EntityTypeInvocationHandler entity, final AttachedEntityStatus status) {
         this.entity = entity;
         this.status = status;
     }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api;
+package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -42,12 +42,16 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Utility {
+public final class Utility {
 
     /**
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(Utility.class);
+
+    private Utility() {
+        // Empty private constructor for static utility classes
+    }
 
     public static Map.Entry<EntityContainer, AssociationSet> getAssociationSet(
             final Association association, final String associationNamespace, final EdmMetadata metadata) {
@@ -57,7 +61,7 @@ public class Utility {
 
         for (Schema schema : metadata.getSchemas()) {
             for (EntityContainer container : schema.getEntityContainers()) {
-                AssociationSet associationSet = getAssociationSet(associationName.toString(), container);
+                final AssociationSet associationSet = getAssociationSet(associationName.toString(), container);
                 if (associationSet != null) {
                     return new AbstractMap.SimpleEntry<EntityContainer, AssociationSet>(container, associationSet);
                 }
@@ -71,9 +75,7 @@ public class Utility {
         return schema.getAssociation(relationship.substring(relationship.lastIndexOf('.') + 1));
     }
 
-    public static AssociationSet getAssociationSet(
-            final String association,
-            final EntityContainer container) {
+    public static AssociationSet getAssociationSet(final String association, final EntityContainer container) {
         LOG.debug("Search for association set {}", association);
 
         for (AssociationSet associationSet : container.getAssociationSets()) {
@@ -121,7 +123,7 @@ public class Utility {
 
     private static <T> T populateCompoundKey(final Class<T> compoundKeyRef, final ODataEntity entity) {
         try {
-            T res = compoundKeyRef.newInstance();
+            final T res = compoundKeyRef.newInstance();
 
             for (Method method : compoundKeyRef.getClass().getDeclaredMethods()) {
                 final Annotation ann = method.getAnnotation(CompoundKeyElement.class);
