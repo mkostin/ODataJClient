@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class AbstractType implements Serializable {
+public abstract class AbstractType implements Serializable {
 
     private static final long serialVersionUID = 5894564747020768401L;
 

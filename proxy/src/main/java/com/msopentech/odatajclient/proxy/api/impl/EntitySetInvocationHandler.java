@@ -90,6 +90,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
     static <T extends Serializable, KEY extends Serializable> EntitySetInvocationHandler<T, KEY> getInstance(
             final Class<?> ref,
             final EntityContainerInvocationHandler container) {
+
         return new EntitySetInvocationHandler<T, KEY>(ref, container);
     }
 
@@ -97,6 +98,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
     private EntitySetInvocationHandler(
             final Class<?> ref,
             final EntityContainerInvocationHandler container) {
+
         super(container.getFactory());
 
         this.container = container;
@@ -175,9 +177,9 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        final Constructor<Void> cv = Void.class.getDeclaredConstructor();
-        cv.setAccessible(true);
-        return cv.newInstance();
+        final Constructor<Void> voidConstructor = Void.class.getDeclaredConstructor();
+        voidConstructor.setAccessible(true);
+        return voidConstructor.newInstance();
     }
 
     @Override
@@ -249,9 +251,9 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
         final List<T> beans = new ArrayList<T>(entitySet.getEntities().size());
         for (ODataEntity entity : entitySet.getEntities()) {
-            EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
+            final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
 
-            EntityTypeInvocationHandler handlerInTheContext =
+            final EntityTypeInvocationHandler handlerInTheContext =
                     EntityContainerFactory.getContext().getEntityContext().getEntity(handler.getUUID());
 
             beans.add((T) Proxy.newProxyInstance(
@@ -286,8 +288,8 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
         if (entity == null) {
             // search for entity
-            final T en = get(key);
-            entity = (EntityTypeInvocationHandler) Proxy.getInvocationHandler(en);
+            final T searched = get(key);
+            entity = (EntityTypeInvocationHandler) Proxy.getInvocationHandler(searched);
             entityContext.attach(entity, AttachedEntityStatus.DELETED);
         } else {
             entityContext.setStatus(entity, AttachedEntityStatus.DELETED);
@@ -337,6 +339,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
                         // ignore the link
                         uri = null;
                         break;
+                        
                     case NEW:
                         entityContext.setStatus(target, AttachedEntityStatus.NEW_IN_BATCH);
                     // follow on with NEW_IN_BATCH case ...
@@ -348,6 +351,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
                     case LINKED:
                     case ATTACHED:
                         entityContext.detach(target);
+                        
                     default:
                         uri = URIUtils.getURI(
                                 getFactory().getServiceRoot(),

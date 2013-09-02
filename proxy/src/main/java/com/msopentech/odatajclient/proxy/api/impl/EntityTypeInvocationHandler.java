@@ -100,6 +100,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             final String entitySetName,
             final Class<?> typeRef,
             final EntityContainerFactory factory) {
+        
         super(factory);
         this.entity = entity;
         this.typeRef = typeRef;
@@ -177,9 +178,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 // if the getter refers to a property .... get property from wrapped entity
                 return getPropertyValue(property, getter.getGenericReturnType());
             }
-
         } else if (method.getName().startsWith("set")) {
-
             // get the corresponding getter method (see assumption above)
             final String getterName = method.getName().replaceFirst("set", "get");
             final Method getter = typeRef.getMethod(getterName);
@@ -261,7 +260,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 }
             } else {
                 // if the getter exists and it is annotated as expected then get name/value and add a new property
-                ODataProperty odataProperty = entity.getProperty(property.name());
+                final ODataProperty odataProperty = entity.getProperty(property.name());
                 if (odataProperty != null) {
                     entity.removeProperty(odataProperty);
                 }
@@ -275,9 +274,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 }
             }
 
-            final Constructor<Void> cv = Void.class.getDeclaredConstructor();
-            cv.setAccessible(true);
-            return cv.newInstance();
+            final Constructor<Void> voidConstructor = Void.class.getDeclaredConstructor();
+            voidConstructor.setAccessible(true);
+            return voidConstructor.newInstance();
         } else {
             throw new UnsupportedOperationException("Unsupported method " + method.getName());
         }
@@ -286,7 +285,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     private Object getNavigationPropertyValue(final NavigationProperty property, final Method getter) {
         Object res = null;
 
-        Type type = getter.getGenericReturnType();
+        final Type type = getter.getGenericReturnType();
 
         final EdmMetadata metadata = getFactory().getMetadata();
         final Schema schema = metadata.getSchema(Utility.getNamespace(typeRef));
