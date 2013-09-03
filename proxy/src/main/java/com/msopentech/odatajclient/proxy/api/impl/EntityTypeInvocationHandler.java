@@ -22,7 +22,6 @@ import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
@@ -38,9 +37,7 @@ import com.msopentech.odatajclient.proxy.api.context.EntityContext;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.context.EntityLinkDesc;
 import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
-import com.msopentech.odatajclient.proxy.api.context.LinkContext;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import com.msopentech.odatajclient.proxy.utils.ODataItemUtils;
 import java.io.Serializable;
@@ -50,7 +47,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,15 +70,15 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private ODataEntity entity;
 
-    private Map<Property, Object> changes = new HashMap<Property, Object>();
+    private Map<Property, Object> propertyChanges = new HashMap<Property, Object>();
+
+    private Map<NavigationProperty, Object> linkChanges = new HashMap<NavigationProperty, Object>();
 
     private final Class<?> typeRef;
 
     private EntityUUID uuid;
 
     private final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
-
-    private final LinkContext linkContext = EntityContainerFactory.getContext().linkContext();
 
     static EntityTypeInvocationHandler getInstance(
             final ODataEntity entity,
@@ -134,6 +130,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 getUUID().getEntitySetName(),
                 getUUID().getName(),
                 MetadataUtils.getKey(typeRef, entity));
+
+        this.propertyChanges.clear();
+        this.linkChanges.clear();
     }
 
     public EntityUUID getUUID() {
@@ -160,8 +159,12 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         return entity;
     }
 
-    public Map<Property, Object> getChanges() {
-        return changes;
+    public Map<Property, Object> getPropertyChanges() {
+        return propertyChanges;
+    }
+
+    public Map<NavigationProperty, Object> getLinkChanges() {
+        return linkChanges;
     }
 
     @Override
@@ -208,7 +211,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         throw new IllegalArgumentException("Invalid argument");
                     }
 
-                    setNavigationPropertyValue(args[0], navProp.name());
+                    setNavigationPropertyValue(navProp, args[0]);
                 }
             } else {
                 setPropertyValue(property, args[0]);
@@ -298,8 +301,6 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     private Object getNavigationPropertyValue(final NavigationProperty property, final Method getter) {
-        Object res = null;
-
         final Class<?> type = getter.getReturnType();
         final Class<?> collItemType;
         if (AbstractEntityCollection.class.isAssignableFrom(type)) {
@@ -309,7 +310,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         } else {
             collItemType = type;
         }
-        
+
         final EdmMetadata metadata = factory.getMetadata();
         final Schema schema = metadata.getSchema(MetadataUtils.getNamespace(typeRef));
 
@@ -323,24 +324,12 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         // 3) get entitySet
         final String targetEntitySetName = MetadataUtils.getEntitySetName(associationSet.getValue(), property.toRole());
 
-        // retrieve ODataLink in the wrapped object.
-        // If link exists then:
-        // * maybe linked object is inline;
-        // * maybe the current instance in not new (already persisted);
-        // * maybe a merge between context and service is needed.
-        // Otherwise:
-        // * the link is not inline for sure
-        // * the link is new (skip query on the service)
-        // * the link should be present in the context
-        final ODataLink link = MetadataUtils.getNavigationLink(property.name(), entity);
+        final Object res;
 
-        if (link == null) {
-            if (AbstractEntityCollection.class.isAssignableFrom(type)) {
-                res = getEntityCollection(linkContext.getLinkedEntities(this, property.name()), type);
-            } else {
-                res = getEntityProxy(linkContext.getLinkedEntities(this, property.name()));
-            }
+        if (linkChanges.containsKey(property)) {
+            res = linkChanges.get(property);
         } else {
+            final ODataLink link = MetadataUtils.getNavigationLink(property.name(), entity);
             if (link instanceof ODataInlineEntity) {
                 // return entity
                 res = getEntityProxy(
@@ -358,33 +347,23 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         ((ODataInlineEntitySet) link).getEntitySet(),
                         false);
             } else {
-                if (linkContext.isAttached(this, property.name())) {
-                    if (AbstractEntityCollection.class.isAssignableFrom(type)) {
-                        res = getEntityCollection(
-                                linkContext.getLinkedEntities(this, property.name()), type);
-                    } else {
-                        res = getEntityProxy(
-                                linkContext.getLinkedEntities(this, property.name()));
-                    }
-                } else {
-                    // navigate
-                    final URI uri = URIUtils.getURI(factory.getServiceRoot(), link.getLink().toASCIIString());
+                // navigate
+                final URI uri = URIUtils.getURI(factory.getServiceRoot(), link.getLink().toASCIIString());
 
-                    if (AbstractEntityCollection.class.isAssignableFrom(type)) {
-                        res = getEntityCollection(
-                                collItemType,
-                                type,
-                                associationSet.getKey().getName(),
-                                ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute().getBody(),
-                                true);
-                    } else {
-                        res = getEntityProxy(
-                                ODataRetrieveRequestFactory.getEntityRequest(uri).execute().getBody(),
-                                associationSet.getKey().getName(),
-                                targetEntitySetName,
-                                type,
-                                true);
-                    }
+                if (AbstractEntityCollection.class.isAssignableFrom(type)) {
+                    res = getEntityCollection(
+                            collItemType,
+                            type,
+                            associationSet.getKey().getName(),
+                            ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute().getBody(),
+                            true);
+                } else {
+                    res = getEntityProxy(
+                            ODataRetrieveRequestFactory.getEntityRequest(uri).execute().getBody(),
+                            associationSet.getKey().getName(),
+                            targetEntitySetName,
+                            type,
+                            true);
                 }
             }
         }
@@ -394,8 +373,8 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private Object getPropertyValue(final Property property, final Type type) {
         try {
-            return changes.containsKey(property)
-                    ? changes.get(property)
+            return propertyChanges.containsKey(property)
+                    ? propertyChanges.get(property)
                     : getValueFromProperty(entity.getProperty(property.name()), type);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error getting value for property '" + property.name() + "'", e);
@@ -440,73 +419,38 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         return res;
     }
 
-    private void setNavigationPropertyValue(final Object arg, final String propName) {
+    private void setNavigationPropertyValue(final NavigationProperty property, final Object value) {
         // 1) attach source entity
-        final AttachedEntityStatus sourceStatus;
-        if (entityContext.isAttached(this)) {
-            sourceStatus = entityContext.getStatus(this);
-        } else {
-            sourceStatus = AttachedEntityStatus.CHANGED;
-            entityContext.attach(this, sourceStatus);
+        if (!entityContext.isAttached(this)) {
+            entityContext.attach(this, AttachedEntityStatus.CHANGED);
         }
 
-        // 2) check if args is a collection/entitySet
-        final Collection toBeLinked;
-        final boolean isCollection;
-        // check for collection before
-        if (AbstractEntityCollection.class.isAssignableFrom(arg.getClass())) {
-            toBeLinked = (AbstractEntityCollection) arg;
-            isCollection = true;
-        } else {
-            toBeLinked = Collections.singleton(arg);
-            isCollection = false;
-        }
+        // 2) attach the target entity handlers
+        for (Object link : AbstractEntityCollection.class.isAssignableFrom(value.getClass())
+                ? (AbstractEntityCollection) value : Collections.singleton(value)) {
 
-        // 3) get the target entity handlers
-        final List<EntityTypeInvocationHandler> targets = new ArrayList<EntityTypeInvocationHandler>();
-
-        for (Object link : toBeLinked) {
-            final InvocationHandler linkIH = Proxy.getInvocationHandler(link);
-            if (!(linkIH instanceof EntityTypeInvocationHandler)) {
+            final InvocationHandler etih = Proxy.getInvocationHandler(link);
+            if (!(etih instanceof EntityTypeInvocationHandler)) {
                 throw new IllegalArgumentException("Invalid argument type");
             }
 
-            final EntityTypeInvocationHandler handler = (EntityTypeInvocationHandler) linkIH;
+            final EntityTypeInvocationHandler handler = (EntityTypeInvocationHandler) etih;
             if (!handler.getTypeRef().isAnnotationPresent(EntityType.class)) {
                 throw new IllegalArgumentException(
                         "Invalid argument type " + handler.getTypeRef().getSimpleName());
             }
 
-            targets.add(handler);
-        }
-
-        // replace the link
-        final ODataLink link = MetadataUtils.getNavigationLink(propName, entity);
-        if (link != null) {
-            entity.removeLink(link);
-        }
-
-        // be sure to replace previous changes in the link context
-        if (linkContext.isAttached(this, propName)) {
-            linkContext.detach(this, propName);
-        }
-
-        // 4) attach target entities and create links
-        for (EntityTypeInvocationHandler target : targets) {
-            // attach target entity
-            if (!entityContext.isAttached(target)) {
-                entityContext.attach(target, AttachedEntityStatus.LINKED);
+            if (!entityContext.isAttached(handler)) {
+                entityContext.attach(handler, AttachedEntityStatus.LINKED);
             }
-
-            // create the link
-            linkContext.attach(new EntityLinkDesc(
-                    propName, this, target, isCollection
-                    ? ODataLinkType.ENTITY_SET_NAVIGATION : ODataLinkType.ENTITY_NAVIGATION));
         }
+
+        // 3) add links
+        linkChanges.put(property, value);
     }
 
-    private void setPropertyValue(final Property key, final Object value) {
-        changes.put(key, value);
+    private void setPropertyValue(final Property property, final Object value) {
+        propertyChanges.put(property, value);
 
         if (entityContext.isAttached(this)) {
             entityContext.setStatus(this, AttachedEntityStatus.CHANGED);

@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNotNull;
 
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.context.EntityContext;
-import com.msopentech.odatajclient.proxy.api.context.LinkContext;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Aliases;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails;
@@ -64,8 +63,6 @@ public abstract class AbstractTest {
     protected static String testLargeModelServiceRootURL;
 
     protected final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
-
-    protected final LinkContext linkContext = EntityContainerFactory.getContext().linkContext();
 
     @BeforeClass
     public static void setUpODataServiceRoot() throws IOException {

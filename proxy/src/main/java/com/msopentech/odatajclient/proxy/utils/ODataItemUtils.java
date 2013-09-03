@@ -51,9 +51,7 @@ public final class ODataItemUtils {
     private static ODataValue getODataValue(final EdmMetadata metadata, final Object obj, final EdmType type) {
         final ODataValue value;
 
-        if (obj == null) {
-            value = null;
-        } else if (type.isCollection()) {
+        if (type.isCollection()) {
             value = new ODataCollectionValue(type.getTypeExpression());
             final EdmType intType = new EdmType(metadata, type.getBaseType());
             for (Object collectionItem : (Collection) obj) {
@@ -75,7 +73,7 @@ public final class ODataItemUtils {
                     final Property complexPropertyAnn = method.getAnnotation(Property.class);
                     try {
                         if (complexPropertyAnn != null) {
-                            ((ODataComplexValue) value).add(
+                            value.asComplex().add(
                                     getODataProperty(metadata, method.invoke(obj), complexPropertyAnn));
                         }
                     } catch (Exception ignore) {
@@ -107,17 +105,17 @@ public final class ODataItemUtils {
                 // create collection property
                 oprop = ODataFactory.newCollectionProperty(
                         prop.name(),
-                        getODataValue(metadata, obj, type).asCollection());
+                        obj == null ? null : getODataValue(metadata, obj, type).asCollection());
             } else if (type.isSimpleType()) {
                 // create a primitive property
                 oprop = ODataFactory.newPrimitiveProperty(
                         prop.name(),
-                        getODataValue(metadata, obj, type).asPrimitive());
+                        obj == null ? null : getODataValue(metadata, obj, type).asPrimitive());
             } else if (type.isComplexType()) {
                 // create a complex property
                 oprop = ODataFactory.newComplexProperty(
                         prop.name(),
-                        getODataValue(metadata, obj, type).asComplex());
+                        obj == null ? null : getODataValue(metadata, obj, type).asComplex());
             } else if (type.isEnumType()) {
                 // TODO: manage enum types
                 throw new UnsupportedOperationException("Usupported enum type " + type.getTypeExpression());
@@ -131,7 +129,7 @@ public final class ODataItemUtils {
         }
     }
 
-    public static void populate(
+    public static void addProperties(
             final EdmMetadata metadata, final Map<Property, Object> changes, final ODataEntity entity) {
 
         for (Map.Entry<Property, Object> property : changes.entrySet()) {

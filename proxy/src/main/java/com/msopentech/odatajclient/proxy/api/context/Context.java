@@ -19,11 +19,8 @@ public class Context {
 
     private final EntityContext entities;
 
-    private final LinkContext links;
-
     public Context() {
         this.entities = new EntityContext();
-        this.links = new LinkContext();
 
     }
 
@@ -31,12 +28,7 @@ public class Context {
         return entities;
     }
 
-    public LinkContext linkContext() {
-        return links;
-    }
-
     public void detachAll() {
         entities.detachAll();
-        links.detachAll();
     }
 }
