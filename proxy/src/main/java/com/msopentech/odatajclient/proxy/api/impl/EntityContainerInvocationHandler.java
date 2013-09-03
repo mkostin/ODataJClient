@@ -36,7 +36,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
             throw new IllegalArgumentException(ref.getName() + " is not an interface");
         }
 
-        Annotation annotation = ref.getAnnotation(EntityContainer.class);
+        final Annotation annotation = ref.getAnnotation(EntityContainer.class);
         if (!(annotation instanceof EntityContainer)) {
             throw new IllegalArgumentException(ref.getName()
                     + " is not annotated as @" + EntityContainer.class.getSimpleName());

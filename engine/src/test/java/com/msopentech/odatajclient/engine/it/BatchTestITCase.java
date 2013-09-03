@@ -275,7 +275,7 @@ public class BatchTestITCase extends AbstractTest {
 
         // Create Customer into the changeset
         targetURI = new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Customer");
-        final ODataEntity original = getSampleCustomerProfile(100, "Sample customer", false);
+        final ODataEntity original = getSampleCustomerProfile(1000, "Sample customer", false);
         final ODataEntityCreateRequest create =
                 ODataCUDRequestFactory.getEntityCreateRequest(targetURI.build(), original);
         create.setFormat(ODataPubFormat.ATOM);
@@ -334,7 +334,7 @@ public class BatchTestITCase extends AbstractTest {
 
         final ODataEntityCreateResponse createres = (ODataEntityCreateResponse) res;
         entity = createres.getBody();
-        assertEquals(new Integer(100), entity.getProperty("CustomerId").getPrimitiveValue().<Integer>toCastValue());
+        assertEquals(new Integer(1000), entity.getProperty("CustomerId").getPrimitiveValue().<Integer>toCastValue());
 
         // retrive the third item (ODataRetrieve)
         item = iter.next();
