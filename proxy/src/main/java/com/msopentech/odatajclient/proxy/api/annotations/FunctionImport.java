@@ -49,10 +49,6 @@ public @interface FunctionImport {
 
     String returnType() default "";
 
-    boolean isBindable() default false;
-
-    boolean isAlwaysBindable() default false;
-
     /**
      * When httpMethod() is NONE, true: this annotates an action; false: this annotates a function
      *

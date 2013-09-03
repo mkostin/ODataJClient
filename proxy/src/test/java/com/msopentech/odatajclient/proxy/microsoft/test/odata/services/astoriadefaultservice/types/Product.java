@@ -5,7 +5,10 @@ import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
+import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
+import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
@@ -223,9 +226,9 @@ public interface Product extends Serializable {
                 toRole = "RelatedProducts",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Product> getRelatedProducts();
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductCollection getRelatedProducts();
 
-    public void setRelatedProducts(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Product> _relatedProducts);
+    public void setRelatedProducts(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductCollection _relatedProducts);
 
 
     @NavigationProperty(name = "Detail", 
@@ -245,9 +248,9 @@ public interface Product extends Serializable {
                 toRole = "Reviews",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReview> getReviews();
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReviewCollection getReviews();
 
-    public void setReviews(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReview> _reviews);
+    public void setReviews(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReviewCollection _reviews);
 
 
     @NavigationProperty(name = "Photos", 
@@ -256,8 +259,13 @@ public interface Product extends Serializable {
                 toRole = "Photos",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhoto> getPhotos();
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhotoCollection getPhotos();
 
-    public void setPhotos(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhoto> _photos);
+    public void setPhotos(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhotoCollection _photos);
 
+
+    @FunctionImport(name = "ChangeProductDimensions"      )
+    void changeProductDimensions(
+            @Parameter(name = "dimensions", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions", nullable = false) com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions dimensions
+        );
 }

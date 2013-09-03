@@ -29,5 +29,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "PageView")
-public interface PageView extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PageView, Integer> {
+public interface PageView extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PageView, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PageViewCollection> {
 }

@@ -2,7 +2,7 @@ package com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriad
 
 import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
+import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.*;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @ComplexType("ComplexToCategory")
-public class ComplexToCategory extends AbstractType {
+public class ComplexToCategory extends AbstractComplexType {
 
     private String _term;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.impl;
+package com.msopentech.odatajclient.proxy.utils;
 
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -42,14 +42,14 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class Utility {
+public final class MetadataUtils {
 
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(Utility.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetadataUtils.class);
 
-    private Utility() {
+    private MetadataUtils() {
         // Empty private constructor for static utility classes
     }
 

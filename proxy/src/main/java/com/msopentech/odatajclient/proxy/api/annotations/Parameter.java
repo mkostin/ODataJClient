@@ -34,6 +34,8 @@ public @interface Parameter {
 
     String type();
 
+    boolean nullable() default true;
+
     ParameterMode mode() default ParameterMode.IN;
 
     int maxLenght() default Integer.MAX_VALUE;

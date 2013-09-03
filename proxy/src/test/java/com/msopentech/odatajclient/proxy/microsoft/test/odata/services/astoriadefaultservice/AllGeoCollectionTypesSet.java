@@ -29,5 +29,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "AllGeoCollectionTypesSet")
-public interface AllGeoCollectionTypesSet extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialCollectionTypes, Integer> {
+public interface AllGeoCollectionTypesSet extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialCollectionTypes, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialCollectionTypesCollection> {
 }

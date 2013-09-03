@@ -19,7 +19,7 @@ import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
+import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityKey;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
 import java.util.Collections;
 import org.junit.Test;
 
@@ -95,7 +96,10 @@ public class EntityCreateTestITCase extends AbstractTest {
 
         final Customer customer = getSampleCustomerProfile(id, sampleName, container);
 
-        customer.setOrders(Collections.<Order>singleton(order));
+        final OrderCollection orders = container.getOrder().newEntityCollection();
+        orders.add(order);
+
+        customer.setOrders(orders);
         order.setCustomer(customer);
         container.getCustomer().flush();
 

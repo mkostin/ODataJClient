@@ -20,9 +20,10 @@ import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 public class ProxyUsageTest {
@@ -88,7 +89,9 @@ public class ProxyUsageTest {
         customer.setName("a name");
 
         // link customer and order
-        customer.getOrders().add(order);
+        OrderCollection orderCollection = orders.newEntityCollection();
+        orderCollection.add(order);
+        customer.setOrders(orderCollection);
         order.setCustomer(customer);
 
         // any flush() will generate actual operations on the OData service
@@ -99,6 +102,6 @@ public class ProxyUsageTest {
         DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
 
         // invoke GetProductsByRating
-        Collection<Customer> customers = container.getSpecificCustomer("xxx");
+        CustomerCollection customers = container.getSpecificCustomer("xxx");
     }
 }

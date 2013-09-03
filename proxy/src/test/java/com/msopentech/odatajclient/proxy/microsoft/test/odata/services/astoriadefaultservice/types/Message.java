@@ -5,7 +5,10 @@ import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
+import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
+import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
@@ -245,8 +248,9 @@ public interface Message extends Serializable {
                 toRole = "Attachments",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachment> getAttachments();
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachmentCollection getAttachments();
 
-    public void setAttachments(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachment> _attachments);
+    public void setAttachments(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachmentCollection _attachments);
+
 
 }

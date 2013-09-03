@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.proxy.api.query;
 
+import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import java.io.Serializable;
-import java.util.List;
 import java.util.concurrent.Future;
 
 /**
@@ -49,7 +49,7 @@ public abstract class AsyncQuery implements Query {
      * @throws UnsupportedOperationException at any invocation, use <tt>asyncGetResultList()</tt> instead.
      */
     @Override
-    public List<? extends Serializable> getResultList() {
+    public <T extends Serializable, EC extends AbstractEntityCollection<T>> EC getResultList() {
         throw new UnsupportedOperationException("Synchronous operations not supported");
     }
 
@@ -58,5 +58,5 @@ public abstract class AsyncQuery implements Query {
      *
      * @see Query#getResultList()
      */
-    public abstract Future<List<? extends Serializable>> asyncGetResultList();
+    public abstract <T extends Serializable, EC extends AbstractEntityCollection<T>> Future<EC> asyncGetResultList();
 }

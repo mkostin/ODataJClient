@@ -34,7 +34,7 @@ public abstract class AbstractElement {
      * @return list of JABX elements.
      */
     @SuppressWarnings("unchecked")
-    protected <T> List<T> getJAXBElements(Class<T> reference) {
+    protected <T> List<T> getJAXBElements(final Class<T> reference) {
         List<T> result = new ArrayList<T>();
 
         for (Object object : getValues()) {

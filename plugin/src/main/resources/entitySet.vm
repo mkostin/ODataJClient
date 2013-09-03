@@ -43,14 +43,14 @@ import java.io.Serializable;
 import java.util.Collection;
 
 #set( $keys = $utility.getEntityKeyType($entitySet) )
-#if ( $keys.size() > 1 )
+#if( $keys.size() > 1 )
   #set( $type = $utility.getEntityType($entitySet).Name + "Key" )
-#elseif ( $keys.size() == 1 )
-  #set ( $type = $keys.values().iterator().next() )
+#elseif( $keys.size() == 1 )
+  #set( $type = $keys.values().iterator().next() )
 #else
-  #set ( $type = "" )
+  #set( $type = "" )
 #end
 
 @EntitySet(name = "$entitySet.Name")
-public interface $utility.capitalize($entitySet.Name) extends AbstractEntitySet<$utility.getJavaType($entitySet.EntityType), $type> {
+public interface $utility.capitalize($entitySet.Name) extends AbstractEntitySet<$utility.getJavaType($entitySet.EntityType), $type, $utility.getJavaType($entitySet.EntityType)Collection> {
 }

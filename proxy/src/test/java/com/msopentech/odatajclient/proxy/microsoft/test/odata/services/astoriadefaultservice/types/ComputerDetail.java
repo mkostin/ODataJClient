@@ -5,7 +5,10 @@ import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
+import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
+import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
@@ -227,4 +230,10 @@ public interface ComputerDetail extends Serializable {
 
     public void setComputer(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Computer _computer);
 
+
+    @FunctionImport(name = "ResetComputerDetailsSpecifications"      )
+    void resetComputerDetailsSpecifications(
+            @Parameter(name = "specifications", type = "Collection(Edm.String)", nullable = false) Collection<String> specifications, 
+            @Parameter(name = "purchaseTime", type = "Edm.DateTime", nullable = false) ODataTimestamp purchaseTime
+        );
 }

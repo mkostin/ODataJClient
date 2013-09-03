@@ -29,5 +29,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "Car")
-public interface Car extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Car, Integer> {
+public interface Car extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Car, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CarCollection> {
 }

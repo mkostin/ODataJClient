@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractAnnotated;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationEnd;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.EntitySet;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
@@ -30,54 +31,56 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import org.apache.commons.lang.StringUtils;
 
-public class Utilities {
+public class Utility {
 
-    private final String FC_TARGET_PATH = "FC_TargetPath";
+    private static final String FC_TARGET_PATH = "FC_TargetPath";
 
-    private final String FC_TARGET_PATH_ANN = "fcTargetPath";
+    private static final String FC_TARGET_PATH_ANN = "fcTargetPath";
 
-    private final String FC_SOURCE_PATH = "FC_SourcePath";
+    private static final String FC_SOURCE_PATH = "FC_SourcePath";
 
-    private final String FC_SOURCE_PATH_ANN = "fcSourcePath";
+    private static final String FC_SOURCE_PATH_ANN = "fcSourcePath";
 
-    private final String FC_KEEP_IN_CONTENT = "FC_KeepInContent";
+    private static final String FC_KEEP_IN_CONTENT = "FC_KeepInContent";
 
-    private final String FC_KEEP_IN_CONTENT_ANN = "fcKeepInContent";
+    private static final String FC_KEEP_IN_CONTENT_ANN = "fcKeepInContent";
 
-    private final String FC_CONTENT_KIND = "FC_ContentKind";
+    private static final String FC_CONTENT_KIND = "FC_ContentKind";
 
-    private final String FC_CONTENT_KIND_ANN = "fcContentKind";
+    private static final String FC_CONTENT_KIND_ANN = "fcContentKind";
 
-    private final String FC_NS_PREFIX = "FC_NSPrefix";
+    private static final String FC_NS_PREFIX = "FC_NSPrefix";
 
-    private final String FC_NS_PREFIX_ANN = "fcNSPrefix";
+    private static final String FC_NS_PREFIX_ANN = "fcNSPrefix";
 
-    private final String FC_NS_URI = "FC_NSURI";
+    private static final String FC_NS_URI = "FC_NSURI";
 
-    private final String FC_NS_URI_ANN = "fcNSURI";
+    private static final String FC_NS_URI_ANN = "fcNSURI";
 
-    private final String MIME_TYPE = "MimeType";
+    private static final String MIME_TYPE = "MimeType";
 
-    private final String MIME_TYPE_ANN = "mimeType";
+    private static final String MIME_TYPE_ANN = "mimeType";
 
-    private final String TYPE_SUB_PKG = "types";
+    private static final String TYPE_SUB_PKG = "types";
 
-    final EdmMetadata metadata;
+    private final EdmMetadata metadata;
 
-    final Schema schema;
+    private final Schema schema;
 
-    final String basePackage;
+    private final String basePackage;
 
-    final String schemaName;
+    private final String schemaName;
 
-    final String namespace;
+    private final String namespace;
 
-    public Utilities(final EdmMetadata metadata, final Schema schema, final String basePackage) {
+    public Utility(final EdmMetadata metadata, final Schema schema, final String basePackage) {
         this.metadata = metadata;
         this.schema = schema;
         this.basePackage = basePackage;
@@ -110,7 +113,7 @@ public class Utilities {
 
         final EdmType edmType = new EdmType(metadata, typeExpression);
 
-        if (edmType.isCollection()) {
+        if (edmType.isCollection() && !edmType.isEntityType()) {
             res.append("Collection<");
         }
 
@@ -130,7 +133,11 @@ public class Utilities {
         }
 
         if (edmType.isCollection()) {
-            res.append(">");
+            if (edmType.isEntityType()) {
+                res.append("Collection");
+            } else {
+                res.append(">");
+            }
         }
 
         return res.toString();
@@ -201,8 +208,12 @@ public class Utilities {
                 if (end.getRole().equalsIgnoreCase(associationRole)) {
                     final List<OnAction> actions = end.getTOperations();
                     return new AbstractMap.SimpleEntry<String, Action>(
-                            "*".equals(end.getMultiplicity()) ? "Collection(" + end.getType() + ")" : end.getType(),
-                            actions.isEmpty() ? Action.NONE : actions.get(0).getAction());
+                            "*".equals(end.getMultiplicity())
+                            ? "Collection(" + end.getType() + ")"
+                            : end.getType(),
+                            actions.isEmpty()
+                            ? Action.NONE
+                            : actions.get(0).getAction());
                 }
             }
         }
@@ -210,13 +221,50 @@ public class Utilities {
         return new AbstractMap.SimpleEntry<String, Action>(associationRole, Action.NONE);
     }
 
-    public String getNameFromNS(final String ns) {
+    public final String getNameFromNS(final String ns) {
         return getNameFromNS(ns, false);
     }
 
-    public String getNameFromNS(final String ns, final boolean toLowerCase) {
+    public final String getNameFromNS(final String ns, final boolean toLowerCase) {
         final int lastpt = ns.lastIndexOf('.');
         final String res = ns.substring(lastpt < 0 ? 0 : lastpt + 1);
         return toLowerCase ? res.toLowerCase() : res;
+    }
+
+    public boolean isSameType(
+            final String entityTypeExpression, final String fullTypeExpression, final boolean collection) {
+
+        final Set<String> types = new HashSet<String>(2);
+
+        types.add((collection ? "Collection(" : StringUtils.EMPTY)
+                + schema.getNamespace() + "." + entityTypeExpression
+                + (collection ? ")" : StringUtils.EMPTY));
+        if (StringUtils.isNotBlank(schema.getAlias())) {
+            types.add((collection ? "Collection(" : StringUtils.EMPTY)
+                    + schema.getAlias() + "." + entityTypeExpression
+                    + (collection ? ")" : StringUtils.EMPTY));
+        }
+
+        return types.contains(fullTypeExpression);
+    }
+
+    public List<EntityContainer.FunctionImport> getFunctionImportsBoundTo(
+            final String typeExpression, final boolean collection) {
+
+        final List<EntityContainer.FunctionImport> result = new ArrayList<EntityContainer.FunctionImport>();
+
+        for (EntityContainer entityContainer : schema.getEntityContainers()) {
+            for (EntityContainer.FunctionImport functionImport : entityContainer.getFunctionImports()) {
+                if (functionImport.isIsBindable()) {
+                    for (int i = 0; i < functionImport.getParameters().size(); i++) {
+                        if (isSameType(typeExpression, functionImport.getParameters().get(i).getType(), collection)) {
+                            result.add(functionImport);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 }

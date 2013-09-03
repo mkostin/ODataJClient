@@ -22,61 +22,54 @@ import java.util.concurrent.Future;
 
 /**
  * Interface for asynchronous CRUD operations on an EntitySet.
- * For synchronous version, check EntitySet.
+ * For synchronous version, check AbstractEntitySet.
  *
- * @see EntitySet
+ * @see AbstractEntitySet
  */
 public abstract interface AbstractAsyncEntitySet<T extends Serializable, KEY extends Serializable> extends Serializable {
 
     /**
-     * @see EntitySet#exists(java.io.Serializable)
+     * @see AbstractEntitySet#exists(java.io.Serializable)
      */
     Future<Boolean> exists(KEY key) throws IllegalArgumentException;
 
     /**
-     * @see EntitySet#get(java.io.Serializable)
+     * @see AbstractEntitySet#get(java.io.Serializable)
      */
     Future<T> get(KEY key) throws IllegalArgumentException;
 
     /**
-     * @see EntitySet#count()
+     * @see AbstractEntitySet#count()
      */
     Future<Long> count();
 
     /**
-     * @see EntitySet#getAll()
+     * @see AbstractEntitySet#getAll()
      */
-    Future<Iterable<T>> getAll();
+    <EC extends AbstractEntityCollection<T>> Future<EC> getAll();
 
     /**
-     * @see EntitySet#createQuery()
+     * @see AbstractEntitySet#createQuery()
      */
     AsyncQuery createQuery();
 
     /**
-     * @see EntitySet#createQuery(java.lang.Class)
+     * @see AbstractEntitySet#createQuery(java.lang.Class)
      */
     <E extends Serializable> AsyncEntityQuery<E> createQuery(Class<E> entityClass);
 
     /**
-     * @see EntitySet#delete(java.io.Serializable)
+     * @see AbstractEntitySet#delete(java.io.Serializable)
      */
     Future<Void> delete(KEY key) throws IllegalArgumentException;
 
     /**
-     * @see EntitySet#delete(java.lang.Iterable)
+     * @see AbstractEntitySet#delete(java.lang.Iterable)
      */
     Future<Void> delete(Iterable<T> entities);
 
     /**
-     * @see EntitySet#flush()
+     * @see AbstractEntitySet#flush()
      */
     Future<Void> flush();
-    
-    /**
-     * Create a new entity instance.
-     *
-     * @return new entity instance.
-     */
-    T newEntity();
 }

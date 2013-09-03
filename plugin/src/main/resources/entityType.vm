@@ -11,6 +11,7 @@
 ## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
+#set( $clsSuffix = ".class" )
 package ${package};
 
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
@@ -18,7 +19,10 @@ import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
+import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
+import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
@@ -48,7 +52,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 #set( $fcprops = $utility.getFcProperties($entityType))
-#if ( $keyRef )@KeyRef(${keyRef}.class)#end
+#if( $keyRef )@KeyRef(${keyRef}.class)#end
 
 @EntityType(name = "$entityType.Name",
         openType = $entityType.isOpenType(),
@@ -64,14 +68,14 @@ import java.util.Collection;
 #set($baseTypeName = ${schemaName})
 public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$baseType#{else}Serializable#end {
 
-#set ( $keys = [] )
-#foreach ($key in $entityType.Key.PropertyRef)
+#set( $keys = [] )
+#foreach($key in $entityType.Key.PropertyRef)
     #if(!$keys.add($key.Name)) #stop #end
 #end
 
-#foreach ($property in $entityType.Properties)
-    #set ($fcprops = $utility.getFcProperties($property) )
-    #if ($keys.contains($property.Name))@Key#end
+#foreach($property in $entityType.Properties)
+    #set($fcprops = $utility.getFcProperties($property) )
+    #if($keys.contains($property.Name))@Key#end
 
     @Property(name = "$property.Name", 
                 type = "$property.Type", 
@@ -98,8 +102,8 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
 
 #end
     
-#foreach ($property in $entityType.NavigationProperties)
-    #set ( $toRoleType = $utility.getNavigationRoleType($property.Relationship, $property.ToRole) )
+#foreach($property in $entityType.NavigationProperties)
+    #set( $toRoleType = $utility.getNavigationRoleType($property.Relationship, $property.ToRole) )
 
     @NavigationProperty(name = "$property.Name", 
                 relationship = "$property.Relationship", 
@@ -111,5 +115,26 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
 
     public void set$utility.capitalize($property.Name)(final $utility.getJavaType($toRoleType.getKey()) _$utility.uncapitalize($property.Name));
 
+#end
+
+#foreach($operation in $utility.getFunctionImportsBoundTo($entityType.Name, false))
+    @FunctionImport(name = "$operation.Name" #if($operation.EntitySet), 
+                    entitySet = $operation.EntitySet$clsSuffix#end #if($operation.EntitySetPath),
+                    entitySetPath = $operation.EntitySetPath#end #if($operation.isIsComposable),
+                    isComposable = $operation.isIsComposable#end #if($operation.isIsSideEffecting),
+                    isSideEffecting = $operation.isIsSideEffecting#end #if($operation.HttpMethod),
+                    httpMethod = HttpMethod.$operation.HttpMethod#end #if($operation.ReturnType),
+                    returnType = "$operation.ReturnType"#end)
+    #if($operation.ReturnType)$utility.getJavaType($operation.ReturnType)#{else}void#end $utility.uncapitalize($operation.Name)(
+    #if($operation.Parameters)
+      #set( $count = $operation.Parameters.size() )#*
+      *##foreach($param in $operation.Parameters)#*
+        *##set( $count = $count - 1 )#*
+        *##if( !$utility.isSameType($entityType.Name, $param.Type, false) )#*
+      *#    @Parameter(name = "$param.Name", type = "$param.Type", nullable = $param.Nullable#if($param.Mode), mode = ParameterMode.$param.Mode.toString()#end) $utility.getJavaType($param.Type) $utility.uncapitalize($param.Name)#if( $count > 0 ), #end
+
+    #end
+    #end#*
+    *##end);
 #end
 }

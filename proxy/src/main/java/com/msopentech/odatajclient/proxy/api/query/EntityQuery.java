@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.proxy.api.query;
 
+import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Interface used to control the execution of typed queries.
@@ -60,10 +60,10 @@ public interface EntityQuery<T extends Serializable> extends Query {
     T getSingleResult() throws NoResultException, NonUniqueResultException;
 
     /**
-     * Execute a <tt>$filter</tt> query and return the query results as a typed List.
+     * Execute a <tt>$filter</tt> query and return the query results as a typed iterable.
      *
-     * @return a list of the results
+     * @return an iterable view of the results
      */
     @Override
-    List<T> getResultList();
+    <T extends Serializable, EC extends AbstractEntityCollection<T>> EC getResultList();
 }

@@ -15,15 +15,16 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.query.AsyncEntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.AsyncQuery;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.AsyncDefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -38,7 +39,7 @@ public class AsyncProxyUsageTest {
         AsyncEntityQuery<Order> orderQuery = container.getOrder().createQuery(Order.class);
         orderQuery.setFilter("OrderId lt 10.00");
 
-        Future<List<Order>> matchingOrdersFuture = orderQuery.asyncGetResultList();
+        Future<AbstractEntityCollection<Order>> matchingOrdersFuture = orderQuery.asyncGetResultList();
 
         // ... do something with matchingOrdersFuture
     }
@@ -51,7 +52,7 @@ public class AsyncProxyUsageTest {
         query.setFilter("OrderId lt 10.00");
         query.setSelect("CustomerId");
 
-        Future<List<? extends Serializable>> matchFuture = query.asyncGetResultList();
+        Future<AbstractEntityCollection<Serializable>> matchFuture = query.asyncGetResultList();
 
         // ... do something with matchFuture
     }
@@ -67,10 +68,10 @@ public class AsyncProxyUsageTest {
         AsyncDefaultContainer container = entityContainerFactory.getEntityContainer(AsyncDefaultContainer.class);
 
         // invoke GetProductsByRating asynchronously
-        Future<Collection<Customer>> customersFuture = container.getSpecificCustomer("xxx");
+        Future<CustomerCollection> customersFuture = container.getSpecificCustomer("xxx");
         while (!customersFuture.isDone()) {
             Thread.sleep(1000);
         }
-        Collection<Customer> customers = customersFuture.get();
+        CustomerCollection customers = customersFuture.get();
     }
 }

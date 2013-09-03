@@ -5,7 +5,10 @@ import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
+import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
+import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
@@ -125,9 +128,9 @@ public interface Login extends Serializable {
                 toRole = "SentMessages",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message> getSentMessages();
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageCollection getSentMessages();
 
-    public void setSentMessages(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message> _sentMessages);
+    public void setSentMessages(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageCollection _sentMessages);
 
 
     @NavigationProperty(name = "ReceivedMessages", 
@@ -136,9 +139,9 @@ public interface Login extends Serializable {
                 toRole = "ReceivedMessages",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message> getReceivedMessages();
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageCollection getReceivedMessages();
 
-    public void setReceivedMessages(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message> _receivedMessages);
+    public void setReceivedMessages(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageCollection _receivedMessages);
 
 
     @NavigationProperty(name = "Orders", 
@@ -147,8 +150,9 @@ public interface Login extends Serializable {
                 toRole = "Orders",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order> getOrders();
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection getOrders();
 
-    public void setOrders(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order> _orders);
+    public void setOrders(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection _orders);
+
 
 }

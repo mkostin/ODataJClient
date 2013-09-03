@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
+import com.msopentech.odatajclient.proxy.utils.MetadataUtils;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import java.lang.annotation.Annotation;
@@ -43,7 +44,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
         }
         this.entityContainerName = ((EntityContainer) annotation).name();
         this.defaultEntityContainer = ((EntityContainer) annotation).isDefaultEntityContainer();
-        this.schemaName = Utility.getNamespace(ref);
+        this.schemaName = MetadataUtils.getNamespace(ref);
     }
 
     public boolean isDefaultEntityContainer() {

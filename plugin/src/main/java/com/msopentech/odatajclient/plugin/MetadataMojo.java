@@ -37,10 +37,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 @Mojo(name = "pojos", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class MetadataMojo extends AbstractMojo {
@@ -63,7 +65,7 @@ public class MetadataMojo extends AbstractMojo {
     @Parameter(property = "basePackage", required = true)
     private String basePackage;
 
-    private Utilities utility = null;
+    private Utility utility = null;
 
     private final Set<String> namespaces = new HashSet<String>();
 
@@ -71,15 +73,13 @@ public class MetadataMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
-        if (new File(outputDirectory + "/" + TOOL_DIR).exists()) {
+        if (new File(outputDirectory + File.separator + TOOL_DIR).exists()) {
             getLog().info("Nothing to do because " + TOOL_DIR + " directory already exists. Clean to update.");
             return;
         }
 
-        Velocity.addProperty(
-                Velocity.RESOURCE_LOADER, "class");
-        Velocity.addProperty(
-                "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        Velocity.addProperty(Velocity.RESOURCE_LOADER, "class");
+        Velocity.addProperty("class.resource.loader.class", ClasspathResourceLoader.class.getName());
 
         final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(serviceRootURL);
 
@@ -95,10 +95,10 @@ public class MetadataMojo extends AbstractMojo {
         }
 
         for (Schema schema : metadata.getSchemas()) {
-            utility = new Utilities(metadata, schema, basePackage);
+            utility = new Utility(metadata, schema, basePackage);
 
             // write package-info for the base package
-            final String schemaPath = utility.getNamespace().toLowerCase().replaceAll("\\.", "/");
+            final String schemaPath = utility.getNamespace().toLowerCase().replaceAll("\\.", File.separator);
             final File base = mkdir(schemaPath);
             final String pkg = basePackage + "." + utility.getNamespace().toLowerCase();
             parseObj(base, pkg, "package-info", "package-info.java");
@@ -124,15 +124,15 @@ public class MetadataMojo extends AbstractMojo {
                 final Map<String, String> keys;
 
                 EntityType baseType = null;
-                if (entity.getBaseType() != null) {
+                if (entity.getBaseType() == null) {
+                    keys = utility.getEntityKeyType(entity);
+                } else {
                     baseType = schema.getEntityType(utility.getNameFromNS(entity.getBaseType()));
                     objs.put("baseType", utility.getJavaType(entity.getBaseType()));
                     while (baseType.getBaseType() != null) {
                         baseType = schema.getEntityType(utility.getNameFromNS(baseType.getBaseType()));
                     }
                     keys = utility.getEntityKeyType(baseType);
-                } else {
-                    keys = utility.getEntityKeyType(entity);
                 }
 
                 if (keys.size() > 1) {
@@ -148,7 +148,10 @@ public class MetadataMojo extends AbstractMojo {
                     }
                 }
 
-                parseObj(typesBaseDir, typesPkg, "entityType", utility.capitalize(entity.getName()) + ".java", objs);
+                parseObj(typesBaseDir, typesPkg, "entityType",
+                        utility.capitalize(entity.getName()) + ".java", objs);
+                parseObj(typesBaseDir, typesPkg, "entityCollection",
+                        utility.capitalize(entity.getName()) + "Collection.java", objs);
             }
 
             // write container and top entity sets into the base package
@@ -173,7 +176,8 @@ public class MetadataMojo extends AbstractMojo {
     }
 
     private File mkdir(final String path) {
-        final File dir = new File(outputDirectory + "/" + TOOL_DIR + "/" + basePackage.replace('.', '/') + "/" + path);
+        final File dir = new File(outputDirectory + File.separator
+                + TOOL_DIR + File.separator + basePackage.replace('.', File.separatorChar) + File.separator + path);
 
         if (dir.exists()) {
             if (!dir.isDirectory()) {
@@ -193,26 +197,18 @@ public class MetadataMojo extends AbstractMojo {
             throw new IllegalArgumentException("Invalid base path '" + path.getAbsolutePath() + "'");
         }
 
-        FileWriter fw = null;
-
+        FileWriter writer = null;
         try {
             final File toBeWritten = new File(path, name);
             if (toBeWritten.exists()) {
                 throw new IllegalStateException("File '" + toBeWritten.getAbsolutePath() + "' already exists");
             }
-            fw = new FileWriter(toBeWritten);
-            template.merge(ctx, fw);
+            writer = new FileWriter(toBeWritten);
+            template.merge(ctx, writer);
         } catch (IOException e) {
             throw new MojoExecutionException("Error creating file '" + name + "'", e);
         } finally {
-            try {
-                if (fw != null) {
-                    fw.flush();
-                    fw.close();
-                }
-            } catch (IOException ignore) {
-                // ignore
-            }
+            IOUtils.closeQuietly(writer);
         }
     }
 
@@ -241,7 +237,8 @@ public class MetadataMojo extends AbstractMojo {
             final String out,
             final Map<String, Object> objs)
             throws MojoExecutionException {
-        VelocityContext ctx = newContext();
+
+        final VelocityContext ctx = newContext();
         ctx.put("package", pkg);
 
         if (objs != null) {
@@ -252,7 +249,7 @@ public class MetadataMojo extends AbstractMojo {
             }
         }
 
-        Template template = Velocity.getTemplate(name + ".vm");
+        final Template template = Velocity.getTemplate(name + ".vm");
         writeFile(out, base, ctx, template);
     }
 }

@@ -15,6 +15,8 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
+import com.msopentech.odatajclient.proxy.api.context.AttachedEntity;
+import com.msopentech.odatajclient.proxy.utils.MetadataUtils;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
@@ -38,9 +40,11 @@ import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
+import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
@@ -50,6 +54,7 @@ import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
 import com.msopentech.odatajclient.proxy.api.context.NavigationLinks;
 import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
+import com.msopentech.odatajclient.proxy.utils.ODataItemUtils;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -63,14 +68,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializable> extends AbstractInvocationHandler
-        implements AbstractEntitySet<T, KEY> {
+class EntitySetInvocationHandler<
+        T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>>
+        extends AbstractInvocationHandler
+        implements AbstractEntitySet<T, KEY, EC> {
 
     private static final long serialVersionUID = 2629912294765040027L;
 
@@ -83,17 +92,19 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
     private final Class<KEY> keyRef;
 
+    private final Class<EC> typeCollectionRef;
+
     private final String entitySetName;
 
     private final EntityContainerInvocationHandler container;
 
     private final URI uri;
 
-    static <T extends Serializable, KEY extends Serializable> EntitySetInvocationHandler<T, KEY> getInstance(
+    static <T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>> EntitySetInvocationHandler<T, KEY, EC> getInstance(
             final Class<?> ref,
             final EntityContainerInvocationHandler container) {
 
-        return new EntitySetInvocationHandler<T, KEY>(ref, container);
+        return new EntitySetInvocationHandler<T, KEY, EC>(ref, container);
     }
 
     @SuppressWarnings("unchecked")
@@ -101,7 +112,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             final Class<?> ref,
             final EntityContainerInvocationHandler container) {
 
-        super(container.getFactory());
+        super(container.factory);
 
         this.container = container;
 
@@ -117,14 +128,13 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
                 ((ParameterizedType) ref.getGenericInterfaces()[0]).getActualTypeArguments();
 
         this.typeRef = (Class<T>) abstractEntitySetParams[0];
-
         if (typeRef.getAnnotation(EntityType.class) == null) {
             throw new IllegalArgumentException("Invalid entity '" + typeRef.getSimpleName() + "'");
         }
-
         this.keyRef = (Class<KEY>) abstractEntitySetParams[1];
+        this.typeCollectionRef = (Class<EC>) abstractEntitySetParams[2];
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(container.getFactory().getServiceRoot());
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(container.factory.getServiceRoot());
 
         if (!container.isDefaultEntityContainer()) {
             uriBuilder.appendStructuralSegment(container.getEntityContainerName()).appendStructuralSegment(".");
@@ -140,6 +150,10 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
     public Class<KEY> getKeyRef() {
         return keyRef;
+    }
+
+    public Class<EC> getTypeCollectionRef() {
+        return typeCollectionRef;
     }
 
     public String getEntitySetName() {
@@ -173,6 +187,8 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             return getAll();
         } else if ("newEntity".equals(method.getName())) {
             return newEntity();
+        } else if ("newEntityCollection".equals(method.getName())) {
+            return newEntityCollection();
         } else if ("flush".equals(method.getName())) {
             flush();
         } else {
@@ -182,6 +198,28 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         final Constructor<Void> voidConstructor = Void.class.getDeclaredConstructor();
         voidConstructor.setAccessible(true);
         return voidConstructor.newInstance();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T newEntity() {
+        final ODataEntity entity =
+                ODataFactory.newEntity(container.getSchemaName() + "." + MetadataUtils.getEntityTypeName(typeRef));
+
+        final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
+        EntityContainerFactory.getContext().entityContext().attachNew(handler);
+
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                new Class<?>[] {typeRef}, handler);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public EC newEntityCollection() {
+        return (EC) Proxy.newProxyInstance(
+                Thread.currentThread().getContextClassLoader(),
+                new Class<?>[] {typeCollectionRef},
+                new EntityCollectionInvocationHandler<T>(new ArrayList<T>(), factory));
     }
 
     @Override
@@ -205,6 +243,30 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         return result;
     }
 
+    private LinkedHashMap<String, Object> getCompoundKey(final Object key) {
+        final Set<CompoundKeyElementWrapper> elements = new TreeSet<CompoundKeyElementWrapper>();
+
+        for (Method method : key.getClass().getMethods()) {
+            final Annotation annotation = method.getAnnotation(CompoundKeyElement.class);
+            if (annotation instanceof CompoundKeyElement) {
+                elements.add(new CompoundKeyElementWrapper(
+                        ((CompoundKeyElement) annotation).name(), method, ((CompoundKeyElement) annotation).position()));
+            }
+        }
+
+        final LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+
+        for (CompoundKeyElementWrapper element : elements) {
+            try {
+                map.put(element.getName(), element.getMethod().invoke(key));
+            } catch (Exception e) {
+                LOG.warn("Error retrieving compound key element '{}' value", element.getName(), e);
+            }
+        }
+
+        return map;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public T get(final KEY key) throws IllegalArgumentException {
@@ -214,10 +276,10 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         }
 
         final EntityUUID uuid = new EntityUUID(
-                Utility.getNamespace(typeRef),
+                MetadataUtils.getNamespace(typeRef),
                 container.getEntityContainerName(),
                 entitySetName,
-                Utility.getNamespace(typeRef) + "." + Utility.getEntityTypeName(typeRef),
+                MetadataUtils.getNamespace(typeRef) + "." + MetadataUtils.getEntityTypeName(typeRef),
                 key);
 
         EntityTypeInvocationHandler handler =
@@ -246,37 +308,32 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         }
 
         return handler == null ? null : (T) Proxy.newProxyInstance(
-                this.getClass().getClassLoader(),
+                Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {typeRef},
                 handler);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Iterable<T> getAll() {
+    public EC getAll() {
         final ODataEntitySet entitySet = ODataRetrieveRequestFactory.getEntitySetRequest(this.uri).execute().getBody();
 
-        final List<T> beans = new ArrayList<T>(entitySet.getEntities().size());
+        final List<T> items = new ArrayList<T>(entitySet.getEntities().size());
         for (ODataEntity entity : entitySet.getEntities()) {
             final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
 
-            EntityTypeInvocationHandler handlerInTheContext =
+            final EntityTypeInvocationHandler handlerInTheContext =
                     EntityContainerFactory.getContext().entityContext().getEntity(handler.getUUID());
-
-            if (handlerInTheContext == null) {
-                beans.add((T) Proxy.newProxyInstance(
-                        this.getClass().getClassLoader(),
-                        new Class<?>[] {typeRef},
-                        handler));
-            } else if (!isDeleted(handlerInTheContext)) {
-                beans.add((T) Proxy.newProxyInstance(
-                        this.getClass().getClassLoader(),
-                        new Class<?>[] {typeRef},
-                        handlerInTheContext));
-            }
+            items.add((T) Proxy.newProxyInstance(
+                    Thread.currentThread().getContextClassLoader(),
+                    new Class<?>[] {typeRef},
+                    handlerInTheContext == null ? handler : handlerInTheContext));
         }
 
-        return beans;
+        return (EC) Proxy.newProxyInstance(
+                Thread.currentThread().getContextClassLoader(),
+                new Class<?>[] {typeCollectionRef},
+                new EntityCollectionInvocationHandler<T>(items, container.factory));
     }
 
     @Override
@@ -294,10 +351,10 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
 
         EntityTypeInvocationHandler entity = entityContext.getEntity(new EntityUUID(
-                Utility.getNamespace(typeRef),
+                MetadataUtils.getNamespace(typeRef),
                 container.getEntityContainerName(),
                 entitySetName,
-                Utility.getEntityTypeName(typeRef),
+                MetadataUtils.getEntityTypeName(typeRef),
                 key));
 
         if (entity == null) {
@@ -329,7 +386,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
      */
     @Override
     public void flush() {
-        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(getFactory().getServiceRoot());
+        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(factory.getServiceRoot());
         final ODataBatchRequest.BatchStreamManager streamManager = request.execute();
         final ODataChangeset changeset = streamManager.addChangeset();
 
@@ -412,18 +469,6 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         EntityContainerFactory.getContext().detachAll();
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public T newEntity() {
-        final ODataEntity entity =
-                ODataFactory.newEntity(container.getSchemaName() + "." + Utility.getEntityTypeName(typeRef));
-
-        final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
-        EntityContainerFactory.getContext().entityContext().attachNew(handler);
-
-        return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class<?>[] {typeRef}, handler);
-    }
-
     private boolean isDeleted(final EntityTypeInvocationHandler handler) {
         return EntityContainerFactory.getContext().entityContext().getStatus(handler) == AttachedEntityStatus.DELETED;
     }
@@ -431,7 +476,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
     private void batchCreate(
             final EntityTypeInvocationHandler handler, final ODataEntity entity, final ODataChangeset changeset) {
         LOG.debug("Create '{}'", handler);
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(handler.getFactory().getServiceRoot());
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(handler.factory.getServiceRoot());
         uriBuilder.appendEntitySetSegment(handler.getEntitySetName());
         changeset.addRequest(ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), entity));
     }
@@ -456,7 +501,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             final EntityTypeInvocationHandler handler, final ODataEntity entity, final ODataChangeset changeset) {
         LOG.debug("Delete '{}'", entity.getEditLink());
         changeset.addRequest(ODataCUDRequestFactory.getDeleteRequest(URIUtils.getURI(
-                handler.getFactory().getServiceRoot(), entity.getEditLink().toASCIIString())));
+                handler.factory.getServiceRoot(), entity.getEditLink().toASCIIString())));
     }
 
     private int processEntityContext(
@@ -471,7 +516,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         items.put(handler, null);
 
         final ODataEntity entity = SerializationUtils.clone(handler.getEntity());
-        populate(handler.getChanges(), entity);
+        ODataItemUtils.populate(factory.getMetadata(), handler.getChanges(), entity);
 
         final NavigationLinks links = EntityContainerFactory.getContext().linkContext().getLinkedEntities(handler);
 
@@ -479,7 +524,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             final Set<EntityTypeInvocationHandler> toBeLinked = new HashSet<EntityTypeInvocationHandler>();
             final ODataLinkType type = links.getLinkType(name);
 
-            final String serviceRoot = getContainer().getFactory().getServiceRoot();
+            final String serviceRoot = getContainer().factory.getServiceRoot();
 
             for (EntityTypeInvocationHandler target : links.getLinkedEntities(name)) {
                 final AttachedEntityStatus status =

@@ -48,7 +48,7 @@ public enum ParameterMode {
 
     private final String value;
 
-    ParameterMode(String v) {
+    ParameterMode(final String v) {
         value = v;
     }
 
@@ -56,7 +56,7 @@ public enum ParameterMode {
         return value;
     }
 
-    public static ParameterMode fromValue(String v) {
+    public static ParameterMode fromValue(final String v) {
         for (ParameterMode c : ParameterMode.values()) {
             if (c.value.equals(v)) {
                 return c;

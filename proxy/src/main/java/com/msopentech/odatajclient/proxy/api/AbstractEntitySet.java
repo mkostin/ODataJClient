@@ -22,7 +22,23 @@ import java.io.Serializable;
 /**
  * Interface for synchronous CRUD operations on an EntitySet.
  */
-public abstract interface AbstractEntitySet<T, KEY extends Serializable> extends Serializable {
+public abstract interface AbstractEntitySet<
+        T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>>
+        extends Serializable {
+
+    /**
+     * Creates a new entity instance.
+     *
+     * @return new entity instance.
+     */
+    T newEntity();
+
+    /**
+     * Creates a new entity collection instance.
+     *
+     * @return new entity instance collection.
+     */
+    EC newEntityCollection();
 
     /**
      * Returns whether an entity with the given id exists.
@@ -54,7 +70,7 @@ public abstract interface AbstractEntitySet<T, KEY extends Serializable> extends
      *
      * @return all entities
      */
-    Iterable<T> getAll();
+    EC getAll();
 
     /**
      * Create an instance of <tt>Query</tt>.
@@ -91,11 +107,4 @@ public abstract interface AbstractEntitySet<T, KEY extends Serializable> extends
      * Flushes all pending changes to the OData service.
      */
     void flush();
-
-    /**
-     * Create a new entity instance.
-     *
-     * @return new entity instance.
-     */
-    T newEntity();
 }

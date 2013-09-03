@@ -14,6 +14,7 @@
 #set( $clsSuffix = ".class" )
 package ${package};
 
+import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
@@ -54,16 +55,23 @@ public interface Async$utility.capitalize($container.Name) {
 #end
 
 #foreach($operation in $container.FunctionImports)
-    @FunctionImport(name = "$operation.Name"#if($operation.EntitySet), entitySet = $operation.EntitySet$clsSuffix#end #if ($operation.ReturnType), returnType = "$operation.ReturnType"#end)
-    #if ($operation.ReturnType)Future<$utility.getJavaType($operation.ReturnType)>#{else}void#end $utility.uncapitalize($operation.Name)(
+  #if( !$operation.isIsBindable() )
+    @FunctionImport(name = "$operation.Name" #if($operation.EntitySet), 
+                    entitySet = $operation.EntitySet$clsSuffix#end #if($operation.EntitySetPath),
+                    entitySetPath = $operation.EntitySetPath#end #if($operation.isIsComposable),
+                    isComposable = $operation.isIsComposable#end #if($operation.isIsSideEffecting),
+                    isSideEffecting = $operation.isIsSideEffecting#end #if($operation.HttpMethod),
+                    httpMethod = HttpMethod.$operation.HttpMethod#end #if($operation.ReturnType),
+                    returnType = "$operation.ReturnType"#end)
+    #if($operation.ReturnType)Future<$utility.getJavaType($operation.ReturnType)>#{else}void#end $utility.uncapitalize($operation.Name)(
     #if($operation.Parameters)
       #set( $count = $operation.Parameters.size() )#*
       *##foreach($param in $operation.Parameters)#*
         *##set( $count = $count - 1 )#*
-      *#    @Parameter(name = "$param.Name", type = "$param.Type"#if ($param.Mode), mode = ParameterMode.$param.Mode.toString()#end) $utility.getJavaType($param.Type) $utility.uncapitalize($param.Name)#if( $count > 0 ), #end
+      *#    @Parameter(name = "$param.Name", type = "$param.Type"#if($param.Mode), mode = ParameterMode.$param.Mode.toString()#end) $utility.getJavaType($param.Type) $utility.uncapitalize($param.Name)#if( $count > 0 ), #end
 
     #end#*
     *##end);
-
+  #end
 #end
 }

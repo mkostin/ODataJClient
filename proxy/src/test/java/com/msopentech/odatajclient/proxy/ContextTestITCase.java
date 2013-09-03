@@ -32,6 +32,7 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Phone;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -209,15 +210,14 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void linkEntitySet() {;
-        final Customer customer = container.getCustomer().newEntity();;
+        final Customer customer = container.getCustomer().newEntity();
 
-        final List<Order> toBeLinked = new ArrayList<Order>();
+        final OrderCollection toBeLinked = container.getOrder().newEntityCollection();
         toBeLinked.add(container.getOrder().newEntity());
         toBeLinked.add(container.getOrder().newEntity());
         toBeLinked.add(container.getOrder().newEntity());
 
         customer.setOrders(toBeLinked);
-
         assertNotNull(customer.getOrders());
         assertEquals(3, customer.getOrders().size());
 
@@ -304,10 +304,8 @@ public class ContextTestITCase extends AbstractTest {
 
         assertEquals("some other info ...", customerInfo.getInformation());
 
-        Iterable<CustomerInfo> customerInfos = container.getCustomerInfo().getAll();
-
         boolean found = false;
-        for (CustomerInfo info : customerInfos) {
+        for (CustomerInfo info : container.getCustomerInfo().getAll()) {
             if (info.getCustomerInfoId() == 16) {
                 assertEquals("some other info ...", customerInfo.getInformation());
                 found = true;
@@ -317,10 +315,8 @@ public class ContextTestITCase extends AbstractTest {
 
         entityContext.detachAll();
 
-        customerInfos = container.getCustomerInfo().getAll();
-
         found = false;
-        for (CustomerInfo info : customerInfos) {
+        for (CustomerInfo info : container.getCustomerInfo().getAll()) {
             if (info.getCustomerInfoId() == 16) {
                 assertNotEquals("some other info ...", info.getInformation());
                 found = true;
@@ -372,9 +368,9 @@ public class ContextTestITCase extends AbstractTest {
         keys.add(-201);
         keys.add(-202);
 
-        final List<Order> toBeLinked = new ArrayList<Order>();
+        final OrderCollection toBeLinked = container.getOrder().newEntityCollection();
         for (Integer key : keys) {
-            Order order = container.getOrder().newEntity();
+            final Order order = container.getOrder().newEntity();
             order.setOrderId(key);
             order.setCustomerId(300);
             order.setCustomer(customer);

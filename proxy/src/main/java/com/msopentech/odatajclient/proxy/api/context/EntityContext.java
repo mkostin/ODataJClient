@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy.api.context;
 
-import com.msopentech.odatajclient.proxy.api.impl.AttachedEntity;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import java.util.ArrayList;
 import java.util.HashMap;

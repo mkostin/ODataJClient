@@ -5,7 +5,10 @@ import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
-import com.msopentech.odatajclient.proxy.api.impl.AbstractType;
+import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
+import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
@@ -223,9 +226,9 @@ public interface Customer extends Serializable {
                 toRole = "Orders",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order> getOrders();
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection getOrders();
 
-    public void setOrders(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order> _orders);
+    public void setOrders(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection _orders);
 
 
     @NavigationProperty(name = "Logins", 
@@ -234,9 +237,9 @@ public interface Customer extends Serializable {
                 toRole = "Logins",
                 containsTarget = false,
                 onDelete = Action.NONE)
-    public Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login> getLogins();
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.LoginCollection getLogins();
 
-    public void setLogins(final Collection<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login> _logins);
+    public void setLogins(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.LoginCollection _logins);
 
 
     @NavigationProperty(name = "Husband", 
@@ -270,5 +273,6 @@ public interface Customer extends Serializable {
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo getInfo();
 
     public void setInfo(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo _info);
+
 
 }
