@@ -252,16 +252,17 @@ public class ContextTestITCase extends AbstractTest {
     @Test
     public void addProperty() {
         final Customer customer = container.getCustomer().newEntity();
+        customer.setCustomerId(100);
 
         final ContactDetails cd = new ContactDetails();
+        customer.setPrimaryContactInfo(cd);
+
         cd.setAlternativeNames(Arrays.asList("alternative1", "alternative2"));
 
         final ContactDetails bcd = new ContactDetails();
-        bcd.setAlternativeNames(Arrays.asList("alternative3", "alternative4"));
-
-        customer.setCustomerId(100);
-        customer.setPrimaryContactInfo(cd);
         customer.setBackupContactInfo(Collections.<ContactDetails>singletonList(bcd));
+
+        bcd.setAlternativeNames(Arrays.asList("alternative3", "alternative4"));
 
         assertEquals(Integer.valueOf(100), customer.getCustomerId());
         assertNotNull(customer.getPrimaryContactInfo().getAlternativeNames());
@@ -270,8 +271,7 @@ public class ContextTestITCase extends AbstractTest {
         assertEquals(2, customer.getBackupContactInfo().iterator().next().getAlternativeNames().size());
         assertTrue(customer.getBackupContactInfo().iterator().next().getAlternativeNames().contains("alternative4"));
 
-        final EntityTypeInvocationHandler source =
-                (EntityTypeInvocationHandler) Proxy.getInvocationHandler(customer);
+        final EntityTypeInvocationHandler source = (EntityTypeInvocationHandler) Proxy.getInvocationHandler(customer);
 
         assertTrue(entityContext.isAttached(source));
         assertEquals(AttachedEntityStatus.NEW, entityContext.getStatus(source));
@@ -366,7 +366,7 @@ public class ContextTestITCase extends AbstractTest {
         Customer customer = container.getCustomer().newEntity();
         customer.setCustomerId(300);
         customer.setName("samplename");
-        
+
         final List<Integer> keys = new ArrayList<Integer>();
         keys.add(-200);
         keys.add(-201);

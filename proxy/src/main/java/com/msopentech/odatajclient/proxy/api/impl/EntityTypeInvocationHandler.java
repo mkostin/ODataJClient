@@ -47,6 +47,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,8 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(EntityTypeInvocationHandler.class);
 
     private ODataEntity entity;
+
+    private Map<Property, Object> changes = new HashMap<Property, Object>();
 
     private final Class<?> typeRef;
 
@@ -100,7 +103,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             final String entitySetName,
             final Class<?> typeRef,
             final EntityContainerFactory factory) {
-        
+
         super(factory);
         this.entity = entity;
         this.typeRef = typeRef;
@@ -146,6 +149,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     public ODataEntity getEntity() {
         return entity;
+    }
+
+    public Map<Property, Object> getChanges() {
+        return changes;
     }
 
     @Override
@@ -259,13 +266,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                     }
                 }
             } else {
-                // if the getter exists and it is annotated as expected then get name/value and add a new property
-                final ODataProperty odataProperty = entity.getProperty(property.name());
-                if (odataProperty != null) {
-                    entity.removeProperty(odataProperty);
-                }
-
-                entity.addProperty(getODataProperty(args[0], property));
+                changes.put(property, args[0]);
 
                 if (entityContext.isAttached(this)) {
                     entityContext.setStatus(this, AttachedEntityStatus.CHANGED);
@@ -370,34 +371,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         final Object res;
 
         try {
-            final ODataProperty oproperty = entity.getProperty(property.name());
-            if (oproperty == null || oproperty.hasNullValue()) {
-                res = null;
-            } else if (oproperty.hasCollectionValue()) {
-                res = new ArrayList();
-
-                final ParameterizedType collType = (ParameterizedType) type;
-                final Class<?> collItemClass = (Class<?>) collType.getActualTypeArguments()[0];
-
-                final Iterator<ODataValue> collPropItor = oproperty.getCollectionValue().iterator();
-                while (collPropItor.hasNext()) {
-                    final ODataValue value = collPropItor.next();
-                    if (value.isPrimitive()) {
-                        ((Collection) res).add(value.asPrimitive().toValue());
-                    }
-                    if (value.isComplex()) {
-                        final Object collItem = collItemClass.newInstance();
-                        populate(collItem, value.asComplex().iterator());
-                        ((Collection) res).add(collItem);
-                    }
-                }
-            } else if (oproperty.hasPrimitiveValue()) {
-                res = oproperty.getPrimitiveValue().toValue();
-            } else if (oproperty.hasComplexValue()) {
-                res = ((Class<?>) type).newInstance();
-                populate(res, oproperty.getComplexValue().iterator());
+            if (changes.containsKey(property)) {
+                res = changes.get(property);
             } else {
-                throw new IllegalArgumentException("Invalid property " + oproperty);
+                res = getValueFromProperty(entity.getProperty(property.name()), type);
             }
 
             return res;
@@ -405,6 +382,43 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             LOG.error("Error getting value for property '" + property.name() + "'");
             throw new IllegalArgumentException(e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object getValueFromProperty(final ODataProperty property, final Type type)
+            throws InstantiationException, IllegalAccessException {
+        final Object res;
+
+        if (property == null || property.hasNullValue()) {
+            res = null;
+        } else if (property.hasCollectionValue()) {
+            res = new ArrayList();
+
+            final ParameterizedType collType = (ParameterizedType) type;
+            final Class<?> collItemClass = (Class<?>) collType.getActualTypeArguments()[0];
+
+            final Iterator<ODataValue> collPropItor = property.getCollectionValue().iterator();
+            while (collPropItor.hasNext()) {
+                final ODataValue value = collPropItor.next();
+                if (value.isPrimitive()) {
+                    ((Collection) res).add(value.asPrimitive().toValue());
+                }
+                if (value.isComplex()) {
+                    final Object collItem = collItemClass.newInstance();
+                    populate(collItem, value.asComplex().iterator());
+                    ((Collection) res).add(collItem);
+                }
+            }
+        } else if (property.hasPrimitiveValue()) {
+            res = property.getPrimitiveValue().toValue();
+        } else if (property.hasComplexValue()) {
+            res = ((Class<?>) type).newInstance();
+            populate(res, property.getComplexValue().iterator());
+        } else {
+            throw new IllegalArgumentException("Invalid property " + property);
+        }
+
+        return res;
     }
 
     @Override

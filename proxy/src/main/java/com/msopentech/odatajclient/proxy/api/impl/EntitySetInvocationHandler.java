@@ -471,6 +471,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         items.put(handler, null);
 
         final ODataEntity entity = SerializationUtils.clone(handler.getEntity());
+        populate(handler.getChanges(), entity);
 
         final NavigationLinks links = EntityContainerFactory.getContext().linkContext().getLinkedEntities(handler);
 

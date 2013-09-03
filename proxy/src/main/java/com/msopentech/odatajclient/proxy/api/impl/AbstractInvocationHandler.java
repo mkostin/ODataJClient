@@ -42,6 +42,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import org.slf4j.Logger;
@@ -162,6 +163,19 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
             return oprop;
         } catch (Exception e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    protected void populate(final Map<Property, Object> changes, final ODataEntity entity) {
+
+        for (Map.Entry<Property, Object> property : changes.entrySet()) {
+            // if the getter exists and it is annotated as expected then get name/value and add a new property
+            final ODataProperty odataProperty = entity.getProperty(property.getKey().name());
+            if (odataProperty != null) {
+                entity.removeProperty(odataProperty);
+            }
+
+            entity.addProperty(getODataProperty(property.getValue(), property.getKey()));
         }
     }
 
