@@ -23,6 +23,8 @@ public class EntityUUID implements Serializable {
 
     private static final long serialVersionUID = 4855025769803086495L;
 
+    private final int tempKey;
+
     private final String schemaName;
 
     private final String containerName;
@@ -52,6 +54,7 @@ public class EntityUUID implements Serializable {
         this.entitySetName = entitySetName;
         this.name = name;
         this.key = key;
+        this.tempKey = (int) (Math.random() * 1000000);
     }
 
     public String getSchemaName() {
@@ -79,7 +82,9 @@ public class EntityUUID implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+        return key == null
+                ? EqualsBuilder.reflectionEquals(this, obj)
+                : EqualsBuilder.reflectionEquals(this, obj, "tempKey");
     }
 
     /**
@@ -87,7 +92,7 @@ public class EntityUUID implements Serializable {
      */
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        return HashCodeBuilder.reflectionHashCode(this, "tempKey");
     }
 
     /**

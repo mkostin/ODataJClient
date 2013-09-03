@@ -68,9 +68,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private EntityUUID uuid;
 
-    private final EntityContext entityContext = EntityContainerFactory.getContext().getEntityContext();
+    private final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
 
-    private final LinkContext linkContext = EntityContainerFactory.getContext().getLinkContext();
+    private final LinkContext linkContext = EntityContainerFactory.getContext().linkContext();
 
     static EntityTypeInvocationHandler getInstance(
             final ODataEntity entity,
@@ -415,13 +415,12 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return uuid.hashCode();
     }
 
     @Override
     public boolean equals(final Object obj) {
         return obj instanceof EntityTypeInvocationHandler
-                && ((EntityTypeInvocationHandler) obj).getUUID().getKey() != null
                 && ((EntityTypeInvocationHandler) obj).getUUID().equals(uuid);
     }
 }

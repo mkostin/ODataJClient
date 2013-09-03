@@ -164,9 +164,6 @@ public class EntityContext implements Iterable<AttachedEntity> {
         if ((status == AttachedEntityStatus.LINKED && current == AttachedEntityStatus.ATTACHED)
                 || (status == AttachedEntityStatus.CHANGED && current == AttachedEntityStatus.ATTACHED)
                 || (status == AttachedEntityStatus.CHANGED && current == AttachedEntityStatus.LINKED)
-                || (status == AttachedEntityStatus.NEW_IN_BATCH && current == AttachedEntityStatus.NEW)
-                || (status == AttachedEntityStatus.CHANGED_IN_BATCH && current == AttachedEntityStatus.CHANGED)
-                || (status == AttachedEntityStatus.DELETED_IN_BATCH && current == AttachedEntityStatus.DELETED)
                 || (status == AttachedEntityStatus.DELETED)) {
             allAttachedEntities.put(entity, status);
         }

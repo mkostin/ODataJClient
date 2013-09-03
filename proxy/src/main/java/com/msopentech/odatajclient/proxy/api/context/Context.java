@@ -27,11 +27,16 @@ public class Context {
 
     }
 
-    public EntityContext getEntityContext() {
+    public EntityContext entityContext() {
         return entities;
     }
 
-    public LinkContext getLinkContext() {
+    public LinkContext linkContext() {
         return links;
+    }
+
+    public void detachAll() {
+        entities.detachAll();
+        links.detachAll();
     }
 }

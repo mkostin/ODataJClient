@@ -16,11 +16,12 @@
 package com.msopentech.odatajclient.proxy.api.context;
 
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +50,20 @@ public class LinkContext implements Iterable<EntityLinkDesc> {
             return attached.get(source).getLinkedEntities(sourceName);
         } else {
             return Collections.<EntityTypeInvocationHandler>emptySet();
+        }
+    }
+
+    /**
+     * Gets all navigation links defined for the given source.
+     *
+     * @param source link source.
+     * @return navigation links defined for the given source.
+     */
+    public NavigationLinks getLinkedEntities(final EntityTypeInvocationHandler source) {
+        if (attached.containsKey(source)) {
+            return attached.get(source);
+        } else {
+            return new NavigationLinks();
         }
     }
 
@@ -151,7 +166,7 @@ public class LinkContext implements Iterable<EntityLinkDesc> {
      */
     @Override
     public Iterator<EntityLinkDesc> iterator() {
-        final Set<EntityLinkDesc> res = new HashSet<EntityLinkDesc>();
+        final List<EntityLinkDesc> res = new ArrayList<EntityLinkDesc>();
 
         for (Map.Entry<EntityTypeInvocationHandler, NavigationLinks> entry : attached.entrySet()) {
             for (String linkName : entry.getValue().getLinkNames()) {

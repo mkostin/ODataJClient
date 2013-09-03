@@ -126,12 +126,4 @@ public class EntityRetrieveTestITCase extends AbstractTest {
         assertNotNull(message);
         assertEquals("1", message.getFromUsername());
     }
-
-    private Customer readCustomer(final DefaultContainer container, int id) {
-        final Customer customer = container.getCustomer().get(-10);
-        assertNotNull(customer);
-        assertEquals(Integer.valueOf(id), customer.getCustomerId());
-
-        return customer;
-    }
 }

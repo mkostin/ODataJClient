@@ -262,6 +262,8 @@ public class EntityCreateTestITCase extends AbstractTest {
 
             order.addProperty(ODataFactory.newPrimitiveProperty("OrderId",
                     new ODataPrimitiveValue.Builder().setValue(key).setType(EdmSimpleType.INT_32).build()));
+            order.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
+                    new ODataPrimitiveValue.Builder().setValue(id).setType(EdmSimpleType.INT_32).build()));
 
             final ODataEntityCreateRequest createReq = ODataCUDRequestFactory.getEntityCreateRequest(
                     new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Order").build(), order);
@@ -291,7 +293,9 @@ public class EntityCreateTestITCase extends AbstractTest {
 
         for (ODataEntity entity : entitySet.getEntities()) {
             final Integer key = entity.getProperty("OrderId").getPrimitiveValue().<Integer>toCastValue();
+            final Integer customerId = entity.getProperty("CustomerId").getPrimitiveValue().<Integer>toCastValue();
             assertTrue(keys.contains(key));
+            assertEquals(Integer.valueOf(id), customerId);
             keys.remove(key);
 
             final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(

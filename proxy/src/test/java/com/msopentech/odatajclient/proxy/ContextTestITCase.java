@@ -24,10 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
-import com.msopentech.odatajclient.proxy.api.context.EntityContext;
-import com.msopentech.odatajclient.proxy.api.context.LinkContext;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails;
@@ -48,10 +45,6 @@ import org.junit.Test;
  * This is the unit test class to check entity retrieve operations.
  */
 public class ContextTestITCase extends AbstractTest {
-
-    private final EntityContext entityContext = EntityContainerFactory.getContext().getEntityContext();
-
-    private final LinkContext linkContext = EntityContainerFactory.getContext().getLinkContext();
 
     private static DefaultContainer container;
 
@@ -370,6 +363,10 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void flushTest() {
+        Customer customer = container.getCustomer().newEntity();
+        customer.setCustomerId(300);
+        customer.setName("samplename");
+        
         final List<Integer> keys = new ArrayList<Integer>();
         keys.add(-200);
         keys.add(-201);
@@ -379,12 +376,10 @@ public class ContextTestITCase extends AbstractTest {
         for (Integer key : keys) {
             Order order = container.getOrder().newEntity();
             order.setOrderId(key);
+            order.setCustomerId(300);
+            order.setCustomer(customer);
             toBeLinked.add(order);
         }
-
-        Customer customer = container.getCustomer().newEntity();
-        customer.setCustomerId(300);
-        customer.setName("samplename");
 
         customer.setOrders(toBeLinked);
 

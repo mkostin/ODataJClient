@@ -365,8 +365,8 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
                 entity, entityContainerName, entitySetName, (Class<?>) type, getFactory());
 
         if (checkInTheContext) {
-            if (EntityContainerFactory.getContext().getEntityContext().isAttached(handler)) {
-                handler = EntityContainerFactory.getContext().getEntityContext().getEntity(handler.getUUID());
+            if (EntityContainerFactory.getContext().entityContext().isAttached(handler)) {
+                handler = EntityContainerFactory.getContext().entityContext().getEntity(handler.getUUID());
             }
         }
         return (T) Proxy.newProxyInstance(
