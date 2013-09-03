@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
@@ -36,8 +37,10 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -138,15 +141,13 @@ public class ContextTestITCase extends AbstractTest {
         assertEquals(AttachedEntityStatus.NEW, entityContext.getStatus(source));
         assertTrue(entityContext.isAttached(target));
         assertEquals(AttachedEntityStatus.LINKED, entityContext.getStatus(target));
-        assertTrue(linkContext.isAttached(source, "Info", target));
-        assertFalse(linkContext.isAttached(target, "Customer", source));
+
+        checkUnidirectional("Info", source, "Customer", target, false);
 
         entityContext.detachAll();
-        linkContext.detachAll();
 
         assertFalse(entityContext.isAttached(source));
         assertFalse(entityContext.isAttached(target));
-        assertFalse(linkContext.isAttached(source, "Info", target));
     }
 
     @Test
@@ -167,15 +168,13 @@ public class ContextTestITCase extends AbstractTest {
         assertEquals(AttachedEntityStatus.CHANGED, entityContext.getStatus(source));
         assertTrue(entityContext.isAttached(target));
         assertEquals(AttachedEntityStatus.NEW, entityContext.getStatus(target));
-        assertTrue(linkContext.isAttached(source, "Info", target));
-        assertFalse(linkContext.isAttached(target, "Customer", source));
+
+        checkUnidirectional("Info", source, "Customer", target, false);
 
         entityContext.detachAll();
-        linkContext.detachAll();
 
         assertFalse(entityContext.isAttached(source));
         assertFalse(entityContext.isAttached(target));
-        assertFalse(linkContext.isAttached(source, "Info", target));
     }
 
     @Test
@@ -196,15 +195,13 @@ public class ContextTestITCase extends AbstractTest {
         assertEquals(AttachedEntityStatus.CHANGED, entityContext.getStatus(source));
         assertTrue(entityContext.isAttached(target));
         assertEquals(AttachedEntityStatus.LINKED, entityContext.getStatus(target));
-        assertTrue(linkContext.isAttached(source, "Info", target));
-        assertFalse(linkContext.isAttached(target, "Customer", source));
+
+        checkUnidirectional("Info", source, "Customer", target, false);
 
         entityContext.detachAll();
-        linkContext.detachAll();
 
         assertFalse(entityContext.isAttached(source));
         assertFalse(entityContext.isAttached(target));
-        assertFalse(linkContext.isAttached(source, "Info", target));
     }
 
     @Test
@@ -226,8 +223,7 @@ public class ContextTestITCase extends AbstractTest {
 
         assertTrue(entityContext.isAttached(source));
         assertEquals(AttachedEntityStatus.NEW, entityContext.getStatus(source));
-        assertTrue(linkContext.isAttached(source, "Orders"));
-        assertEquals(3, linkContext.getLinkedEntities(source, "Orders").size());
+        assertEquals(3, ((Collection) (source.getLinkChanges().entrySet().iterator().next().getValue())).size());
 
         for (Order order : toBeLinked) {
             final EntityTypeInvocationHandler target =
@@ -235,14 +231,12 @@ public class ContextTestITCase extends AbstractTest {
 
             assertTrue(entityContext.isAttached(target));
             assertEquals(AttachedEntityStatus.NEW, entityContext.getStatus(target));
-            assertFalse(linkContext.isAttached(target, "Customer", source));
+            checkUnidirectional("Orders", source, "Customer", target, true);
         }
 
         entityContext.detachAll();
-        linkContext.detachAll();
 
         assertFalse(entityContext.isAttached(source));
-        assertFalse(linkContext.isAttached(source, "Orders"));
 
         for (Order order : toBeLinked) {
             assertFalse(entityContext.isAttached((EntityTypeInvocationHandler) Proxy.getInvocationHandler(order)));
@@ -277,7 +271,6 @@ public class ContextTestITCase extends AbstractTest {
         assertEquals(AttachedEntityStatus.NEW, entityContext.getStatus(source));
 
         entityContext.detachAll();
-        linkContext.detachAll();
 
         assertFalse(entityContext.isAttached(source));
     }
@@ -430,5 +423,51 @@ public class ContextTestITCase extends AbstractTest {
         for (Order linked : toBeLinked) {
             assertFalse(entityContext.isAttached((EntityTypeInvocationHandler) Proxy.getInvocationHandler(linked)));
         }
+    }
+
+    private void checkUnlink(
+            final String sourceName,
+            final EntityTypeInvocationHandler source) {
+        boolean found = false;
+        for (Map.Entry<NavigationProperty, Object> property : source.getLinkChanges().entrySet()) {
+            if (property.getKey().name().equals(sourceName)) {
+                found = true;
+            }
+        }
+        assertFalse(found);
+    }
+
+    private void checkLink(
+            final String sourceName,
+            final EntityTypeInvocationHandler source,
+            final EntityTypeInvocationHandler target,
+            final boolean isCollection) {
+        boolean found = false;
+        for (Map.Entry<NavigationProperty, Object> property : source.getLinkChanges().entrySet()) {
+            if (property.getKey().name().equals(sourceName)) {
+                if (isCollection) {
+                    found = false;
+                    for (Object proxy : (Collection) property.getValue()) {
+                        if (target.equals((EntityTypeInvocationHandler) Proxy.getInvocationHandler(proxy))) {
+                            found = true;
+                        }
+                    }
+                } else {
+                    found = target.equals(
+                            (EntityTypeInvocationHandler) Proxy.getInvocationHandler(property.getValue()));
+                }
+            }
+        }
+        assertTrue(found);
+    }
+
+    private void checkUnidirectional(
+            final String sourceName,
+            final EntityTypeInvocationHandler source,
+            final String targetName,
+            final EntityTypeInvocationHandler target,
+            final boolean isCollection) {
+        checkLink(sourceName, source, target, isCollection);
+        checkUnlink(targetName, target);
     }
 }

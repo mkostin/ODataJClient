@@ -166,7 +166,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
         }
     }
 
-    protected void populate(final Map<Property, Object> changes, final ODataEntity entity) {
+    protected void addProperties(final Map<Property, Object> changes, final ODataEntity entity) {
 
         for (Map.Entry<Property, Object> property : changes.entrySet()) {
             // if the getter exists and it is annotated as expected then get name/value and add a new property

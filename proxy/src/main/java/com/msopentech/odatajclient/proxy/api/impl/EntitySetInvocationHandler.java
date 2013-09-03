@@ -43,11 +43,11 @@ import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
 import com.msopentech.odatajclient.proxy.api.annotations.EntitySet;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
+import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
 import com.msopentech.odatajclient.proxy.api.context.EntityContext;
 import com.msopentech.odatajclient.proxy.api.context.EntityLinkDesc;
 import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
-import com.msopentech.odatajclient.proxy.api.context.NavigationLinks;
 import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
 import java.io.Serializable;
@@ -64,6 +64,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
@@ -471,17 +472,27 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
         items.put(handler, null);
 
         final ODataEntity entity = SerializationUtils.clone(handler.getEntity());
-        populate(handler.getChanges(), entity);
+        addProperties(handler.getPropertyChanges(), entity);
 
-        final NavigationLinks links = EntityContainerFactory.getContext().linkContext().getLinkedEntities(handler);
+        for (Map.Entry<NavigationProperty, Object> property : handler.getLinkChanges().entrySet()) {
+            final ODataLinkType type = Collection.class.isAssignableFrom(property.getValue().getClass())
+                    ? ODataLinkType.ENTITY_SET_NAVIGATION
+                    : ODataLinkType.ENTITY_NAVIGATION;
 
-        for (String name : links.getLinkNames()) {
+            final ODataLink link = Utility.getNavigationLink(property.getKey().name(), entity);
+            if (link != null) {
+                entity.removeLink(link);
+            }
+
             final Set<EntityTypeInvocationHandler> toBeLinked = new HashSet<EntityTypeInvocationHandler>();
-            final ODataLinkType type = links.getLinkType(name);
-
             final String serviceRoot = getContainer().getFactory().getServiceRoot();
 
-            for (EntityTypeInvocationHandler target : links.getLinkedEntities(name)) {
+            for (Object proxy : type == ODataLinkType.ENTITY_SET_NAVIGATION
+                    ? (Collection) property.getValue() : Collections.singleton(property.getValue())) {
+
+                final EntityTypeInvocationHandler target =
+                        (EntityTypeInvocationHandler) Proxy.getInvocationHandler(proxy);
+
                 final AttachedEntityStatus status =
                         EntityContainerFactory.getContext().entityContext().getStatus(target);
 
@@ -489,7 +500,8 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
                 if (status == AttachedEntityStatus.ATTACHED || status == AttachedEntityStatus.LINKED) {
                     entity.addLink(buildNavigationLink(
-                            name, URIUtils.getURI(serviceRoot, editLink.toASCIIString()), type));
+                            property.getKey().name(),
+                            URIUtils.getURI(serviceRoot, editLink.toASCIIString()), type));
                 } else {
                     if (!items.contains(target)) {
                         pos = processEntityContext(target, pos, items, delayedUpdates, changeset);
@@ -498,7 +510,8 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
 
                     if (status == AttachedEntityStatus.CHANGED) {
                         entity.addLink(buildNavigationLink(
-                                name, URIUtils.getURI(serviceRoot, editLink.toASCIIString()), type));
+                                property.getKey().name(),
+                                URIUtils.getURI(serviceRoot, editLink.toASCIIString()), type));
                     } else {
                         final Integer targetPos = items.get(target);
                         if (targetPos == null) {
@@ -510,7 +523,8 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
                             LOG.debug("'{}' from '{}' to (${}) '{}'",
                                     new Object[] {type.name(), handler, targetPos, target});
 
-                            entity.addLink(buildNavigationLink(name, URI.create("$" + targetPos), type));
+                            entity.addLink(
+                                    buildNavigationLink(property.getKey().name(), URI.create("$" + targetPos), type));
 
                         }
                     }
@@ -518,7 +532,7 @@ class EntitySetInvocationHandler<T extends Serializable, KEY extends Serializabl
             }
 
             if (!toBeLinked.isEmpty()) {
-                delayedUpdates.add(new EntityLinkDesc(name, handler, toBeLinked, type));
+                delayedUpdates.add(new EntityLinkDesc(property.getKey().name(), handler, toBeLinked, type));
             }
         }
 
