@@ -137,6 +137,7 @@ public abstract class AbstractTest {
             final Customer customer,
             final Integer id,
             final String sampleName) {
+
         assertEquals(sampleName, customer.getName());
         assertEquals(id, customer.getCustomerId());
         assertNotNull(customer.getPrimaryContactInfo());

@@ -56,17 +56,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private static final long serialVersionUID = 2629912294765040037L;
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(EntityTypeInvocationHandler.class);
 
     private ODataEntity entity;
 
@@ -171,13 +164,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     @SuppressWarnings("unchecked")
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
         // Assumption: for each getter will always exist a setter and viceversa.
-        if ("equals".equals(method.getName()) && !(ArrayUtils.isEmpty(args)) && args.length == 1) {
-            return this.equals(args[0]);
-        } else if ("hashCode".equals(method.getName()) && (ArrayUtils.isEmpty(args))) {
-            return this.hashCode();
-        } else if ("toString".equals(method.getName()) && (ArrayUtils.isEmpty(args))) {
-            return this.toString();
-        } else if (method.getName().startsWith("get")) {
+        if (method.getName().startsWith("get")) {
             // get method annotation and check if it exists as expected
 
             final Method getter = typeRef.getMethod(method.getName());
@@ -235,48 +222,15 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
         final List<T> items = new ArrayList<T>();
 
-        for (ODataEntity entity : entitySet.getEntities()) {
-            items.add((T) getEntityProxy(entity, entityContainerName, entitySet.getName(), typeRef, checkInTheContext));
+        for (ODataEntity entityFromSet : entitySet.getEntities()) {
+            items.add((T) getEntityProxy(
+                    entityFromSet, entityContainerName, entitySet.getName(), typeRef, checkInTheContext));
         }
 
         return (EC) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {typeCollectionRef},
                 new EntityCollectionInvocationHandler<T>(items, factory));
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends Serializable, EC extends AbstractEntityCollection<T>> EC getEntityCollection(
-            final Collection<EntityTypeInvocationHandler> handlers, final Class<?> typeCollectionRef) {
-
-        final List<T> items = new ArrayList<T>();
-
-        if (handlers != null) {
-            for (EntityTypeInvocationHandler handler : handlers) {
-                items.add((T) Proxy.newProxyInstance(
-                        Thread.currentThread().getContextClassLoader(),
-                        new Class<?>[] {(Class<?>) handler.getTypeRef()},
-                        handler));
-            }
-        }
-
-        return (EC) Proxy.newProxyInstance(
-                Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {typeCollectionRef},
-                new EntityCollectionInvocationHandler<T>(items, factory));
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> T getEntityProxy(final Collection<EntityTypeInvocationHandler> handlers) {
-        if (handlers == null || handlers.isEmpty()) {
-            return null;
-        } else {
-            final EntityTypeInvocationHandler handler = handlers.iterator().next();
-            return (T) Proxy.newProxyInstance(
-                    Thread.currentThread().getContextClassLoader(),
-                    new Class<?>[] {(Class<?>) handler.getTypeRef()},
-                    handler);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -324,15 +278,15 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         // 3) get entitySet
         final String targetEntitySetName = MetadataUtils.getEntitySetName(associationSet.getValue(), property.toRole());
 
-        final Object res;
+        final Object navPropValue;
 
         if (linkChanges.containsKey(property)) {
-            res = linkChanges.get(property);
+            navPropValue = linkChanges.get(property);
         } else {
             final ODataLink link = MetadataUtils.getNavigationLink(property.name(), entity);
             if (link instanceof ODataInlineEntity) {
                 // return entity
-                res = getEntityProxy(
+                navPropValue = getEntityProxy(
                         ((ODataInlineEntity) link).getEntity(),
                         associationSet.getKey().getName(),
                         targetEntitySetName,
@@ -340,7 +294,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         false);
             } else if (link instanceof ODataInlineEntitySet) {
                 // return entity set
-                res = getEntityCollection(
+                navPropValue = getEntityCollection(
                         collItemType,
                         type,
                         associationSet.getKey().getName(),
@@ -351,14 +305,14 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 final URI uri = URIUtils.getURI(factory.getServiceRoot(), link.getLink().toASCIIString());
 
                 if (AbstractEntityCollection.class.isAssignableFrom(type)) {
-                    res = getEntityCollection(
+                    navPropValue = getEntityCollection(
                             collItemType,
                             type,
                             associationSet.getKey().getName(),
                             ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute().getBody(),
                             true);
                 } else {
-                    res = getEntityProxy(
+                    navPropValue = getEntityProxy(
                             ODataRetrieveRequestFactory.getEntityRequest(uri).execute().getBody(),
                             associationSet.getKey().getName(),
                             targetEntitySetName,
@@ -368,7 +322,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             }
         }
 
-        return res;
+        return navPropValue;
     }
 
     private Object getPropertyValue(final Property property, final Type type) {
@@ -381,42 +335,42 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Object getValueFromProperty(final ODataProperty property, final Type type)
             throws InstantiationException, IllegalAccessException {
 
-        final Object res;
+        final Object value;
 
         if (property == null || property.hasNullValue()) {
-            res = null;
+            value = null;
         } else if (property.hasCollectionValue()) {
-            res = new ArrayList();
+            value = new ArrayList();
 
             final ParameterizedType collType = (ParameterizedType) type;
             final Class<?> collItemClass = (Class<?>) collType.getActualTypeArguments()[0];
 
             final Iterator<ODataValue> collPropItor = property.getCollectionValue().iterator();
             while (collPropItor.hasNext()) {
-                final ODataValue value = collPropItor.next();
-                if (value.isPrimitive()) {
-                    ((Collection) res).add(value.asPrimitive().toValue());
+                final ODataValue odataValue = collPropItor.next();
+                if (odataValue.isPrimitive()) {
+                    ((Collection) value).add(odataValue.asPrimitive().toValue());
                 }
-                if (value.isComplex()) {
+                if (odataValue.isComplex()) {
                     final Object collItem = collItemClass.newInstance();
-                    ODataItemUtils.populate(factory.getMetadata(), collItem, value.asComplex().iterator());
-                    ((Collection) res).add(collItem);
+                    ODataItemUtils.populate(factory.getMetadata(), collItem, odataValue.asComplex().iterator());
+                    ((Collection) value).add(collItem);
                 }
             }
         } else if (property.hasPrimitiveValue()) {
-            res = property.getPrimitiveValue().toValue();
+            value = property.getPrimitiveValue().toValue();
         } else if (property.hasComplexValue()) {
-            res = ((Class<?>) type).newInstance();
-            ODataItemUtils.populate(factory.getMetadata(), res, property.getComplexValue().iterator());
+            value = ((Class<?>) type).newInstance();
+            ODataItemUtils.populate(factory.getMetadata(), value, property.getComplexValue().iterator());
         } else {
             throw new IllegalArgumentException("Invalid property " + property);
         }
 
-        return res;
+        return value;
     }
 
     private void setNavigationPropertyValue(final NavigationProperty property, final Object value) {

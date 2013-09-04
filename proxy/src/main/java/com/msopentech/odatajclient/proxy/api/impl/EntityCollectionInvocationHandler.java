@@ -19,17 +19,13 @@ import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import org.apache.commons.lang3.ArrayUtils;
 
 public class EntityCollectionInvocationHandler<T extends Serializable>
         extends AbstractInvocationHandler implements AbstractEntityCollection<T> {
 
     private static final long serialVersionUID = 98078202642671726L;
-
-    private static final Method[] COLLECTION_METHODS = Collection.class.getMethods();
 
     private final Collection<T> items;
 
@@ -38,27 +34,10 @@ public class EntityCollectionInvocationHandler<T extends Serializable>
         this.items = items;
     }
 
-    private boolean isCollectionMethod(final Method method) {
-        boolean result = false;
-
-        for (int i = 0; i < COLLECTION_METHODS.length && !result; i++) {
-            result = method.getName().equals(COLLECTION_METHODS[i].getName())
-                    && Arrays.equals(method.getParameterTypes(), COLLECTION_METHODS[i].getParameterTypes());
-        }
-
-        return result;
-    }
-
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        if ("equals".equals(method.getName()) && !(ArrayUtils.isEmpty(args)) && args.length == 1) {
-            return this.equals(args[0]);
-        } else if ("hashCode".equals(method.getName()) && (ArrayUtils.isEmpty(args))) {
-            return this.hashCode();
-        } else if ("toString".equals(method.getName()) && (ArrayUtils.isEmpty(args))) {
-            return this.toString();
-        } else if (isCollectionMethod(method)) {
-            return this.getClass().getMethod(method.getName(), method.getParameterTypes()).invoke(this, args);
+        if (isSelfMethod(method, args)) {
+            return invokeSelfMethod(method, args);
         } else {
             throw new UnsupportedOperationException("Not supported yet.");
         }

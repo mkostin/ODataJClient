@@ -57,7 +57,6 @@ import com.msopentech.odatajclient.proxy.api.query.Query;
 import com.msopentech.odatajclient.proxy.utils.ODataItemUtils;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
@@ -172,33 +171,11 @@ class EntitySetInvocationHandler<
     @Override
     @SuppressWarnings("unchecked")
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        if ("delete".equals(method.getName())) {
-            if (args[0] instanceof Collection) {
-                delete((Collection<T>) args[0]);
-            } else {
-                delete((KEY) args[0]);
-            }
-        } else if ("count".equals(method.getName())) {
-            return count();
-        } else if ("exists".equals(method.getName())) {
-            return exists((KEY) args[0]);
-        } else if ("get".equals(method.getName())) {
-            return get((KEY) args[0]);
-        } else if ("getAll".equals(method.getName())) {
-            return getAll();
-        } else if ("newEntity".equals(method.getName())) {
-            return newEntity();
-        } else if ("newEntityCollection".equals(method.getName())) {
-            return newEntityCollection();
-        } else if ("flush".equals(method.getName())) {
-            flush();
+        if (isSelfMethod(method, args)) {
+            return invokeSelfMethod(method, args);
         } else {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-
-        final Constructor<Void> voidConstructor = Void.class.getDeclaredConstructor();
-        voidConstructor.setAccessible(true);
-        return voidConstructor.newInstance();
     }
 
     @Override
@@ -271,7 +248,6 @@ class EntitySetInvocationHandler<
     @Override
     @SuppressWarnings("unchecked")
     public T get(final KEY key) throws IllegalArgumentException {
-
         if (key == null) {
             throw new IllegalArgumentException("Null key");
         }
@@ -500,6 +476,7 @@ class EntitySetInvocationHandler<
 
     private void batchDelete(
             final EntityTypeInvocationHandler handler, final ODataEntity entity, final ODataChangeset changeset) {
+
         LOG.debug("Delete '{}'", entity.getEditLink());
         changeset.addRequest(ODataCUDRequestFactory.getDeleteRequest(URIUtils.getURI(
                 handler.factory.getServiceRoot(), entity.getEditLink().toASCIIString())));
@@ -594,8 +571,10 @@ class EntitySetInvocationHandler<
         switch (type) {
             case ENTITY_NAVIGATION:
                 return ODataFactory.newEntityNavigationLink(name, uri);
+
             case ENTITY_SET_NAVIGATION:
                 return ODataFactory.newFeedNavigationLink(name, uri);
+
             default:
                 throw new IllegalArgumentException("Invalid link type " + type.name());
         }
@@ -603,16 +582,20 @@ class EntitySetInvocationHandler<
 
     private void batch(
             final EntityTypeInvocationHandler handler, final ODataEntity entity, final ODataChangeset changeset) {
+
         switch (EntityContainerFactory.getContext().entityContext().getStatus(handler)) {
             case NEW:
                 batchCreate(handler, entity, changeset);
                 break;
+
             case CHANGED:
                 batchUpdate(entity, changeset);
                 break;
+
             case DELETED:
                 batchDelete(handler, entity, changeset);
                 break;
+
             default:
             // ignore
         }

@@ -17,6 +17,9 @@ package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -37,6 +40,27 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
     protected AbstractInvocationHandler(final EntityContainerFactory factory) {
         this.factory = factory;
+    }
+
+    protected boolean isSelfMethod(final Method method, final Object[] args) {
+        final Method[] selfMethods = getClass().getMethods();
+
+        boolean result = false;
+
+        for (int i = 0; i < selfMethods.length && !result; i++) {
+            result = method.getName().equals(selfMethods[i].getName())
+                    && Arrays.equals(method.getParameterTypes(), selfMethods[i].getParameterTypes());
+        }
+
+        System.out.println("KKKKKKKKKKKK " + method.getName() + " " + result);
+        
+        return result;
+    }
+
+    protected Object invokeSelfMethod(final Method method, final Object[] args)
+            throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+
+        return getClass().getMethod(method.getName(), method.getParameterTypes()).invoke(this, args);
     }
 
     @Override
