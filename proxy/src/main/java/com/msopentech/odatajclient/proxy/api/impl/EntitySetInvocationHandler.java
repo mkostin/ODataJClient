@@ -193,14 +193,14 @@ class EntitySetInvocationHandler<
         EntityContainerFactory.getContext().entityContext().attachNew(handler);
 
         return (NE) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {typeRef}, handler);
+                new Class<?>[] {reference}, handler);
     }
 
     @SuppressWarnings("unchecked")
     private <NEC> NEC newEntityCollection(final Class<NEC> reference) {
         return (NEC) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {typeCollectionRef},
+                new Class<?>[] {reference},
                 new EntityCollectionInvocationHandler<T>(new ArrayList<T>(), factory));
     }
 
