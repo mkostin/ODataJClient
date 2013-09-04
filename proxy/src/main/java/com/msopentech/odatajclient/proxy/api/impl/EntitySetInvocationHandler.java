@@ -187,7 +187,7 @@ class EntitySetInvocationHandler<
     @SuppressWarnings("unchecked")
     private <NE> NE newEntity(final Class<NE> reference) {
         final ODataEntity entity =
-                ODataFactory.newEntity(container.getSchemaName() + "." + ClassUtils.getEntityTypeName(typeRef));
+                ODataFactory.newEntity(container.getSchemaName() + "." + ClassUtils.getEntityTypeName(reference));
 
         final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
         EntityContainerFactory.getContext().entityContext().attachNew(handler);
