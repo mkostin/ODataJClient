@@ -52,8 +52,6 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
                     && Arrays.equals(method.getParameterTypes(), selfMethods[i].getParameterTypes());
         }
 
-        System.out.println("KKKKKKKKKKKK " + method.getName() + " " + result);
-        
         return result;
     }
 
