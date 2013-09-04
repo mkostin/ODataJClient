@@ -30,4 +30,7 @@ import java.util.Collection;
 
 @EntitySet(name = "CustomerInfo")
 public interface CustomerInfo extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfoCollection> {
+
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo newCustomerInfo();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfoCollection newCustomerInfoCollection();
 }

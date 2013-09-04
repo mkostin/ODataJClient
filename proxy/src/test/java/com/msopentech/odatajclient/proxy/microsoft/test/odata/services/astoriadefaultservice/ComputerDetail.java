@@ -30,4 +30,7 @@ import java.util.Collection;
 
 @EntitySet(name = "ComputerDetail")
 public interface ComputerDetail extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetailCollection> {
+
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail newComputerDetail();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetailCollection newComputerDetailCollection();
 }

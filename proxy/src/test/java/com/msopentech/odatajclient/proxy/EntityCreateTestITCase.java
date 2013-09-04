@@ -88,13 +88,13 @@ public class EntityCreateTestITCase extends AbstractTest {
         final String sampleName = "sample customer from proxy with back navigation";
         final Integer id = 102;
 
-        Order order = container.getOrder().newEntity();
+        Order order = container.getOrder().newOrder();
         order.setCustomerId(id);
         order.setOrderId(id); // same id ...
 
         final Customer customer = getSampleCustomerProfile(id, sampleName, container);
 
-        final OrderCollection orders = container.getOrder().newEntityCollection();
+        final OrderCollection orders = container.getOrder().newOrderCollection();
         orders.add(order);
 
         customer.setOrders(orders);
@@ -133,7 +133,7 @@ public class EntityCreateTestITCase extends AbstractTest {
 
     @Test
     public void multiKey() {
-        Message message = container.getMessage().newEntity();
+        Message message = container.getMessage().newMessage();
         message.setMessageId(100);
         message.setFromUsername("fromusername");
         message.setToUsername("myusername");

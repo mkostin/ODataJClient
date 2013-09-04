@@ -173,28 +173,32 @@ class EntitySetInvocationHandler<
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
         if (isSelfMethod(method, args)) {
             return invokeSelfMethod(method, args);
+        } else if (method.getName().startsWith("new")) {
+            if (method.getName().endsWith("Collection")) {
+                return newEntityCollection(method.getReturnType());
+            } else {
+                return newEntity(method.getReturnType());
+            }
         } else {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public T newEntity() {
+    private <NE> NE newEntity(final Class<NE> reference) {
         final ODataEntity entity =
                 ODataFactory.newEntity(container.getSchemaName() + "." + ClassUtils.getEntityTypeName(typeRef));
 
         final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
         EntityContainerFactory.getContext().entityContext().attachNew(handler);
 
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+        return (NE) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {typeRef}, handler);
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public EC newEntityCollection() {
-        return (EC) Proxy.newProxyInstance(
+    private <NEC> NEC newEntityCollection(final Class<NEC> reference) {
+        return (NEC) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {typeCollectionRef},
                 new EntityCollectionInvocationHandler<T>(new ArrayList<T>(), factory));

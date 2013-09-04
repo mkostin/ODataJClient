@@ -27,20 +27,6 @@ public abstract interface AbstractEntitySet<
         extends Serializable {
 
     /**
-     * Creates a new entity instance.
-     *
-     * @return new entity instance.
-     */
-    T newEntity();
-
-    /**
-     * Creates a new entity collection instance.
-     *
-     * @return new entity instance collection.
-     */
-    EC newEntityCollection();
-
-    /**
      * Returns whether an entity with the given id exists.
      *
      * @param key must not be null

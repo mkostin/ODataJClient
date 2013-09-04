@@ -79,17 +79,17 @@ public class ProxyUsageTest {
                 container.getOrder();
 
         // create Order (local)
-        Order order = orders.newEntity();
+        Order order = orders.newOrder();
         order.setCustomerId(-10);
 
         final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
                 container.getCustomer();
         // create Customer (local)
-        Customer customer = customers.newEntity();
+        Customer customer = customers.newCustomer();
         customer.setName("a name");
 
         // link customer and order
-        OrderCollection orderCollection = orders.newEntityCollection();
+        OrderCollection orderCollection = orders.newOrderCollection();
         orderCollection.add(order);
         customer.setOrders(orderCollection);
         order.setCustomer(customer);

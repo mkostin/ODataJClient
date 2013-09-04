@@ -30,4 +30,7 @@ import java.util.Collection;
 
 @EntitySet(name = "ProductPhoto")
 public interface ProductPhoto extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhoto, ProductPhotoKey, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhotoCollection> {
+
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhoto newProductPhoto();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhotoCollection newProductPhotoCollection();
 }

@@ -30,4 +30,7 @@ import java.util.Collection;
 
 @EntitySet(name = "Driver")
 public interface Driver extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Driver, String, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.DriverCollection> {
+
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Driver newDriver();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.DriverCollection newDriverCollection();
 }

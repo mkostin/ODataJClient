@@ -104,7 +104,7 @@ public abstract class AbstractTest {
             final String sampleName,
             final DefaultContainer container) {
 
-        final Customer customer = container.getCustomer().newEntity();
+        final Customer customer = container.getCustomer().newCustomer();
 
         // add name attribute
         customer.setName(sampleName);

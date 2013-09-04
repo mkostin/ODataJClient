@@ -30,4 +30,7 @@ import java.util.Collection;
 
 @EntitySet(name = "ProductReview")
 public interface ProductReview extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReview, ProductReviewKey, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReviewCollection> {
+
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReview newProductReview();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReviewCollection newProductReviewCollection();
 }

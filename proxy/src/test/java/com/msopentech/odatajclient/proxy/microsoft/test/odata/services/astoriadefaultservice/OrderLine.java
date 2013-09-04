@@ -30,4 +30,11 @@ import java.util.Collection;
 
 @EntitySet(name = "OrderLine")
 public interface OrderLine extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderLine, OrderLineKey, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderLineCollection> {
+
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderLine newOrderLine();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderLineCollection newOrderLineCollection();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.BackOrderLine newBackOrderLine();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.BackOrderLineCollection newBackOrderLineCollection();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.BackOrderLine2 newBackOrderLine2();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.BackOrderLine2Collection newBackOrderLine2Collection();
 }
