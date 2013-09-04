@@ -31,6 +31,7 @@ import java.util.Collection;
 @EntitySet(name = "Order")
 public interface Order extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection> {
 
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection getAllOrder();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order newOrder();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection newOrderCollection();
 }

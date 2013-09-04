@@ -27,5 +27,5 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-public interface ContractorCollection extends PersonCollection {
+public interface ContractorCollection extends AbstractEntityCollection<Contractor> {
 }

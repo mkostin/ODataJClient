@@ -15,12 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
-import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_NAVIGATION;
-import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_SET_NAVIGATION;
-import static com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus.CHANGED;
-import static com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus.DELETED;
-import static com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus.NEW;
-
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
@@ -38,15 +32,16 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.proxy.api.AbstractContainer;
-import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
-import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntity;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
 import com.msopentech.odatajclient.proxy.api.context.EntityLinkDesc;
+import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
+import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
+import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
+import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import com.msopentech.odatajclient.proxy.utils.EngineUtils;
 import java.lang.annotation.Annotation;
@@ -71,6 +66,8 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(EntityContainerInvocationHandler.class);
+
+    private static final long serialVersionUID = 7379006755693410764L;
 
     protected final String schemaName;
 
@@ -118,13 +115,30 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
             if (methodAnnots.length == 0) {
                 final Class<?> returnType = method.getReturnType();
 
-                return Proxy.newProxyInstance(returnType.getClassLoader(), new Class<?>[] {returnType},
+                return Proxy.newProxyInstance(
+                        returnType.getClassLoader(),
+                        new Class<?>[] {returnType},
                         EntitySetInvocationHandler.getInstance(returnType, this));
             } // 2. invoke function imports
-            else {
+            else if (methodAnnots[0] instanceof FunctionImport) {
+                return functionImport((FunctionImport) methodAnnots[0]);
+            } else {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         }
+    }
+
+    private Object functionImport(final FunctionImport annotation) {
+        final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
+                factory.getMetadata().getSchema(schemaName).getEntityContainer(entityContainerName);
+        final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp =
+                container.getFunctionImport(annotation.name());
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(factory.getServiceRoot()).
+                appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
+
+        // TODO: complete
+        return null;
     }
 
     /**

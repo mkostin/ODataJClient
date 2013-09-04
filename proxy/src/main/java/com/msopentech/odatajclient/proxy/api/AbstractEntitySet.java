@@ -43,6 +43,16 @@ public abstract interface AbstractEntitySet<
      * @throws IllegalArgumentException in case the given key is null
      */
     T get(KEY key) throws IllegalArgumentException;
+    
+    /**
+     * Retrieves an entity by its key.
+     *
+     * @param key must not be null
+     * @param reference entity class to be returned
+     * @return the entity with the given id or null if none found
+     * @throws IllegalArgumentException in case the given key is null
+     */
+    <S extends T> S get(KEY key, Class<S> reference) throws IllegalArgumentException;
 
     /**
      * Returns the number of entities available.
@@ -87,5 +97,5 @@ public abstract interface AbstractEntitySet<
      *
      * @param entities to be deleted
      */
-    void delete(Iterable<T> entities);
+    <S extends T> void delete(Iterable<S> entities);
 }

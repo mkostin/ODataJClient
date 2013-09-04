@@ -194,7 +194,6 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             }
 
             return res;
-
         } else if (method.getName().startsWith("set")) {
             // get the corresponding getter method (see assumption above)
             final String getterName = method.getName().replaceFirst("set", "get");

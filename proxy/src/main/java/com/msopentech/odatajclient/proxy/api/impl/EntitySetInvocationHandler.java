@@ -47,6 +47,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,12 +148,17 @@ class EntitySetInvocationHandler<
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
         if (isSelfMethod(method, args)) {
             return invokeSelfMethod(method, args);
-        } else if (method.getName().startsWith("new")) {
+        } else if (method.getName().startsWith("new") && ArrayUtils.isEmpty(args)) {
             if (method.getName().endsWith("Collection")) {
                 return newEntityCollection(method.getReturnType());
             } else {
                 return newEntity(method.getReturnType());
             }
+        } else if (method.getName().startsWith("getAll") && ArrayUtils.isEmpty(args)) {
+            final Class<?> entityCollectionClass = method.getReturnType();
+            final Type[] entityCollectionParams =
+                    ((ParameterizedType) entityCollectionClass.getGenericInterfaces()[0]).getActualTypeArguments();
+            return getAll((Class<EC>) method.getReturnType(), (Class<T>) entityCollectionParams[0]);
         } else {
             throw new UnsupportedOperationException("Not supported yet.");
         }
@@ -163,11 +169,14 @@ class EntitySetInvocationHandler<
         final ODataEntity entity =
                 ODataFactory.newEntity(container.getSchemaName() + "." + ClassUtils.getEntityTypeName(reference));
 
-        final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
+        final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(
+                entity, getContainer().getEntityContainerName(), entitySetName, reference, factory);
         EntityContainerFactory.getContext().entityContext().attachNew(handler);
 
-        return (NE) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {reference}, handler);
+        return (NE) Proxy.newProxyInstance(
+                Thread.currentThread().getContextClassLoader(),
+                new Class<?>[] {reference},
+                handler);
     }
 
     @SuppressWarnings("unchecked")
@@ -224,8 +233,13 @@ class EntitySetInvocationHandler<
     }
 
     @Override
+    public T get(KEY key) throws IllegalArgumentException {
+        return get(key, typeRef);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
-    public T get(final KEY key) throws IllegalArgumentException {
+    public <S extends T> S get(final KEY key, final Class<S> typeRef) throws IllegalArgumentException {
         if (key == null) {
             throw new IllegalArgumentException("Null key");
         }
@@ -262,33 +276,40 @@ class EntitySetInvocationHandler<
             handler = null;
         }
 
-        return handler == null ? null : (T) Proxy.newProxyInstance(
+        return handler == null ? null : (S) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {typeRef},
                 handler);
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public EC getAll() {
-        final ODataEntitySet entitySet = ODataRetrieveRequestFactory.getEntitySetRequest(this.uri).execute().getBody();
+    private <SEC extends EC, S extends T> SEC getAll(final Class<SEC> typeCollectionRef, final Class<S> typeRef) {
+        final ODataEntitySet entitySet = ODataRetrieveRequestFactory.getEntitySetRequest(
+                new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
+                ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).
+                build()).execute().getBody();
 
-        final List<T> items = new ArrayList<T>(entitySet.getEntities().size());
+        final List<S> items = new ArrayList<S>(entitySet.getEntities().size());
         for (ODataEntity entity : entitySet.getEntities()) {
             final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
 
             final EntityTypeInvocationHandler handlerInTheContext =
                     EntityContainerFactory.getContext().entityContext().getEntity(handler.getUUID());
-            items.add((T) Proxy.newProxyInstance(
+            items.add((S) Proxy.newProxyInstance(
                     Thread.currentThread().getContextClassLoader(),
                     new Class<?>[] {typeRef},
                     handlerInTheContext == null ? handler : handlerInTheContext));
         }
 
-        return (EC) Proxy.newProxyInstance(
+        return (SEC) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {typeCollectionRef},
-                new EntityCollectionInvocationHandler<T>(items, container.factory));
+                new EntityCollectionInvocationHandler<S>(items, container.factory));
+    }
+
+    @Override
+    public EC getAll() {
+        return getAll(typeCollectionRef, typeRef);
     }
 
     @Override
@@ -323,7 +344,7 @@ class EntitySetInvocationHandler<
     }
 
     @Override
-    public void delete(final Iterable<T> entities) {
+    public <S extends T> void delete(final Iterable<S> entities) {
         final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
 
         for (T en : entities) {

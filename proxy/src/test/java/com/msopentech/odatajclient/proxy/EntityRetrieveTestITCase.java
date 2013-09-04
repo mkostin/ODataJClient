@@ -29,12 +29,16 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialTypes;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContractorCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.EmployeeCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonCollection;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.SpecialEmployeeCollection;
 import java.util.Collection;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -51,8 +55,30 @@ public class EntityRetrieveTestITCase extends AbstractTest {
     }
 
     @Test
-    public void read() {
+    public void get() {
         readCustomer(container, -10);
+    }
+
+    @Test
+    public void getAll() {
+        final PersonCollection all = container.getPerson().getAll();
+        assertNotNull(all);
+        assertFalse(all.isEmpty());
+
+        final EmployeeCollection employees = container.getPerson().getAllEmployee();
+        assertNotNull(employees);
+        assertFalse(employees.isEmpty());
+
+        final SpecialEmployeeCollection specialEmployees = container.getPerson().getAllSpecialEmployee();
+        assertNotNull(specialEmployees);
+        assertFalse(specialEmployees.isEmpty());
+
+        final ContractorCollection contractors = container.getPerson().getAllContractor();
+        assertNotNull(contractors);
+        assertFalse(contractors.isEmpty());
+
+        assertTrue(employees.size() > specialEmployees.size());
+        assertTrue(all.size() > employees.size() + contractors.size());
     }
 
     @Test

@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy.utils;
 
-import static com.msopentech.odatajclient.proxy.utils.ClassUtils.getCompoundKeyRef;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -245,7 +244,7 @@ public final class EngineUtils {
         if (entity.getProperties().isEmpty()) {
             res = null;
         } else {
-            final Class<?> keyRef = getCompoundKeyRef(entityTypeRef);
+            final Class<?> keyRef = ClassUtils.getCompoundKeyRef(entityTypeRef);
             if (keyRef == null) {
                 final ODataProperty property = entity.getProperty(firstValidEntityKey(entityTypeRef));
                 res = property == null || !property.hasPrimitiveValue()

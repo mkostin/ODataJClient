@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Employee;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
@@ -60,6 +61,38 @@ public class EntityCreateTestITCase extends AbstractTest {
 
         entityContext.detachAll();
         actual = container.getCustomer().get(id);
+        assertNull(actual);
+    }
+
+    @Test
+    public void createEmployee() {
+        final Integer id = 101;
+
+        final Employee employee = container.getPerson().newEmployee();
+        employee.setPersonId(id);
+        employee.setName("sample employee from proxy");
+        employee.setManagersPersonId(-9918);
+        employee.setSalary(2147483647);
+        employee.setTitle("CEO");
+
+        container.flush();
+
+        Employee actual = container.getPerson().get(id, Employee.class);
+        assertNotNull(actual);
+        assertEquals(id, actual.getPersonId());
+
+        entityContext.detachAll();
+        actual = container.getPerson().get(id, Employee.class);
+        assertNotNull(actual);
+
+        container.getPerson().delete(Collections.<Employee>singleton(actual));
+        container.flush();
+
+        actual = container.getPerson().get(id, Employee.class);
+        assertNull(actual);
+
+        entityContext.detachAll();
+        actual = container.getPerson().get(id, Employee.class);
         assertNull(actual);
     }
 

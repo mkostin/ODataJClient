@@ -57,6 +57,7 @@ public interface $utility.capitalize($entitySet.Name) extends AbstractEntitySet<
 #foreach( $dos in $utility.getDescendantsOrSelf($utility.getEntityType($entitySet)) )
     #set( $djt = $utility.getJavaType($dos) )
     #set( $sIdx = $djt.lastIndexOf('.') + 1 )
+    ${djt}Collection getAll$djt.substring($sIdx)();
     $djt new$djt.substring($sIdx)();
     ${djt}Collection new$djt.substring($sIdx)Collection();
 #end

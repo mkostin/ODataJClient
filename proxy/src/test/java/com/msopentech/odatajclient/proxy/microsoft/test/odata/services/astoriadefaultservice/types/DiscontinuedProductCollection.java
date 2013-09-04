@@ -27,5 +27,5 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-public interface DiscontinuedProductCollection extends ProductCollection {
+public interface DiscontinuedProductCollection extends AbstractEntityCollection<DiscontinuedProduct> {
 }

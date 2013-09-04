@@ -42,8 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-#set( $startIdx = $baseType.lastIndexOf('.') + 1 )
-public interface $utility.capitalize($entityType.Name)Collection extends #if( $baseType )$baseType.substring($startIdx)Collection#{else}AbstractEntityCollection<$utility.capitalize($entityType.Name)>#end {
+public interface $utility.capitalize($entityType.Name)Collection extends AbstractEntityCollection<$utility.capitalize($entityType.Name)> {
 #foreach($operation in $utility.getFunctionImportsBoundTo($entityType.Name, true))
     @FunctionImport(name = "$operation.Name" #if ($operation.EntitySet), 
                     entitySet = $operation.EntitySet$clsSuffix#end #if ($operation.EntitySetPath),

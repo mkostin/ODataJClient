@@ -31,12 +31,16 @@ import java.util.Collection;
 @EntitySet(name = "Person")
 public interface Person extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Person, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonCollection> {
 
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonCollection getAllPerson();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Person newPerson();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonCollection newPersonCollection();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContractorCollection getAllContractor();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Contractor newContractor();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContractorCollection newContractorCollection();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.EmployeeCollection getAllEmployee();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Employee newEmployee();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.EmployeeCollection newEmployeeCollection();
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.SpecialEmployeeCollection getAllSpecialEmployee();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.SpecialEmployee newSpecialEmployee();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.SpecialEmployeeCollection newSpecialEmployeeCollection();
 }

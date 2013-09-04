@@ -27,5 +27,5 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-public interface SpecialEmployeeCollection extends EmployeeCollection {
+public interface SpecialEmployeeCollection extends AbstractEntityCollection<SpecialEmployee> {
 }

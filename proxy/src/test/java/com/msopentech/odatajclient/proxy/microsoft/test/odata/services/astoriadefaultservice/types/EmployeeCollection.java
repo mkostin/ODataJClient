@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-public interface EmployeeCollection extends PersonCollection {
+public interface EmployeeCollection extends AbstractEntityCollection<Employee> {
     @FunctionImport(name = "IncreaseSalaries"      )
     void increaseSalaries(
             @Parameter(name = "n", type = "Edm.Int32", nullable = false) Integer n

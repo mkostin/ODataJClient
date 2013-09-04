@@ -31,6 +31,7 @@ import java.util.Collection;
 @EntitySet(name = "ProductDetail")
 public interface ProductDetail extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductDetail, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductDetailCollection> {
 
+    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductDetailCollection getAllProductDetail();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductDetail newProductDetail();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductDetailCollection newProductDetailCollection();
 }
