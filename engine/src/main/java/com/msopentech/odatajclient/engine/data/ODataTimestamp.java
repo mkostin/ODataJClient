@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +30,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @see com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType#DATE_TIME
  * @see com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType#DATE_TIME_OFFSET
  */
-public final class ODataTimestamp {
+public final class ODataTimestamp implements Serializable {
+
+    private static final long serialVersionUID = 4053990618660356004L;
 
     private final SimpleDateFormat sdf;
 

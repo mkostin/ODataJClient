@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import static com.msopentech.odatajclient.proxy.AbstractTest.getDefaultContainer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -22,6 +23,8 @@ import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
 import java.util.Collections;
@@ -131,5 +134,36 @@ public class EntityCreateTestITCase extends AbstractTest {
 
         actual = container.getCustomer().get(id);
         assertNull(actual);
+    }
+
+    @Test
+    public void multiKey() {
+        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
+        Message message = container.getMessage().newEntity();
+        message.setMessageId(100);
+        message.setFromUsername("fromusername");
+        message.setToUsername("myusername");
+        message.setIsRead(false);
+        message.setSubject("test message");
+        message.setBody("test");
+
+        container.getMessage().flush();
+
+        MessageKey key = new MessageKey();
+        key.setFromUsername("fromusername");
+        key.setMessageId(100);
+
+        message = container.getMessage().get(key);
+        assertNotNull(message);
+        assertEquals(Integer.valueOf(100), message.getMessageId());
+        assertEquals("fromusername", message.getFromUsername());
+        assertEquals("myusername", message.getToUsername());
+        assertEquals("test message", message.getSubject());
+        assertEquals("test", message.getBody());
+
+        container.getMessage().delete(key);
+        container.getMessage().flush();
+
+        assertNull(container.getMessage().get(key));
     }
 }
