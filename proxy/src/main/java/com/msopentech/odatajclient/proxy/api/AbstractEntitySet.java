@@ -88,9 +88,4 @@ public abstract interface AbstractEntitySet<
      * @param entities to be deleted
      */
     void delete(Iterable<T> entities);
-
-    /**
-     * Flushes all pending changes to the OData service.
-     */
-    void flush();
 }

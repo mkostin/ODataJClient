@@ -95,7 +95,7 @@ public class ProxyUsageTest {
         order.setCustomer(customer);
 
         // any flush() will generate actual operations on the OData service
-        container.getCustomer().flush();
+        container.flush();
     }
 
     public void invoke() {

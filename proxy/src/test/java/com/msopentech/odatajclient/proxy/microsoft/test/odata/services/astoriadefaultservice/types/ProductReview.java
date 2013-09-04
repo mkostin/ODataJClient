@@ -98,30 +98,6 @@ public interface ProductReview extends Serializable {
 
     public void setReviewId(final Integer _reviewId);
 
-    @Key
-    @Property(name = "RevisionId", 
-                type = "Edm.String", 
-                nullable = false,
-                defaultValue = "",
-                maxLenght = Integer.MAX_VALUE,
-                fixedLenght = false,
-                precision = 0,
-                scale = 0,
-                unicode = false,
-                collation = "",
-                srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
-                fcSourcePath = "",
-                fcTargetPath = "",
-                fcContentKind = EdmContentKind.text,
-                fcNSPrefix = "",
-                fcNSURI = "",
-                fcKeepInContent = false)
-    public String getRevisionId();
-
-    public void setRevisionId(final String _revisionId);
-
     
     @Property(name = "Review", 
                 type = "Edm.String", 
@@ -145,6 +121,30 @@ public interface ProductReview extends Serializable {
     public String getReview();
 
     public void setReview(final String _review);
+
+    @Key
+    @Property(name = "RevisionId", 
+                type = "Edm.String", 
+                nullable = false,
+                defaultValue = "",
+                maxLenght = Integer.MAX_VALUE,
+                fixedLenght = false,
+                precision = 0,
+                scale = 0,
+                unicode = false,
+                collation = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.NONE,
+                mimeType = "",
+                fcSourcePath = "",
+                fcTargetPath = "",
+                fcContentKind = EdmContentKind.text,
+                fcNSPrefix = "",
+                fcNSURI = "",
+                fcKeepInContent = false)
+    public String getRevisionId();
+
+    public void setRevisionId(final String _revisionId);
 
     
 

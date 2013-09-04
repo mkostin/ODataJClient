@@ -39,7 +39,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         final Integer id = 100;
 
         getSampleCustomerProfile(id, sampleName, container);
-        container.getCustomer().flush();
+        container.flush();
 
         Customer actual = readCustomer(container, id);
         checKSampleCustomerProfile(actual, id, sampleName);
@@ -53,7 +53,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         assertNotNull(actual);
 
         container.getCustomer().delete(Collections.<Customer>singleton(actual));
-        container.getCustomer().flush();
+        container.flush();
 
         actual = container.getCustomer().get(id);
         assertNull(actual);
@@ -70,14 +70,14 @@ public class EntityCreateTestITCase extends AbstractTest {
 
         final Customer original = getSampleCustomerProfile(id, sampleName, container);
         original.setInfo(container.getCustomerInfo().get(16));
-        container.getCustomer().flush();
+        container.flush();
 
         Customer actual = readCustomer(container, id);
         checKSampleCustomerProfile(actual, id, sampleName);
         assertEquals(Integer.valueOf(16), actual.getInfo().getCustomerInfoId());
 
         container.getCustomer().delete(Collections.<Customer>singleton(actual));
-        container.getCustomer().flush();
+        container.flush();
 
         actual = container.getCustomer().get(id);
         assertNull(actual);
@@ -99,7 +99,7 @@ public class EntityCreateTestITCase extends AbstractTest {
 
         customer.setOrders(orders);
         order.setCustomer(customer);
-        container.getCustomer().flush();
+        container.flush();
 
         assertEquals(id, order.getOrderId());
         assertEquals(id, order.getCustomerId());
@@ -116,7 +116,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         assertEquals(id, order.getCustomer().getCustomerId());
 
         container.getOrder().delete(actual.getOrders());
-        container.getCustomer().flush();
+        container.flush();
 
         order = container.getOrder().get(id);
         assertNull(order);
@@ -125,7 +125,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         assertTrue(actual.getOrders().isEmpty());
 
         container.getCustomer().delete(Collections.<Customer>singleton(actual));
-        container.getCustomer().flush();
+        container.flush();
 
         actual = container.getCustomer().get(id);
         assertNull(actual);
@@ -141,7 +141,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         message.setSubject("test message");
         message.setBody("test");
 
-        container.getMessage().flush();
+        container.flush();
 
         MessageKey key = new MessageKey();
         key.setFromUsername("fromusername");
@@ -156,7 +156,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         assertEquals("test", message.getBody());
 
         container.getMessage().delete(key);
-        container.getMessage().flush();
+        container.flush();
 
         assertNull(container.getMessage().get(key));
     }

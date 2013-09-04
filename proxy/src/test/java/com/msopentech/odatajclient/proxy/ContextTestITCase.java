@@ -317,7 +317,7 @@ public class ContextTestITCase extends AbstractTest {
         assertTrue(entityContext.isAttached(handler));
 
         try {
-            container.getLogin().flush();
+            container.flush();
             fail();
         } catch (Exception e) {
             // ignore
@@ -328,14 +328,14 @@ public class ContextTestITCase extends AbstractTest {
         login.setCustomerId(-10);
         login.setUsername("customer");
 
-        container.getLogin().flush();
+        container.flush();
         assertFalse(entityContext.isAttached(handler));
         assertNotNull(container.getLogin().get("customer"));
 
         container.getLogin().delete(Collections.<Login>singleton(login));
         assertTrue(entityContext.isAttached(handler));
 
-        container.getLogin().flush();
+        container.flush();
         assertFalse(entityContext.isAttached(handler));
         assertNull(container.getLogin().get("customer"));
     }
@@ -385,7 +385,7 @@ public class ContextTestITCase extends AbstractTest {
             assertTrue(entityContext.isAttached((EntityTypeInvocationHandler) Proxy.getInvocationHandler(linked)));
         }
 
-        container.getCustomer().flush();
+        container.flush();
 
         assertFalse(entityContext.isAttached((EntityTypeInvocationHandler) Proxy.getInvocationHandler(customerInfo)));
         assertFalse(entityContext.isAttached((EntityTypeInvocationHandler) Proxy.getInvocationHandler(customer)));
@@ -403,7 +403,7 @@ public class ContextTestITCase extends AbstractTest {
             assertTrue(entityContext.isAttached((EntityTypeInvocationHandler) Proxy.getInvocationHandler(linked)));
         }
 
-        container.getCustomer().flush();
+        container.flush();
 
         assertFalse(entityContext.isAttached((EntityTypeInvocationHandler) Proxy.getInvocationHandler(customer)));
         for (Order linked : toBeLinked) {
