@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.utils;
 
+import static com.msopentech.odatajclient.proxy.utils.ClassUtils.getCompoundKeyRef;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -30,12 +31,15 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
+import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -234,12 +238,45 @@ public final class EngineUtils {
         bean.getClass().getMethod(setterName, getter.getReturnType()).invoke(bean, value);
     }
 
+    public static Object getKey(
+            final EdmMetadata metadata, final Class<?> entityTypeRef, final ODataEntity entity) {
+        final Object res;
+
+        if (entity.getProperties().isEmpty()) {
+            res = null;
+        } else {
+            final Class<?> keyRef = getCompoundKeyRef(entityTypeRef);
+            if (keyRef == null) {
+                final ODataProperty property = entity.getProperty(firstValidEntityKey(entityTypeRef));
+                res = property == null || !property.hasPrimitiveValue()
+                        ? null
+                        : property.getPrimitiveValue().toValue();
+
+            } else {
+                try {
+                    res = keyRef.newInstance();
+                    populate(metadata, res, CompoundKeyElement.class, entity.getProperties().iterator());
+                } catch (Exception e) {
+                    LOG.error("Error population compound key {}", keyRef.getSimpleName(), e);
+                    throw new IllegalArgumentException("Cannot populate compound key");
+                }
+            }
+        }
+
+        return res;
+    }
+
     @SuppressWarnings("unchecked")
-    public static void populate(final EdmMetadata metadata, final Object bean, final Iterator<ODataProperty> propItor) {
+    public static void populate(
+            final EdmMetadata metadata,
+            final Object bean,
+            final Class<? extends Annotation> getterAnn,
+            final Iterator<ODataProperty> propItor) {
         while (propItor.hasNext()) {
             final ODataProperty property = propItor.next();
 
-            final Method getter = ClassUtils.findGetterByAnnotatedName(bean.getClass(), property.getName());
+            final Method getter = ClassUtils.findGetterByAnnotatedName(bean.getClass(), getterAnn, property.getName());
+
             if (getter == null) {
                 LOG.warn("Could not find any property annotated as {} in {}",
                         property.getName(), bean.getClass().getName());
@@ -253,7 +290,7 @@ public final class EngineUtils {
                     }
                     if (property.hasComplexValue()) {
                         final Object complex = getter.getReturnType().newInstance();
-                        populate(metadata, complex, property.getComplexValue().iterator());
+                        populate(metadata, complex, Property.class, property.getComplexValue().iterator());
                         setPropertyValue(bean, getter, complex);
                     }
                     if (property.hasCollectionValue()) {
@@ -274,7 +311,7 @@ public final class EngineUtils {
                             }
                             if (value.isComplex()) {
                                 final Object collItem = collItemClass.newInstance();
-                                populate(metadata, collItem, value.asComplex().iterator());
+                                populate(metadata, collItem, Property.class, value.asComplex().iterator());
                                 collection.add(collItem);
                             }
                         }
@@ -284,5 +321,56 @@ public final class EngineUtils {
                 }
             }
         }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static Object getValueFromProperty(
+            final EdmMetadata metadata, final ODataProperty property, final Type type)
+            throws InstantiationException, IllegalAccessException {
+
+        final Object value;
+
+        if (property == null || property.hasNullValue()) {
+            value = null;
+        } else if (property.hasCollectionValue()) {
+            value = new ArrayList();
+
+            final ParameterizedType collType = (ParameterizedType) type;
+            final Class<?> collItemClass = (Class<?>) collType.getActualTypeArguments()[0];
+
+            final Iterator<ODataValue> collPropItor = property.getCollectionValue().iterator();
+            while (collPropItor.hasNext()) {
+                final ODataValue odataValue = collPropItor.next();
+                if (odataValue.isPrimitive()) {
+                    ((Collection) value).add(odataValue.asPrimitive().toValue());
+                }
+                if (odataValue.isComplex()) {
+                    final Object collItem = collItemClass.newInstance();
+                    populate(metadata, collItem, Property.class, odataValue.asComplex().iterator());
+                    ((Collection) value).add(collItem);
+                }
+            }
+        } else if (property.hasPrimitiveValue()) {
+            value = property.getPrimitiveValue().toValue();
+        } else if (property.hasComplexValue()) {
+            value = ((Class<?>) type).newInstance();
+            populate(metadata, value, Property.class, property.getComplexValue().iterator());
+        } else {
+            throw new IllegalArgumentException("Invalid property " + property);
+        }
+
+        return value;
+    }
+
+    private static String firstValidEntityKey(final Class<?> entityTypeRef) {
+        for (Method method : entityTypeRef.getDeclaredMethods()) {
+            if (method.getAnnotation(Key.class) != null) {
+                final Annotation ann = method.getAnnotation(Property.class);
+                if (ann != null) {
+                    return ((Property) ann).name();
+                }
+            }
+        }
+        return null;
     }
 }

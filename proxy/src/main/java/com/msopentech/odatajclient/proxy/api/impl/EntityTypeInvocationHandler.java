@@ -21,8 +21,6 @@ import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
@@ -48,10 +46,8 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
@@ -71,6 +67,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     private EntityUUID uuid;
 
     private final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
+
+    private int propertiesTag;
+
+    private int linksTag;
 
     static EntityTypeInvocationHandler getInstance(
             final ODataEntity entity,
@@ -110,7 +110,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 entityContainerName,
                 entitySetName,
                 entity.getName(),
-                ClassUtils.getKey(typeRef, entity));
+                EngineUtils.getKey(factory.getMetadata(), typeRef, entity));
+
+        this.propertiesTag = 0;
+        this.linksTag = 0;
     }
 
     public void setEntity(final ODataEntity entity) {
@@ -121,7 +124,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 getUUID().getContainerName(),
                 getUUID().getEntitySetName(),
                 getUUID().getName(),
-                ClassUtils.getKey(typeRef, entity));
+                EngineUtils.getKey(factory.getMetadata(), typeRef, entity));
 
         this.propertyChanges.clear();
         this.linkChanges.clear();
@@ -163,8 +166,11 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     @SuppressWarnings("unchecked")
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
         // Assumption: for each getter will always exist a setter and viceversa.
-        if (method.getName().startsWith("get")) {
+        if (isSelfMethod(method, args)) {
+            return invokeSelfMethod(method, args);
+        } else if (method.getName().startsWith("get")) {
             // get method annotation and check if it exists as expected
+            final Object res;
 
             final Method getter = typeRef.getMethod(method.getName());
 
@@ -175,12 +181,20 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                     throw new UnsupportedOperationException("Unsupported method " + method.getName());
                 } else {
                     // if the getter refers to a navigation property ... navigate and follow link if necessary
-                    return getNavigationPropertyValue(navProp, getter);
+                    res = getNavigationPropertyValue(navProp, getter);
                 }
             } else {
                 // if the getter refers to a property .... get property from wrapped entity
-                return getPropertyValue(property, getter.getGenericReturnType());
+                res = getPropertyValue(property, getter.getGenericReturnType());
             }
+
+            // attach the current handler
+            if (!entityContext.isAttached(this)) {
+                entityContext.attach(this, AttachedEntityStatus.ATTACHED);
+            }
+
+            return res;
+
         } else if (method.getName().startsWith("set")) {
             // get the corresponding getter method (see assumption above)
             final String getterName = method.getName().replaceFirst("set", "get");
@@ -319,6 +333,12 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                             true);
                 }
             }
+
+            if (navPropValue != null) {
+                int checkpoint = linkChanges.hashCode();
+                linkChanges.put(property, navPropValue);
+                updateLinksTag(checkpoint);
+            }
         }
 
         return navPropValue;
@@ -326,50 +346,25 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private Object getPropertyValue(final Property property, final Type type) {
         try {
-            return propertyChanges.containsKey(property)
-                    ? propertyChanges.get(property)
-                    : getValueFromProperty(entity.getProperty(property.name()), type);
+            final Object res;
+
+            if (propertyChanges.containsKey(property)) {
+                res = propertyChanges.get(property);
+            } else {
+                res = EngineUtils.getValueFromProperty(
+                        factory.getMetadata(), entity.getProperty(property.name()), type);
+
+                if (res != null) {
+                    int checkpoint = propertyChanges.hashCode();
+                    propertyChanges.put(property, res);
+                    updatePropertiesTag(checkpoint);
+                }
+            }
+
+            return res;
         } catch (Exception e) {
             throw new IllegalArgumentException("Error getting value for property '" + property.name() + "'", e);
         }
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private Object getValueFromProperty(final ODataProperty property, final Type type)
-            throws InstantiationException, IllegalAccessException {
-
-        final Object value;
-
-        if (property == null || property.hasNullValue()) {
-            value = null;
-        } else if (property.hasCollectionValue()) {
-            value = new ArrayList();
-
-            final ParameterizedType collType = (ParameterizedType) type;
-            final Class<?> collItemClass = (Class<?>) collType.getActualTypeArguments()[0];
-
-            final Iterator<ODataValue> collPropItor = property.getCollectionValue().iterator();
-            while (collPropItor.hasNext()) {
-                final ODataValue odataValue = collPropItor.next();
-                if (odataValue.isPrimitive()) {
-                    ((Collection) value).add(odataValue.asPrimitive().toValue());
-                }
-                if (odataValue.isComplex()) {
-                    final Object collItem = collItemClass.newInstance();
-                    EngineUtils.populate(factory.getMetadata(), collItem, odataValue.asComplex().iterator());
-                    ((Collection) value).add(collItem);
-                }
-            }
-        } else if (property.hasPrimitiveValue()) {
-            value = property.getPrimitiveValue().toValue();
-        } else if (property.hasComplexValue()) {
-            value = ((Class<?>) type).newInstance();
-            EngineUtils.populate(factory.getMetadata(), value, property.getComplexValue().iterator());
-        } else {
-            throw new IllegalArgumentException("Invalid property " + property);
-        }
-
-        return value;
     }
 
     private void setNavigationPropertyValue(final NavigationProperty property, final Object value) {
@@ -410,6 +405,22 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         } else {
             entityContext.attach(this, AttachedEntityStatus.CHANGED);
         }
+    }
+
+    private void updatePropertiesTag(final int checkpoint) {
+        if (checkpoint == propertiesTag) {
+            propertiesTag = propertyChanges.hashCode();
+        }
+    }
+
+    private void updateLinksTag(final int checkpoint) {
+        if (checkpoint == linksTag) {
+            linksTag = linkChanges.hashCode();
+        }
+    }
+
+    public boolean isChanged() {
+        return linkChanges.hashCode() != linksTag || propertyChanges.hashCode() != propertiesTag;
     }
 
     @Override

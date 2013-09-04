@@ -29,7 +29,7 @@ import java.util.Collections;
 import org.junit.Test;
 
 /**
- * This is the unit test class to check entity retrieve operations.
+ * This is the unit test class to check entity create operations.
  */
 public class EntityCreateTestITCase extends AbstractTest {
 

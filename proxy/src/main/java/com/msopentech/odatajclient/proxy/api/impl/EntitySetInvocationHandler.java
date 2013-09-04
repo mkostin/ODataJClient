@@ -331,7 +331,7 @@ class EntitySetInvocationHandler<
                 ClassUtils.getNamespace(typeRef),
                 container.getEntityContainerName(),
                 entitySetName,
-                ClassUtils.getEntityTypeName(typeRef),
+                ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef),
                 key));
 
         if (entity == null) {
@@ -370,21 +370,21 @@ class EntitySetInvocationHandler<
         final TransactionItems items = new TransactionItems();
         final List<EntityLinkDesc> delayedUpdates = new ArrayList<EntityLinkDesc>();
 
-        int pos = 1;
+        int pos = 0;
 
         for (AttachedEntity attachedEntity : EntityContainerFactory.getContext().entityContext()) {
             final AttachedEntityStatus status = attachedEntity.getStatus();
-            if (status != AttachedEntityStatus.ATTACHED
-                    && status != AttachedEntityStatus.LINKED
+            if (((status != AttachedEntityStatus.ATTACHED
+                    && status != AttachedEntityStatus.LINKED) || attachedEntity.getEntity().isChanged())
                     && !items.contains(attachedEntity.getEntity())) {
-                pos += processEntityContext(attachedEntity.getEntity(), pos, items, delayedUpdates, changeset);
+                pos++;
+                pos = processEntityContext(attachedEntity.getEntity(), pos, items, delayedUpdates, changeset);
             }
         }
 
-        int lastPos = items.size();
         for (EntityLinkDesc delayedUpdate : delayedUpdates) {
-            lastPos++;
-            items.put(delayedUpdate.getSource(), lastPos);
+            pos++;
+            items.put(delayedUpdate.getSource(), pos);
 
             final ODataEntity changes = ODataFactory.newEntity(delayedUpdate.getSource().getEntity().getName());
 
@@ -414,32 +414,34 @@ class EntitySetInvocationHandler<
 
         final Iterator<ODataBatchResponseItem> iter = response.getBody();
 
-        if (!iter.hasNext()) {
-            throw new IllegalStateException("Unexpected operation");
-        }
-
-        final ODataBatchResponseItem item = iter.next();
-        if (!(item instanceof ODataChangesetResponseItem)) {
-            throw new IllegalStateException("Unexpected batch response item " + item.getClass().getSimpleName());
-        }
-
-        final ODataChangesetResponseItem chgres = (ODataChangesetResponseItem) item;
-
-        for (Integer changesetItemId : items.sortedValues()) {
-            LOG.debug("Expected changeset item {}", changesetItemId);
-            final ODataResponse res = chgres.next();
-            if (res.getStatusCode() >= 400) {
-                throw new IllegalStateException("Transaction failed: " + res.getStatusMessage());
+        if (!items.isEmpty()) {
+            if (!iter.hasNext()) {
+                throw new IllegalStateException("Unexpected operation result");
             }
 
-            final EntityTypeInvocationHandler handler = items.get(changesetItemId);
+            final ODataBatchResponseItem item = iter.next();
+            if (!(item instanceof ODataChangesetResponseItem)) {
+                throw new IllegalStateException("Unexpected batch response item " + item.getClass().getSimpleName());
+            }
 
-            if (res instanceof ODataEntityCreateResponse) {
-                LOG.debug("Upgrade created object '{}'", handler);
-                handler.setEntity(((ODataEntityCreateResponse) res).getBody());
-            } else if (res instanceof ODataEntityUpdateResponse) {
-                LOG.debug("Upgrade updated object '{}'", handler);
-                handler.setEntity(((ODataEntityUpdateResponse) res).getBody());
+            final ODataChangesetResponseItem chgres = (ODataChangesetResponseItem) item;
+
+            for (Integer changesetItemId : items.sortedValues()) {
+                LOG.debug("Expected changeset item {}", changesetItemId);
+                final ODataResponse res = chgres.next();
+                if (res.getStatusCode() >= 400) {
+                    throw new IllegalStateException("Transaction failed: " + res.getStatusMessage());
+                }
+
+                final EntityTypeInvocationHandler handler = items.get(changesetItemId);
+
+                if (res instanceof ODataEntityCreateResponse) {
+                    LOG.debug("Upgrade created object '{}'", handler);
+                    handler.setEntity(((ODataEntityCreateResponse) res).getBody());
+                } else if (res instanceof ODataEntityUpdateResponse) {
+                    LOG.debug("Upgrade updated object '{}'", handler);
+                    handler.setEntity(((ODataEntityUpdateResponse) res).getBody());
+                }
             }
         }
 
@@ -461,7 +463,7 @@ class EntitySetInvocationHandler<
     private void batchUpdate(final ODataEntity changes, final ODataChangeset changeset) {
         LOG.debug("Update '{}'", changes.getEditLink());
         final ODataEntityUpdateRequest req =
-                ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.REPLACE, changes);
+                ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.PATCH, changes);
         req.setPrefer(ODataHeaderValues.preferReturnContent);
         changeset.addRequest(req);
     }
@@ -494,7 +496,12 @@ class EntitySetInvocationHandler<
         items.put(handler, null);
 
         final ODataEntity entity = SerializationUtils.clone(handler.getEntity());
-        EngineUtils.addProperties(factory.getMetadata(), handler.getPropertyChanges(), entity);
+        entity.getNavigationLinks().clear();
+
+        if (AttachedEntityStatus.DELETED != EntityContainerFactory.getContext().entityContext().getStatus(handler)) {
+            entity.getProperties().clear();
+            EngineUtils.addProperties(factory.getMetadata(), handler.getPropertyChanges(), entity);
+        }
 
         for (Map.Entry<NavigationProperty, Object> property : handler.getLinkChanges().entrySet()) {
             final ODataLinkType type = Collection.class.isAssignableFrom(property.getValue().getClass())
@@ -520,7 +527,8 @@ class EntitySetInvocationHandler<
 
                 final URI editLink = target.getEntity().getEditLink();
 
-                if (status == AttachedEntityStatus.ATTACHED || status == AttachedEntityStatus.LINKED) {
+                if ((status == AttachedEntityStatus.ATTACHED || status == AttachedEntityStatus.LINKED)
+                        && !target.isChanged()) {
                     entity.addLink(buildNavigationLink(
                             property.getKey().name(),
                             URIUtils.getURI(serviceRoot, editLink.toASCIIString()), type));
@@ -597,7 +605,9 @@ class EntitySetInvocationHandler<
                 break;
 
             default:
-            // ignore
+                if (handler.isChanged()) {
+                    batchUpdate(entity, changeset);
+                }
         }
     }
 
@@ -651,6 +661,10 @@ class EntitySetInvocationHandler<
 
         public int size() {
             return keys.size();
+        }
+
+        public boolean isEmpty() {
+            return keys.isEmpty();
         }
     }
 }
