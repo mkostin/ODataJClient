@@ -15,13 +15,11 @@
  */
 package com.msopentech.odatajclient.proxy;
 
-import static com.msopentech.odatajclient.proxy.AbstractTest.getDefaultContainer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
@@ -40,7 +38,6 @@ public class EntityCreateTestITCase extends AbstractTest {
         final String sampleName = "sample customer from proxy";
         final Integer id = 100;
 
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         getSampleCustomerProfile(id, sampleName, container);
         container.getCustomer().flush();
 
@@ -71,7 +68,6 @@ public class EntityCreateTestITCase extends AbstractTest {
         final String sampleName = "sample customer from proxy with navigation";
         final Integer id = 101;
 
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         final Customer original = getSampleCustomerProfile(id, sampleName, container);
         original.setInfo(container.getCustomerInfo().get(16));
         container.getCustomer().flush();
@@ -89,7 +85,6 @@ public class EntityCreateTestITCase extends AbstractTest {
 
     @Test
     public void createWithBackNavigation() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         final String sampleName = "sample customer from proxy with back navigation";
         final Integer id = 102;
 
@@ -138,7 +133,6 @@ public class EntityCreateTestITCase extends AbstractTest {
 
     @Test
     public void multiKey() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         Message message = container.getMessage().newEntity();
         message.setMessageId(100);
         message.setFromUsername("fromusername");

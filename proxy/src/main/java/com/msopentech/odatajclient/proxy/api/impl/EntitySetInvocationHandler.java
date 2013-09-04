@@ -16,7 +16,6 @@
 package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntity;
-import com.msopentech.odatajclient.proxy.utils.MetadataUtils;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
@@ -54,7 +53,8 @@ import com.msopentech.odatajclient.proxy.api.context.EntityLinkDesc;
 import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
 import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
-import com.msopentech.odatajclient.proxy.utils.ODataItemUtils;
+import com.msopentech.odatajclient.proxy.utils.ClassUtils;
+import com.msopentech.odatajclient.proxy.utils.EngineUtils;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -182,7 +182,7 @@ class EntitySetInvocationHandler<
     @SuppressWarnings("unchecked")
     public T newEntity() {
         final ODataEntity entity =
-                ODataFactory.newEntity(container.getSchemaName() + "." + MetadataUtils.getEntityTypeName(typeRef));
+                ODataFactory.newEntity(container.getSchemaName() + "." + ClassUtils.getEntityTypeName(typeRef));
 
         final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
         EntityContainerFactory.getContext().entityContext().attachNew(handler);
@@ -253,10 +253,10 @@ class EntitySetInvocationHandler<
         }
 
         final EntityUUID uuid = new EntityUUID(
-                MetadataUtils.getNamespace(typeRef),
+                ClassUtils.getNamespace(typeRef),
                 container.getEntityContainerName(),
                 entitySetName,
-                MetadataUtils.getNamespace(typeRef) + "." + MetadataUtils.getEntityTypeName(typeRef),
+                ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef),
                 key);
 
         EntityTypeInvocationHandler handler =
@@ -328,10 +328,10 @@ class EntitySetInvocationHandler<
         final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
 
         EntityTypeInvocationHandler entity = entityContext.getEntity(new EntityUUID(
-                MetadataUtils.getNamespace(typeRef),
+                ClassUtils.getNamespace(typeRef),
                 container.getEntityContainerName(),
                 entitySetName,
-                MetadataUtils.getEntityTypeName(typeRef),
+                ClassUtils.getEntityTypeName(typeRef),
                 key));
 
         if (entity == null) {
@@ -494,14 +494,14 @@ class EntitySetInvocationHandler<
         items.put(handler, null);
 
         final ODataEntity entity = SerializationUtils.clone(handler.getEntity());
-        ODataItemUtils.addProperties(factory.getMetadata(), handler.getPropertyChanges(), entity);
+        EngineUtils.addProperties(factory.getMetadata(), handler.getPropertyChanges(), entity);
 
         for (Map.Entry<NavigationProperty, Object> property : handler.getLinkChanges().entrySet()) {
             final ODataLinkType type = Collection.class.isAssignableFrom(property.getValue().getClass())
                     ? ODataLinkType.ENTITY_SET_NAVIGATION
                     : ODataLinkType.ENTITY_NAVIGATION;
 
-            final ODataLink link = MetadataUtils.getNavigationLink(property.getKey().name(), entity);
+            final ODataLink link = EngineUtils.getNavigationLink(property.getKey().name(), entity);
             if (link != null) {
                 entity.removeLink(link);
             }

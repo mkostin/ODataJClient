@@ -64,6 +64,8 @@ public abstract class AbstractTest {
 
     protected final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
 
+    protected static DefaultContainer container;
+
     @BeforeClass
     public static void setUpODataServiceRoot() throws IOException {
         String testBaseURL = null;
@@ -91,20 +93,17 @@ public abstract class AbstractTest {
         testOpenTypesServiceRootURL = testBaseURL + "/OpenTypesService.svc";
         testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeysService.svc";
         testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
-    }
 
-    protected static DefaultContainer getDefaultContainer(final String serviceRootURL) {
-        final DefaultContainer container = EntityContainerFactory.newInstance(serviceRootURL)
-                .getEntityContainer(DefaultContainer.class);
+        container = EntityContainerFactory.newInstance(testDefaultServiceRootURL).
+                getEntityContainer(DefaultContainer.class);
         assertNotNull(container);
-
-        return container;
     }
 
     protected Customer getSampleCustomerProfile(
             final Integer id,
             final String sampleName,
             final DefaultContainer container) {
+
         final Customer customer = container.getCustomer().newEntity();
 
         // add name attribute

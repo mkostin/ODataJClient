@@ -15,10 +15,10 @@
  */
 package com.msopentech.odatajclient.proxy;
 
-import static com.msopentech.odatajclient.proxy.AbstractTest.testDefaultServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.msopentech.odatajclient.engine.data.ODataTimestamp;
@@ -26,7 +26,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatia
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial.Type;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiLineString;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialTypes;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo;
@@ -46,13 +45,18 @@ import org.junit.Test;
 public class EntityRetrieveTestITCase extends AbstractTest {
 
     @Test
+    public void exists() {
+        assertTrue(container.getPerson().exists(-10));
+        assertFalse(container.getPerson().exists(-11));
+    }
+
+    @Test
     public void read() {
-        readCustomer(getDefaultContainer(testDefaultServiceRootURL), -10);
+        readCustomer(container, -10);
     }
 
     @Test
     public void navigate() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         final Order order = container.getOrder().get(-9);
         assertNotNull(order);
         assertEquals(Integer.valueOf(-9), order.getOrderId());
@@ -65,7 +69,6 @@ public class EntityRetrieveTestITCase extends AbstractTest {
 
     @Test
     public void withGeospatial() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         final AllSpatialTypes allSpatialTypes = container.getAllGeoTypesSet().get(-10);
         assertNotNull(allSpatialTypes);
         assertEquals(Integer.valueOf(-10), allSpatialTypes.getId());
@@ -87,23 +90,23 @@ public class EntityRetrieveTestITCase extends AbstractTest {
     // TODO: test for lazy and eager
     @Test
     public void withInlineEntry() {
-        final Customer customer = readCustomer(getDefaultContainer(testDefaultServiceRootURL), -10);
+        final Customer customer = readCustomer(container, -10);
         final CustomerInfo customerInfo = customer.getInfo();
         assertNotNull(customerInfo);
         assertEquals(Integer.valueOf(11), customerInfo.getCustomerInfoId());
     }
 
     // TODO: test for lazy and eager
-    @Test @Ignore
+    @Test
+    @Ignore
     public void withInlineFeed() {
-        final Customer customer = readCustomer(getDefaultContainer(testDefaultServiceRootURL), -10);
+        final Customer customer = readCustomer(container, -10);
         final OrderCollection orders = customer.getOrders();
         assertFalse(orders.isEmpty());
     }
 
     @Test
     public void withActions() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         final ComputerDetail computerDetail = container.getComputerDetail().get(-10);
         assertEquals(Integer.valueOf(-10), computerDetail.getComputerDetailId());
 
@@ -117,7 +120,6 @@ public class EntityRetrieveTestITCase extends AbstractTest {
 
     @Test
     public void multiKey() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         final MessageKey messageKey = new MessageKey();
         messageKey.setFromUsername("1");
         messageKey.setMessageId(-10);

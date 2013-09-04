@@ -15,12 +15,29 @@
  */
 package com.msopentech.odatajclient.proxy.utils;
 
+import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataProperty;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
+import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
+import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
+import com.msopentech.odatajclient.proxy.api.annotations.Key;
+import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
+import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class ClassUtils {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ClassUtils.class);
 
     private ClassUtils() {
         // Empty private constructor for static utility classes
@@ -46,5 +63,114 @@ public final class ClassUtils {
     public static <ANN extends Annotation> ANN getAnnotation(final Class<ANN> reference, final AccessibleObject obj) {
         final Annotation ann = obj.getAnnotation(reference);
         return ann == null ? null : (ANN) ann;
+    }
+
+    private static String firstValidEntityKey(final Class<?> entityTypeRef) {
+        for (Method method : entityTypeRef.getDeclaredMethods()) {
+            if (method.getAnnotation(Key.class) != null) {
+                final Annotation ann = method.getAnnotation(Property.class);
+                if (ann != null) {
+                    return ((Property) ann).name();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Class<?> getCompoundKeyRef(final Class<?> entityTypeRef) {
+        if (entityTypeRef.getAnnotation(EntityType.class) == null) {
+            throw new IllegalArgumentException("Invalid annotation for entity type " + entityTypeRef);
+        }
+
+        final Annotation ann = entityTypeRef.getAnnotation(KeyRef.class);
+
+        return ann == null || ((KeyRef) ann).value().getAnnotation(CompoundKey.class) == null
+                ? null
+                : ((KeyRef) ann).value();
+    }
+
+    private static <T> T populateCompoundKey(final Class<T> compoundKeyRef, final ODataEntity entity) {
+        try {
+            final T res = compoundKeyRef.newInstance();
+
+            for (Method method : compoundKeyRef.getClass().getDeclaredMethods()) {
+                final Annotation ann = method.getAnnotation(CompoundKeyElement.class);
+                if (ann != null) {
+                    try {
+                        compoundKeyRef.getClass().getDeclaredMethod(
+                                method.getName().replaceFirst("get", "set"), method.getReturnType()).invoke(
+                                res,
+                                entity.getProperty(((CompoundKeyElement) ann).name()));
+                    } catch (Exception e) {
+                        LOG.error("Error populating key element {}", ((CompoundKeyElement) ann).name(), e);
+                    }
+                }
+            }
+            return res;
+        } catch (Exception e) {
+            LOG.error("Error population compound key {}", compoundKeyRef.getSimpleName());
+            throw new IllegalArgumentException("Cannot populate compound key");
+        }
+    }
+
+    public static Object getKey(final Class<?> entityTypeRef, final ODataEntity entity) {
+        final Object res;
+
+        if (entity.getProperties().isEmpty()) {
+            res = null;
+        } else {
+            final Class<?> keyRef = getCompoundKeyRef(entityTypeRef);
+            if (keyRef == null) {
+                final ODataProperty property = entity.getProperty(firstValidEntityKey(entityTypeRef));
+                res = property == null || !property.hasPrimitiveValue()
+                        ? null
+                        : property.getPrimitiveValue().toValue();
+
+            } else {
+                res = populateCompoundKey(keyRef, entity);
+            }
+        }
+
+        return res;
+    }
+
+    public static Class<?> getKeyRef(final Class<?> entityTypeRef) {
+        Class<?> res = getCompoundKeyRef(entityTypeRef);
+
+        if (res == null) {
+            final Set<Method> keyGetters = new HashSet<Method>();
+
+            for (Method method : entityTypeRef.getDeclaredMethods()) {
+                if (method.getName().startsWith("get") && method.getAnnotation(Key.class) != null) {
+                    keyGetters.add(method);
+                }
+            }
+
+            if (keyGetters.size() == 1) {
+                res = keyGetters.iterator().next().getReturnType();
+            } else {
+                throw new IllegalStateException(entityTypeRef.getSimpleName() + "'s key reference not found");
+            }
+        }
+
+        return res;
+    }
+
+    public static String getEntityTypeName(final Class<?> ref) {
+        final Annotation annotation = ref.getAnnotation(EntityType.class);
+        if (!(annotation instanceof EntityType)) {
+            throw new IllegalArgumentException(ref.getPackage().getName()
+                    + " is not annotated as @" + EntityType.class.getSimpleName());
+        }
+        return ((EntityType) annotation).name();
+    }
+
+    public static String getNamespace(final Class<?> ref) {
+        final Annotation annotation = ref.getPackage().getAnnotation(Namespace.class);
+        if (!(annotation instanceof Namespace)) {
+            throw new IllegalArgumentException(ref.getPackage().getName()
+                    + " is not annotated as @" + Namespace.class.getSimpleName());
+        }
+        return ((Namespace) annotation).value();
     }
 }

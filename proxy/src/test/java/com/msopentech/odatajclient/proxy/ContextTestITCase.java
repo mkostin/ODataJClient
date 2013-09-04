@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy;
 
-import static com.msopentech.odatajclient.proxy.AbstractTest.testDefaultServiceRootURL;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -27,7 +26,6 @@ import static org.junit.Assert.assertNull;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo;
@@ -42,20 +40,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * This is the unit test class to check entity retrieve operations.
  */
 public class ContextTestITCase extends AbstractTest {
-
-    private static DefaultContainer container;
-
-    @BeforeClass
-    public static void init() {
-        container = getDefaultContainer(testDefaultServiceRootURL);
-    }
 
     @Test
     public void attachDetachNewEntity() {

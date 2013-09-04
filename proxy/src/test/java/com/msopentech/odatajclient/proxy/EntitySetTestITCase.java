@@ -20,7 +20,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Message;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Car;
 import java.io.IOException;
@@ -34,7 +33,6 @@ public class EntitySetTestITCase extends AbstractTest {
 
     @Test
     public void count() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         final Message message = container.getMessage();
 
         assertNotNull(message);
@@ -49,8 +47,6 @@ public class EntitySetTestITCase extends AbstractTest {
 
     @Test
     public void readEntitySetWithNextLink() {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
-
         final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
                 container.getCustomer();
 
@@ -69,7 +65,6 @@ public class EntitySetTestITCase extends AbstractTest {
 
     @Test
     public void readODataEntitySet() throws IOException {
-        final DefaultContainer container = getDefaultContainer(testDefaultServiceRootURL);
         // TODO: add top(2).skip(4) feature.
         final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Car cars =
                 container.getCar();

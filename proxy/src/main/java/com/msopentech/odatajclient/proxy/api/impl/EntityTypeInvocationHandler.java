@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
-import com.msopentech.odatajclient.proxy.utils.MetadataUtils;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
@@ -39,7 +38,7 @@ import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
-import com.msopentech.odatajclient.proxy.utils.ODataItemUtils;
+import com.msopentech.odatajclient.proxy.utils.EngineUtils;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -107,11 +106,11 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         this.typeRef = typeRef;
 
         this.uuid = new EntityUUID(
-                MetadataUtils.getNamespace(typeRef),
+                ClassUtils.getNamespace(typeRef),
                 entityContainerName,
                 entitySetName,
                 entity.getName(),
-                MetadataUtils.getKey(typeRef, entity));
+                ClassUtils.getKey(typeRef, entity));
     }
 
     public void setEntity(final ODataEntity entity) {
@@ -122,7 +121,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 getUUID().getContainerName(),
                 getUUID().getEntitySetName(),
                 getUUID().getName(),
-                MetadataUtils.getKey(typeRef, entity));
+                ClassUtils.getKey(typeRef, entity));
 
         this.propertyChanges.clear();
         this.linkChanges.clear();
@@ -266,24 +265,24 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         }
 
         final EdmMetadata metadata = factory.getMetadata();
-        final Schema schema = metadata.getSchema(MetadataUtils.getNamespace(typeRef));
+        final Schema schema = metadata.getSchema(ClassUtils.getNamespace(typeRef));
 
         // 1) get association
-        final Association association = MetadataUtils.getAssociation(schema, property.relationship());
+        final Association association = EngineUtils.getAssociation(schema, property.relationship());
 
         // 2) get entity container and association set
         final Map.Entry<EntityContainer, AssociationSet> associationSet =
-                MetadataUtils.getAssociationSet(association, schema.getNamespace(), metadata);
+                EngineUtils.getAssociationSet(association, schema.getNamespace(), metadata);
 
         // 3) get entitySet
-        final String targetEntitySetName = MetadataUtils.getEntitySetName(associationSet.getValue(), property.toRole());
+        final String targetEntitySetName = EngineUtils.getEntitySetName(associationSet.getValue(), property.toRole());
 
         final Object navPropValue;
 
         if (linkChanges.containsKey(property)) {
             navPropValue = linkChanges.get(property);
         } else {
-            final ODataLink link = MetadataUtils.getNavigationLink(property.name(), entity);
+            final ODataLink link = EngineUtils.getNavigationLink(property.name(), entity);
             if (link instanceof ODataInlineEntity) {
                 // return entity
                 navPropValue = getEntityProxy(
@@ -357,7 +356,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 }
                 if (odataValue.isComplex()) {
                     final Object collItem = collItemClass.newInstance();
-                    ODataItemUtils.populate(factory.getMetadata(), collItem, odataValue.asComplex().iterator());
+                    EngineUtils.populate(factory.getMetadata(), collItem, odataValue.asComplex().iterator());
                     ((Collection) value).add(collItem);
                 }
             }
@@ -365,7 +364,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             value = property.getPrimitiveValue().toValue();
         } else if (property.hasComplexValue()) {
             value = ((Class<?>) type).newInstance();
-            ODataItemUtils.populate(factory.getMetadata(), value, property.getComplexValue().iterator());
+            EngineUtils.populate(factory.getMetadata(), value, property.getComplexValue().iterator());
         } else {
             throw new IllegalArgumentException("Invalid property " + property);
         }

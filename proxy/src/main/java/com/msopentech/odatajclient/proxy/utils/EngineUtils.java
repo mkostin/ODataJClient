@@ -19,33 +19,115 @@ import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
+import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class ODataItemUtils {
+public final class EngineUtils {
 
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(MetadataUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EngineUtils.class);
 
-    private ODataItemUtils() {
+    private EngineUtils() {
         // Empty private constructor for static utility classes
+    }
+
+    public static Map.Entry<EntityContainer, EntityContainer.AssociationSet> getAssociationSet(
+            final Association association, final String associationNamespace, final EdmMetadata metadata) {
+
+        final StringBuilder associationName = new StringBuilder();
+        associationName.append(associationNamespace).append('.').append(association.getName());
+
+        for (Schema schema : metadata.getSchemas()) {
+            for (EntityContainer container : schema.getEntityContainers()) {
+                final EntityContainer.AssociationSet associationSet = getAssociationSet(associationName.toString(),
+                        container);
+                if (associationSet != null) {
+                    return new AbstractMap.SimpleEntry<EntityContainer, EntityContainer.AssociationSet>(container,
+                            associationSet);
+                }
+            }
+        }
+
+        throw new IllegalStateException("Association set not found");
+    }
+
+    public static Association getAssociation(final Schema schema, final String relationship) {
+        return schema.getAssociation(relationship.substring(relationship.lastIndexOf('.') + 1));
+    }
+
+    public static EntityContainer.AssociationSet getAssociationSet(final String association,
+            final EntityContainer container) {
+        LOG.debug("Search for association set {}", association);
+
+        for (EntityContainer.AssociationSet associationSet : container.getAssociationSets()) {
+            LOG.debug("Retrieved association set '{}:{}'", associationSet.getName(), associationSet.getAssociation());
+            if (associationSet.getAssociation().equals(association)) {
+                return associationSet;
+            }
+        }
+
+        return null;
+    }
+
+    public static String getEntitySetName(final EntityContainer.AssociationSet associationSet, final String role) {
+        for (EntityContainer.AssociationSet.End end : associationSet.getEnd()) {
+            if (end.getRole().equals(role)) {
+                return end.getEntitySet();
+            }
+        }
+        return null;
+    }
+
+    public static NavigationProperty getNavigationProperty(final Class<?> entityTypeRef, final String relationship) {
+        NavigationProperty res = null;
+        final Method[] methods = entityTypeRef.getClass().getDeclaredMethods();
+
+        for (int i = 0; i < methods.length && res == null; i++) {
+            final Annotation ann = methods[i].getAnnotation(NavigationProperty.class);
+            if ((ann instanceof NavigationProperty)
+                    && ((NavigationProperty) ann).relationship().equalsIgnoreCase(relationship)) {
+                res = (NavigationProperty) ann;
+            }
+        }
+
+        return res;
+    }
+
+    public static ODataLink getNavigationLink(final String name, final ODataEntity entity) {
+        ODataLink res = null;
+        final List<ODataLink> links = entity.getNavigationLinks();
+
+        for (int i = 0; i < links.size() && res == null; i++) {
+            if (links.get(i).getName().equalsIgnoreCase(name)) {
+                res = links.get(i);
+            }
+        }
+        return res;
     }
 
     private static ODataValue getODataValue(final EdmMetadata metadata, final Object obj, final EdmType type) {
