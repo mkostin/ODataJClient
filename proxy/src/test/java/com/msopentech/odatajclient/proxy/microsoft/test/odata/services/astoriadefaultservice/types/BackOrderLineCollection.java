@@ -27,5 +27,5 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-public interface BackOrderLineCollection extends AbstractEntityCollection<BackOrderLine> {
+public interface BackOrderLineCollection extends OrderLineCollection {
 }

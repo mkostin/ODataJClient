@@ -27,5 +27,5 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-public interface AllSpatialCollectionTypes_SimpleCollection extends AbstractEntityCollection<AllSpatialCollectionTypes_Simple> {
+public interface AllSpatialCollectionTypes_SimpleCollection extends AllSpatialCollectionTypesCollection {
 }

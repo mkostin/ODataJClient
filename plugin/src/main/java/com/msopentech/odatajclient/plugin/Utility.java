@@ -221,6 +221,10 @@ public class Utility {
         return new AbstractMap.SimpleEntry<String, Action>(associationRole, Action.NONE);
     }
 
+    public final String getNameInNamespace(final String name) {
+        return schema.getNamespace() + "." + name;
+    }
+
     public final String getNameFromNS(final String ns) {
         return getNameFromNS(ns, false);
     }
@@ -237,7 +241,7 @@ public class Utility {
         final Set<String> types = new HashSet<String>(2);
 
         types.add((collection ? "Collection(" : StringUtils.EMPTY)
-                + schema.getNamespace() + "." + entityTypeExpression
+                + getNameInNamespace(entityTypeExpression)
                 + (collection ? ")" : StringUtils.EMPTY));
         if (StringUtils.isNotBlank(schema.getAlias())) {
             types.add((collection ? "Collection(" : StringUtils.EMPTY)
@@ -246,6 +250,27 @@ public class Utility {
         }
 
         return types.contains(fullTypeExpression);
+    }
+
+    private void populateDescendants(final EntityType base, final List<String> descendants) {
+        for (EntityType type : schema.getEntityTypes()) {
+            if (StringUtils.isNotBlank(type.getBaseType())
+                    && base.getName().equals(getNameFromNS(type.getBaseType()))) {
+
+                descendants.add(getNameInNamespace(type.getName()));
+                populateDescendants(type, descendants);
+            }
+        }
+
+    }
+
+    public List<String> getDescendantsOrSelf(final EntityType base) {
+        final List<String> descendants = new ArrayList<String>();
+
+        descendants.add(getNameInNamespace(base.getName()));
+        populateDescendants(base, descendants);
+
+        return descendants;
     }
 
     public List<EntityContainer.FunctionImport> getFunctionImportsBoundTo(

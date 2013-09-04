@@ -27,5 +27,5 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-public interface ProductPageViewCollection extends AbstractEntityCollection<ProductPageView> {
+public interface ProductPageViewCollection extends PageViewCollection {
 }

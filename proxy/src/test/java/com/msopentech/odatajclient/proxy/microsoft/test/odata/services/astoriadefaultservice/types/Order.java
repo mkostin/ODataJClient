@@ -124,17 +124,6 @@ public interface Order extends Serializable {
 
     
 
-    @NavigationProperty(name = "Login", 
-                relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Order_Login", 
-                fromRole = "Order", 
-                toRole = "Login",
-                containsTarget = false,
-                onDelete = Action.NONE)
-    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login getLogin();
-
-    public void setLogin(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login _login);
-
-
     @NavigationProperty(name = "Customer", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Order_Customer", 
                 fromRole = "Order", 
@@ -144,6 +133,17 @@ public interface Order extends Serializable {
     public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer getCustomer();
 
     public void setCustomer(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer _customer);
+
+
+    @NavigationProperty(name = "Login", 
+                relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Order_Login", 
+                fromRole = "Order", 
+                toRole = "Login",
+                containsTarget = false,
+                onDelete = Action.NONE)
+    public com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login getLogin();
+
+    public void setLogin(final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login _login);
 
 
 }

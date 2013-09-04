@@ -49,8 +49,8 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void attachDetachNewEntity() {
-        final Customer customer1 = container.getCustomer().newEntity();
-        final Customer customer2 = container.getCustomer().newEntity();
+        final Customer customer1 = container.getCustomer().newCustomer();
+        final Customer customer2 = container.getCustomer().newCustomer();
 
         final EntityTypeInvocationHandler source1 =
                 (EntityTypeInvocationHandler) Proxy.getInvocationHandler(customer1);
@@ -116,7 +116,7 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void linkTargetExisting() {
-        final Customer customer = container.getCustomer().newEntity();
+        final Customer customer = container.getCustomer().newCustomer();
         final CustomerInfo customerInfo = container.getCustomerInfo().get(11);
 
         customer.setInfo(customerInfo);
@@ -144,7 +144,7 @@ public class ContextTestITCase extends AbstractTest {
     @Test
     public void linkSourceExisting() {
         final Customer customer = container.getCustomer().get(-10);;
-        final CustomerInfo customerInfo = container.getCustomerInfo().newEntity();
+        final CustomerInfo customerInfo = container.getCustomerInfo().newCustomerInfo();
 
         customer.setInfo(customerInfo);
 
@@ -197,12 +197,12 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void linkEntitySet() {;
-        final Customer customer = container.getCustomer().newEntity();
+        final Customer customer = container.getCustomer().newCustomer();
 
-        final OrderCollection toBeLinked = container.getOrder().newEntityCollection();
-        toBeLinked.add(container.getOrder().newEntity());
-        toBeLinked.add(container.getOrder().newEntity());
-        toBeLinked.add(container.getOrder().newEntity());
+        final OrderCollection toBeLinked = container.getOrder().newOrderCollection();
+        toBeLinked.add(container.getOrder().newOrder());
+        toBeLinked.add(container.getOrder().newOrder());
+        toBeLinked.add(container.getOrder().newOrder());
 
         customer.setOrders(toBeLinked);
         assertNotNull(customer.getOrders());
@@ -235,7 +235,7 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void addProperty() {
-        final Customer customer = container.getCustomer().newEntity();
+        final Customer customer = container.getCustomer().newCustomer();
         customer.setCustomerId(100);
 
         final ContactDetails cd = new ContactDetails();
@@ -310,7 +310,7 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void checkContextInCaseOfErrors() {
-        final Login login = container.getLogin().newEntity();
+        final Login login = container.getLogin().newLogin();
 
         final EntityTypeInvocationHandler handler = (EntityTypeInvocationHandler) Proxy.getInvocationHandler(login);
 
@@ -342,7 +342,7 @@ public class ContextTestITCase extends AbstractTest {
 
     @Test
     public void flushTest() {
-        Customer customer = container.getCustomer().newEntity();
+        Customer customer = container.getCustomer().newCustomer();
         customer.setCustomerId(300);
         customer.setName("samplename");
 
@@ -351,9 +351,9 @@ public class ContextTestITCase extends AbstractTest {
         keys.add(-201);
         keys.add(-202);
 
-        final OrderCollection toBeLinked = container.getOrder().newEntityCollection();
+        final OrderCollection toBeLinked = container.getOrder().newOrderCollection();
         for (Integer key : keys) {
-            final Order order = container.getOrder().newEntity();
+            final Order order = container.getOrder().newOrder();
             order.setOrderId(key);
             order.setCustomerId(300);
             order.setCustomer(customer);
