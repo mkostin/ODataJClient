@@ -24,6 +24,7 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Product;
 import org.junit.Test;
 
 /**
@@ -93,5 +94,17 @@ public class EntityUpdateTestITCase extends AbstractTest {
         }
         assertEquals(1, count);
         assertEquals(-9, order.getCustomer().getCustomerId().intValue());
+    }
+
+    @Test
+    public void concurrentModification() {
+        Product product = container.getProduct().get(-10);
+        final String baseConcurrency = String.valueOf(System.currentTimeMillis());
+        product.setBaseConcurrency(baseConcurrency);
+
+        container.flush();
+
+        product = container.getProduct().get(-10);
+        assertEquals(baseConcurrency, product.getBaseConcurrency());
     }
 }

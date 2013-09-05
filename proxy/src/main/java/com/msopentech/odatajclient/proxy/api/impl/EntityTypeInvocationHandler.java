@@ -72,6 +72,8 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private int linksTag;
 
+    private String eTag;
+
     static EntityTypeInvocationHandler getInstance(
             final ODataEntity entity,
             final EntitySetInvocationHandler entitySet) {
@@ -114,6 +116,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
         this.propertiesTag = 0;
         this.linksTag = 0;
+        this.eTag = null;
     }
 
     public void setEntity(final ODataEntity entity) {
@@ -128,6 +131,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
         this.propertyChanges.clear();
         this.linkChanges.clear();
+        this.propertiesTag = 0;
+        this.linksTag = 0;
+        this.eTag = null;
     }
 
     public EntityUUID getUUID() {
@@ -160,6 +166,14 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     public Map<NavigationProperty, Object> getLinkChanges() {
         return linkChanges;
+    }
+
+    public String getETag() {
+        return eTag;
+    }
+
+    public void setETag(final String eTag) {
+        this.eTag = eTag;
     }
 
     @Override

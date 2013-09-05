@@ -17,6 +17,7 @@ package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
@@ -265,8 +266,11 @@ class EntitySetInvocationHandler<
                     uriBuilder.appendKeySegment(getCompoundKey(key));
                 }
 
-                handler = EntityTypeInvocationHandler.getInstance(
-                        ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute().getBody(), this);
+                final ODataRetrieveResponse<ODataEntity> res =
+                        ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute();
+
+                handler = EntityTypeInvocationHandler.getInstance(res.getBody(), this);
+                handler.setETag(res.getEtag());
 
             } catch (Exception e) {
                 LOG.info("Entity '" + uuid + "' not found", e);
@@ -284,10 +288,12 @@ class EntitySetInvocationHandler<
 
     @SuppressWarnings("unchecked")
     private <SEC extends EC, S extends T> SEC getAll(final Class<SEC> typeCollectionRef, final Class<S> typeRef) {
-        final ODataEntitySet entitySet = ODataRetrieveRequestFactory.getEntitySetRequest(
+        final ODataRetrieveResponse<ODataEntitySet> res = ODataRetrieveRequestFactory.getEntitySetRequest(
                 new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
                 ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).
-                build()).execute().getBody();
+                build()).execute();
+
+        final ODataEntitySet entitySet = res.getBody();
 
         final List<S> items = new ArrayList<S>(entitySet.getEntities().size());
         for (ODataEntity entity : entitySet.getEntities()) {
