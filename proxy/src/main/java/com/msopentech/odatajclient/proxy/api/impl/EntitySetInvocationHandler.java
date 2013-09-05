@@ -166,7 +166,7 @@ class EntitySetInvocationHandler<
                     ((ParameterizedType) entityCollectionClass.getGenericInterfaces()[0]).getActualTypeArguments();
             return getAll((Class<T>) entityCollectionParams[0], (Class<EC>) method.getReturnType());
         } else {
-            throw new UnsupportedOperationException("Not supported yet.");
+            throw new UnsupportedOperationException("Method not found: " + method);
         }
     }
 
@@ -190,7 +190,8 @@ class EntitySetInvocationHandler<
         return (NEC) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {reference},
-                new EntityCollectionInvocationHandler<T>(new ArrayList<T>(), factory));
+                new EntityCollectionInvocationHandler<T>(
+                factory, new ArrayList<T>(), typeRef, container.getEntityContainerName()));
     }
 
     @Override
@@ -274,9 +275,8 @@ class EntitySetInvocationHandler<
                 final ODataRetrieveResponse<ODataEntity> res =
                         ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute();
 
-                handler = EntityTypeInvocationHandler.getInstance(res.getBody(), this);
+                handler = EntityTypeInvocationHandler.getInstance(res.getBody(), this, typeRef);
                 handler.setETag(res.getEtag());
-
             } catch (Exception e) {
                 LOG.info("Entity '" + uuid + "' not found", e);
             }
@@ -292,29 +292,7 @@ class EntitySetInvocationHandler<
     }
 
     @SuppressWarnings("unchecked")
-    private <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(
-            final Class<S> typeRef, final Class<SEC> typeCollectionRef) {
-
-        final List<S> items = new ArrayList<S>();
-
-        URI uri = new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
-                ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).build();
-
-        while (uri != null) {
-            final Map.Entry<List<S>, URI> entitySet = getEntitySet(uri);
-            uri = entitySet.getValue();
-            items.addAll(entitySet.getKey());
-        }
-
-        return (SEC) Proxy.newProxyInstance(
-                Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {typeCollectionRef},
-                new EntityCollectionInvocationHandler<S>(items, container.factory));
-    }
-
-    @SuppressWarnings("unchecked")
-    private <S extends T> Map.Entry<List<S>, URI> getEntitySet(final URI uri) {
-
+    private <S extends T> Map.Entry<List<S>, URI> fetchEntitySet(final URI uri, final Class<S> typeRef) {
         final ODataRetrieveResponse<ODataEntitySet> res =
                 ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute();
 
@@ -322,7 +300,7 @@ class EntitySetInvocationHandler<
 
         final List<S> items = new ArrayList<S>(entitySet.getEntities().size());
         for (ODataEntity entity : entitySet.getEntities()) {
-            final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this);
+            final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(entity, this, typeRef);
 
             final EntityTypeInvocationHandler handlerInTheContext =
                     EntityContainerFactory.getContext().entityContext().getEntity(handler.getUUID());
@@ -334,6 +312,28 @@ class EntitySetInvocationHandler<
         }
 
         return new AbstractMap.SimpleEntry<List<S>, URI>(items, entitySet.getNext());
+    }
+
+    @SuppressWarnings("unchecked")
+    private <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(
+            final Class<S> typeRef, final Class<SEC> typeCollectionRef) {
+
+        final List<S> items = new ArrayList<S>();
+
+        final URI entitySetURI = new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
+                ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).build();
+        URI nextURI = entitySetURI;
+        while (nextURI != null) {
+            final Map.Entry<List<S>, URI> entitySet = fetchEntitySet(nextURI, typeRef);
+            nextURI = entitySet.getValue();
+            items.addAll(entitySet.getKey());
+        }
+
+        return (SEC) Proxy.newProxyInstance(
+                Thread.currentThread().getContextClassLoader(),
+                new Class<?>[] {typeCollectionRef},
+                new EntityCollectionInvocationHandler<S>(
+                container.factory, items, typeRef, container.getEntityContainerName(), entitySetURI));
     }
 
     @Override
@@ -450,7 +450,7 @@ class EntitySetInvocationHandler<
         }
 
         private void goon() {
-            final Map.Entry<List<T>, URI> entitySet = esi.getEntitySet(this.next);
+            final Map.Entry<List<T>, URI> entitySet = esi.fetchEntitySet(this.next, esi.typeRef);
             this.next = entitySet.getValue();
             this.current = entitySet.getKey().iterator();
         }

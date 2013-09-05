@@ -18,10 +18,10 @@ package com.msopentech.odatajclient.proxy.api.impl;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
+import com.msopentech.odatajclient.engine.data.ODataOperation;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
@@ -33,38 +33,37 @@ import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.context.EntityContext;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
+import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import com.msopentech.odatajclient.proxy.utils.EngineUtils;
-import java.io.Serializable;
-import java.lang.reflect.Constructor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 
 public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private static final long serialVersionUID = 2629912294765040037L;
 
+    private final String entityContainerName;
+
     private ODataEntity entity;
+
+    private final Class<?> typeRef;
 
     private Map<Property, Object> propertyChanges = new HashMap<Property, Object>();
 
     private Map<NavigationProperty, Object> linkChanges = new HashMap<NavigationProperty, Object>();
-
-    private final Class<?> typeRef;
 
     private EntityUUID uuid;
 
@@ -76,13 +75,14 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     static EntityTypeInvocationHandler getInstance(
             final ODataEntity entity,
-            final EntitySetInvocationHandler entitySet) {
+            final EntitySetInvocationHandler entitySet,
+            final Class<?> typeRef) {
 
         return getInstance(
                 entity,
                 entitySet.getContainer().getEntityContainerName(),
                 entitySet.getEntitySetName(),
-                entitySet.getTypeRef(),
+                typeRef,
                 entitySet.getContainer().factory);
     }
 
@@ -104,6 +104,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             final EntityContainerFactory factory) {
 
         super(factory);
+        this.entityContainerName = entityContainerName;
         this.entity = entity;
         this.typeRef = typeRef;
 
@@ -187,10 +188,27 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     @Override
     @SuppressWarnings("unchecked")
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        // Assumption: for each getter will always exist a setter and viceversa.
+        final Annotation[] methodAnnots = method.getAnnotations();
+
         if (isSelfMethod(method, args)) {
             return invokeSelfMethod(method, args);
-        } else if (method.getName().startsWith("get")) {
+        } else if (!ArrayUtils.isEmpty(methodAnnots) && methodAnnots[0] instanceof FunctionImport) {
+            final ODataOperation operation = this.entity.getOperation(((FunctionImport) methodAnnots[0]).name());
+            if (operation == null) {
+                throw new IllegalArgumentException(
+                        "Could not find any FunctionImport named " + ((FunctionImport) methodAnnots[0]).name());
+            }
+
+            final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
+                    factory.getMetadata().getSchema(ClassUtils.getNamespace(typeRef)).
+                    getEntityContainer(entityContainerName);
+            final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp =
+                    container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
+
+            return functionImport((FunctionImport) methodAnnots[0], method, args,
+                    operation.getTarget(), funcImp);
+        } // Assumption: for each getter will always exist a setter and viceversa.
+        else if (method.getName().startsWith("get")) {
             // get method annotation and check if it exists as expected
             final Object res;
 
@@ -238,69 +256,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 setPropertyValue(property, args[0]);
             }
 
-            final Constructor<Void> voidConstructor = Void.class.getDeclaredConstructor();
-            voidConstructor.setAccessible(true);
-            return voidConstructor.newInstance();
+            return returnVoid();
         } else {
-            throw new UnsupportedOperationException("Unsupported method " + method.getName());
+            throw new UnsupportedOperationException("Method not found: " + method);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected <T extends Serializable, EC extends AbstractEntityCollection<T>> EC getEntityCollection(
-            final Class<?> typeRef,
-            final Class<?> typeCollectionRef,
-            final String entityContainerName,
-            final ODataEntitySet entitySet,
-            final boolean checkInTheContext) {
-
-        final List<T> items = new ArrayList<T>();
-
-        for (ODataEntity entityFromSet : entitySet.getEntities()) {
-            items.add((T) getEntityProxy(
-                    entityFromSet, entityContainerName, entitySet.getName(), typeRef, checkInTheContext));
-        }
-
-        return (EC) Proxy.newProxyInstance(
-                Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {typeCollectionRef},
-                new EntityCollectionInvocationHandler<T>(items, factory));
-    }
-
-    private <T> T getEntityProxy(
-            final ODataEntity entity,
-            final String entityContainerName,
-            final String entitySetName,
-            final Class<?> type,
-            final boolean checkInTheContext) {
-        return getEntityProxy(entity, entityContainerName, entitySetName, type, null, checkInTheContext);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> T getEntityProxy(
-            final ODataEntity entity,
-            final String entityContainerName,
-            final String entitySetName,
-            final Class<?> type,
-            final String eTag,
-            final boolean checkInTheContext) {
-
-        EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(
-                entity, entityContainerName, entitySetName, type, factory);
-
-        if (StringUtils.isNotBlank(eTag)) {
-            // override ETag into the wrapped object.
-            handler.setETag(eTag);
-        }
-
-        if (checkInTheContext && EntityContainerFactory.getContext().entityContext().isAttached(handler)) {
-            handler = EntityContainerFactory.getContext().entityContext().getEntity(handler.getUUID());
-        }
-
-        return (T) Proxy.newProxyInstance(
-                Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {type},
-                handler);
     }
 
     private Object getNavigationPropertyValue(final NavigationProperty property, final Method getter) {
@@ -348,6 +307,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         type,
                         associationSet.getKey().getName(),
                         ((ODataInlineEntitySet) link).getEntitySet(),
+                        link.getLink(),
                         false);
             } else {
                 // navigate
@@ -359,6 +319,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                             type,
                             associationSet.getKey().getName(),
                             ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute().getBody(),
+                            uri,
                             true);
                 } else {
                     final ODataRetrieveResponse<ODataEntity> res =

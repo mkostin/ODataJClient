@@ -30,16 +30,20 @@ import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialTypes;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Contractor;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContractorCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Employee;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.EmployeeCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Person;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Product;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.SpecialEmployee;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.SpecialEmployeeCollection;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
@@ -68,18 +72,30 @@ public class EntityRetrieveTestITCase extends AbstractTest {
         final PersonCollection all = container.getPerson().getAll();
         assertNotNull(all);
         assertFalse(all.isEmpty());
+        for (Person person : all) {
+            assertNotNull(person);
+        }
 
         final EmployeeCollection employees = container.getPerson().getAllEmployee();
         assertNotNull(employees);
         assertFalse(employees.isEmpty());
+        for (Employee employee : employees) {
+            assertNotNull(employee);
+        }
 
         final SpecialEmployeeCollection specialEmployees = container.getPerson().getAllSpecialEmployee();
         assertNotNull(specialEmployees);
         assertFalse(specialEmployees.isEmpty());
+        for (SpecialEmployee employee : specialEmployees) {
+            assertNotNull(employee);
+        }
 
         final ContractorCollection contractors = container.getPerson().getAllContractor();
         assertNotNull(contractors);
         assertFalse(contractors.isEmpty());
+        for (Contractor contractor : contractors) {
+            assertNotNull(contractor);
+        }
 
         assertTrue(employees.size() > specialEmployees.size());
         assertTrue(all.size() > employees.size() + contractors.size());

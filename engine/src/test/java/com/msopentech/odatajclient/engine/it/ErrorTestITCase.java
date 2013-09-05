@@ -149,7 +149,7 @@ public class ErrorTestITCase extends AbstractTest {
         final EntityContainer.FunctionImport funcImp = container.getFunctionImport("InStreamErrorGetCustomer");
 
         final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
-                appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
+                appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
         final ODataInvokeRequest<ODataEntitySet> req =
                 ODataInvokeRequestFactory.getInvokeRequest(builder.build(), metadata, funcImp);

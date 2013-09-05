@@ -53,7 +53,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
             final ODataInvokeResponse<ODataProperty> res;
             if (funcImp.getParameters().isEmpty()) {
                 final ODataURIBuilder funcImpBuilder = new ODataURIBuilder(testActionOverloadingServiceRootURL).
-                        appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
+                        appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
                 res = ODataInvokeRequestFactory.<ODataProperty>getInvokeRequest(
                         funcImpBuilder.build(), metadata, funcImp).execute();

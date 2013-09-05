@@ -98,7 +98,7 @@ public final class URIUtils {
      * @param functionImport function import.
      * @return URI segment.
      */
-    public static String functionImportURISegment(
+    public static String rootFunctionImportURISegment(
             final EntityContainer entityContainer, final FunctionImport functionImport) {
 
         final StringBuilder result = new StringBuilder();

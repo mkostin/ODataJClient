@@ -123,24 +123,19 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
                         EntitySetInvocationHandler.getInstance(returnType, this));
             } // 2. invoke function imports
             else if (methodAnnots[0] instanceof FunctionImport) {
-                return functionImport((FunctionImport) methodAnnots[0]);
+                final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
+                        factory.getMetadata().getSchema(schemaName).getEntityContainer(entityContainerName);
+                final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp =
+                        container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
+
+                final ODataURIBuilder uriBuilder = new ODataURIBuilder(factory.getServiceRoot()).
+                        appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
+
+                return functionImport((FunctionImport) methodAnnots[0], method, args, uriBuilder.build(), funcImp);
             } else {
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new UnsupportedOperationException("Method not found: " + method);
             }
         }
-    }
-
-    private Object functionImport(final FunctionImport annotation) {
-        final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
-                factory.getMetadata().getSchema(schemaName).getEntityContainer(entityContainerName);
-        final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp =
-                container.getFunctionImport(annotation.name());
-
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(factory.getServiceRoot()).
-                appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
-
-        // TODO: complete
-        return null;
     }
 
     /**

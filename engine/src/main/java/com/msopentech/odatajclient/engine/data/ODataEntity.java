@@ -100,7 +100,7 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
      *
      * @param eTag ETag.
      */
-    public void setETag(String eTag) {
+    public void setETag(final String eTag) {
         this.eTag = eTag;
     }
 

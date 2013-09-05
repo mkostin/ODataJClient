@@ -51,6 +51,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 public class InvokeTestITCase extends AbstractTest {
@@ -66,7 +67,7 @@ public class InvokeTestITCase extends AbstractTest {
         FunctionImport funcImp = container.getFunctionImport("GetPrimitiveString");
 
         ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
-                appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
+                appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
         ODataInvokeRequest<ODataProperty> req =
                 ODataInvokeRequestFactory.getInvokeRequest(builder.build(), metadata, funcImp);
@@ -82,7 +83,7 @@ public class InvokeTestITCase extends AbstractTest {
         funcImp = container.getFunctionImport("EntityProjectionReturnsCollectionOfComplexTypes");
 
         builder = new ODataURIBuilder(testDefaultServiceRootURL).
-                appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
+                appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
         req = ODataInvokeRequestFactory.getInvokeRequest(builder.build(), metadata, funcImp);
         req.setFormat(format);
@@ -116,7 +117,7 @@ public class InvokeTestITCase extends AbstractTest {
         FunctionImport funcImp = container.getFunctionImport("GetArgumentPlusOne");
 
         ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
-                appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
+                appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
         EdmType type = new EdmType(funcImp.getParameters().get(0).getType());
         ODataPrimitiveValue argument = new ODataPrimitiveValue.Builder().
@@ -146,12 +147,12 @@ public class InvokeTestITCase extends AbstractTest {
         funcImp = container.getFunctionImport("GetSpecificCustomer");
 
         builder = new ODataURIBuilder(testDefaultServiceRootURL).
-                appendFunctionImportSegment(URIUtils.functionImportURISegment(container, funcImp));
+                appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
         type = new EdmType(funcImp.getParameters().get(0).getType());
         argument = new ODataPrimitiveValue.Builder().
                 setType(type.getSimpleType()).
-                setText("").
+                setText(StringUtils.EMPTY).
                 build();
         parameters = new LinkedHashMap<String, ODataValue>();
         parameters.put(funcImp.getParameters().get(0).getName(), argument);
