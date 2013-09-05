@@ -27,6 +27,20 @@ import org.w3c.dom.Element;
 public interface EntryResource {
 
     /**
+     * Gets ETag.
+     *
+     * @return ETag.
+     */
+    String getETag();
+
+    /**
+     * Sets ETag.
+     *
+     * @param eTag ETag.
+     */
+    void setETag(String eTag);
+
+    /**
      * Gets base URI.
      *
      * @return base URI.

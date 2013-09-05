@@ -28,6 +28,11 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
     private static final long serialVersionUID = 8360640095932811034L;
 
     /**
+     * ETag.
+     */
+    private String eTag;
+
+    /**
      * Media entity flag.
      */
     private boolean mediaEntity = false;
@@ -79,6 +84,24 @@ public class ODataEntity extends ODataItem implements ODataInvokeResult {
      */
     ODataEntity(final String name) {
         super(name);
+    }
+
+    /**
+     * Gets ETag.
+     *
+     * @return ETag.
+     */
+    public String getETag() {
+        return eTag;
+    }
+
+    /**
+     * Sets ETag.
+     *
+     * @param eTag ETag.
+     */
+    public void setETag(String eTag) {
+        this.eTag = eTag;
     }
 
     /**

@@ -297,6 +297,10 @@ public final class ODataBinder {
                 ? ODataFactory.newEntity(resource.getType())
                 : ODataFactory.newEntity(resource.getType(), URIUtils.getURI(base, resource.getSelfLink().getHref()));
 
+        if (StringUtils.isNotBlank(resource.getETag())) {
+            entity.setETag(resource.getETag());
+        }
+
         if (resource.getEditLink() != null) {
             entity.setEditLink(URIUtils.getURI(base, resource.getEditLink().getHref()));
         }

@@ -65,7 +65,6 @@ public final class AtomDeserializer {
                 LOG.error("Could not parse date {}", updateds.get(0).getTextContent(), e);
             }
         }
-
     }
 
     public static AtomEntry entry(final Element input) {
@@ -76,6 +75,11 @@ public final class AtomDeserializer {
         final AtomEntry entry = new AtomEntry();
 
         common(input, entry);
+
+        final String etag = input.getAttribute(ODataConstants.ATOM_ATTR_ETAG);
+        if (StringUtils.isNotBlank(etag)) {
+            entry.setETag(etag);
+        }
 
         final List<Element> categories = XMLUtils.getChildElements(input, ODataConstants.ATOM_ELEM_CATEGORY);
         if (!categories.isEmpty()) {

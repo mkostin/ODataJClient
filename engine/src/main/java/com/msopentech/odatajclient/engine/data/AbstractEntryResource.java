@@ -28,6 +28,8 @@ public abstract class AbstractEntryResource<LINK extends LinkResource>
 
     private static final long serialVersionUID = 2127764552600969783L;
 
+    private String eTag;
+
     private String type;
 
     private String id;
@@ -57,6 +59,22 @@ public abstract class AbstractEntryResource<LINK extends LinkResource>
         navigationLinks = new ArrayList<LINK>();
         mediaEditLinks = new ArrayList<LINK>();
         operations = new ArrayList<ODataOperation>();
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public String getETag() {
+        return eTag;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void setETag(String eTag) {
+        this.eTag = eTag;
     }
 
     /**

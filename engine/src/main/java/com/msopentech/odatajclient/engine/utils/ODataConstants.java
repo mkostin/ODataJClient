@@ -155,6 +155,8 @@ public class ODataConstants {
 
     public final static String JSON_TYPE = "odata.type";
 
+    public final static String JSON_ETAG = "odata.etag";
+
     public final static String JSON_ID = "odata.id";
 
     public final static String JSON_READ_LINK = "odata.readLink";
@@ -225,6 +227,8 @@ public class ODataConstants {
     public static final String ATOM_ATTR_SCHEME = "scheme";
 
     public static final String ATOM_ATTR_SRC = "src";
+
+    public static final String ATOM_ATTR_ETAG = PREFIX_METADATA + "etag";
 
     public static final String ATOM_CATEGORY_SCHEME = NS_DATASERVICES + "/" + ATOM_ATTR_SCHEME;
 

@@ -37,6 +37,7 @@ import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import java.util.LinkedHashMap;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 /**
@@ -193,6 +194,33 @@ public class EntityRetrieveTestITCase extends AbstractTest {
     @Test
     public void multiKeyAsJSON() {
         multiKey(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    @Test
+    public void checkForETagAsATOM() {
+        checkForETag(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void checkForETagAsJSON() {
+        checkForETag(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    private void checkForETag(final ODataPubFormat format) {
+        final ODataURIBuilder uriBuilder =
+                new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Product").appendKeySegment(-10);
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(format);
+
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+
+        final String etag = res.getEtag();
+        assertTrue(StringUtils.isNotBlank(etag));
+
+        final ODataEntity product = res.getBody();
+        assertEquals(etag, product.getETag());
     }
 
     @Test(expected = IllegalArgumentException.class)
