@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import static com.msopentech.odatajclient.proxy.AbstractTest.container;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -22,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Message;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Car;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Computer;
 import java.io.IOException;
 import java.util.Iterator;
 import org.junit.Test;
@@ -46,33 +48,38 @@ public class EntitySetTestITCase extends AbstractTest {
     }
 
     @Test
-    public void readEntitySetWithNextLink() {
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-
+    public void getAll() {
         int count = 0;
-        for (Customer customer : customers.getAll()) {
+        for (Customer customer : container.getCustomer().getAll()) {
             assertNotNull(customer);
             count++;
         }
-        assertEquals(2, count);
+        assertTrue(count >= 10);
+    }
 
-        // TODO: add next link  and assert for assertNotNull(customers.getNext()) and URI;
-        // final URI expected = URI.create(testDefaultServiceRootURL + "/Customer?$skiptoken=-9");
-        // final URI found = URIUtils.getURI(testDefaultServiceRootURL, feed.getNext().toASCIIString());
-        // assertEquals(expected, found);
+    @Test
+    public void readEntitySetWithNextLink() {
+        int count = 0;
+        for (Customer customer : container.getCustomer().getAll()) {
+            assertNotNull(customer);
+            count++;
+        }
+        assertTrue(count >= 10);
+
+        int iterating = 0;
+        for (Customer customer : container.getCustomer()) {
+            assertNotNull(customer);
+            iterating++;
+        }
+        assertEquals(count, iterating);
     }
 
     @Test
     public void readODataEntitySet() throws IOException {
         // TODO: add top(2).skip(4) feature.
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Car cars =
-                container.getCar();
+        assertTrue(container.getCar().count() >= 10);
 
-        assertNotNull(cars);
-        assertTrue(cars.count() >= 10);
-
-        final Iterable<Car> car = cars.getAll();
+        final Iterable<Car> car = container.getCar().getAll();
         assertNotNull(car);
 
         final Iterator<Car> itor = car.iterator();
@@ -85,8 +92,13 @@ public class EntitySetTestITCase extends AbstractTest {
         assertTrue(count >= 10);
     }
 
-    // TODO: what about etityset iterator?
     @Test
-    public void readODataEntitySetIterator() {
+    public void readEntitySetIterator() {
+        int count = 0;
+        for (Computer computer : container.getComputer()) {
+            assertNotNull(computer);
+            count++;
+        }
+        assertTrue(count >= 10);
     }
 }

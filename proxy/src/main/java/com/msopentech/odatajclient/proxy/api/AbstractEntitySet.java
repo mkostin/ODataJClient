@@ -24,7 +24,7 @@ import java.io.Serializable;
  */
 public abstract interface AbstractEntitySet<
         T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>>
-        extends Serializable {
+        extends Iterable<T>, Serializable {
 
     /**
      * Returns whether an entity with the given id exists.
@@ -43,7 +43,7 @@ public abstract interface AbstractEntitySet<
      * @throws IllegalArgumentException in case the given key is null
      */
     T get(KEY key) throws IllegalArgumentException;
-    
+
     /**
      * Retrieves an entity by its key.
      *

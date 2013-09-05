@@ -43,9 +43,14 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 import org.apache.commons.lang3.ArrayUtils;
@@ -290,10 +295,28 @@ class EntitySetInvocationHandler<
     private <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(
             final Class<S> typeRef, final Class<SEC> typeCollectionRef) {
 
-        final ODataRetrieveResponse<ODataEntitySet> res = ODataRetrieveRequestFactory.getEntitySetRequest(
-                new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
-                ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).
-                build()).execute();
+        final List<S> items = new ArrayList<S>();
+
+        URI uri = new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
+                ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).build();
+
+        while (uri != null) {
+            final Map.Entry<List<S>, URI> entitySet = getEntitySet(uri);
+            uri = entitySet.getValue();
+            items.addAll(entitySet.getKey());
+        }
+
+        return (SEC) Proxy.newProxyInstance(
+                Thread.currentThread().getContextClassLoader(),
+                new Class<?>[] {typeCollectionRef},
+                new EntityCollectionInvocationHandler<S>(items, container.factory));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <S extends T> Map.Entry<List<S>, URI> getEntitySet(final URI uri) {
+
+        final ODataRetrieveResponse<ODataEntitySet> res =
+                ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute();
 
         final ODataEntitySet entitySet = res.getBody();
 
@@ -310,10 +333,7 @@ class EntitySetInvocationHandler<
                     handlerInTheContext == null ? handler : handlerInTheContext));
         }
 
-        return (SEC) Proxy.newProxyInstance(
-                Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {typeCollectionRef},
-                new EntityCollectionInvocationHandler<S>(items, container.factory));
+        return new AbstractMap.SimpleEntry<List<S>, URI>(items, entitySet.getNext());
     }
 
     @Override
@@ -368,5 +388,71 @@ class EntitySetInvocationHandler<
 
     private boolean isDeleted(final EntityTypeInvocationHandler handler) {
         return EntityContainerFactory.getContext().entityContext().getStatus(handler) == AttachedEntityStatus.DELETED;
+    }
+
+    @Override
+    public EntitySetIterator<T, KEY, EC> iterator() {
+        return new EntitySetIterator<T, KEY, EC>(
+                new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
+                ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).build(),
+                this);
+    }
+
+    private static class EntitySetIterator<
+            T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>>
+            implements Iterator<T> {
+
+        private URI next;
+
+        private Iterator<T> current;
+
+        private final EntitySetInvocationHandler<T, KEY, EC> esi;
+
+        public EntitySetIterator(final URI uri, EntitySetInvocationHandler<T, KEY, EC> esi) {
+            this.esi = esi;
+            this.next = uri;
+            this.current = Collections.<T>emptyList().iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            boolean res = false;
+            if (this.current.hasNext()) {
+                res = true;
+            } else if (this.next == null) {
+                res = false;
+            } else {
+                goon();
+                res = current.hasNext();
+            }
+            return res;
+        }
+
+        @Override
+        public T next() {
+            T res;
+            try {
+                res = this.current.next();
+            } catch (NoSuchElementException e) {
+                if (this.next == null) {
+                    throw e;
+                }
+                goon();
+                res = next();
+            }
+
+            return res;
+        }
+
+        @Override
+        public void remove() {
+            this.current.remove();
+        }
+
+        private void goon() {
+            final Map.Entry<List<T>, URI> entitySet = esi.getEntitySet(this.next);
+            this.next = entitySet.getValue();
+            this.current = entitySet.getKey().iterator();
+        }
     }
 }

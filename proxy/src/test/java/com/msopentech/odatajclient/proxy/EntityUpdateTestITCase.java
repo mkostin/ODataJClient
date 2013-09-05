@@ -15,9 +15,12 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
+import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message;
@@ -25,6 +28,8 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Product;
+import java.lang.reflect.Proxy;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 /**
@@ -99,6 +104,9 @@ public class EntityUpdateTestITCase extends AbstractTest {
     @Test
     public void concurrentModification() {
         Product product = container.getProduct().get(-10);
+        final String etag = ((EntityTypeInvocationHandler) Proxy.getInvocationHandler(product)).getETag();
+        assertTrue(StringUtils.isNotBlank(etag));
+
         final String baseConcurrency = String.valueOf(System.currentTimeMillis());
         product.setBaseConcurrency(baseConcurrency);
 
@@ -106,5 +114,6 @@ public class EntityUpdateTestITCase extends AbstractTest {
 
         product = container.getProduct().get(-10);
         assertEquals(baseConcurrency, product.getBaseConcurrency());
+        assertNotEquals(etag, ((EntityTypeInvocationHandler) Proxy.getInvocationHandler(product)).getETag());
     }
 }
