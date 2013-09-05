@@ -76,7 +76,6 @@ public class EntitySetTestITCase extends AbstractTest {
 
     @Test
     public void readODataEntitySet() throws IOException {
-        // TODO: add top(2).skip(4) feature.
         assertTrue(container.getCar().count() >= 10);
 
         final Iterable<Car> car = container.getCar().getAll();
