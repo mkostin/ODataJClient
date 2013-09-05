@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
@@ -51,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
@@ -71,8 +73,6 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     private int propertiesTag;
 
     private int linksTag;
-
-    private String eTag;
 
     static EntityTypeInvocationHandler getInstance(
             final ODataEntity entity,
@@ -116,7 +116,6 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
         this.propertiesTag = 0;
         this.linksTag = 0;
-        this.eTag = null;
     }
 
     public void setEntity(final ODataEntity entity) {
@@ -133,7 +132,6 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         this.linkChanges.clear();
         this.propertiesTag = 0;
         this.linksTag = 0;
-        this.eTag = null;
     }
 
     public EntityUUID getUUID() {
@@ -168,12 +166,22 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         return linkChanges;
     }
 
+    /**
+     * Gets the current ETag defined into the wrapped entity.
+     *
+     * @return
+     */
     public String getETag() {
-        return eTag;
+        return this.entity.getETag();
     }
 
+    /**
+     * Overrides ETag value defined into the wrapped entity.
+     *
+     * @param eTag ETag.
+     */
     public void setETag(final String eTag) {
-        this.eTag = eTag;
+        this.entity.setETag(eTag);
     }
 
     @Override
@@ -259,16 +267,31 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 new EntityCollectionInvocationHandler<T>(items, factory));
     }
 
-    @SuppressWarnings("unchecked")
     private <T> T getEntityProxy(
             final ODataEntity entity,
             final String entityContainerName,
             final String entitySetName,
             final Class<?> type,
             final boolean checkInTheContext) {
+        return getEntityProxy(entity, entityContainerName, entitySetName, type, null, checkInTheContext);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T getEntityProxy(
+            final ODataEntity entity,
+            final String entityContainerName,
+            final String entitySetName,
+            final Class<?> type,
+            final String eTag,
+            final boolean checkInTheContext) {
 
         EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(
                 entity, entityContainerName, entitySetName, type, factory);
+
+        if (StringUtils.isNotBlank(eTag)) {
+            // override ETag into the wrapped object.
+            handler.setETag(eTag);
+        }
 
         if (checkInTheContext && EntityContainerFactory.getContext().entityContext().isAttached(handler)) {
             handler = EntityContainerFactory.getContext().entityContext().getEntity(handler.getUUID());
@@ -338,11 +361,15 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                             ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute().getBody(),
                             true);
                 } else {
+                    final ODataRetrieveResponse<ODataEntity> res =
+                            ODataRetrieveRequestFactory.getEntityRequest(uri).execute();
+
                     navPropValue = getEntityProxy(
-                            ODataRetrieveRequestFactory.getEntityRequest(uri).execute().getBody(),
+                            res.getBody(),
                             associationSet.getKey().getName(),
                             targetEntitySetName,
                             type,
+                            res.getEtag(),
                             true);
                 }
             }

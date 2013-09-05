@@ -26,6 +26,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatia
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial.Type;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiLineString;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
+import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialTypes;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo;
@@ -38,8 +39,11 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonCollection;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Product;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.SpecialEmployeeCollection;
+import java.lang.reflect.Proxy;
 import java.util.Collection;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -153,5 +157,12 @@ public class EntityRetrieveTestITCase extends AbstractTest {
         final Message message = container.getMessage().get(messageKey);
         assertNotNull(message);
         assertEquals("1", message.getFromUsername());
+    }
+
+    @Test
+    public void checkForETag() {
+        Product product = container.getProduct().get(-10);
+        assertTrue(StringUtils.isNotBlank(
+                ((EntityTypeInvocationHandler) Proxy.getInvocationHandler(product)).getETag()));
     }
 }

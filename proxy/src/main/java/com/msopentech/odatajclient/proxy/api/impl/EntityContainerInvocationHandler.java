@@ -23,6 +23,7 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatch
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangeset;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangesetResponseItem;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
@@ -57,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -205,7 +207,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
                     delayedUpdate.getType().name(), sourceURI, targetURI});
             }
 
-            batchUpdate(sourceURI, changes, changeset);
+            batchUpdate(delayedUpdate.getSource(), sourceURI, changes, changeset);
         }
 
         final ODataBatchResponse response = streamManager.getResponse();
@@ -259,7 +261,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
                 break;
 
             case CHANGED:
-                batchUpdate(entity, changeset);
+                batchUpdate(handler, entity, changeset);
                 break;
 
             case DELETED:
@@ -268,7 +270,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
 
             default:
                 if (handler.isChanged()) {
-                    batchUpdate(entity, changeset);
+                    batchUpdate(handler, entity, changeset);
                 }
         }
     }
@@ -281,19 +283,36 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
         changeset.addRequest(ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), entity));
     }
 
-    private void batchUpdate(final ODataEntity changes, final ODataChangeset changeset) {
+    private void batchUpdate(
+            final EntityTypeInvocationHandler handler,
+            final ODataEntity changes,
+            final ODataChangeset changeset) {
         LOG.debug("Update '{}'", changes.getEditLink());
         final ODataEntityUpdateRequest req =
                 ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.PATCH, changes);
         req.setPrefer(ODataHeaderValues.preferReturnContent);
+
+        if (StringUtils.isNotBlank(handler.getETag())) {
+            req.setIfMatch(handler.getETag());
+        }
+
         changeset.addRequest(req);
     }
 
-    private void batchUpdate(final URI uri, final ODataEntity changes, final ODataChangeset changeset) {
+    private void batchUpdate(
+            final EntityTypeInvocationHandler handler,
+            final URI uri,
+            final ODataEntity changes,
+            final ODataChangeset changeset) {
         LOG.debug("Update '{}'", uri);
         final ODataEntityUpdateRequest req =
                 ODataCUDRequestFactory.getEntityUpdateRequest(uri, UpdateType.PATCH, changes);
         req.setPrefer(ODataHeaderValues.preferReturnContent);
+
+        if (StringUtils.isNotBlank(handler.getETag())) {
+            req.setIfMatch(handler.getETag());
+        }
+
         changeset.addRequest(req);
     }
 
@@ -301,8 +320,15 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
             final EntityTypeInvocationHandler handler, final ODataEntity entity, final ODataChangeset changeset) {
 
         LOG.debug("Delete '{}'", entity.getEditLink());
-        changeset.addRequest(ODataCUDRequestFactory.getDeleteRequest(URIUtils.getURI(
-                handler.factory.getServiceRoot(), entity.getEditLink().toASCIIString())));
+
+        final ODataDeleteRequest req = ODataCUDRequestFactory.getDeleteRequest(URIUtils.getURI(
+                handler.factory.getServiceRoot(), entity.getEditLink().toASCIIString()));
+
+        if (StringUtils.isNotBlank(handler.getETag())) {
+            req.setIfMatch(handler.getETag());
+        }
+
+        changeset.addRequest(req);
     }
 
     private int processEntityContext(

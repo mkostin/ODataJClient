@@ -159,7 +159,7 @@ class EntitySetInvocationHandler<
             final Class<?> entityCollectionClass = method.getReturnType();
             final Type[] entityCollectionParams =
                     ((ParameterizedType) entityCollectionClass.getGenericInterfaces()[0]).getActualTypeArguments();
-            return getAll((Class<EC>) method.getReturnType(), (Class<T>) entityCollectionParams[0]);
+            return getAll((Class<T>) entityCollectionParams[0], (Class<EC>) method.getReturnType());
         } else {
             throw new UnsupportedOperationException("Not supported yet.");
         }
@@ -287,7 +287,9 @@ class EntitySetInvocationHandler<
     }
 
     @SuppressWarnings("unchecked")
-    private <SEC extends EC, S extends T> SEC getAll(final Class<SEC> typeCollectionRef, final Class<S> typeRef) {
+    private <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(
+            final Class<S> typeRef, final Class<SEC> typeCollectionRef) {
+
         final ODataRetrieveResponse<ODataEntitySet> res = ODataRetrieveRequestFactory.getEntitySetRequest(
                 new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
                 ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).
@@ -301,6 +303,7 @@ class EntitySetInvocationHandler<
 
             final EntityTypeInvocationHandler handlerInTheContext =
                     EntityContainerFactory.getContext().entityContext().getEntity(handler.getUUID());
+
             items.add((S) Proxy.newProxyInstance(
                     Thread.currentThread().getContextClassLoader(),
                     new Class<?>[] {typeRef},
@@ -315,7 +318,7 @@ class EntitySetInvocationHandler<
 
     @Override
     public EC getAll() {
-        return getAll(typeCollectionRef, typeRef);
+        return getAll(typeRef, typeCollectionRef);
     }
 
     @Override
