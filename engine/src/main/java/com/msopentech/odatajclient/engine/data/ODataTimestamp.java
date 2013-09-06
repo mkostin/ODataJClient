@@ -101,7 +101,7 @@ public final class ODataTimestamp implements Serializable {
      */
     @Override
     public boolean equals(final Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+        return EqualsBuilder.reflectionEquals(this, obj, "sdf");
     }
 
     /**
@@ -109,7 +109,7 @@ public final class ODataTimestamp implements Serializable {
      */
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        return HashCodeBuilder.reflectionHashCode(this, "sdf");
     }
 
     /**

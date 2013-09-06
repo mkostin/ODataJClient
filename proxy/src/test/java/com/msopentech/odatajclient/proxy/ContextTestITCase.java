@@ -332,7 +332,7 @@ public class ContextTestITCase extends AbstractTest {
         assertFalse(entityContext.isAttached(handler));
         assertNotNull(container.getLogin().get("customer"));
 
-        container.getLogin().delete(Collections.<Login>singleton(login));
+        container.getLogin().delete(login.getUsername());
         assertTrue(entityContext.isAttached(handler));
 
         container.flush();

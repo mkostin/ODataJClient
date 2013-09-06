@@ -19,11 +19,9 @@ import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvo
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
-import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
@@ -54,10 +52,10 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
     private static final long serialVersionUID = 358520026931462958L;
 
-    protected final EntityContainerFactory factory;
+    protected EntityContainerInvocationHandler containerHandler;
 
-    protected AbstractInvocationHandler(final EntityContainerFactory factory) {
-        this.factory = factory;
+    protected AbstractInvocationHandler(final EntityContainerInvocationHandler containerHandler) {
+        this.containerHandler = containerHandler;
     }
 
     protected boolean isSelfMethod(final Method method, final Object[] args) {
@@ -106,7 +104,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
         return (EC) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {typeCollectionRef},
-                new EntityCollectionInvocationHandler<T>(factory, items, typeRef, entityContainerName, uri));
+                new EntityCollectionInvocationHandler<T>(containerHandler, items, typeRef, entityContainerName, uri));
     }
 
     protected <T> T getEntityProxy(
@@ -129,7 +127,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
             final boolean checkInTheContext) {
 
         EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(
-                entity, entityContainerName, entitySetName, type, factory);
+                entity, entityContainerName, entitySetName, type, containerHandler);
 
         if (StringUtils.isNotBlank(eTag)) {
             // override ETag into the wrapped object.
@@ -169,30 +167,36 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
                             "Parameter " + parAnnot.name() + " is not nullable but a null value was provided");
                 }
 
-                parameters.put(parAnnot.name(),
-                        args[i] == null
+                final ODataValue paramValue = args[i] == null
                         ? null
-                        : new ODataPrimitiveValue.Builder().
-                        setValue(args[i]).setType(EdmSimpleType.fromValue(parAnnot.type())).build());
+                        : EngineUtils.getODataValue(containerHandler.getFactory().getMetadata(),
+                        new EdmType(containerHandler.getFactory().getMetadata(), parAnnot.type()), args[i]);
+
+                parameters.put(parAnnot.name(), paramValue);
             }
         }
 
-        // 2. invoke
+        // 2. IMPORTANT: flush any pending change *before* invoke if this operation is side effecting
+        if (annotation.isSideEffecting()) {
+            containerHandler.flush();
+        }
+
+        // 3. invoke
         final ODataInvokeResult result = ODataInvokeRequestFactory.getInvokeRequest(
-                target, factory.getMetadata(), funcImp, parameters).execute().getBody();
+                target, containerHandler.getFactory().getMetadata(), funcImp, parameters).execute().getBody();
 
         // 3. process invoke result
         if (StringUtils.isBlank(annotation.returnType())) {
             return returnVoid();
         }
 
-        final EdmType edmType = new EdmType(factory.getMetadata(), annotation.returnType());
+        final EdmType edmType = new EdmType(containerHandler.getFactory().getMetadata(), annotation.returnType());
         if (edmType.isEnumType()) {
             throw new UnsupportedOperationException("Usupported enum type " + edmType.getTypeExpression());
         }
         if (edmType.isSimpleType() || edmType.isComplexType()) {
             return EngineUtils.getValueFromProperty(
-                    factory.getMetadata(), (ODataProperty) result, method.getGenericReturnType());
+                    containerHandler.getFactory().getMetadata(), (ODataProperty) result, method.getGenericReturnType());
         }
         if (edmType.isEntityType()) {
             if (edmType.isCollection()) {

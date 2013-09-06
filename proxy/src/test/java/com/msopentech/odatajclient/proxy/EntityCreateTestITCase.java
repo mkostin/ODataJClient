@@ -26,7 +26,6 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageKey;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
-import java.util.Collections;
 import org.junit.Test;
 
 /**
@@ -45,7 +44,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         Customer actual = readCustomer(container, id);
         checKSampleCustomerProfile(actual, id, sampleName);
 
-        container.getCustomer().delete(Collections.<Customer>singleton(actual));
+        container.getCustomer().delete(actual.getCustomerId());
         actual = container.getCustomer().get(id);
         assertNull(actual);
 
@@ -53,7 +52,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         actual = container.getCustomer().get(id);
         assertNotNull(actual);
 
-        container.getCustomer().delete(Collections.<Customer>singleton(actual));
+        container.getCustomer().delete(actual.getCustomerId());
         container.flush();
 
         actual = container.getCustomer().get(id);
@@ -85,7 +84,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         actual = container.getPerson().get(id, Employee.class);
         assertNotNull(actual);
 
-        container.getPerson().delete(Collections.<Employee>singleton(actual));
+        container.getPerson().delete(actual.getPersonId());
         container.flush();
 
         actual = container.getPerson().get(id, Employee.class);
@@ -109,7 +108,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         checKSampleCustomerProfile(actual, id, sampleName);
         assertEquals(Integer.valueOf(16), actual.getInfo().getCustomerInfoId());
 
-        container.getCustomer().delete(Collections.<Customer>singleton(actual));
+        container.getCustomer().delete(actual.getCustomerId());
         container.flush();
 
         actual = container.getCustomer().get(id);
@@ -157,7 +156,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         actual = readCustomer(container, id);
         assertTrue(actual.getOrders().isEmpty());
 
-        container.getCustomer().delete(Collections.<Customer>singleton(actual));
+        container.getCustomer().delete(actual.getCustomerId());
         container.flush();
 
         actual = container.getCustomer().get(id);

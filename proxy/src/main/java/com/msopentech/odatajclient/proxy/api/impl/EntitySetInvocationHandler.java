@@ -77,25 +77,21 @@ class EntitySetInvocationHandler<
 
     private final String entitySetName;
 
-    private final EntityContainerInvocationHandler container;
-
     private final URI uri;
 
     static <T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>> EntitySetInvocationHandler<T, KEY, EC> getInstance(
             final Class<?> ref,
-            final EntityContainerInvocationHandler container) {
+            final EntityContainerInvocationHandler containerHandler) {
 
-        return new EntitySetInvocationHandler<T, KEY, EC>(ref, container);
+        return new EntitySetInvocationHandler<T, KEY, EC>(ref, containerHandler);
     }
 
     @SuppressWarnings("unchecked")
     private EntitySetInvocationHandler(
             final Class<?> ref,
-            final EntityContainerInvocationHandler container) {
+            final EntityContainerInvocationHandler containerHandler) {
 
-        super(container.factory);
-
-        this.container = container;
+        super(containerHandler);
 
         final Annotation annotation = ref.getAnnotation(EntitySet.class);
         if (!(annotation instanceof EntitySet)) {
@@ -115,10 +111,10 @@ class EntitySetInvocationHandler<
         this.keyRef = (Class<KEY>) abstractEntitySetParams[1];
         this.typeCollectionRef = (Class<EC>) abstractEntitySetParams[2];
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(container.factory.getServiceRoot());
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(containerHandler.getFactory().getServiceRoot());
 
-        if (!container.isDefaultEntityContainer()) {
-            uriBuilder.appendStructuralSegment(container.getEntityContainerName()).appendStructuralSegment(".");
+        if (!containerHandler.isDefaultEntityContainer()) {
+            uriBuilder.appendStructuralSegment(containerHandler.getEntityContainerName()).appendStructuralSegment(".");
         }
 
         uriBuilder.appendEntitySetSegment(entitySetName);
@@ -139,10 +135,6 @@ class EntitySetInvocationHandler<
 
     public String getEntitySetName() {
         return entitySetName;
-    }
-
-    public EntityContainerInvocationHandler getContainer() {
-        return container;
     }
 
     public URI getUri() {
@@ -172,11 +164,11 @@ class EntitySetInvocationHandler<
 
     @SuppressWarnings("unchecked")
     private <NE> NE newEntity(final Class<NE> reference) {
-        final ODataEntity entity =
-                ODataFactory.newEntity(container.getSchemaName() + "." + ClassUtils.getEntityTypeName(reference));
+        final ODataEntity entity = ODataFactory.newEntity(
+                containerHandler.getSchemaName() + "." + ClassUtils.getEntityTypeName(reference));
 
         final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(
-                entity, getContainer().getEntityContainerName(), entitySetName, reference, factory);
+                entity, containerHandler.getEntityContainerName(), entitySetName, reference, containerHandler);
         EntityContainerFactory.getContext().entityContext().attachNew(handler);
 
         return (NE) Proxy.newProxyInstance(
@@ -191,7 +183,7 @@ class EntitySetInvocationHandler<
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {reference},
                 new EntityCollectionInvocationHandler<T>(
-                factory, new ArrayList<T>(), typeRef, container.getEntityContainerName()));
+                containerHandler, new ArrayList<T>(), typeRef, containerHandler.getEntityContainerName()));
     }
 
     @Override
@@ -253,7 +245,7 @@ class EntitySetInvocationHandler<
 
         final EntityUUID uuid = new EntityUUID(
                 ClassUtils.getNamespace(typeRef),
-                container.getEntityContainerName(),
+                containerHandler.getEntityContainerName(),
                 entitySetName,
                 ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef),
                 key);
@@ -341,7 +333,7 @@ class EntitySetInvocationHandler<
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {typeCollectionRef},
                 new EntityCollectionInvocationHandler<S>(
-                container.factory, items, typeRef, container.getEntityContainerName(), entitySetURI));
+                containerHandler, items, typeRef, containerHandler.getEntityContainerName(), entitySetURI));
     }
 
     @Override
@@ -365,7 +357,7 @@ class EntitySetInvocationHandler<
 
         EntityTypeInvocationHandler entity = entityContext.getEntity(new EntityUUID(
                 ClassUtils.getNamespace(typeRef),
-                container.getEntityContainerName(),
+                containerHandler.getEntityContainerName(),
                 entitySetName,
                 ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef),
                 key));
