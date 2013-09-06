@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "Driver")
-public interface AsyncDriver extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Driver, String> {
+public interface AsyncDriver extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Driver, String, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.DriverCollection> {
 }

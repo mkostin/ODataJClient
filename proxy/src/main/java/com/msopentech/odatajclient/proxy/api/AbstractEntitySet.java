@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
 import java.io.Serializable;
 
@@ -45,7 +44,7 @@ public abstract interface AbstractEntitySet<
     T get(KEY key) throws IllegalArgumentException;
 
     /**
-     * Retrieves an entity by its key.
+     * Retrieves an entity by its key, considering polymorphism.
      *
      * @param key must not be null
      * @param reference entity class to be returned
@@ -62,27 +61,33 @@ public abstract interface AbstractEntitySet<
     Long count();
 
     /**
-     * Returns all instances of the type.
+     * Returns all instances.
      *
      * @return all entities
      */
     EC getAll();
 
     /**
+     * Returns all instances of the given subtype.
+     *
+     * @param reference entity collection class to be returned
+     * @return all entities of the given subtype
+     */
+    <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(Class<SEC> reference);
+
+    /**
      * Create an instance of <tt>Query</tt>.
      *
      * @return the new query instance
      */
-    Query createQuery();
+    Query<T, EC> createQuery();
 
     /**
-     * Create an instance of <tt>TypedQuery</tt>.
+     * Create an instance of <tt>Query</tt>.
      *
-     * @param entityClass the type of the query result
-     * @param <E> the type of the query result
      * @return the new query instance
      */
-    <E extends Serializable> EntityQuery<E> createQuery(Class<E> entityClass);
+     <S extends T, SEC extends AbstractEntityCollection<S>> Query<S, SEC> createQuery(Class<SEC> reference);
 
     /**
      * Deletes the entity with the given key.

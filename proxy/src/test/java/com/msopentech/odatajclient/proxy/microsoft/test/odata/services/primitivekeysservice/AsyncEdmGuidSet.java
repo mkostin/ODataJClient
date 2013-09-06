@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "EdmGuidSet")
-public interface AsyncEdmGuidSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmGuid, UUID> {
+public interface AsyncEdmGuidSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmGuid, UUID, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmGuidCollection> {
 }

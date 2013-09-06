@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "EdmBooleanSet")
-public interface AsyncEdmBooleanSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmBoolean, Boolean> {
+public interface AsyncEdmBooleanSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmBoolean, Boolean, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmBooleanCollection> {
 }

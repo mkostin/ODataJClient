@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "Folders")
-public interface AsyncFolders extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.Folder, Integer> {
+public interface AsyncFolders extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.Folder, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.FolderCollection> {
 }

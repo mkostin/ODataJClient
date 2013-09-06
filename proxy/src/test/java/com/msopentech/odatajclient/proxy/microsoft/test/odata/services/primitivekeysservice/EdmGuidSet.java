@@ -31,7 +31,6 @@ import java.util.Collection;
 @EntitySet(name = "EdmGuidSet")
 public interface EdmGuidSet extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmGuid, UUID, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmGuidCollection> {
 
-    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmGuidCollection getAllEdmGuid();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmGuid newEdmGuid();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmGuidCollection newEdmGuidCollection();
 }

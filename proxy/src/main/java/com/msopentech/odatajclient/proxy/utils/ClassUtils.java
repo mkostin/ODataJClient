@@ -15,14 +15,18 @@
  */
 package com.msopentech.odatajclient.proxy.utils;
 
+import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -37,6 +41,14 @@ public final class ClassUtils {
 
     private ClassUtils() {
         // Empty private constructor for static utility classes
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <S extends Serializable, SEC extends AbstractEntityCollection<S>> Class<S> extractTypeRef(
+            final Class<SEC> collTypeRef) {
+
+        final Type[] params = ((ParameterizedType) collTypeRef.getGenericInterfaces()[0]).getActualTypeArguments();
+        return (Class<S>) params[0];
     }
 
     public static Method findGetterByAnnotatedName(

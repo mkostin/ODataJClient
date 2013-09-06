@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "ComputerDetail")
-public interface AsyncComputerDetail extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail, Integer> {
+public interface AsyncComputerDetail extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetailCollection> {
 }

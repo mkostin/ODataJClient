@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "OrderLine")
-public interface AsyncOrderLine extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderLine, OrderLineKey> {
+public interface AsyncOrderLine extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderLine, OrderLineKey, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderLineCollection> {
 }

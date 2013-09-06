@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "Message")
-public interface AsyncMessage extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message, MessageKey> {
+public interface AsyncMessage extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Message, MessageKey, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageCollection> {
 }

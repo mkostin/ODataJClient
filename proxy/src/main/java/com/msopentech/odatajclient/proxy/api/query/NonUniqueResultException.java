@@ -29,8 +29,4 @@ public class NonUniqueResultException extends RuntimeException {
     public NonUniqueResultException() {
         super();
     }
-
-    public NonUniqueResultException(final String message) {
-        super(message);
-    }
 }

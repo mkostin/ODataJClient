@@ -31,7 +31,6 @@ import java.util.Collection;
 @EntitySet(name = "EdmByteSet")
 public interface EdmByteSet extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmByte, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmByteCollection> {
 
-    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmByteCollection getAllEdmByte();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmByte newEdmByte();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmByteCollection newEdmByteCollection();
 }

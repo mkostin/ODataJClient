@@ -109,7 +109,7 @@ public class InvokeTestITCase extends AbstractTest {
 
     @Test
     public void entityCollectionBoundPostWithParam() {
-        EmployeeCollection employees = container.getPerson().getAllEmployee();
+        EmployeeCollection employees = container.getPerson().getAll(EmployeeCollection.class);
         assertFalse(employees.isEmpty());
         final Map<Integer, Integer> preSalaries = new HashMap<Integer, Integer>(employees.size());
         for (Employee employee : employees) {
@@ -119,7 +119,7 @@ public class InvokeTestITCase extends AbstractTest {
 
         employees.increaseSalaries(1);
 
-        employees = container.getPerson().getAllEmployee();
+        employees = container.getPerson().getAll(EmployeeCollection.class);
         assertFalse(employees.isEmpty());
         for (Employee employee : employees) {
             assertEquals(preSalaries.get(employee.getPersonId()) + 1, employee.getSalary().intValue());

@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "EdmDoubleSet")
-public interface AsyncEdmDoubleSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDouble, Double> {
+public interface AsyncEdmDoubleSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDouble, Double, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDoubleCollection> {
 }

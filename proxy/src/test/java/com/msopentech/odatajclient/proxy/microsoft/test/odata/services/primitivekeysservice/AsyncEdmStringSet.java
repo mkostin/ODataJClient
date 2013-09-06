@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "EdmStringSet")
-public interface AsyncEdmStringSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmString, String> {
+public interface AsyncEdmStringSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmString, String, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmStringCollection> {
 }

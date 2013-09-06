@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "ProductReview")
-public interface AsyncProductReview extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReview, ProductReviewKey> {
+public interface AsyncProductReview extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReview, ProductReviewKey, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ProductReviewCollection> {
 }

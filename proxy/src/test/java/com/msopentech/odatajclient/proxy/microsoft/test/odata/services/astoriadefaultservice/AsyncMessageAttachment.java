@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "MessageAttachment")
-public interface AsyncMessageAttachment extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachment, UUID> {
+public interface AsyncMessageAttachment extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachment, UUID, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachmentCollection> {
 }

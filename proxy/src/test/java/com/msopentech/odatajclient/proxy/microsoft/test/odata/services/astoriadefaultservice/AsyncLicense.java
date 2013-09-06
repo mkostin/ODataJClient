@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "License")
-public interface AsyncLicense extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.License, String> {
+public interface AsyncLicense extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.License, String, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.LicenseCollection> {
 }

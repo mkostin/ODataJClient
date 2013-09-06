@@ -31,7 +31,6 @@ import java.util.Collection;
 @EntitySet(name = "EdmBinarySet")
 public interface EdmBinarySet extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmBinary, byte[], com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmBinaryCollection> {
 
-    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmBinaryCollection getAllEdmBinary();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmBinary newEdmBinary();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmBinaryCollection newEdmBinaryCollection();
 }

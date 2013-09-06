@@ -17,12 +17,10 @@ package com.msopentech.odatajclient.proxy;
 
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
-import com.msopentech.odatajclient.proxy.api.query.AsyncEntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.AsyncQuery;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.AsyncDefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
-import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -30,27 +28,13 @@ public class AsyncProxyUsageTest {
 
     private EntityContainerFactory entityContainerFactory;
 
-    public void entityQuery() {
+    public void query() {
         AsyncDefaultContainer container = entityContainerFactory.getEntityContainer(AsyncDefaultContainer.class);
-
-        // Typed query for orders with id < 10.00, to be execute asynchronously
-        AsyncEntityQuery<Order> orderQuery = container.getOrder().createQuery(Order.class);
-        orderQuery.setFilter("OrderId lt 10.00");
-
-        Future<AbstractEntityCollection<Order>> matchingOrdersFuture = orderQuery.asyncGetResultList();
-
-        // ... do something with matchingOrdersFuture
-    }
-
-    public void untypedQuery() {
-        AsyncDefaultContainer container = entityContainerFactory.getEntityContainer(AsyncDefaultContainer.class);
-
-        // Untyped query for names of order with id < 10.00, to be execute asynchronously
-        AsyncQuery query = container.getOrder().createQuery();
+        // Query for orders with id < 10.00, to be execute asynchronously
+        AsyncQuery<Order, AbstractEntityCollection<Order>> query = container.getOrder().createQuery();
         query.setFilter("OrderId lt 10.00");
-        query.setSelect("CustomerId");
-
-        Future<AbstractEntityCollection<Serializable>> matchFuture = query.asyncGetResultList();
+        
+        Future<AbstractEntityCollection<Order>> matchFuture = query.asyncGetResultList();
 
         // ... do something with matchFuture
     }

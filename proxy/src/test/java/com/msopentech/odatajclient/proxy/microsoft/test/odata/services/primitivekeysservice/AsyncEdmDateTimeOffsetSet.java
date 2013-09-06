@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "EdmDateTimeOffsetSet")
-public interface AsyncEdmDateTimeOffsetSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDateTimeOffset, ODataTimestamp> {
+public interface AsyncEdmDateTimeOffsetSet extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDateTimeOffset, ODataTimestamp, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDateTimeOffsetCollection> {
 }

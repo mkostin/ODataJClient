@@ -31,7 +31,6 @@ import java.util.Collection;
 @EntitySet(name = "Login")
 public interface Login extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login, String, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.LoginCollection> {
 
-    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.LoginCollection getAllLogin();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login newLogin();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.LoginCollection newLoginCollection();
 }

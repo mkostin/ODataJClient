@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "RSAToken")
-public interface AsyncRSAToken extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.RSAToken, String> {
+public interface AsyncRSAToken extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.RSAToken, String, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.RSATokenCollection> {
 }

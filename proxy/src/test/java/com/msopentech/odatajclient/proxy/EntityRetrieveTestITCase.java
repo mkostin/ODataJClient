@@ -47,6 +47,7 @@ import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriade
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.SpecialEmployeeCollection;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
+import javax.sound.midi.Soundbank;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -76,21 +77,21 @@ public class EntityRetrieveTestITCase extends AbstractTest {
             assertNotNull(person);
         }
 
-        final EmployeeCollection employees = container.getPerson().getAllEmployee();
+        final EmployeeCollection employees = container.getPerson().getAll(EmployeeCollection.class);
         assertNotNull(employees);
         assertFalse(employees.isEmpty());
         for (Employee employee : employees) {
             assertNotNull(employee);
         }
 
-        final SpecialEmployeeCollection specialEmployees = container.getPerson().getAllSpecialEmployee();
+        final SpecialEmployeeCollection specialEmployees = container.getPerson().getAll(SpecialEmployeeCollection.class);
         assertNotNull(specialEmployees);
         assertFalse(specialEmployees.isEmpty());
         for (SpecialEmployee employee : specialEmployees) {
             assertNotNull(employee);
         }
 
-        final ContractorCollection contractors = container.getPerson().getAllContractor();
+        final ContractorCollection contractors = container.getPerson().getAll(ContractorCollection.class);
         assertNotNull(contractors);
         assertFalse(contractors.isEmpty());
         for (Contractor contractor : contractors) {
@@ -133,7 +134,6 @@ public class EntityRetrieveTestITCase extends AbstractTest {
         assertEquals(173.334, geogPoint.getX(), 0);
     }
 
-    // TODO: test for lazy and eager
     @Test
     public void withInlineEntry() {
         final Customer customer = readCustomer(container, -10);
@@ -142,9 +142,7 @@ public class EntityRetrieveTestITCase extends AbstractTest {
         assertEquals(Integer.valueOf(11), customerInfo.getCustomerInfoId());
     }
 
-    // TODO: test for lazy and eager
     @Test
-    @Ignore
     public void withInlineFeed() {
         final Customer customer = readCustomer(container, -10);
         final OrderCollection orders = customer.getOrders();

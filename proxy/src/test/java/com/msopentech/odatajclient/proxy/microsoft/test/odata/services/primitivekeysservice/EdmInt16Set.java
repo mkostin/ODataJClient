@@ -31,7 +31,6 @@ import java.util.Collection;
 @EntitySet(name = "EdmInt16Set")
 public interface EdmInt16Set extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmInt16, Short, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmInt16Collection> {
 
-    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmInt16Collection getAllEdmInt16();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmInt16 newEdmInt16();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmInt16Collection newEdmInt16Collection();
 }

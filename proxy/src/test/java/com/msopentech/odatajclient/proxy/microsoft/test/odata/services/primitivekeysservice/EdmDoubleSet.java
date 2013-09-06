@@ -31,7 +31,6 @@ import java.util.Collection;
 @EntitySet(name = "EdmDoubleSet")
 public interface EdmDoubleSet extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDouble, Double, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDoubleCollection> {
 
-    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDoubleCollection getAllEdmDouble();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDouble newEdmDouble();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.EdmDoubleCollection newEdmDoubleCollection();
 }

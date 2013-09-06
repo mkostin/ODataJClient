@@ -50,5 +50,5 @@ import java.util.Collection;
 #end
 
 @EntitySet(name = "$entitySet.Name")
-public interface Async$utility.capitalize($entitySet.Name) extends AbstractAsyncEntitySet<$utility.getJavaType($entitySet.EntityType), $type> {
+public interface Async$utility.capitalize($entitySet.Name) extends AbstractAsyncEntitySet<$utility.getJavaType($entitySet.EntityType), $type, $utility.getJavaType($entitySet.EntityType)Collection> {
 }

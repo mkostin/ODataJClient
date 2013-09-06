@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "Login")
-public interface AsyncLogin extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login, String> {
+public interface AsyncLogin extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Login, String, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.LoginCollection> {
 }

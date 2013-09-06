@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "MappedEntityType")
-public interface AsyncMappedEntityType extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MappedEntityType, Integer> {
+public interface AsyncMappedEntityType extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MappedEntityType, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.MappedEntityTypeCollection> {
 }

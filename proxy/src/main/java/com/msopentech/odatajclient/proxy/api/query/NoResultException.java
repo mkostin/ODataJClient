@@ -18,6 +18,7 @@ package com.msopentech.odatajclient.proxy.api.query;
 /**
  * Thrown when <tt>Query.getSingleResult()</tt> or <tt>EntityQuery.getSingleResult()</tt> is executed on a query
  * and there is no result to return.
+ *
  * @see Query#getSingleResult()
  * @see EntityQuery#getSingleResult()
  */
@@ -27,9 +28,5 @@ public class NoResultException extends RuntimeException {
 
     public NoResultException() {
         super();
-    }
-
-    public NoResultException(final String message) {
-        super(message);
     }
 }

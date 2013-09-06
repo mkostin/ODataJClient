@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "Car")
-public interface AsyncCar extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Car, Integer> {
+public interface AsyncCar extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Car, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CarCollection> {
 }

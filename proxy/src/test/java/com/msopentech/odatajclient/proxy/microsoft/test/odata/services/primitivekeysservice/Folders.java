@@ -31,7 +31,6 @@ import java.util.Collection;
 @EntitySet(name = "Folders")
 public interface Folders extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.Folder, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.FolderCollection> {
 
-    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.FolderCollection getAllFolder();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.Folder newFolder();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.types.FolderCollection newFolderCollection();
 }

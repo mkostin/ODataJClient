@@ -27,5 +27,5 @@ import java.util.Collection;
 
 
 @EntitySet(name = "PersonMetadata")
-public interface AsyncPersonMetadata extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonMetadata, Integer> {
+public interface AsyncPersonMetadata extends AbstractAsyncEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonMetadata, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonMetadataCollection> {
 }

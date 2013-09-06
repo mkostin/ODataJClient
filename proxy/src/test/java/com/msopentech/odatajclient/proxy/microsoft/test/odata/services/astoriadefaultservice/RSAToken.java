@@ -31,7 +31,6 @@ import java.util.Collection;
 @EntitySet(name = "RSAToken")
 public interface RSAToken extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.RSAToken, String, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.RSATokenCollection> {
 
-    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.RSATokenCollection getAllRSAToken();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.RSAToken newRSAToken();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.RSATokenCollection newRSATokenCollection();
 }

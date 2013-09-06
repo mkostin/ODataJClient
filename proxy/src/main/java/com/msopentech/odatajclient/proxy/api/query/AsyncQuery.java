@@ -22,7 +22,8 @@ import java.util.concurrent.Future;
 /**
  * Abstract class to control asynchronous query execution.
  */
-public abstract class AsyncQuery implements Query {
+public abstract class AsyncQuery<T extends Serializable, EC extends AbstractEntityCollection<T>>
+        implements Query<T, EC> {
 
     private static final long serialVersionUID = -1384992773012007320L;
 
@@ -32,7 +33,7 @@ public abstract class AsyncQuery implements Query {
      * @throws UnsupportedOperationException at any invocation, use <tt>asyncGetSingleResult()</tt> instead.
      */
     @Override
-    public Serializable getSingleResult() throws NoResultException, NonUniqueResultException {
+    public T getSingleResult() throws NoResultException, NonUniqueResultException {
         throw new UnsupportedOperationException("Synchronous operations not supported");
     }
 
@@ -41,7 +42,7 @@ public abstract class AsyncQuery implements Query {
      *
      * @see Query#getSingleResult()
      */
-    public abstract Future<Serializable> asyncGetSingleResult() throws NoResultException, NonUniqueResultException;
+    public abstract Future<T> asyncGetSingleResult() throws NoResultException, NonUniqueResultException;
 
     /**
      * {@inheritDoc}
@@ -49,7 +50,7 @@ public abstract class AsyncQuery implements Query {
      * @throws UnsupportedOperationException at any invocation, use <tt>asyncGetResultList()</tt> instead.
      */
     @Override
-    public <T extends Serializable, EC extends AbstractEntityCollection<T>> EC getResultList() {
+    public EC getResult() {
         throw new UnsupportedOperationException("Synchronous operations not supported");
     }
 
@@ -58,5 +59,5 @@ public abstract class AsyncQuery implements Query {
      *
      * @see Query#getResultList()
      */
-    public abstract <T extends Serializable, EC extends AbstractEntityCollection<T>> Future<EC> asyncGetResultList();
+    public abstract Future<EC> asyncGetResultList();
 }

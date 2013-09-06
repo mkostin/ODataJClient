@@ -31,7 +31,6 @@ import java.util.Collection;
 @EntitySet(name = "PersonMetadata")
 public interface PersonMetadata extends AbstractEntitySet<com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonMetadata, Integer, com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonMetadataCollection> {
 
-    com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonMetadataCollection getAllPersonMetadata();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonMetadata newPersonMetadata();
     com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.PersonMetadataCollection newPersonMetadataCollection();
 }

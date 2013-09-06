@@ -16,15 +16,12 @@
 package com.msopentech.odatajclient.proxy;
 
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
-import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
-import java.io.Serializable;
-import java.util.List;
 
 public class ProxyUsageTest {
 
@@ -32,37 +29,13 @@ public class ProxyUsageTest {
 
     public void entityQuery() {
         DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
-
-        // Typed query for orders with id < 10.00, to be execute
-        EntityQuery<Order> orderQuery = container.getOrder().createQuery(Order.class);
+        // Query for orders with id < 10.00, to be execute
+        Query<Order, OrderCollection> orderQuery = container.getOrder().createQuery();
         orderQuery.setFilter("OrderId lt 10.00");
-
-        List<Order> matchingOrdersFuture = orderQuery.getResultList();
-
-        // ... do something with matchingOrdersFuture
-
-
-        // Typed query for CustomerId of orders with OrderId < 10.00
-        orderQuery = container.getOrder().createQuery(Order.class);
-        orderQuery.setFilter("OrderId lt 10.00");
-        orderQuery.setSelect("CustomerId");
-
-        List<Order> matchingCategories = orderQuery.getResultList();
+        
+        OrderCollection matchingOrders = orderQuery.getResult();
 
         // ... do something with matchingOrders
-    }
-
-    public void untypedQuery() {
-        DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
-
-        // Untyped query for names of order with id < 10.00, to be execute
-        Query query = container.getOrder().createQuery();
-        query.setFilter("OrderId lt 10.00");
-        query.setSelect("CustomerId");
-
-        List<? extends Serializable> matchFuture = query.getResultList();
-
-        // ... do something with results
     }
 
     public void get() {

@@ -15,60 +15,57 @@
  */
 package com.msopentech.odatajclient.proxy.api.query;
 
+import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import java.io.Serializable;
 
 /**
  * Interface used to control query execution.
+ *
+ * @param <T> query result type
  */
-public interface Query extends Serializable {
+public interface Query<T extends Serializable, EC extends AbstractEntityCollection<T>> extends Serializable {
 
     /**
-     * Set the <tt>$select</tt> expression for this query.
-     *
-     * @param select the <tt>$select</tt> expression for this query
-     * @return the same query instance
-     */
-    Query setSelect(String select);
-
-    /**
-     * The <tt>$select</tt> expression for this query.
-     *
-     * @return the <tt>$select</tt> expression for this query
-     */
-    String getSelect();
-
-    /**
-     * Set the <tt>$filter</tt> expression for this query.
+     * Sets the <tt>$filter</tt> expression for this query.
      * Any of available operators and functions can be embodied here.
      *
      * @param filter the <tt>$filter</tt> expression for this query
      * @return the same query instance
      */
-    Query setFilter(String filter);
+    Query<T, EC> setFilter(String filter);
+
+    /**
+     * Sets the filter generating the <tt>$filter</tt> expression for this query.
+     *
+     * @param filter filter instance (to be obtained via <tt>ODataFilterFactory</tt>):
+     * note that <tt>build()</tt> method will be immediately invoked.
+     * @return the same query instance
+     */
+    Query<T, EC> setFilter(ODataFilter filter);
 
     /**
      * The <tt>$filter</tt> expression for this query.
      *
      * @return the <tt>$filter</tt> expression for this query
      */
-    String getFiter();
+    String getFilter();
 
     /**
-     * Set the <tt>$orderBy</tt> expression for this query via sort options.
+     * Sets the <tt>$orderBy</tt> expression for this query via sort options.
      *
      * @param sort sort options
      * @return the same query instance
      */
-    Query setOrderBy(Sort... sort);
+    Query<T, EC> setOrderBy(Sort... sort);
 
     /**
-     * Set the <tt>$orderBy</tt> expression for this query.
+     * Sets the <tt>$orderBy</tt> expression for this query.
      *
      * @param select the <tt>$orderBy</tt> expression for this query
      * @return the same query instance
      */
-    Query setOrderBy(String orderBy);
+    Query<T, EC> setOrderBy(String orderBy);
 
     /**
      * The <tt>$orderBy</tt> expression for this query.
@@ -78,13 +75,13 @@ public interface Query extends Serializable {
     String getOrderBy();
 
     /**
-     * Set the maximum number of results to retrieve (<tt>$top</tt>).
+     * Sets the maximum number of results to retrieve (<tt>$top</tt>).
      *
-     * @param maxResult maximum number of results to retrieve
+     * @param maxResults maximum number of results to retrieve
      * @return the same query instance
      * @throws IllegalArgumentException if the argument is negative
      */
-    Query setMaxResults(int maxResult) throws IllegalArgumentException;
+    Query<T, EC> setMaxResults(int maxResults) throws IllegalArgumentException;
 
     /**
      * The maximum number of results the query object was set to retrieve (<tt>$top</tt>).
@@ -95,13 +92,13 @@ public interface Query extends Serializable {
     int getMaxResults();
 
     /**
-     * Set the position of the first result to retrieve (<tt>$skip</tt>).
+     * Sets the position of the first result to retrieve (<tt>$skip</tt>).
      *
-     * @param startPosition position of the first result, numbered from 0
+     * @param firstResult position of the first result, numbered from 0
      * @return the same query instance
      * @throws IllegalArgumentException if the argument is negative
      */
-    Query setFirstResult(int startPosition) throws IllegalArgumentException;
+    Query<T, EC> setFirstResult(int firstResult) throws IllegalArgumentException;
 
     /**
      * The position of the first result the query object was set to retrieve (<tt>$skip</tt>).
@@ -113,18 +110,18 @@ public interface Query extends Serializable {
     int getFirstResult();
 
     /**
-     * Execute a <tt>$filter</tt> query that returns a single untyped result.
+     * Executes a <tt>$filter</tt> query that returns a single result.
      *
      * @return the result
      * @throws NoResultException if there is no result
      * @throws NonUniqueResultException if more than one result
      */
-    Serializable getSingleResult() throws NoResultException, NonUniqueResultException;
+    T getSingleResult() throws NoResultException, NonUniqueResultException;
 
     /**
-     * Execute a <tt>$filter</tt> query and return the query results as an untyped iterable.
+     * Executes a <tt>$filter</tt> query and return the query results as collection.
      *
      * @return an iterable view of the results
      */
-    <T extends Serializable, EC extends AbstractEntityCollection<T>> EC getResultList();
+    EC getResult();
 }
