@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import java.io.Serializable;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -27,7 +28,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @see com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType#TIME
  * @see Duration
  */
-public final class ODataDuration {
+public final class ODataDuration implements Serializable {
+
+    private static final long serialVersionUID = 778404231943967899L;
 
     private final Duration duration;
 

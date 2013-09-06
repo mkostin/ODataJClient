@@ -258,7 +258,7 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
-        <version>0.9</version>
+        <version>0.10</version>
         <configuration>
           <excludes>
             <exclude>nb*.xml</exclude>
@@ -279,7 +279,7 @@
             <exclude>.idea/**</exclude>
             <exclude>**/.*</exclude>
             <exclude>yworks*/**</exclude>
-            <exclude>**/astoriadefaultservice/**/*.java</exclude>
+            <exclude>**/microsoft/**/*.java</exclude>
           </excludes>
         </configuration>
         <executions>

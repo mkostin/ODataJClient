@@ -258,19 +258,26 @@ class EntitySetInvocationHandler<
                 ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef),
                 key);
 
+        LOG.debug("Ask for '{}({})'", typeRef.getSimpleName(), key);
+
         EntityTypeInvocationHandler handler =
                 EntityContainerFactory.getContext().entityContext().getEntity(uuid);
 
         if (handler == null) {
             // not yet attached: search against the service
             try {
+                LOG.debug("Search for '{}({})' into the service", typeRef.getSimpleName(), key);
                 final ODataURIBuilder uriBuilder = new ODataURIBuilder(this.uri.toASCIIString());
 
                 if (key.getClass().getAnnotation(CompoundKey.class) == null) {
+                    LOG.debug("Append key segment '{}'", key);
                     uriBuilder.appendKeySegment(key);
                 } else {
+                    LOG.debug("Append compound key segment '{}'", key);
                     uriBuilder.appendKeySegment(getCompoundKey(key));
                 }
+
+                LOG.debug("Execute query '{}'", uriBuilder.toString());
 
                 final ODataRetrieveResponse<ODataEntity> res =
                         ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute();
@@ -282,6 +289,7 @@ class EntitySetInvocationHandler<
             }
         } else if (isDeleted(handler)) {
             // object deleted
+            LOG.debug("Object '{}({})' has been delete", typeRef.getSimpleName(), uuid);
             handler = null;
         }
 

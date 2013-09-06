@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Properties;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
@@ -60,11 +61,23 @@ public abstract class AbstractTest {
 
     protected static String testPrimitiveKeysServiceRootURL;
 
+    protected static String testOpenTypeServiceRootURL;
+
     protected static String testLargeModelServiceRootURL;
+
+    protected static String testAuthServiceRootURL;
 
     protected final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
 
     protected static DefaultContainer container;
+
+    /**
+     * This is needed for correct number handling (Double, for example).
+     */
+    @BeforeClass
+    public static void setEnglishLocale() {
+        Locale.setDefault(Locale.ENGLISH);
+    }
 
     @BeforeClass
     public static void setUpODataServiceRoot() throws IOException {
@@ -90,9 +103,10 @@ public abstract class AbstractTest {
         testActionOverloadingServiceRootURL = testBaseURL + "/ActionOverloadingService.svc";
         testKeyAsSegmentServiceRootURL = testBaseURL + "/KeyAsSegmentService.svc";
         testODataWriterDefaultServiceRootURL = testBaseURL + "/ODataWriterDefaultService.svc";
-        testOpenTypesServiceRootURL = testBaseURL + "/OpenTypesService.svc";
-        testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeysService.svc";
+        testOpenTypeServiceRootURL = testBaseURL + "/OpenTypeService.svc";
+        testPrimitiveKeysServiceRootURL = testBaseURL + "/PrimitiveKeys.svc";
         testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
+        testAuthServiceRootURL = "http://localhost:9080/DefaultService.svc";
 
         container = EntityContainerFactory.newInstance(testDefaultServiceRootURL).
                 getEntityContainer(DefaultContainer.class);
