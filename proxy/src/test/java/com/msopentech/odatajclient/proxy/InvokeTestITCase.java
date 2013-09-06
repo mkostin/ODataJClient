@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy;
 
-import static com.msopentech.odatajclient.proxy.AbstractTest.container;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -103,7 +102,7 @@ public class InvokeTestITCase extends AbstractTest {
             assertTrue(employee.getTitle().endsWith("[Sacked]"));
         } finally {
             // 3. remove the test employee
-            container.getPerson().delete(Collections.<Employee>singleton(employee));
+            container.getPerson().delete(employee.getPersonId());
             container.flush();
         }
     }
@@ -167,7 +166,7 @@ public class InvokeTestITCase extends AbstractTest {
             assertEquals(BigDecimal.ONE, product.getDimensions().getWidth());
         } finally {
             // 3. remove the test product
-            container.getProduct().delete(Collections.<Product>singleton(product));
+            container.getProduct().delete(product.getProductId());
             container.flush();
         }
     }
@@ -207,7 +206,7 @@ public class InvokeTestITCase extends AbstractTest {
                     computerDetail.getPurchaseDate());
         } finally {
             // 3. remove the test product
-            container.getComputerDetail().delete(Collections.<ComputerDetail>singleton(computerDetail));
+            container.getComputerDetail().delete(computerDetail.getComputerDetailId());
             container.flush();
         }
     }
