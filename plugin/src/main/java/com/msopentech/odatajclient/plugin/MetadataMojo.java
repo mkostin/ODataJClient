@@ -96,7 +96,7 @@ public class MetadataMojo extends AbstractMojo {
 
         for (Schema schema : metadata.getSchemas()) {
             utility = new Utility(metadata, schema, basePackage);
-
+            
             // write package-info for the base package
             final String schemaPath = utility.getNamespace().toLowerCase().replaceAll("\\.", File.separator);
             final File base = mkdir(schemaPath);

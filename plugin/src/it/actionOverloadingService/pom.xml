@@ -72,7 +72,7 @@
             <configuration>
               <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
               <serviceRootURL>@serviceRootURL@/ActionOverloadingService.svc</serviceRootURL>
-              <basePackage>com.msopentech.odatajclient.proxy</basePackage>
+              <basePackage>com.msopentech.odatajclient.proxy.actionoverloadingservice</basePackage>
             </configuration>
             <id>pojos</id>
             <phase>generate-sources</phase>

@@ -18,9 +18,9 @@ package com.msopentech.odatajclient.proxy;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.query.AsyncQuery;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.AsyncDefaultContainer;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.AsyncDefaultContainer;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Order;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 

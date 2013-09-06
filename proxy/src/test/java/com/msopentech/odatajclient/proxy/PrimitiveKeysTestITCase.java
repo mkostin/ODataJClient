@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.msopentech.odatajclient.engine.data.ODataDuration;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.primitivekeysservice.TestContext;
+import com.msopentech.odatajclient.proxy.primitivekeysservice.microsoft.test.odata.services.primitivekeysservice.TestContext;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.Test;
