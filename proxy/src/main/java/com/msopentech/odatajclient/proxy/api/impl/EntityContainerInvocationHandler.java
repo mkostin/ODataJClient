@@ -71,31 +71,43 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
 
     private static final long serialVersionUID = 7379006755693410764L;
 
+    private final EntityContainerFactory factory;
+
     protected final String schemaName;
 
     private final String entityContainerName;
 
-    private final boolean defaultEntityContainer;
+    private final boolean defaultEC;
 
-    public EntityContainerInvocationHandler(final Class<?> ref, final EntityContainerFactory factory) {
-        super(factory);
+    public static EntityContainerInvocationHandler getInstance(
+            final Class<?> ref, final EntityContainerFactory factory) {
 
-        if (!ref.isInterface()) {
-            throw new IllegalArgumentException(ref.getName() + " is not an interface");
-        }
+        final EntityContainerInvocationHandler instance = new EntityContainerInvocationHandler(ref, factory);
+        instance.containerHandler = instance;
+        return instance;
+    }
+
+    private EntityContainerInvocationHandler(final Class<?> ref, final EntityContainerFactory factory) {
+        super(null);
 
         final Annotation annotation = ref.getAnnotation(EntityContainer.class);
         if (!(annotation instanceof EntityContainer)) {
             throw new IllegalArgumentException(ref.getName()
                     + " is not annotated as @" + EntityContainer.class.getSimpleName());
         }
+
+        this.factory = factory;
         this.entityContainerName = ((EntityContainer) annotation).name();
-        this.defaultEntityContainer = ((EntityContainer) annotation).isDefaultEntityContainer();
+        this.defaultEC = ((EntityContainer) annotation).isDefaultEntityContainer();
         this.schemaName = ClassUtils.getNamespace(ref);
     }
 
+    public EntityContainerFactory getFactory() {
+        return factory;
+    }
+
     public boolean isDefaultEntityContainer() {
-        return defaultEntityContainer;
+        return defaultEC;
     }
 
     public String getEntityContainerName() {
@@ -124,7 +136,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
             } // 2. invoke function imports
             else if (methodAnnots[0] instanceof FunctionImport) {
                 final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
-                        factory.getMetadata().getSchema(schemaName).getEntityContainer(entityContainerName);
+                        getFactory().getMetadata().getSchema(schemaName).getEntityContainer(entityContainerName);
                 final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp =
                         container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
 
@@ -272,9 +284,11 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
 
     private void batchCreate(
             final EntityTypeInvocationHandler handler, final ODataEntity entity, final ODataChangeset changeset) {
+
         LOG.debug("Create '{}'", handler);
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(handler.factory.getServiceRoot());
-        uriBuilder.appendEntitySetSegment(handler.getEntitySetName());
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(factory.getServiceRoot()).
+                appendEntitySetSegment(handler.getEntitySetName());
         changeset.addRequest(ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), entity));
     }
 
@@ -282,7 +296,9 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
             final EntityTypeInvocationHandler handler,
             final ODataEntity changes,
             final ODataChangeset changeset) {
+
         LOG.debug("Update '{}'", changes.getEditLink());
+
         final ODataEntityUpdateRequest req =
                 ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.PATCH, changes);
         req.setPrefer(ODataHeaderValues.preferReturnContent);
@@ -299,7 +315,9 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
             final URI uri,
             final ODataEntity changes,
             final ODataChangeset changeset) {
+
         LOG.debug("Update '{}'", uri);
+
         final ODataEntityUpdateRequest req =
                 ODataCUDRequestFactory.getEntityUpdateRequest(uri, UpdateType.PATCH, changes);
         req.setPrefer(ODataHeaderValues.preferReturnContent);
@@ -317,7 +335,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
         LOG.debug("Delete '{}'", entity.getEditLink());
 
         final ODataDeleteRequest req = ODataCUDRequestFactory.getDeleteRequest(URIUtils.getURI(
-                handler.factory.getServiceRoot(), entity.getEditLink().toASCIIString()));
+                factory.getServiceRoot(), entity.getEditLink().toASCIIString()));
 
         if (StringUtils.isNotBlank(handler.getETag())) {
             req.setIfMatch(handler.getETag());
@@ -378,7 +396,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
                     final Integer targetPos = items.get(target);
                     if (targetPos == null) {
                         // schedule update for the current object
-                        LOG.debug("Schedule '{}' from '{}' to '{}'", new Object[] {type.name(), handler, target});
+                        LOG.debug("Schedule '{}' from '{}' to '{}'", type.name(), handler, target);
                         toBeLinked.add(target);
                     } else if (status == AttachedEntityStatus.CHANGED) {
                         entity.addLink(buildNavigationLink(
@@ -386,8 +404,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
                                 URIUtils.getURI(serviceRoot, editLink.toASCIIString()), type));
                     } else {
                         // create the link for the current object
-                        LOG.debug("'{}' from '{}' to (${}) '{}'",
-                                new Object[] {type.name(), handler, targetPos, target});
+                        LOG.debug("'{}' from '{}' to (${}) '{}'", type.name(), handler, targetPos, target);
 
                         entity.addLink(
                                 buildNavigationLink(property.getKey().name(), URI.create("$" + targetPos), type));

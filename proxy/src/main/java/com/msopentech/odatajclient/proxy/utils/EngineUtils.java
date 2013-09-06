@@ -133,7 +133,7 @@ public final class EngineUtils {
         return res;
     }
 
-    private static ODataValue getODataValue(final EdmMetadata metadata, final Object obj, final EdmType type) {
+    public static ODataValue getODataValue(final EdmMetadata metadata, final EdmType type, final Object obj) {
         final ODataValue value;
 
         if (type.isCollection()) {
@@ -141,9 +141,9 @@ public final class EngineUtils {
             final EdmType intType = new EdmType(metadata, type.getBaseType());
             for (Object collectionItem : (Collection) obj) {
                 if (intType.isSimpleType()) {
-                    ((ODataCollectionValue) value).add(getODataValue(metadata, collectionItem, intType).asPrimitive());
+                    ((ODataCollectionValue) value).add(getODataValue(metadata, intType, collectionItem).asPrimitive());
                 } else if (intType.isComplexType()) {
-                    ((ODataCollectionValue) value).add(getODataValue(metadata, collectionItem, intType).asComplex());
+                    ((ODataCollectionValue) value).add(getODataValue(metadata, intType, collectionItem).asComplex());
                 } else if (intType.isEnumType()) {
                     // TODO: manage enum types
                     throw new UnsupportedOperationException("Usupported enum type " + intType.getTypeExpression());
@@ -190,17 +190,17 @@ public final class EngineUtils {
                 // create collection property
                 oprop = ODataFactory.newCollectionProperty(
                         prop.name(),
-                        obj == null ? null : getODataValue(metadata, obj, type).asCollection());
+                        obj == null ? null : getODataValue(metadata, type, obj).asCollection());
             } else if (type.isSimpleType()) {
                 // create a primitive property
                 oprop = ODataFactory.newPrimitiveProperty(
                         prop.name(),
-                        obj == null ? null : getODataValue(metadata, obj, type).asPrimitive());
+                        obj == null ? null : getODataValue(metadata, type, obj).asPrimitive());
             } else if (type.isComplexType()) {
                 // create a complex property
                 oprop = ODataFactory.newComplexProperty(
                         prop.name(),
-                        obj == null ? null : getODataValue(metadata, obj, type).asComplex());
+                        obj == null ? null : getODataValue(metadata, type, obj).asComplex());
             } else if (type.isEnumType()) {
                 // TODO: manage enum types
                 throw new UnsupportedOperationException("Usupported enum type " + type.getTypeExpression());

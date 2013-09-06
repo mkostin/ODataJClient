@@ -17,7 +17,6 @@ package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
-import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import java.io.Serializable;
@@ -41,16 +40,16 @@ public class EntityCollectionInvocationHandler<T extends Serializable>
 
     private final URI uri;
 
-    public EntityCollectionInvocationHandler(final EntityContainerFactory factory, final Collection<T> items,
-            final Class<?> itemRef, final String entityContainerName) {
+    public EntityCollectionInvocationHandler(final EntityContainerInvocationHandler containerHandler,
+            final Collection<T> items, final Class<?> itemRef, final String entityContainerName) {
 
-        this(factory, items, itemRef, entityContainerName, null);
+        this(containerHandler, items, itemRef, entityContainerName, null);
     }
 
-    public EntityCollectionInvocationHandler(final EntityContainerFactory factory, final Collection<T> items,
-            final Class<?> itemRef, final String entityContainerName, final URI uri) {
+    public EntityCollectionInvocationHandler(final EntityContainerInvocationHandler containerHandler,
+            final Collection<T> items, final Class<?> itemRef, final String entityContainerName, final URI uri) {
 
-        super(factory);
+        super(containerHandler);
 
         this.items = items;
         this.itemRef = itemRef;
@@ -70,7 +69,7 @@ public class EntityCollectionInvocationHandler<T extends Serializable>
             }
 
             final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
-                    factory.getMetadata().getSchema(ClassUtils.getNamespace(itemRef)).
+                    containerHandler.getFactory().getMetadata().getSchema(ClassUtils.getNamespace(itemRef)).
                     getEntityContainer(entityContainerName);
             final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp =
                     container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());

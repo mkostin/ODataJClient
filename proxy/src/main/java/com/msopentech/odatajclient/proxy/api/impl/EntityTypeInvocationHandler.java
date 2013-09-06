@@ -80,10 +80,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
         return getInstance(
                 entity,
-                entitySet.getContainer().getEntityContainerName(),
+                entitySet.containerHandler.getEntityContainerName(),
                 entitySet.getEntitySetName(),
                 typeRef,
-                entitySet.getContainer().factory);
+                entitySet.containerHandler);
     }
 
     static EntityTypeInvocationHandler getInstance(
@@ -91,9 +91,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             final String entityContainerName,
             final String entitySetName,
             final Class<?> typeRef,
-            final EntityContainerFactory factory) {
+            final EntityContainerInvocationHandler containerHandler) {
 
-        return new EntityTypeInvocationHandler(entity, entityContainerName, entitySetName, typeRef, factory);
+        return new EntityTypeInvocationHandler(entity, entityContainerName, entitySetName, typeRef, containerHandler);
     }
 
     private EntityTypeInvocationHandler(
@@ -101,9 +101,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             final String entityContainerName,
             final String entitySetName,
             final Class<?> typeRef,
-            final EntityContainerFactory factory) {
+            final EntityContainerInvocationHandler containerHandler) {
 
-        super(factory);
+        super(containerHandler);
         this.entityContainerName = entityContainerName;
         this.entity = entity;
         this.typeRef = typeRef;
@@ -113,7 +113,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 entityContainerName,
                 entitySetName,
                 entity.getName(),
-                EngineUtils.getKey(factory.getMetadata(), typeRef, entity));
+                EngineUtils.getKey(containerHandler.getFactory().getMetadata(), typeRef, entity));
 
         this.propertiesTag = 0;
         this.linksTag = 0;
@@ -127,7 +127,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 getUUID().getContainerName(),
                 getUUID().getEntitySetName(),
                 getUUID().getName(),
-                EngineUtils.getKey(factory.getMetadata(), typeRef, entity));
+                EngineUtils.getKey(containerHandler.getFactory().getMetadata(), typeRef, entity));
 
         this.propertyChanges.clear();
         this.linkChanges.clear();
@@ -200,7 +200,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             }
 
             final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
-                    factory.getMetadata().getSchema(ClassUtils.getNamespace(typeRef)).
+                    containerHandler.getFactory().getMetadata().getSchema(ClassUtils.getNamespace(typeRef)).
                     getEntityContainer(entityContainerName);
             final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp =
                     container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
@@ -273,7 +273,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             collItemType = type;
         }
 
-        final EdmMetadata metadata = factory.getMetadata();
+        final EdmMetadata metadata = containerHandler.getFactory().getMetadata();
         final Schema schema = metadata.getSchema(ClassUtils.getNamespace(typeRef));
 
         // 1) get association
@@ -311,7 +311,8 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         false);
             } else {
                 // navigate
-                final URI uri = URIUtils.getURI(factory.getServiceRoot(), link.getLink().toASCIIString());
+                final URI uri = URIUtils.getURI(
+                        containerHandler.getFactory().getServiceRoot(), link.getLink().toASCIIString());
 
                 if (AbstractEntityCollection.class.isAssignableFrom(type)) {
                     navPropValue = getEntityCollection(
@@ -353,7 +354,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 res = propertyChanges.get(property);
             } else {
                 res = EngineUtils.getValueFromProperty(
-                        factory.getMetadata(), entity.getProperty(property.name()), type);
+                        containerHandler.getFactory().getMetadata(), entity.getProperty(property.name()), type);
 
                 if (res != null) {
                     int checkpoint = propertyChanges.hashCode();

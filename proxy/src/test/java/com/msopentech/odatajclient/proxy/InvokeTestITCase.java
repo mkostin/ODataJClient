@@ -15,16 +15,25 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import static com.msopentech.odatajclient.proxy.AbstractTest.container;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.msopentech.odatajclient.engine.data.ODataTimestamp;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Employee;
 import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.EmployeeCollection;
+import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Product;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -85,7 +94,7 @@ public class InvokeTestITCase extends AbstractTest {
         assertEquals(id, employee.getPersonId());
 
         try {
-            // 1. invoke action bound with the employee just created
+            // 1. invoke action bound to the employee just created
             employee.sack();
 
             // 2. check that invoked action has effectively run
@@ -110,12 +119,96 @@ public class InvokeTestITCase extends AbstractTest {
         assertFalse(preSalaries.isEmpty());
 
         employees.increaseSalaries(1);
-        container.flush();
 
         employees = container.getPerson().getAllEmployee();
         assertFalse(employees.isEmpty());
         for (Employee employee : employees) {
             assertEquals(preSalaries.get(employee.getPersonId()) + 1, employee.getSalary().intValue());
+        }
+    }
+
+    @Test
+    public void changeProductDimensions() {
+        // 0. create a product
+        final Integer id = 101;
+
+        Product product = container.getProduct().newProduct();
+        product.setProductId(id);
+        product.setDescription("New product");
+
+        final Dimensions origDimensions = new Dimensions();
+        origDimensions.setDepth(BigDecimal.ZERO);
+        origDimensions.setHeight(BigDecimal.ZERO);
+        origDimensions.setWidth(BigDecimal.ZERO);
+        product.setDimensions(origDimensions);
+
+        container.flush();
+
+        product = container.getProduct().get(id);
+        assertNotNull(product);
+        assertEquals(id, product.getProductId());
+        assertEquals(BigDecimal.ZERO, product.getDimensions().getDepth());
+        assertEquals(BigDecimal.ZERO, product.getDimensions().getHeight());
+        assertEquals(BigDecimal.ZERO, product.getDimensions().getWidth());
+
+        try {
+            // 1. invoke action bound to the product just created
+            final Dimensions newDimensions = new Dimensions();
+            newDimensions.setDepth(BigDecimal.ONE);
+            newDimensions.setHeight(BigDecimal.ONE);
+            newDimensions.setWidth(BigDecimal.ONE);
+
+            product.changeProductDimensions(newDimensions);
+
+            // 2. check that invoked action has effectively run
+            product = container.getProduct().get(id);
+            assertEquals(BigDecimal.ONE, product.getDimensions().getDepth());
+            assertEquals(BigDecimal.ONE, product.getDimensions().getHeight());
+            assertEquals(BigDecimal.ONE, product.getDimensions().getWidth());
+        } finally {
+            // 3. remove the test product
+            container.getProduct().delete(Collections.<Product>singleton(product));
+            container.flush();
+        }
+    }
+
+    @Test
+    public void resetComputerDetailsSpecifications() {
+        // 0. create a computer detail
+        final Integer id = 101;
+
+        ComputerDetail computerDetail = container.getComputerDetail().newComputerDetail();
+        computerDetail.setComputerDetailId(id);
+        computerDetail.setSpecificationsBag(Collections.singleton("First spec"));
+
+        container.flush();
+
+        computerDetail = container.getComputerDetail().get(id);
+        assertNotNull(computerDetail);
+        assertEquals(id, computerDetail.getComputerDetailId());
+        assertEquals(1, computerDetail.getSpecificationsBag().size());
+        assertTrue(computerDetail.getSpecificationsBag().contains("First spec"));
+        assertEquals(ODataTimestamp.parse(EdmSimpleType.DATE_TIME.pattern(), "0001-01-01T00:00:00"),
+                computerDetail.getPurchaseDate());
+
+        try {
+            // 1. invoke action bound to the computer detail just created
+            computerDetail.resetComputerDetailsSpecifications(
+                    Collections.singleton("Second spec"),
+                    ODataTimestamp.getInstance(EdmSimpleType.DATE_TIME, new Timestamp(System.currentTimeMillis())));
+
+            // 2. check that invoked action has effectively run
+            computerDetail = container.getComputerDetail().get(id);
+            assertNotNull(computerDetail);
+            assertEquals(id, computerDetail.getComputerDetailId());
+            assertEquals(1, computerDetail.getSpecificationsBag().size());
+            assertTrue(computerDetail.getSpecificationsBag().contains("Second spec"));
+            assertNotEquals(ODataTimestamp.parse(EdmSimpleType.DATE_TIME.pattern(), "0001-01-01T00:00:00"),
+                    computerDetail.getPurchaseDate());
+        } finally {
+            // 3. remove the test product
+            container.getComputerDetail().delete(Collections.<ComputerDetail>singleton(computerDetail));
+            container.flush();
         }
     }
 }

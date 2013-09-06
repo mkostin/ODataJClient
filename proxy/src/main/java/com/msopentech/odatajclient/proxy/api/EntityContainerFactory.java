@@ -90,6 +90,6 @@ public class EntityContainerFactory {
         return (T) Proxy.newProxyInstance(
                 reference.getClassLoader(),
                 new Class<?>[] {reference},
-                new EntityContainerInvocationHandler(reference, this));
+                EntityContainerInvocationHandler.getInstance(reference, this));
     }
 }
