@@ -18,11 +18,11 @@ package com.msopentech.odatajclient.proxy;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.query.EntityQuery;
 import com.msopentech.odatajclient.proxy.api.query.Query;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Order;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Order;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection;
 import java.io.Serializable;
 import java.util.List;
 
@@ -75,21 +75,16 @@ public class ProxyUsageTest {
     public void create() {
         DefaultContainer container = entityContainerFactory.getEntityContainer(DefaultContainer.class);
 
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Order orders =
-                container.getOrder();
-
         // create Order (local)
-        Order order = orders.newOrder();
+        Order order = container.getOrder().newOrder();
         order.setCustomerId(-10);
 
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
         // create Customer (local)
-        Customer customer = customers.newCustomer();
+        Customer customer = container.getCustomer().newCustomer();
         customer.setName("a name");
 
         // link customer and order
-        OrderCollection orderCollection = orders.newOrderCollection();
+        OrderCollection orderCollection = container.getOrder().newOrderCollection();
         orderCollection.add(order);
         customer.setOrders(orderCollection);
         order.setCustomer(customer);

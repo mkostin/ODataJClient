@@ -20,10 +20,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Message;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Car;
-import com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.types.Computer;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Car;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Computer;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Customer;
 import java.io.IOException;
 import java.util.Iterator;
 import org.junit.Test;
@@ -35,16 +34,10 @@ public class EntitySetTestITCase extends AbstractTest {
 
     @Test
     public void count() {
-        final Message message = container.getMessage();
+        assertNotNull(container.getMessage());
+        assertEquals(Long.valueOf(10L), container.getMessage().count());
 
-        assertNotNull(message);
-        assertEquals(Long.valueOf(10L), message.count());
-
-        final com.msopentech.odatajclient.proxy.microsoft.test.odata.services.astoriadefaultservice.Customer customers =
-                container.getCustomer();
-
-        assertNotNull(customers);
-        assertTrue(customers.count() > 0);
+        assertTrue(container.getCustomer().count() > 0);
     }
 
     @Test
