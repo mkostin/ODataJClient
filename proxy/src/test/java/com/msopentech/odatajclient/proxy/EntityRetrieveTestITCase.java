@@ -27,6 +27,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatia
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiLineString;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.proxy.api.impl.EntityTypeInvocationHandler;
+import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.AllSpatialTypes;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo;
@@ -47,9 +48,7 @@ import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.ser
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.SpecialEmployeeCollection;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
-import javax.sound.midi.Soundbank;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -57,41 +56,46 @@ import org.junit.Test;
  */
 public class EntityRetrieveTestITCase extends AbstractTest {
 
+    protected DefaultContainer getContainer() {
+        return container;
+    }
+
     @Test
     public void exists() {
-        assertTrue(container.getPerson().exists(-10));
-        assertFalse(container.getPerson().exists(-11));
+        assertTrue(getContainer().getPerson().exists(-10));
+        assertFalse(getContainer().getPerson().exists(-11));
     }
 
     @Test
     public void get() {
-        readCustomer(container, -10);
+        readCustomer(getContainer(), -10);
     }
 
     @Test
     public void getAll() {
-        final PersonCollection all = container.getPerson().getAll();
+        final PersonCollection all = getContainer().getPerson().getAll();
         assertNotNull(all);
         assertFalse(all.isEmpty());
         for (Person person : all) {
             assertNotNull(person);
         }
 
-        final EmployeeCollection employees = container.getPerson().getAll(EmployeeCollection.class);
+        final EmployeeCollection employees = getContainer().getPerson().getAll(EmployeeCollection.class);
         assertNotNull(employees);
         assertFalse(employees.isEmpty());
         for (Employee employee : employees) {
             assertNotNull(employee);
         }
 
-        final SpecialEmployeeCollection specialEmployees = container.getPerson().getAll(SpecialEmployeeCollection.class);
+        final SpecialEmployeeCollection specialEmployees = getContainer().getPerson().getAll(
+                SpecialEmployeeCollection.class);
         assertNotNull(specialEmployees);
         assertFalse(specialEmployees.isEmpty());
         for (SpecialEmployee employee : specialEmployees) {
             assertNotNull(employee);
         }
 
-        final ContractorCollection contractors = container.getPerson().getAll(ContractorCollection.class);
+        final ContractorCollection contractors = getContainer().getPerson().getAll(ContractorCollection.class);
         assertNotNull(contractors);
         assertFalse(contractors.isEmpty());
         for (Contractor contractor : contractors) {
@@ -104,7 +108,7 @@ public class EntityRetrieveTestITCase extends AbstractTest {
 
     @Test
     public void navigate() {
-        final Order order = container.getOrder().get(-9);
+        final Order order = getContainer().getOrder().get(-9);
         assertNotNull(order);
         assertEquals(Integer.valueOf(-9), order.getOrderId());
 
@@ -116,7 +120,7 @@ public class EntityRetrieveTestITCase extends AbstractTest {
 
     @Test
     public void withGeospatial() {
-        final AllSpatialTypes allSpatialTypes = container.getAllGeoTypesSet().get(-10);
+        final AllSpatialTypes allSpatialTypes = getContainer().getAllGeoTypesSet().get(-10);
         assertNotNull(allSpatialTypes);
         assertEquals(Integer.valueOf(-10), allSpatialTypes.getId());
 
@@ -136,7 +140,7 @@ public class EntityRetrieveTestITCase extends AbstractTest {
 
     @Test
     public void withInlineEntry() {
-        final Customer customer = readCustomer(container, -10);
+        final Customer customer = readCustomer(getContainer(), -10);
         final CustomerInfo customerInfo = customer.getInfo();
         assertNotNull(customerInfo);
         assertEquals(Integer.valueOf(11), customerInfo.getCustomerInfoId());
@@ -144,14 +148,14 @@ public class EntityRetrieveTestITCase extends AbstractTest {
 
     @Test
     public void withInlineFeed() {
-        final Customer customer = readCustomer(container, -10);
+        final Customer customer = readCustomer(getContainer(), -10);
         final OrderCollection orders = customer.getOrders();
         assertFalse(orders.isEmpty());
     }
 
     @Test
     public void withActions() {
-        final ComputerDetail computerDetail = container.getComputerDetail().get(-10);
+        final ComputerDetail computerDetail = getContainer().getComputerDetail().get(-10);
         assertEquals(Integer.valueOf(-10), computerDetail.getComputerDetailId());
 
         try {
@@ -168,14 +172,14 @@ public class EntityRetrieveTestITCase extends AbstractTest {
         messageKey.setFromUsername("1");
         messageKey.setMessageId(-10);
 
-        final Message message = container.getMessage().get(messageKey);
+        final Message message = getContainer().getMessage().get(messageKey);
         assertNotNull(message);
         assertEquals("1", message.getFromUsername());
     }
 
     @Test
     public void checkForETag() {
-        Product product = container.getProduct().get(-10);
+        Product product = getContainer().getProduct().get(-10);
         assertTrue(StringUtils.isNotBlank(
                 ((EntityTypeInvocationHandler) Proxy.getInvocationHandler(product)).getETag()));
     }
