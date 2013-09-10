@@ -16,6 +16,7 @@
 package com.msopentech.odatajclient.engine.data.metadata.edm.geospatial;
 
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -24,7 +25,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * Base class for all geospatial info.
  */
-public abstract class Geospatial {
+public abstract class Geospatial implements Serializable {
 
     public enum Dimension {
 
@@ -125,7 +126,7 @@ public abstract class Geospatial {
     }
 
     public abstract EdmSimpleType getEdmSimpleType();
-    
+
     /**
      * {@inheritDoc }
      */

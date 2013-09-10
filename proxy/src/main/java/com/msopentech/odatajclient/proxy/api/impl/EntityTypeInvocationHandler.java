@@ -22,6 +22,7 @@ import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataOperation;
+import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
@@ -46,9 +47,12 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
@@ -63,11 +67,15 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private Map<Property, Object> propertyChanges = new HashMap<Property, Object>();
 
+    private Map<String, Object> additionalPropertyChanges = new HashMap<String, Object>();
+
     private Map<NavigationProperty, Object> linkChanges = new HashMap<NavigationProperty, Object>();
 
     private EntityUUID uuid;
 
     private final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
+
+    private int additionalPropertiesTag;
 
     private int propertiesTag;
 
@@ -115,6 +123,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 entity.getName(),
                 EngineUtils.getKey(containerHandler.getFactory().getMetadata(), typeRef, entity));
 
+        this.additionalPropertiesTag = 0;
         this.propertiesTag = 0;
         this.linksTag = 0;
     }
@@ -130,7 +139,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 EngineUtils.getKey(containerHandler.getFactory().getMetadata(), typeRef, entity));
 
         this.propertyChanges.clear();
+        this.additionalPropertyChanges.clear();
         this.linkChanges.clear();
+        this.additionalPropertiesTag = 0;
         this.propertiesTag = 0;
         this.linksTag = 0;
     }
@@ -157,6 +168,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     public ODataEntity getEntity() {
         return entity;
+    }
+
+    public Map<String, Object> getAdditionalPropertyChanges() {
+        return additionalPropertyChanges;
     }
 
     public Map<Property, Object> getPropertyChanges() {
@@ -369,6 +384,52 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         }
     }
 
+    public Object getAdditionalProperty(final String name) {
+        try {
+            final Object res;
+
+            if (additionalPropertyChanges.containsKey(name)) {
+                res = additionalPropertyChanges.get(name);
+            } else {
+                res = EngineUtils.getValueFromProperty(
+                        containerHandler.getFactory().getMetadata(), entity.getProperty(name));
+
+                if (res != null) {
+                    int checkpoint = additionalPropertyChanges.hashCode();
+                    additionalPropertyChanges.put(name, res);
+                    updateAdditionalPropertiesTag(checkpoint);
+                }
+            }
+
+            return res;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error getting value for property '" + name + "'", e);
+        }
+    }
+
+    public Collection<String> getAdditionalPropertyNames() {
+        final Set<String> res = new HashSet<String>(additionalPropertyChanges.keySet());
+        final Set<String> propertyNames = new HashSet<String>();
+        for (Method method : typeRef.getMethods()) {
+            final Annotation ann = method.getAnnotation(Property.class);
+            if (ann != null) {
+                final String property = ((Property) ann).name();
+                propertyNames.add(property);
+
+                // maybe someone could add a normal attribute to the additional set
+                res.remove(property);
+            }
+        }
+
+        for (ODataProperty property : entity.getProperties()) {
+            if (!propertyNames.contains(property.getName())) {
+                res.add(property.getName());
+            }
+        }
+
+        return res;
+    }
+
     private void setNavigationPropertyValue(final NavigationProperty property, final Object value) {
         // 1) attach source entity
         if (!entityContext.isAttached(this)) {
@@ -409,6 +470,22 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         }
     }
 
+    public void addAdditionalProperty(final String name, final Object value) {
+        additionalPropertyChanges.put(name, value);
+
+        if (entityContext.isAttached(this)) {
+            entityContext.setStatus(this, AttachedEntityStatus.CHANGED);
+        } else {
+            entityContext.attach(this, AttachedEntityStatus.CHANGED);
+        }
+    }
+
+    private void updateAdditionalPropertiesTag(final int checkpoint) {
+        if (checkpoint == additionalPropertiesTag) {
+            additionalPropertiesTag = additionalPropertyChanges.hashCode();
+        }
+    }
+
     private void updatePropertiesTag(final int checkpoint) {
         if (checkpoint == propertiesTag) {
             propertiesTag = propertyChanges.hashCode();
@@ -422,7 +499,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     public boolean isChanged() {
-        return linkChanges.hashCode() != linksTag || propertyChanges.hashCode() != propertiesTag;
+        return linkChanges.hashCode() != linksTag
+                || additionalPropertyChanges.hashCode() != additionalPropertiesTag
+                || propertyChanges.hashCode() != propertiesTag;
     }
 
     @Override

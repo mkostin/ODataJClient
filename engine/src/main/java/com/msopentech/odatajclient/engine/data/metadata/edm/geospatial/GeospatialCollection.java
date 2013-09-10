@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class GeospatialCollection extends ComposedGeospatial<Geospatial> {
 
+    private static final long serialVersionUID = -9181547636133878977L;
+
     /**
      * Constructor.
      *
@@ -36,7 +38,7 @@ public class GeospatialCollection extends ComposedGeospatial<Geospatial> {
     @Override
     public EdmSimpleType getEdmSimpleType() {
         return dimension == Dimension.GEOGRAPHY
-                ? EdmSimpleType.GEOGRAPHY_COLLECTION 
+                ? EdmSimpleType.GEOGRAPHY_COLLECTION
                 : EdmSimpleType.GEOMETRY_COLLECTION;
     }
 }

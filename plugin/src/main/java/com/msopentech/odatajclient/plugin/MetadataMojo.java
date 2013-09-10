@@ -94,17 +94,20 @@ public class MetadataMojo extends AbstractMojo {
             namespaces.add(schema.getNamespace().toLowerCase());
         }
 
+        final Set<String> complexTypeNames = new HashSet<String>();
+        final File services = mkdir("META-INF/services");
+
         for (Schema schema : metadata.getSchemas()) {
             utility = new Utility(metadata, schema, basePackage);
-            
+
             // write package-info for the base package
             final String schemaPath = utility.getNamespace().toLowerCase().replaceAll("\\.", File.separator);
-            final File base = mkdir(schemaPath);
+            final File base = mkPkgDir(schemaPath);
             final String pkg = basePackage + "." + utility.getNamespace().toLowerCase();
             parseObj(base, pkg, "package-info", "package-info.java");
 
             // write package-info for types package
-            final File typesBaseDir = mkdir(schemaPath + "/types");
+            final File typesBaseDir = mkPkgDir(schemaPath + "/types");
             final String typesPkg = pkg + ".types";
             parseObj(typesBaseDir, typesPkg, "package-info", "package-info.java");
 
@@ -112,9 +115,11 @@ public class MetadataMojo extends AbstractMojo {
 
             // write types into types package
             for (ComplexType complex : schema.getComplexTypes()) {
+                final String className = utility.capitalize(complex.getName());
+                complexTypeNames.add(typesPkg + "." + className);
                 objs.clear();
                 objs.put("complexType", complex);
-                parseObj(typesBaseDir, typesPkg, "complexType", utility.capitalize(complex.getName()) + ".java", objs);
+                parseObj(typesBaseDir, typesPkg, "complexType", className + ".java", objs);
             }
 
             for (EntityType entity : schema.getEntityTypes()) {
@@ -172,12 +177,14 @@ public class MetadataMojo extends AbstractMojo {
                             "Async" + utility.capitalize(entitySet.getName()) + ".java", objs);
                 }
             }
+
+            parseObj(services, null, "services", "com.msopentech.odatajclient.proxy.api.AbstractComplexType",
+                    Collections.singletonMap("services", (Object) complexTypeNames));
         }
     }
 
     private File mkdir(final String path) {
-        final File dir = new File(outputDirectory + File.separator
-                + TOOL_DIR + File.separator + basePackage.replace('.', File.separatorChar) + File.separator + path);
+        final File dir = new File(outputDirectory + File.separator + TOOL_DIR + File.separator + path);
 
         if (dir.exists()) {
             if (!dir.isDirectory()) {
@@ -188,6 +195,10 @@ public class MetadataMojo extends AbstractMojo {
         }
 
         return dir;
+    }
+
+    private File mkPkgDir(final String path) {
+        return mkdir(basePackage.replace('.', File.separatorChar) + File.separator + path);
     }
 
     private void writeFile(final String name, final File path, final VelocityContext ctx, final Template template)

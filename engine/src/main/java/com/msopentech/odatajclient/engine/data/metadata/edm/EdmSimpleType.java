@@ -276,10 +276,21 @@ public enum EdmSimpleType {
         return namespace() + "." + value;
     }
 
+    /**
+     * Checks if is a geospatial type.
+     *
+     * @return <tt>true</tt> if is geospatial type; <tt>false</tt> otherwise.
+     */
     public boolean isGeospatial() {
         return name().startsWith("GEO");
     }
 
+    /**
+     * Checks if the given type is a geospatial type.
+     *
+     * @param type type.
+     * @return <tt>true</tt> if is geospatial type; <tt>false</tt> otherwise.
+     */
     public static boolean isGeospatial(final String type) {
         return type != null && type.startsWith(namespace() + ".Geo");
     }
@@ -298,6 +309,23 @@ public enum EdmSimpleType {
             }
         }
         throw new IllegalArgumentException(value);
+    }
+
+    /**
+     * Gets <tt>EdmSimpleType</tt> from object instance.
+     *
+     * @param obj object.
+     * @return <tt>EdmSimpleType</tt> object.
+     */
+    public static EdmSimpleType fromObject(final Object obj) {
+        for (EdmSimpleType edmSimpleType : EdmSimpleType.values()) {
+            if (edmSimpleType.javaType().equals(obj.getClass())) {
+                return edmSimpleType == DATE_TIME_OFFSET || edmSimpleType == DATE_TIME
+                        ? ((ODataTimestamp) obj).isOffset() ? DATE_TIME_OFFSET : DATE_TIME
+                        : edmSimpleType;
+            }
+        }
+        throw new IllegalArgumentException(obj.getClass().getSimpleName() + " is not a simple type");
     }
 
     /**

@@ -40,16 +40,20 @@ public final class ODataTimestamp implements Serializable {
 
     private String timezone;
 
+    private final boolean offset;
+
     public static ODataTimestamp getInstance(final EdmSimpleType type, final Timestamp timestamp) {
         return new ODataTimestamp(new SimpleDateFormat(type.pattern()),
-                new Date(timestamp.getTime()), timestamp.getNanos());
+                new Date(timestamp.getTime()), timestamp.getNanos(), type == EdmSimpleType.DATE_TIME_OFFSET);
     }
 
-    public static ODataTimestamp parse(final String pattern, final String input) {
+    public static ODataTimestamp parse(final EdmSimpleType type, final String input) {
         final ODataTimestamp instance;
 
         final String[] dateParts = input.split("\\.");
-        final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        final SimpleDateFormat sdf = new SimpleDateFormat(type.pattern());
+        final boolean isOffset = type == EdmSimpleType.DATE_TIME_OFFSET;
+
         try {
             final Date date = sdf.parse(dateParts[0]);
             if (dateParts.length > 1) {
@@ -58,33 +62,35 @@ public final class ODataTimestamp implements Serializable {
                     idx = dateParts[1].indexOf('-');
                 }
                 if (idx == -1) {
-                    instance = new ODataTimestamp(sdf, date, Integer.parseInt(dateParts[1]));
+                    instance = new ODataTimestamp(sdf, date, Integer.parseInt(dateParts[1]), isOffset);
                 } else {
                     instance = new ODataTimestamp(sdf, date,
-                            Integer.parseInt(dateParts[1].substring(0, idx)), dateParts[1].substring(idx));
+                            Integer.parseInt(dateParts[1].substring(0, idx)), dateParts[1].substring(idx), isOffset);
                 }
             } else {
-                instance = new ODataTimestamp(sdf, date);
+                instance = new ODataTimestamp(sdf, date, isOffset);
             }
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cannot parse " + pattern, e);
+            throw new IllegalArgumentException("Cannot parse " + type.pattern(), e);
         }
 
         return instance;
     }
 
-    private ODataTimestamp(final SimpleDateFormat sdf, final Date date) {
+    private ODataTimestamp(final SimpleDateFormat sdf, final Date date, final boolean offset) {
         this.sdf = sdf;
         this.timestamp = new Timestamp(date.getTime());
+        this.offset = offset;
     }
 
-    private ODataTimestamp(final SimpleDateFormat sdf, final Date date, final int nanos) {
-        this(sdf, date);
+    private ODataTimestamp(final SimpleDateFormat sdf, final Date date, final int nanos, final boolean offset) {
+        this(sdf, date, offset);
         this.timestamp.setNanos(nanos);
     }
 
-    private ODataTimestamp(final SimpleDateFormat sdf, final Date date, final int nanos, final String timezone) {
-        this(sdf, date, nanos);
+    private ODataTimestamp(
+            final SimpleDateFormat sdf, final Date date, final int nanos, final String timezone, final boolean offset) {
+        this(sdf, date, nanos, offset);
         this.timezone = timezone;
     }
 
@@ -94,6 +100,10 @@ public final class ODataTimestamp implements Serializable {
 
     public String getTimezone() {
         return timezone;
+    }
+
+    public boolean isOffset() {
+        return offset;
     }
 
     /**

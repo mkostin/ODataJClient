@@ -19,6 +19,7 @@ import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataGeospatialValue;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
@@ -29,6 +30,8 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
+import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
 import com.msopentech.odatajclient.proxy.api.annotations.Key;
@@ -45,6 +48,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -153,13 +157,13 @@ public final class EngineUtils {
             }
         } else if (type.isComplexType()) {
             value = new ODataComplexValue(type.getBaseType());
-            if (obj.getClass().getAnnotation(ComplexType.class) != null) {
+            if (obj.getClass().isAnnotationPresent(ComplexType.class)) {
                 for (Method method : obj.getClass().getMethods()) {
                     final Property complexPropertyAnn = method.getAnnotation(Property.class);
                     try {
                         if (complexPropertyAnn != null) {
                             value.asComplex().add(
-                                    getODataProperty(metadata, method.invoke(obj), complexPropertyAnn));
+                                    getODataProperty(metadata, complexPropertyAnn.name(), method.invoke(obj)));
                         }
                     } catch (Exception ignore) {
                         // ignore name
@@ -174,32 +178,36 @@ public final class EngineUtils {
             // TODO: manage enum types
             throw new UnsupportedOperationException("Usupported enum type " + type.getTypeExpression());
         } else {
-            value = new ODataPrimitiveValue.Builder().setValue(obj).
-                    setType(EdmSimpleType.fromValue(type.getTypeExpression())).build();
+            final EdmSimpleType simpleType = EdmSimpleType.fromValue(type.getTypeExpression());
+            if (simpleType.isGeospatial()) {
+                value = new ODataGeospatialValue.Builder().setValue((Geospatial) obj).setType(simpleType).build();
+            } else {
+                value = new ODataPrimitiveValue.Builder().setValue(obj).setType(simpleType).build();
+            }
         }
 
         return value;
     }
 
-    private static ODataProperty getODataProperty(final EdmMetadata metadata, final Object obj, final Property prop) {
+    private static ODataProperty getODataProperty(final EdmMetadata metadata, final String name, final Object obj) {
         final ODataProperty oprop;
 
-        final EdmType type = new EdmType(metadata, prop.type());
+        final EdmType type = getEdmType(metadata, obj);
         try {
             if (type.isCollection()) {
                 // create collection property
                 oprop = ODataFactory.newCollectionProperty(
-                        prop.name(),
+                        name,
                         obj == null ? null : getODataValue(metadata, type, obj).asCollection());
             } else if (type.isSimpleType()) {
                 // create a primitive property
                 oprop = ODataFactory.newPrimitiveProperty(
-                        prop.name(),
+                        name,
                         obj == null ? null : getODataValue(metadata, type, obj).asPrimitive());
             } else if (type.isComplexType()) {
                 // create a complex property
                 oprop = ODataFactory.newComplexProperty(
-                        prop.name(),
+                        name,
                         obj == null ? null : getODataValue(metadata, type, obj).asComplex());
             } else if (type.isEnumType()) {
                 // TODO: manage enum types
@@ -224,7 +232,21 @@ public final class EngineUtils {
                 entity.removeProperty(odataProperty);
             }
 
-            entity.addProperty(getODataProperty(metadata, property.getValue(), property.getKey()));
+            entity.addProperty(getODataProperty(metadata, property.getKey().name(), property.getValue()));
+        }
+    }
+
+    public static void addAdditionalProperties(
+            final EdmMetadata metadata, final Map<String, Object> changes, final ODataEntity entity) {
+
+        for (Map.Entry<String, Object> property : changes.entrySet()) {
+            // if the getter exists and it is annotated as expected then get name/value and add a new property
+            final ODataProperty odataProperty = entity.getProperty(property.getKey());
+            if (odataProperty != null) {
+                entity.removeProperty(odataProperty);
+            }
+
+            entity.addProperty(getODataProperty(metadata, property.getKey(), property.getValue()));
         }
     }
 
@@ -271,55 +293,111 @@ public final class EngineUtils {
             final Object bean,
             final Class<? extends Annotation> getterAnn,
             final Iterator<ODataProperty> propItor) {
-        while (propItor.hasNext()) {
-            final ODataProperty property = propItor.next();
 
-            final Method getter = ClassUtils.findGetterByAnnotatedName(bean.getClass(), getterAnn, property.getName());
+        if (bean != null) {
+            while (propItor.hasNext()) {
+                final ODataProperty property = propItor.next();
 
-            if (getter == null) {
-                LOG.warn("Could not find any property annotated as {} in {}",
-                        property.getName(), bean.getClass().getName());
-            } else {
-                try {
-                    if (property.hasNullValue()) {
-                        setPropertyValue(bean, getter, null);
-                    }
-                    if (property.hasPrimitiveValue()) {
-                        setPropertyValue(bean, getter, property.getPrimitiveValue().toValue());
-                    }
-                    if (property.hasComplexValue()) {
-                        final Object complex = getter.getReturnType().newInstance();
-                        populate(metadata, complex, Property.class, property.getComplexValue().iterator());
-                        setPropertyValue(bean, getter, complex);
-                    }
-                    if (property.hasCollectionValue()) {
-                        final ParameterizedType collType = (ParameterizedType) getter.getGenericReturnType();
-                        final Class<?> collItemClass = (Class<?>) collType.getActualTypeArguments()[0];
+                final Method getter =
+                        ClassUtils.findGetterByAnnotatedName(bean.getClass(), getterAnn, property.getName());
 
-                        Collection collection = (Collection) getter.invoke(bean);
-                        if (collection == null) {
-                            collection = new ArrayList();
-                            setPropertyValue(bean, getter, collection);
+                if (getter == null) {
+                    LOG.warn("Could not find any property annotated as {} in {}",
+                            property.getName(), bean.getClass().getName());
+                } else {
+                    try {
+                        if (property.hasNullValue()) {
+                            setPropertyValue(bean, getter, null);
                         }
+                        if (property.hasPrimitiveValue()) {
+                            setPropertyValue(bean, getter, property.getPrimitiveValue().toValue());
+                        }
+                        if (property.hasComplexValue()) {
+                            final Object complex = getter.getReturnType().newInstance();
+                            populate(metadata, complex, Property.class, property.getComplexValue().iterator());
+                            setPropertyValue(bean, getter, complex);
+                        }
+                        if (property.hasCollectionValue()) {
+                            final ParameterizedType collType = (ParameterizedType) getter.getGenericReturnType();
+                            final Class<?> collItemClass = (Class<?>) collType.getActualTypeArguments()[0];
 
-                        final Iterator<ODataValue> collPropItor = property.getCollectionValue().iterator();
-                        while (collPropItor.hasNext()) {
-                            final ODataValue value = collPropItor.next();
-                            if (value.isPrimitive()) {
-                                collection.add(value.asPrimitive().toValue());
+                            Collection collection = (Collection) getter.invoke(bean);
+                            if (collection == null) {
+                                collection = new ArrayList();
+                                setPropertyValue(bean, getter, collection);
                             }
-                            if (value.isComplex()) {
-                                final Object collItem = collItemClass.newInstance();
-                                populate(metadata, collItem, Property.class, value.asComplex().iterator());
-                                collection.add(collItem);
+
+                            final Iterator<ODataValue> collPropItor = property.getCollectionValue().iterator();
+                            while (collPropItor.hasNext()) {
+                                final ODataValue value = collPropItor.next();
+                                if (value.isPrimitive()) {
+                                    collection.add(value.asPrimitive().toValue());
+                                }
+                                if (value.isComplex()) {
+                                    final Object collItem = collItemClass.newInstance();
+                                    populate(metadata, collItem, Property.class, value.asComplex().iterator());
+                                    collection.add(collItem);
+                                }
                             }
                         }
+                    } catch (Exception e) {
+                        LOG.error("Could not set property {} on {}", getter, bean, e);
                     }
-                } catch (Exception e) {
-                    LOG.error("Could not set property {} on {}", getter, bean, e);
                 }
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Object getValueFromProperty(final EdmMetadata metadata, final ODataProperty property)
+            throws InstantiationException, IllegalAccessException {
+
+        final Object value;
+
+        if (property == null || property.hasNullValue()) {
+            value = null;
+        } else if (property.hasCollectionValue()) {
+            value = new ArrayList();
+
+            final Iterator<ODataValue> collPropItor = property.getCollectionValue().iterator();
+            while (collPropItor.hasNext()) {
+                final ODataValue odataValue = collPropItor.next();
+                if (odataValue.isPrimitive()) {
+                    ((Collection) value).add(odataValue.asPrimitive().toValue());
+                }
+                if (odataValue.isComplex()) {
+                    final Object collItem =
+                            buildComplexInstance(metadata, property.getName(), odataValue.asComplex().iterator());
+                    ((Collection) value).add(collItem);
+                }
+            }
+        } else if (property.hasPrimitiveValue()) {
+            value = property.getPrimitiveValue().toValue();
+        } else if (property.hasComplexValue()) {
+            value = buildComplexInstance(metadata, property.getComplexValue().getTypeName(), property.getComplexValue().
+                    iterator());
+        } else {
+            throw new IllegalArgumentException("Invalid property " + property);
+        }
+
+        return value;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <C extends AbstractComplexType> C buildComplexInstance(
+            final EdmMetadata metadata, final String name, final Iterator<ODataProperty> properties) {
+
+        for (C complex : (Iterable<C>) ServiceLoader.load(AbstractComplexType.class)) {
+            final ComplexType ann = complex.getClass().getAnnotation(ComplexType.class);
+            final String fn = ann == null ? null : ClassUtils.getNamespace(complex.getClass()) + "." + ann.value();
+
+            if (name.equals(fn)) {
+                populate(metadata, complex, Property.class, properties);
+                return complex;
+            }
+        }
+
+        return null;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -371,5 +449,30 @@ public final class EngineUtils {
             }
         }
         return null;
+    }
+
+    private static EdmType getEdmType(final EdmMetadata metadata, final Object obj) {
+        final EdmType res;
+
+        if (obj == null) {
+            res = null;
+        } else if (Collection.class.isAssignableFrom(obj.getClass())) {
+            if (((Collection) obj).isEmpty()) {
+                res = null;
+            } else {
+                res = new EdmType(metadata, "Collection("
+                        + getEdmType(metadata, ((Collection) obj).iterator().next()).getTypeExpression()
+                        + ")");
+            }
+        } else if (obj.getClass().isAnnotationPresent(ComplexType.class)) {
+            final String ns = ClassUtils.getNamespace(obj.getClass());
+            final ComplexType ann = obj.getClass().getAnnotation(ComplexType.class);
+            res = new EdmType(metadata, ns + "." + ann.value());
+        } else {
+            final EdmSimpleType simpleType = EdmSimpleType.fromObject(obj);
+            res = new EdmType(metadata, simpleType.toString());
+        }
+
+        return res;
     }
 }

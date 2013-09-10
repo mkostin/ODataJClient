@@ -487,7 +487,7 @@ public class PrimitiveValueTest extends AbstractTest {
         multiPolygon(ODataFormat.JSON);
     }
 
-    private void collection(final ODataFormat format) {
+    private void geomCollection(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-8)", "GeomCollection", format);
         assertEquals(EdmSimpleType.GEOMETRY_COLLECTION.toString(), opv.getTypeName());
 
@@ -511,13 +511,47 @@ public class PrimitiveValueTest extends AbstractTest {
         assertEquals(2, count);
     }
 
-    @Test
-    public void collectionFromXML() {
-        collection(ODataFormat.XML);
+    private void geogCollection(final ODataFormat format) {
+        final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-5)", "GeogCollection", format);
+        assertEquals(EdmSimpleType.GEOGRAPHY_COLLECTION.toString(), opv.getTypeName());
+
+        final GeospatialCollection collection = opv.<GeospatialCollection>toCastValue();
+        assertNotNull(collection);
+        assertEquals(Geospatial.Dimension.GEOGRAPHY, collection.getDimension());
+
+        final Iterator<Geospatial> itor = collection.iterator();
+        int count = 0;
+        while (itor.hasNext()) {
+            count++;
+
+            final Geospatial geospatial = itor.next();
+            if (count == 1) {
+                assertTrue(geospatial instanceof GeospatialCollection);
+            }
+            if (count == 2) {
+                assertTrue(geospatial instanceof GeospatialCollection);
+            }
+        }
+        assertEquals(2, count);
     }
 
     @Test
-    public void collectionFromJSON() {
-        collection(ODataFormat.JSON);
+    public void geomCollectionFromXML() {
+        geomCollection(ODataFormat.XML);
+    }
+
+    @Test
+    public void geomCollectionFromJSON() {
+        geomCollection(ODataFormat.JSON);
+    }
+
+    @Test
+    public void geogCollectionFromXML() {
+        geogCollection(ODataFormat.XML);
+    }
+
+    @Test
+    public void geogCollectionFromJSON() {
+        geogCollection(ODataFormat.JSON);
     }
 }

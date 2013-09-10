@@ -24,6 +24,8 @@ import java.util.List;
  */
 public abstract class ComposedGeospatial<T extends Geospatial> extends Geospatial implements Iterable<T> {
 
+    private static final long serialVersionUID = 8796254901098541307L;
+
     protected final List<T> geospatials;
 
     /**

@@ -178,7 +178,7 @@ public class ODataPrimitiveValue extends ODataValue {
 
             case DATE_TIME:
             case DATE_TIME_OFFSET:
-                this.value = ODataTimestamp.parse(this.type.pattern(), this.toString());
+                this.value = ODataTimestamp.parse(this.type, this.toString());
                 break;
 
             case TIME:
