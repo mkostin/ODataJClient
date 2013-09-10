@@ -26,10 +26,10 @@ import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
+import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import com.msopentech.odatajclient.proxy.utils.EngineUtils;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -74,15 +74,6 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
     protected Object invokeSelfMethod(final Method method, final Object[] args)
             throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         return getClass().getMethod(method.getName(), method.getParameterTypes()).invoke(this, args);
-    }
-
-    protected Object returnVoid()
-            throws NoSuchMethodException, InstantiationException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
-
-        final Constructor<Void> voidConstructor = Void.class.getDeclaredConstructor();
-        voidConstructor.setAccessible(true);
-        return voidConstructor.newInstance();
     }
 
     @SuppressWarnings("unchecked")
@@ -178,7 +169,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
         // 2. IMPORTANT: flush any pending change *before* invoke if this operation is side effecting
         if (annotation.isSideEffecting()) {
-            containerHandler.flush();
+            new Container(containerHandler.getFactory()).flush();
         }
 
         // 3. invoke
@@ -187,7 +178,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
         // 3. process invoke result
         if (StringUtils.isBlank(annotation.returnType())) {
-            return returnVoid();
+            return ClassUtils.returnVoid();
         }
 
         final EdmType edmType = new EdmType(containerHandler.getFactory().getMetadata(), annotation.returnType());

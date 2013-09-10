@@ -18,10 +18,10 @@ package com.msopentech.odatajclient.proxy.api.impl;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
-import com.msopentech.odatajclient.proxy.api.query.NoResultException;
-import com.msopentech.odatajclient.proxy.api.query.NonUniqueResultException;
-import com.msopentech.odatajclient.proxy.api.query.Query;
-import com.msopentech.odatajclient.proxy.api.query.Sort;
+import com.msopentech.odatajclient.proxy.api.NoResultException;
+import com.msopentech.odatajclient.proxy.api.NonUniqueResultException;
+import com.msopentech.odatajclient.proxy.api.Query;
+import com.msopentech.odatajclient.proxy.api.Sort;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import java.io.Serializable;
 import java.net.URI;
@@ -47,8 +47,9 @@ public class QueryImpl<T extends Serializable, EC extends AbstractEntityCollecti
 
     private Integer firstResult;
 
-    QueryImpl(final Class<EC> collTypeRef, final URI baseURI, final EntitySetInvocationHandler handler) {
-        this.typeRef = ClassUtils.extractTypeRef(collTypeRef);
+    @SuppressWarnings("unchecked")
+    QueryImpl(final Class<EC> collTypeRef, final URI baseURI, final EntitySetInvocationHandler handler) {         
+        this.typeRef = (Class<T>) ClassUtils.extractTypeArg(collTypeRef);
         this.collTypeRef = collTypeRef;
         this.baseURI = baseURI;
         this.handler = handler;

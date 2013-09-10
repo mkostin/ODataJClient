@@ -256,7 +256,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 setPropertyValue(property, args[0]);
             }
 
-            return returnVoid();
+            return ClassUtils.returnVoid();
         } else {
             throw new UnsupportedOperationException("Method not found: " + method);
         }

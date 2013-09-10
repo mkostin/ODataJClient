@@ -15,15 +15,15 @@
  */
 package com.msopentech.odatajclient.proxy.utils;
 
-import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKey;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
 import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -44,11 +44,9 @@ public final class ClassUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static <S extends Serializable, SEC extends AbstractEntityCollection<S>> Class<S> extractTypeRef(
-            final Class<SEC> collTypeRef) {
-
-        final Type[] params = ((ParameterizedType) collTypeRef.getGenericInterfaces()[0]).getActualTypeArguments();
-        return (Class<S>) params[0];
+    public static Class<?> extractTypeArg(final Class<?> paramType) {
+        final Type[] params = ((ParameterizedType) paramType.getGenericInterfaces()[0]).getActualTypeArguments();
+        return (Class<?>) params[0];
     }
 
     public static Method findGetterByAnnotatedName(
@@ -128,5 +126,14 @@ public final class ClassUtils {
                     + " is not annotated as @" + Namespace.class.getSimpleName());
         }
         return ((Namespace) annotation).value();
+    }
+
+    public static Void returnVoid()
+            throws NoSuchMethodException, InstantiationException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException {
+
+        final Constructor<Void> voidConstructor = Void.class.getDeclaredConstructor();
+        voidConstructor.setAccessible(true);
+        return voidConstructor.newInstance();
     }
 }

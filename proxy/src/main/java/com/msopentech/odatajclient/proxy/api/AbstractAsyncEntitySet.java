@@ -15,8 +15,8 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.proxy.api.query.AsyncQuery;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.concurrent.Future;
 
 /**
@@ -27,7 +27,7 @@ import java.util.concurrent.Future;
  */
 public abstract interface AbstractAsyncEntitySet<        
         T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>>
-        extends Iterable<T>, Serializable {
+        extends Serializable {
 
     /**
      * @see AbstractEntitySet#exists(java.io.Serializable)
@@ -55,19 +55,18 @@ public abstract interface AbstractAsyncEntitySet<
     Future<EC> getAll();
 
     /**
+     * Returns a future handle enabling asynchronous iteration over this entity set.
+     * <br/>
+     * This interface does not extend <tt>java.util.Iterable&lt;T&gt;</tt> on purpose.
+     *
+     * @return future handle enabling asynchronous iteration over this entity set.
+     */
+    Future<Iterator<T>> iterator();
+
+    /**
      * @see AbstractEntitySet#getAll(java.lang.Class, java.lang.Class)
      */
     <S extends T, SEC extends AbstractEntityCollection<S>> Future<SEC> getAll(Class<SEC> reference);
-
-    /**
-     * @see AbstractEntitySet#createQuery()
-     */
-    <S extends T, SEC extends AbstractEntityCollection<S>> AsyncQuery<S, SEC> createQuery();
-
-    /**
-     * @see AbstractEntitySet#createQuery(java.lang.Class) 
-     */
-    <S extends T, SEC extends AbstractEntityCollection<S>> AsyncQuery<S, SEC> createQuery(Class<SEC> reference);
 
     /**
      * @see AbstractEntitySet#delete(java.io.Serializable)
@@ -78,4 +77,14 @@ public abstract interface AbstractAsyncEntitySet<
      * @see AbstractEntitySet#delete(java.lang.Iterable)
      */
     <S extends T> Future<Void> delete(Iterable<S> entities);
+
+    /**
+     * @see AbstractEntitySet#createQuery()
+     */
+    <S extends T, SEC extends AbstractEntityCollection<S>> AsyncQuery<S, SEC> createQuery();
+
+    /**
+     * @see AbstractEntitySet#createQuery(java.lang.Class)
+     */
+    <S extends T, SEC extends AbstractEntityCollection<S>> AsyncQuery<S, SEC> createQuery(Class<SEC> reference);
 }

@@ -50,7 +50,7 @@ public class AuthEntityRetrieveTestITCase extends EntityRetrieveTestITCase {
 
     @BeforeClass
     public static void setupContaner() {
-        container = EntityContainerFactory.newInstance(testAuthServiceRootURL).
+        container = EntityContainerFactory.getInstance(testAuthServiceRootURL).
                 getEntityContainer(DefaultContainer.class);
         assertNotNull(container);
     }

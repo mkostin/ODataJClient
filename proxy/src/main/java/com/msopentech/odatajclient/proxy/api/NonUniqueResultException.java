@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.query;
+package com.msopentech.odatajclient.proxy.api;
 
 /**
- * Thrown when <tt>Query.getSingleResult()</tt> or <tt>EntityQuery.getSingleResult()</tt> is executed on a query
- * and there is no result to return.
+ * Thrown when <tt>Query.getSingleResult()</tt> or <tt>EntityQuery.getSingleResult()</tt> is executed on a query and
+ * there is more than one result from the query.
  *
  * @see Query#getSingleResult()
  * @see EntityQuery#getSingleResult()
  */
-public class NoResultException extends RuntimeException {
+public class NonUniqueResultException extends RuntimeException {
 
-    private static final long serialVersionUID = -6643642637364303053L;
+    private static final long serialVersionUID = 4444551737338550185L;
 
-    public NoResultException() {
+    public NonUniqueResultException() {
         super();
     }
 }

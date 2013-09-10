@@ -21,9 +21,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilterFactory;
-import com.msopentech.odatajclient.proxy.api.query.NonUniqueResultException;
-import com.msopentech.odatajclient.proxy.api.query.Query;
-import com.msopentech.odatajclient.proxy.api.query.Sort;
+import com.msopentech.odatajclient.proxy.api.NonUniqueResultException;
+import com.msopentech.odatajclient.proxy.api.Query;
+import com.msopentech.odatajclient.proxy.api.Sort;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Car;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.CarCollection;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Employee;

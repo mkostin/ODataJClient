@@ -5,7 +5,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import com.msopentech.odatajclient.proxy.api.AbstractContainer;
+import com.msopentech.odatajclient.proxy.api.AbstractAsyncContainer;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.*;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.*;
 
@@ -32,7 +32,7 @@ import java.util.concurrent.Future;
 
 @EntityContainer(name = "DefaultContainer", 
   isDefaultEntityContainer = true)
-public interface AsyncDefaultContainer extends AbstractContainer {
+public interface AsyncDefaultContainer extends AbstractAsyncContainer {
 
     AsyncAllGeoTypesSet getAllGeoTypesSet();
 

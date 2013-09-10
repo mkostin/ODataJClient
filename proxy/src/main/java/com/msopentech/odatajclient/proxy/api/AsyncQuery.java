@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.query;
+package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
+import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
 import java.io.Serializable;
 import java.util.concurrent.Future;
 
@@ -25,7 +25,25 @@ import java.util.concurrent.Future;
 public abstract class AsyncQuery<T extends Serializable, EC extends AbstractEntityCollection<T>>
         implements Query<T, EC> {
 
-    private static final long serialVersionUID = -1384992773012007320L;
+    private static long serialVersionUID = -1384992773012007320L;
+
+    @Override
+    public abstract AsyncQuery<T, EC> setFilter(String filter);
+
+    @Override
+    public abstract AsyncQuery<T, EC> setFilter(ODataFilter filter);
+
+    @Override
+    public abstract AsyncQuery<T, EC> setOrderBy(Sort... sort);
+
+    @Override
+    public abstract AsyncQuery<T, EC> setOrderBy(String orderBy);
+
+    @Override
+    public abstract AsyncQuery<T, EC> setMaxResults(int maxResults) throws IllegalArgumentException;
+
+    @Override
+    public abstract AsyncQuery<T, EC> setFirstResult(int firstResult) throws IllegalArgumentException;
 
     /**
      * {@inheritDoc}
@@ -59,5 +77,5 @@ public abstract class AsyncQuery<T extends Serializable, EC extends AbstractEnti
      *
      * @see Query#getResultList()
      */
-    public abstract Future<EC> asyncGetResultList();
+    public abstract Future<EC> asyncGetResult();
 }

@@ -33,7 +33,7 @@ import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
 import com.msopentech.odatajclient.proxy.api.context.EntityContext;
 import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
-import com.msopentech.odatajclient.proxy.api.query.Query;
+import com.msopentech.odatajclient.proxy.api.Query;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -44,12 +44,9 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 import org.apache.commons.lang3.ArrayUtils;
@@ -69,8 +66,6 @@ class EntitySetInvocationHandler<
     private static final Logger LOG = LoggerFactory.getLogger(EntitySetInvocationHandler.class);
 
     private final Class<T> typeRef;
-
-    private final Class<KEY> keyRef;
 
     private final Class<EC> collTypeRef;
 
@@ -107,7 +102,6 @@ class EntitySetInvocationHandler<
         if (typeRef.getAnnotation(EntityType.class) == null) {
             throw new IllegalArgumentException("Invalid entity '" + typeRef.getSimpleName() + "'");
         }
-        this.keyRef = (Class<KEY>) abstractEntitySetParams[1];
         this.collTypeRef = (Class<EC>) abstractEntitySetParams[2];
 
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(containerHandler.getFactory().getServiceRoot());
@@ -120,8 +114,20 @@ class EntitySetInvocationHandler<
         this.uri = uriBuilder.build();
     }
 
-    public String getEntitySetName() {
+    Class<T> getTypeRef() {
+        return typeRef;
+    }
+
+    Class<EC> getCollTypeRef() {
+        return collTypeRef;
+    }
+
+    String getEntitySetName() {
         return entitySetName;
+    }
+
+    URI getUri() {
+        return uri;
     }
 
     @Override
@@ -270,7 +276,7 @@ class EntitySetInvocationHandler<
     }
 
     @SuppressWarnings("unchecked")
-    private <S extends T> Map.Entry<List<S>, URI> fetchPartialEntitySet(final URI uri, final Class<S> typeRef) {
+    public <S extends T> Map.Entry<List<S>, URI> fetchPartialEntitySet(final URI uri, final Class<S> typeRef) {
         final ODataRetrieveResponse<ODataEntitySet> res =
                 ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute();
 
@@ -320,7 +326,7 @@ class EntitySetInvocationHandler<
     @SuppressWarnings("unchecked")
     @Override
     public <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(final Class<SEC> collTypeRef) {
-        final Class<S> typeRef = ClassUtils.extractTypeRef(collTypeRef);
+        final Class<S> typeRef = (Class<S>) ClassUtils.extractTypeArg(collTypeRef);
 
         final URI entitySetURI = new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
                 ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).build();
@@ -385,63 +391,5 @@ class EntitySetInvocationHandler<
                 new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
                 ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).build(),
                 this);
-    }
-
-    private static class EntitySetIterator<
-            T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>>
-            implements Iterator<T> {
-
-        private URI next;
-
-        private Iterator<T> current;
-
-        private final EntitySetInvocationHandler<T, KEY, EC> esi;
-
-        public EntitySetIterator(final URI uri, EntitySetInvocationHandler<T, KEY, EC> esi) {
-            this.esi = esi;
-            this.next = uri;
-            this.current = Collections.<T>emptyList().iterator();
-        }
-
-        @Override
-        public boolean hasNext() {
-            boolean res = false;
-            if (this.current.hasNext()) {
-                res = true;
-            } else if (this.next == null) {
-                res = false;
-            } else {
-                goon();
-                res = current.hasNext();
-            }
-            return res;
-        }
-
-        @Override
-        public T next() {
-            T res;
-            try {
-                res = this.current.next();
-            } catch (NoSuchElementException e) {
-                if (this.next == null) {
-                    throw e;
-                }
-                goon();
-                res = next();
-            }
-
-            return res;
-        }
-
-        @Override
-        public void remove() {
-            this.current.remove();
-        }
-
-        private void goon() {
-            final Map.Entry<List<T>, URI> entitySet = esi.fetchPartialEntitySet(this.next, esi.typeRef);
-            this.next = entitySet.getValue();
-            this.current = entitySet.getKey().iterator();
-        }
     }
 }
