@@ -31,7 +31,7 @@ public class PrimitiveKeysTestITCase extends AbstractTest {
 
     @Test
     public void readPrimitiveKeys() {
-        final EntityContainerFactory factory = EntityContainerFactory.newInstance(testPrimitiveKeysServiceRootURL);
+        final EntityContainerFactory factory = EntityContainerFactory.getInstance(testPrimitiveKeysServiceRootURL);
         final TestContext pkcontainer = factory.getEntityContainer(TestContext.class);
 
         // commented as per #115

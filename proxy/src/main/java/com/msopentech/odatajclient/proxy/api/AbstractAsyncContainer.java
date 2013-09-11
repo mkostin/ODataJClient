@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.query;
+package com.msopentech.odatajclient.proxy.api;
+
+import java.io.Serializable;
+import java.util.concurrent.Future;
 
 /**
- * Thrown when <tt>Query.getSingleResult()</tt> or <tt>EntityQuery.getSingleResult()</tt> is executed on a query and
- * there is more than one result from the query.
- *
- * @see Query#getSingleResult()
- * @see EntityQuery#getSingleResult()
+ * Interface for asynchronous container operations.
  */
-public class NonUniqueResultException extends RuntimeException {
+public abstract interface AbstractAsyncContainer extends Serializable {
 
-    private static final long serialVersionUID = 4444551737338550185L;
-
-    public NonUniqueResultException() {
-        super();
-    }
+    /**
+     * Returns a future handle for flushing all pending changes to the OData service.
+     */
+    Future<Void> flush();
 }

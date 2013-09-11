@@ -15,7 +15,6 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.proxy.api.query.Query;
 import java.io.Serializable;
 
 /**
@@ -76,20 +75,6 @@ public abstract interface AbstractEntitySet<
     <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(Class<SEC> reference);
 
     /**
-     * Create an instance of <tt>Query</tt>.
-     *
-     * @return the new query instance
-     */
-    Query<T, EC> createQuery();
-
-    /**
-     * Create an instance of <tt>Query</tt>.
-     *
-     * @return the new query instance
-     */
-     <S extends T, SEC extends AbstractEntityCollection<S>> Query<S, SEC> createQuery(Class<SEC> reference);
-
-    /**
      * Deletes the entity with the given key.
      *
      * @param key must not be null
@@ -103,4 +88,18 @@ public abstract interface AbstractEntitySet<
      * @param entities to be deleted
      */
     <S extends T> void delete(Iterable<S> entities);
+
+    /**
+     * Create an instance of <tt>Query</tt>.
+     *
+     * @return the new query instance
+     */
+    Query<T, EC> createQuery();
+
+    /**
+     * Create an instance of <tt>Query</tt>.
+     *
+     * @return the new query instance
+     */
+    <S extends T, SEC extends AbstractEntityCollection<S>> Query<S, SEC> createQuery(Class<SEC> reference);
 }

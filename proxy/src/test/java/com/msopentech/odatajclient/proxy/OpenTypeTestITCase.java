@@ -60,7 +60,7 @@ public class OpenTypeTestITCase extends AbstractTest {
 
     @Test
     public void readRow() {
-        final DefaultContainer otcontainer = EntityContainerFactory.newInstance(testOpenTypeServiceRootURL).
+        final DefaultContainer otcontainer = EntityContainerFactory.getInstance(testOpenTypeServiceRootURL).
                 getEntityContainer(DefaultContainer.class);
 
         Row row = otcontainer.getRow().get(UUID.fromString("71f7d0dc-ede4-45eb-b421-555a2aa1e58f"));
@@ -70,7 +70,7 @@ public class OpenTypeTestITCase extends AbstractTest {
 
     @Test
     public void cud() {
-        final DefaultContainer otcontainer = EntityContainerFactory.newInstance(testOpenTypeServiceRootURL).
+        final DefaultContainer otcontainer = EntityContainerFactory.getInstance(testOpenTypeServiceRootURL).
                 getEntityContainer(DefaultContainer.class);
 
         Row row = otcontainer.getRow().newRow();

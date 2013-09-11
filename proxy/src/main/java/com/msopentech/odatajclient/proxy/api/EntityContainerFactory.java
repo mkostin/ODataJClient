@@ -22,6 +22,8 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.proxy.api.impl.EntityContainerInvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -31,11 +33,17 @@ public class EntityContainerFactory {
 
     private static final Object MONITOR = new Object();
 
+    private static Context context = null;
+
+    private static final Map<String, EntityContainerFactory> FACTORY_PER_SERVICEROOT =
+            new ConcurrentHashMap<String, EntityContainerFactory>();
+
+    private static final Map<Class<?>, Object> ENTITY_CONTAINERS =
+            new ConcurrentHashMap<Class<?>, Object>();
+
     private String serviceRoot;
 
     private EdmMetadata metadata;
-
-    private static Context context = null;
 
     public static Context getContext() {
         synchronized (MONITOR) {
@@ -47,8 +55,12 @@ public class EntityContainerFactory {
         return context;
     }
 
-    public static EntityContainerFactory newInstance(final String serviceRoot) {
-        return new EntityContainerFactory(serviceRoot);
+    public static EntityContainerFactory getInstance(final String serviceRoot) {
+        if (!FACTORY_PER_SERVICEROOT.containsKey(serviceRoot)) {
+            final EntityContainerFactory instance = new EntityContainerFactory(serviceRoot);
+            FACTORY_PER_SERVICEROOT.put(serviceRoot, instance);
+        }
+        return FACTORY_PER_SERVICEROOT.get(serviceRoot);
     }
 
     private EntityContainerFactory(final String serviceRoot) {
@@ -87,9 +99,13 @@ public class EntityContainerFactory {
             throw new IllegalStateException("serviceRoot was not set");
         }
 
-        return (T) Proxy.newProxyInstance(
-                reference.getClassLoader(),
-                new Class<?>[] {reference},
-                EntityContainerInvocationHandler.getInstance(reference, this));
+        if (!ENTITY_CONTAINERS.containsKey(reference)) {
+            final Object entityContainer = Proxy.newProxyInstance(
+                    Thread.currentThread().getContextClassLoader(),
+                    new Class<?>[] {reference},
+                    EntityContainerInvocationHandler.getInstance(reference, this));
+            ENTITY_CONTAINERS.put(reference, entityContainer);
+        }
+        return (T) ENTITY_CONTAINERS.get(reference);
     }
 }
