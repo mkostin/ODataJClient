@@ -65,9 +65,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private final Class<?> typeRef;
 
-    private Map<Property, Object> propertyChanges = new HashMap<Property, Object>();
-
-    private Map<String, Object> additionalPropertyChanges = new HashMap<String, Object>();
+    private Map<String, Object> propertyChanges = new HashMap<String, Object>();
 
     private Map<NavigationProperty, Object> linkChanges = new HashMap<NavigationProperty, Object>();
 
@@ -139,7 +137,6 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 EngineUtils.getKey(containerHandler.getFactory().getMetadata(), typeRef, entity));
 
         this.propertyChanges.clear();
-        this.additionalPropertyChanges.clear();
         this.linkChanges.clear();
         this.additionalPropertiesTag = 0;
         this.propertiesTag = 0;
@@ -170,11 +167,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         return entity;
     }
 
-    public Map<String, Object> getAdditionalPropertyChanges() {
-        return additionalPropertyChanges;
-    }
-
-    public Map<Property, Object> getPropertyChanges() {
+    public Map<String, Object> getPropertyChanges() {
         return propertyChanges;
     }
 
@@ -361,43 +354,24 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         return navPropValue;
     }
 
-    private Object getPropertyValue(final Property property, final Type type) {
+    private Object getPropertyValue(final String name, final Type type) {
         try {
             final Object res;
 
-            if (propertyChanges.containsKey(property)) {
-                res = propertyChanges.get(property);
+            if (propertyChanges.containsKey(name)) {
+                res = propertyChanges.get(name);
             } else {
-                res = EngineUtils.getValueFromProperty(
-                        containerHandler.getFactory().getMetadata(), entity.getProperty(property.name()), type);
+
+                res = type == null
+                        ? EngineUtils.getValueFromProperty(
+                        containerHandler.getFactory().getMetadata(), entity.getProperty(name))
+                        : EngineUtils.getValueFromProperty(
+                        containerHandler.getFactory().getMetadata(), entity.getProperty(name), type);
 
                 if (res != null) {
                     int checkpoint = propertyChanges.hashCode();
-                    propertyChanges.put(property, res);
+                    propertyChanges.put(name, res);
                     updatePropertiesTag(checkpoint);
-                }
-            }
-
-            return res;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error getting value for property '" + property.name() + "'", e);
-        }
-    }
-
-    public Object getAdditionalProperty(final String name) {
-        try {
-            final Object res;
-
-            if (additionalPropertyChanges.containsKey(name)) {
-                res = additionalPropertyChanges.get(name);
-            } else {
-                res = EngineUtils.getValueFromProperty(
-                        containerHandler.getFactory().getMetadata(), entity.getProperty(name));
-
-                if (res != null) {
-                    int checkpoint = additionalPropertyChanges.hashCode();
-                    additionalPropertyChanges.put(name, res);
-                    updateAdditionalPropertiesTag(checkpoint);
                 }
             }
 
@@ -407,8 +381,16 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         }
     }
 
+    private Object getPropertyValue(final Property property, final Type type) {
+        return getPropertyValue(property.name(), type);
+    }
+
+    public Object getAdditionalProperty(final String name) {
+        return getPropertyValue(name, null);
+    }
+
     public Collection<String> getAdditionalPropertyNames() {
-        final Set<String> res = new HashSet<String>(additionalPropertyChanges.keySet());
+        final Set<String> res = new HashSet<String>(propertyChanges.keySet());
         final Set<String> propertyNames = new HashSet<String>();
         for (Method method : typeRef.getMethods()) {
             final Annotation ann = method.getAnnotation(Property.class);
@@ -461,7 +443,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     private void setPropertyValue(final Property property, final Object value) {
-        propertyChanges.put(property, value);
+        propertyChanges.put(property.name(), value);
 
         if (entityContext.isAttached(this)) {
             entityContext.setStatus(this, AttachedEntityStatus.CHANGED);
@@ -471,18 +453,12 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     public void addAdditionalProperty(final String name, final Object value) {
-        additionalPropertyChanges.put(name, value);
+        propertyChanges.put(name, value);
 
         if (entityContext.isAttached(this)) {
             entityContext.setStatus(this, AttachedEntityStatus.CHANGED);
         } else {
             entityContext.attach(this, AttachedEntityStatus.CHANGED);
-        }
-    }
-
-    private void updateAdditionalPropertiesTag(final int checkpoint) {
-        if (checkpoint == additionalPropertiesTag) {
-            additionalPropertiesTag = additionalPropertyChanges.hashCode();
         }
     }
 
@@ -500,7 +476,6 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     public boolean isChanged() {
         return linkChanges.hashCode() != linksTag
-                || additionalPropertyChanges.hashCode() != additionalPropertiesTag
                 || propertyChanges.hashCode() != propertiesTag;
     }
 

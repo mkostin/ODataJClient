@@ -283,7 +283,6 @@ class Container implements AbstractContainer {
         if (AttachedEntityStatus.DELETED != EntityContainerFactory.getContext().entityContext().getStatus(handler)) {
             entity.getProperties().clear();
             EngineUtils.addProperties(factory.getMetadata(), handler.getPropertyChanges(), entity);
-            EngineUtils.addAdditionalProperties(factory.getMetadata(), handler.getAdditionalPropertyChanges(), entity);
         }
 
         for (Map.Entry<NavigationProperty, Object> property : handler.getLinkChanges().entrySet()) {

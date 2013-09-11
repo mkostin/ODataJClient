@@ -240,20 +240,6 @@ public final class EngineUtils {
     }
 
     public static void addProperties(
-            final EdmMetadata metadata, final Map<Property, Object> changes, final ODataEntity entity) {
-
-        for (Map.Entry<Property, Object> property : changes.entrySet()) {
-            // if the getter exists and it is annotated as expected then get name/value and add a new property
-            final ODataProperty odataProperty = entity.getProperty(property.getKey().name());
-            if (odataProperty != null) {
-                entity.removeProperty(odataProperty);
-            }
-
-            entity.addProperty(getODataProperty(metadata, property.getKey().name(), property.getValue()));
-        }
-    }
-
-    public static void addAdditionalProperties(
             final EdmMetadata metadata, final Map<String, Object> changes, final ODataEntity entity) {
 
         for (Map.Entry<String, Object> property : changes.entrySet()) {
