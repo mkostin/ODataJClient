@@ -112,4 +112,5 @@ public interface Folder extends Serializable {
     public void setParent(final com.msopentech.odatajclient.proxy.primitivekeysservice.microsoft.test.odata.services.primitivekeysservice.types.Folder _parent);
 
 
+
 }

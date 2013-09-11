@@ -112,4 +112,5 @@ public interface ProductDetail extends Serializable {
     public void setProduct(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Product _product);
 
 
+
 }

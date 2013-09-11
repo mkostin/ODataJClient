@@ -88,4 +88,5 @@ public interface RowIndex extends AbstractOpenType {
     public void setRows(final com.msopentech.odatajclient.proxy.opentypeservice.microsoft.test.odata.services.opentypesservice.types.IndexedRowCollection _rows);
 
 
+
 }

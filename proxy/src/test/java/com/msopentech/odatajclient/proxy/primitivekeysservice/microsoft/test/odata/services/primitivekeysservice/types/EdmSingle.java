@@ -77,4 +77,5 @@ public interface EdmSingle extends Serializable {
 
     
 
+
 }

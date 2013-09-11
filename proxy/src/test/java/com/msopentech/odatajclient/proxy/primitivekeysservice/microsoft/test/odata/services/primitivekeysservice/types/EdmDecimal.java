@@ -77,4 +77,5 @@ public interface EdmDecimal extends Serializable {
 
     
 
+
 }

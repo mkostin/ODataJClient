@@ -112,4 +112,5 @@ public interface Driver extends Serializable {
     public void setLicense(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.License _license);
 
 
+
 }

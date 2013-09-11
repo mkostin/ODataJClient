@@ -136,4 +136,5 @@ public interface SpecialEmployee extends com.msopentech.odatajclient.proxy.defau
     public void setCar(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Car _car);
 
 
+
 }

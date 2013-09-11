@@ -131,7 +131,12 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
             }
             req.rawAppend(ODataStreamer.CRLF);
 
-            req.rawAppend(IOUtils.toByteArray(input));
+            try {
+                req.rawAppend(IOUtils.toByteArray(input));
+            } catch (Exception e) {
+                LOG.debug("Invalid stream", e);
+                req.rawAppend(new byte[0]);
+            }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         } finally {

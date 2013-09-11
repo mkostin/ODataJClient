@@ -156,4 +156,5 @@ public interface Login extends Serializable {
     public void setOrders(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection _orders);
 
 
+
 }

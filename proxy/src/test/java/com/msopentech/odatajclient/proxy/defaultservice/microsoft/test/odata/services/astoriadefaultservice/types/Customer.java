@@ -71,9 +71,9 @@ public interface Customer extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)
-    public URI getThumbnail();
+    public java.io.InputStream getThumbnail();
 
-    public void setThumbnail(final URI _thumbnail);
+    public void setThumbnail(final java.io.InputStream _thumbnail);
 
     
     @Property(name = "Video", 
@@ -95,9 +95,9 @@ public interface Customer extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)
-    public URI getVideo();
+    public java.io.InputStream getVideo();
 
-    public void setVideo(final URI _video);
+    public void setVideo(final java.io.InputStream _video);
 
     @Key
     @Property(name = "CustomerId", 
@@ -274,6 +274,7 @@ public interface Customer extends Serializable {
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo getInfo();
 
     public void setInfo(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo _info);
+
 
 
 }

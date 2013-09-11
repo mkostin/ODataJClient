@@ -5,7 +5,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import com.msopentech.odatajclient.proxy.api.AbstractContainer;
+import com.msopentech.odatajclient.proxy.api.AbstractAsyncContainer;
 import com.msopentech.odatajclient.proxy.primitivekeysservice.microsoft.test.odata.services.primitivekeysservice.*;
 import com.msopentech.odatajclient.proxy.primitivekeysservice.microsoft.test.odata.services.primitivekeysservice.types.*;
 
@@ -32,7 +32,7 @@ import java.util.concurrent.Future;
 
 @EntityContainer(name = "TestContext", 
   isDefaultEntityContainer = true)
-public interface AsyncTestContext extends AbstractContainer {
+public interface AsyncTestContext extends AbstractAsyncContainer {
 
     AsyncEdmBinarySet getEdmBinarySet();
 

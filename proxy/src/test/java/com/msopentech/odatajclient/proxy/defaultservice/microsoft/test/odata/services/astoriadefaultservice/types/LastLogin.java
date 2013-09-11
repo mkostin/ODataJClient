@@ -160,4 +160,5 @@ public interface LastLogin extends Serializable {
     public void setLogin(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Login _login);
 
 
+
 }

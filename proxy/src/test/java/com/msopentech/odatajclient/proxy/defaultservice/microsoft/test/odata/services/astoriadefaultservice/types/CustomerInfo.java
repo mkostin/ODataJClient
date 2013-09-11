@@ -101,4 +101,6 @@ public interface CustomerInfo extends Serializable {
 
     
 
+
+    public java.io.InputStream getStream();
 }

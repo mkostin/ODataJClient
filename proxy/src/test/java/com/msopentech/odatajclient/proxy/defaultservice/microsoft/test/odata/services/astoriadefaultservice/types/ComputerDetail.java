@@ -237,4 +237,5 @@ public interface ComputerDetail extends Serializable {
             @Parameter(name = "specifications", type = "Collection(Edm.String)", nullable = false) Collection<String> specifications, 
             @Parameter(name = "purchaseTime", type = "Edm.DateTime", nullable = false) ODataTimestamp purchaseTime
         );
+
 }

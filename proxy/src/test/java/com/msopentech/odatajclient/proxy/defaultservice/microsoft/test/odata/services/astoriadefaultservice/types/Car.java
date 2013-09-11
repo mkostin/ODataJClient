@@ -71,9 +71,9 @@ public interface Car extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)
-    public URI getPhoto();
+    public java.io.InputStream getPhoto();
 
-    public void setPhoto(final URI _photo);
+    public void setPhoto(final java.io.InputStream _photo);
 
     
     @Property(name = "Video", 
@@ -95,9 +95,9 @@ public interface Car extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)
-    public URI getVideo();
+    public java.io.InputStream getVideo();
 
-    public void setVideo(final URI _video);
+    public void setVideo(final java.io.InputStream _video);
 
     @Key
     @Property(name = "VIN", 
@@ -149,4 +149,8 @@ public interface Car extends Serializable {
 
     
 
+
+    public java.io.InputStream getStream();
+    
+    public void setStream(final java.io.InputStream is);
 }

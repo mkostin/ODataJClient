@@ -77,4 +77,5 @@ public interface EdmBoolean extends Serializable {
 
     
 
+
 }

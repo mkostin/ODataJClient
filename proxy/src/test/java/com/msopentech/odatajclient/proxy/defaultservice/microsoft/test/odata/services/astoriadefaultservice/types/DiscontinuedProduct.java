@@ -149,4 +149,5 @@ public interface DiscontinuedProduct extends com.msopentech.odatajclient.proxy.d
 
     
 
+
 }

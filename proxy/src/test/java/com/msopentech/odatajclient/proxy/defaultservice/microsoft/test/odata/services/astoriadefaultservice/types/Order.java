@@ -147,4 +147,5 @@ public interface Order extends Serializable {
     public void setCustomer(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Customer _customer);
 
 
+
 }

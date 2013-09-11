@@ -139,4 +139,5 @@ public interface Employee extends com.msopentech.odatajclient.proxy.defaultservi
     @FunctionImport(name = "Sack"      )
     void sack(
         );
+
 }

@@ -71,9 +71,9 @@ public interface Product extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)
-    public URI getPicture();
+    public java.io.InputStream getPicture();
 
-    public void setPicture(final URI _picture);
+    public void setPicture(final java.io.InputStream _picture);
 
     @Key
     @Property(name = "ProductId", 
@@ -269,4 +269,5 @@ public interface Product extends Serializable {
     void changeProductDimensions(
             @Parameter(name = "dimensions", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions", nullable = false) com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions dimensions
         );
+
 }

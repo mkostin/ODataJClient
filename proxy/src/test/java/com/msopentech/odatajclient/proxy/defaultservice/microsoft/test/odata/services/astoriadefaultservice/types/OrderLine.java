@@ -71,9 +71,9 @@ public interface OrderLine extends Serializable {
                 fcNSPrefix = "",
                 fcNSURI = "",
                 fcKeepInContent = false)
-    public URI getOrderLineStream();
+    public java.io.InputStream getOrderLineStream();
 
-    public void setOrderLineStream(final URI _orderLineStream);
+    public void setOrderLineStream(final java.io.InputStream _orderLineStream);
 
     @Key
     @Property(name = "OrderId", 
@@ -193,6 +193,7 @@ public interface OrderLine extends Serializable {
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Product getProduct();
 
     public void setProduct(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Product _product);
+
 
 
 }

@@ -254,4 +254,5 @@ public interface Message extends Serializable {
     public void setAttachments(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachmentCollection _attachments);
 
 
+
 }

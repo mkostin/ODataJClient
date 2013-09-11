@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -28,6 +29,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.AssociationSet;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
+import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
@@ -40,6 +42,7 @@ import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.proxy.api.context.EntityUUID;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import com.msopentech.odatajclient.proxy.utils.EngineUtils;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -53,7 +56,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
@@ -69,11 +74,11 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private Map<NavigationProperty, Object> linkChanges = new HashMap<NavigationProperty, Object>();
 
+    private InputStream stream;
+
     private EntityUUID uuid;
 
     private final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
-
-    private int additionalPropertiesTag;
 
     private int propertiesTag;
 
@@ -111,8 +116,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
         super(containerHandler);
         this.entityContainerName = entityContainerName;
-        this.entity = entity;
         this.typeRef = typeRef;
+
+        this.entity = entity;
+        this.entity.setMediaEntity(typeRef.getAnnotation(EntityType.class).hasStream());
 
         this.uuid = new EntityUUID(
                 ClassUtils.getNamespace(typeRef),
@@ -121,13 +128,14 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                 entity.getName(),
                 EngineUtils.getKey(containerHandler.getFactory().getMetadata(), typeRef, entity));
 
-        this.additionalPropertiesTag = 0;
+        this.stream = null;
         this.propertiesTag = 0;
         this.linksTag = 0;
     }
 
     public void setEntity(final ODataEntity entity) {
         this.entity = entity;
+        this.entity.setMediaEntity(typeRef.getAnnotation(EntityType.class).hasStream());
 
         this.uuid = new EntityUUID(
                 getUUID().getSchemaName(),
@@ -138,9 +146,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
         this.propertyChanges.clear();
         this.linkChanges.clear();
-        this.additionalPropertiesTag = 0;
         this.propertiesTag = 0;
         this.linksTag = 0;
+        this.stream = null;
     }
 
     public EntityUUID getUUID() {
@@ -237,9 +245,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             }
 
             // attach the current handler
-            if (!entityContext.isAttached(this)) {
-                entityContext.attach(this, AttachedEntityStatus.ATTACHED);
-            }
+            attach();
 
             return res;
         } else if (method.getName().startsWith("set")) {
@@ -414,9 +420,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private void setNavigationPropertyValue(final NavigationProperty property, final Object value) {
         // 1) attach source entity
-        if (!entityContext.isAttached(this)) {
-            entityContext.attach(this, AttachedEntityStatus.CHANGED);
-        }
+        attach(AttachedEntityStatus.CHANGED, false);
 
         // 2) attach the target entity handlers
         for (Object link : AbstractEntityCollection.class.isAssignableFrom(value.getClass())
@@ -444,22 +448,12 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private void setPropertyValue(final Property property, final Object value) {
         propertyChanges.put(property.name(), value);
-
-        if (entityContext.isAttached(this)) {
-            entityContext.setStatus(this, AttachedEntityStatus.CHANGED);
-        } else {
-            entityContext.attach(this, AttachedEntityStatus.CHANGED);
-        }
+        attach(AttachedEntityStatus.CHANGED);
     }
 
     public void addAdditionalProperty(final String name, final Object value) {
         propertyChanges.put(name, value);
-
-        if (entityContext.isAttached(this)) {
-            entityContext.setStatus(this, AttachedEntityStatus.CHANGED);
-        } else {
-            entityContext.attach(this, AttachedEntityStatus.CHANGED);
-        }
+        attach(AttachedEntityStatus.CHANGED);
     }
 
     private void updatePropertiesTag(final int checkpoint) {
@@ -475,8 +469,63 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     public boolean isChanged() {
-        return linkChanges.hashCode() != linksTag
-                || propertyChanges.hashCode() != propertiesTag;
+        return this.linkChanges.hashCode() != this.linksTag
+                || this.propertyChanges.hashCode() != this.propertiesTag
+                || this.stream != null;
+    }
+
+    public void setStream(final InputStream stream) {
+        if (typeRef.getAnnotation(EntityType.class).hasStream()) {
+            IOUtils.closeQuietly(this.stream);
+            this.stream = stream;
+            attach(AttachedEntityStatus.CHANGED);
+        }
+    }
+
+    public InputStream getStreamChanges() {
+        return this.stream;
+    }
+
+    public InputStream getStream() {
+
+        final String contentSource = entity.getMediaContentSource();
+
+        if (this.stream == null
+                && typeRef.getAnnotation(EntityType.class).hasStream()
+                && StringUtils.isNotBlank(contentSource)) {
+
+            final String comntentType =
+                    StringUtils.isBlank(entity.getMediaContentType()) ? "*/*" : entity.getMediaContentType();
+
+            final URI contentSourceURI = URIUtils.getURI(containerHandler.getFactory().getServiceRoot(), contentSource);
+
+            final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(contentSourceURI);
+            retrieveReq.setFormat(ODataMediaFormat.fromFormat(comntentType));
+
+            this.stream = retrieveReq.execute().getBody();
+        }
+
+        return this.stream;
+    }
+
+    private void attach() {
+        if (!entityContext.isAttached(this)) {
+            entityContext.attach(this, AttachedEntityStatus.ATTACHED);
+        }
+    }
+
+    private void attach(final AttachedEntityStatus status) {
+        attach(status, true);
+    }
+
+    private void attach(final AttachedEntityStatus status, final boolean override) {
+        if (entityContext.isAttached(this)) {
+            if (override) {
+                entityContext.setStatus(this, status);
+            }
+        } else {
+            entityContext.attach(this, status);
+        }
     }
 
     @Override

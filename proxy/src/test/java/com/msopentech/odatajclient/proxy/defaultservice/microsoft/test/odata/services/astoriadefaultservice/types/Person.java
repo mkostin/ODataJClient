@@ -112,4 +112,5 @@ public interface Person extends Serializable {
     public void setPersonMetadata(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.PersonMetadataCollection _personMetadata);
 
 
+
 }

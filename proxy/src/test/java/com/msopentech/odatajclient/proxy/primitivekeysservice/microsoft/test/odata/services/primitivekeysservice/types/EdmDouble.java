@@ -77,4 +77,5 @@ public interface EdmDouble extends Serializable {
 
     
 
+
 }

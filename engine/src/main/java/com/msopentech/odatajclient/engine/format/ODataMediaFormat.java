@@ -47,4 +47,14 @@ public enum ODataMediaFormat {
     public String toString() {
         return format;
     }
+
+    public static ODataMediaFormat fromFormat(final String format) {
+        for (ODataMediaFormat mediaFormat : ODataMediaFormat.values()) {
+            if (mediaFormat.format.equalsIgnoreCase(format)) {
+                return mediaFormat;
+            }
+        }
+
+        throw new IllegalArgumentException("Invalid media format " + format);
+    }
 }

@@ -28,6 +28,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.OnAction;
 import com.msopentech.odatajclient.engine.data.metadata.edm.PropertyRef;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
+import java.io.InputStream;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,7 +118,9 @@ public class Utility {
             res.append("Collection<");
         }
 
-        if (edmType.isSimpleType()) {
+        if ("Edm.Stream".equals(typeExpression)) {
+            res.append(InputStream.class.getName());
+        } else if (edmType.isSimpleType()) {
             res.append(edmType.getSimpleType().javaType().getSimpleName());
         } else if (edmType.isComplexType()) {
             res.append(basePackage).append('.').append(edmType.getNamespaceOrAlias().toLowerCase()).append('.').

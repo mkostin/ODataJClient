@@ -101,4 +101,5 @@ public interface ProductPageView extends com.msopentech.odatajclient.proxy.defau
 
     
 
+
 }

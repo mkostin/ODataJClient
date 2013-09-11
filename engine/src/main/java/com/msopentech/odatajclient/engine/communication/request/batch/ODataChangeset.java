@@ -113,7 +113,6 @@ public class ODataChangeset extends ODataBatchRequestItem {
         streamRequestHeader(request, contentId);
 
         request.batch(req, String.valueOf(contentId));
-        newLine();
 
         // add request to the list
         expectedResItem.addResponse(String.valueOf(contentId), ((ODataRequestImpl) request).getResponseTemplate());

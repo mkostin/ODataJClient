@@ -138,4 +138,8 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
     #end#*
     *##end);
 #end
+
+#if($entityType.hasStream())
+    public java.io.InputStream getStream();
+#end
 }

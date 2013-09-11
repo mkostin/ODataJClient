@@ -117,4 +117,5 @@ public interface Computer extends Serializable {
                     returnType = "Microsoft.Test.OData.Services.AstoriaDefaultService.Computer")
     com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Computer getComputer(
         );
+
 }

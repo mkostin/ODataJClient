@@ -197,4 +197,5 @@ public interface AllSpatialCollectionTypes_Simple extends com.msopentech.odatajc
 
     
 
+
 }
