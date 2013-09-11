@@ -345,13 +345,9 @@ public final class ODataBinder {
             content = resource.getContent();
         }
         if (content != null) {
-            for (int i = 0; i < content.getChildNodes().getLength(); i++) {
-                final Element property = (Element) content.getChildNodes().item(i);
-
+            for (Node property : XMLUtils.getChildNodes(content, Node.ELEMENT_NODE)) {
                 try {
-                    if (property.getNodeType() != Node.TEXT_NODE) {
-                        entity.addProperty(getProperty(property));
-                    }
+                    entity.addProperty(getProperty((Element) property));
                 } catch (IllegalArgumentException e) {
                     LOG.warn("Failure retrieving EdmType for {}", property.getTextContent(), e);
                 }

@@ -20,7 +20,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.data.Deserializer;
-import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
@@ -28,6 +27,8 @@ import com.msopentech.odatajclient.engine.data.ODataOperation;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
+import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.InputStream;
 import java.util.Collections;
@@ -139,7 +140,7 @@ public class EntityTest extends AbstractTest {
         assertNotNull(entity.getMediaContentSource());
         assertNotNull(entity.getMediaContentType());
 
-        
+
         final ODataEntity written = ODataBinder.getODataEntity(
                 ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)));
         assertEquals(entity, written);
@@ -153,5 +154,32 @@ public class EntityTest extends AbstractTest {
     @Test
     public void mediaEntityFromJSON() {
         mediaEntity(ODataPubFormat.JSON_FULL_METADATA);
+    }
+
+    private void issue128(final ODataPubFormat format) {
+        final InputStream input = getClass().getResourceAsStream("AllGeoTypesSet_-5." + getSuffix(format));
+        final ODataEntity entity = ODataBinder.getODataEntity(
+                Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
+        assertNotNull(entity);
+
+        final ODataProperty geogCollection = entity.getProperty("GeogCollection");
+        assertEquals(EdmSimpleType.GEOGRAPHY_COLLECTION.toString(), geogCollection.getPrimitiveValue().getTypeName());
+
+        int count = 0;
+        for (Geospatial g : geogCollection.getPrimitiveValue().<GeospatialCollection>toCastValue()) {
+            assertNotNull(g);
+            count++;
+        }
+        assertEquals(2, count);
+    }
+
+    @Test
+    public void issue128FromAtom() {
+        issue128(ODataPubFormat.ATOM);
+    }
+
+    @Test
+    public void issue128FromJSON() {
+        issue128(ODataPubFormat.JSON_FULL_METADATA);
     }
 }

@@ -511,6 +511,16 @@ public class PrimitiveValueTest extends AbstractTest {
         assertEquals(2, count);
     }
 
+    @Test
+    public void geomCollectionFromXML() {
+        geomCollection(ODataFormat.XML);
+    }
+
+    @Test
+    public void geomCollectionFromJSON() {
+        geomCollection(ODataFormat.JSON);
+    }
+
     private void geogCollection(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-5)", "GeogCollection", format);
         assertEquals(EdmSimpleType.GEOGRAPHY_COLLECTION.toString(), opv.getTypeName());
@@ -533,16 +543,6 @@ public class PrimitiveValueTest extends AbstractTest {
             }
         }
         assertEquals(2, count);
-    }
-
-    @Test
-    public void geomCollectionFromXML() {
-        geomCollection(ODataFormat.XML);
-    }
-
-    @Test
-    public void geomCollectionFromJSON() {
-        geomCollection(ODataFormat.JSON);
     }
 
     @Test

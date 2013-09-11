@@ -24,12 +24,20 @@ import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 final class GeospatialJSONHandler {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(GeospatialJSONHandler.class);
 
     private GeospatialJSONHandler() {
         // Empty private constructor for static utility classes
@@ -231,33 +239,27 @@ final class GeospatialJSONHandler {
     }
 
     private static void serializeLineString(final JsonGenerator jgen, final Element node) throws IOException {
-        final NodeList poses = node.getElementsByTagName(ODataConstants.ELEM_POS);
-        for (int i = 0; i < poses.getLength(); i++) {
+        for (Element element : XMLUtils.getChildElements(node, ODataConstants.ELEM_POS)) {
             jgen.writeStartArray();
-            serializePoint(jgen, poses.item(i));
+            serializePoint(jgen, element);
             jgen.writeEndArray();
         }
     }
 
     private static void serializePolygon(final JsonGenerator jgen, final Element node) throws IOException {
-        final NodeList exts = node.getElementsByTagName(ODataConstants.ELEM_POLYGON_EXTERIOR);
-        if (exts.getLength() > 0) {
-            final Element exterior = (Element) exts.item(0);
-
+        for (Element exterior : XMLUtils.getChildElements(node, ODataConstants.ELEM_POLYGON_EXTERIOR)) {
             jgen.writeStartArray();
             serializeLineString(jgen,
-                    (Element) exterior.getElementsByTagName(ODataConstants.ELEM_POLYGON_LINEARRING).item(0));
+                    XMLUtils.getChildElements(exterior, ODataConstants.ELEM_POLYGON_LINEARRING).get(0));
             jgen.writeEndArray();
 
         }
-        final NodeList ints = node.getElementsByTagName(ODataConstants.ELEM_POLYGON_INTERIOR);
-        if (ints.getLength() > 0) {
-            final Element interior = (Element) ints.item(0);
-
+        for (Element interior : XMLUtils.getChildElements(node, ODataConstants.ELEM_POLYGON_INTERIOR)) {
             jgen.writeStartArray();
             serializeLineString(jgen,
-                    (Element) interior.getElementsByTagName(ODataConstants.ELEM_POLYGON_LINEARRING).item(0));
+                    XMLUtils.getChildElements(interior, ODataConstants.ELEM_POLYGON_LINEARRING).get(0));
             jgen.writeEndArray();
+
         }
     }
 
@@ -278,27 +280,24 @@ final class GeospatialJSONHandler {
         switch (edmSimpleType) {
             case GEOGRAPHY_POINT:
             case GEOMETRY_POINT:
-                root = (Element) node.getElementsByTagName(ODataConstants.ELEM_POINT).item(0);
+                root = XMLUtils.getChildElements(node, ODataConstants.ELEM_POINT).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
-                serializePoint(jgen, node.getElementsByTagName(ODataConstants.ELEM_POS).item(0));
+                serializePoint(jgen, XMLUtils.getChildElements(root, ODataConstants.ELEM_POS).get(0));
                 jgen.writeEndArray();
                 break;
 
             case GEOGRAPHY_MULTI_POINT:
             case GEOMETRY_MULTI_POINT:
-                root = (Element) node.getElementsByTagName(ODataConstants.ELEM_MULTIPOINT).item(0);
+                root = XMLUtils.getChildElements(node, ODataConstants.ELEM_MULTIPOINT).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
 
-                final Element pMembs =
-                        (Element) root.getElementsByTagName(ODataConstants.ELEM_POINTMEMBERS).item(0);
-                if (pMembs != null) {
-                    final NodeList points = pMembs.getElementsByTagName(ODataConstants.ELEM_POINT);
-                    for (int i = 0; i < points.getLength(); i++) {
+                final List<Element> pMembs = XMLUtils.getChildElements(root, ODataConstants.ELEM_POINTMEMBERS);
+                if (pMembs != null && !pMembs.isEmpty()) {
+                    for (Element point : XMLUtils.getChildElements(pMembs.get(0), ODataConstants.ELEM_POINT)) {
                         jgen.writeStartArray();
-                        serializePoint(jgen,
-                                ((Element) points.item(i)).getElementsByTagName(ODataConstants.ELEM_POS).item(0));
+                        serializePoint(jgen, XMLUtils.getChildElements(point, ODataConstants.ELEM_POS).get(0));
                         jgen.writeEndArray();
                     }
                 }
@@ -308,7 +307,7 @@ final class GeospatialJSONHandler {
 
             case GEOGRAPHY_LINE_STRING:
             case GEOMETRY_LINE_STRING:
-                root = (Element) node.getElementsByTagName(ODataConstants.ELEM_LINESTRING).item(0);
+                root = XMLUtils.getChildElements(node, ODataConstants.ELEM_LINESTRING).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
                 serializeLineString(jgen, root);
@@ -317,17 +316,15 @@ final class GeospatialJSONHandler {
 
             case GEOGRAPHY_MULTI_LINE_STRING:
             case GEOMETRY_MULTI_LINE_STRING:
-                root = (Element) node.getElementsByTagName(ODataConstants.ELEM_MULTILINESTRING).item(0);
+                root = XMLUtils.getChildElements(node, ODataConstants.ELEM_MULTILINESTRING).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
 
-                final Element lMembs =
-                        (Element) root.getElementsByTagName(ODataConstants.ELEM_LINESTRINGMEMBERS).item(0);
-                if (lMembs != null) {
-                    final NodeList lineStrs = lMembs.getElementsByTagName(ODataConstants.ELEM_LINESTRING);
-                    for (int i = 0; i < lineStrs.getLength(); i++) {
+                final List<Element> lMembs = XMLUtils.getChildElements(root, ODataConstants.ELEM_LINESTRINGMEMBERS);
+                if (lMembs != null && !lMembs.isEmpty()) {
+                    for (Element lineStr : XMLUtils.getChildElements(lMembs.get(0), ODataConstants.ELEM_LINESTRING)) {
                         jgen.writeStartArray();
-                        serializeLineString(jgen, (Element) lineStrs.item(i));
+                        serializeLineString(jgen, lineStr);
                         jgen.writeEndArray();
                     }
                 }
@@ -337,7 +334,7 @@ final class GeospatialJSONHandler {
 
             case GEOGRAPHY_POLYGON:
             case GEOMETRY_POLYGON:
-                root = (Element) node.getElementsByTagName(ODataConstants.ELEM_POLYGON).item(0);
+                root = XMLUtils.getChildElements(node, ODataConstants.ELEM_POLYGON).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
                 serializePolygon(jgen, root);
@@ -346,17 +343,15 @@ final class GeospatialJSONHandler {
 
             case GEOGRAPHY_MULTI_POLYGON:
             case GEOMETRY_MULTI_POLYGON:
-                root = (Element) node.getElementsByTagName(ODataConstants.ELEM_MULTIPOLYGON).item(0);
+                root = XMLUtils.getChildElements(node, ODataConstants.ELEM_MULTIPOLYGON).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
 
-                final Element mpMembs =
-                        (Element) root.getElementsByTagName(ODataConstants.ELEM_SURFACEMEMBERS).item(0);
-                if (mpMembs != null) {
-                    final NodeList pols = mpMembs.getElementsByTagName(ODataConstants.ELEM_POLYGON);
-                    for (int i = 0; i < pols.getLength(); i++) {
+                final List<Element> mpMembs = XMLUtils.getChildElements(root, ODataConstants.ELEM_SURFACEMEMBERS);
+                if (mpMembs != null & !mpMembs.isEmpty()) {
+                    for (Element pol : XMLUtils.getChildElements(mpMembs.get(0), ODataConstants.ELEM_POLYGON)) {
                         jgen.writeStartArray();
-                        serializePolygon(jgen, (Element) pols.item(i));
+                        serializePolygon(jgen, pol);
                         jgen.writeEndArray();
                     }
                 }
@@ -366,25 +361,32 @@ final class GeospatialJSONHandler {
 
             case GEOGRAPHY_COLLECTION:
             case GEOMETRY_COLLECTION:
-                root = (Element) node.getElementsByTagName(ODataConstants.ELEM_GEOCOLLECTION).item(0);
+                root = XMLUtils.getChildElements(node, ODataConstants.ELEM_GEOCOLLECTION).get(0);
 
-                final Node cMembs = root.getElementsByTagName(ODataConstants.ELEM_GEOMEMBERS).item(0);
-                if (cMembs != null) {
+                final List<Element> cMembs = XMLUtils.getChildElements(root, ODataConstants.ELEM_GEOMEMBERS);
+                if (cMembs != null && !cMembs.isEmpty()) {
                     jgen.writeArrayFieldStart(ODataConstants.JSON_GEOMETRIES);
 
-                    for (Node geom : XMLUtils.getChildNodes(cMembs, Node.ELEMENT_NODE)) {
-                        final Element fakeParent = node.getOwnerDocument().createElementNS(
-                                ODataConstants.NS_DATASERVICES, ODataConstants.PREFIX_DATASERVICES + "fake");
-                        fakeParent.appendChild(geom);
+                    for (Node geom : XMLUtils.getChildNodes(cMembs.get(0), Node.ELEMENT_NODE)) {
+                        try {
+                            final DocumentBuilder builder = ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder();
+                            final Document doc = builder.newDocument();
 
-                        final EdmSimpleType callAsType = XMLUtils.simpleTypeForNode(
-                                edmSimpleType == EdmSimpleType.GEOGRAPHY_COLLECTION
-                                ? Geospatial.Dimension.GEOGRAPHY : Geospatial.Dimension.GEOMETRY,
-                                geom);
+                            final Element fakeParent = doc.createElementNS(
+                                    ODataConstants.NS_DATASERVICES, ODataConstants.PREFIX_DATASERVICES + "fake");
+                            fakeParent.appendChild(doc.importNode(geom, true));
 
-                        jgen.writeStartObject();
-                        serialize(jgen, fakeParent, callAsType.toString());
-                        jgen.writeEndObject();
+                            final EdmSimpleType callAsType = XMLUtils.simpleTypeForNode(
+                                    edmSimpleType == EdmSimpleType.GEOGRAPHY_COLLECTION
+                                    ? Geospatial.Dimension.GEOGRAPHY : Geospatial.Dimension.GEOMETRY,
+                                    geom);
+
+                            jgen.writeStartObject();
+                            serialize(jgen, fakeParent, callAsType.toString());
+                            jgen.writeEndObject();
+                        } catch (Exception e) {
+                            LOG.warn("While serializing {}", XMLUtils.getSimpleName(geom), e);
+                        }
                     }
 
                     jgen.writeEndArray();

@@ -161,8 +161,7 @@ public class OpenTypeTestITCase extends AbstractTest {
         for (Geospatial geospatial : aCollection) {
             count++;
         }
-        // TODO: uncomment when #128 has been fixed
-        //assertEquals(4, count);
+        assertEquals(4, count);
 
         ContactDetails aContact = (ContactDetails) row.getAdditionalProperty("aContact");
         assertEquals("text", new String(aContact.getFirstContacted()));

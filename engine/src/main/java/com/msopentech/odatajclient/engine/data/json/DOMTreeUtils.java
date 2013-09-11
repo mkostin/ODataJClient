@@ -39,8 +39,6 @@ final class DOMTreeUtils {
     /**
      * Recursively builds DOM content out of JSON subtree rooted at given node.
      *
-     * @see #getContent(com.fasterxml.jackson.databind.JsonNode)
-     *
      * @param document root of the DOM document being built
      * @param parent parent of the nodes being generated during this step
      * @param node JSON node to be used as source for DOM elements
