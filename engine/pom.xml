@@ -88,6 +88,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <inherited>true</inherited>
+        <configuration>
+          <systemPropertyVariables>
+            <propertyName>org.slf4j.simpleLogger.defaultLogLevel</propertyName>
+            <org.slf4j.simpleLogger.defaultLogLevel>ERROR</org.slf4j.simpleLogger.defaultLogLevel>
+          </systemPropertyVariables>
+        </configuration>
         <executions>
           <execution>
             <id>default-test</id>

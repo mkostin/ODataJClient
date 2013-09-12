@@ -81,11 +81,6 @@ public class BasicPerfTest extends AbstractTest {
         }
     }
 
-    @BeforeClass
-    public static void nolog() {
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "error");
-    }
-
     @Test
     public void readAtomViaLowerlevelLibs() throws ParserConfigurationException, SAXException, IOException {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
