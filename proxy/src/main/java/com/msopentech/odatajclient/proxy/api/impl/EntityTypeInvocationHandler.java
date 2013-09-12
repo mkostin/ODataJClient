@@ -59,7 +59,6 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
@@ -392,7 +391,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     private Object getPropertyValue(final Property property, final Type type) {
-        if (!(type instanceof ParameterizedTypeImpl) && (Class<?>) type == InputStream.class) {
+        if (!(type instanceof ParameterizedType) && (Class<?>) type == InputStream.class) {
             return getStreamedProperty(property);
         } else {
             return getPropertyValue(property.name(), type);
