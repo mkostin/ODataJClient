@@ -59,6 +59,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
@@ -71,6 +72,8 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     private final Class<?> typeRef;
 
     private Map<String, Object> propertyChanges = new HashMap<String, Object>();
+
+    private Map<String, InputStream> streamedPropertyChanges = new HashMap<String, InputStream>();
 
     private Map<NavigationProperty, Object> linkChanges = new HashMap<NavigationProperty, Object>();
 
@@ -146,6 +149,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
         this.propertyChanges.clear();
         this.linkChanges.clear();
+        this.streamedPropertyChanges.clear();
         this.propertiesTag = 0;
         this.linksTag = 0;
         this.stream = null;
@@ -388,7 +392,11 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     private Object getPropertyValue(final Property property, final Type type) {
-        return getPropertyValue(property.name(), type);
+        if (!(type instanceof ParameterizedTypeImpl) && (Class<?>) type == InputStream.class) {
+            return getStreamedProperty(property);
+        } else {
+            return getPropertyValue(property.name(), type);
+        }
     }
 
     public Object getAdditionalProperty(final String name) {
@@ -447,7 +455,12 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     }
 
     private void setPropertyValue(final Property property, final Object value) {
-        propertyChanges.put(property.name(), value);
+        if (property.type().equalsIgnoreCase("Edm.Stream")) {
+            setStreamedProperty(property, (InputStream) value);
+        } else {
+            propertyChanges.put(property.name(), value);
+        }
+
         attach(AttachedEntityStatus.CHANGED);
     }
 
@@ -471,7 +484,8 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
     public boolean isChanged() {
         return this.linkChanges.hashCode() != this.linksTag
                 || this.propertyChanges.hashCode() != this.propertiesTag
-                || this.stream != null;
+                || this.stream != null
+                || !this.streamedPropertyChanges.isEmpty();
     }
 
     public void setStream(final InputStream stream) {
@@ -484,6 +498,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     public InputStream getStreamChanges() {
         return this.stream;
+    }
+
+    public Map<String, InputStream> getStreamedPropertyChanges() {
+        return streamedPropertyChanges;
     }
 
     public InputStream getStream() {
@@ -506,6 +524,37 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         }
 
         return this.stream;
+    }
+
+    public Object getStreamedProperty(final Property property) {
+
+        InputStream res = streamedPropertyChanges.get(property.name());
+
+        try {
+            if (res == null) {
+                final URI link = URIUtils.getURI(
+                        containerHandler.getFactory().getServiceRoot(),
+                        EngineUtils.getEditMediaLink(property.name(), this.entity).toASCIIString());
+
+                final ODataMediaRequest req = ODataRetrieveRequestFactory.getMediaRequest(link);
+                res = req.execute().getBody();
+
+            }
+        } catch (Exception e) {
+            res = null;
+        }
+
+        return res;
+
+    }
+
+    private void setStreamedProperty(final Property property, final InputStream input) {
+        final Object obj = propertyChanges.get(property.name());
+        if (obj != null && obj instanceof InputStream) {
+            IOUtils.closeQuietly((InputStream) obj);
+        }
+
+        streamedPropertyChanges.put(property.name(), input);
     }
 
     private void attach() {

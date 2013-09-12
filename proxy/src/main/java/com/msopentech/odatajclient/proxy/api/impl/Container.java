@@ -25,8 +25,8 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataChang
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
@@ -170,25 +170,6 @@ class Container implements AbstractContainer {
         }
     }
 
-    private void batchCreateMedia(
-            final EntityTypeInvocationHandler handler,
-            final InputStream input,
-            final ODataChangeset changeset) {
-
-        LOG.debug("Create media entity '{}'", handler);
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(factory.getServiceRoot()).
-                appendEntitySetSegment(handler.getEntitySetName());
-
-        final ODataMediaEntityCreateRequest req =
-                ODataStreamedRequestFactory.getMediaEntityCreateRequest(uriBuilder.build(), input);
-
-        req.setContentType(StringUtils.isBlank(handler.getEntity().getMediaContentType())
-                ? ODataMediaFormat.WILDCARD.toString()
-                : ODataMediaFormat.fromFormat(handler.getEntity().getMediaContentType()).toString());
-
-        changeset.addRequest(req);
-    }
-
     private void batchCreate(
             final EntityTypeInvocationHandler handler, final ODataEntity entity, final ODataChangeset changeset) {
 
@@ -199,7 +180,7 @@ class Container implements AbstractContainer {
         changeset.addRequest(ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), entity));
     }
 
-    private void batchUpdateMedia(
+    private void batchUpdateMediaEntity(
             final EntityTypeInvocationHandler handler,
             final URI uri,
             final InputStream input,
@@ -213,6 +194,23 @@ class Container implements AbstractContainer {
         req.setContentType(StringUtils.isBlank(handler.getEntity().getMediaContentType())
                 ? ODataMediaFormat.WILDCARD.toString()
                 : ODataMediaFormat.fromFormat(handler.getEntity().getMediaContentType()).toString());
+
+        if (StringUtils.isNotBlank(handler.getETag())) {
+            req.setIfMatch(handler.getETag());
+        }
+
+        changeset.addRequest(req);
+    }
+
+    private void batchUpdateMediaResource(
+            final EntityTypeInvocationHandler handler,
+            final URI uri,
+            final InputStream input,
+            final ODataChangeset changeset) {
+
+        LOG.debug("Update media entity '{}'", uri);
+
+        final ODataStreamUpdateRequest req = ODataStreamedRequestFactory.getStreamUpdateRequest(uri, input);
 
         if (StringUtils.isNotBlank(handler.getETag())) {
             req.setIfMatch(handler.getETag());
@@ -355,8 +353,9 @@ class Container implements AbstractContainer {
 
         items.put(handler, pos);
 
+        int startingPos = pos;
+
         if (handler.getEntity().isMediaEntity()) {
-            int startingPos = pos;
 
             // update media properties
             if (!handler.getPropertyChanges().isEmpty()) {
@@ -375,12 +374,25 @@ class Container implements AbstractContainer {
                         : URIUtils.getURI(
                         factory.getServiceRoot(), handler.getEntity().getEditLink().toASCIIString() + "/$value");
 
-                batchUpdateMedia(handler, targetURI, handler.getStreamChanges(), changeset);
+                batchUpdateMediaEntity(handler, targetURI, handler.getStreamChanges(), changeset);
 
                 // update media info (use null key)
                 pos++;
                 items.put(null, pos);
             }
+        }
+
+        for (Map.Entry<String, InputStream> streamedChanges : handler.getStreamedPropertyChanges().entrySet()) {
+            final URI targetURI = currentStatus == AttachedEntityStatus.NEW
+                    ? URI.create("$" + startingPos) : URIUtils.getURI(
+                    factory.getServiceRoot(),
+                    EngineUtils.getEditMediaLink(streamedChanges.getKey(), entity).toASCIIString());
+
+            batchUpdateMediaResource(handler, targetURI, streamedChanges.getValue(), changeset);
+
+            // update media info (use null key)
+            pos++;
+            items.put(handler, pos);
         }
 
         return pos;

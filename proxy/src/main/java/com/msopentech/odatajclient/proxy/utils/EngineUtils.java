@@ -478,4 +478,14 @@ public final class EngineUtils {
 
         return res;
     }
+
+    public static URI getEditMediaLink(final String name, final ODataEntity entity) {
+        for (ODataLink editMediaLink : entity.getEditMediaLinks()) {
+            if (name.equalsIgnoreCase(editMediaLink.getName())) {
+                return editMediaLink.getLink();
+            }
+        }
+
+        throw new IllegalArgumentException("Invalid streamed property " + name);
+    }
 }

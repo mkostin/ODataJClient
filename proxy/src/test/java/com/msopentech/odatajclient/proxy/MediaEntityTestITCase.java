@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Car;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
@@ -41,11 +42,27 @@ public class MediaEntityTestITCase extends AbstractTest {
     }
 
     @Test
+    public void updateReadStreamedProperty() throws IOException {
+        final String TO_BE_UPDATED = "buffered stream sample (" + System.currentTimeMillis() + ")";
+        final InputStream input = new ByteArrayInputStream(TO_BE_UPDATED.getBytes());
+
+        Car car = container.getCar().get(12);
+        car.setPhoto(input);
+
+        container.flush();
+
+        car = container.getCar().get(12);
+        final InputStream is = car.getPhoto();
+        assertEquals(TO_BE_UPDATED, IOUtils.toString(is));
+        IOUtils.closeQuietly(is);
+    }
+
+    @Test
     public void update() throws IOException {
         Car car = container.getCar().get(14);
         assertNotNull(car);
 
-        final String TO_BE_UPDATED = "new buffered stream sample";
+        final String TO_BE_UPDATED = "buffered stream sample (" + System.currentTimeMillis() + ")";
         InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);
 
         car.setStream(input);
@@ -61,11 +78,12 @@ public class MediaEntityTestITCase extends AbstractTest {
     public void create() throws IOException {
         Car car = container.getCar().newCar();
 
-        final String TO_BE_UPDATED = "new buffered stream sample";
+        final String TO_BE_UPDATED = "buffered stream sample (" + System.currentTimeMillis() + ")";
         InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);
 
+        final String DESC = "DESC - " + System.currentTimeMillis();
         car.setStream(input);
-        car.setDescription("no description");
+        car.setDescription(DESC);
 
         container.flush();
 
@@ -75,7 +93,7 @@ public class MediaEntityTestITCase extends AbstractTest {
         EntityContainerFactory.getContext().detachAll();
 
         car = container.getCar().get(key);
-        assertEquals("no description", car.getDescription());
+        assertEquals(DESC, car.getDescription());
         input = car.getStream();
         assertEquals(TO_BE_UPDATED, IOUtils.toString(input));
         IOUtils.closeQuietly(input);
