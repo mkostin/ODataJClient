@@ -41,6 +41,16 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
+#set ($doc = $utility.getDocumentation($complexType))
+#if($doc && !$doc.getKey().isEmpty())
+/**
+ * $doc.getKey()
+#if(!$doc.getValue().isEmpty())
+ * <br />
+ * $doc.getValue()
+#end
+ */
+#end
 @ComplexType("$complexType.Name")
 public class $utility.capitalize($complexType.Name) extends AbstractComplexType {
 

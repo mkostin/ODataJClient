@@ -56,6 +56,17 @@ public interface $utility.capitalize($container.Name) extends AbstractContainer 
 
 #foreach($operation in $container.FunctionImports)
   #if( !$operation.isIsBindable() )
+#set ($doc = $utility.getDocumentation($operation))
+#if($doc && !$doc.getKey().isEmpty())
+    /**
+     * $doc.getKey()
+    #if(!$doc.getValue().isEmpty())
+     * <br />
+     * $doc.getValue()
+    #end
+     */
+#end
+#set ($doc = false)
     @FunctionImport(name = "$operation.Name" #if($operation.EntitySet), 
                     entitySet = $operation.EntitySet$clsSuffix#end #if($operation.EntitySetPath),
                     entitySetPath = $operation.EntitySetPath#end #if($operation.isIsComposable),

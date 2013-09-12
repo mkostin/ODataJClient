@@ -52,6 +52,16 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
+#set ($doc = $utility.getDocumentation($entityType))
+#if($doc && !$doc.getKey().isEmpty())
+/**
+ * $doc.getKey()
+#if(!$doc.getValue().isEmpty())
+ * <br />
+ * $doc.getValue()
+#end
+ */
+#end
 #set( $fcprops = $utility.getFcProperties($entityType))
 #if( $keyRef )@KeyRef(${keyRef}.class)#end
 
@@ -119,6 +129,17 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
 #end
 
 #foreach($operation in $utility.getFunctionImportsBoundTo($entityType.Name, false))
+#set ($doc = $utility.getDocumentation($operation))
+#if($doc && !$doc.getKey().isEmpty())
+    /**
+     * $doc.getKey()
+    #if(!$doc.getValue().isEmpty())
+     * <br />
+     * $doc.getValue()
+    #end
+     */
+#end
+#set ($doc = false)
     @FunctionImport(name = "$operation.Name" #if($operation.EntitySet), 
                     entitySet = $operation.EntitySet$clsSuffix#end #if($operation.EntitySetPath),
                     entitySetPath = $operation.EntitySetPath#end #if($operation.isIsComposable),

@@ -21,6 +21,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractAnnotated;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationEnd;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Documentation;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.EntitySet;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityProperty;
@@ -29,6 +30,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.OnAction;
 import com.msopentech.odatajclient.engine.data.metadata.edm.PropertyRef;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -294,5 +296,28 @@ public class Utility {
         }
 
         return result;
+    }
+
+    public static Map.Entry<String, String> getDocumentation(final Object obj) {
+        final String summary;
+        final String description;
+
+        try {
+            final Method method = obj.getClass().getMethod("getDocumentation");
+
+            if (method == null || method.getReturnType() != Documentation.class) {
+                throw new Exception("Documentation not found");
+            }
+
+            final Documentation doc = (Documentation) method.invoke(obj);
+
+            summary = doc.getSummary() == null ? "" : doc.getSummary().getContentAsString();
+            description = doc.getLongDescription() == null ? "" : doc.getLongDescription().getContentAsString();
+
+            return new AbstractMap.SimpleEntry<String, String>(summary, description);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 }

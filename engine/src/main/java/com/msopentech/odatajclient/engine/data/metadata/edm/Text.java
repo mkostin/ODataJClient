@@ -110,4 +110,15 @@ public class Text {
     public Map<QName, String> getOtherAttributes() {
         return otherAttributes;
     }
+
+    public String getContentAsString() {
+        final StringBuilder builder = new StringBuilder();
+        for (Object obj : getContent()) {
+            if (builder.length() > 0) {
+                builder.append("\n");
+            }
+            builder.append(obj.toString());
+        }
+        return builder.toString();
+    }
 }
