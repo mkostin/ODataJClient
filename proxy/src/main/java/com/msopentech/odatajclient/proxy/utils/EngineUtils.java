@@ -211,21 +211,20 @@ public final class EngineUtils {
 
         final EdmType type = getEdmType(metadata, obj);
         try {
-            if (type.isCollection()) {
+            if (type == null || obj == null) {
+                oprop = ODataFactory.newPrimitiveProperty(name, null);
+            } else if (type.isCollection()) {
                 // create collection property
                 oprop = ODataFactory.newCollectionProperty(
-                        name,
-                        obj == null ? null : getODataValue(metadata, type, obj).asCollection());
+                        name, getODataValue(metadata, type, obj).asCollection());
             } else if (type.isSimpleType()) {
                 // create a primitive property
                 oprop = ODataFactory.newPrimitiveProperty(
-                        name,
-                        obj == null ? null : getODataValue(metadata, type, obj).asPrimitive());
+                        name, getODataValue(metadata, type, obj).asPrimitive());
             } else if (type.isComplexType()) {
                 // create a complex property
                 oprop = ODataFactory.newComplexProperty(
-                        name,
-                        obj == null ? null : getODataValue(metadata, type, obj).asComplex());
+                        name, getODataValue(metadata, type, obj).asComplex());
             } else if (type.isEnumType()) {
                 // TODO: manage enum types
                 throw new UnsupportedOperationException("Usupported enum type " + type.getTypeExpression());
@@ -461,7 +460,7 @@ public final class EngineUtils {
             res = null;
         } else if (Collection.class.isAssignableFrom(obj.getClass())) {
             if (((Collection) obj).isEmpty()) {
-                res = null;
+                res = new EdmType(metadata, "Collection(" + getEdmType(metadata, "Edm.String"));
             } else {
                 res = new EdmType(metadata, "Collection("
                         + getEdmType(metadata, ((Collection) obj).iterator().next()).getTypeExpression()
