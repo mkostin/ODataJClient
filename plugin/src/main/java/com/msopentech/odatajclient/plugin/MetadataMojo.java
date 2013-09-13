@@ -168,16 +168,12 @@ public class MetadataMojo extends AbstractMojo {
                 objs.put("container", container);
                 parseObj(base, pkg, "container",
                         utility.capitalize(container.getName()) + ".java", objs);
-                parseObj(base, pkg, "asyncContainer",
-                        "Async" + utility.capitalize(container.getName()) + ".java", objs);
 
                 for (EntitySet entitySet : container.getEntitySets()) {
                     objs.clear();
                     objs.put("entitySet", entitySet);
                     parseObj(base, pkg, "entitySet",
                             utility.capitalize(entitySet.getName()) + ".java", objs);
-                    parseObj(base, pkg, "asyncEntitySet",
-                            "Async" + utility.capitalize(entitySet.getName()) + ".java", objs);
                 }
             }
 

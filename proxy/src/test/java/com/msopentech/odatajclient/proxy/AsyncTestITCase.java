@@ -18,9 +18,9 @@ package com.msopentech.odatajclient.proxy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
-import com.msopentech.odatajclient.proxy.api.AsyncQuery;
+import com.msopentech.odatajclient.proxy.api.AsyncCall;
+import com.msopentech.odatajclient.proxy.api.Query;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Employee;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.EmployeeCollection;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Product;
@@ -36,7 +36,13 @@ public class AsyncTestITCase extends AbstractTest {
 
     @Test
     public void retrieveEntitySet() throws InterruptedException, ExecutionException {
-        final Future<ProductCollection> futureProds = asyncContainer.getProduct().getAll();
+        final Future<ProductCollection> futureProds = new AsyncCall<ProductCollection>() {
+
+            @Override
+            public ProductCollection call() {
+                return container.getProduct().getAll();
+            }
+        };
         assertNotNull(futureProds);
 
         while (!futureProds.isDone()) {
@@ -57,43 +63,52 @@ public class AsyncTestITCase extends AbstractTest {
         final Product product = container.getProduct().get(-10);
         product.setDescription("AsyncTest#updateEntity " + random);
 
-        final Future<Void> futureFlush = asyncContainer.flush();
+        final Future<Void> futureFlush = new AsyncCall<Void>() {
+
+            @Override
+            public Void call() {
+                container.flush();
+                return null;
+            }
+        };
         assertNotNull(futureFlush);
 
         while (!futureFlush.isDone()) {
         }
 
-        assertEquals("AsyncTest#updateEntity " + random, asyncContainer.getProduct().get(-10).get().getDescription());
+        final Future<Product> futureProd = new AsyncCall<Product>() {
+
+            @Override
+            public Product call() {
+                return container.getProduct().get(-10);
+            }
+        };
+
+        assertEquals("AsyncTest#updateEntity " + random, futureProd.get().getDescription());
     }
 
     @Test
     public void polymorphQuery() throws Exception {
-        final AsyncQuery<Employee, EmployeeCollection> queryEmployee =
-                asyncContainer.getPerson().createQuery(EmployeeCollection.class);
+        final Future<Query<Employee, EmployeeCollection>> queryEmployee =
+                new AsyncCall<Query<Employee, EmployeeCollection>>() {
 
-        Exception ex = null;
-        try {
-            queryEmployee.getResult();
-            fail();
-        } catch (UnsupportedOperationException e) {
-            ex = e;
-        }
-        assertNotNull(ex);
+            @Override
+            public Query<Employee, EmployeeCollection> call() {
+                return container.getPerson().createQuery(EmployeeCollection.class);
+            }
+        };
 
-        assertEquals(7, queryEmployee.asyncGetResult().get().size());
+        assertEquals(7, queryEmployee.get().getResult().size());
 
-        final AsyncQuery<SpecialEmployee, SpecialEmployeeCollection> querySpecialEmployee =
-                asyncContainer.getPerson().createQuery(SpecialEmployeeCollection.class);
+        final Future<Query<SpecialEmployee, SpecialEmployeeCollection>> querySpecialEmployee =
+                new AsyncCall<Query<SpecialEmployee, SpecialEmployeeCollection>>() {
 
-        ex = null;
-        try {
-            querySpecialEmployee.getResult();
-            fail();
-        } catch (UnsupportedOperationException e) {
-            ex = e;
-        }
-        assertNotNull(ex);
+            @Override
+            public Query<SpecialEmployee, SpecialEmployeeCollection> call() {
+                return container.getPerson().createQuery(SpecialEmployeeCollection.class);
+            }
+        };
 
-        assertEquals(4, querySpecialEmployee.asyncGetResult().get().size());
+        assertEquals(4, querySpecialEmployee.get().getResult().size());
     }
 }
