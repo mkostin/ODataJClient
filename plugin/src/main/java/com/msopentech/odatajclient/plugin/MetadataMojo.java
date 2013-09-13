@@ -44,6 +44,9 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
+/**
+ * POJOs generator.
+ */
 @Mojo(name = "pojos", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class MetadataMojo extends AbstractMojo {
 

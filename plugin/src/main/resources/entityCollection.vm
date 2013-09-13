@@ -44,6 +44,17 @@ import java.util.Collection;
 
 public interface $utility.capitalize($entityType.Name)Collection extends AbstractEntityCollection<$utility.capitalize($entityType.Name)> {
 #foreach($operation in $utility.getFunctionImportsBoundTo($entityType.Name, true))
+#set ($doc = $utility.getDocumentation($operation))
+#if($doc && !$doc.getKey().isEmpty())
+    /**
+     * $doc.getKey()
+    #if(!$doc.getValue().isEmpty())
+     * <br />
+     * $doc.getValue()
+    #end
+     */
+#end
+#set ($doc = false)
     @FunctionImport(name = "$operation.Name" #if ($operation.EntitySet), 
                     entitySet = $operation.EntitySet$clsSuffix#end #if ($operation.EntitySetPath),
                     entitySetPath = $operation.EntitySetPath#end #if ($operation.isIsComposable),
