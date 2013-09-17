@@ -17,16 +17,13 @@ package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
-import com.msopentech.odatajclient.proxy.api.AbstractAsyncEntitySet;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.concurrent.Future;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class EntityContainerInvocationHandler extends AbstractInvocationHandler {
@@ -86,28 +83,18 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
         if (isSelfMethod(method, args)) {
             return invokeSelfMethod(method, args);
         } else if ("flush".equals(method.getName()) && ArrayUtils.isEmpty(args)) {
-            if (method.getReturnType().isAssignableFrom(Future.class)) {
-                return new AsyncContainer(factory).flush();
-            } else {
-                new Container(factory).flush();
-                return ClassUtils.returnVoid();
-            }
+            new Container(factory).flush();
+            return ClassUtils.returnVoid();
         } else {
             final Annotation[] methodAnnots = method.getAnnotations();
             // 1. access top-level entity sets
             if (methodAnnots.length == 0) {
                 final Class<?> returnType = method.getReturnType();
 
-                final InvocationHandler handler =
-                        ArrayUtils.contains(returnType.getInterfaces(), AbstractAsyncEntitySet.class)
-                        ? AsyncEntitySetInvocationHandler.getInstance(
-                        EntitySetInvocationHandler.getInstance(returnType, this))
-                        : EntitySetInvocationHandler.getInstance(returnType, this);
-
                 return Proxy.newProxyInstance(
                         Thread.currentThread().getContextClassLoader(),
                         new Class<?>[] {returnType},
-                        handler);
+                        EntitySetInvocationHandler.getInstance(returnType, this));
             } // 2. invoke function imports
             else if (methodAnnots[0] instanceof FunctionImport) {
                 final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =

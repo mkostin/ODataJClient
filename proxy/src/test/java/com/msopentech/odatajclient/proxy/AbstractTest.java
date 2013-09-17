@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNotNull;
 
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.context.EntityContext;
-import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.AsyncDefaultContainer;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Aliases;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails;
@@ -72,8 +71,6 @@ public abstract class AbstractTest {
 
     protected static DefaultContainer container;
 
-    protected static AsyncDefaultContainer asyncContainer;
-
     /**
      * This is needed for correct number handling (Double, for example).
      */
@@ -113,9 +110,6 @@ public abstract class AbstractTest {
 
         container = EntityContainerFactory.getInstance(testDefaultServiceRootURL).
                 getEntityContainer(DefaultContainer.class);
-        assertNotNull(container);
-        asyncContainer = EntityContainerFactory.getInstance(testDefaultServiceRootURL).
-                getEntityContainer(AsyncDefaultContainer.class);
         assertNotNull(container);
     }
 

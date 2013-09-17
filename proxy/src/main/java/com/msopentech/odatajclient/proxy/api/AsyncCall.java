@@ -13,58 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.msopentech.odatajclient.proxy.api.impl;
+package com.msopentech.odatajclient.proxy.api;
 
 import com.msopentech.odatajclient.engine.utils.Configuration;
-import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
-import java.io.Serializable;
-import java.net.URI;
-import java.util.Iterator;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-class AsyncEntitySetIterator<T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>>
-        implements Future<Iterator<T>> {
+public abstract class AsyncCall<V> implements Future<V> {
 
-    private final Future<EntitySetIterator<T, KEY, EC>> entitySetItor;
+    private final Future<V> future;
 
-    AsyncEntitySetIterator(final URI uri, final EntitySetInvocationHandler<T, KEY, EC> esi) {
-        this.entitySetItor = Configuration.getExecutor().submit(new Callable<EntitySetIterator<T, KEY, EC>>() {
+    public AsyncCall() {
+        this.future = Configuration.getExecutor().submit(new Callable<V>() {
 
             @Override
-            public EntitySetIterator<T, KEY, EC> call() throws Exception {
-                return new EntitySetIterator<T, KEY, EC>(uri, esi);
+            public V call() throws Exception {
+                return AsyncCall.this.call();
             }
         });
     }
 
+    public abstract V call();
+
     @Override
     public boolean cancel(final boolean mayInterruptIfRunning) {
-        return entitySetItor.cancel(mayInterruptIfRunning);
+        return this.future.cancel(mayInterruptIfRunning);
     }
 
     @Override
     public boolean isCancelled() {
-        return entitySetItor.isCancelled();
+        return this.future.isCancelled();
     }
 
     @Override
     public boolean isDone() {
-        return entitySetItor.isDone();
+        return this.future.isDone();
     }
 
     @Override
-    public Iterator<T> get() throws InterruptedException, ExecutionException {
-        return entitySetItor.get();
+    public V get() throws InterruptedException, ExecutionException {
+        return this.future.get();
     }
 
     @Override
-    public Iterator<T> get(final long timeout, final TimeUnit unit)
+    public V get(final long timeout, final TimeUnit unit)
             throws InterruptedException, ExecutionException, TimeoutException {
 
-        return entitySetItor.get(timeout, unit);
+        return this.future.get(timeout, unit);
     }
 }
