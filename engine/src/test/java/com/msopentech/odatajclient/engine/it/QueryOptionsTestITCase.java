@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.it;
 
+import static com.msopentech.odatajclient.engine.it.AbstractTest.testDefaultServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -23,9 +24,11 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEn
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
+import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
+import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.ArrayList;
@@ -168,5 +171,24 @@ public class QueryOptionsTestITCase extends AbstractTest {
         assertEquals(1, customer.getProperties().size());
         assertEquals(1, customer.getNavigationLinks().size());
         assertTrue((customer.getNavigationLinks().get(0) instanceof ODataInlineEntitySet));
+    }
+
+    @Test
+    public void issue131() {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Customer").appendKeySegment(-10).select("Name");
+
+        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(ODataPubFormat.ATOM);
+
+        final ODataEntity customer = req.execute().getBody();
+        assertEquals(0, customer.getProperties().size());
+
+        req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(ODataPubFormat.ATOM);
+
+        final AtomEntry atomEntry = Deserializer.toEntry(req.execute().getRawResponse(), AtomEntry.class);
+        assertEquals("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass",
+                atomEntry.getSummary());
     }
 }
