@@ -43,6 +43,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DecompressingHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +107,12 @@ public class ODataRequestImpl implements ODataRequest {
         // target uri
         this.uri = uri;
 
-        this.client = Configuration.getHttpClientFactory().createHttpClient(this.method, this.uri);
+        HttpClient _client = Configuration.getHttpClientFactory().createHttpClient(this.method, this.uri);
+        if (Configuration.isGzipCompression()) {
+            _client = new DecompressingHttpClient(_client);
+        }
+        this.client = _client;
+
         this.request = Configuration.getHttpUriRequestFactory().createHttpUriRequest(this.method, this.uri);
     }
 

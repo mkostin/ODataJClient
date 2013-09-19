@@ -47,6 +47,8 @@ public final class Configuration {
 
     private static final String KEY_AS_SEGMENT = "keyAsSegment";
 
+    private static final String GZIP_COMPRESSION = "gzipCompression";
+
     private static final Map<String, Object> CONF = new HashMap<String, Object>();
 
     private static ExecutorService EXECUTOR = Executors.newFixedThreadPool(10);
@@ -237,6 +239,24 @@ public final class Configuration {
 
     public static void setKeyAsSegment(final boolean value) {
         setProperty(KEY_AS_SEGMENT, value);
+    }
+
+    /**
+     * Checks whether Gzip compression (e.g. support for <tt>Accept-Encoding: gzip</tt> and
+     * <tt>Content-Encoding: gzip</tt> HTTP headers) is enabled.
+     *
+     * @return whether HTTP Gzip compression is enabled
+     */
+    public static boolean isGzipCompression() {
+        return (Boolean) getProperty(GZIP_COMPRESSION, false);
+    }
+
+    /**
+     * Sets Gzip compression (e.g. support for <tt>Accept-Encoding: gzip</tt> and
+     * <tt>Content-Encoding: gzip</tt> HTTP headers) enabled or disabled.
+     */
+    public static void setGzipCompression(final boolean value) {
+        setProperty(GZIP_COMPRESSION, value);
     }
 
     /**
