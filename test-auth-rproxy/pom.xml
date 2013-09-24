@@ -101,7 +101,7 @@
           <packagingExcludes>WEB-INF/classes/esigate.properties,WEB-INF/classes/META-INF/LICENSE*,WEB-INF/classes/META-INF/DEPENDENCIES*</packagingExcludes>
         </configuration>
       </plugin>
-      
+          
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
         <artifactId>cargo-maven2-plugin</artifactId>
@@ -155,6 +155,13 @@
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>..</directory>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>LICENSE</include>
+        </includes>
       </resource>
     </resources>
   </build>
