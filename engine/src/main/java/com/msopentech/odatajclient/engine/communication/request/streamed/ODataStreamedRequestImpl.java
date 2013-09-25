@@ -88,8 +88,8 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     @SuppressWarnings("unchecked")
     public T execute() {
         streamManager = getStreamManager();
-
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(streamManager.getBody(), -1));
+        
+        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(streamManager.getBody(), -65000));
 
         futureWrapper.setWrapped(Configuration.getExecutor().submit(new Callable<HttpResponse>() {
 

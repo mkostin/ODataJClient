@@ -34,7 +34,7 @@ public class JSONODataError extends AbstractPayloadObject implements ODataError 
     /**
      * Error message.
      */
-    static class Message extends AbstractPayloadObject {
+    public static class Message extends AbstractPayloadObject {
 
         private static final long serialVersionUID = 2577818040815637859L;
 
@@ -198,6 +198,18 @@ public class JSONODataError extends AbstractPayloadObject implements ODataError 
     @Override
     public String getMessageValue() {
         return this.message == null ? null : this.message.getValue();
+    }
+
+    /**
+     * Sets the value of the message property.
+     *
+     * @param value
+     * allowed object is
+     * {@link Error.Message }
+     *
+     */
+    public void setMessage(final JSONODataError.Message value) {
+        this.message = value;
     }
 
     /**
