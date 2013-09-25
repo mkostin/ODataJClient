@@ -54,6 +54,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
+import org.apache.http.entity.ContentType;
 import org.junit.Test;
 
 /**
@@ -250,6 +251,32 @@ public class EntityCreateTestITCase extends AbstractTest {
                 new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer").appendKeySegment(id).build()).
                 execute();
         assertEquals(204, deleteRes.getStatusCode());
+    }
+
+    @Test
+    public void issue135() {
+        final int id = 2;
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer for issue 135", false);
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer");
+        final ODataEntityCreateRequest createReq =
+                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
+        createReq.setFormat(ODataPubFormat.JSON_FULL_METADATA);
+        createReq.setContentType(ContentType.APPLICATION_ATOM_XML.getMimeType());
+        createReq.setPrefer(ODataHeaderValues.preferReturnContent);
+
+        try {
+            final ODataEntityCreateResponse createRes = createReq.execute();
+            assertEquals(201, createRes.getStatusCode());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        } finally {
+            final ODataDeleteResponse deleteRes = ODataCUDRequestFactory.getDeleteRequest(
+                    new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer").appendKeySegment(id).
+                    build()).
+                    execute();
+            assertEquals(204, deleteRes.getStatusCode());
+        }
     }
 
     private ODataEntity createWithFeedNavigationLink(final ODataPubFormat format, final int id) {

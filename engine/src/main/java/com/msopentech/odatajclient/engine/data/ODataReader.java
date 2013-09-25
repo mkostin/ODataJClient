@@ -179,9 +179,9 @@ public final class ODataReader {
             } else if (ODataEntity.class.isAssignableFrom(reference)) {
                 res = ODataReader.readEntity(src, ODataPubFormat.fromString(format));
             } else if (ODataProperty.class.isAssignableFrom(reference)) {
-                res = ODataReader.readProperty(src, ODataFormat.fromValue(format));
+                res = ODataReader.readProperty(src, ODataFormat.fromString(format));
             } else if (ODataLinkCollection.class.isAssignableFrom(reference)) {
-                res = ODataReader.readLinks(src, ODataFormat.fromValue(format));
+                res = ODataReader.readLinks(src, ODataFormat.fromString(format));
             } else if (ODataValue.class.isAssignableFrom(reference)) {
                 res = new ODataPrimitiveValue.Builder().
                         setType(ODataValueFormat.fromString(format) == ODataValueFormat.TEXT
@@ -191,7 +191,7 @@ public final class ODataReader {
             } else if (EdmMetadata.class.isAssignableFrom(reference)) {
                 res = ODataReader.readMetadata(src);
             } else if (ODataServiceDocument.class.isAssignableFrom(reference)) {
-                res = ODataReader.readServiceDocument(src, ODataFormat.fromValue(format));
+                res = ODataReader.readServiceDocument(src, ODataFormat.fromString(format));
             } else if (ODataError.class.isAssignableFrom(reference)) {
                 res = ODataReader.readError(src, !format.toString().contains("json"));
             } else {

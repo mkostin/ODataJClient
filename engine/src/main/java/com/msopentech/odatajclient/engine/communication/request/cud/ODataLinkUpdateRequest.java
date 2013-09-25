@@ -85,7 +85,7 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeLink(link, getFormat());
+        return ODataWriter.writeLink(link, ODataFormat.fromString(getContentType()));
     }
 
     /**

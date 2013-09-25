@@ -58,16 +58,18 @@ public enum ODataValueFormat {
      * @return OData format.
      */
     public static ODataValueFormat fromString(final String format) {
+        final String _format = format.split(";")[0];
+
         ODataValueFormat result = null;
 
         for (ODataValueFormat value : values()) {
-            if (format.equals(value.toString())) {
+            if (_format.equals(value.toString())) {
                 result = value;
             }
         }
 
         if (result == null) {
-            throw new IllegalArgumentException(format);
+            throw new IllegalArgumentException("Unsupported format: " + format);
         }
 
         return result;

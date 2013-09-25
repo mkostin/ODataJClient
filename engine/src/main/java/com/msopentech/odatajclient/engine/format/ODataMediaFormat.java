@@ -53,12 +53,20 @@ public enum ODataMediaFormat {
     }
 
     public static ODataMediaFormat fromFormat(final String format) {
-        for (ODataMediaFormat mediaFormat : ODataMediaFormat.values()) {
-            if (mediaFormat.format.equalsIgnoreCase(format)) {
-                return mediaFormat;
+        final String _format = format.split(";")[0];
+
+        ODataMediaFormat result = null;
+
+        for (ODataMediaFormat value : values()) {
+            if (_format.equals(value.toString())) {
+                result = value;
             }
         }
 
-        throw new IllegalArgumentException("Invalid media format " + format);
+        if (result == null) {
+            throw new IllegalArgumentException("Unsupported format: " + format);
+        }
+
+        return result;
     }
 }

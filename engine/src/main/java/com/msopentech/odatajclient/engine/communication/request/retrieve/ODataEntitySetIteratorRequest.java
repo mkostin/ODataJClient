@@ -76,7 +76,8 @@ public class ODataEntitySetIteratorRequest extends ODataRetrieveRequest<ODataEnt
         @SuppressWarnings("unchecked")
         public ODataEntitySetIterator getBody() {
             if (feedIterator == null) {
-                feedIterator = new ODataEntitySetIterator(getRawResponse(), getFormat());
+                feedIterator = new ODataEntitySetIterator(
+                        getRawResponse(), ODataPubFormat.fromString(getContentType()));
             }
             return feedIterator;
         }

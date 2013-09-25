@@ -32,6 +32,9 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.ByteArrayOutputStream;
@@ -61,12 +64,14 @@ import org.slf4j.LoggerFactory;
  * @see ODataInvokeRequestFactory
  * @see ODataStreamedRequestFactory
  */
-public class ODataRequestImpl implements ODataRequest {
+public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
 
     /**
      * Logger.
      */
     protected static final Logger LOG = LoggerFactory.getLogger(ODataRequest.class);
+
+    protected final Class<T> formatRef;
 
     /**
      * OData request method.
@@ -99,7 +104,8 @@ public class ODataRequestImpl implements ODataRequest {
      * @param method HTTP request method. If configured X-HTTP-METHOD header will be used.
      * @param uri OData request URI.
      */
-    protected ODataRequestImpl(final HttpMethod method, final URI uri) {
+    protected ODataRequestImpl(final Class<T> formatRef, final HttpMethod method, final URI uri) {
+        this.formatRef = formatRef;
         this.method = method;
 
         // initialize default headers
@@ -118,6 +124,20 @@ public class ODataRequestImpl implements ODataRequest {
         this.client = _client;
 
         this.request = Configuration.getHttpUriRequestFactory().createHttpUriRequest(this.method, this.uri);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    public T getDefaultFormat() {
+        return (T) (formatRef.equals(ODataPubFormat.class)
+                ? Configuration.getDefaultPubFormat()
+                : (formatRef.equals(ODataValueFormat.class)
+                ? Configuration.getDefaultValueFormat()
+                : (formatRef.equals(ODataMediaFormat.class)
+                ? Configuration.getDefaultMediaFormat()
+                : Configuration.getDefaultFormat())));
     }
 
     /**
@@ -254,7 +274,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getAccept() {
         final String acceptHead = odataHeaders.getHeader(ODataHeaders.HeaderName.accept);
-        return StringUtils.isBlank(acceptHead) ? Configuration.getDefaultPubFormat().toString() : acceptHead;
+        return StringUtils.isBlank(acceptHead) ? getDefaultFormat().toString() : acceptHead;
     }
 
     /**
@@ -287,7 +307,7 @@ public class ODataRequestImpl implements ODataRequest {
     @Override
     public String getContentType() {
         final String contentTypeHead = odataHeaders.getHeader(ODataHeaders.HeaderName.contentType);
-        return StringUtils.isBlank(contentTypeHead) ? Configuration.getDefaultPubFormat().toString() : contentTypeHead;
+        return StringUtils.isBlank(contentTypeHead) ? getDefaultFormat().toString() : contentTypeHead;
     }
 
     /**

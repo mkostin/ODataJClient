@@ -21,6 +21,7 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.net.URI;
 
 /**
@@ -37,6 +38,6 @@ public class ODataRawRequest extends ODataRequestImpl {
      * @param uri request URI.
      */
     ODataRawRequest(final URI uri) {
-        super(HttpMethod.GET, uri);
+        super(ODataPubFormat.class, HttpMethod.GET, uri);
     }
 }

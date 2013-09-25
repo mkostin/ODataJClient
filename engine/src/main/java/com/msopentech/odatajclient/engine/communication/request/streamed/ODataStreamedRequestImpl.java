@@ -25,6 +25,7 @@ import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import com.msopentech.odatajclient.engine.utils.Wrapper;
@@ -66,8 +67,9 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
      * @param method OData request HTTP method.
      * @param uri OData request URI.
      */
+    @SuppressWarnings("unchecked")
     public ODataStreamedRequestImpl(final HttpMethod method, final URI uri) {
-        super(method, uri);
+        super(ODataMediaFormat.class, method, uri);
         setAccept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
         setContentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
     }

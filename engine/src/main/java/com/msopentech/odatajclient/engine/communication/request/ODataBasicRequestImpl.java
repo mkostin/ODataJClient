@@ -22,9 +22,6 @@ package com.msopentech.odatajclient.engine.communication.request;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
-import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
-import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
@@ -41,15 +38,8 @@ import org.apache.commons.lang3.StringUtils;
  * @param <V> OData response type corresponding to the request implementation.
  */
 public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends Enum<T>>
-        extends ODataRequestImpl
+        extends ODataRequestImpl<T>
         implements ODataBasicRequest<V, T> {
-
-    protected final Class<T> formatRef;
-
-    /**
-     * OData resource representation format.
-     */
-    private T format = null;
 
     /**
      * Constructor.
@@ -58,25 +48,7 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      * @param uri OData request URI.
      */
     public ODataBasicRequestImpl(final Class<T> formatRef, final HttpMethod method, final URI uri) {
-        super(method, uri);
-        this.formatRef = formatRef;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public T getFormat() {
-        return (T) (format == null
-                ? (formatRef.equals(ODataPubFormat.class)
-                ? Configuration.getDefaultPubFormat()
-                : (formatRef.equals(ODataValueFormat.class)
-                ? Configuration.getDefaultValueFormat()
-                : (formatRef.equals(ODataMediaFormat.class)
-                ? Configuration.getDefaultMediaFormat()
-                : Configuration.getDefaultFormat())))
-                : format);
+        super(formatRef, method, uri);
     }
 
     /**
@@ -84,7 +56,6 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      */
     @Override
     public void setFormat(final T format) {
-        this.format = format;
         setAccept(format.toString());
         setContentType(format.toString());
     }

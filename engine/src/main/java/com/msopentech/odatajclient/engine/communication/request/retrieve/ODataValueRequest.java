@@ -88,9 +88,11 @@ public class ODataValueRequest extends ODataRetrieveRequest<ODataValue, ODataVal
         @Override
         public ODataValue getBody() {
             if (value == null) {
+                final ODataValueFormat format = ODataValueFormat.fromString(getContentType());
+
                 try {
                     value = new ODataPrimitiveValue.Builder().
-                            setType(getFormat() == ODataValueFormat.TEXT ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
+                            setType(format == ODataValueFormat.TEXT ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
                             setText(IOUtils.toString(getRawResponse())).
                             build();
                 } catch (IOException e) {

@@ -42,9 +42,9 @@ public enum ODataPubFormat {
      * Atom format.
      */
     ATOM(ContentType.APPLICATION_ATOM_XML.getMimeType());
-
+    
     private final String format;
-
+    
     ODataPubFormat(final String format) {
         this.format = format;
     }
@@ -67,17 +67,32 @@ public enum ODataPubFormat {
      */
     public static ODataPubFormat fromString(final String format) {
         ODataPubFormat result = null;
-
-        for (ODataPubFormat value : values()) {
-            if (format.equals(value.toString())) {
-                result = value;
+        
+        final StringBuffer _format = new StringBuffer();
+        
+        final String[] parts = format.split(";");
+        _format.append(parts[0]);
+        if (ContentType.APPLICATION_JSON.getMimeType().equals(parts[0])) {
+            if (parts.length > 1 && parts[1].startsWith("odata=")) {
+                _format.append(';').append(parts[1]);
+            } else {
+                result = ODataPubFormat.JSON;
             }
         }
-
+        
         if (result == null) {
-            throw new IllegalArgumentException(format);
+            final String candidate = _format.toString();
+            for (ODataPubFormat value : values()) {
+                if (candidate.equals(value.toString())) {
+                    result = value;
+                }
+            }
         }
-
+        
+        if (result == null) {
+            throw new IllegalArgumentException("Unsupported format: " + format);
+        }
+        
         return result;
     }
 }

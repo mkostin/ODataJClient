@@ -69,8 +69,6 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
      */
     private Map<String, ODataValue> parameters;
 
-    private String format;
-
     /**
      * Constructor.
      *
@@ -106,19 +104,11 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
      */
     @Override
     public void setFormat(final ODataPubFormat format) {
-        this.format = (reference.isAssignableFrom(ODataProperty.class) && format == ODataPubFormat.ATOM)
+        final String _format = (reference.isAssignableFrom(ODataProperty.class) && format == ODataPubFormat.ATOM)
                 ? ODataFormat.XML.toString()
                 : format.toString();
-        setAccept(this.format);
-        setContentType(this.format);
-    }
-
-    private String getInvokeFormat() {
-        if (this.format == null) {
-            setFormat(super.getFormat());
-        }
-
-        return this.format;
+        setAccept(_format);
+        setContentType(_format);
     }
 
     /**
@@ -226,15 +216,15 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
                 try {
                     if (reference.isAssignableFrom(ODataEntitySet.class)) {
                         invokeResult = (T) ODataReader.readEntitySet(res.getEntity().getContent(),
-                                ODataPubFormat.fromString(getInvokeFormat()));
+                                ODataPubFormat.fromString(getContentType()));
                     }
                     if (reference.isAssignableFrom(ODataEntity.class)) {
                         invokeResult = (T) ODataReader.readEntity(res.getEntity().getContent(),
-                                ODataPubFormat.fromString(getInvokeFormat()));
+                                ODataPubFormat.fromString(getContentType()));
                     }
                     if (reference.isAssignableFrom(ODataProperty.class)) {
                         invokeResult = (T) ODataReader.readProperty(res.getEntity().getContent(),
-                                ODataFormat.fromValue(getInvokeFormat()));
+                                ODataFormat.fromString(getContentType()));
                     }
                 } catch (IOException e) {
                     throw new HttpClientException(e);

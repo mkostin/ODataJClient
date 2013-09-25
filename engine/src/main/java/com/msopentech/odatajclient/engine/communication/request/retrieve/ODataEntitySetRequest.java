@@ -86,7 +86,7 @@ public class ODataEntitySetRequest extends ODataRetrieveRequest<ODataEntitySet, 
         public ODataEntitySet getBody() {
             if (feed == null) {
                 try {
-                    feed = ODataReader.readEntitySet(getRawResponse(), getFormat());
+                    feed = ODataReader.readEntitySet(getRawResponse(), ODataPubFormat.fromString(getContentType()));
                 } finally {
                     this.close();
                 }

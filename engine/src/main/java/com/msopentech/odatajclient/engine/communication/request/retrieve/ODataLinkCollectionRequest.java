@@ -85,7 +85,8 @@ public class ODataLinkCollectionRequest extends ODataRetrieveRequest<ODataLinkCo
         public ODataLinkCollection getBody() {
             if (links == null) {
                 try {
-                    links = ODataReader.readLinks(res.getEntity().getContent(), getFormat());
+                    links = ODataReader.readLinks(
+                            res.getEntity().getContent(), ODataFormat.fromString(getContentType()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);
                 } finally {

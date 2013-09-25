@@ -85,7 +85,8 @@ public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServi
         public ODataServiceDocument getBody() {
             if (serviceDocument == null) {
                 try {
-                    serviceDocument = ODataReader.readServiceDocument(getRawResponse(), getFormat());
+                    serviceDocument = ODataReader.readServiceDocument(
+                            getRawResponse(), ODataFormat.fromString(getContentType()));
                 } finally {
                     this.close();
                 }
