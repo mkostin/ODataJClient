@@ -160,6 +160,8 @@ public class ODataConstants {
     public final static String JSON_TYPE = "odata.type";
 
     public final static String JSON_ETAG = "odata.etag";
+    
+    public final static String JSON_MEDIA_ETAG = "odata.mediaETag";
 
     public final static String JSON_ID = "odata.id";
 

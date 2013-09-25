@@ -102,6 +102,11 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
             tree.remove(ODataConstants.JSON_METADATA);
         }
 
+        if (tree.hasNonNull(ODataConstants.JSON_MEDIA_ETAG)) {
+            entry.setMediaETag(tree.get(ODataConstants.JSON_MEDIA_ETAG).textValue());
+            tree.remove(ODataConstants.JSON_MEDIA_ETAG);
+        }
+
         if (tree.hasNonNull(ODataConstants.JSON_ETAG)) {
             entry.setETag(tree.get(ODataConstants.JSON_ETAG).textValue());
             tree.remove(ODataConstants.JSON_ETAG);

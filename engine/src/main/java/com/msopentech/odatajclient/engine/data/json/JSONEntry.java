@@ -37,6 +37,8 @@ public class JSONEntry extends AbstractEntryResource<JSONLink> {
 
     private URI metadata;
 
+    private String mediaETag;
+
     @JsonIgnore
     @Override
     public URI getBaseURI() {
@@ -63,5 +65,25 @@ public class JSONEntry extends AbstractEntryResource<JSONLink> {
      */
     public void setMetadata(final URI metadata) {
         this.metadata = metadata;
+    }
+
+    /**
+     * The odata.mediaEtag annotation MAY be included; its value MUST be the ETag of the binary stream represented by
+     * this media entity or named stream property.
+     *
+     * @return odata.mediaEtag annotation value.
+     */
+    public String getMediaETag() {
+        return mediaETag;
+    }
+
+    /**
+     * The odata.mediaEtag annotation MAY be included; its value MUST be the ETag of the binary stream represented by
+     * this media entity or named stream property.
+     *
+     * @param eTag odata.mediaEtag annotation value.
+     */
+    public void setMediaETag(String eTag) {
+        this.mediaETag = eTag;
     }
 }
