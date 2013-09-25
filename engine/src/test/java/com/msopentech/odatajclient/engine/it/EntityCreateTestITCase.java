@@ -1,17 +1,21 @@
-/*
- * Copyright 2013 MS OpenTech.
+/**
+ * Copyright © Microsoft Open Technologies, Inc.
+ *
+ * All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
+ * OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+ * ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
+ * PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
+ *
+ * See the Apache License, Version 2.0 for the specific language
+ * governing permissions and limitations under the License.
  */
 package com.msopentech.odatajclient.engine.it;
 
@@ -50,6 +54,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
+import org.apache.http.entity.ContentType;
 import org.junit.Test;
 
 /**
@@ -246,6 +251,32 @@ public class EntityCreateTestITCase extends AbstractTest {
                 new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer").appendKeySegment(id).build()).
                 execute();
         assertEquals(204, deleteRes.getStatusCode());
+    }
+
+    @Test
+    public void issue135() {
+        final int id = 2;
+        final ODataEntity original = getSampleCustomerProfile(id, "Sample customer for issue 135", false);
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer");
+        final ODataEntityCreateRequest createReq =
+                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
+        createReq.setFormat(ODataPubFormat.JSON_FULL_METADATA);
+        createReq.setContentType(ContentType.APPLICATION_ATOM_XML.getMimeType());
+        createReq.setPrefer(ODataHeaderValues.preferReturnContent);
+
+        try {
+            final ODataEntityCreateResponse createRes = createReq.execute();
+            assertEquals(201, createRes.getStatusCode());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        } finally {
+            final ODataDeleteResponse deleteRes = ODataCUDRequestFactory.getDeleteRequest(
+                    new ODataURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer").appendKeySegment(id).
+                    build()).
+                    execute();
+            assertEquals(204, deleteRes.getStatusCode());
+        }
     }
 
     private ODataEntity createWithFeedNavigationLink(final ODataPubFormat format, final int id) {

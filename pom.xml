@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2013 Microsoft Open Technologies, Inc.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+    Copyright © Microsoft Open Technologies, Inc.
 
-  http://www.apache.org/licenses/LICENSE-2.0
+    All Rights Reserved
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
+    OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+    ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
+    PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
+
+    See the Apache License, Version 2.0 for the specific language
+    governing permissions and limitations under the License.
+
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -21,7 +27,7 @@
 
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient</artifactId>
-  <version>M4-SNAPSHOT</version>
+  <version>0.9.0-SNAPSHOT</version>
   <name>Client OData libray for Java</name>
   <description>Java client API for OData 3.0 services</description>
 
@@ -58,7 +64,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
     <hc.client.version>4.2.6</hc.client.version>
-    <jackson.version>2.2.2</jackson.version>
+    <jackson.version>2.2.3</jackson.version>
     
     <commons.io.version>2.4</commons.io.version>
     <commons.lang3.version>3.1</commons.lang3.version>
@@ -74,6 +80,7 @@
     <maven.plugin.tools.version>3.2</maven.plugin.tools.version>
     
     <skip.it.tests>true</skip.it.tests>
+    <main.basedir>${project.basedir}</main.basedir>
   </properties>
   
   <dependencyManagement>
@@ -256,11 +263,18 @@
     
     <plugins>
       <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <version>0.10</version>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.10.b1</version>
         <configuration>
+          <header>${main.basedir}/src/main/resources/header.txt</header>
+          <strictCheck>true</strictCheck>
+          <failIfMissing>true</failIfMissing>
+          <aggregate>true</aggregate>
+          <useDefaultExcludes>true</useDefaultExcludes>
+          <useDefaultMapping>true</useDefaultMapping>
           <excludes>
+            <exclude>LICENSE</exclude>
             <exclude>nb*.xml</exclude>
             <exclude>**/META-INF/services/**</exclude>
             <exclude>**/META-INF/MANIFEST.MF</exclude>
@@ -279,11 +293,11 @@
             <exclude>.idea/**</exclude>
             <exclude>**/.*</exclude>
             <exclude>yworks*/**</exclude>
-            <exclude>**/microsoft/**/*.java</exclude>
           </excludes>
         </configuration>
         <executions>
           <execution>
+            <id>check-headers</id>
             <phase>verify</phase>
             <goals>
               <goal>check</goal>
@@ -292,7 +306,7 @@
         </executions>
       </plugin>
       
-      <!-- Put NOTICE and LICENSE files in all javadoc artifacts -->
+      <!-- Put LICENSE file in all javadoc artifacts -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -347,6 +361,16 @@
       
       <properties>
         <skip.it.tests>false</skip.it.tests>
+        
+        <log.directory>${project.build.directory}/log</log.directory>
+        
+        <tomcat.version>7.0.42</tomcat.version>
+        
+        <cargo.servlet.port>9080</cargo.servlet.port>
+        <cargo.tomcat.ajp.port>9889</cargo.tomcat.ajp.port>
+        <cargo.rmi.port>9805</cargo.rmi.port>
+        <cargo.log>${log.directory}/cargo.log</cargo.log>
+        <cargo.output>${log.directory}/cargo-output.log</cargo.output>
       </properties>
       
       <build>
@@ -385,6 +409,63 @@
                 </configuration>
               </execution>
             </executions>
+          </plugin>
+          
+          <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>1.4.4</version>
+            <configuration>
+              <container>
+                <containerId>tomcat7x</containerId>
+                <zipUrlInstaller>
+                  <url>http://archive.apache.org/dist/tomcat/tomcat-7/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip</url>
+                  <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>
+                  <extractDir>${project.build.directory}/cargo/extract</extractDir>
+                </zipUrlInstaller>
+                <log>${cargo.log}</log>
+                <output>${cargo.output}</output>
+              </container>
+              <configuration>
+                <type>standalone</type>
+                <properties>
+                  <cargo.servlet.port>${cargo.servlet.port}</cargo.servlet.port>
+                  <cargo.tomcat.ajp.port>${cargo.tomcat.ajp.port}</cargo.tomcat.ajp.port>
+                  <cargo.rmi.port>${cargo.rmi.port}</cargo.rmi.port>
+
+                  <!--<cargo.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n</cargo.jvmargs>-->
+                  <cargo.jvmargs>-noverify -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:MaxPermSize=256m</cargo.jvmargs>
+                </properties>
+                <files>
+                  <file>
+                    <file>${project.build.directory}/test-classes/esigate.properties</file>
+                    <todir>lib</todir>
+                  </file>
+                </files>
+                <configfiles>
+                  <configfile>
+                    <file>${project.build.directory}/test-classes/context.xml</file>
+                    <todir>conf/</todir>
+                    <tofile>context.xml</tofile>
+                  </configfile>
+                  <configfile>
+                    <file>${project.build.directory}/test-classes/tomcat-users.xml</file>
+                    <todir>conf/</todir>
+                    <tofile>tomcat-users.xml</tofile>
+                  </configfile>
+                </configfiles>
+              </configuration>
+              <deployables>
+                <deployable>
+                  <groupId>com.msopentech.odatajclient</groupId>
+                  <artifactId>odatajclient-test-auth-rproxy</artifactId>
+                  <type>war</type>
+                  <properties>
+                    <context>/</context>
+                  </properties>
+                </deployable>
+              </deployables>
+            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -425,9 +506,10 @@
   </profiles>
 
   <modules>
+    <module>plugin</module>
     <module>engine</module>
     <module>proxy</module>
-    <module>plugin</module>
+    <module>test-auth-rproxy</module>
   </modules>
   
 </project>

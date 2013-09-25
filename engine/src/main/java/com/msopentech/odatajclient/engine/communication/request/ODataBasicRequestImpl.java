@@ -1,26 +1,27 @@
-/*
- * Copyright 2013 MS OpenTech.
+/**
+ * Copyright © Microsoft Open Technologies, Inc.
+ *
+ * All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
+ * OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+ * ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
+ * PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
+ *
+ * See the Apache License, Version 2.0 for the specific language
+ * governing permissions and limitations under the License.
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
-import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
-import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
@@ -37,15 +38,8 @@ import org.apache.commons.lang3.StringUtils;
  * @param <V> OData response type corresponding to the request implementation.
  */
 public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends Enum<T>>
-        extends ODataRequestImpl
+        extends ODataRequestImpl<T>
         implements ODataBasicRequest<V, T> {
-
-    protected final Class<T> formatRef;
-
-    /**
-     * OData resource representation format.
-     */
-    private T format = null;
 
     /**
      * Constructor.
@@ -54,25 +48,7 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      * @param uri OData request URI.
      */
     public ODataBasicRequestImpl(final Class<T> formatRef, final HttpMethod method, final URI uri) {
-        super(method, uri);
-        this.formatRef = formatRef;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public T getFormat() {
-        return (T) (format == null
-                ? (formatRef.equals(ODataPubFormat.class)
-                ? Configuration.getDefaultPubFormat()
-                : (formatRef.equals(ODataValueFormat.class)
-                ? Configuration.getDefaultValueFormat()
-                : (formatRef.equals(ODataMediaFormat.class)
-                ? Configuration.getDefaultMediaFormat()
-                : Configuration.getDefaultFormat())))
-                : format);
+        super(formatRef, method, uri);
     }
 
     /**
@@ -80,7 +56,6 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      */
     @Override
     public void setFormat(final T format) {
-        this.format = format;
         setAccept(format.toString());
         setContentType(format.toString());
     }

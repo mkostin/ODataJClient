@@ -1,17 +1,21 @@
-/*
- * Copyright 2013 MS OpenTech.
+/**
+ * Copyright © Microsoft Open Technologies, Inc.
+ *
+ * All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
+ * OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+ * ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
+ * PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
+ *
+ * See the Apache License, Version 2.0 for the specific language
+ * governing permissions and limitations under the License.
  */
 package com.msopentech.odatajclient.engine.communication.request.invoke;
 
@@ -65,8 +69,6 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
      */
     private Map<String, ODataValue> parameters;
 
-    private String format;
-
     /**
      * Constructor.
      *
@@ -102,19 +104,11 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
      */
     @Override
     public void setFormat(final ODataPubFormat format) {
-        this.format = (reference.isAssignableFrom(ODataProperty.class) && format == ODataPubFormat.ATOM)
+        final String _format = (reference.isAssignableFrom(ODataProperty.class) && format == ODataPubFormat.ATOM)
                 ? ODataFormat.XML.toString()
                 : format.toString();
-        setAccept(this.format);
-        setContentType(this.format);
-    }
-
-    private String getInvokeFormat() {
-        if (this.format == null) {
-            setFormat(super.getFormat());
-        }
-
-        return this.format;
+        setAccept(_format);
+        setContentType(_format);
     }
 
     /**
@@ -222,15 +216,15 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
                 try {
                     if (reference.isAssignableFrom(ODataEntitySet.class)) {
                         invokeResult = (T) ODataReader.readEntitySet(res.getEntity().getContent(),
-                                ODataPubFormat.fromString(getInvokeFormat()));
+                                ODataPubFormat.fromString(getContentType()));
                     }
                     if (reference.isAssignableFrom(ODataEntity.class)) {
                         invokeResult = (T) ODataReader.readEntity(res.getEntity().getContent(),
-                                ODataPubFormat.fromString(getInvokeFormat()));
+                                ODataPubFormat.fromString(getContentType()));
                     }
                     if (reference.isAssignableFrom(ODataProperty.class)) {
                         invokeResult = (T) ODataReader.readProperty(res.getEntity().getContent(),
-                                ODataFormat.fromValue(getInvokeFormat()));
+                                ODataFormat.fromString(getContentType()));
                     }
                 } catch (IOException e) {
                     throw new HttpClientException(e);

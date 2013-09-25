@@ -1,17 +1,21 @@
-/*
- * Copyright 2013 MS OpenTech.
+/**
+ * Copyright © Microsoft Open Technologies, Inc.
+ *
+ * All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
+ * OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+ * ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
+ * PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
+ *
+ * See the Apache License, Version 2.0 for the specific language
+ * governing permissions and limitations under the License.
  */
 package com.msopentech.odatajclient.engine.data;
 
@@ -175,9 +179,9 @@ public final class ODataReader {
             } else if (ODataEntity.class.isAssignableFrom(reference)) {
                 res = ODataReader.readEntity(src, ODataPubFormat.fromString(format));
             } else if (ODataProperty.class.isAssignableFrom(reference)) {
-                res = ODataReader.readProperty(src, ODataFormat.fromValue(format));
+                res = ODataReader.readProperty(src, ODataFormat.fromString(format));
             } else if (ODataLinkCollection.class.isAssignableFrom(reference)) {
-                res = ODataReader.readLinks(src, ODataFormat.fromValue(format));
+                res = ODataReader.readLinks(src, ODataFormat.fromString(format));
             } else if (ODataValue.class.isAssignableFrom(reference)) {
                 res = new ODataPrimitiveValue.Builder().
                         setType(ODataValueFormat.fromString(format) == ODataValueFormat.TEXT
@@ -187,7 +191,7 @@ public final class ODataReader {
             } else if (EdmMetadata.class.isAssignableFrom(reference)) {
                 res = ODataReader.readMetadata(src);
             } else if (ODataServiceDocument.class.isAssignableFrom(reference)) {
-                res = ODataReader.readServiceDocument(src, ODataFormat.fromValue(format));
+                res = ODataReader.readServiceDocument(src, ODataFormat.fromString(format));
             } else if (ODataError.class.isAssignableFrom(reference)) {
                 res = ODataReader.readError(src, !format.toString().contains("json"));
             } else {

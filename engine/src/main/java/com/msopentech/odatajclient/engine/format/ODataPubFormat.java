@@ -1,17 +1,21 @@
-/*
- * Copyright 2013 MS OpenTech.
+/**
+ * Copyright © Microsoft Open Technologies, Inc.
+ *
+ * All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
+ * OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+ * ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
+ * PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
+ *
+ * See the Apache License, Version 2.0 for the specific language
+ * governing permissions and limitations under the License.
  */
 package com.msopentech.odatajclient.engine.format;
 
@@ -38,9 +42,9 @@ public enum ODataPubFormat {
      * Atom format.
      */
     ATOM(ContentType.APPLICATION_ATOM_XML.getMimeType());
-
+    
     private final String format;
-
+    
     ODataPubFormat(final String format) {
         this.format = format;
     }
@@ -63,17 +67,32 @@ public enum ODataPubFormat {
      */
     public static ODataPubFormat fromString(final String format) {
         ODataPubFormat result = null;
-
-        for (ODataPubFormat value : values()) {
-            if (format.equals(value.toString())) {
-                result = value;
+        
+        final StringBuffer _format = new StringBuffer();
+        
+        final String[] parts = format.split(";");
+        _format.append(parts[0]);
+        if (ContentType.APPLICATION_JSON.getMimeType().equals(parts[0])) {
+            if (parts.length > 1 && parts[1].startsWith("odata=")) {
+                _format.append(';').append(parts[1]);
+            } else {
+                result = ODataPubFormat.JSON;
             }
         }
-
+        
         if (result == null) {
-            throw new IllegalArgumentException(format);
+            final String candidate = _format.toString();
+            for (ODataPubFormat value : values()) {
+                if (candidate.equals(value.toString())) {
+                    result = value;
+                }
+            }
         }
-
+        
+        if (result == null) {
+            throw new IllegalArgumentException("Unsupported format: " + format);
+        }
+        
         return result;
     }
 }
