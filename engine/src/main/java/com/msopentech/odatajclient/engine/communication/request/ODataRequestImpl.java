@@ -27,7 +27,10 @@ import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvo
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
+import com.msopentech.odatajclient.engine.data.ODataError;
 import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.data.json.error.JSONODataError;
+import com.msopentech.odatajclient.engine.data.xml.error.XMLODataError;
 import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.ByteArrayOutputStream;
@@ -402,7 +405,6 @@ public class ODataRequestImpl implements ODataRequest {
             throw new HttpClientException(e);
         }
 
-
         if (response.getStatusLine().getStatusCode() >= 500) {
             throw new ODataServerErrorException(response.getStatusLine());
         } else if (response.getStatusLine().getStatusCode() >= 400) {
@@ -411,8 +413,20 @@ public class ODataRequestImpl implements ODataRequest {
                 if (httpEntity == null) {
                     throw new ODataClientErrorException(response.getStatusLine());
                 } else {
-                    throw new ODataClientErrorException(response.getStatusLine(),
-                            ODataReader.readError(httpEntity.getContent(), getAccept().indexOf("json") == -1));
+                    final boolean isXML = getAccept().indexOf("json") == -1;
+                    ODataError error;
+
+                    try {
+                        error = ODataReader.readError(httpEntity.getContent(), isXML);
+                    } catch (IllegalArgumentException e) {
+                        LOG.warn("Error deserializing error response", e);
+                        error = getGenericError(
+                                response.getStatusLine().getStatusCode(),
+                                response.getStatusLine().getReasonPhrase(),
+                                isXML);
+                    }
+
+                    throw new ODataClientErrorException(response.getStatusLine(), error);
                 }
             } catch (IOException e) {
                 throw new HttpClientException(
@@ -447,5 +461,26 @@ public class ODataRequestImpl implements ODataRequest {
         }
 
         throw new IllegalStateException("No response class template has been found");
+    }
+
+    private ODataError getGenericError(final int code, final String errorMsg, final boolean isXML) {
+        final ODataError error;
+        if (isXML) {
+            error = new XMLODataError();
+            final XMLODataError.Message msg = new XMLODataError.Message();
+            msg.setValue(errorMsg);
+
+            ((XMLODataError) error).setMessage(msg);
+            ((XMLODataError) error).setCode(String.valueOf(code));
+        } else {
+            error = new JSONODataError();
+            final JSONODataError.Message msg = new JSONODataError.Message();
+            msg.setValue(errorMsg);
+
+            ((JSONODataError) error).setMessage(msg);
+            ((JSONODataError) error).setCode(String.valueOf(code));
+        }
+
+        return error;
     }
 }

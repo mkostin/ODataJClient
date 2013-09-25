@@ -303,7 +303,7 @@ public final class Deserializer {
         try {
             final XMLStreamReader xmler = XMLIF.createXMLStreamReader(input);
             final JAXBContext context = JAXBContext.newInstance(XMLODataError.class);
-
+          
             return context.createUnmarshaller().unmarshal(xmler, XMLODataError.class).getValue();
         } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing XML error", e);

@@ -15,6 +15,7 @@
  */
 package com.msopentech.odatajclient.engine.it;
 
+import static com.msopentech.odatajclient.engine.it.AbstractTest.testDefaultServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -34,6 +35,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntit
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataStreamUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
+import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -97,6 +99,36 @@ public class MediaEntityTestITCase extends AbstractTest {
     @Test
     public void createMediaEntityAsJson() throws Exception {
         createMediaEntity(ODataPubFormat.JSON);
+    }
+
+    @Test
+    public void createMP4EntityAsAtom() throws Exception {
+        createMediaEntity(ODataPubFormat.ATOM, this.getClass().getResourceAsStream("/sample.mp4"));
+    }
+
+    @Test
+    public void createMP4EntityAsJson() throws Exception {
+        createMediaEntity(ODataPubFormat.JSON, this.getClass().getResourceAsStream("/sample.mp4"));
+    }
+
+    @Test
+    public void createWMVEntityAsAtom() throws Exception {
+        createMediaEntity(ODataPubFormat.ATOM, this.getClass().getResourceAsStream("/sample.wmv"));
+    }
+
+    @Test
+    public void createWMVEntityAsJson() throws Exception {
+        createMediaEntity(ODataPubFormat.JSON, this.getClass().getResourceAsStream("/sample.wmv"));
+    }
+    
+    @Test
+    public void createPictureEntityAsAtom() throws Exception {
+        createMediaEntity(ODataPubFormat.ATOM, this.getClass().getResourceAsStream("/sample.png"));
+    }
+
+    @Test
+    public void createPictureEntityAsJson() throws Exception {
+        createMediaEntity(ODataPubFormat.JSON, this.getClass().getResourceAsStream("/sample.png"));
     }
 
     @Test
@@ -177,5 +209,37 @@ public class MediaEntityTestITCase extends AbstractTest {
         final ODataRetrieveResponse<InputStream> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
         assertEquals(inputValue, IOUtils.toString(retrieveRes.getBody()));
+    }
+
+    private void createMediaEntity(final ODataPubFormat format, final InputStream input) throws Exception {
+        final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntitySetSegment("Car");
+
+        final ODataMediaEntityCreateRequest createReq =
+                ODataStreamedRequestFactory.getMediaEntityCreateRequest(builder.build(), input);
+        createReq.setFormat(format);
+
+        final MediaEntityCreateStreamManager streamManager = createReq.execute();
+        final ODataMediaEntityCreateResponse createRes = streamManager.getResponse();
+        assertEquals(201, createRes.getStatusCode());
+
+        final ODataEntity created = createRes.getBody();
+        assertNotNull(created);
+
+        Integer id = null;
+        for (ODataProperty prop : created.getProperties()) {
+            if ("VIN".equals(prop.getName())) {
+                id = prop.getPrimitiveValue().<Integer>toCastValue();
+            }
+        }
+        assertNotNull(id);
+
+        builder.appendKeySegment(id).appendValueSegment();
+
+        final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
+
+        final ODataRetrieveResponse<InputStream> retrieveRes = retrieveReq.execute();
+        assertEquals(200, retrieveRes.getStatusCode());
+        assertNotNull(retrieveRes.getBody());
     }
 }
