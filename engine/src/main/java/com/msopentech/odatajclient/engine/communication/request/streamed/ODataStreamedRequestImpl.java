@@ -48,7 +48,7 @@ import org.apache.http.entity.InputStreamEntity;
  * @param <T> OData request payload type corresponding to the request implementation.
  */
 public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extends ODataStreamManager<V>>
-        extends ODataRequestImpl implements ODataStreamedRequest<V, T> {
+        extends ODataRequestImpl<ODataMediaFormat> implements ODataStreamedRequest<V, T> {
 
     /**
      * OData payload stream manager.

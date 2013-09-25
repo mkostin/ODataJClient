@@ -87,12 +87,21 @@ public class Utility {
 
     private final String namespace;
 
+    private final Map<String, List<EntityType>> allEntityTypes = new HashMap<String, List<EntityType>>();
+
     public Utility(final EdmMetadata metadata, final Schema schema, final String basePackage) {
         this.metadata = metadata;
         this.schema = schema;
         this.basePackage = basePackage;
         this.namespace = schema.getNamespace();
         this.schemaName = schema.getAlias() == null ? getNameFromNS(namespace) : schema.getAlias();
+
+        for (Schema _schema : metadata.getSchemas()) {
+            allEntityTypes.put(_schema.getNamespace(), _schema.getEntityTypes());
+            if (StringUtils.isNotBlank(_schema.getAlias())) {
+                allEntityTypes.put(_schema.getAlias(), _schema.getEntityTypes());
+            }
+        }
     }
 
     public String getBasePackage() {
@@ -178,12 +187,12 @@ public class Utility {
         return res;
     }
 
-    public EntityType getEntityType(final EntitySet entitySet) {
-        return new EdmType(metadata, entitySet.getEntityType()).getEntityType();
+    public EdmType getEdmType(final EntitySet entitySet) {
+        return new EdmType(metadata, entitySet.getEntityType());
     }
 
     public Map<String, String> getEntityKeyType(final EntitySet entitySet) {
-        return getEntityKeyType(getEntityType(entitySet));
+        return getEntityKeyType(getEdmType(entitySet).getEntityType());
     }
 
     public Map<String, String> getEntityKeyType(final EntityType entityType) {
@@ -234,6 +243,10 @@ public class Utility {
         return schema.getNamespace() + "." + name;
     }
 
+    public final String getNameInNamespace(final EdmType entityType) {
+        return entityType.getNamespaceOrAlias() + "." + entityType.getEntityType().getName();
+    }
+
     public final String getNameFromNS(final String ns) {
         return getNameFromNS(ns, false);
     }
@@ -261,23 +274,26 @@ public class Utility {
         return types.contains(fullTypeExpression);
     }
 
-    private void populateDescendants(final EntityType base, final List<String> descendants) {
-        for (EntityType type : schema.getEntityTypes()) {
-            if (StringUtils.isNotBlank(type.getBaseType())
-                    && base.getName().equals(getNameFromNS(type.getBaseType()))) {
+    private void populateDescendants(final EdmType base, final List<String> descendants) {
+        for (Map.Entry<String, List<EntityType>> entry : allEntityTypes.entrySet()) {
+            for (EntityType type : entry.getValue()) {
+                if (StringUtils.isNotBlank(type.getBaseType())
+                        && base.getEntityType().getName().equals(getNameFromNS(type.getBaseType()))) {
 
-                descendants.add(getNameInNamespace(type.getName()));
-                populateDescendants(type, descendants);
+                    final EdmType entityType = new EdmType(metadata, entry.getKey() + "." + type.getName());
+
+                    descendants.add(getNameInNamespace(entityType));
+                    populateDescendants(entityType, descendants);
+                }
             }
         }
-
     }
 
-    public List<String> getDescendantsOrSelf(final EntityType base) {
+    public List<String> getDescendantsOrSelf(final EdmType entityType) {
         final List<String> descendants = new ArrayList<String>();
 
-        descendants.add(getNameInNamespace(base.getName()));
-        populateDescendants(base, descendants);
+        descendants.add(getNameInNamespace(entityType));
+        populateDescendants(entityType, descendants);
 
         return descendants;
     }

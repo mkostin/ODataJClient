@@ -30,7 +30,7 @@ import java.net.URI;
  *
  * @see ODataRetrieveRequestFactory#getRawRequest(java.net.URI)
  */
-public class ODataRawRequest extends ODataRequestImpl {
+public class ODataRawRequest extends ODataRequestImpl<ODataPubFormat> {
 
     /**
      * Constructor.

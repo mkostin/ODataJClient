@@ -181,7 +181,7 @@ public class MetadataMojo extends AbstractMojo {
                 }
             }
 
-            parseObj(services, null, "services", "com.msopentech.odatajclient.proxy.api.AbstractComplexType",
+            parseObj(services, true, null, "services", "com.msopentech.odatajclient.proxy.api.AbstractComplexType",
                     Collections.singletonMap("services", (Object) complexTypeNames));
         }
     }
@@ -204,8 +204,8 @@ public class MetadataMojo extends AbstractMojo {
         return mkdir(basePackage.replace('.', File.separatorChar) + File.separator + path);
     }
 
-    private void writeFile(final String name, final File path, final VelocityContext ctx, final Template template)
-            throws MojoExecutionException {
+    private void writeFile(final String name, final File path, final VelocityContext ctx, final Template template,
+            final boolean append) throws MojoExecutionException {
 
         if (!path.exists()) {
             throw new IllegalArgumentException("Invalid base path '" + path.getAbsolutePath() + "'");
@@ -214,10 +214,10 @@ public class MetadataMojo extends AbstractMojo {
         FileWriter writer = null;
         try {
             final File toBeWritten = new File(path, name);
-            if (toBeWritten.exists()) {
+            if (!append && toBeWritten.exists()) {
                 throw new IllegalStateException("File '" + toBeWritten.getAbsolutePath() + "' already exists");
             }
-            writer = new FileWriter(toBeWritten);
+            writer = new FileWriter(toBeWritten, append);
             template.merge(ctx, writer);
         } catch (IOException e) {
             throw new MojoExecutionException("Error creating file '" + name + "'", e);
@@ -241,11 +241,24 @@ public class MetadataMojo extends AbstractMojo {
 
     private void parseObj(final File base, final String pkg, final String name, final String out)
             throws MojoExecutionException {
-        parseObj(base, pkg, name, out, Collections.<String, Object>emptyMap());
+
+        parseObj(base, false, pkg, name, out, Collections.<String, Object>emptyMap());
     }
 
     private void parseObj(
             final File base,
+            final String pkg,
+            final String name,
+            final String out,
+            final Map<String, Object> objs)
+            throws MojoExecutionException {
+
+        parseObj(base, false, pkg, name, out, objs);
+    }
+
+    private void parseObj(
+            final File base,
+            final boolean append,
             final String pkg,
             final String name,
             final String out,
@@ -264,6 +277,6 @@ public class MetadataMojo extends AbstractMojo {
         }
 
         final Template template = Velocity.getTemplate(name + ".vm");
-        writeFile(out, base, ctx, template);
+        writeFile(out, base, ctx, template, append);
     }
 }
