@@ -57,10 +57,22 @@ import org.w3c.dom.ls.LSParser;
  */
 public final class Deserializer {
 
+    private static final Object MONITOR = new Object();
+
     /**
      * Factory for StAX de-serialization.
      */
-    private static final XMLInputFactory XMLIF = XMLInputFactory.newInstance();
+    private static XMLInputFactory XMLIF;
+
+    private static XMLInputFactory getXMLInputFactory() {
+        synchronized (MONITOR) {
+            if (XMLIF == null) {
+                XMLIF = XMLInputFactory.newInstance();
+            }
+        }
+
+        return XMLIF;
+    }
 
     private Deserializer() {
         // Empty private constructor for static utility classes
@@ -68,7 +80,7 @@ public final class Deserializer {
 
     public static Edmx toMetadata(final InputStream input) {
         try {
-            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(input);
+            final XMLStreamReader xmler = getXMLInputFactory().createXMLStreamReader(input);
             final JAXBContext context = JAXBContext.newInstance(Edmx.class);
 
             return context.createUnmarshaller().unmarshal(xmler, Edmx.class).getValue();
@@ -305,9 +317,9 @@ public final class Deserializer {
 
     private static XMLODataError toODataErrorFromXML(final InputStream input) {
         try {
-            final XMLStreamReader xmler = XMLIF.createXMLStreamReader(input);
+            final XMLStreamReader xmler = getXMLInputFactory().createXMLStreamReader(input);
             final JAXBContext context = JAXBContext.newInstance(XMLODataError.class);
-          
+
             return context.createUnmarshaller().unmarshal(xmler, XMLODataError.class).getValue();
         } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing XML error", e);

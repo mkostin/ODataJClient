@@ -26,6 +26,7 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.entity.ContentType;
 
 /**
  * This class implements a metadata query request.
@@ -42,6 +43,18 @@ public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODat
      */
     ODataMetadataRequest(final URI uri) {
         super(ODataPubFormat.class, uri);
+        super.setAccept(ContentType.APPLICATION_XML.getMimeType());
+        super.setContentType(ContentType.APPLICATION_XML.getMimeType());
+    }
+
+    @Override
+    public void setAccept(final String value) {
+        // do nothing: Accept is application/XML
+    }
+
+    @Override
+    public void setContentType(final String value) {
+        // do nothing: Accept is application/XML
     }
 
     /**
