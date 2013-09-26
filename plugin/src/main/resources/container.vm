@@ -34,6 +34,7 @@
 package ${package};
 
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
+import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
@@ -64,7 +65,8 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-@EntityContainer(name = "$container.Name", 
+@Namespace("$namespace")
+@EntityContainer(name = "$container.Name",
   isDefaultEntityContainer = $container.DefaultEntityContainer)
 public interface $utility.capitalize($container.Name) extends AbstractContainer {
 

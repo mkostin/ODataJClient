@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * Associate Java package with OData namespace.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PACKAGE)
+@Target(ElementType.TYPE)
 public @interface Namespace {
 
     String value();

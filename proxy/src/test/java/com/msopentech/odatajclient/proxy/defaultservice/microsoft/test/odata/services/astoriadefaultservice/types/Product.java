@@ -17,8 +17,10 @@
  * See the Apache License, Version 2.0 for the specific language
  * governing permissions and limitations under the License.
  */
+
 package com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types;
 
+import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
@@ -56,6 +58,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 
+@Namespace("Microsoft.Test.OData.Services.AstoriaDefaultService")
 @EntityType(name = "Product",
         openType = false,
         hasStream = false,

@@ -17,9 +17,11 @@
  * See the Apache License, Version 2.0 for the specific language
  * governing permissions and limitations under the License.
  */
+
 package com.msopentech.odatajclient.proxy.primitivekeysservice.microsoft.test.odata.services.primitivekeysservice;
 
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
+import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
@@ -48,7 +50,8 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
-@EntityContainer(name = "TestContext", 
+@Namespace("Microsoft.Test.OData.Services.PrimitiveKeysService")
+@EntityContainer(name = "TestContext",
   isDefaultEntityContainer = true)
 public interface TestContext extends AbstractContainer {
 

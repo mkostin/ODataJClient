@@ -17,8 +17,10 @@
  * See the Apache License, Version 2.0 for the specific language
  * governing permissions and limitations under the License.
  */
+
 package com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types;
 
+import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
 import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
@@ -45,6 +47,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
+@Namespace("Microsoft.Test.OData.Services.AstoriaDefaultService")
 @ComplexType("ConcurrencyInfo")
 public class ConcurrencyInfo extends AbstractComplexType {
 

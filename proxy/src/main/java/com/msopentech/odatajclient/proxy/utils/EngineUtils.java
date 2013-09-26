@@ -187,7 +187,7 @@ public final class EngineUtils {
                                     getODataProperty(metadata, complexPropertyAnn.name(), method.invoke(obj)));
                         }
                     } catch (Exception ignore) {
-                        // ignore name
+                        // ignore value
                         LOG.warn("Error attaching complex field '{}'", complexPropertyAnn.name(), ignore);
                     }
                 }
@@ -246,7 +246,7 @@ public final class EngineUtils {
             final EdmMetadata metadata, final Map<String, Object> changes, final ODataEntity entity) {
 
         for (Map.Entry<String, Object> property : changes.entrySet()) {
-            // if the getter exists and it is annotated as expected then get name/value and add a new property
+            // if the getter exists and it is annotated as expected then get value/value and add a new property
             final ODataProperty odataProperty = entity.getProperty(property.getKey());
             if (odataProperty != null) {
                 entity.removeProperty(odataProperty);

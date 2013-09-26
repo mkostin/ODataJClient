@@ -33,6 +33,7 @@
 #set( $clsSuffix = ".class" )
 package ${package};
 
+import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
 import com.msopentech.odatajclient.proxy.api.annotations.Key;
 import com.msopentech.odatajclient.proxy.api.annotations.KeyRef;
@@ -84,6 +85,7 @@ import java.util.Collection;
 #set( $fcprops = $utility.getFcProperties($entityType))
 #if( $keyRef )@KeyRef(${keyRef}.class)#end
 
+@Namespace("$namespace")
 @EntityType(name = "$entityType.Name",
         openType = $entityType.isOpenType(),
         hasStream = $entityType.hasStream(),
@@ -180,6 +182,8 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
 #end
 
 #if($entityType.hasStream())
+    public void setStream(java.io.InputStream stream);
+
     public java.io.InputStream getStream();
 #end
 }

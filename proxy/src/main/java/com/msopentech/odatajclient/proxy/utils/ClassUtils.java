@@ -124,9 +124,9 @@ public final class ClassUtils {
     }
 
     public static String getNamespace(final Class<?> ref) {
-        final Annotation annotation = ref.getPackage().getAnnotation(Namespace.class);
+        final Annotation annotation = ref.getAnnotation(Namespace.class);
         if (!(annotation instanceof Namespace)) {
-            throw new IllegalArgumentException(ref.getPackage().getName()
+            throw new IllegalArgumentException(ref.getName()
                     + " is not annotated as @" + Namespace.class.getSimpleName());
         }
         return ((Namespace) annotation).value();

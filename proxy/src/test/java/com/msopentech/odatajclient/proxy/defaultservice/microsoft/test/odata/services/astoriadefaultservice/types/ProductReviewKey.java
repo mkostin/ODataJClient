@@ -17,6 +17,7 @@
  * See the Apache License, Version 2.0 for the specific language
  * governing permissions and limitations under the License.
  */
+
 package com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types;
 
 import com.msopentech.odatajclient.proxy.api.annotations.EntityType;
