@@ -30,6 +30,7 @@ import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -38,10 +39,6 @@ import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSOutput;
-import org.w3c.dom.ls.LSSerializer;
 
 /**
  * Utility class for serialization.
@@ -173,16 +170,7 @@ public final class Serializer {
      * @param writer writer.
      */
     public static void dom(final Node content, final Writer writer) {
-        try {
-            final DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
-            final DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");
-            final LSSerializer serializer = impl.createLSSerializer();
-            final LSOutput lso = impl.createLSOutput();
-            lso.setCharacterStream(writer);
-            serializer.write(content, lso);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("While serializing DOM element", e);
-        }
+        XMLUtils.parser.serialize(content, writer);
     }
 
     /*

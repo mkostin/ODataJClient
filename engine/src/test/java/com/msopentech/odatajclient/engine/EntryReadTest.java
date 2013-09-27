@@ -28,6 +28,7 @@ import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import org.junit.Test;
@@ -67,7 +68,7 @@ public class EntryReadTest extends AbstractTest {
             entered = true;
 
             final Node property = content.getChildNodes().item(i);
-            if ("PrimaryContactInfo".equals(property.getLocalName())) {
+            if ("PrimaryContactInfo".equals(XMLUtils.getSimpleName(property))) {
                 checked = true;
 
                 if (ODataPubFormat.JSON_FULL_METADATA == format || ODataPubFormat.ATOM == format) {

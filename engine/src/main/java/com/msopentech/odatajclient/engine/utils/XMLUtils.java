@@ -19,10 +19,13 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -35,6 +38,14 @@ public final class XMLUtils {
 
     private XMLUtils() {
         // Empty private constructor for static utility classes       
+    }
+
+    public static AbstractDOMParser parser;
+
+    static {
+        final Iterator<AbstractDOMParser> itor =
+                ServiceLoader.load(AbstractDOMParser.class, Deserializer.class.getClassLoader()).iterator();
+        parser = itor.hasNext() ? itor.next() : new DefaultDOMParserImpl();
     }
 
     /**

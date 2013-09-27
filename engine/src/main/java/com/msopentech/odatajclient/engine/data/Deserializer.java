@@ -37,6 +37,7 @@ import com.msopentech.odatajclient.engine.data.xml.XMLServiceDocument;
 import com.msopentech.odatajclient.engine.data.xml.error.XMLODataError;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -47,10 +48,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSInput;
-import org.w3c.dom.ls.LSParser;
 
 /**
  * Utility class for serialization.
@@ -83,11 +80,11 @@ public final class Deserializer {
             final XMLStreamReader xmler = getXMLInputFactory().createXMLStreamReader(input);
             final JAXBContext context = JAXBContext.newInstance(Edmx.class);
 
-            return context.createUnmarshaller().unmarshal(xmler, Edmx.class).getValue();
+            return context.createUnmarshaller()
+                    .unmarshal(xmler, Edmx.class).getValue();
         } catch (Exception e) {
             throw new IllegalArgumentException("Could not parse as Edmx document", e);
         }
-
     }
 
     /**
@@ -102,8 +99,12 @@ public final class Deserializer {
     public static <T extends FeedResource> T toFeed(final InputStream input, final Class<T> reference) {
         T entry;
 
-        if (AtomFeed.class.equals(reference)) {
+
+
+        if (AtomFeed.class
+                .equals(reference)) {
             entry = (T) toAtomFeed(input);
+
         } else {
             entry = (T) toJSONFeed(input);
         }
@@ -123,8 +124,12 @@ public final class Deserializer {
     public static <T extends EntryResource> T toEntry(final InputStream input, final Class<T> reference) {
         T entry;
 
-        if (AtomEntry.class.equals(reference)) {
+
+
+        if (AtomEntry.class
+                .equals(reference)) {
             entry = (T) toAtomEntry(input);
+
         } else {
             entry = (T) toJSONEntry(input);
         }
@@ -191,23 +196,14 @@ public final class Deserializer {
      * @return DOM tree
      */
     public static Element toDOM(final InputStream input) {
-        try {
-            final DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
-            final DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");
-            final LSParser parser = impl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
-            final LSInput lsinput = impl.createLSInput();
-            lsinput.setByteStream(input);
-
-            return parser.parse(lsinput).getDocumentElement();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Could not parse DOM", e);
-        }
+        return XMLUtils.parser.parse(input);
     }
 
     /*
      * ------------------ Private methods ------------------
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(
+            "unchecked")
     private static AtomFeed toAtomFeed(final InputStream input) {
         try {
             return AtomDeserializer.feed(toDOM(input));
@@ -228,6 +224,8 @@ public final class Deserializer {
     private static JSONFeed toJSONFeed(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+
             return mapper.readValue(input, JSONFeed.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON feed", e);
@@ -237,6 +235,8 @@ public final class Deserializer {
     private static JSONEntry toJSONEntry(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+
             return mapper.readValue(input, JSONEntry.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON entry", e);
@@ -250,6 +250,8 @@ public final class Deserializer {
     private static Element toPropertyDOMFromJSON(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+
             return mapper.readValue(input, JSONProperty.class).getContent();
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON property", e);
@@ -281,6 +283,8 @@ public final class Deserializer {
     private static ServiceDocumentResource toServiceDocumentFromJSON(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+
             return mapper.readValue(input, JSONServiceDocument.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON service document", e);
@@ -309,6 +313,8 @@ public final class Deserializer {
     private static JSONLinkCollection toLinkCollectionFromJSON(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+
             return mapper.readValue(input, JSONLinkCollection.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON $links", e);
@@ -320,7 +326,8 @@ public final class Deserializer {
             final XMLStreamReader xmler = getXMLInputFactory().createXMLStreamReader(input);
             final JAXBContext context = JAXBContext.newInstance(XMLODataError.class);
 
-            return context.createUnmarshaller().unmarshal(xmler, XMLODataError.class).getValue();
+            return context.createUnmarshaller()
+                    .unmarshal(xmler, XMLODataError.class).getValue();
         } catch (Exception e) {
             throw new IllegalArgumentException("While deserializing XML error", e);
         }
@@ -329,6 +336,8 @@ public final class Deserializer {
     private static JSONODataError toODataErrorFromJSON(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+
             return mapper.readValue(input, JSONODataErrorBundle.class).getError();
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON error", e);
