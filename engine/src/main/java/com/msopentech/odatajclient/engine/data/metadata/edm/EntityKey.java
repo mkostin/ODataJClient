@@ -19,17 +19,15 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonDeserialize(using = EntityKeyDeserializer.class)
 public class EntityKey extends AbstractEdm {
 
     private static final long serialVersionUID = 2586047015894794685L;
 
-    @JsonProperty(value = "PropertyRef", required = true)
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<PropertyRef> propertyRefs = new ArrayList<PropertyRef>();
 
     public List<PropertyRef> getPropertyRefs() {

@@ -22,8 +22,12 @@ package com.msopentech.odatajclient.engine.data;
 import com.fasterxml.aalto.stax.InputFactoryImpl;
 import com.fasterxml.aalto.stax.OutputFactoryImpl;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -37,6 +41,8 @@ import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.data.json.JSONServiceDocument;
 import com.msopentech.odatajclient.engine.data.json.error.JSONODataError;
 import com.msopentech.odatajclient.engine.data.json.error.JSONODataErrorBundle;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractAnnotatedEdm;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractAnnotatedEdmUtils;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Edmx;
 import com.msopentech.odatajclient.engine.data.xml.XMLLinkCollection;
 import com.msopentech.odatajclient.engine.data.xml.XMLServiceDocument;
@@ -49,7 +55,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.stream.XMLInputFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -57,23 +62,6 @@ import org.w3c.dom.NodeList;
  * Utility class for serialization.
  */
 public final class Deserializer {
-
-    private static final Object MONITOR = new Object();
-
-    /**
-     * Factory for StAX de-serialization.
-     */
-    private static XMLInputFactory XMLIF;
-
-    private static XMLInputFactory getXMLInputFactory() {
-        synchronized (MONITOR) {
-            if (XMLIF == null) {
-                XMLIF = XMLInputFactory.newInstance();
-            }
-        }
-
-        return XMLIF;
-    }
 
     private Deserializer() {
         // Empty private constructor for static utility classes
@@ -83,9 +71,29 @@ public final class Deserializer {
         try {
             final XmlMapper xmlMapper = new XmlMapper(
                     new XmlFactory(new InputFactoryImpl(), new OutputFactoryImpl()), new JacksonXmlModule());
-            xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            xmlMapper.addHandler(new DeserializationProblemHandler() {
+
+                @Override
+                public boolean handleUnknownProperty(final DeserializationContext ctxt, final JsonParser jp,
+                        final JsonDeserializer<?> deserializer, final Object beanOrClass, final String propertyName)
+                        throws IOException, JsonProcessingException {
+
+                    // 1. special handling of AbstractAnnotatedEdm's fields
+                    if (beanOrClass instanceof AbstractAnnotatedEdm
+                            && AbstractAnnotatedEdmUtils.isAbstractAnnotatedProperty(propertyName)) {
+
+                        AbstractAnnotatedEdmUtils.parseAnnotatedEdm((AbstractAnnotatedEdm) beanOrClass, jp);
+                    } // 2. skip any other unknown property
+                    else {
+                        ctxt.getParser().skipChildren();
+                    }
+
+                    return true;
+                }
+            });
             return xmlMapper.readValue(input, Edmx.class);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("Could not parse as Edmx document", e);
         }
     }

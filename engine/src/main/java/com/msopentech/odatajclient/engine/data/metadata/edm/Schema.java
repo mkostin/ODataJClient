@@ -177,9 +177,25 @@ public class Schema extends AbstractEdm {
      */
     public EntityType getEntityType(final String name) {
         EntityType result = null;
-        for (EntityType complexType : getEntityTypes()) {
-            if (name.equals(complexType.getName())) {
-                result = complexType;
+        for (EntityType type : getEntityTypes()) {
+            if (name.equals(type.getName())) {
+                result = type;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Gets complex type with the given name.
+     *
+     * @param name name.
+     * @return complex type.
+     */
+    public ComplexType getComplexType(final String name) {
+        ComplexType result = null;
+        for (ComplexType type : getComplexTypes()) {
+            if (name.equals(type.getName())) {
+                result = type;
             }
         }
         return result;

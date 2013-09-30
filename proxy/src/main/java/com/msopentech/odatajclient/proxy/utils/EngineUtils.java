@@ -111,7 +111,7 @@ public final class EngineUtils {
     }
 
     public static String getEntitySetName(final AssociationSet associationSet, final String role) {
-        for (AssociationSetEnd end : associationSet.getEnd()) {
+        for (AssociationSetEnd end : associationSet.getEnds()) {
             if (end.getRole().equals(role)) {
                 return end.getEntitySet();
             }

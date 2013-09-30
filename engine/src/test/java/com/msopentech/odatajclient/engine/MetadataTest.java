@@ -28,6 +28,7 @@ import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.ComplexType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
@@ -102,5 +103,49 @@ public class MetadataTest extends AbstractTest {
         final EntityContainer entityContainer = second.getDefaultEntityContainer();
         assertNotNull(entityContainer);
         assertEquals("NorthwindEntities", entityContainer.getName());
+    }
+
+    @Test
+    public void entityType() {
+        final EdmMetadata metadata = ODataReader.readMetadata(getClass().getResourceAsStream("metadata.xml"));
+        assertNotNull(metadata);
+
+        final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
+        assertNotNull(container);
+        final EntityType type = metadata.getSchema(0).getEntityType("ProductReview");
+        assertNotNull(type);
+
+        assertFalse(type.getProperties().isEmpty());
+        assertNotNull(type.getProperties().get(0));
+
+        assertFalse(type.getKey().getPropertyRefs().isEmpty());
+        assertNotNull(type.getKey().getPropertyRefs().get(0));
+    }
+
+    @Test
+    public void complexType() {
+        final EdmMetadata metadata = ODataReader.readMetadata(getClass().getResourceAsStream("metadata.xml"));
+        assertNotNull(metadata);
+
+        final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
+        assertNotNull(container);
+        final ComplexType type = metadata.getSchema(0).getComplexType("ContactDetails");
+        assertNotNull(type);
+
+        assertFalse(type.getProperties().isEmpty());
+        assertNotNull(type.getProperties().get(0));
+    }
+
+    @Test
+    public void functionImport() {
+        final EdmMetadata metadata = ODataReader.readMetadata(getClass().getResourceAsStream("metadata.xml"));
+        assertNotNull(metadata);
+
+        final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
+        assertNotNull(container);
+        final FunctionImport funcImp = container.getFunctionImport("GetArgumentPlusOne");
+        assertNotNull(funcImp);
+
+        assertNotNull(funcImp.getParameters().get(0));
     }
 }

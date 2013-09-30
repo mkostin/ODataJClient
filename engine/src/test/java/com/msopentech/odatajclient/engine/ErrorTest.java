@@ -20,7 +20,6 @@
 package com.msopentech.odatajclient.engine;
 
 import static org.junit.Assert.assertNotNull;
-
 import com.msopentech.odatajclient.engine.data.ODataError;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import org.junit.Test;

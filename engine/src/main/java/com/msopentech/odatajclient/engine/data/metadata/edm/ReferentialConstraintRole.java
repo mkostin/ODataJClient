@@ -19,21 +19,18 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonDeserialize(using = ReferentialConstraintRoleDeserializer.class)
 public class ReferentialConstraintRole extends AbstractEdm {
 
     private static final long serialVersionUID = -3712887115248634164L;
 
-    @JsonProperty(value = "Role", required = true)
     private String role;
 
-    @JsonProperty(value = "PropertyRef", required = true)
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private List<PropertyRef> propertyRef = new ArrayList<PropertyRef>();
+    private List<PropertyRef> propertyRefs = new ArrayList<PropertyRef>();
 
     public String getRole() {
         return role;
@@ -43,11 +40,11 @@ public class ReferentialConstraintRole extends AbstractEdm {
         this.role = role;
     }
 
-    public List<PropertyRef> getPropertyRef() {
-        return propertyRef;
+    public List<PropertyRef> getPropertyRefs() {
+        return propertyRefs;
     }
 
-    public void setPropertyRef(final List<PropertyRef> propertyRef) {
-        this.propertyRef = propertyRef;
+    public void setPropertyRefs(final List<PropertyRef> propertyRefs) {
+        this.propertyRefs = propertyRefs;
     }
 }

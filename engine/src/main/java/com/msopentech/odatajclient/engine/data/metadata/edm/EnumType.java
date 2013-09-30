@@ -19,26 +19,21 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonDeserialize(using = EnumTypeDeserializer.class)
 public class EnumType extends AbstractAnnotatedEdm {
 
     private static final long serialVersionUID = 2688487586103418210L;
 
-    @JsonProperty(value = "Name", required = true)
     private String name;
 
-    @JsonProperty("UnderlyingType")
     private String underlyingType;
 
-    @JsonProperty("IsFlags")
     private boolean flags;
 
-    @JsonProperty("Member")
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<Member> members = new ArrayList<Member>();
 
     public String getName() {

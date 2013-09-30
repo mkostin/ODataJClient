@@ -19,26 +19,21 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonDeserialize(using = TypeAnnotationDeserializer.class)
 public class TypeAnnotation extends AbstractEdm {
 
     private static final long serialVersionUID = -7585489230017331877L;
 
-    @JsonProperty(value = "Term", required = true)
     private String term;
 
-    @JsonProperty("Qualifier")
     private String qualifier;
 
-    @JsonProperty("Documentation")
     private Documentation documentation;
 
-    @JsonProperty("PropertyValue")
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<PropertyValue> propertyValues = new ArrayList<PropertyValue>();
 
     public String getTerm() {

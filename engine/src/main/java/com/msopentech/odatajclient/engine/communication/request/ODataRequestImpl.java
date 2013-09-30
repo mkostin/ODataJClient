@@ -46,6 +46,7 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
@@ -497,8 +498,8 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
         final ODataError error;
         if (isXML) {
             error = new XMLODataError();
-            final XMLODataError.Message msg = new XMLODataError.Message();
-            msg.setValue(errorMsg);
+            final XMLODataError.Message msg = new XMLODataError.Message(
+                    Collections.singletonMap("", (Object) errorMsg));
 
             ((XMLODataError) error).setMessage(msg);
             ((XMLODataError) error).setCode(String.valueOf(code));

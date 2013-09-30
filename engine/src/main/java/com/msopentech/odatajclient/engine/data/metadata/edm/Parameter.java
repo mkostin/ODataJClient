@@ -75,7 +75,7 @@ public class Parameter extends AbstractAnnotatedEdm {
         return nullable;
     }
 
-    public void setNullable(boolean nullable) {
+    public void setNullable(final boolean nullable) {
         this.nullable = nullable;
     }
 

@@ -19,24 +19,20 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonDeserialize(using = AssociationSetDeserializer.class)
 public class AssociationSet extends AbstractEdm {
 
     private static final long serialVersionUID = 1248430921598774799L;
 
-    @JsonProperty(value = "Name", required = true)
     private String name;
 
-    @JsonProperty(value = "Association", required = true)
     private String association;
 
-    @JsonProperty("End")
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private List<AssociationSetEnd> end = new ArrayList<AssociationSetEnd>();
+    private List<AssociationSetEnd> ends = new ArrayList<AssociationSetEnd>();
 
     public String getName() {
         return name;
@@ -54,11 +50,11 @@ public class AssociationSet extends AbstractEdm {
         this.association = association;
     }
 
-    public List<AssociationSetEnd> getEnd() {
-        return end;
+    public List<AssociationSetEnd> getEnds() {
+        return ends;
     }
 
-    public void setEnd(final List<AssociationSetEnd> end) {
-        this.end = end;
+    public void setEnds(final List<AssociationSetEnd> ends) {
+        this.ends = ends;
     }
 }

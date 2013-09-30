@@ -19,11 +19,13 @@
  */
 package com.msopentech.odatajclient.engine.data.xml;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import com.msopentech.odatajclient.engine.data.ODataError;
 import com.msopentech.odatajclient.engine.data.AbstractPayloadObject;
+import java.util.Map;
 
 /**
  * This class represents an OData error returned as JSON.
@@ -119,9 +121,6 @@ public class XMLODataError extends AbstractPayloadObject implements ODataError {
 
         private static final long serialVersionUID = -8908394095210115904L;
 
-        @JacksonXmlText
-        private String value;
-
         public TextChildContainer() {
             super();
         }
@@ -130,6 +129,14 @@ public class XMLODataError extends AbstractPayloadObject implements ODataError {
             super();
             this.value = value;
         }
+
+        @JsonCreator
+        public TextChildContainer(final Map<String, Object> props) {
+            super();
+            this.value = (String) props.get("");
+        }
+
+        private String value;
 
         public String getValue() {
             return value;
@@ -148,6 +155,16 @@ public class XMLODataError extends AbstractPayloadObject implements ODataError {
         private static final long serialVersionUID = 2577818040815637859L;
 
         private String lang;
+
+        public Message() {
+            super();
+        }
+
+        @JsonCreator
+        public Message(final Map<String, Object> props) {
+            super(props);
+            this.lang = (String) props.get("lang");
+        }
 
         /**
          * Gets language.

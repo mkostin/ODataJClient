@@ -19,8 +19,6 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,15 +26,10 @@ public abstract class AbstractAnnotatedEdm extends AbstractEdm {
 
     private static final long serialVersionUID = -4161875076707454520L;
 
-    @JsonProperty("Documentation")
     private Documentation documentation;
 
-    @JsonProperty("TypeAnnotation")
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<TypeAnnotation> typeAnnotations = new ArrayList<TypeAnnotation>();
 
-    @JsonProperty("ValueAnnotation")
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<ValueAnnotation> valueAnnotations = new ArrayList<ValueAnnotation>();
 
     public Documentation getDocumentation() {

@@ -19,9 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +28,10 @@ public class Association extends AbstractAnnotatedEdm {
 
     private static final long serialVersionUID = 73763231919532482L;
 
-    @JsonProperty(value = "Name", required = true)
     private String name;
 
-    @JsonProperty(value = "ReferentialConstraint")
     private ReferentialConstraint referentialConstraint;
 
-    @JsonProperty(value = "End", required = true)
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<AssociationEnd> ends = new ArrayList<AssociationEnd>();
 
     public String getName() {

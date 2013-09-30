@@ -62,14 +62,18 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
             final JsonNode inline = tree.path(entryNamePrefix);
 
             if (inline instanceof ObjectNode) {
-                link.setInlineEntry(inline.traverse(codec).readValuesAs(JSONEntry.class).next());
+                final JsonParser inlineParser = inline.traverse();
+                inlineParser.setCodec(codec);
+                link.setInlineEntry(inlineParser.readValuesAs(JSONEntry.class).next());
             }
 
             if (inline instanceof ArrayNode) {
                 final JSONFeed feed = new JSONFeed();
                 final Iterator<JsonNode> entries = ((ArrayNode) inline).elements();
                 while (entries.hasNext()) {
-                    feed.addEntry(entries.next().traverse(codec).readValuesAs(JSONEntry.class).next());
+                    final JsonParser inlineParser = entries.next().traverse();
+                    inlineParser.setCodec(codec);
+                    feed.addEntry(inlineParser.readValuesAs(JSONEntry.class).next());
                 }
 
                 link.setInlineFeed(feed);

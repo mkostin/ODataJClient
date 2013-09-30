@@ -89,10 +89,6 @@ final class DOMTreeUtils {
                             Boolean.toString(true));
                 } else if (child.isValueNode()) {
                     if (!typeSet) {
-                        if (child.isShort()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.Int16.toString());
-                        }
                         if (child.isInt()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.Int32.toString());
@@ -104,10 +100,6 @@ final class DOMTreeUtils {
                         if (child.isBigDecimal()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
                                     EdmSimpleType.Decimal.toString());
-                        }
-                        if (child.isFloat()) {
-                            property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.Single.toString());
                         }
                         if (child.isDouble()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,

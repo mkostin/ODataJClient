@@ -19,44 +19,33 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonDeserialize(using = FunctionImportDeserializer.class)
 public class FunctionImport extends AbstractAnnotatedEdm {
 
     private static final long serialVersionUID = 4154308065211315663L;
 
-    @JsonProperty(value = "Name", required = true)
     private String name;
 
-    @JsonProperty("ReturnType")
     private String returnType;
 
-    @JsonProperty("EntitySet")
     private String entitySet;
 
-    @JsonProperty("EntitySetPath")
     private String entitySetPath;
 
-    @JsonProperty("IsComposable")
     private boolean composable;
 
-    @JsonProperty("IsSideEffecting")
     private boolean sideEffecting = true;
 
-    @JsonProperty("IsBindable")
     private boolean bindable;
 
-    @JsonProperty("IsAlwaysBindable")
     private boolean alwaysBindable;
 
-    @JsonProperty("HttpMethod")
     private String httpMethod;
 
-    @JsonProperty("Parameter")
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<Parameter> parameters = new ArrayList<Parameter>();
 
     public String getName() {
