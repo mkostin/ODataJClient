@@ -19,133 +19,31 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * <p>Java class for TAnnotations complex type.
- *
- * <p>The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="TAnnotations">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;choice maxOccurs="unbounded" minOccurs="0">
- *           &lt;element name="ValueAnnotation" type="{http://schemas.microsoft.com/ado/2009/11/edm}TValueAnnotation" maxOccurs="unbounded" minOccurs="0"/>
- *           &lt;element name="TypeAnnotation" type="{http://schemas.microsoft.com/ado/2009/11/edm}TTypeAnnotation" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;/choice>
- *       &lt;/sequence>
- *       &lt;attribute name="Target" use="required" type="{http://schemas.microsoft.com/ado/2009/11/edm}TPath" />
- *       &lt;attribute name="Qualifier" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- *
- *
- */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TAnnotations", propOrder = {
-    "valueAnnotationOrTypeAnnotation"
-})
-public class Annotations {
+public class Annotations extends AbstractAnnotatedEdm {
 
-    @XmlElements({
-        @XmlElement(name = "TypeAnnotation", type = TypeAnnotation.class),
-        @XmlElement(name = "ValueAnnotation", type = ValueAnnotation.class)
-    })
-    protected List<Object> valueAnnotationOrTypeAnnotation;
+    private static final long serialVersionUID = 4926640428016042620L;
 
-    @XmlAttribute(name = "Target", required = true)
-    protected String target;
+    @JsonProperty(value = "Target", required = true)
+    private String target;
 
-    @XmlAttribute(name = "Qualifier")
-    protected String qualifier;
+    @JsonProperty("Qualifier")
+    private String qualifier;
 
-    /**
-     * Gets the value of the valueAnnotationOrTypeAnnotation property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a
-     * <CODE>set</CODE> method for the valueAnnotationOrTypeAnnotation property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getValueAnnotationOrTypeAnnotation().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link TTypeAnnotation }
-     * {@link TValueAnnotation }
-     *
-     *
-     */
-    public List<Object> getValueAnnotationOrTypeAnnotation() {
-        if (valueAnnotationOrTypeAnnotation == null) {
-            valueAnnotationOrTypeAnnotation = new ArrayList<Object>();
-        }
-        return this.valueAnnotationOrTypeAnnotation;
-    }
-
-    /**
-     * Gets the value of the target property.
-     *
-     * @return
-     * possible object is
-     * {@link String }
-     *
-     */
     public String getTarget() {
         return target;
     }
 
-    /**
-     * Sets the value of the target property.
-     *
-     * @param value
-     * allowed object is
-     * {@link String }
-     *
-     */
-    public void setTarget(String value) {
-        this.target = value;
+    public void setTarget(final String target) {
+        this.target = target;
     }
 
-    /**
-     * Gets the value of the qualifier property.
-     *
-     * @return
-     * possible object is
-     * {@link String }
-     *
-     */
     public String getQualifier() {
         return qualifier;
     }
 
-    /**
-     * Sets the value of the qualifier property.
-     *
-     * @param value
-     * allowed object is
-     * {@link String }
-     *
-     */
-    public void setQualifier(String value) {
-        this.qualifier = value;
+    public void setQualifier(final String qualifier) {
+        this.qualifier = qualifier;
     }
 }

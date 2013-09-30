@@ -51,9 +51,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -63,13 +60,7 @@ import java.util.Collection;
         openType = false,
         hasStream = false,
         isAbstract = false,
-        baseType = "Microsoft.Test.OData.Services.AstoriaDefaultService.Employee",
-        fcSourcePath = "",
-        fcTargetPath = "",
-        fcContentKind = EdmContentKind.text,
-        fcNSPrefix = "",
-        fcNSURI = "",
-        fcKeepInContent = false)
+        baseType = "")
 public interface SpecialEmployee extends com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Employee {
 
 
@@ -85,14 +76,13 @@ public interface SpecialEmployee extends com.msopentech.odatajclient.proxy.defau
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Integer getCarsVIN();
 
     public void setCarsVIN(final Integer _carsVIN);
@@ -109,14 +99,13 @@ public interface SpecialEmployee extends com.msopentech.odatajclient.proxy.defau
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Integer getBonus();
 
     public void setBonus(final Integer _bonus);
@@ -133,14 +122,13 @@ public interface SpecialEmployee extends com.msopentech.odatajclient.proxy.defau
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Boolean getIsFullyVested();
 
     public void setIsFullyVested(final Boolean _isFullyVested);
@@ -150,9 +138,7 @@ public interface SpecialEmployee extends com.msopentech.odatajclient.proxy.defau
     @NavigationProperty(name = "Car", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.SpecialEmployee_Car", 
                 fromRole = "SpecialEmployee", 
-                toRole = "Car",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Car")
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Car getCar();
 
     public void setCar(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Car _car);

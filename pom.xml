@@ -70,8 +70,6 @@
     <commons.lang3.version>3.1</commons.lang3.version>
     <commons.beanutils.version>1.8.3</commons.beanutils.version>
 
-    <woodstox.version>4.2.0</woodstox.version>
-
     <sl4j.version>1.7.5</sl4j.version>
     
     <velocity.version>1.7</velocity.version>
@@ -100,12 +98,6 @@
         <artifactId>commons-beanutils-core</artifactId>
         <version>${commons.beanutils.version}</version>
       </dependency>
-
-      <dependency>
-        <groupId>org.codehaus.woodstox</groupId>
-        <artifactId>woodstox-core-asl</artifactId>
-        <version>${woodstox.version}</version>
-      </dependency>
     
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -118,19 +110,22 @@
         <artifactId>jackson-databind</artifactId>
         <version>${jackson.version}</version>
       </dependency>
-    
       <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${sl4j.version}</version>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>1.1.1</version>
-        <scope>provided</scope>
+        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <artifactId>jackson-dataformat-xml</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
-      
+      <dependency>
+        <groupId>com.fasterxml</groupId>
+        <artifactId>aalto-xml</artifactId>
+        <version>0.9.8</version>
+      </dependency>
+                          
       <dependency>
         <groupId>org.apache.velocity</groupId>
         <artifactId>velocity</artifactId>
@@ -146,6 +141,18 @@
         <groupId>org.apache.maven.plugin-tools</groupId>
         <artifactId>maven-plugin-annotations</artifactId>
         <version>${maven.plugin.tools.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${sl4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.1</version>
+        <scope>provided</scope>
       </dependency>
 
       <dependency> 

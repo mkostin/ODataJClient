@@ -93,7 +93,7 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
                 throw new IllegalArgumentException(
                         "Use " + ODataPrimitiveValue.class.getSimpleName() + " for non-geospatial types");
             }
-            if (type == EdmSimpleType.GEOGRAPHY || type == EdmSimpleType.GEOMETRY) {
+            if (type == EdmSimpleType.Geography || type == EdmSimpleType.Geometry) {
                 throw new IllegalArgumentException(
                         type + "is not an instantiable type. "
                         + "An entity can declare a property to be of type Geometry. "
@@ -150,14 +150,14 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
         Geospatial.Dimension dimension;
 
         switch (this.type) {
-            case GEOGRAPHY:
-            case GEOGRAPHY_COLLECTION:
-            case GEOGRAPHY_LINE_STRING:
-            case GEOGRAPHY_MULTI_LINE_STRING:
-            case GEOGRAPHY_POINT:
-            case GEOGRAPHY_MULTI_POINT:
-            case GEOGRAPHY_POLYGON:
-            case GEOGRAPHY_MULTI_POLYGON:
+            case Geography:
+            case GeographyCollection:
+            case GeographyLineString:
+            case GeographyMultiLineString:
+            case GeographyPoint:
+            case GeographyMultiPoint:
+            case GeographyPolygon:
+            case GeographyMultiPolygon:
                 dimension = Geospatial.Dimension.GEOGRAPHY;
                 break;
 
@@ -214,13 +214,13 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
         Geospatial value;
 
         switch (type) {
-            case GEOGRAPHY_POINT:
-            case GEOMETRY_POINT:
+            case GeographyPoint:
+            case GeometryPoint:
                 value = parsePoints(tree.getElementsByTagName(ODataConstants.ELEM_POS)).get(0);
                 break;
 
-            case GEOGRAPHY_MULTI_POINT:
-            case GEOMETRY_MULTI_POINT:
+            case GeographyMultiPoint:
+            case GeometryMultiPoint:
                 final Element pMembs =
                         (Element) tree.getElementsByTagName(ODataConstants.ELEM_POINTMEMBERS).item(0);
                 final List<Point> points = pMembs == null
@@ -229,13 +229,13 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
                 value = new MultiPoint(getDimension(), points);
                 break;
 
-            case GEOGRAPHY_LINE_STRING:
-            case GEOMETRY_LINE_STRING:
+            case GeographyLineString:
+            case GeometryLineString:
                 value = parseLineString(tree);
                 break;
 
-            case GEOGRAPHY_MULTI_LINE_STRING:
-            case GEOMETRY_MULTI_LINE_STRING:
+            case GeographyMultiLineString:
+            case GeometryMultiLineString:
                 final Element mlMembs =
                         (Element) tree.getElementsByTagName(ODataConstants.ELEM_LINESTRINGMEMBERS).item(0);
                 final List<LineString> lineStrings;
@@ -251,13 +251,13 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
                 value = new MultiLineString(getDimension(), lineStrings);
                 break;
 
-            case GEOGRAPHY_POLYGON:
-            case GEOMETRY_POLYGON:
+            case GeographyPolygon:
+            case GeometryPolygon:
                 value = parsePolygon(tree);
                 break;
 
-            case GEOGRAPHY_MULTI_POLYGON:
-            case GEOMETRY_MULTI_POLYGON:
+            case GeographyMultiPolygon:
+            case GeometryMultiPolygon:
                 final Element mpMembs =
                         (Element) tree.getElementsByTagName(ODataConstants.ELEM_SURFACEMEMBERS).item(0);
                 final List<Polygon> polygons;
@@ -273,8 +273,8 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
                 value = new MultiPolygon(getDimension(), polygons);
                 break;
 
-            case GEOGRAPHY_COLLECTION:
-            case GEOMETRY_COLLECTION:
+            case GeographyCollection:
+            case GeometryCollection:
                 final Element cMembs =
                         (Element) tree.getElementsByTagName(ODataConstants.ELEM_GEOMEMBERS).item(0);
                 final List<Geospatial> geospatials;
@@ -385,15 +385,15 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
         final Element tree;
 
         switch (value.getEdmSimpleType()) {
-            case GEOGRAPHY_POINT:
-            case GEOMETRY_POINT:
+            case GeographyPoint:
+            case GeometryPoint:
                 tree = doc.createElementNS(ODataConstants.NS_GML, ODataConstants.ELEM_POINT);
 
                 parsePoints(tree, Collections.singleton((Point) value).iterator(), false);
                 break;
 
-            case GEOMETRY_MULTI_POINT:
-            case GEOGRAPHY_MULTI_POINT:
+            case GeometryMultiPoint:
+            case GeographyMultiPoint:
                 tree = doc.createElementNS(ODataConstants.NS_GML, ODataConstants.ELEM_MULTIPOINT);
 
                 final Element pMembs = doc.createElementNS(ODataConstants.NS_GML, ODataConstants.ELEM_POINTMEMBERS);
@@ -402,15 +402,15 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
                 parsePoints(pMembs, ((MultiPoint) value).iterator(), true);
                 break;
 
-            case GEOMETRY_LINE_STRING:
-            case GEOGRAPHY_LINE_STRING:
+            case GeometryLineString:
+            case GeographyLineString:
                 tree = doc.createElementNS(ODataConstants.NS_GML, ODataConstants.ELEM_LINESTRING);
 
                 parseLineStrings(tree, Collections.singleton((LineString) value).iterator(), false);
                 break;
 
-            case GEOMETRY_MULTI_LINE_STRING:
-            case GEOGRAPHY_MULTI_LINE_STRING:
+            case GeometryMultiLineString:
+            case GeographyMultiLineString:
                 tree = doc.createElementNS(ODataConstants.NS_GML, ODataConstants.ELEM_MULTILINESTRING);
 
                 final Element mlMembs =
@@ -420,14 +420,14 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
                 parseLineStrings(mlMembs, ((MultiLineString) value).iterator(), true);
                 break;
 
-            case GEOGRAPHY_POLYGON:
-            case GEOMETRY_POLYGON:
+            case GeographyPolygon:
+            case GeometryPolygon:
                 tree = doc.createElementNS(ODataConstants.NS_GML, ODataConstants.ELEM_POLYGON);
                 parsePolygons(tree, Collections.singleton(((Polygon) value)).iterator(), false);
                 break;
 
-            case GEOGRAPHY_MULTI_POLYGON:
-            case GEOMETRY_MULTI_POLYGON:
+            case GeographyMultiPolygon:
+            case GeometryMultiPolygon:
                 tree = doc.createElementNS(ODataConstants.NS_GML, ODataConstants.ELEM_MULTIPOLYGON);
 
                 final Element mpMembs =
@@ -437,8 +437,8 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
                 parsePolygons(mpMembs, ((MultiPolygon) value).iterator(), true);
                 break;
 
-            case GEOGRAPHY_COLLECTION:
-            case GEOMETRY_COLLECTION:
+            case GeographyCollection:
+            case GeometryCollection:
                 tree = doc.createElementNS(ODataConstants.NS_GML, ODataConstants.ELEM_GEOCOLLECTION);
 
                 final Element gMembs =

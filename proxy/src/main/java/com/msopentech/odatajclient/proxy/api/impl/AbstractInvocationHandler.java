@@ -26,13 +26,11 @@ import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import com.msopentech.odatajclient.proxy.utils.EngineUtils;
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -80,8 +78,8 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
         return getClass().getMethod(method.getName(), method.getParameterTypes()).invoke(this, args);
     }
 
-    @SuppressWarnings("unchecked")
-    protected <T extends Serializable, EC extends AbstractEntityCollection<T>> EC getEntityCollection(
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected Object getEntityCollection(
             final Class<?> typeRef,
             final Class<?> typeCollectionRef,
             final String entityContainerName,
@@ -89,17 +87,17 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
             final URI uri,
             final boolean checkInTheContext) {
 
-        final List<T> items = new ArrayList<T>();
+        final List<Object> items = new ArrayList<Object>();
 
         for (ODataEntity entityFromSet : entitySet.getEntities()) {
-            items.add((T) getEntityProxy(
+            items.add(getEntityProxy(
                     entityFromSet, entityContainerName, entitySet.getName(), typeRef, checkInTheContext));
         }
 
-        return (EC) Proxy.newProxyInstance(
+        return Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {typeCollectionRef},
-                new EntityCollectionInvocationHandler<T>(containerHandler, items, typeRef, entityContainerName, uri));
+                new EntityCollectionInvocationHandler(containerHandler, items, typeRef, entityContainerName, uri));
     }
 
     protected <T> T getEntityProxy(
@@ -141,7 +139,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
     protected Object functionImport(
             final FunctionImport annotation, final Method method, final Object[] args, final URI target,
-            final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp)
+            final com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport funcImp)
             throws InstantiationException, IllegalAccessException, NoSuchMethodException,
             IllegalArgumentException, InvocationTargetException {
 

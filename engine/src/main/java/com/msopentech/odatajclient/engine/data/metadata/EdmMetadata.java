@@ -21,14 +21,13 @@ package com.msopentech.odatajclient.engine.data.metadata;
 
 import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
-import com.msopentech.odatajclient.engine.data.metadata.edmx.DataServices;
-import com.msopentech.odatajclient.engine.data.metadata.edmx.Edmx;
+import com.msopentech.odatajclient.engine.data.metadata.edm.DataServices;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Edmx;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.bind.JAXBElement;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -50,20 +49,10 @@ public class EdmMetadata implements Serializable {
     @SuppressWarnings("unchecked")
     public EdmMetadata(final InputStream inputStream) {
         final Edmx edmx = Deserializer.toMetadata(inputStream);
-
-        DataServices ds = null;
-        for (JAXBElement<?> edmxContent : edmx.getContent()) {
-            if (DataServices.class.equals(edmxContent.getDeclaredType())) {
-                ds = (DataServices) edmxContent.getValue();
-            }
-        }
-        if (ds == null) {
-            throw new IllegalArgumentException("No <DataServices/> element found");
-        }
-        this.dataservices = ds;
+        this.dataservices = edmx.getDataServices();
 
         this.schemaByNsOrAlias = new HashMap<String, Schema>();
-        for (Schema schema : this.dataservices.getSchema()) {
+        for (Schema schema : this.dataservices.getSchemas()) {
             this.schemaByNsOrAlias.put(schema.getNamespace(), schema);
             if (StringUtils.isNotBlank(schema.getAlias())) {
                 this.schemaByNsOrAlias.put(schema.getAlias(), schema);
@@ -88,7 +77,7 @@ public class EdmMetadata implements Serializable {
      * @return the Schema at the specified position in the EdM metadata document
      */
     public Schema getSchema(final int index) {
-        return this.dataservices.getSchema().get(index);
+        return this.dataservices.getSchemas().get(index);
     }
 
     /**
@@ -107,6 +96,6 @@ public class EdmMetadata implements Serializable {
      * @return all Schema objects defined in the EdM metadata document
      */
     public List<Schema> getSchemas() {
-        return this.dataservices.getSchema();
+        return this.dataservices.getSchemas();
     }
 }

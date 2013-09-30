@@ -19,220 +19,83 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyAttribute;
-import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.namespace.QName;
 
-/**
- * <p>Java class for TSchema complex type.
- *
- * <p>The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="TSchema">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;group ref="{http://schemas.microsoft.com/ado/2009/11/edm}GSchemaBodyElements" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;any processContents='lax' namespace='##other' maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;attribute name="Namespace" type="{http://schemas.microsoft.com/ado/2009/11/edm}TNamespaceName" />
- *       &lt;attribute name="Alias" type="{http://schemas.microsoft.com/ado/2009/11/edm}TSimpleIdentifier" />
- *       &lt;anyAttribute processContents='lax' namespace='##other'/>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- *
- *
- */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TSchema", propOrder = {
-    "gSchemaBodyElements",
-    "any"
-})
-public class Schema extends AbstractElement {
+@JsonDeserialize(using = SchemaDeserializer.class)
+public class Schema extends AbstractEdm {
 
-    @XmlElements({
-        @XmlElement(name = "EntityType", type = EntityType.class),
-        @XmlElement(name = "Function", type = Function.class),
-        @XmlElement(name = "EnumType", type = EnumType.class),
-        @XmlElement(name = "Using", type = Using.class),
-        @XmlElement(name = "ValueTerm", type = ValueTerm.class),
-        @XmlElement(name = "Association", type = Association.class),
-        @XmlElement(name = "EntityContainer", type = EntityContainer.class),
-        @XmlElement(name = "Annotations", type = Annotations.class),
-        @XmlElement(name = "ComplexType", type = ComplexType.class)
-    })
-    protected List<Object> gSchemaBodyElements;
+    private static final long serialVersionUID = -1356392748971378455L;
 
-    @XmlAnyElement(lax = true)
-    protected List<Object> any;
+    private String namespace;
 
-    @XmlAttribute(name = "Namespace")
-    protected String namespace;
+    private String alias;
 
-    @XmlAttribute(name = "Alias")
-    protected String alias;
+    private List<Using> usings = new ArrayList<Using>();
 
-    @XmlAnyAttribute
-    private Map<QName, String> otherAttributes = new HashMap<QName, String>();
+    private List<Association> associations = new ArrayList<Association>();
 
-    /**
-     * Gets the value of the gSchemaBodyElements property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a
-     * <CODE>set</CODE> method for the gSchemaBodyElements property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getGSchemaBodyElements().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link EntityType }
-     * {@link Function }
-     * {@link EnumType }
-     * {@link Using }
-     * {@link ValueTerm }
-     * {@link Association }
-     * {@link EntityContainer }
-     * {@link Annotations }
-     * {@link ComplexType }
-     */
-    @Override
-    public List<Object> getValues() {
-        if (gSchemaBodyElements == null) {
-            gSchemaBodyElements = new ArrayList<Object>();
-        }
-        return this.gSchemaBodyElements;
+    private List<ComplexType> complexTypes = new ArrayList<ComplexType>();
+
+    private List<EntityType> entityTypes = new ArrayList<EntityType>();
+
+    private List<EnumType> enumTypes = new ArrayList<EnumType>();
+
+    private List<ValueTerm> valueTerms = new ArrayList<ValueTerm>();
+
+    private List<Annotations> annotations = new ArrayList<Annotations>();
+
+    private List<EntityContainer> entityContainers = new ArrayList<EntityContainer>();
+
+    public String getNamespace() {
+        return namespace;
     }
 
-    /**
-     * Gets using statements.
-     *
-     * @return using statements.
-     */
-    public List<Using> getUsings() {
-        return getElements(Using.class);
+    public void setNamespace(final String namespace) {
+        this.namespace = namespace;
     }
 
-    /**
-     * Gets enum types.
-     *
-     * @return enum types.
-     */
-    public List<EnumType> getEnumTypes() {
-        return getElements(EnumType.class);
+    public String getAlias() {
+        return alias;
     }
 
-    /**
-     * Gets enum type with the given name.
-     *
-     * @param name name.
-     * @return enum type.
-     */
-    public EnumType getEnumType(final String name) {
-        EnumType result = null;
-        for (EnumType enumType : getEnumTypes()) {
-            if (name.equals(enumType.getName())) {
-                result = enumType;
-            }
-        }
-        return result;
+    public void setAlias(final String alias) {
+        this.alias = alias;
     }
 
-    /**
-     * Gets complex types.
-     *
-     * @return complex types.
-     */
-    public List<ComplexType> getComplexTypes() {
-        return getElements(ComplexType.class);
-    }
-
-    /**
-     * Gets complex type with the given name.
-     *
-     * @param name name.
-     * @return complex type.
-     */
-    public ComplexType getComplexType(final String name) {
-        ComplexType result = null;
-        for (ComplexType complexType : getComplexTypes()) {
-            if (name.equals(complexType.getName())) {
-                result = complexType;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Gets row types.
-     *
-     * @return row types.
-     */
-    public List<RowType> getRowTypes() {
-        return getElements(RowType.class);
-    }
-
-    /**
-     * Gets entity types.
-     *
-     * @return entity types.
-     */
     public List<EntityType> getEntityTypes() {
-        return getElements(EntityType.class);
+        return entityTypes;
     }
 
-    /**
-     * Gets entity type with the given name.
-     *
-     * @param name name.
-     * @return entity type.
-     */
-    public EntityType getEntityType(final String name) {
-        EntityType result = null;
-        for (EntityType complexType : getEntityTypes()) {
-            if (name.equals(complexType.getName())) {
-                result = complexType;
-            }
-        }
-        return result;
+    public void setEntityTypes(final List<EntityType> entityTypes) {
+        this.entityTypes = entityTypes;
     }
 
-    /**
-     * Gets associations.
-     *
-     * @return associations.
-     */
-    public List<Association> getAssociations() {
-        return getElements(Association.class);
+    public List<EnumType> getEnumTypes() {
+        return enumTypes;
     }
 
-    /**
-     * Gets association with the given name.
-     *
-     * @param name name.
-     * @return association.
-     */
+    public void setEnumTypes(final List<EnumType> enumTypes) {
+        this.enumTypes = enumTypes;
+    }
+
+    public List<Using> getUsings() {
+        return usings;
+    }
+
+    public void setUsings(final List<Using> usings) {
+        this.usings = usings;
+    }
+
+    public List<ValueTerm> getValueTerms() {
+        return valueTerms;
+    }
+
+    public void setValueTerms(final List<ValueTerm> valueTerms) {
+        this.valueTerms = valueTerms;
+    }
+
     public Association getAssociation(final String name) {
         Association result = null;
         for (Association association : getAssociations()) {
@@ -243,13 +106,36 @@ public class Schema extends AbstractElement {
         return result;
     }
 
-    /**
-     * Gets entity containers.
-     *
-     * @return entity containers.
-     */
+    public List<Association> getAssociations() {
+        return associations;
+    }
+
+    public void setAssociations(final List<Association> associations) {
+        this.associations = associations;
+    }
+
     public List<EntityContainer> getEntityContainers() {
-        return getElements(EntityContainer.class);
+        return entityContainers;
+    }
+
+    public void setEntityContainers(final List<EntityContainer> entityContainers) {
+        this.entityContainers = entityContainers;
+    }
+
+    public List<Annotations> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(final List<Annotations> annotations) {
+        this.annotations = annotations;
+    }
+
+    public List<ComplexType> getComplexTypes() {
+        return complexTypes;
+    }
+
+    public void setComplexTypes(final List<ComplexType> complexTypes) {
+        this.complexTypes = complexTypes;
     }
 
     /**
@@ -284,99 +170,18 @@ public class Schema extends AbstractElement {
     }
 
     /**
-     * Gets the value of the any property.
+     * Gets entity type with the given name.
      *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a
-     * <CODE>set</CODE> method for the any property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getAny().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Object }
-     * {@link Element }
-     *
-     *
+     * @param name name.
+     * @return entity type.
      */
-    public List<Object> getAny() {
-        if (any == null) {
-            any = new ArrayList<Object>();
+    public EntityType getEntityType(final String name) {
+        EntityType result = null;
+        for (EntityType complexType : getEntityTypes()) {
+            if (name.equals(complexType.getName())) {
+                result = complexType;
+            }
         }
-        return this.any;
-    }
-
-    /**
-     * Gets the value of the namespace property.
-     *
-     * @return
-     * possible object is
-     * {@link String }
-     *
-     */
-    public String getNamespace() {
-        return namespace;
-    }
-
-    /**
-     * Sets the value of the namespace property.
-     *
-     * @param value
-     * allowed object is
-     * {@link String }
-     *
-     */
-    public void setNamespace(final String value) {
-        this.namespace = value;
-    }
-
-    /**
-     * Gets the value of the alias property.
-     *
-     * @return
-     * possible object is
-     * {@link String }
-     *
-     */
-    public String getAlias() {
-        return alias;
-    }
-
-    /**
-     * Sets the value of the alias property.
-     *
-     * @param value
-     * allowed object is
-     * {@link String }
-     *
-     */
-    public void setAlias(final String value) {
-        this.alias = value;
-    }
-
-    /**
-     * Gets a map that contains attributes that aren't bound to any typed property on this class.
-     *
-     * <p>
-     * the map is keyed by the name of the attribute and
-     * the value is the string value of the attribute.
-     *
-     * the map returned by this method is live, and you can add new attribute
-     * by updating the map directly. Because of this design, there's no setter.
-     *
-     *
-     * @return
-     * always non-null
-     */
-    public Map<QName, String> getOtherAttributes() {
-        return otherAttributes;
+        return result;
     }
 }

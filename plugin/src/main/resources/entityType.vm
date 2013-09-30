@@ -17,19 +17,6 @@
  * See the Apache License, Version 2.0 for the specific language
  * governing permissions and limitations under the License.
  *#
-## Copyright 2013 MS OpenTech.
-##
-## Licensed under the Apache License, Version 2.0 (the "License");
-## you may not use this file except in compliance with the License.
-## You may obtain a copy of the License at
-##
-##      http://www.apache.org/licenses/LICENSE-2.0
-##
-## Unless required by applicable law or agreed to in writing, software
-## distributed under the License is distributed on an "AS IS" BASIS,
-## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-## See the License for the specific language governing permissions and
-## limitations under the License.
 #set( $clsSuffix = ".class" )
 package ${package};
 
@@ -66,9 +53,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -82,26 +66,19 @@ import java.util.Collection;
 #end
  */
 #end
-#set( $fcprops = $utility.getFcProperties($entityType))
 #if( $keyRef )@KeyRef(${keyRef}.class)#end
 
 @Namespace("$namespace")
 @EntityType(name = "$entityType.Name",
         openType = $entityType.isOpenType(),
-        hasStream = $entityType.hasStream(),
-        isAbstract = $entityType.isAbstract(),
-        baseType = "#if($entityType.getBaseType())$entityType.getBaseType()#end",
-        fcSourcePath = "#if($fcprops.containsKey("fcSourcePath"))$fcprops.get("fcSourcePath")#end",
-        fcTargetPath = "#if($fcprops.containsKey("fcTargetPath"))$fcprops.get("fcTargetPath")#end",
-        fcContentKind = #if($fcprops.containsKey("fcContentKind"))EdmContentKind.$fcprops.get("fcContentKind")#{else}EdmContentKind.text#end,
-        fcNSPrefix = "#if($fcprops.containsKey("fcNSPrefix"))$fcprops.get("fcNSPrefix")#end",
-        fcNSURI = "#if($fcprops.containsKey("fcNSURI"))$fcprops.get("fcNSURI")#end",
-        fcKeepInContent = #if($fcprops.containsKey("fcKeepInContent"))$fcprops.get("fcKeepInContent")#{else}false#end)
+        hasStream = $entityType.isHasStream(),
+        isAbstract = $entityType.isAbstractEntityType(),
+        baseType = "#if($utility.isNotBlank())$entityType.getBaseType()#end")
 #set($baseTypeName = ${schemaName})
 public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$baseType#{elseif}( $entityType.isOpenType() )AbstractOpenType#{else}Serializable#end {
 
 #set( $keys = [] )
-#foreach($key in $entityType.Key.PropertyRef)
+#foreach($key in $entityType.Key.PropertyRefs)
     #if(!$keys.add($key.Name)) #stop #end
 #end
 
@@ -120,8 +97,7 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
                 unicode = #if($property.isUnicode())$property.isUnicode()#{else}false#end,
                 collation = "#if($property.getCollation())$property.getCollation()#end",
                 srid = "#if($property.getSRID())$property.getSRID()#end",
-                concurrencyMode = #if($property.getConcurrencyMode())ConcurrencyMode.$property.getConcurrencyMode()#{else}ConcurrencyMode.NONE#end,
-                mimeType = "#if($fcprops.containsKey("mimeType"))$fcprops.get("mimeType")#end",
+                concurrencyMode = #if($property.getConcurrencyMode())ConcurrencyMode.$property.getConcurrencyMode()#{else}ConcurrencyMode.None#end,
                 fcSourcePath = "#if($fcprops.containsKey("fcSourcePath"))$fcprops.get("fcSourcePath")#end",
                 fcTargetPath = "#if($fcprops.containsKey("fcTargetPath"))$fcprops.get("fcTargetPath")#end",
                 fcContentKind = #if($fcprops.containsKey("fcContentKind"))EdmContentKind.$fcprops.get("fcContentKind")#{else}EdmContentKind.text#end,
@@ -140,12 +116,10 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
     @NavigationProperty(name = "$property.Name", 
                 relationship = "$property.Relationship", 
                 fromRole = "$property.FromRole", 
-                toRole = "$property.ToRole",
-                containsTarget = #if($property.isContainsTarget())$property.isContainsTarget()#{else}false#end,
-                onDelete = Action.$toRoleType.getValue())
-    public $utility.getJavaType($toRoleType.getKey()) get$utility.capitalize($property.Name)();
+                toRole = "$property.ToRole")
+    public $utility.getJavaType($toRoleType) get$utility.capitalize($property.Name)();
 
-    public void set$utility.capitalize($property.Name)(final $utility.getJavaType($toRoleType.getKey()) _$utility.uncapitalize($property.Name));
+    public void set$utility.capitalize($property.Name)(final $utility.getJavaType($toRoleType) _$utility.uncapitalize($property.Name));
 
 #end
 
@@ -181,7 +155,7 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
     *##end);
 #end
 
-#if($entityType.hasStream())
+#if($entityType.isHasStream())
     public void setStream(java.io.InputStream stream);
 
     public java.io.InputStream getStream();

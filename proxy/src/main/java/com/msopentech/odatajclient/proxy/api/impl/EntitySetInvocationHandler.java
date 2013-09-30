@@ -77,11 +77,11 @@ class EntitySetInvocationHandler<
 
     private final URI uri;
 
-    static <T extends Serializable, KEY extends Serializable, EC extends AbstractEntityCollection<T>> EntitySetInvocationHandler<T, KEY, EC> getInstance(
-            final Class<?> ref,
-            final EntityContainerInvocationHandler containerHandler) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    static EntitySetInvocationHandler getInstance(
+            final Class<?> ref, final EntityContainerInvocationHandler containerHandler) {
 
-        return new EntitySetInvocationHandler<T, KEY, EC>(ref, containerHandler);
+        return new EntitySetInvocationHandler(ref, containerHandler);
     }
 
     @SuppressWarnings("unchecked")

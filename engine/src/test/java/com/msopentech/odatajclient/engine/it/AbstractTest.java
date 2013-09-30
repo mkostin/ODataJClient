@@ -262,7 +262,7 @@ public abstract class AbstractTest {
         entity.setMediaEntity(true);
 
         entity.addProperty(ODataFactory.newPrimitiveProperty("Information",
-                new ODataPrimitiveValue.Builder().setText(sampleinfo).setType(EdmSimpleType.STRING).build()));
+                new ODataPrimitiveValue.Builder().setText(sampleinfo).setType(EdmSimpleType.String).build()));
 
         return entity;
     }
@@ -275,11 +275,11 @@ public abstract class AbstractTest {
 
         // add name attribute
         entity.addProperty(ODataFactory.newPrimitiveProperty("Name",
-                new ODataPrimitiveValue.Builder().setText(sampleName).setType(EdmSimpleType.STRING).build()));
+                new ODataPrimitiveValue.Builder().setText(sampleName).setType(EdmSimpleType.String).build()));
 
         // add key attribute
         entity.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
-                new ODataPrimitiveValue.Builder().setText(String.valueOf(id)).setType(EdmSimpleType.INT_32).build()));
+                new ODataPrimitiveValue.Builder().setText(String.valueOf(id)).setType(EdmSimpleType.Int32).build()));
 
         // add BackupContactInfo attribute (collection)
         final ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
@@ -295,13 +295,13 @@ public abstract class AbstractTest {
         // add BackupContactInfo.ContactDetails.AlternativeNames attribute (collection)
         final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
         altNamesValue.add(new ODataPrimitiveValue.Builder().
-                setText("myname").setType(EdmSimpleType.STRING).build());
+                setText("myname").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataFactory.newCollectionProperty("AlternativeNames", altNamesValue));
 
         // add BackupContactInfo.ContactDetails.EmailBag attribute (collection)
         final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
         emailBagValue.add(new ODataPrimitiveValue.Builder().
-                setText("myname@mydomain.com").setType(EdmSimpleType.STRING).build());
+                setText("myname@mydomain.com").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataFactory.newCollectionProperty("EmailBag", emailBagValue));
 
         // add BackupContactInfo.ContactDetails.ContactAlias attribute (complex)
@@ -312,7 +312,7 @@ public abstract class AbstractTest {
         // add BackupContactInfo.ContactDetails.ContactAlias.AlternativeNames attribute (collection)
         final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
         aliasAltNamesValue.add(new ODataPrimitiveValue.Builder().
-                setText("myAlternativeName").setType(EdmSimpleType.STRING).build());
+                setText("myAlternativeName").setType(EdmSimpleType.String).build());
         contactAliasValue.add(ODataFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
 
         if (withInlineInfo) {

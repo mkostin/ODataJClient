@@ -51,9 +51,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -63,13 +60,7 @@ import java.util.Collection;
         openType = false,
         hasStream = false,
         isAbstract = false,
-        baseType = "",
-        fcSourcePath = "",
-        fcTargetPath = "",
-        fcContentKind = EdmContentKind.text,
-        fcNSPrefix = "",
-        fcNSURI = "",
-        fcKeepInContent = false)
+        baseType = "")
 public interface ProductDetail extends Serializable {
 
     
@@ -85,14 +76,13 @@ public interface ProductDetail extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Integer getProductId();
 
     public void setProductId(final Integer _productId);
@@ -109,14 +99,13 @@ public interface ProductDetail extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public String getDetails();
 
     public void setDetails(final String _details);
@@ -126,9 +115,7 @@ public interface ProductDetail extends Serializable {
     @NavigationProperty(name = "Product", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.ProductDetail_Product", 
                 fromRole = "ProductDetail", 
-                toRole = "Product",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Product")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.Product getProduct();
 
     public void setProduct(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.Product _product);

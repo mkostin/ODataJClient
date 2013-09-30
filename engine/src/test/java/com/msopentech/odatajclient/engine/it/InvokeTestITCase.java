@@ -47,7 +47,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.net.URI;
@@ -191,13 +191,13 @@ public class InvokeTestITCase extends AbstractTest {
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Employee");
 
         employee.addProperty(ODataFactory.newPrimitiveProperty("PersonId", new ODataPrimitiveValue.Builder().
-                setText("1244").setType(EdmSimpleType.INT_32).build()));
+                setText("1244").setType(EdmSimpleType.Int32).build()));
         employee.addProperty(ODataFactory.newPrimitiveProperty("Name", new ODataPrimitiveValue.Builder().
                 setText("Test employee").build()));
         employee.addProperty(ODataFactory.newPrimitiveProperty("ManagersPersonId", new ODataPrimitiveValue.Builder().
-                setText("3777").setType(EdmSimpleType.INT_32).build()));
+                setText("3777").setType(EdmSimpleType.Int32).build()));
         employee.addProperty(ODataFactory.newPrimitiveProperty("Salary", new ODataPrimitiveValue.Builder().
-                setText("1000").setType(EdmSimpleType.INT_32).build()));
+                setText("1000").setType(EdmSimpleType.Int32).build()));
         employee.addProperty(ODataFactory.newPrimitiveProperty("Title", new ODataPrimitiveValue.Builder().
                 setText("CEO").build()));
 
@@ -288,7 +288,7 @@ public class InvokeTestITCase extends AbstractTest {
         final ODataInvokeRequest<ODataNoContent> req = ODataInvokeRequestFactory.getInvokeRequest(
                 builder.appendStructuralSegment(funcImp.getName()).build(), metadata, funcImp,
                 Collections.<String, ODataValue>singletonMap(
-                "n", new ODataPrimitiveValue.Builder().setValue(1).setType(EdmSimpleType.INT_32).build()));
+                "n", new ODataPrimitiveValue.Builder().setValue(1).setType(EdmSimpleType.Int32).build()));
         final ODataInvokeResponse<ODataNoContent> res = req.execute();
         assertNotNull(res);
         assertEquals(204, res.getStatusCode());

@@ -42,7 +42,7 @@ public class GeospatialCollection extends ComposedGeospatial<Geospatial> {
     @Override
     public EdmSimpleType getEdmSimpleType() {
         return dimension == Dimension.GEOGRAPHY
-                ? EdmSimpleType.GEOGRAPHY_COLLECTION
-                : EdmSimpleType.GEOMETRY_COLLECTION;
+                ? EdmSimpleType.GeographyCollection
+                : EdmSimpleType.GeometryCollection;
     }
 }

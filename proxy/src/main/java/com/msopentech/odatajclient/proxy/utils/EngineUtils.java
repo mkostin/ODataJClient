@@ -34,6 +34,8 @@ import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationSet;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationSetEnd;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
@@ -71,7 +73,7 @@ public final class EngineUtils {
         // Empty private constructor for static utility classes
     }
 
-    public static Map.Entry<EntityContainer, EntityContainer.AssociationSet> getAssociationSet(
+    public static Map.Entry<EntityContainer, AssociationSet> getAssociationSet(
             final Association association, final String associationNamespace, final EdmMetadata metadata) {
 
         final StringBuilder associationName = new StringBuilder();
@@ -79,11 +81,10 @@ public final class EngineUtils {
 
         for (Schema schema : metadata.getSchemas()) {
             for (EntityContainer container : schema.getEntityContainers()) {
-                final EntityContainer.AssociationSet associationSet = getAssociationSet(associationName.toString(),
+                final AssociationSet associationSet = getAssociationSet(associationName.toString(),
                         container);
                 if (associationSet != null) {
-                    return new AbstractMap.SimpleEntry<EntityContainer, EntityContainer.AssociationSet>(container,
-                            associationSet);
+                    return new AbstractMap.SimpleEntry<EntityContainer, AssociationSet>(container, associationSet);
                 }
             }
         }
@@ -95,11 +96,11 @@ public final class EngineUtils {
         return schema.getAssociation(relationship.substring(relationship.lastIndexOf('.') + 1));
     }
 
-    public static EntityContainer.AssociationSet getAssociationSet(final String association,
+    public static AssociationSet getAssociationSet(final String association,
             final EntityContainer container) {
         LOG.debug("Search for association set {}", association);
 
-        for (EntityContainer.AssociationSet associationSet : container.getAssociationSets()) {
+        for (AssociationSet associationSet : container.getAssociationSets()) {
             LOG.debug("Retrieved association set '{}:{}'", associationSet.getName(), associationSet.getAssociation());
             if (associationSet.getAssociation().equals(association)) {
                 return associationSet;
@@ -109,8 +110,8 @@ public final class EngineUtils {
         return null;
     }
 
-    public static String getEntitySetName(final EntityContainer.AssociationSet associationSet, final String role) {
-        for (EntityContainer.AssociationSet.End end : associationSet.getEnd()) {
+    public static String getEntitySetName(final AssociationSet associationSet, final String role) {
+        for (AssociationSetEnd end : associationSet.getEnd()) {
             if (end.getRole().equals(role)) {
                 return end.getEntitySet();
             }

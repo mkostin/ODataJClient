@@ -51,9 +51,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -63,13 +60,7 @@ import java.util.Collection;
         openType = false,
         hasStream = false,
         isAbstract = false,
-        baseType = "",
-        fcSourcePath = "",
-        fcTargetPath = "",
-        fcContentKind = EdmContentKind.text,
-        fcNSPrefix = "",
-        fcNSURI = "",
-        fcKeepInContent = false)
+        baseType = "")
 public interface AllSpatialTypes extends Serializable {
 
     
@@ -85,14 +76,13 @@ public interface AllSpatialTypes extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Integer getId();
 
     public void setId(final Integer _id);
@@ -108,15 +98,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Geospatial getGeog();
 
     public void setGeog(final Geospatial _geog);
@@ -132,15 +121,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Point getGeogPoint();
 
     public void setGeogPoint(final Point _geogPoint);
@@ -156,15 +144,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public LineString getGeogLine();
 
     public void setGeogLine(final LineString _geogLine);
@@ -180,15 +167,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Polygon getGeogPolygon();
 
     public void setGeogPolygon(final Polygon _geogPolygon);
@@ -204,15 +190,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public GeospatialCollection getGeogCollection();
 
     public void setGeogCollection(final GeospatialCollection _geogCollection);
@@ -228,15 +213,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public MultiPoint getGeogMultiPoint();
 
     public void setGeogMultiPoint(final MultiPoint _geogMultiPoint);
@@ -252,15 +236,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public MultiLineString getGeogMultiLine();
 
     public void setGeogMultiLine(final MultiLineString _geogMultiLine);
@@ -276,15 +259,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public MultiPolygon getGeogMultiPolygon();
 
     public void setGeogMultiPolygon(final MultiPolygon _geogMultiPolygon);
@@ -300,15 +282,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Geospatial getGeom();
 
     public void setGeom(final Geospatial _geom);
@@ -324,15 +305,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Point getGeomPoint();
 
     public void setGeomPoint(final Point _geomPoint);
@@ -348,15 +328,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public LineString getGeomLine();
 
     public void setGeomLine(final LineString _geomLine);
@@ -372,15 +351,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Polygon getGeomPolygon();
 
     public void setGeomPolygon(final Polygon _geomPolygon);
@@ -396,15 +374,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public GeospatialCollection getGeomCollection();
 
     public void setGeomCollection(final GeospatialCollection _geomCollection);
@@ -420,15 +397,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public MultiPoint getGeomMultiPoint();
 
     public void setGeomMultiPoint(final MultiPoint _geomMultiPoint);
@@ -444,15 +420,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public MultiLineString getGeomMultiLine();
 
     public void setGeomMultiLine(final MultiLineString _geomMultiLine);
@@ -468,15 +443,14 @@ public interface AllSpatialTypes extends Serializable {
                 scale = 0,
                 unicode = false,
                 collation = "",
-                srid = "Variable",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                srid = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public MultiPolygon getGeomMultiPolygon();
 
     public void setGeomMultiPolygon(final MultiPolygon _geomMultiPolygon);

@@ -51,9 +51,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -63,13 +60,7 @@ import java.util.Collection;
         openType = false,
         hasStream = false,
         isAbstract = false,
-        baseType = "",
-        fcSourcePath = "",
-        fcTargetPath = "",
-        fcContentKind = EdmContentKind.text,
-        fcNSPrefix = "",
-        fcNSURI = "",
-        fcKeepInContent = false)
+        baseType = "")
 public interface Product extends Serializable {
 
     
@@ -85,14 +76,13 @@ public interface Product extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public java.io.InputStream getPicture();
 
     public void setPicture(final java.io.InputStream _picture);
@@ -109,14 +99,13 @@ public interface Product extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Integer getProductId();
 
     public void setProductId(final Integer _productId);
@@ -133,14 +122,13 @@ public interface Product extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public String getDescription();
 
     public void setDescription(final String _description);
@@ -157,14 +145,13 @@ public interface Product extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions getDimensions();
 
     public void setDimensions(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions _dimensions);
@@ -181,14 +168,13 @@ public interface Product extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.FIXED,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.Fixed,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public String getBaseConcurrency();
 
     public void setBaseConcurrency(final String _baseConcurrency);
@@ -205,14 +191,13 @@ public interface Product extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo getComplexConcurrency();
 
     public void setComplexConcurrency(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ConcurrencyInfo _complexConcurrency);
@@ -229,14 +214,13 @@ public interface Product extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.AuditInfo getNestedComplexConcurrency();
 
     public void setNestedComplexConcurrency(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.AuditInfo _nestedComplexConcurrency);
@@ -246,9 +230,7 @@ public interface Product extends Serializable {
     @NavigationProperty(name = "RelatedProducts", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Product_RelatedProducts", 
                 fromRole = "Product", 
-                toRole = "RelatedProducts",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "RelatedProducts")
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ProductCollection getRelatedProducts();
 
     public void setRelatedProducts(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ProductCollection _relatedProducts);
@@ -257,9 +239,7 @@ public interface Product extends Serializable {
     @NavigationProperty(name = "Detail", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Product_Detail", 
                 fromRole = "Product", 
-                toRole = "Detail",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Detail")
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ProductDetail getDetail();
 
     public void setDetail(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ProductDetail _detail);
@@ -268,9 +248,7 @@ public interface Product extends Serializable {
     @NavigationProperty(name = "Reviews", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Product_Reviews", 
                 fromRole = "Product", 
-                toRole = "Reviews",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Reviews")
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ProductReviewCollection getReviews();
 
     public void setReviews(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ProductReviewCollection _reviews);
@@ -279,9 +257,7 @@ public interface Product extends Serializable {
     @NavigationProperty(name = "Photos", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Product_Photos", 
                 fromRole = "Product", 
-                toRole = "Photos",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Photos")
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhotoCollection getPhotos();
 
     public void setPhotos(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ProductPhotoCollection _photos);
@@ -289,7 +265,7 @@ public interface Product extends Serializable {
 
     @FunctionImport(name = "ChangeProductDimensions"      )
     void changeProductDimensions(
-            @Parameter(name = "dimensions", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions", nullable = false) com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions dimensions
+            @Parameter(name = "dimensions", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions", nullable = true) com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions dimensions
         );
 
 }

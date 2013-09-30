@@ -51,9 +51,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -63,13 +60,7 @@ import java.util.Collection;
         openType = false,
         hasStream = false,
         isAbstract = false,
-        baseType = "",
-        fcSourcePath = "",
-        fcTargetPath = "",
-        fcContentKind = EdmContentKind.text,
-        fcNSPrefix = "",
-        fcNSURI = "",
-        fcKeepInContent = false)
+        baseType = "")
 public interface Login extends Serializable {
 
     
@@ -85,14 +76,13 @@ public interface Login extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public String getUsername();
 
     public void setUsername(final String _username);
@@ -109,14 +99,13 @@ public interface Login extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Integer getCustomerId();
 
     public void setCustomerId(final Integer _customerId);
@@ -126,9 +115,7 @@ public interface Login extends Serializable {
     @NavigationProperty(name = "Customer", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Login_Customer", 
                 fromRole = "Login", 
-                toRole = "Customer",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Customer")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.Customer getCustomer();
 
     public void setCustomer(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.Customer _customer);
@@ -137,9 +124,7 @@ public interface Login extends Serializable {
     @NavigationProperty(name = "LastLogin", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Login_LastLogin", 
                 fromRole = "Login", 
-                toRole = "LastLogin",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "LastLogin")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.LastLogin getLastLogin();
 
     public void setLastLogin(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.LastLogin _lastLogin);
@@ -148,9 +133,7 @@ public interface Login extends Serializable {
     @NavigationProperty(name = "SentMessages", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Login_SentMessages", 
                 fromRole = "Login", 
-                toRole = "SentMessages",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "SentMessages")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.MessageCollection getSentMessages();
 
     public void setSentMessages(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.MessageCollection _sentMessages);
@@ -159,9 +142,7 @@ public interface Login extends Serializable {
     @NavigationProperty(name = "ReceivedMessages", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Login_ReceivedMessages", 
                 fromRole = "Login", 
-                toRole = "ReceivedMessages",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "ReceivedMessages")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.MessageCollection getReceivedMessages();
 
     public void setReceivedMessages(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.MessageCollection _receivedMessages);
@@ -170,9 +151,7 @@ public interface Login extends Serializable {
     @NavigationProperty(name = "Orders", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Login_Orders", 
                 fromRole = "Login", 
-                toRole = "Orders",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Orders")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection getOrders();
 
     public void setOrders(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection _orders);

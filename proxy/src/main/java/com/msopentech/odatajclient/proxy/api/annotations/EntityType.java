@@ -19,7 +19,6 @@
  */
 package com.msopentech.odatajclient.proxy.api.annotations;
 
-import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -43,17 +42,4 @@ public @interface EntityType {
     boolean openType() default false;
 
     boolean hasStream() default false;
-
-    /* -- Feed Customization annotations -- */
-    String fcSourcePath() default "";
-
-    String fcTargetPath() default "";
-
-    EdmContentKind fcContentKind() default EdmContentKind.text;
-
-    String fcNSPrefix() default "";
-
-    String fcNSURI() default "";
-
-    boolean fcKeepInContent() default false;
 }

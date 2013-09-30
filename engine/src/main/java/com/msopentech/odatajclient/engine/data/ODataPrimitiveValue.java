@@ -80,9 +80,9 @@ public class ODataPrimitiveValue extends ODataValue {
          * @return the current builder.
          */
         public Builder setType(final EdmSimpleType type) {
-            if (type == EdmSimpleType.STREAM) {
+            if (type == EdmSimpleType.Stream) {
                 throw new IllegalArgumentException("Cannot build a primitive value for "
-                        + EdmSimpleType.STREAM.toString());
+                        + EdmSimpleType.Stream.toString());
             }
             this.opv.type = type;
             return this;
@@ -102,7 +102,7 @@ public class ODataPrimitiveValue extends ODataValue {
             }
 
             if (this.opv.type == null) {
-                this.opv.type = EdmSimpleType.STRING;
+                this.opv.type = EdmSimpleType.String;
             }
 
             if (this.opv.type.isGeospatial()) {
@@ -164,65 +164,65 @@ public class ODataPrimitiveValue extends ODataValue {
      */
     private void parseText() {
         switch (this.type) {
-            case NULL:
+            case Null:
                 this.value = null;
                 break;
 
-            case BINARY:
+            case Binary:
                 this.value = Base64.decodeBase64(this.toString());
                 break;
 
-            case S_BYTE:
+            case SByte:
                 this.value = Byte.parseByte(this.toString());
                 break;
 
-            case BOOLEAN:
+            case Boolean:
                 this.value = Boolean.parseBoolean(this.toString());
                 break;
 
-            case DATE_TIME:
-            case DATE_TIME_OFFSET:
+            case DateTime:
+            case DateTimeOffset:
                 this.value = ODataTimestamp.parse(this.type, this.toString());
                 break;
 
-            case TIME:
+            case Time:
                 this.value = new ODataDuration(this.toString());
                 break;
 
-            case DECIMAL:
+            case Decimal:
                 this.value = new BigDecimal(this.toString());
                 break;
 
-            case SINGLE:
+            case Single:
                 this.value = Float.parseFloat(this.toString());
                 break;
 
-            case DOUBLE:
+            case Double:
                 this.value = Double.parseDouble(this.toString());
                 break;
 
-            case GUID:
+            case Guid:
                 this.value = UUID.fromString(this.toString());
                 break;
 
-            case INT_16:
+            case Int16:
                 this.value = Short.parseShort(this.toString());
                 break;
 
-            case BYTE:
-            case INT_32:
+            case Byte:
+            case Int32:
                 this.value = Integer.parseInt(this.toString());
                 break;
 
-            case INT_64:
+            case Int64:
                 this.value = Long.parseLong(this.toString());
                 break;
 
-            case STREAM:
+            case Stream:
                 this.value = URI.create(this.toString());
                 break;
 
-            case STRING:
+            case String:
                 this.value = this.toString();
                 break;
 
@@ -235,65 +235,65 @@ public class ODataPrimitiveValue extends ODataValue {
      */
     private void formatValue() {
         switch (this.type) {
-            case NULL:
+            case Null:
                 this.text = StringUtils.EMPTY;
                 break;
 
-            case BINARY:
+            case Binary:
                 this.text = Base64.encodeBase64String(this.<byte[]>toCastValue());
                 break;
 
-            case S_BYTE:
+            case SByte:
                 this.text = this.<Byte>toCastValue().toString();
                 break;
 
-            case BOOLEAN:
+            case Boolean:
                 this.text = this.<Boolean>toCastValue().toString();
                 break;
 
-            case DATE_TIME:
-            case DATE_TIME_OFFSET:
+            case DateTime:
+            case DateTimeOffset:
                 this.text = this.<ODataTimestamp>toCastValue().toString();
                 break;
 
-            case TIME:
+            case Time:
                 this.text = this.<ODataDuration>toCastValue().toString();
                 break;
 
-            case DECIMAL:
+            case Decimal:
                 this.text = new DecimalFormat(this.type.pattern()).format(this.<BigDecimal>toCastValue());
                 break;
 
-            case SINGLE:
+            case Single:
                 this.text = new DecimalFormat(this.type.pattern()).format(this.<Float>toCastValue());
                 break;
 
-            case DOUBLE:
+            case Double:
                 this.text = new DecimalFormat(this.type.pattern()).format(this.<Double>toCastValue());
                 break;
 
-            case GUID:
+            case Guid:
                 this.text = this.<UUID>toCastValue().toString();
                 break;
 
-            case INT_16:
+            case Int16:
                 this.text = this.<Short>toCastValue().toString();
                 break;
 
-            case BYTE:
-            case INT_32:
+            case Byte:
+            case Int32:
                 this.text = this.<Integer>toCastValue().toString();
                 break;
 
-            case INT_64:
+            case Int64:
                 this.text = this.<Long>toCastValue().toString();
                 break;
 
-            case STREAM:
+            case Stream:
                 this.text = this.<URI>toCastValue().toASCIIString();
                 break;
 
-            case STRING:
+            case String:
                 this.text = this.<String>toCastValue();
                 break;
 

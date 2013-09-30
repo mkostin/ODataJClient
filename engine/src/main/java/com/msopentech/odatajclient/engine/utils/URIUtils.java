@@ -19,15 +19,30 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+import com.msopentech.odatajclient.engine.data.ODataDuration;
+import com.msopentech.odatajclient.engine.data.ODataTimestamp;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import java.math.BigDecimal;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.util.UUID;
+import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * URI utilities.
  */
 public final class URIUtils {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(URIUtils.class);
 
     private URIUtils() {
         // Empty private constructor for static utility classes
@@ -112,5 +127,45 @@ public final class URIUtils {
         result.append(functionImport.getName());
 
         return result.toString();
+    }
+
+    /**
+     * Turns primitive values into their respective URI representation.
+     *
+     * @param obj primitive value
+     * @return URI representation
+     */
+    public static String escape(final Object obj) {
+        String value;
+
+        try {
+            value = (obj instanceof UUID)
+                    ? "guid'" + obj.toString() + "'"
+                    : (obj instanceof byte[])
+                    ? "X'" + Hex.encodeHexString((byte[]) obj) + "'"
+                    : ((obj instanceof ODataTimestamp) && ((ODataTimestamp) obj).getTimezone() == null)
+                    ? "datetime'" + URLEncoder.encode(((ODataTimestamp) obj).toString(), ODataConstants.UTF8) + "'"
+                    : ((obj instanceof ODataTimestamp) && ((ODataTimestamp) obj).getTimezone() != null)
+                    ? "datetimeoffset'" + URLEncoder.encode(((ODataTimestamp) obj).toString(), ODataConstants.UTF8)
+                    + "'"
+                    : (obj instanceof ODataDuration)
+                    ? "time'" + ((ODataDuration) obj).toString() + "'"
+                    : (obj instanceof BigDecimal)
+                    ? new DecimalFormat(EdmSimpleType.Decimal.pattern()).format((BigDecimal) obj) + "M"
+                    : (obj instanceof Double)
+                    ? new DecimalFormat(EdmSimpleType.Double.pattern()).format((Double) obj) + "D"
+                    : (obj instanceof Float)
+                    ? new DecimalFormat(EdmSimpleType.Single.pattern()).format((Float) obj) + "f"
+                    : (obj instanceof Long)
+                    ? ((Long) obj).toString() + "L"
+                    : (obj instanceof String)
+                    ? "'" + URLEncoder.encode((String) obj, ODataConstants.UTF8) + "'"
+                    : obj.toString();
+        } catch (Exception e) {
+            LOG.warn("While generating key segment for '{}', using toString()", obj, e);
+            value = obj.toString();
+        }
+
+        return value;
     }
 }

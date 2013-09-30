@@ -170,7 +170,7 @@ public final class Serializer {
      * @param writer writer.
      */
     public static void dom(final Node content, final Writer writer) {
-        XMLUtils.parser.serialize(content, writer);
+        XMLUtils.PARSER.serialize(content, writer);
     }
 
     /*

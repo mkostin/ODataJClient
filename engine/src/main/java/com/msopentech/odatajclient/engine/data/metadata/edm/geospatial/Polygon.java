@@ -27,6 +27,8 @@ import java.util.List;
  */
 public class Polygon extends Geospatial {
 
+    private static final long serialVersionUID = 7797602503445391678L;
+
     final ComposedGeospatial<Point> interior;
 
     final ComposedGeospatial<Point> exterior;
@@ -65,7 +67,7 @@ public class Polygon extends Geospatial {
     @Override
     public EdmSimpleType getEdmSimpleType() {
         return dimension == Dimension.GEOGRAPHY
-                ? EdmSimpleType.GEOGRAPHY_POLYGON
-                : EdmSimpleType.GEOMETRY_POLYGON;
+                ? EdmSimpleType.GeographyPolygon
+                : EdmSimpleType.GeometryPolygon;
     }
 }

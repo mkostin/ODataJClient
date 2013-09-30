@@ -48,7 +48,7 @@ public final class ODataTimestamp implements Serializable {
 
     public static ODataTimestamp getInstance(final EdmSimpleType type, final Timestamp timestamp) {
         return new ODataTimestamp(new SimpleDateFormat(type.pattern()),
-                new Date(timestamp.getTime()), timestamp.getNanos(), type == EdmSimpleType.DATE_TIME_OFFSET);
+                new Date(timestamp.getTime()), timestamp.getNanos(), type == EdmSimpleType.DateTimeOffset);
     }
 
     public static ODataTimestamp parse(final EdmSimpleType type, final String input) {
@@ -56,7 +56,7 @@ public final class ODataTimestamp implements Serializable {
 
         final String[] dateParts = input.split("\\.");
         final SimpleDateFormat sdf = new SimpleDateFormat(type.pattern());
-        final boolean isOffset = type == EdmSimpleType.DATE_TIME_OFFSET;
+        final boolean isOffset = type == EdmSimpleType.DateTimeOffset;
 
         try {
             final Date date = sdf.parse(dateParts[0]);

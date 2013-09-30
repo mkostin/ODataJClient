@@ -46,7 +46,7 @@ public class PropertyTest extends AbstractTest {
         final InputStream input = getClass().getResourceAsStream("Customer_-10_CustomerId_value.txt");
 
         final ODataValue value = new ODataPrimitiveValue.Builder().
-                setType(EdmSimpleType.STRING).
+                setType(EdmSimpleType.String).
                 setText(IOUtils.toString(input)).
                 build();
         assertNotNull(value);

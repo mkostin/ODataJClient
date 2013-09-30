@@ -191,14 +191,14 @@ public class InvokeTestITCase extends AbstractTest {
         assertEquals(id, computerDetail.getComputerDetailId());
         assertEquals(1, computerDetail.getSpecificationsBag().size());
         assertTrue(computerDetail.getSpecificationsBag().contains("First spec"));
-        assertEquals(ODataTimestamp.parse(EdmSimpleType.DATE_TIME, "0001-01-01T00:00:00"),
+        assertEquals(ODataTimestamp.parse(EdmSimpleType.DateTime, "0001-01-01T00:00:00"),
                 computerDetail.getPurchaseDate());
 
         try {
             // 1. invoke action bound to the computer detail just created
             computerDetail.resetComputerDetailsSpecifications(
                     Collections.singleton("Second spec"),
-                    ODataTimestamp.getInstance(EdmSimpleType.DATE_TIME, new Timestamp(System.currentTimeMillis())));
+                    ODataTimestamp.getInstance(EdmSimpleType.DateTime, new Timestamp(System.currentTimeMillis())));
 
             // 2. check that invoked action has effectively run
             computerDetail = container.getComputerDetail().get(id);
@@ -206,7 +206,7 @@ public class InvokeTestITCase extends AbstractTest {
             assertEquals(id, computerDetail.getComputerDetailId());
             assertEquals(1, computerDetail.getSpecificationsBag().size());
             assertTrue(computerDetail.getSpecificationsBag().contains("Second spec"));
-            assertNotEquals(ODataTimestamp.parse(EdmSimpleType.DATE_TIME, "0001-01-01T00:00:00"),
+            assertNotEquals(ODataTimestamp.parse(EdmSimpleType.DateTime, "0001-01-01T00:00:00"),
                     computerDetail.getPurchaseDate());
         } finally {
             // 3. remove the test product

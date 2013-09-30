@@ -24,6 +24,8 @@ import java.util.List;
 
 public class MultiLineString extends ComposedGeospatial<LineString> {
 
+    private static final long serialVersionUID = -5042414471218124125L;
+
     public MultiLineString(final Dimension dimension, final List<LineString> lineStrings) {
         super(dimension, Type.MULTILINESTRING, lineStrings);
     }
@@ -31,7 +33,7 @@ public class MultiLineString extends ComposedGeospatial<LineString> {
     @Override
     public EdmSimpleType getEdmSimpleType() {
         return dimension == Dimension.GEOGRAPHY
-                ? EdmSimpleType.GEOGRAPHY_MULTI_LINE_STRING
-                : EdmSimpleType.GEOMETRY_MULTI_LINE_STRING;
+                ? EdmSimpleType.GeographyMultiLineString
+                : EdmSimpleType.GeometryMultiLineString;
     }
 }

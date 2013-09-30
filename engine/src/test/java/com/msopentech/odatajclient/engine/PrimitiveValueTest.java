@@ -103,7 +103,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void int32(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("Customer(-10)", "CustomerId", format);
-        assertEquals(EdmSimpleType.INT_32.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.Int32.toString(), opv.getTypeName());
 
         final Integer value = opv.<Integer>toCastValue();
         assertNotNull(value);
@@ -122,7 +122,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void string(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("Product(-9)", "Description", format);
-        assertEquals(EdmSimpleType.STRING.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.String.toString(), opv.getTypeName());
 
         final String value = opv.<String>toCastValue();
         assertNotNull(value);
@@ -143,7 +143,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void decimal(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("Product(-10)", "Dimensions/Width", format);
-        assertEquals(EdmSimpleType.DECIMAL.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.Decimal.toString(), opv.getTypeName());
 
         final BigDecimal value = opv.<BigDecimal>toCastValue();
         assertNotNull(value);
@@ -163,7 +163,7 @@ public class PrimitiveValueTest extends AbstractTest {
     private void datetime(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue(
                 "Product(-10)", "ComplexConcurrency/QueriedDateTime", format);
-        assertEquals(EdmSimpleType.DATE_TIME.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.DateTime.toString(), opv.getTypeName());
 
         final ODataTimestamp value = opv.<ODataTimestamp>toCastValue();
         assertNotNull(value);
@@ -183,7 +183,7 @@ public class PrimitiveValueTest extends AbstractTest {
     private void guid(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue(
                 "MessageAttachment(guid'1126a28b-a4af-4bbd-bf0a-2b2c22635565')", "AttachmentId", format);
-        assertEquals(EdmSimpleType.GUID.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.Guid.toString(), opv.getTypeName());
 
         final UUID value = opv.<UUID>toCastValue();
         assertNotNull(value);
@@ -203,7 +203,7 @@ public class PrimitiveValueTest extends AbstractTest {
     private void binary(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue(
                 "MessageAttachment(guid'1126a28b-a4af-4bbd-bf0a-2b2c22635565')", "Attachment", format);
-        assertEquals(EdmSimpleType.BINARY.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.Binary.toString(), opv.getTypeName());
 
         final byte[] value = opv.<byte[]>toCastValue();
         assertNotNull(value);
@@ -223,7 +223,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void point(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-10)", "GeogPoint", format);
-        assertEquals(EdmSimpleType.GEOGRAPHY_POINT.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.GeographyPoint.toString(), opv.getTypeName());
 
         final Point point = opv.<Point>toCastValue();
         assertNotNull(point);
@@ -245,7 +245,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void lineString(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-10)", "GeogLine", format);
-        assertEquals(EdmSimpleType.GEOGRAPHY_LINE_STRING.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.GeographyLineString.toString(), opv.getTypeName());
 
         final LineString lineString = opv.<LineString>toCastValue();
         assertNotNull(lineString);
@@ -284,7 +284,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void multiPoint(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-7)", "GeomMultiPoint", format);
-        assertEquals(EdmSimpleType.GEOMETRY_MULTI_POINT.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.GeometryMultiPoint.toString(), opv.getTypeName());
 
         final MultiPoint multiPoint = opv.<MultiPoint>toCastValue();
         assertNotNull(multiPoint);
@@ -314,7 +314,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void multiLine(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-6)", "GeomMultiLine", format);
-        assertEquals(EdmSimpleType.GEOMETRY_MULTI_LINE_STRING.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.GeometryMultiLineString.toString(), opv.getTypeName());
 
         final MultiLineString multiLine = opv.<MultiLineString>toCastValue();
         assertNotNull(multiLine);
@@ -370,7 +370,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void polygon(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-5)", "GeogPolygon", format);
-        assertEquals(EdmSimpleType.GEOGRAPHY_POLYGON.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.GeographyPolygon.toString(), opv.getTypeName());
 
         final Polygon polygon = opv.<Polygon>toCastValue();
         assertNotNull(polygon);
@@ -409,7 +409,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void multiPolygon(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-3)", "GeomMultiPolygon", format);
-        assertEquals(EdmSimpleType.GEOMETRY_MULTI_POLYGON.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.GeometryMultiPolygon.toString(), opv.getTypeName());
 
         final MultiPolygon multiPolygon = opv.<MultiPolygon>toCastValue();
         assertNotNull(multiPolygon);
@@ -493,7 +493,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void geomCollection(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-8)", "GeomCollection", format);
-        assertEquals(EdmSimpleType.GEOMETRY_COLLECTION.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.GeometryCollection.toString(), opv.getTypeName());
 
         final GeospatialCollection collection = opv.<GeospatialCollection>toCastValue();
         assertNotNull(collection);
@@ -527,7 +527,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
     private void geogCollection(final ODataFormat format) {
         final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-5)", "GeogCollection", format);
-        assertEquals(EdmSimpleType.GEOGRAPHY_COLLECTION.toString(), opv.getTypeName());
+        assertEquals(EdmSimpleType.GeographyCollection.toString(), opv.getTypeName());
 
         final GeospatialCollection collection = opv.<GeospatialCollection>toCastValue();
         assertNotNull(collection);

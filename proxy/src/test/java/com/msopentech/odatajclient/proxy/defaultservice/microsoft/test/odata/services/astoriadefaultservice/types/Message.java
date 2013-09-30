@@ -51,9 +51,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -63,13 +60,7 @@ import java.util.Collection;
         openType = false,
         hasStream = false,
         isAbstract = false,
-        baseType = "",
-        fcSourcePath = "",
-        fcTargetPath = "",
-        fcContentKind = EdmContentKind.text,
-        fcNSPrefix = "",
-        fcNSURI = "",
-        fcKeepInContent = false)
+        baseType = "")
 public interface Message extends Serializable {
 
         
@@ -85,14 +76,13 @@ public interface Message extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Integer getMessageId();
 
     public void setMessageId(final Integer _messageId);
@@ -109,14 +99,13 @@ public interface Message extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public String getFromUsername();
 
     public void setFromUsername(final String _fromUsername);
@@ -133,14 +122,13 @@ public interface Message extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public String getToUsername();
 
     public void setToUsername(final String _toUsername);
@@ -157,8 +145,7 @@ public interface Message extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "SyndicationPublished",
                 fcContentKind = EdmContentKind.text,
@@ -181,8 +168,7 @@ public interface Message extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "SyndicationTitle",
                 fcContentKind = EdmContentKind.text,
@@ -205,14 +191,13 @@ public interface Message extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public String getBody();
 
     public void setBody(final String _body);
@@ -229,14 +214,13 @@ public interface Message extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Boolean getIsRead();
 
     public void setIsRead(final Boolean _isRead);
@@ -246,9 +230,7 @@ public interface Message extends Serializable {
     @NavigationProperty(name = "Sender", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Message_Sender", 
                 fromRole = "Message", 
-                toRole = "Sender",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Sender")
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Login getSender();
 
     public void setSender(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Login _sender);
@@ -257,9 +239,7 @@ public interface Message extends Serializable {
     @NavigationProperty(name = "Recipient", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Message_Recipient", 
                 fromRole = "Message", 
-                toRole = "Recipient",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Recipient")
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Login getRecipient();
 
     public void setRecipient(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Login _recipient);
@@ -268,9 +248,7 @@ public interface Message extends Serializable {
     @NavigationProperty(name = "Attachments", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Message_Attachments", 
                 fromRole = "Message", 
-                toRole = "Attachments",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Attachments")
     public com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachmentCollection getAttachments();
 
     public void setAttachments(final com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.MessageAttachmentCollection _attachments);

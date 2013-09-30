@@ -103,7 +103,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
             else if (methodAnnots[0] instanceof FunctionImport) {
                 final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
                         getFactory().getMetadata().getSchema(schemaName).getEntityContainer(entityContainerName);
-                final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp =
+                final com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport funcImp =
                         container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
 
                 final ODataURIBuilder uriBuilder = new ODataURIBuilder(factory.getServiceRoot()).

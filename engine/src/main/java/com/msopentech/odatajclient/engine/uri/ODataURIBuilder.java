@@ -20,8 +20,8 @@
 package com.msopentech.odatajclient.engine.uri;
 
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
-import com.msopentech.odatajclient.engine.uri.filter.ODataFilterFactory;
 import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -127,7 +127,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      */
     public ODataURIBuilder appendKeySegment(final Object val) {
-        final String segValue = PrimitiveValueURIEscaper.escape(val);
+        final String segValue = URIUtils.escape(val);
 
         segments.add(Configuration.isKeyAsSegment()
                 ? new Segment(SegmentType.KEY_AS_SEGMENT, segValue)
@@ -145,7 +145,7 @@ public class ODataURIBuilder implements Serializable {
         if (!Configuration.isKeyAsSegment()) {
             final StringBuilder keyBuilder = new StringBuilder().append('(');
             for (Map.Entry<String, Object> entry : segmentValues.entrySet()) {
-                keyBuilder.append(entry.getKey()).append('=').append(PrimitiveValueURIEscaper.escape(entry.getValue()));
+                keyBuilder.append(entry.getKey()).append('=').append(URIUtils.escape(entry.getValue()));
                 keyBuilder.append(',');
             }
             keyBuilder.deleteCharAt(keyBuilder.length() - 1).append(')');

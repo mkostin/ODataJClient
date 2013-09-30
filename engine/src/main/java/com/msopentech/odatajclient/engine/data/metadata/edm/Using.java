@@ -19,182 +19,42 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyAttribute;
-import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.namespace.QName;
-import org.w3c.dom.Element;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * <p>Java class for TUsing complex type.
- *
- * <p>The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="TUsing">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;group ref="{http://schemas.microsoft.com/ado/2009/11/edm}GEmptyElementExtensibility" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;attribute name="Namespace" use="required" type="{http://schemas.microsoft.com/ado/2009/11/edm}TNamespaceName" />
- *       &lt;attribute name="Alias" use="required" type="{http://schemas.microsoft.com/ado/2009/11/edm}TSimpleIdentifier" />
- *       &lt;anyAttribute processContents='lax' namespace='##other'/>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- *
- *
- */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TUsing", propOrder = {
-    "documentation",
-    "any"
-})
-public class Using {
+public class Using extends AbstractEdm {
 
-    @XmlElement(name = "Documentation")
-    protected Documentation documentation;
+    private static final long serialVersionUID = 2086957510154443445L;
 
-    @XmlAnyElement(lax = true)
-    protected List<Object> any;
+    @JsonProperty(value = "Namespace", required = true)
+    private String namespace;
 
-    @XmlAttribute(name = "Namespace", required = true)
-    protected String namespace;
+    @JsonProperty("Alias")
+    private String alias;
 
-    @XmlAttribute(name = "Alias", required = true)
-    protected String alias;
+    @JsonProperty("Documentation")
+    private Documentation documentation;
 
-    @XmlAnyAttribute
-    private Map<QName, String> otherAttributes = new HashMap<QName, String>();
-
-    /**
-     * Gets the value of the documentation property.
-     *
-     * @return
-     * possible object is
-     * {@link Documentation }
-     *
-     */
-    public Documentation getDocumentation() {
-        return documentation;
-    }
-
-    /**
-     * Sets the value of the documentation property.
-     *
-     * @param value
-     * allowed object is
-     * {@link Documentation }
-     *
-     */
-    public void setDocumentation(Documentation value) {
-        this.documentation = value;
-    }
-
-    /**
-     * Gets the value of the any property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a
-     * <CODE>set</CODE> method for the any property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getAny().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Object }
-     * {@link Element }
-     *
-     *
-     */
-    public List<Object> getAny() {
-        if (any == null) {
-            any = new ArrayList<Object>();
-        }
-        return this.any;
-    }
-
-    /**
-     * Gets the value of the namespace property.
-     *
-     * @return
-     * possible object is
-     * {@link String }
-     *
-     */
     public String getNamespace() {
         return namespace;
     }
 
-    /**
-     * Sets the value of the namespace property.
-     *
-     * @param value
-     * allowed object is
-     * {@link String }
-     *
-     */
-    public void setNamespace(String value) {
-        this.namespace = value;
+    public void setNamespace(final String namespace) {
+        this.namespace = namespace;
     }
 
-    /**
-     * Gets the value of the alias property.
-     *
-     * @return
-     * possible object is
-     * {@link String }
-     *
-     */
     public String getAlias() {
         return alias;
     }
 
-    /**
-     * Sets the value of the alias property.
-     *
-     * @param value
-     * allowed object is
-     * {@link String }
-     *
-     */
-    public void setAlias(String value) {
-        this.alias = value;
+    public void setAlias(final String alias) {
+        this.alias = alias;
     }
 
-    /**
-     * Gets a map that contains attributes that aren't bound to any typed property on this class.
-     *
-     * <p>
-     * the map is keyed by the name of the attribute and
-     * the value is the string value of the attribute.
-     *
-     * the map returned by this method is live, and you can add new attribute
-     * by updating the map directly. Because of this design, there's no setter.
-     *
-     *
-     * @return
-     * always non-null
-     */
-    public Map<QName, String> getOtherAttributes() {
-        return otherAttributes;
+    public Documentation getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(final Documentation documentation) {
+        this.documentation = documentation;
     }
 }

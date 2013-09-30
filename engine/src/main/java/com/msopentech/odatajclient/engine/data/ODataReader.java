@@ -185,7 +185,7 @@ public final class ODataReader {
             } else if (ODataValue.class.isAssignableFrom(reference)) {
                 res = new ODataPrimitiveValue.Builder().
                         setType(ODataValueFormat.fromString(format) == ODataValueFormat.TEXT
-                        ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
+                        ? EdmSimpleType.String : EdmSimpleType.Stream).
                         setText(IOUtils.toString(src)).
                         build();
             } else if (EdmMetadata.class.isAssignableFrom(reference)) {

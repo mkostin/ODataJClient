@@ -39,6 +39,7 @@ import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayInputStream;
@@ -87,8 +88,7 @@ public class ErrorTestITCase extends AbstractTest {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
-        final ErrorGeneratingRequest errorReq =
-                new ErrorGeneratingRequest(HttpMethod.POST, uriBuilder.build());
+        final ErrorGeneratingRequest errorReq = new ErrorGeneratingRequest(HttpMethod.POST, uriBuilder.build());
         errorReq.setFormat(format);
 
         ODataClientErrorException ocee = null;
@@ -150,7 +150,7 @@ public class ErrorTestITCase extends AbstractTest {
         assertNotNull(metadata);
 
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
-        final EntityContainer.FunctionImport funcImp = container.getFunctionImport("InStreamErrorGetCustomer");
+        final FunctionImport funcImp = container.getFunctionImport("InStreamErrorGetCustomer");
 
         final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));

@@ -19,7 +19,6 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
-import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import java.util.ArrayList;
@@ -36,16 +35,16 @@ import org.w3c.dom.NodeList;
  */
 public final class XMLUtils {
 
-    private XMLUtils() {
-        // Empty private constructor for static utility classes       
-    }
-
-    public static AbstractDOMParser parser;
+    public static final AbstractDOMParser PARSER;
 
     static {
         final Iterator<AbstractDOMParser> itor =
-                ServiceLoader.load(AbstractDOMParser.class, Deserializer.class.getClassLoader()).iterator();
-        parser = itor.hasNext() ? itor.next() : new DefaultDOMParserImpl();
+                ServiceLoader.load(AbstractDOMParser.class, Thread.currentThread().getContextClassLoader()).iterator();
+        PARSER = itor.hasNext() ? itor.next() : new DefaultDOMParserImpl();
+    }
+
+    private XMLUtils() {
+        // Empty private constructor for static utility classes       
     }
 
     /**
@@ -146,34 +145,34 @@ public final class XMLUtils {
 
         if (ODataConstants.ELEM_POINT.equals(node.getNodeName())) {
             type = dimension == Geospatial.Dimension.GEOGRAPHY
-                    ? EdmSimpleType.GEOGRAPHY_POINT
-                    : EdmSimpleType.GEOMETRY_POINT;
+                    ? EdmSimpleType.GeographyPoint
+                    : EdmSimpleType.GeometryPoint;
         } else if (ODataConstants.ELEM_MULTIPOINT.equals(node.getNodeName())) {
             type = dimension == Geospatial.Dimension.GEOGRAPHY
-                    ? EdmSimpleType.GEOGRAPHY_MULTI_POINT
-                    : EdmSimpleType.GEOMETRY_MULTI_POINT;
+                    ? EdmSimpleType.GeographyMultiPoint
+                    : EdmSimpleType.GeometryMultiPoint;
         } else if (ODataConstants.ELEM_LINESTRING.equals(node.getNodeName())) {
             type = dimension == Geospatial.Dimension.GEOGRAPHY
-                    ? EdmSimpleType.GEOGRAPHY_LINE_STRING
-                    : EdmSimpleType.GEOMETRY_LINE_STRING;
+                    ? EdmSimpleType.GeographyLineString
+                    : EdmSimpleType.GeometryLineString;
         } else if (ODataConstants.ELEM_MULTILINESTRING.equals(node.getNodeName())) {
             type = dimension == Geospatial.Dimension.GEOGRAPHY
-                    ? EdmSimpleType.GEOGRAPHY_MULTI_LINE_STRING
-                    : EdmSimpleType.GEOMETRY_MULTI_LINE_STRING;
+                    ? EdmSimpleType.GeographyMultiLineString
+                    : EdmSimpleType.GeometryMultiLineString;
         } else if (ODataConstants.ELEM_POLYGON.equals(node.getNodeName())) {
             type = dimension == Geospatial.Dimension.GEOGRAPHY
-                    ? EdmSimpleType.GEOGRAPHY_POLYGON
-                    : EdmSimpleType.GEOMETRY_POLYGON;
+                    ? EdmSimpleType.GeographyPolygon
+                    : EdmSimpleType.GeometryPolygon;
         } else if (ODataConstants.ELEM_MULTIPOLYGON.equals(node.getNodeName())) {
             type = dimension == Geospatial.Dimension.GEOGRAPHY
-                    ? EdmSimpleType.GEOGRAPHY_MULTI_POLYGON
-                    : EdmSimpleType.GEOMETRY_MULTI_POLYGON;
+                    ? EdmSimpleType.GeographyMultiPolygon
+                    : EdmSimpleType.GeometryMultiPolygon;
         } else if (ODataConstants.ELEM_GEOCOLLECTION.equals(node.getNodeName())
                 || ODataConstants.ELEM_GEOMEMBERS.equals(node.getNodeName())) {
 
             type = dimension == Geospatial.Dimension.GEOGRAPHY
-                    ? EdmSimpleType.GEOGRAPHY_COLLECTION
-                    : EdmSimpleType.GEOMETRY_COLLECTION;
+                    ? EdmSimpleType.GeographyCollection
+                    : EdmSimpleType.GeometryCollection;
         }
 
         return type;

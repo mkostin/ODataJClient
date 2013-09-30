@@ -117,13 +117,13 @@ final class GeospatialJSONHandler {
         Element root = null;
         final EdmSimpleType edmSimpleType = EdmSimpleType.fromValue(type);
         switch (edmSimpleType) {
-            case GEOGRAPHY_POINT:
-            case GEOMETRY_POINT:
+            case GeographyPoint:
+            case GeometryPoint:
                 root = deserializePoint(parent.getOwnerDocument(), cooItor);
                 break;
 
-            case GEOGRAPHY_MULTI_POINT:
-            case GEOMETRY_MULTI_POINT:
+            case GeographyMultiPoint:
+            case GeometryMultiPoint:
                 root = parent.getOwnerDocument().createElementNS(ODataConstants.NS_GML, ODataConstants.ELEM_MULTIPOINT);
                 if (cooItor.hasNext()) {
                     final Element pointMembers = parent.getOwnerDocument().createElementNS(
@@ -136,13 +136,13 @@ final class GeospatialJSONHandler {
                 }
                 break;
 
-            case GEOGRAPHY_LINE_STRING:
-            case GEOMETRY_LINE_STRING:
+            case GeographyLineString:
+            case GeometryLineString:
                 root = deserializeLineString(parent.getOwnerDocument(), cooItor);
                 break;
 
-            case GEOGRAPHY_MULTI_LINE_STRING:
-            case GEOMETRY_MULTI_LINE_STRING:
+            case GeographyMultiLineString:
+            case GeometryMultiLineString:
                 root = parent.getOwnerDocument().createElementNS(
                         ODataConstants.NS_GML, ODataConstants.ELEM_MULTILINESTRING);
                 if (cooItor.hasNext()) {
@@ -156,13 +156,13 @@ final class GeospatialJSONHandler {
                 }
                 break;
 
-            case GEOGRAPHY_POLYGON:
-            case GEOMETRY_POLYGON:
+            case GeographyPolygon:
+            case GeometryPolygon:
                 root = deserializePolygon(parent.getOwnerDocument(), cooItor);
                 break;
 
-            case GEOGRAPHY_MULTI_POLYGON:
-            case GEOMETRY_MULTI_POLYGON:
+            case GeographyMultiPolygon:
+            case GeometryMultiPolygon:
                 root = parent.getOwnerDocument().createElementNS(
                         ODataConstants.NS_GML, ODataConstants.ELEM_MULTIPOLYGON);
                 if (cooItor.hasNext()) {
@@ -176,8 +176,8 @@ final class GeospatialJSONHandler {
                 }
                 break;
 
-            case GEOGRAPHY_COLLECTION:
-            case GEOMETRY_COLLECTION:
+            case GeographyCollection:
+            case GeometryCollection:
                 root = parent.getOwnerDocument().createElementNS(
                         ODataConstants.NS_GML, ODataConstants.ELEM_GEOCOLLECTION);
                 if (node.has(ODataConstants.JSON_GEOMETRIES)) {
@@ -191,13 +191,13 @@ final class GeospatialJSONHandler {
                             final JsonNode geo = geoItor.next();
                             final String collItemType = geo.get(ODataConstants.ATTR_TYPE).asText();
                             final String callAsType;
-                            if (EdmSimpleType.GEOGRAPHY_COLLECTION.value().equals(collItemType)
-                                    || EdmSimpleType.GEOMETRY_COLLECTION.value().equals(collItemType)) {
+                            if (EdmSimpleType.GeographyCollection.name().equals(collItemType)
+                                    || EdmSimpleType.GeometryCollection.name().equals(collItemType)) {
 
                                 callAsType = collItemType;
                             } else {
                                 callAsType =
-                                        (edmSimpleType == EdmSimpleType.GEOGRAPHY_COLLECTION ? "Geography" : "Geometry")
+                                        (edmSimpleType == EdmSimpleType.GeographyCollection ? "Geography" : "Geometry")
                                         + collItemType;
                             }
 
@@ -270,20 +270,20 @@ final class GeospatialJSONHandler {
     public static void serialize(final JsonGenerator jgen, final Element node, final String type) throws IOException {
         final EdmSimpleType edmSimpleType = EdmSimpleType.fromValue(type);
 
-        if (edmSimpleType.equals(EdmSimpleType.GEOGRAPHY_COLLECTION)
-                || edmSimpleType.equals(EdmSimpleType.GEOMETRY_COLLECTION)) {
+        if (edmSimpleType.equals(EdmSimpleType.GeographyCollection)
+                || edmSimpleType.equals(EdmSimpleType.GeometryCollection)) {
 
-            jgen.writeStringField(ODataConstants.ATTR_TYPE, EdmSimpleType.GEOMETRY_COLLECTION.value());
+            jgen.writeStringField(ODataConstants.ATTR_TYPE, EdmSimpleType.GeometryCollection.name());
         } else {
-            final int yIdx = edmSimpleType.value().indexOf('y');
-            final String itemType = edmSimpleType.value().substring(yIdx + 1);
+            final int yIdx = edmSimpleType.name().indexOf('y');
+            final String itemType = edmSimpleType.name().substring(yIdx + 1);
             jgen.writeStringField(ODataConstants.ATTR_TYPE, itemType);
         }
 
         Element root = null;
         switch (edmSimpleType) {
-            case GEOGRAPHY_POINT:
-            case GEOMETRY_POINT:
+            case GeographyPoint:
+            case GeometryPoint:
                 root = XMLUtils.getChildElements(node, ODataConstants.ELEM_POINT).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
@@ -291,8 +291,8 @@ final class GeospatialJSONHandler {
                 jgen.writeEndArray();
                 break;
 
-            case GEOGRAPHY_MULTI_POINT:
-            case GEOMETRY_MULTI_POINT:
+            case GeographyMultiPoint:
+            case GeometryMultiPoint:
                 root = XMLUtils.getChildElements(node, ODataConstants.ELEM_MULTIPOINT).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
@@ -309,8 +309,8 @@ final class GeospatialJSONHandler {
                 jgen.writeEndArray();
                 break;
 
-            case GEOGRAPHY_LINE_STRING:
-            case GEOMETRY_LINE_STRING:
+            case GeographyLineString:
+            case GeometryLineString:
                 root = XMLUtils.getChildElements(node, ODataConstants.ELEM_LINESTRING).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
@@ -318,8 +318,8 @@ final class GeospatialJSONHandler {
                 jgen.writeEndArray();
                 break;
 
-            case GEOGRAPHY_MULTI_LINE_STRING:
-            case GEOMETRY_MULTI_LINE_STRING:
+            case GeographyMultiLineString:
+            case GeometryMultiLineString:
                 root = XMLUtils.getChildElements(node, ODataConstants.ELEM_MULTILINESTRING).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
@@ -336,8 +336,8 @@ final class GeospatialJSONHandler {
                 jgen.writeEndArray();
                 break;
 
-            case GEOGRAPHY_POLYGON:
-            case GEOMETRY_POLYGON:
+            case GeographyPolygon:
+            case GeometryPolygon:
                 root = XMLUtils.getChildElements(node, ODataConstants.ELEM_POLYGON).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
@@ -345,8 +345,8 @@ final class GeospatialJSONHandler {
                 jgen.writeEndArray();
                 break;
 
-            case GEOGRAPHY_MULTI_POLYGON:
-            case GEOMETRY_MULTI_POLYGON:
+            case GeographyMultiPolygon:
+            case GeometryMultiPolygon:
                 root = XMLUtils.getChildElements(node, ODataConstants.ELEM_MULTIPOLYGON).get(0);
 
                 jgen.writeArrayFieldStart(ODataConstants.JSON_COORDINATES);
@@ -363,8 +363,8 @@ final class GeospatialJSONHandler {
                 jgen.writeEndArray();
                 break;
 
-            case GEOGRAPHY_COLLECTION:
-            case GEOMETRY_COLLECTION:
+            case GeographyCollection:
+            case GeometryCollection:
                 root = XMLUtils.getChildElements(node, ODataConstants.ELEM_GEOCOLLECTION).get(0);
 
                 final List<Element> cMembs = XMLUtils.getChildElements(root, ODataConstants.ELEM_GEOMEMBERS);
@@ -381,7 +381,7 @@ final class GeospatialJSONHandler {
                             fakeParent.appendChild(doc.importNode(geom, true));
 
                             final EdmSimpleType callAsType = XMLUtils.simpleTypeForNode(
-                                    edmSimpleType == EdmSimpleType.GEOGRAPHY_COLLECTION
+                                    edmSimpleType == EdmSimpleType.GeographyCollection
                                     ? Geospatial.Dimension.GEOGRAPHY : Geospatial.Dimension.GEOMETRY,
                                     geom);
 

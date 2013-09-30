@@ -32,9 +32,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  * Represent the primitive types of the Entity Data Model (EDM).
@@ -49,172 +46,95 @@ import javax.xml.bind.annotation.XmlType;
  * The Abstract Type System used to define the primitive types supported by OData is defined in detail in <a
  * href="http://msdn.microsoft.com/en-us/library/dd541474.aspx">[MC-CSDL] (section 2.2.1).</a>
  * </p>
- *
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <pre>
- * &lt;simpleType name="EDMSimpleType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="Binary"/>
- *     &lt;enumeration value="Boolean"/>
- *     &lt;enumeration value="Byte"/>
- *     &lt;enumeration value="DateTime"/>
- *     &lt;enumeration value="DateTimeOffset"/>
- *     &lt;enumeration value="Time"/>
- *     &lt;enumeration value="Decimal"/>
- *     &lt;enumeration value="Double"/>
- *     &lt;enumeration value="Single"/>
- *     &lt;enumeration value="Geography"/>
- *     &lt;enumeration value="GeographyPoint"/>
- *     &lt;enumeration value="GeographyLineString"/>
- *     &lt;enumeration value="GeographyPolygon"/>
- *     &lt;enumeration value="GeographyMultiPoint"/>
- *     &lt;enumeration value="GeographyMultiLineString"/>
- *     &lt;enumeration value="GeographyMultiPolygon"/>
- *     &lt;enumeration value="GeographyCollection"/>
- *     &lt;enumeration value="Geometry"/>
- *     &lt;enumeration value="GeometryPoint"/>
- *     &lt;enumeration value="GeometryLineString"/>
- *     &lt;enumeration value="GeometryPolygon"/>
- *     &lt;enumeration value="GeometryMultiPoint"/>
- *     &lt;enumeration value="GeometryMultiLineString"/>
- *     &lt;enumeration value="GeometryMultiPolygon"/>
- *     &lt;enumeration value="GeometryCollection"/>
- *     &lt;enumeration value="Guid"/>
- *     &lt;enumeration value="Int16"/>
- *     &lt;enumeration value="Int32"/>
- *     &lt;enumeration value="Int64"/>
- *     &lt;enumeration value="String"/>
- *     &lt;enumeration value="SByte"/>
- *   &lt;/restriction>
- * &lt;/simpleType>
- * </pre>
- *
  */
-@XmlType(name = "EDMSimpleType")
-@XmlEnum
 public enum EdmSimpleType {
 
     /**
      * The absence of a value.
      */
-    @XmlEnumValue("Null")
-    NULL("Null", Void.class),
+    Null(Void.class),
     /**
      * An array of bytes.
      */
-    @XmlEnumValue("Binary")
-    BINARY("Binary", byte[].class),
+    Binary(byte[].class),
     /**
      * A Boolean value.
      */
-    @XmlEnumValue("Boolean")
-    BOOLEAN("Boolean", Boolean.class),
+    Boolean(Boolean.class),
     /**
      * Unsigned 8-bit integer value.
      */
-    @XmlEnumValue("Byte")
-    BYTE("Byte", Integer.class),
+    Byte(Integer.class),
     /**
      * A signed 8-bit integer value.
      */
-    @XmlEnumValue("SByte")
-    S_BYTE("SByte", Byte.class),
+    SByte(Byte.class),
     /**
      * A 64-bit value expressed as Coordinated Universal Time (UTC).
      */
-    @XmlEnumValue("DateTime")
-    DATE_TIME("DateTime", ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
+    DateTime(ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
     /**
      * Date and time as an Offset in minutes from GMT.
      */
-    @XmlEnumValue("DateTimeOffset")
-    DATE_TIME_OFFSET("DateTimeOffset", ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
+    DateTimeOffset(ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
     /**
      * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
      */
-    @XmlEnumValue("Time")
-    TIME("Time", ODataDuration.class),
+    Time(ODataDuration.class),
     /**
      * Numeric values with fixed precision and scale.
      */
-    @XmlEnumValue("Decimal")
-    DECIMAL("Decimal", BigDecimal.class, "#.#######################"),
+    Decimal(BigDecimal.class, "#.#######################"),
     /**
      * A floating point number with 7 digits precision.
      */
-    @XmlEnumValue("Single")
-    SINGLE("Single", Float.class, "#.#######E0"),
+    Single(Float.class, "#.#######E0"),
     /**
      * A 64-bit double-precision floating point value.
      */
-    @XmlEnumValue("Double")
-    DOUBLE("Double", Double.class, "#.#######################E0"),
-    @XmlEnumValue("Geography")
-    GEOGRAPHY("Geography", Geospatial.class),
-    @XmlEnumValue("GeographyPoint")
-    GEOGRAPHY_POINT("GeographyPoint", Point.class),
-    @XmlEnumValue("GeographyLineString")
-    GEOGRAPHY_LINE_STRING("GeographyLineString", LineString.class),
-    @XmlEnumValue("GeographyPolygon")
-    GEOGRAPHY_POLYGON("GeographyPolygon", Polygon.class),
-    @XmlEnumValue("GeographyMultiPoint")
-    GEOGRAPHY_MULTI_POINT("GeographyMultiPoint", MultiPoint.class),
-    @XmlEnumValue("GeographyMultiLineString")
-    GEOGRAPHY_MULTI_LINE_STRING("GeographyMultiLineString", MultiLineString.class),
-    @XmlEnumValue("GeographyMultiPolygon")
-    GEOGRAPHY_MULTI_POLYGON("GeographyMultiPolygon", MultiPolygon.class),
-    @XmlEnumValue("GeographyCollection")
-    GEOGRAPHY_COLLECTION("GeographyCollection", GeospatialCollection.class),
-    @XmlEnumValue("Geometry")
-    GEOMETRY("Geometry", Geospatial.class),
-    @XmlEnumValue("GeometryPoint")
-    GEOMETRY_POINT("GeometryPoint", Point.class),
-    @XmlEnumValue("GeometryLineString")
-    GEOMETRY_LINE_STRING("GeometryLineString", LineString.class),
-    @XmlEnumValue("GeometryPolygon")
-    GEOMETRY_POLYGON("GeometryPolygon", Polygon.class),
-    @XmlEnumValue("GeometryMultiPoint")
-    GEOMETRY_MULTI_POINT("GeometryMultiPoint", MultiPoint.class),
-    @XmlEnumValue("GeometryMultiLineString")
-    GEOMETRY_MULTI_LINE_STRING("GeometryMultiLineString", MultiLineString.class),
-    @XmlEnumValue("GeometryMultiPolygon")
-    GEOMETRY_MULTI_POLYGON("GeometryMultiPolygon", MultiPolygon.class),
-    @XmlEnumValue("GeometryCollection")
-    GEOMETRY_COLLECTION("GeometryCollection", GeospatialCollection.class),
+    Double(Double.class, "#.#######################E0"),
+    // --- Geospatial ---
+    Geography(Geospatial.class),
+    GeographyPoint(Point.class),
+    GeographyLineString(LineString.class),
+    GeographyPolygon(Polygon.class),
+    GeographyMultiPoint(MultiPoint.class),
+    GeographyMultiLineString(MultiLineString.class),
+    GeographyMultiPolygon(MultiPolygon.class),
+    GeographyCollection(GeospatialCollection.class),
+    Geometry(Geospatial.class),
+    GeometryPoint(Point.class),
+    GeometryLineString(LineString.class),
+    GeometryPolygon(Polygon.class),
+    GeometryMultiPoint(MultiPoint.class),
+    GeometryMultiLineString(MultiLineString.class),
+    GeometryMultiPolygon(MultiPolygon.class),
+    GeometryCollection(GeospatialCollection.class),
     /**
      * A 128-bit globally unique identifier.
      */
-    @XmlEnumValue("Guid")
-    GUID("Guid", UUID.class),
+    Guid(UUID.class),
     /**
      * A 16-bit integer value.
      */
-    @XmlEnumValue("Int16")
-    INT_16("Int16", Short.class),
+    Int16(Short.class),
     /**
      * A 32-bit integer value.
      */
-    @XmlEnumValue("Int32")
-    INT_32("Int32", Integer.class),
+    Int32(Integer.class),
     /**
      * A 64-bit integer value.
      */
-    @XmlEnumValue("Int64")
-    INT_64("Int64", Long.class),
+    Int64(Long.class),
     /**
      * A UTF-16-encoded value.
      * String values may be up to 64 KB in size.
      */
-    @XmlEnumValue("String")
-    STRING("String", String.class),
+    String(String.class),
     /**
      * Resource stream (for media entities).
      */
-    @XmlEnumValue("Stream")
-    STREAM("Stream", URI.class);
-
-    private final String value;
+    Stream(URI.class);
 
     private final Class<?> clazz;
 
@@ -226,8 +146,7 @@ public enum EdmSimpleType {
      * @param value value.
      * @param clazz type.
      */
-    EdmSimpleType(final String value, final Class<?> clazz) {
-        this.value = value;
+    EdmSimpleType(final Class<?> clazz) {
         this.clazz = clazz;
         this.pattern = null;
     }
@@ -239,19 +158,9 @@ public enum EdmSimpleType {
      * @param clazz type.
      * @param pattern pattern.
      */
-    EdmSimpleType(final String value, final Class<?> clazz, final String pattern) {
-        this.value = value;
+    EdmSimpleType(final Class<?> clazz, final String pattern) {
         this.clazz = clazz;
         this.pattern = pattern;
-    }
-
-    /**
-     * Gets value.
-     *
-     * @return value.
-     */
-    public String value() {
-        return value;
     }
 
     /**
@@ -277,7 +186,7 @@ public enum EdmSimpleType {
      */
     @Override
     public String toString() {
-        return namespace() + "." + value;
+        return namespace() + "." + name();
     }
 
     /**
@@ -286,7 +195,7 @@ public enum EdmSimpleType {
      * @return <tt>true</tt> if is geospatial type; <tt>false</tt> otherwise.
      */
     public boolean isGeospatial() {
-        return name().startsWith("GEO");
+        return name().startsWith("Geo");
     }
 
     /**
@@ -308,7 +217,7 @@ public enum EdmSimpleType {
     public static EdmSimpleType fromValue(final String value) {
         final String noNsValue = value.substring(4);
         for (EdmSimpleType edmSimpleType : EdmSimpleType.values()) {
-            if (edmSimpleType.value.equals(noNsValue)) {
+            if (edmSimpleType.name().equals(noNsValue)) {
                 return edmSimpleType;
             }
         }
@@ -324,8 +233,8 @@ public enum EdmSimpleType {
     public static EdmSimpleType fromObject(final Object obj) {
         for (EdmSimpleType edmSimpleType : EdmSimpleType.values()) {
             if (edmSimpleType.javaType().equals(obj.getClass())) {
-                return edmSimpleType == DATE_TIME_OFFSET || edmSimpleType == DATE_TIME
-                        ? ((ODataTimestamp) obj).isOffset() ? DATE_TIME_OFFSET : DATE_TIME
+                return edmSimpleType == DateTimeOffset || edmSimpleType == DateTime
+                        ? ((ODataTimestamp) obj).isOffset() ? DateTimeOffset : DateTime
                         : edmSimpleType;
             }
         }

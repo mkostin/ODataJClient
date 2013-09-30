@@ -124,7 +124,7 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
 
                 try {
                     value = new ODataPrimitiveValue.Builder().
-                            setType(format == ODataValueFormat.TEXT ? EdmSimpleType.STRING : EdmSimpleType.STREAM).
+                            setType(format == ODataValueFormat.TEXT ? EdmSimpleType.String : EdmSimpleType.Stream).
                             setText(IOUtils.toString(getRawResponse())).
                             build();
                 } catch (IOException e) {

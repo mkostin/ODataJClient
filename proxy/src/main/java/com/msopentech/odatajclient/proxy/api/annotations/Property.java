@@ -21,6 +21,7 @@ package com.msopentech.odatajclient.proxy.api.annotations;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.StoreGeneratedPattern;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -55,7 +56,7 @@ public @interface Property {
 
     String srid() default "";
 
-    ConcurrencyMode concurrencyMode() default ConcurrencyMode.NONE;
+    ConcurrencyMode concurrencyMode() default ConcurrencyMode.None;
 
     String mimeType() default "";
 
@@ -71,4 +72,6 @@ public @interface Property {
     String fcNSURI() default "";
 
     boolean fcKeepInContent() default false;
+
+    StoreGeneratedPattern storeGeneratedPattern() default StoreGeneratedPattern.None;
 }

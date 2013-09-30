@@ -24,6 +24,8 @@ import java.util.List;
 
 public class MultiPolygon extends ComposedGeospatial<Polygon> {
 
+    private static final long serialVersionUID = -160184788048512883L;
+
     public MultiPolygon(final Dimension dimension, final List<Polygon> polygons) {
         super(dimension, Type.MULTIPOLYGON, polygons);
     }
@@ -31,7 +33,7 @@ public class MultiPolygon extends ComposedGeospatial<Polygon> {
     @Override
     public EdmSimpleType getEdmSimpleType() {
         return dimension == Dimension.GEOGRAPHY
-                ? EdmSimpleType.GEOGRAPHY_MULTI_POLYGON
-                : EdmSimpleType.GEOMETRY_MULTI_POLYGON;
+                ? EdmSimpleType.GeographyMultiPolygon
+                : EdmSimpleType.GeometryMultiPolygon;
     }
 }

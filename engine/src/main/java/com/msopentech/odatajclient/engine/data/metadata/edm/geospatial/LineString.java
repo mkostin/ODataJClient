@@ -24,6 +24,8 @@ import java.util.List;
 
 public class LineString extends ComposedGeospatial<Point> {
 
+    private static final long serialVersionUID = 3207958185407535907L;
+
     public LineString(final Dimension dimension, final List<Point> points) {
         super(dimension, Type.LINESTRING, points);
     }
@@ -31,7 +33,7 @@ public class LineString extends ComposedGeospatial<Point> {
     @Override
     public EdmSimpleType getEdmSimpleType() {
         return dimension == Dimension.GEOGRAPHY
-                ? EdmSimpleType.GEOGRAPHY_LINE_STRING
-                : EdmSimpleType.GEOMETRY_LINE_STRING;
+                ? EdmSimpleType.GeographyLineString
+                : EdmSimpleType.GeometryLineString;
     }
 }

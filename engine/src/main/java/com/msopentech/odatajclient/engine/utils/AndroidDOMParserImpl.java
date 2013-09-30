@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
 public class AndroidDOMParserImpl extends AbstractDOMParser {
 
     @Override
-    public Element parse(InputStream input) {
+    public Element parse(final InputStream input) {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input).getDocumentElement();
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class AndroidDOMParserImpl extends AbstractDOMParser {
     }
 
     @Override
-    public void serialize(Node content, Writer writer) {
+    public void serialize(final Node content, final Writer writer) {
         try {
             TransformerFactory.newInstance().newTransformer().
                     transform(new DOMSource(content), new StreamResult(writer));

@@ -19,118 +19,31 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.namespace.QName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * The Documentation element is used to provide documentation of comments on the contents of the XML file. It is valid
- * under Schema, Type, Index and Relationship elements.
- *
- * <p>Java class for TDocumentation complex type.
- *
- * <p>The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="TDocumentation">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="Summary" type="{http://schemas.microsoft.com/ado/2009/11/edm}TText" minOccurs="0"/>
- *         &lt;element name="LongDescription" type="{http://schemas.microsoft.com/ado/2009/11/edm}TText" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;anyAttribute processContents='lax' namespace='##other'/>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- *
- *
- */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TDocumentation", propOrder = {
-    "summary",
-    "longDescription"
-})
-public class Documentation {
+public class Documentation extends AbstractEdm {
 
-    @XmlElement(name = "Summary")
-    protected Text summary;
+    private static final long serialVersionUID = 490619194572087173L;
 
-    @XmlElement(name = "LongDescription")
-    protected Text longDescription;
+    @JsonProperty("Summary")
+    private String summary;
 
-    @XmlAnyAttribute
-    private Map<QName, String> otherAttributes = new HashMap<QName, String>();
+    @JsonProperty("LongDescription")
+    private String longDescription;
 
-    /**
-     * Gets the value of the summary property.
-     *
-     * @return
-     * possible object is
-     * {@link TText }
-     *
-     */
-    public Text getSummary() {
+    public String getSummary() {
         return summary;
     }
 
-    /**
-     * Sets the value of the summary property.
-     *
-     * @param value
-     * allowed object is
-     * {@link TText }
-     *
-     */
-    public void setSummary(Text value) {
-        this.summary = value;
+    public void setSummary(final String summary) {
+        this.summary = summary;
     }
 
-    /**
-     * Gets the value of the longDescription property.
-     *
-     * @return
-     * possible object is
-     * {@link TText }
-     *
-     */
-    public Text getLongDescription() {
+    public String getLongDescription() {
         return longDescription;
     }
 
-    /**
-     * Sets the value of the longDescription property.
-     *
-     * @param value
-     * allowed object is
-     * {@link TText }
-     *
-     */
-    public void setLongDescription(Text value) {
-        this.longDescription = value;
-    }
-
-    /**
-     * Gets a map that contains attributes that aren't bound to any typed property on this class.
-     *
-     * <p>
-     * the map is keyed by the name of the attribute and
-     * the value is the string value of the attribute.
-     *
-     * the map returned by this method is live, and you can add new attribute
-     * by updating the map directly. Because of this design, there's no setter.
-     *
-     *
-     * @return
-     * always non-null
-     */
-    public Map<QName, String> getOtherAttributes() {
-        return otherAttributes;
+    public void setLongDescription(final String longDescription) {
+        this.longDescription = longDescription;
     }
 }

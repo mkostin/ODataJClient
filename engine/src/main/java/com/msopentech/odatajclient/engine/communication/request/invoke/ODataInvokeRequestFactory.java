@@ -28,7 +28,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
 import java.net.URI;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
@@ -57,7 +57,7 @@ public class ODataInvokeRequestFactory {
         } else if (HttpMethod.POST.name().equals(functionImport.getHttpMethod())) {
             method = HttpMethod.POST;
         } else if (functionImport.getHttpMethod() == null) {
-            if (functionImport.isIsSideEffecting()) {
+            if (functionImport.isSideEffecting()) {
                 method = HttpMethod.POST;
             } else {
                 method = HttpMethod.GET;

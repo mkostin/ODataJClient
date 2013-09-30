@@ -21,16 +21,14 @@ package com.msopentech.odatajclient.plugin;
 
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractAnnotated;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
 import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationEnd;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Documentation;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.EntitySet;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityProperty;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntitySet;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.OnAction;
+import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.Property;
 import com.msopentech.odatajclient.engine.data.metadata.edm.PropertyRef;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import java.io.InputStream;
@@ -42,38 +40,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.namespace.QName;
 import org.apache.commons.lang.StringUtils;
 
 public class Utility {
 
-    private static final String FC_TARGET_PATH = "FC_TargetPath";
+    private static final String FC_TARGET_PATH = "fcTargetPath";
 
-    private static final String FC_TARGET_PATH_ANN = "fcTargetPath";
+    private static final String FC_SOURCE_PATH = "fcSourcePath";
 
-    private static final String FC_SOURCE_PATH = "FC_SourcePath";
+    private static final String FC_KEEP_IN_CONTENT = "fcKeepInContent";
 
-    private static final String FC_SOURCE_PATH_ANN = "fcSourcePath";
+    private static final String FC_CONTENT_KIND = "fcContentKind";
 
-    private static final String FC_KEEP_IN_CONTENT = "FC_KeepInContent";
+    private static final String FC_NS_PREFIX = "fcNSPrefix";
 
-    private static final String FC_KEEP_IN_CONTENT_ANN = "fcKeepInContent";
-
-    private static final String FC_CONTENT_KIND = "FC_ContentKind";
-
-    private static final String FC_CONTENT_KIND_ANN = "fcContentKind";
-
-    private static final String FC_NS_PREFIX = "FC_NSPrefix";
-
-    private static final String FC_NS_PREFIX_ANN = "fcNSPrefix";
-
-    private static final String FC_NS_URI = "FC_NSURI";
-
-    private static final String FC_NS_URI_ANN = "fcNSURI";
-
-    private static final String MIME_TYPE = "MimeType";
-
-    private static final String MIME_TYPE_ANN = "mimeType";
+    private static final String FC_NS_URI = "fcNSURI";
 
     private static final String TYPE_SUB_PKG = "types";
 
@@ -161,30 +142,25 @@ public class Utility {
         return res.toString();
     }
 
-    public Map<String, String> getFcProperties(final AbstractAnnotated annotated) {
-        final Map<String, String> res = new HashMap<String, String>();
+    public Map<String, String> getFcProperties(final Property property) {
+        final Map<String, String> fcProps = new HashMap<String, String>();
 
-        for (Map.Entry<QName, String> fcprop : annotated instanceof EntityType
-                ? ((EntityType) annotated).getOtherAttributes().entrySet()
-                : ((EntityProperty) annotated).getOtherAttributes().entrySet()) {
-            if (FC_TARGET_PATH.equalsIgnoreCase(fcprop.getKey().getLocalPart())) {
-                res.put(FC_TARGET_PATH_ANN, fcprop.getValue());
-            } else if (FC_SOURCE_PATH.equalsIgnoreCase(fcprop.getKey().getLocalPart())) {
-                res.put(FC_SOURCE_PATH_ANN, fcprop.getValue());
-            } else if (FC_NS_PREFIX.equalsIgnoreCase(fcprop.getKey().getLocalPart())) {
-                res.put(FC_NS_PREFIX_ANN, fcprop.getValue());
-            } else if (FC_NS_URI.equalsIgnoreCase(fcprop.getKey().getLocalPart())) {
-                res.put(FC_NS_URI_ANN, fcprop.getValue());
-            } else if (FC_CONTENT_KIND.equalsIgnoreCase(fcprop.getKey().getLocalPart())) {
-                res.put(FC_CONTENT_KIND_ANN, fcprop.getValue());
-            } else if (FC_KEEP_IN_CONTENT.equalsIgnoreCase(fcprop.getKey().getLocalPart())) {
-                res.put(FC_KEEP_IN_CONTENT_ANN, fcprop.getValue());
-            } else if (MIME_TYPE.equalsIgnoreCase(fcprop.getKey().getLocalPart())) {
-                res.put(MIME_TYPE_ANN, fcprop.getValue());
-            }
+        if (StringUtils.isNotBlank(property.getFcTargetPath())) {
+            fcProps.put(FC_TARGET_PATH, property.getFcTargetPath());
         }
+        if (StringUtils.isNotBlank(property.getFcSourcePath())) {
+            fcProps.put(FC_SOURCE_PATH, property.getFcSourcePath());
+        }
+        if (StringUtils.isNotBlank(property.getFcNSPrefix())) {
+            fcProps.put(FC_NS_PREFIX, property.getFcNSPrefix());
+        }
+        if (StringUtils.isNotBlank(property.getFcNSURI())) {
+            fcProps.put(FC_NS_URI, property.getFcNSURI());
+        }
+        fcProps.put(FC_CONTENT_KIND, property.getFcContentKind().name());
+        fcProps.put(FC_KEEP_IN_CONTENT, Boolean.toString(property.isFcKeepInContent()));
 
-        return res;
+        return fcProps;
     }
 
     public EdmType getEdmType(final EntitySet entitySet) {
@@ -202,13 +178,13 @@ public class Utility {
         }
 
         final List<String> properties = new ArrayList<String>();
-        for (PropertyRef pref : baseType.getKey().getPropertyRef()) {
+        for (PropertyRef pref : baseType.getKey().getPropertyRefs()) {
             properties.add(pref.getName());
         }
 
         final Map<String, String> res = new HashMap<String, String>();
 
-        for (EntityProperty prop : baseType.getProperties()) {
+        for (Property prop : baseType.getProperties()) {
             if (properties.contains(prop.getName())) {
                 res.put(prop.getName(), getJavaType(prop.getType()));
             }
@@ -217,26 +193,20 @@ public class Utility {
         return res;
     }
 
-    public Map.Entry<String, Action> getNavigationRoleType(final String associationName, final String associationRole) {
+    public String getNavigationRoleType(final String associationName, final String associationRole) {
         final String name = getNameFromNS(associationName);
         final Association association = schema.getAssociation(name);
-
         if (association != null) {
-            for (AssociationEnd end : association.getEnd()) {
+            for (AssociationEnd end : association.getEnds()) {
                 if (end.getRole().equalsIgnoreCase(associationRole)) {
-                    final List<OnAction> actions = end.getTOperations();
-                    return new AbstractMap.SimpleEntry<String, Action>(
-                            "*".equals(end.getMultiplicity())
+                    return "*".equals(end.getMultiplicity())
                             ? "Collection(" + end.getType() + ")"
-                            : end.getType(),
-                            actions.isEmpty()
-                            ? Action.NONE
-                            : actions.get(0).getAction());
+                            : end.getType();
                 }
             }
         }
 
-        return new AbstractMap.SimpleEntry<String, Action>(associationRole, Action.NONE);
+        return associationRole;
     }
 
     public final String getNameInNamespace(final String name) {
@@ -298,14 +268,14 @@ public class Utility {
         return descendants;
     }
 
-    public List<EntityContainer.FunctionImport> getFunctionImportsBoundTo(
+    public List<FunctionImport> getFunctionImportsBoundTo(
             final String typeExpression, final boolean collection) {
 
-        final List<EntityContainer.FunctionImport> result = new ArrayList<EntityContainer.FunctionImport>();
+        final List<FunctionImport> result = new ArrayList<FunctionImport>();
 
         for (EntityContainer entityContainer : schema.getEntityContainers()) {
-            for (EntityContainer.FunctionImport functionImport : entityContainer.getFunctionImports()) {
-                if (functionImport.isIsBindable()) {
+            for (FunctionImport functionImport : entityContainer.getFunctionImports()) {
+                if (functionImport.isBindable()) {
                     for (int i = 0; i < functionImport.getParameters().size(); i++) {
                         if (isSameType(typeExpression, functionImport.getParameters().get(i).getType(), collection)) {
                             result.add(functionImport);
@@ -331,8 +301,8 @@ public class Utility {
 
             final Documentation doc = (Documentation) method.invoke(obj);
 
-            summary = doc.getSummary() == null ? "" : doc.getSummary().getContentAsString();
-            description = doc.getLongDescription() == null ? "" : doc.getLongDescription().getContentAsString();
+            summary = doc.getSummary() == null ? "" : doc.getSummary();
+            description = doc.getLongDescription() == null ? "" : doc.getLongDescription();
 
             return new AbstractMap.SimpleEntry<String, String>(summary, description);
         } catch (Exception e) {

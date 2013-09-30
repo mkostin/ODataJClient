@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ComplexType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.EntitySet;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EntitySet;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import org.apache.maven.plugin.AbstractMojo;

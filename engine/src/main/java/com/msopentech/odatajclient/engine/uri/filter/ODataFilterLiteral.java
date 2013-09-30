@@ -19,7 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.uri.filter;
 
-import com.msopentech.odatajclient.engine.uri.PrimitiveValueURIEscaper;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 
 /**
  * Filter value literals; obtain instances via <tt>ODataFilterArgFactory</tt>.
@@ -36,6 +36,6 @@ public class ODataFilterLiteral implements ODataFilterArg {
 
     @Override
     public String build() {
-        return PrimitiveValueURIEscaper.escape(value);
+        return URIUtils.escape(value);
     }
 }

@@ -34,7 +34,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataError;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.json.error.JSONODataError;
-import com.msopentech.odatajclient.engine.data.xml.error.XMLODataError;
+import com.msopentech.odatajclient.engine.data.xml.XMLODataError;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;

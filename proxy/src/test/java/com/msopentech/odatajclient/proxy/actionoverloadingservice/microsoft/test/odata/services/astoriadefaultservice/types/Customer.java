@@ -51,9 +51,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -63,13 +60,7 @@ import java.util.Collection;
         openType = false,
         hasStream = false,
         isAbstract = false,
-        baseType = "",
-        fcSourcePath = "",
-        fcTargetPath = "",
-        fcContentKind = EdmContentKind.text,
-        fcNSPrefix = "",
-        fcNSURI = "",
-        fcKeepInContent = false)
+        baseType = "")
 public interface Customer extends Serializable {
 
     
@@ -85,14 +76,13 @@ public interface Customer extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public java.io.InputStream getThumbnail();
 
     public void setThumbnail(final java.io.InputStream _thumbnail);
@@ -109,14 +99,13 @@ public interface Customer extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public java.io.InputStream getVideo();
 
     public void setVideo(final java.io.InputStream _video);
@@ -133,14 +122,13 @@ public interface Customer extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Integer getCustomerId();
 
     public void setCustomerId(final Integer _customerId);
@@ -157,8 +145,7 @@ public interface Customer extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "SyndicationSummary",
                 fcContentKind = EdmContentKind.text,
@@ -181,14 +168,13 @@ public interface Customer extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails getPrimaryContactInfo();
 
     public void setPrimaryContactInfo(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails _primaryContactInfo);
@@ -205,14 +191,13 @@ public interface Customer extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public Collection<com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails> getBackupContactInfo();
 
     public void setBackupContactInfo(final Collection<com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.ContactDetails> _backupContactInfo);
@@ -229,14 +214,13 @@ public interface Customer extends Serializable {
                 unicode = false,
                 collation = "",
                 srid = "",
-                concurrencyMode = ConcurrencyMode.NONE,
-                mimeType = "",
+                concurrencyMode = ConcurrencyMode.None,
                 fcSourcePath = "",
                 fcTargetPath = "",
                 fcContentKind = EdmContentKind.text,
                 fcNSPrefix = "",
                 fcNSURI = "",
-                fcKeepInContent = false)
+                fcKeepInContent = true)
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.AuditInfo getAuditing();
 
     public void setAuditing(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.AuditInfo _auditing);
@@ -246,9 +230,7 @@ public interface Customer extends Serializable {
     @NavigationProperty(name = "Orders", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Customer_Orders", 
                 fromRole = "Customer", 
-                toRole = "Orders",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Orders")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection getOrders();
 
     public void setOrders(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.OrderCollection _orders);
@@ -257,9 +239,7 @@ public interface Customer extends Serializable {
     @NavigationProperty(name = "Logins", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Customer_Logins", 
                 fromRole = "Customer", 
-                toRole = "Logins",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Logins")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.LoginCollection getLogins();
 
     public void setLogins(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.LoginCollection _logins);
@@ -268,9 +248,7 @@ public interface Customer extends Serializable {
     @NavigationProperty(name = "Husband", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Customer_Husband", 
                 fromRole = "Customer", 
-                toRole = "Husband",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Husband")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.Customer getHusband();
 
     public void setHusband(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.Customer _husband);
@@ -279,9 +257,7 @@ public interface Customer extends Serializable {
     @NavigationProperty(name = "Wife", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Customer_Wife", 
                 fromRole = "Customer", 
-                toRole = "Wife",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Wife")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.Customer getWife();
 
     public void setWife(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.Customer _wife);
@@ -290,9 +266,7 @@ public interface Customer extends Serializable {
     @NavigationProperty(name = "Info", 
                 relationship = "Microsoft.Test.OData.Services.AstoriaDefaultService.Customer_Info", 
                 fromRole = "Customer", 
-                toRole = "Info",
-                containsTarget = false,
-                onDelete = Action.NONE)
+                toRole = "Info")
     public com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo getInfo();
 
     public void setInfo(final com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.CustomerInfo _info);

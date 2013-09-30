@@ -44,9 +44,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -114,7 +111,7 @@ public interface DefaultContainer extends AbstractContainer {
                     httpMethod = HttpMethod.GET ,
                     returnType = "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Customer)")
     com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection getSpecificCustomer(
-        @Parameter(name = "Name", type = "Edm.String", nullable = false) String name
+        @Parameter(name = "Name", type = "Edm.String", nullable = true) String name
     );
         @FunctionImport(name = "GetCustomerCount"     ,
                     httpMethod = HttpMethod.GET ,
@@ -142,4 +139,30 @@ public interface DefaultContainer extends AbstractContainer {
                     returnType = "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Customer)")
     com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.CustomerCollection inStreamErrorGetCustomer(
     );
-            }
+        @FunctionImport(name = "IncreaseSalaries"      )
+    void increaseSalaries(
+        @Parameter(name = "employees", type = "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Employee)", nullable = true) com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.EmployeeCollection employees, 
+        @Parameter(name = "n", type = "Edm.Int32", nullable = false) Integer n
+    );
+        @FunctionImport(name = "Sack"      )
+    void sack(
+        @Parameter(name = "employee", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Employee", nullable = true) com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Employee employee
+    );
+        @FunctionImport(name = "GetComputer" , 
+                    entitySet = Computer.class     ,
+                    returnType = "Microsoft.Test.OData.Services.AstoriaDefaultService.Computer")
+    com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Computer getComputer(
+        @Parameter(name = "computer", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Computer", nullable = true) com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Computer computer
+    );
+        @FunctionImport(name = "ChangeProductDimensions"      )
+    void changeProductDimensions(
+        @Parameter(name = "product", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Product", nullable = true) com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Product product, 
+        @Parameter(name = "dimensions", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions", nullable = true) com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.Dimensions dimensions
+    );
+        @FunctionImport(name = "ResetComputerDetailsSpecifications"      )
+    void resetComputerDetailsSpecifications(
+        @Parameter(name = "computerDetail", type = "Microsoft.Test.OData.Services.AstoriaDefaultService.ComputerDetail", nullable = true) com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.ComputerDetail computerDetail, 
+        @Parameter(name = "specifications", type = "Collection(Edm.String)", nullable = false) Collection<String> specifications, 
+        @Parameter(name = "purchaseTime", type = "Edm.DateTime", nullable = false) ODataTimestamp purchaseTime
+    );
+  }

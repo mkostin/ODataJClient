@@ -91,35 +91,35 @@ final class DOMTreeUtils {
                     if (!typeSet) {
                         if (child.isShort()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.INT_16.toString());
+                                    EdmSimpleType.Int16.toString());
                         }
                         if (child.isInt()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.INT_32.toString());
+                                    EdmSimpleType.Int32.toString());
                         }
                         if (child.isLong()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.INT_64.toString());
+                                    EdmSimpleType.Int64.toString());
                         }
                         if (child.isBigDecimal()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.DECIMAL.toString());
+                                    EdmSimpleType.Decimal.toString());
                         }
                         if (child.isFloat()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.SINGLE.toString());
+                                    EdmSimpleType.Single.toString());
                         }
                         if (child.isDouble()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.DOUBLE.toString());
+                                    EdmSimpleType.Double.toString());
                         }
                         if (child.isBoolean()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.BOOLEAN.toString());
+                                    EdmSimpleType.Boolean.toString());
                         }
                         if (child.isTextual()) {
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
-                                    EdmSimpleType.STRING.toString());
+                                    EdmSimpleType.String.toString());
                         }
                     }
 
@@ -132,8 +132,8 @@ final class DOMTreeUtils {
 
                     final String type = property.getAttribute(ODataConstants.ATTR_M_TYPE);
                     if (StringUtils.isNotBlank(type) && EdmSimpleType.isGeospatial(type)) {
-                        if (EdmSimpleType.GEOGRAPHY.toString().equals(type)
-                                || EdmSimpleType.GEOMETRY.toString().equals(type)) {
+                        if (EdmSimpleType.Geography.toString().equals(type)
+                                || EdmSimpleType.Geometry.toString().equals(type)) {
 
                             final String geoType = child.get(ODataConstants.ATTR_TYPE).textValue();
                             property.setAttributeNS(ODataConstants.NS_METADATA, ODataConstants.ATTR_M_TYPE,
@@ -205,7 +205,7 @@ final class DOMTreeUtils {
                     jgen.writeStringField(childName, out);
                 } else {
                     if (child.getAttributes().getNamedItem(ODataConstants.ATTR_NULL) == null) {
-                        if (typeAttr != null && EdmSimpleType.STRING.toString().equals(typeAttr.getTextContent())) {
+                        if (typeAttr != null && EdmSimpleType.String.toString().equals(typeAttr.getTextContent())) {
                             jgen.writeStringField(childName + "@" + ODataConstants.JSON_TYPE, typeAttr.getTextContent());
                             jgen.writeStringField(childName, StringUtils.EMPTY);
                         } else {

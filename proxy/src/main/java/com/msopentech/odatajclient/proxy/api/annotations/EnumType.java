@@ -34,7 +34,7 @@ public @interface EnumType {
 
     String value();
 
-    EdmSimpleType underlyingType() default EdmSimpleType.INT_32;
+    EdmSimpleType underlyingType() default EdmSimpleType.Int32;
 
     boolean isFlags() default false;
 }

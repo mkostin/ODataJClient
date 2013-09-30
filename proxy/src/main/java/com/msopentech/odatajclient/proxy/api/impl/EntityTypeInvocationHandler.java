@@ -30,8 +30,8 @@ import com.msopentech.odatajclient.engine.data.ODataOperation;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationSet;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.AssociationSet;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
@@ -225,7 +225,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
                     containerHandler.getFactory().getMetadata().getSchema(ClassUtils.getNamespace(typeRef)).
                     getEntityContainer(entityContainerName);
-            final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport funcImp =
+            final com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport funcImp =
                     container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
 
             return functionImport((FunctionImport) methodAnnots[0], method, args,

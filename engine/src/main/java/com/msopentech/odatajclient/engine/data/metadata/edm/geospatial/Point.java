@@ -23,6 +23,8 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 
 public class Point extends Geospatial {
 
+    private static final long serialVersionUID = 4917380107331557828L;
+
     /**
      * The X coordinate of the point.
      * In most long/lat systems, this is the longitude.
@@ -74,7 +76,7 @@ public class Point extends Geospatial {
     @Override
     public EdmSimpleType getEdmSimpleType() {
         return dimension == Dimension.GEOGRAPHY
-                ? EdmSimpleType.GEOGRAPHY_POINT
-                : EdmSimpleType.GEOMETRY_POINT;
+                ? EdmSimpleType.GeographyPoint
+                : EdmSimpleType.GeometryPoint;
     }
 }

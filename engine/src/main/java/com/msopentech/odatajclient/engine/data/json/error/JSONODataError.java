@@ -208,7 +208,7 @@ public class JSONODataError extends AbstractPayloadObject implements ODataError 
      * {@link Error.Message }
      *
      */
-    public void setMessage(final JSONODataError.Message value) {
+    public void setMessage(final Message value) {
         this.message = value;
     }
 

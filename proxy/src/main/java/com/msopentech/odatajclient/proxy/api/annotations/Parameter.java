@@ -40,7 +40,7 @@ public @interface Parameter {
 
     boolean nullable() default true;
 
-    ParameterMode mode() default ParameterMode.IN;
+    ParameterMode mode() default ParameterMode.In;
 
     int maxLenght() default Integer.MAX_VALUE;
 

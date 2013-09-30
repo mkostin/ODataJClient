@@ -33,7 +33,7 @@ import org.w3c.dom.ls.LSSerializer;
 public class DefaultDOMParserImpl extends AbstractDOMParser {
 
     @Override
-    public Element parse(InputStream input) {
+    public Element parse(final InputStream input) {
         try {
             final DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
             final DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");
@@ -49,7 +49,7 @@ public class DefaultDOMParserImpl extends AbstractDOMParser {
     }
 
     @Override
-    public void serialize(Node content, Writer writer) {
+    public void serialize(final Node content, final Writer writer) {
         try {
             final DOMImplementationRegistry reg = DOMImplementationRegistry.newInstance();
             final DOMImplementationLS impl = (DOMImplementationLS) reg.getDOMImplementation("LS");

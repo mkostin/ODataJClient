@@ -88,7 +88,7 @@ public class OpenTypeTestITCase extends AbstractTest {
         row.addAdditionalProperty("aDouble", 1.5D);
         row.addAdditionalProperty("aByte", Byte.MAX_VALUE);
         row.addAdditionalProperty("aDate",
-                ODataTimestamp.getInstance(EdmSimpleType.DATE_TIME, new Timestamp(new Date().getTime())));
+                ODataTimestamp.getInstance(EdmSimpleType.DateTime, new Timestamp(new Date().getTime())));
 
         final Point point = new Point(Geospatial.Dimension.GEOGRAPHY);
         point.setX(1.2);
@@ -136,9 +136,9 @@ public class OpenTypeTestITCase extends AbstractTest {
         ContactDetails contactDetails = new ContactDetails();
         contactDetails.setFirstContacted("text".getBytes());
         contactDetails.setLastContacted(
-                ODataTimestamp.parse(EdmSimpleType.DATE_TIME_OFFSET, "2001-04-05T05:05:05.001+00:01"));
+                ODataTimestamp.parse(EdmSimpleType.DateTimeOffset, "2001-04-05T05:05:05.001+00:01"));
         contactDetails.setContacted(
-                ODataTimestamp.parse(EdmSimpleType.DATE_TIME, "2001-04-05T05:05:04.001"));
+                ODataTimestamp.parse(EdmSimpleType.DateTime, "2001-04-05T05:05:04.001"));
         contactDetails.setGUID(UUID.randomUUID());
         contactDetails.setPreferedContactTime(new ODataDuration("-P9DT51M10.5063807S"));
         contactDetails.setByte(241);
@@ -171,7 +171,7 @@ public class OpenTypeTestITCase extends AbstractTest {
         assertEquals("text", new String(aContact.getFirstContacted()));
         assertEquals(Short.MAX_VALUE, aContact.getShort().shortValue());
         assertEquals(241, aContact.getByte().intValue());
-        assertEquals(ODataTimestamp.parse(EdmSimpleType.DATE_TIME, "2001-04-05T05:05:04.001").toString(),
+        assertEquals(ODataTimestamp.parse(EdmSimpleType.DateTime, "2001-04-05T05:05:04.001").toString(),
                 aContact.getContacted().toString());
 
         otcontainer.getRow().delete(guid);
