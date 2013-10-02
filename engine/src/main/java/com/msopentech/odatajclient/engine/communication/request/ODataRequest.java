@@ -71,38 +71,6 @@ public interface ODataRequest {
     String getHeader(final String name);
 
     /**
-     * Adds <tt>MaxDataServiceVersion</tt> OData request header.
-     *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#maxDataServiceVersion
-     */
-    void setMaxDataServiceVersion(final String value);
-
-    /**
-     * Gets <tt>MaxDataServiceVersion</tt> OData request header.
-     *
-     * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#maxDataServiceVersion
-     */
-    String getMaxDataServiceVersion();
-
-    /**
-     * Adds <tt>MinDataServiceVersion</tt> OData request header.
-     *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#minDataServiceVersion
-     */
-    void setMinDataServiceVersion(final String value);
-
-    /**
-     * Gets <tt>MinDataServiceVersion</tt> OData request header.
-     *
-     * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#minDataServiceVersion
-     */
-    String getMinDataServiceVersion();
-
-    /**
      * Adds <tt>Accept</tt> OData request header.
      *
      * @param value header value.
@@ -181,22 +149,6 @@ public interface ODataRequest {
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#contentType
      */
     String getContentType();
-
-    /**
-     * Adds <tt>dataServiceVersion</tt> OData request header.
-     *
-     * @param value header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#dataServiceVersion
-     */
-    void setDataServiceVersion(final String value);
-
-    /**
-     * Gets <tt>dataServiceVersion</tt> OData request header.
-     *
-     * @return header value.
-     * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#dataServiceVersion
-     */
-    String getDataServiceVersion();
 
     /**
      * Adds <tt>Slug</tt> OData request header.

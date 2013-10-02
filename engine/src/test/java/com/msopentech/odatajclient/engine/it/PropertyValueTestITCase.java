@@ -33,137 +33,147 @@ import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 
+public class PropertyValueTestITCase extends AbstractTest {
+    //retrieves Edm.Int32
 
-public class PropertyValueTestITCase extends AbstractTest{
-	//retrieves Edm.Int32
-	@Test
-	public  void retreiveIntPropertyValueTest() {
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment("ProductId").appendValueSegment();
-		final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-		req.setFormat(ODataValueFormat.TEXT);
-		final ODataValue value = req.execute().getBody();
-		assertNotNull(value);
-		assertEquals(-10,Integer.parseInt(value.toString()));
-	}
-	//retrieves boolean
-	@Test
-	public  void retreiveBooleanPropertyValueTest() {
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment("ProductId").appendValueSegment();
-		final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-		req.setFormat(ODataValueFormat.TEXT);
-		final ODataValue value = req.execute().getBody();
-		assertNotNull(value);
-		assertEquals(-10,Integer.parseInt(value.toString()));
-	}
-	//retrieves Edm.String 
-	@Test
-	public  void retreiveStringPropertyValueTest() {
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment("Description").appendValueSegment();
-		final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-		req.setFormat(ODataValueFormat.TEXT);
-		final ODataValue value = req.execute().getBody();
-		assertNotNull(value);
-		assertEquals("onesusjnzuzrmzhqankkugdrftiukzkzqaggsfdmtvineulehkrbpu",value.toString());
-	}
-	
-	// date from a complex structure. 
-	@Test
-	public  void retreiveDatePropertyValueTest() {
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment("NestedComplexConcurrency/ModifiedDate").appendValueSegment();
-		//System.out.println(uriBuilder.build());
-		final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-		req.setFormat(ODataValueFormat.TEXT);
-		final ODataValue value = req.execute().getBody();
-		assertNotNull(value);
-		assertEquals("9999-12-31T23:59:59.9999999",value.toString());
-	}
-	//decimal type test
-	@Test
-	public  void retreiveDecimalPropertyValueTest() {
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment("Dimensions/Height").appendValueSegment();
-		//System.out.println(uriBuilder.build());
-		final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-		req.setFormat(ODataValueFormat.TEXT);
-		final ODataValue value = req.execute().getBody();
-		assertNotNull(value);
-		assertEquals("-0.492988348718789",value.toString());
-	}
-	//binary test with json format 
-	@Test
-	public  void retreiveBinaryPropertyValueTest() throws IOException {
-		 ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendNavigationLinkSegment("ProductPhoto(PhotoId=-3,ProductId=-3)").appendStructuralSegment("Photo");
-		ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-		req.setAccept("application/json");
-		System.out.println(uriBuilder.build());
-		ODataRetrieveResponse<ODataEntity> res = req.execute();
-		assertEquals(200, res.getStatusCode());
-		ODataEntity entitySet = res.getBody();
-		assertNotNull(entitySet);
-		assertEquals("fi653p3+MklA/LdoBlhWgnMTUUEo8tEgtbMXnF0a3CUNL9BZxXpSRiD9ebTnmNR0zWPjJVIDx4tdmCnq55XrJh+RW9aI/b34wAogK3kcORw=",
-				entitySet.getProperties().get(0).getValue().toString());
-	}
-	//binary test with atom format.
-	@Test(expected = ODataClientErrorException.class)
-	public  void retreiveBinaryPropertyValueTestWithAtom() throws IOException {
-		 ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendNavigationLinkSegment("ProductPhoto(PhotoId=-3,ProductId=-3)").appendStructuralSegment("Photo");
-		ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-		req.setAccept("application/atom+xml");
-		System.out.println(uriBuilder.build());
-		ODataRetrieveResponse<ODataEntity> res = req.execute();
-		assertEquals(200, res.getStatusCode());
-		ODataEntity entitySet = res.getBody();
-		assertNotNull(entitySet);
-		assertEquals("fi653p3+MklA/LdoBlhWgnMTUUEo8tEgtbMXnF0a3CUNL9BZxXpSRiD9ebTnmNR0zWPjJVIDx4tdmCnq55XrJh+RW9aI/b34wAogK3kcORw=",
-				entitySet.getProperties().get(0).getValue().toString());
-	}
-	// binary data with xml. Unable to deserialize JSON
-	@Test(expected = IllegalArgumentException.class)
-	public  void retreiveBinaryPropertyValueTestWithXML() throws IOException {
-		 ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendNavigationLinkSegment("ProductPhoto(PhotoId=-3,ProductId=-3)").appendStructuralSegment("Photo");
-		ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-		req.setAccept("application/xml");
-		System.out.println(uriBuilder.build());
-		ODataRetrieveResponse<ODataEntity> res = req.execute();
-		assertEquals(200, res.getStatusCode());
-		ODataEntity entitySet = res.getBody();
-		assertNotNull(entitySet);
-		assertEquals("fi653p3+MklA/LdoBlhWgnMTUUEo8tEgtbMXnF0a3CUNL9BZxXpSRiD9ebTnmNR0zWPjJVIDx4tdmCnq55XrJh+RW9aI/b34wAogK3kcORw=",
-				entitySet.getProperties().get(0).getValue().toString());
-	}
-	//collection of primitives
-	@Test
-	public  void retreiveCollectionPropertyValueTest() {
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment("ComplexConcurrency/QueriedDateTime").appendValueSegment();
-		System.out.println(uriBuilder.build());
-		final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-		req.setFormat(ODataValueFormat.TEXT);
-		final ODataValue value = req.execute().getBody();
-		if(value.isPrimitive()){
-			assertNotNull(value);
-			assertEquals("2013-01-10T06:27:51.1667673",value.toString());
-		}
-	}
-	// No resource found error. Token is not available under ComplexConcurrency
-	@Test
-	public  void retreiveNullPropertyValueTest() {
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment("ComplexConcurrency/Token").appendValueSegment();
-		System.out.println(uriBuilder.build());
-		final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-		try{
-			final ODataValue value = req.execute().getBody();
-			System.out.println(value);
-		}catch(ODataClientErrorException e){
-			assertEquals(404,e.getStatusLine().getStatusCode());
-		}
-	}
+    @Test
+    public void retrieveIntPropertyValueTest() {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment("ProductId").
+                appendValueSegment();
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+        final ODataValue value = req.execute().getBody();
+        assertNotNull(value);
+        assertEquals(-10, Integer.parseInt(value.toString()));
+    }
+    //retrieves boolean
+
+    @Test
+    public void retrieveBooleanPropertyValueTest() {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment("ProductId").
+                appendValueSegment();
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+        final ODataValue value = req.execute().getBody();
+        assertNotNull(value);
+        assertEquals(-10, Integer.parseInt(value.toString()));
+    }
+    //retrieves Edm.String 
+
+    @Test
+    public void retrieveStringPropertyValueTest() {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Product").appendKeySegment(-6).appendStructuralSegment("Description").
+                appendValueSegment();
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+        final ODataValue value = req.execute().getBody();
+        assertNotNull(value);
+        assertEquals("expdybhclurfobuyvzmhkgrnrajhamqmkhqpmiypittnp", value.toString());
+    }
+
+    // date from a complex structure. 
+    @Test
+    public void retrieveDatePropertyValueTest() {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Product").appendKeySegment(-7).appendStructuralSegment(
+                "NestedComplexConcurrency/ModifiedDate").appendValueSegment();
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+        final ODataValue value = req.execute().getBody();
+        assertNotNull(value);
+        assertEquals("7866-11-16T22:25:52.747755+01:00", value.toString());
+    }
+    //decimal type test
+
+    @Test
+    public void retrieveDecimalPropertyValueTest() {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Product").appendKeySegment(-6).appendStructuralSegment("Dimensions/Height").
+                appendValueSegment();
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+        final ODataValue value = req.execute().getBody();
+        assertNotNull(value);
+        assertEquals("-79228162514264337593543950335", value.toString());
+    }
+    //binary test with json format 
+
+    @Test
+    public void retrieveBinaryPropertyValueTest() throws IOException {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendNavigationLinkSegment("ProductPhoto(PhotoId=-3,ProductId=-3)").appendStructuralSegment("Photo");
+        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setAccept("application/json");
+        ODataRetrieveResponse<ODataEntity> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+        ODataEntity entitySet = res.getBody();
+        assertNotNull(entitySet);
+        assertEquals(
+                "fi653p3+MklA/LdoBlhWgnMTUUEo8tEgtbMXnF0a3CUNL9BZxXpSRiD9ebTnmNR0zWPjJVIDx4tdmCnq55XrJh+RW9aI/b34wAogK3kcORw=",
+                entitySet.getProperties().get(0).getValue().toString());
+    }
+    //binary test with atom format.
+
+    @Test(expected = ODataClientErrorException.class)
+    public void retrieveBinaryPropertyValueTestWithAtom() throws IOException {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendNavigationLinkSegment("ProductPhoto(PhotoId=-3,ProductId=-3)").appendStructuralSegment("Photo");
+        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setAccept("application/atom+xml");
+        ODataRetrieveResponse<ODataEntity> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+        ODataEntity entitySet = res.getBody();
+        assertNotNull(entitySet);
+        assertEquals(
+                "fi653p3+MklA/LdoBlhWgnMTUUEo8tEgtbMXnF0a3CUNL9BZxXpSRiD9ebTnmNR0zWPjJVIDx4tdmCnq55XrJh+RW9aI/b34wAogK3kcORw=",
+                entitySet.getProperties().get(0).getValue().toString());
+    }
+    // binary data with xml. Unable to deserialize JSON
+
+    @Test(expected = IllegalArgumentException.class)
+    public void retrieveBinaryPropertyValueTestWithXML() throws IOException {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendNavigationLinkSegment("ProductPhoto(PhotoId=-3,ProductId=-3)").appendStructuralSegment("Photo");
+        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setAccept("application/xml");
+        ODataRetrieveResponse<ODataEntity> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+        ODataEntity entitySet = res.getBody();
+        assertNotNull(entitySet);
+        assertEquals(
+                "fi653p3+MklA/LdoBlhWgnMTUUEo8tEgtbMXnF0a3CUNL9BZxXpSRiD9ebTnmNR0zWPjJVIDx4tdmCnq55XrJh+RW9aI/b34wAogK3kcORw=",
+                entitySet.getProperties().get(0).getValue().toString());
+    }
+    //collection of primitives
+
+    @Test
+    public void retrieveCollectionPropertyValueTest() {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Product").appendKeySegment(-7).appendStructuralSegment(
+                "ComplexConcurrency/QueriedDateTime").appendValueSegment();
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+        final ODataValue value = req.execute().getBody();
+        if (value.isPrimitive()) {
+            assertNotNull(value);
+            assertEquals("2013-09-18T00:44:43.6196168", value.toString());
+        }
+    }
+    // No resource found error. Token is not available under ComplexConcurrency
+
+    @Test
+    public void retrieveNullPropertyValueTest() {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Product").appendKeySegment(-10).appendStructuralSegment(
+                "ComplexConcurrency/Token").appendValueSegment();
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        try {
+            final ODataValue value = req.execute().getBody();
+        } catch (ODataClientErrorException e) {
+            assertEquals(404, e.getStatusLine().getStatusCode());
+        }
+    }
 }

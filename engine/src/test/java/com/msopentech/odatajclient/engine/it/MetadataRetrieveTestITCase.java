@@ -34,100 +34,108 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 
+public class MetadataRetrieveTestITCase extends AbstractTest {
 
-public class MetadataRetrieveTestITCase extends AbstractTest{
+    private void retreiveMetadataTest(final ODataPubFormat reqFormat, final String acceptFormat) {
+        // testing entity types which are not open
+        final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(testDefaultServiceRootURL);
+        req.setFormat(reqFormat);
+        req.setAccept(acceptFormat);
+        try {
+            final ODataRetrieveResponse<EdmMetadata> res = req.execute();
+            final EdmMetadata metadata = res.getBody();
+            assertNotNull(metadata);
+            assertEquals(24, metadata.getSchemas().get(0).getEntityContainers().get(0).getEntitySets().size());
+            final EdmType productCollection =
+                    new EdmType(metadata, "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Product)");
+            assertTrue(productCollection.isCollection());
+            assertFalse(productCollection.isSimpleType());
+            assertFalse(productCollection.isEnumType());
+            assertFalse(productCollection.isComplexType());
+            assertTrue(productCollection.isEntityType());
+            final EntityType type = productCollection.getEntityType();
+            assertNotNull(type);
+            assertFalse(type.isOpenType());
+            assertEquals("Product", type.getName());
+            final EdmType stream = new EdmType(metadata, "Edm.Stream");
+            assertNotNull(stream);
+            assertTrue(stream.isSimpleType());
+            assertFalse(stream.isCollection());
+            assertFalse(stream.isEnumType());
+            assertFalse(stream.isComplexType());
+            assertFalse(stream.isEntityType());
+            final EdmType customerCollection =
+                    new EdmType(metadata, "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Customer)");
+            final EntityType customer = customerCollection.getEntityType();
+            assertNotNull(type);
+            assertFalse(customer.isOpenType());
+            assertEquals("Customer", customer.getName());
 
-	private void retreiveMetadataTest(final ODataPubFormat reqFormat, final String acceptFormat){		
-		// testing entity types which are not open
-		final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(testDefaultServiceRootURL);
-		req.setFormat(reqFormat);
-	    req.setAccept(acceptFormat);
-	    try{
-	        final ODataRetrieveResponse<EdmMetadata> res = req.execute();
-	        final EdmMetadata metadata = res.getBody();
-	        assertNotNull(metadata);
-	        assertEquals(24,metadata.getSchemas().get(0).getEntityContainers().get(0).getEntitySets().size());
-	        final EdmType productCollection =
-	        		new EdmType(metadata, "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Product)");
-	        assertTrue(productCollection.isCollection());
-	        assertFalse(productCollection.isSimpleType());
-	        assertFalse(productCollection.isEnumType());
-	        assertFalse(productCollection.isComplexType());
-	        assertTrue(productCollection.isEntityType());
-	        final EntityType type = productCollection.getEntityType();
-	        assertNotNull(type);
-	        assertFalse(type.isOpenType());
-	        assertEquals("Product",type.getName());
-	        final EdmType stream = new EdmType(metadata, "Edm.Stream");
-	        assertNotNull(stream);
-	        assertTrue(stream.isSimpleType());        
-	        assertFalse(stream.isCollection());
-	        assertFalse(stream.isEnumType());
-	        assertFalse(stream.isComplexType());
-	        assertFalse(stream.isEntityType());
-	        final EdmType customerCollection =
-	        		new EdmType(metadata, "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Customer)");
-	        final EntityType customer = customerCollection.getEntityType();
-	        assertNotNull(type);
-	        assertFalse(customer.isOpenType());
-	        assertEquals("Customer",customer.getName());
-	        
-	        //testing open types
-	        final ODataMetadataRequest req1 = ODataRetrieveRequestFactory.getMetadataRequest(testOpenTypeServiceRootURL);
-			req.setFormat(reqFormat);
-		    req.setAccept(acceptFormat);
-	        final ODataRetrieveResponse<EdmMetadata> res1 = req1.execute();
-	        final EdmMetadata metadata1 = res1.getBody();
-	        List<EntityType> types = metadata1.getSchema(0).getEntityTypes();
-	        for(int i=0; i<types.size();i++){
-	        	assertTrue(types.get(0).isOpenType());
-	        }
-	    }catch(ODataClientErrorException e){
-	    	assertEquals(415,e.getStatusLine().getStatusCode());
-	    }
+            //testing open types
+            final ODataMetadataRequest req1 = ODataRetrieveRequestFactory.getMetadataRequest(testOpenTypeServiceRootURL);
+            req.setFormat(reqFormat);
+            req.setAccept(acceptFormat);
+            final ODataRetrieveResponse<EdmMetadata> res1 = req1.execute();
+            final EdmMetadata metadata1 = res1.getBody();
+            List<EntityType> types = metadata1.getSchema(0).getEntityTypes();
+            for (int i = 0; i < types.size(); i++) {
+                assertTrue(types.get(0).isOpenType());
+            }
+        } catch (ODataClientErrorException e) {
+            assertEquals(415, e.getStatusLine().getStatusCode());
+        }
     }
-	//unsupported media type. 415 error
-	@Test
-	public void jsonTest(){
-		retreiveMetadataTest(ODataPubFormat.JSON,"application/json");
-	}
-	//unsupported media type. 415 error
-	@Test
-	public void atomTest(){
-		retreiveMetadataTest(ODataPubFormat.ATOM,"application/atom+xml");
-	}
-	@Test
-	public void xmlTest(){
-		retreiveMetadataTest(ODataPubFormat.JSON,"application/xml");
-	}
-	//unsupported media type. 415 error
-	@Test
-	public void fullMetadataTest(){
-		retreiveMetadataTest(ODataPubFormat.JSON_FULL_METADATA,"application/json");
-	}
-	//unsupported media type. 415 error
-	@Test
-	public void noMetadataTest(){
-		retreiveMetadataTest(ODataPubFormat.JSON_NO_METADATA,"application/json");
-	}
-	//null format test
-	@Test
-	public void nullAcceptTest(){
-		retreiveMetadataTest(ODataPubFormat.JSON_NO_METADATA,null);
-	}
-	//null format test
-	@Test(expected=NullPointerException.class)
-	public void nullFormatTest(){
-		retreiveMetadataTest(null,"application/json");
-	}
-	//null format test
-	@Test
-	public void atomWithNoAcceptTest(){
-		retreiveMetadataTest(ODataPubFormat.ATOM,null);
-	}
-	//null format test
-	@Test(expected=NullPointerException.class)
-	public void noFormatTest(){
-		retreiveMetadataTest(null,"application/xml");
-	}
+    //unsupported media type. 415 error
+
+    @Test
+    public void jsonTest() {
+        retreiveMetadataTest(ODataPubFormat.JSON, "application/json");
+    }
+    //unsupported media type. 415 error
+
+    @Test
+    public void atomTest() {
+        retreiveMetadataTest(ODataPubFormat.ATOM, "application/atom+xml");
+    }
+
+    @Test
+    public void xmlTest() {
+        retreiveMetadataTest(ODataPubFormat.JSON, "application/xml");
+    }
+    //unsupported media type. 415 error
+
+    @Test
+    public void fullMetadataTest() {
+        retreiveMetadataTest(ODataPubFormat.JSON_FULL_METADATA, "application/json");
+    }
+    //unsupported media type. 415 error
+
+    @Test
+    public void noMetadataTest() {
+        retreiveMetadataTest(ODataPubFormat.JSON_NO_METADATA, "application/json");
+    }
+    //null format test
+
+    @Test
+    public void nullAcceptTest() {
+        retreiveMetadataTest(ODataPubFormat.JSON_NO_METADATA, null);
+    }
+    //null format test
+
+    @Test
+    public void nullFormatTest() {
+        retreiveMetadataTest(null, "application/json");
+    }
+    //null format test
+
+    @Test
+    public void atomWithNoAcceptTest() {
+        retreiveMetadataTest(ODataPubFormat.ATOM, null);
+    }
+    //null format test
+
+    @Test
+    public void noFormatTest() {
+        retreiveMetadataTest(null, "application/xml");
+    }
 }

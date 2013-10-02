@@ -20,6 +20,7 @@
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
+import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import java.io.IOException;
@@ -43,8 +44,13 @@ public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMe
      */
     ODataMediaRequest(final URI query) {
         super(ODataMediaFormat.class, query);
+
         setAccept(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
         setContentType(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
+
+        this.odataHeaders.removeHeader(ODataHeaders.HeaderName.minDataServiceVersion);
+        this.odataHeaders.removeHeader(ODataHeaders.HeaderName.maxDataServiceVersion);
+        this.odataHeaders.removeHeader(ODataHeaders.HeaderName.dataServiceVersion);
     }
 
     /**
@@ -60,6 +66,8 @@ public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMe
      * Response class about an ODataMediaRequest.
      */
     protected class ODataMediaResponseImpl extends ODataRetrieveResponseImpl {
+
+        private InputStream input = null;
 
         /**
          * Constructor.
@@ -80,17 +88,22 @@ public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMe
         }
 
         /**
-         * {@inheritDoc }
+         * Gets query result objects.
+         * <br/>
+         * <b>WARNING</b>: Closing this <tt>ODataResponse</tt> instance is left to the caller.
+         *
+         * @return query result objects as <tt>InputStream</tt>.
          */
         @Override
         public InputStream getBody() {
-            try {
-                return res.getEntity().getContent();
-            } catch (IOException e) {
-                throw new HttpClientException(e);
-            } finally {
-                this.close();
+            if (input == null) {
+                try {
+                    input = res.getEntity().getContent();
+                } catch (IOException e) {
+                    throw new HttpClientException(e);
+                }
             }
+            return input;
         }
     }
 }

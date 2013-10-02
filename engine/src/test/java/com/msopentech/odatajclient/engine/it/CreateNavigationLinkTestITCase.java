@@ -61,64 +61,70 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 
-public class CreateNavigationLinkTestITCase extends AbstractTest{
+public class CreateNavigationLinkTestITCase extends AbstractTest {
 
-	// create navigation link with ATOM
-	@Test
+    // create navigation link with ATOM
+    @Test
     public void createNavWithAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final String contentType = "application/atom+xml";
         final String prefer = "return-content";
-        final ODataEntity actual = createNavigation(format, 20, contentType,prefer);
+        final ODataEntity actual = createNavigation(format, 20, contentType, prefer);
         delete(format, actual, false, testDefaultServiceRootURL);
     }
-	// create navigation link with JSON full metadata
-	@Test
+    // create navigation link with JSON full metadata
+
+    @Test
     public void createNavWithJSONFullMetadata() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final String contentType = "application/json;odata=fullmetadata";
         final String prefer = "return-content";
-        final ODataEntity actual = createNavigation(format, 21, contentType,prefer);
+        final ODataEntity actual = createNavigation(format, 21, contentType, prefer);
         delete(format, actual, false, testDefaultServiceRootURL);
     }
-	// throws Null pointer exception when the format is JSON No metadata
-	@Test(expected = HttpClientException.class)
+    // throws Null pointer exception when the format is JSON No metadata
+
+    @Test(expected = HttpClientException.class)
     public void createNavWithJSONNoMetadata() {
         final ODataPubFormat format = ODataPubFormat.JSON_NO_METADATA;
         final String contentType = "application/json;odata=nometadata";
         final String prefer = "return-content";
-        final ODataEntity actual = createNavigation(format, 22, contentType,prefer);
+        final ODataEntity actual = createNavigation(format, 22, contentType, prefer);
         delete(format, actual, false, testDefaultServiceRootURL);
     }
-	// test with JSON accept and atom content type
-	@Test
+    // test with JSON accept and atom content type
+
+    @Test
     public void createNavWithJSONAndATOM() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final String contentType = "application/atom+xml";
         final String prefer = "return-content";
-        final ODataEntity actual = createNavigation(format, 23, contentType,prefer);
+        final ODataEntity actual = createNavigation(format, 23, contentType, prefer);
         delete(format, actual, false, testDefaultServiceRootURL);
     }
-	// test with JSON full metadata in format and json no metadata in content type
-	@Test
+    // test with JSON full metadata in format and json no metadata in content type
+
+    @Test
     public void createNavWithDiffJSON() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final String contentType = "application/json;odata=nometadata";
         final String prefer = "return-content";
-        final ODataEntity actual = createNavigation(format, 24, contentType,prefer);
+        final ODataEntity actual = createNavigation(format, 24, contentType, prefer);
         delete(format, actual, false, testDefaultServiceRootURL);
     }
-	// test with JSON no metadata format and json no metadata in content type
-	@Test(expected = HttpClientException.class)
+    // test with JSON no metadata format and json no metadata in content type
+
+    @Test(expected = HttpClientException.class)
     public void createNavWithNoMetadata() {
         final ODataPubFormat format = ODataPubFormat.JSON_NO_METADATA;
         final String contentType = "application/json;odata=fullmetadata";
         final String prefer = "return-content";
-        final ODataEntity actual = createNavigation(format, 25, contentType,prefer);
+        final ODataEntity actual = createNavigation(format, 25, contentType, prefer);
         delete(format, actual, false, testDefaultServiceRootURL);
     }
-	// create collection navigation link with ATOM
-	@Test
+    // create collection navigation link with ATOM
+
+    @Test
     public void createCollectionNavWithAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
         final String contentType = "application/atom+xml";
@@ -126,195 +132,204 @@ public class CreateNavigationLinkTestITCase extends AbstractTest{
         final ODataEntity actual = createCollectionNavigation(format, 55, contentType, prefer);
         delete(format, actual, false, testDefaultServiceRootURL);
     }
-	// create collection navigation link with JSON
-	@Test
-	 public void createCollectionNavWithJSON() {
-       final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
+    // create collection navigation link with JSON
+
+    @Test
+    public void createCollectionNavWithJSON() {
+        final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
         final String contentType = "application/json;odata=fullmetadata";
         final String prefer = "return-content";
         final ODataEntity actual = createCollectionNavigation(format, 77, contentType, prefer);
         delete(format, actual, false, testDefaultServiceRootURL);
     }
-		
-	// create a navigation link
-	public ODataEntity createNavigation(final ODataPubFormat format, final int id, final String contenttype, final String prefer){
-		final String name = "Customer Navigation test";
-		
-		final ODataEntity original = getNewCustomer(id, name, false);
-		original.addLink(ODataFactory.newEntityNavigationLink(
-		        "Info", URI.create(testDefaultServiceRootURL + "/CustomerInfo(11)")));
-		final ODataEntity created = createNav(testDefaultServiceRootURL, format, original, "Customer", contenttype, prefer);
-		
-		final ODataEntity actual = validateEntities(testDefaultServiceRootURL, format, created, id, null, "Customer");
-		
-		final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
-		uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Info");
-		
-		final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-		req.setFormat(format);
-		req.setContentType(contenttype);
-		req.setPrefer(prefer);
-		req.setDataServiceVersion("3.0");
-		final ODataRetrieveResponse<ODataEntity> res = req.execute();
-		assertEquals(200, res.getStatusCode());
-		assertTrue(res.getHeader("DataServiceVersion").contains("3.0;"));
-		final ODataEntity entity = res.getBody();
-		assertNotNull(entity);
-		for (ODataProperty prop : entity.getProperties()) {
-		    if ("CustomerInfoId".equals(prop.getName())) {
-		        assertEquals("11", prop.getValue().toString());
-		    }
-		}
-		return actual;
- 	}
 
- 	// create a navigation link
- 	public ODataEntity createNav(final String url,final ODataPubFormat format, final ODataEntity original,final String entitySetName, final String contentType,final String prefer) {
-	 	final ODataURIBuilder uriBuilder = new ODataURIBuilder(url);
+    // create a navigation link
+    public ODataEntity createNavigation(final ODataPubFormat format, final int id, final String contenttype,
+            final String prefer) {
+        final String name = "Customer Navigation test";
+
+        final ODataEntity original = getNewCustomer(id, name, false);
+        original.addLink(ODataFactory.newEntityNavigationLink(
+                "Info", URI.create(testDefaultServiceRootURL + "/CustomerInfo(11)")));
+        final ODataEntity created = createNav(testDefaultServiceRootURL, format, original, "Customer", contenttype,
+                prefer);
+
+        final ODataEntity actual = validateEntities(testDefaultServiceRootURL, format, created, id, null, "Customer");
+
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Info");
+
+        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setFormat(format);
+        req.setContentType(contenttype);
+        req.setPrefer(prefer);
+        final ODataRetrieveResponse<ODataEntity> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+        assertTrue(res.getHeader("DataServiceVersion").contains("3.0;"));
+        final ODataEntity entity = res.getBody();
+        assertNotNull(entity);
+        for (ODataProperty prop : entity.getProperties()) {
+            if ("CustomerInfoId".equals(prop.getName())) {
+                assertEquals("11", prop.getValue().toString());
+            }
+        }
+        return actual;
+    }
+
+    // create a navigation link
+    public ODataEntity createNav(final String url, final ODataPubFormat format, final ODataEntity original,
+            final String entitySetName, final String contentType, final String prefer) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(url);
         uriBuilder.appendEntitySetSegment(entitySetName);
         final ODataEntityCreateRequest createReq =
                 ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
         createReq.setFormat(format);
         createReq.setContentType(contentType);
         createReq.setPrefer(prefer);
-        createReq.setDataServiceVersion("3.0");     
-	        final ODataEntityCreateResponse createRes = createReq.execute();
-	        System.out.println("Entered");
-	        assertEquals(201, createRes.getStatusCode());
-	        
-	        	assertEquals("Created", createRes.getStatusMessage());
+        final ODataEntityCreateResponse createRes = createReq.execute();
+        assertEquals(201, createRes.getStatusCode());
 
-	        	final ODataEntity created = createRes.getBody();
-	        	assertNotNull(created);
-	      return created;
+        assertEquals("Created", createRes.getStatusMessage());
+
+        final ODataEntity created = createRes.getBody();
+        assertNotNull(created);
+        return created;
     }
- 	// create collection navigation link
- 	public ODataEntity createCollectionNavigation(final ODataPubFormat format, final int id, 
-		 final String contentType, final String prefer){{
-	    final String name = "Collection Navigation Key Customer";
-        final ODataEntity original = getNewCustomer(id, name, false);
+    // create collection navigation link
 
-        final Set<Integer> navigationKeys = new HashSet<Integer>();
-        navigationKeys.add(-118);
-        navigationKeys.add(-119);
+    public ODataEntity createCollectionNavigation(final ODataPubFormat format, final int id,
+            final String contentType, final String prefer) {
+        {
+            final String name = "Collection Navigation Key Customer";
+            final ODataEntity original = getNewCustomer(id, name, false);
 
-        for (Integer key : navigationKeys) {
-            final ODataEntity orderEntity =
-                    ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Order");
+            final Set<Integer> navigationKeys = new HashSet<Integer>();
+            navigationKeys.add(-118);
+            navigationKeys.add(-119);
 
-            orderEntity.addProperty(ODataFactory.newPrimitiveProperty("OrderId",
-                    new ODataPrimitiveValue.Builder().setValue(key).setType(EdmSimpleType.INT_32).build()));
-            orderEntity.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
-                    new ODataPrimitiveValue.Builder().setValue(id).setType(EdmSimpleType.INT_32).build()));
+            for (Integer key : navigationKeys) {
+                final ODataEntity orderEntity =
+                        ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Order");
 
-            final ODataEntityCreateRequest createReq = ODataCUDRequestFactory.getEntityCreateRequest(
-                    new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Order").build(), orderEntity);
-            createReq.setFormat(format);
-            createReq.setContentType(contentType);
-            original.addLink(ODataFactory.newFeedNavigationLink(
-                    "Orders",
-                    createReq.execute().getBody().getEditLink()));
+                orderEntity.addProperty(ODataFactory.newPrimitiveProperty("OrderId",
+                        new ODataPrimitiveValue.Builder().setValue(key).setType(EdmSimpleType.Int32).build()));
+                orderEntity.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
+                        new ODataPrimitiveValue.Builder().setValue(id).setType(EdmSimpleType.Int32).build()));
+
+                final ODataEntityCreateRequest createReq = ODataCUDRequestFactory.getEntityCreateRequest(
+                        new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Order").build(),
+                        orderEntity);
+                createReq.setFormat(format);
+                createReq.setContentType(contentType);
+                original.addLink(ODataFactory.newFeedNavigationLink(
+                        "Orders",
+                        createReq.execute().getBody().getEditLink()));
+            }
+            final ODataEntity createdEntity = createNav(testDefaultServiceRootURL, format, original, "Customer",
+                    contentType, prefer);
+            final ODataEntity actualEntity =
+                    validateEntities(testDefaultServiceRootURL, format, createdEntity, id, null, "Customer");
+
+            final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+            uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Orders");
+
+            final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+            req.setFormat(format);
+
+            final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+
+            final ODataEntitySet entitySet = res.getBody();
+            assertNotNull(entitySet);
+
+            assertEquals(2, entitySet.getCount());
+
+            for (ODataEntity entity : entitySet.getEntities()) {
+                final Integer key = entity.getProperty("OrderId").getPrimitiveValue().<Integer>toCastValue();
+                final Integer customerId = entity.getProperty("CustomerId").getPrimitiveValue().<Integer>toCastValue();
+                assertTrue(navigationKeys.contains(key));
+                assertEquals(Integer.valueOf(id), customerId);
+                navigationKeys.remove(key);
+                final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(
+                        URIUtils.getURI(testDefaultServiceRootURL, entity.getEditLink().toASCIIString()));
+
+                deleteReq.setFormat(format);
+                assertEquals(204, deleteReq.execute().getStatusCode());
+            }
+
+            return actualEntity;
         }
-        final ODataEntity createdEntity = createNav(testDefaultServiceRootURL, format, original, "Customer", contentType, prefer);
-        final ODataEntity actualEntity = validateEntities(testDefaultServiceRootURL, format, createdEntity, id, null, "Customer");
+    }
+    // get a Customer entity to be created
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
-        uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Orders");
+    public ODataEntity getNewCustomer(
+            final int id, final String name, final boolean withInlineInfo) {
 
-        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-        req.setFormat(format);
-        
-        final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-        assertEquals(200, res.getStatusCode());
+        final ODataEntity entity =
+                ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
 
-        final ODataEntitySet entitySet = res.getBody();
-        assertNotNull(entitySet);
-        
-        assertEquals(2, entitySet.getCount());
+        // add name attribute
+        entity.addProperty(ODataFactory.newPrimitiveProperty("Name",
+                new ODataPrimitiveValue.Builder().setText(name).setType(EdmSimpleType.String).build()));
 
-        for (ODataEntity entity : entitySet.getEntities()) {
-            final Integer key = entity.getProperty("OrderId").getPrimitiveValue().<Integer>toCastValue();
-            final Integer customerId = entity.getProperty("CustomerId").getPrimitiveValue().<Integer>toCastValue();
-            assertTrue(navigationKeys.contains(key));
-            assertEquals(Integer.valueOf(id), customerId);
-            navigationKeys.remove(key);
-           //  System.out.println("Edit Link " +testDefaultServiceRootURL +entity.getEditLink().toASCIIString());
-            final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(
-                    URIUtils.getURI(testDefaultServiceRootURL, entity.getEditLink().toASCIIString()));
+        // add key attribute
+        if (id != 0) {
+            entity.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
+                    new ODataPrimitiveValue.Builder().setText(String.valueOf(id)).setType(EdmSimpleType.Int32).build()));
+        }
+        final ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
+                "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails)");
 
-            deleteReq.setFormat(format);
-            assertEquals(204, deleteReq.execute().getStatusCode());
+
+        final ODataComplexValue contactDetails = new ODataComplexValue(
+                "Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails");
+
+
+        final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
+        altNamesValue.add(new ODataPrimitiveValue.Builder().
+                setText("My Alternative name").setType(EdmSimpleType.String).build());
+        contactDetails.add(ODataFactory.newCollectionProperty("AlternativeNames", altNamesValue));
+
+        final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
+        emailBagValue.add(new ODataPrimitiveValue.Builder().
+                setText("altname@mydomain.com").setType(EdmSimpleType.String).build());
+        contactDetails.add(ODataFactory.newCollectionProperty("EmailBag", emailBagValue));
+
+        final ODataComplexValue contactAliasValue = new ODataComplexValue(
+                "Microsoft.Test.OData.Services.AstoriaDefaultService.Aliases");
+        contactDetails.add(ODataFactory.newComplexProperty("ContactAlias", contactAliasValue));
+
+        final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
+        aliasAltNamesValue.add(new ODataPrimitiveValue.Builder().
+                setText("myAlternativeName").setType(EdmSimpleType.String).build());
+        contactAliasValue.add(ODataFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
+
+        final ODataComplexValue homePhone = new ODataComplexValue(
+                "Microsoft.Test.OData.Services.AstoriaDefaultService.Phone");
+        homePhone.add(ODataFactory.newPrimitiveProperty("PhoneNumber",
+                new ODataPrimitiveValue.Builder().setText("8437568356834568").setType(EdmSimpleType.String).build()));
+        homePhone.add(ODataFactory.newPrimitiveProperty("Extension",
+                new ODataPrimitiveValue.Builder().setText("124365426534621534423ttrf").setType(EdmSimpleType.String).
+                build()));
+        contactDetails.add(ODataFactory.newComplexProperty("HomePhone", homePhone));
+
+        backupContactInfoValue.add(contactDetails);
+        entity.addProperty(ODataFactory.newCollectionProperty("BackupContactInfo",
+                backupContactInfoValue));
+        if (withInlineInfo) {
+            final ODataInlineEntity inlineInfo = ODataFactory.newInlineEntity("Info", URI.create("Customer(" + id
+                    + ")/Info"), getInfo(id, name + "_Info"));
+            inlineInfo.getEntity().setMediaEntity(true);
+            entity.addLink(inlineInfo);
         }
 
-         return actualEntity;
-		 }
- 	}
- 	// get a Customer entity to be created
- 	public ODataEntity getNewCustomer(
-        final int id, final String name, final boolean withInlineInfo) {
+        return entity;
+    }
+    //delete an entity and associated links after creation
 
-		final ODataEntity entity =
-		        ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
-		
-		// add name attribute
-		entity.addProperty(ODataFactory.newPrimitiveProperty("Name",
-		        new ODataPrimitiveValue.Builder().setText(name).setType(EdmSimpleType.STRING).build()));
-		
-		// add key attribute
-		if(id!=0){
-		entity.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
-		        new ODataPrimitiveValue.Builder().setText(String.valueOf(id)).setType(EdmSimpleType.INT_32).build()));
-		}
-		final ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
-		        "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails)");
-		
-		
-		final ODataComplexValue contactDetails = new ODataComplexValue(
-		        "Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails");
-		
-		
-		final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-		altNamesValue.add(new ODataPrimitiveValue.Builder().
-		        setText("My Alternative name").setType(EdmSimpleType.STRING).build());
-		contactDetails.add(ODataFactory.newCollectionProperty("AlternativeNames", altNamesValue));
-		
-		final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
-		emailBagValue.add(new ODataPrimitiveValue.Builder().
-		        setText("altname@mydomain.com").setType(EdmSimpleType.STRING).build());
-		contactDetails.add(ODataFactory.newCollectionProperty("EmailBag", emailBagValue));
-		
-		final ODataComplexValue contactAliasValue = new ODataComplexValue(
-		        "Microsoft.Test.OData.Services.AstoriaDefaultService.Aliases");
-		contactDetails.add(ODataFactory.newComplexProperty("ContactAlias", contactAliasValue));
-		
-		final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-		aliasAltNamesValue.add(new ODataPrimitiveValue.Builder().
-		        setText("myAlternativeName").setType(EdmSimpleType.STRING).build());
-		contactAliasValue.add(ODataFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
-		
-		final ODataComplexValue homePhone = new ODataComplexValue(
-		        "Microsoft.Test.OData.Services.AstoriaDefaultService.Phone");       
-		homePhone.add(ODataFactory.newPrimitiveProperty("PhoneNumber",
-		        new ODataPrimitiveValue.Builder().setText("8437568356834568").setType(EdmSimpleType.STRING).build()));
-		homePhone.add(ODataFactory.newPrimitiveProperty("Extension",
-		        new ODataPrimitiveValue.Builder().setText("124365426534621534423ttrf").setType(EdmSimpleType.STRING).build()));
-		contactDetails.add(ODataFactory.newComplexProperty("HomePhone", homePhone));
-		
-		backupContactInfoValue.add(contactDetails);
-		entity.addProperty(ODataFactory.newCollectionProperty("BackupContactInfo",
-		        backupContactInfoValue));
-		if (withInlineInfo) {
-		    final ODataInlineEntity inlineInfo = ODataFactory.newInlineEntity("Info",URI.create("Customer(" + id + ")/Info"),getInfo(id, name + "_Info"));
-		    inlineInfo.getEntity().setMediaEntity(true);
-		    entity.addLink(inlineInfo);
-		}
-
-    	return entity;
- 	}
- 	//delete an entity and associated links after creation
- 	public void delete(final ODataPubFormat format,final ODataEntity created,final boolean includeInline,final String baseUri) {
-	 	final Set<URI> toBeDeleted = new HashSet<URI>();
-        System.out.println("Link "+created.getEditLink());
+    public void delete(final ODataPubFormat format, final ODataEntity created, final boolean includeInline,
+            final String baseUri) {
+        final Set<URI> toBeDeleted = new HashSet<URI>();
         toBeDeleted.add(created.getEditLink());
 
         if (includeInline) {
@@ -348,18 +363,20 @@ public class CreateNavigationLinkTestITCase extends AbstractTest{
             deleteRes.close();
         }
     }
- 	// add Information property
- 	public ODataEntity getInfo(final int id, final String info) {
+    // add Information property
+
+    public ODataEntity getInfo(final int id, final String info) {
         final ODataEntity entity =
                 ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.CustomerInfo");
         entity.setMediaEntity(true);
 
         entity.addProperty(ODataFactory.newPrimitiveProperty("Information",
-                new ODataPrimitiveValue.Builder().setText(info).setType(EdmSimpleType.STRING).build()));
+                new ODataPrimitiveValue.Builder().setText(info).setType(EdmSimpleType.String).build()));
         return entity;
- 	}
- 	// validate newly created entities
- 	public ODataEntity validateEntities(final String serviceRootURL,
+    }
+    // validate newly created entities
+
+    public ODataEntity validateEntities(final String serviceRootURL,
             final ODataPubFormat format,
             final ODataEntity original,
             final int actualObjectId,
@@ -389,110 +406,112 @@ public class CreateNavigationLinkTestITCase extends AbstractTest{
         checkProperties(original.getProperties(), actual.getProperties());
         return actual;
     }
- 	// compares links of the newly created entity with the previous 
-	 public void validateLinks(final Collection<ODataLink> original, final Collection<ODataLink> actual) {
-	        assertTrue(original.size() <= actual.size());
+    // compares links of the newly created entity with the previous 
 
-	        for (ODataLink originalLink : original) {
-	            ODataLink foundOriginal = null;
-	            ODataLink foundActual = null;
+    public void validateLinks(final Collection<ODataLink> original, final Collection<ODataLink> actual) {
+        assertTrue(original.size() <= actual.size());
 
-	            for (ODataLink actualLink : actual) {
+        for (ODataLink originalLink : original) {
+            ODataLink foundOriginal = null;
+            ODataLink foundActual = null;
 
-	                if (actualLink.getType() == originalLink.getType()
-	                        && (originalLink.getLink() == null
-	                        || actualLink.getLink().toASCIIString().endsWith(originalLink.getLink().toASCIIString()))
-	                        && actualLink.getName().equals(originalLink.getName())) {
+            for (ODataLink actualLink : actual) {
 
-	                    foundOriginal = originalLink;
-	                    foundActual = actualLink;
-	                }
-	            }
+                if (actualLink.getType() == originalLink.getType()
+                        && (originalLink.getLink() == null
+                        || actualLink.getLink().toASCIIString().endsWith(originalLink.getLink().toASCIIString()))
+                        && actualLink.getName().equals(originalLink.getName())) {
 
-	            assertNotNull(foundOriginal);
-	            assertNotNull(foundActual);
+                    foundOriginal = originalLink;
+                    foundActual = actualLink;
+                }
+            }
 
-	            if (foundOriginal instanceof ODataInlineEntity && foundActual instanceof ODataInlineEntity) {
-	                final ODataEntity originalInline = ((ODataInlineEntity) foundOriginal).getEntity();
-	                assertNotNull(originalInline);
+            assertNotNull(foundOriginal);
+            assertNotNull(foundActual);
 
-	                final ODataEntity actualInline = ((ODataInlineEntity) foundActual).getEntity();
-	                assertNotNull(actualInline);
+            if (foundOriginal instanceof ODataInlineEntity && foundActual instanceof ODataInlineEntity) {
+                final ODataEntity originalInline = ((ODataInlineEntity) foundOriginal).getEntity();
+                assertNotNull(originalInline);
 
-	                checkProperties(originalInline.getProperties(), actualInline.getProperties());
-	            }
-	        }
-	    }
-	// compares properties of the newly created entity with the properties that were originally provided
-	 public void checkProperties(final Collection<ODataProperty> original, final Collection<ODataProperty> actual) {
-	        assertTrue(original.size() <= actual.size());
+                final ODataEntity actualInline = ((ODataInlineEntity) foundActual).getEntity();
+                assertNotNull(actualInline);
 
-	        final Map<String, ODataProperty> actualProperties = new HashMap<String, ODataProperty>(actual.size());
+                checkProperties(originalInline.getProperties(), actualInline.getProperties());
+            }
+        }
+    }
+    // compares properties of the newly created entity with the properties that were originally provided
 
-	        for (ODataProperty prop : actual) {
-	            assertFalse(actualProperties.containsKey(prop.getName()));
-	            actualProperties.put(prop.getName(), prop);
-	        }
+    public void checkProperties(final Collection<ODataProperty> original, final Collection<ODataProperty> actual) {
+        assertTrue(original.size() <= actual.size());
 
-	        assertTrue(actual.size() <= actualProperties.size());
+        final Map<String, ODataProperty> actualProperties = new HashMap<String, ODataProperty>(actual.size());
 
-	        for (ODataProperty prop : original) {
-	            assertNotNull(prop);
-	            if (actualProperties.containsKey(prop.getName())) {
-	                final ODataProperty actualProp = actualProperties.get(prop.getName());
-	                assertNotNull(actualProp);
+        for (ODataProperty prop : actual) {
+            assertFalse(actualProperties.containsKey(prop.getName()));
+            actualProperties.put(prop.getName(), prop);
+        }
 
-	                if (prop.getValue() != null && actualProp.getValue() != null) {
-	                    checkPropertyValue(prop.getName(), prop.getValue(), actualProp.getValue());
-	                }
-	            } 
-	        }
-	    }
-	// compares property value of the newly created entity with the property value that were originally provided
-	 public void checkPropertyValue(final String propertyName,
-	            final ODataValue original, final ODataValue actual) {
+        assertTrue(actual.size() <= actualProperties.size());
 
-	        assertNotNull("Null original value for " + propertyName, original);
-	        assertNotNull("Null actual value for " + propertyName, actual);
+        for (ODataProperty prop : original) {
+            assertNotNull(prop);
+            if (actualProperties.containsKey(prop.getName())) {
+                final ODataProperty actualProp = actualProperties.get(prop.getName());
+                assertNotNull(actualProp);
 
-	        assertEquals("Type mismatch for '" + propertyName + "'",
-	                original.getClass().getSimpleName(), actual.getClass().getSimpleName());
+                if (prop.getValue() != null && actualProp.getValue() != null) {
+                    checkPropertyValue(prop.getName(), prop.getValue(), actualProp.getValue());
+                }
+            }
+        }
+    }
+    // compares property value of the newly created entity with the property value that were originally provided
 
-	        if (original.isComplex()) {
-	            final List<ODataProperty> originalPropertyValue = new ArrayList<ODataProperty>();
-	            for (ODataProperty prop : original.asComplex()) {
-	            	originalPropertyValue.add(prop);
-	            }
+    public void checkPropertyValue(final String propertyName,
+            final ODataValue original, final ODataValue actual) {
 
-	            final List<ODataProperty> actualPropertyValue = new ArrayList<ODataProperty>();
-	            for (ODataProperty prop : (ODataComplexValue) actual) {
-	            	actualPropertyValue.add(prop);
-	            }
+        assertNotNull("Null original value for " + propertyName, original);
+        assertNotNull("Null actual value for " + propertyName, actual);
 
-	            checkProperties(originalPropertyValue, actualPropertyValue);
-	        } else if (original.isCollection()) {
-	            assertTrue(original.asCollection().size() <= actual.asCollection().size());
+        assertEquals("Type mismatch for '" + propertyName + "'",
+                original.getClass().getSimpleName(), actual.getClass().getSimpleName());
 
-	            boolean found = original.asCollection().isEmpty();
+        if (original.isComplex()) {
+            final List<ODataProperty> originalPropertyValue = new ArrayList<ODataProperty>();
+            for (ODataProperty prop : original.asComplex()) {
+                originalPropertyValue.add(prop);
+            }
 
-	            for (ODataValue originalValue : original.asCollection()) {
-	                for (ODataValue actualValue : actual.asCollection()) {
-	                    try {
-	                        checkPropertyValue(propertyName, originalValue, actualValue);
-	                        found = true;
-	                    } catch (AssertionError error) {
-	                        
-	                    }
-	                }
-	            }
+            final List<ODataProperty> actualPropertyValue = new ArrayList<ODataProperty>();
+            for (ODataProperty prop : (ODataComplexValue) actual) {
+                actualPropertyValue.add(prop);
+            }
 
-	            assertTrue("Found " + actual + " and expected " + original, found);
-	        } else {
-	            assertTrue("Primitive value for '" + propertyName + "' type mismatch",
-	                    original.asPrimitive().getTypeName().equals(actual.asPrimitive().getTypeName()));
+            checkProperties(originalPropertyValue, actualPropertyValue);
+        } else if (original.isCollection()) {
+            assertTrue(original.asCollection().size() <= actual.asCollection().size());
 
-	            assertEquals("Primitive value for '" + propertyName + "' mismatch",
-	                    original.asPrimitive().toString(), actual.asPrimitive().toString());
-	        }
-	    }
+            boolean found = original.asCollection().isEmpty();
+
+            for (ODataValue originalValue : original.asCollection()) {
+                for (ODataValue actualValue : actual.asCollection()) {
+                    try {
+                        checkPropertyValue(propertyName, originalValue, actualValue);
+                        found = true;
+                    } catch (AssertionError error) {
+                    }
+                }
+            }
+
+            assertTrue("Found " + actual + " and expected " + original, found);
+        } else {
+            assertTrue("Primitive value for '" + propertyName + "' type mismatch",
+                    original.asPrimitive().getTypeName().equals(actual.asPrimitive().getTypeName()));
+
+            assertEquals("Primitive value for '" + propertyName + "' mismatch",
+                    original.asPrimitive().toString(), actual.asPrimitive().toString());
+        }
+    }
 }

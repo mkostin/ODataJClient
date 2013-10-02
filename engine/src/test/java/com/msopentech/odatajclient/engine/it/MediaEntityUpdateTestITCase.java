@@ -24,7 +24,6 @@ import static org.junit.Assert.*;
 import java.io.InputStream;
 import java.net.URI;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
@@ -37,33 +36,43 @@ import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntit
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.BoundedInputStream;
+import org.apache.commons.lang3.ArrayUtils;
 
-public class MediaEntityUpdateTestITCase extends AbstractTest{
+public class MediaEntityUpdateTestITCase extends AbstractTest {
 
-	private void updateMediaEntity(
-			final ODataPubFormat format,
-			final String contentType,
-			final String prefer,
-			final String image,
-			final int id) throws Exception {
+    private void updateMediaEntity(
+            final ODataPubFormat format,
+            final String prefer,
+            final String image,
+            final int id) throws Exception {
+
         ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
-        final InputStream input = IOUtils.toInputStream(image);
+        // The sample service has an upload request size of 65k
+        InputStream input = new BoundedInputStream(getClass().getResourceAsStream(image), 65000);
+        final byte[] expected = new byte[65000];
+        IOUtils.read(input, expected, 0, expected.length);
+        IOUtils.closeQuietly(input);
+
+        input = new BoundedInputStream(getClass().getResourceAsStream(image), 65000);
 
         final ODataMediaEntityUpdateRequest updateReq =
                 ODataStreamedRequestFactory.getMediaEntityUpdateRequest(builder.build(), input);
         updateReq.setFormat(format);
         updateReq.setPrefer(prefer);
         final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
-	            appendEntityTypeSegment("Car").appendKeySegment(id).build();
-	    final String etag = getETag(uri);
-	    if (StringUtils.isNotBlank(etag)) {
-        	updateReq.setIfMatch(etag);
+                appendEntityTypeSegment("Car").appendKeySegment(id).build();
+        final String etag = getETag(uri);
+        if (StringUtils.isNotBlank(etag)) {
+            updateReq.setIfMatch(etag);
         }
         final MediaEntityUpdateStreamManager streamManager = updateReq.execute();
         final ODataMediaEntityUpdateResponse updateRes = streamManager.getResponse();
         assertEquals(204, updateRes.getStatusCode());
+
         builder = new ODataURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
@@ -71,80 +80,79 @@ public class MediaEntityUpdateTestITCase extends AbstractTest{
 
         final ODataRetrieveResponse<InputStream> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
-        assertEquals(image, IOUtils.toString(retrieveRes.getBody()));
+
+        final byte[] actual = new byte[65000];
+        IOUtils.read(retrieveRes.getBody(), actual, 0, actual.length);
+        assertTrue(ArrayUtils.isEquals(expected, actual));
     }
-	// update media with JSON full metadata
-	@Test
-	public void updateMediaWithJSON(){
-		ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
-		String contentType = "application/json;odata=fullmetadata";
-		String prefer = "return-content";
-		String media1 = "../images/big_buck_bunny.mp4";
-		String media2 = "../images/renault.jpg";
-		String media3 = "../images/image1.png";
-		String media4 = "../images/20051210-w50s.flv";		
-		int id = 11;
-		try{
-			updateMediaEntity(format,contentType,prefer,media1,id);
-			updateMediaEntity(format,contentType,prefer,media2,id);
-			updateMediaEntity(format,contentType,prefer,media3,id);
-			updateMediaEntity(format,contentType,prefer,media4,id);
-		}catch(Exception e){
-			fail(e.getMessage());
-		}
-		catch(AssertionError e){
-			fail(e.getMessage());
-		}
-	}
-	// update media with ATOM
-	@Test
-	public void updateMediaWithATOM(){
-		ODataPubFormat format = ODataPubFormat.ATOM;
-		String contentType = "application/atom+xml";
-		String prefer = "return-content";
-		String media = "../images/big_buck_bunny.mp4";
-		int id = 12;
-		try{
-			updateMediaEntity(format,contentType,prefer,media,id);
-		}catch(Exception e){
-			fail(e.getMessage());
-		}
-		catch(AssertionError e){
-			fail(e.getMessage());
-		}
-	}
-	// update media with JSON minimla metadata
-	@Test
-	public void updateMediaWithJSONMinimal(){
-		ODataPubFormat format = ODataPubFormat.JSON;
-		String contentType = "application/json";
-		String prefer = "return-content";
-		String media = "../images/big_buck_bunny.mp4";
-		int id = 13;
-		try{
-			updateMediaEntity(format,contentType,prefer,media,id);
-		}catch(Exception e){
-			fail(e.getMessage());
-		}
-		catch(AssertionError e){
-			fail(e.getMessage());
-		}
-	}
-	// update media with JSON no metadata
-	@Test
-	public void updateMediaWithJSONNoMetadata(){
-		ODataPubFormat format = ODataPubFormat.JSON_NO_METADATA;
-		String contentType = "application/json;odata=nometadata";
-		String prefer = "return-content";
-		String media = "../images/big_buck_bunny.mp4";
-		int id = 14;
-		try{
-			updateMediaEntity(format,contentType,prefer,media,id);
-		}catch(Exception e){
-			fail(e.getMessage());
-		}
-		catch(AssertionError e){
-			fail(e.getMessage());
-		}
-	}
+    // update media with JSON full metadata
+
+    @Test
+    public void updateMediaWithJSON() {
+        ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
+        String prefer = "return-content";
+        String media1 = "/images/big_buck_bunny.mp4";
+        String media2 = "/images/Renault.jpg";
+        String media3 = "/images/image1.png";
+        String media4 = "/images/20051210-w50s.flv";
+        int id = 11;
+        try {
+            updateMediaEntity(format, prefer, media1, id);
+            updateMediaEntity(format, prefer, media2, id);
+            updateMediaEntity(format, prefer, media3, id);
+            updateMediaEntity(format, prefer, media4, id);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        } catch (AssertionError e) {
+            fail(e.getMessage());
+        }
+    }
+    // update media with ATOM
+
+    @Test
+    public void updateMediaWithATOM() {
+        ODataPubFormat format = ODataPubFormat.ATOM;
+        String prefer = "return-content";
+        String media = "/images/big_buck_bunny.mp4";
+        int id = 12;
+        try {
+            updateMediaEntity(format, prefer, media, id);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        } catch (AssertionError e) {
+            fail(e.getMessage());
+        }
+    }
+    // update media with JSON minimla metadata
+
+    @Test
+    public void updateMediaWithJSONMinimal() {
+        ODataPubFormat format = ODataPubFormat.JSON;
+        String prefer = "return-content";
+        String media = "/images/big_buck_bunny.mp4";
+        int id = 13;
+        try {
+            updateMediaEntity(format, prefer, media, id);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        } catch (AssertionError e) {
+            fail(e.getMessage());
+        }
+    }
+    // update media with JSON no metadata
+
+    @Test
+    public void updateMediaWithJSONNoMetadata() {
+        ODataPubFormat format = ODataPubFormat.JSON_NO_METADATA;
+        String prefer = "return-content";
+        String media = "/images/big_buck_bunny.mp4";
+        int id = 14;
+        try {
+            updateMediaEntity(format, prefer, media, id);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        } catch (AssertionError e) {
+            fail(e.getMessage());
+        }
+    }
 }

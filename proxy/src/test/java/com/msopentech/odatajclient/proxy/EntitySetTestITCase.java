@@ -39,7 +39,7 @@ public class EntitySetTestITCase extends AbstractTest {
     @Test
     public void count() {
         assertNotNull(container.getMessage());
-        assertEquals(Long.valueOf(10L), container.getMessage().count());
+        assertTrue(10 <= container.getMessage().count());
 
         assertTrue(container.getCustomer().count() > 0);
     }

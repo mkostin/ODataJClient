@@ -180,7 +180,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
     @Test
     public void issue131() {
         final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-                appendEntityTypeSegment("Customer").appendKeySegment(-10).select("Name");
+                appendEntityTypeSegment("Customer").appendKeySegment(-7).select("Name");
 
         ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
@@ -192,7 +192,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
         req.setFormat(ODataPubFormat.ATOM);
 
         final AtomEntry atomEntry = Deserializer.toEntry(req.execute().getRawResponse(), AtomEntry.class);
-        assertEquals("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass",
+        assertEquals("remotingdestructorprinterswitcheschannelssatellitelanguageresolve",
                 atomEntry.getSummary());
     }
 }

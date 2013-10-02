@@ -30,49 +30,55 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 
+public class ServiceDocumentRetrieveTestITCase extends AbstractTest {
+    // retrieve service document
 
-public class ServiceDocumentRetrieveTestITCase extends AbstractTest{
-	// retrieve service document
-	private void retreiveServiceDocumentTest(final ODataFormat reqFormat, final String acceptFormat){
-		final ODataServiceDocumentRequest req =ODataRetrieveRequestFactory.getServiceDocumentRequest(testDefaultServiceRootURL);
+    private void retrieveServiceDocumentTest(final ODataFormat reqFormat, final String acceptFormat) {
+        final ODataServiceDocumentRequest req = ODataRetrieveRequestFactory.getServiceDocumentRequest(
+                testDefaultServiceRootURL);
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         final ODataRetrieveResponse<ODataServiceDocument> res = req.execute();
-        assertEquals(200,res.getStatusCode());
+        assertEquals(200, res.getStatusCode());
         final ODataServiceDocument serviceDocument = res.getBody();
-        assertEquals(24,serviceDocument.count());
+        assertEquals(24, serviceDocument.count());
         assertEquals(URI.create(testDefaultServiceRootURL + "/Customer"),
-        		serviceDocument.getEntitySetURI("Customer"));
-	}
-	//with json header
-	@Test
-	public void jsonTest(){
-		retreiveServiceDocumentTest(ODataFormat.JSON,"application/json");
-	}
-	//with json header no metadata
-	@Test
-	public void jsonNoMetadataTest(){
-		retreiveServiceDocumentTest(ODataFormat.JSON_NO_METADATA,"application/json");
-	}
-	//with xml header
-	@Test
-	public void xmlTest(){
-		retreiveServiceDocumentTest(ODataFormat.XML,"application/xml");
-	}
-	//unsupported media type. 415 error
-	@Test(expected = ODataClientErrorException.class)
-	public void atomAccpetTest(){
-		retreiveServiceDocumentTest(ODataFormat.XML,"application/atom+xml");
-	}
-	// test with xml format and null accept header
-	@Test
-	public void nullAccpetTest(){
-		retreiveServiceDocumentTest(ODataFormat.XML,null);
-	}
-	// null format test
-	@Test(expected = NullPointerException.class)
-	public void nullServiceFormatTest(){
-		retreiveServiceDocumentTest(null,"application/atom+xml");
-	}
-	
+                serviceDocument.getEntitySetURI("Customer"));
+    }
+    //with json header
+
+    @Test
+    public void jsonTest() {
+        retrieveServiceDocumentTest(ODataFormat.JSON, "application/json");
+    }
+    //with json header no metadata
+
+    @Test
+    public void jsonNoMetadataTest() {
+        retrieveServiceDocumentTest(ODataFormat.JSON_NO_METADATA, "application/json");
+    }
+    //with xml header
+
+    @Test
+    public void xmlTest() {
+        retrieveServiceDocumentTest(ODataFormat.XML, "application/xml");
+    }
+    //unsupported media type. 415 error
+
+    @Test(expected = ODataClientErrorException.class)
+    public void atomAcceptTest() {
+        retrieveServiceDocumentTest(ODataFormat.XML, "application/atom+xml");
+    }
+    // test with xml format and null accept header
+
+    @Test
+    public void nullAcceptTest() {
+        retrieveServiceDocumentTest(ODataFormat.XML, null);
+    }
+    // null format test
+
+    @Test
+    public void nullServiceFormatTest() {
+        retrieveServiceDocumentTest(null, "application/xml");
+    }
 }

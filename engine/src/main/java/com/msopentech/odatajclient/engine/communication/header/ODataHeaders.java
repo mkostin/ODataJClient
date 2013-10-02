@@ -42,7 +42,7 @@ public class ODataHeaders {
         accept("Accept"),
         /**
          * The Content-Type header is used as specified in [RFC2616].
-         * <p>
+         * <br/>
          * OData request/response supports the following types:
          * <ul>
          * <li>application/atom+xml</li>
@@ -133,7 +133,7 @@ public class ODataHeaders {
         slug("Slug"),
         /**
          * This header is a custom HTTP request header.
-         * <p>
+         * <br/>
          * It is possible to instruct network intermediaries (proxies, firewalls, and so on) inspecting traffic at
          * the application protocol layer (for example, HTTP) to block requests that contain certain HTTP verbs.
          * In practice, GET and POST verbs are rarely blocked (traditional web pages rely heavily on these
@@ -142,12 +142,12 @@ public class ODataHeaders {
          * some existing HTTP libraries do not allow creation of requests using verbs other than GET or POST.
          * Therefore, an alternative way of specifying request types which use verbs other than GET and POST
          * is needed to ensure that this document works well in a wide range of environments.
-         * <p>
+         * <br/>
          * To address this need, the X-HTTP-Method header can be added to a POST request that signals that
          * the server MUST process the request not as a POST, but as if the HTTP verb specified as the value of
          * the header was used as the method on the HTTP request's request line, as specified in [RFC2616]
          * section 5.1. This technique is often referred to as "verb tunneling".
-         * <p>
+         * <br/>
          * This header is only valid when on POST requests.
          */
         xHttpMethod("X-HTTP-METHOD");
@@ -195,7 +195,7 @@ public class ODataHeaders {
 
     /**
      * Gets the value of the header identified by the given name.
-     * <p>
+     * <br/>
      * Please note that header name is case-insensitive.
      *
      * @param name name of the header to be retrieved.
@@ -207,7 +207,7 @@ public class ODataHeaders {
 
     /**
      * Gets the value of the header identified by the given name.
-     * <p>
+     * <br/>
      * Please note that header name is case-insensitive.
      *
      * @param name name of the header to be retrieved.
@@ -218,8 +218,32 @@ public class ODataHeaders {
     }
 
     /**
+     * Removes the header identified by the given name.
+     * <br/>
+     * Please note that header name is case-insensitive.
+     *
+     * @param name name of the header to be retrieved.
+     * @return header name (if found).
+     */
+    public String removeHeader(final HeaderName name) {
+        return headers.remove(name.toString());
+    }
+
+    /**
+     * Removes the header identified by the given name.
+     * <br/>
+     * Please note that header name is case-insensitive.
+     *
+     * @param name name of the header to be retrieved.
+     * @return header name (if found).
+     */
+    public String removeHeader(final String name) {
+        return headers.remove(name);
+    }
+
+    /**
      * Gets header names.
-     * <p>
+     * <br/>
      * Please note that header name is case-insensitive.
      *
      * @return header names.

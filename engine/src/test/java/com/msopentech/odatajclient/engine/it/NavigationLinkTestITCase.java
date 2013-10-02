@@ -34,96 +34,105 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 
+public class NavigationLinkTestITCase extends AbstractTest {
+    //collection of navigation links
 
-public class NavigationLinkTestITCase extends AbstractTest{
-	//collection of navigation links
-	private void getListNavigationLinks(String acceptFormat){
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Orders");
-		ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setAccept(acceptFormat);
-		ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-		assertEquals(200, res.getStatusCode());
-		ODataEntitySet entitySet = res.getBody();
-		assertNotNull(entitySet);
-		List<ODataEntity> entity = entitySet.getEntities();
-		assertNotNull(entity);
-		for(int i=0; i<entity.size(); i++){
-			assertNotNull(entity.get(i).getProperties().get(0).getValue());
-		}
-	}
-	//invalid query
-	private void getListNavigationLinksInvalidSegment(String acceptFormat){
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Address");
-		ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setAccept(acceptFormat);
-		ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-		assertEquals(415, res.getStatusCode());
-	}
-	//Reference navigation link
-	private void getSingleNavigationLinks(String acceptFormat){
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Orders").appendKeySegment(-10);
-		ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-		req.setAccept(acceptFormat);
-		ODataRetrieveResponse<ODataEntity> res = req.execute();
-		assertEquals(200, res.getStatusCode());
-		ODataEntity entity = res.getBody();
-		System.out.println(entity.getProperties().get(0).getValue());
-		assertNotNull(entity.getProperties().get(0).getValue());
-	}
-	// reference navigation link
-	private void getReferenceNavigationLinks(String acceptFormat){
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Logins").appendKeySegment(-1);
-		ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
-		req.setAccept(acceptFormat);
-		try{
-			ODataRetrieveResponse<ODataEntity> res = req.execute();
-			assertEquals(200, res.getStatusCode());
-			ODataEntity entity = res.getBody();
-			assertNotNull(entity);
-			System.out.println(entity.getProperties().get(0).getValue());
-			assertNotNull(entity.getProperties().get(0).getValue());
-		}catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415)
-				assertEquals(415,e.getStatusLine().getStatusCode());
-			if(e.getStatusLine().getStatusCode() == 404)
-				assertEquals(404,e.getStatusLine().getStatusCode());
-		}
-	}
-	// json header test
-	@Test
-	public void withJSON(){
-		getListNavigationLinks("application/json");
-		getSingleNavigationLinks("application/json");
-	}
-	// atom header test
-	@Test(expected = ODataClientErrorException.class)
-	public void withATOM(){
-		getListNavigationLinks("application/atom+xml");
-		getSingleNavigationLinks("application/atom+xml");
-		getReferenceNavigationLinks("application/atom+xml");
-	}
-	// unable to deserialize. xml is an invalid accept header for collection reference link
-	@Test(expected = IllegalArgumentException.class)
-	public void withXML(){
-		getListNavigationLinks("application/xml");
-		getSingleNavigationLinks("application/xml");
-		getReferenceNavigationLinks("application/xml");
-	}
-	//with no accept header test
-	@Test
-	public void withNull(){
-		getListNavigationLinks(null);
-		getSingleNavigationLinks(null);
-		getReferenceNavigationLinks(null);
-	}
-	// with an invalid navigation segment which does not exists. 404 error is returned
-	@Test(expected = ODataClientErrorException.class)
-	public void withInvalidSegment(){
-		getListNavigationLinksInvalidSegment("application/json");
-	}
+    private void getListNavigationLinks(String acceptFormat) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Orders");
+        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setAccept(acceptFormat);
+        ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+        ODataEntitySet entitySet = res.getBody();
+        assertNotNull(entitySet);
+        List<ODataEntity> entity = entitySet.getEntities();
+        assertNotNull(entity);
+        for (int i = 0; i < entity.size(); i++) {
+            assertNotNull(entity.get(i).getProperties().get(0).getValue());
+        }
+    }
+    //invalid query
 
+    private void getListNavigationLinksInvalidSegment(String acceptFormat) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Address");
+        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setAccept(acceptFormat);
+        ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+        assertEquals(415, res.getStatusCode());
+    }
+    //Reference navigation link
+
+    private void getSingleNavigationLinks(String acceptFormat) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Orders").
+                appendKeySegment(-10);
+        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setAccept(acceptFormat);
+        ODataRetrieveResponse<ODataEntity> res = req.execute();
+        assertEquals(200, res.getStatusCode());
+        ODataEntity entity = res.getBody();
+        assertNotNull(entity.getProperties().get(0).getValue());
+    }
+    // reference navigation link
+
+    private void getReferenceNavigationLinks(String acceptFormat) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Logins").
+                appendKeySegment(-1);
+        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req.setAccept(acceptFormat);
+        try {
+            ODataRetrieveResponse<ODataEntity> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            ODataEntity entity = res.getBody();
+            assertNotNull(entity);
+            assertNotNull(entity.getProperties().get(0).getValue());
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            }
+            if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    // json header test
+
+    @Test
+    public void withJSON() {
+        getListNavigationLinks("application/json");
+        getSingleNavigationLinks("application/json");
+    }
+    // atom header test
+
+    @Test(expected = ODataClientErrorException.class)
+    public void withATOM() {
+        getListNavigationLinks("application/atom+xml");
+        getSingleNavigationLinks("application/atom+xml");
+        getReferenceNavigationLinks("application/atom+xml");
+    }
+    // unable to deserialize. xml is an invalid accept header for collection reference link
+
+    @Test(expected = IllegalArgumentException.class)
+    public void withXML() {
+        getListNavigationLinks("application/xml");
+        getSingleNavigationLinks("application/xml");
+        getReferenceNavigationLinks("application/xml");
+    }
+    //with no accept header test
+
+    @Test
+    public void withNull() {
+        getListNavigationLinks(null);
+        getSingleNavigationLinks(null);
+        getReferenceNavigationLinks(null);
+    }
+    // with an invalid navigation segment which does not exists. 404 error is returned
+
+    @Test(expected = ODataClientErrorException.class)
+    public void withInvalidSegment() {
+        getListNavigationLinksInvalidSegment("application/json");
+    }
 }

@@ -33,333 +33,337 @@ import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 
+public class EntitySetRetrieveTestITCase extends AbstractTest {
+    // retrieves an entity set
 
-public class EntitySetRetrieveTestITCase extends AbstractTest{
-	// retrieves an entity set
-	private void retreiveEntityTest(ODataPubFormat reqFormat, String acceptFormat){
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Product");
-		ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setFormat(reqFormat);
-		req.setAccept(acceptFormat);
-		try{
-			ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-			assertEquals(200,res.getStatusCode());
-			ODataEntitySet entitySet = res.getBody();
-			List<ODataEntity> entity = entitySet.getEntities();
-			for(int i=0;i<entity.size();i++){
-				assertNotNull(entity.get(i));
-			}
-			assertEquals(10,entity.size());
-		}catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415){
-				assertEquals(415, e.getStatusLine().getStatusCode());
-			}
-			else if(e.getStatusLine().getStatusCode() == 404){
-				assertEquals(404, e.getStatusLine().getStatusCode());
-			}
-		}
-	}
-	// get entity set with fullmetadata
-	private void retreiveFullMetadataEntityTest(ODataPubFormat reqFormat, String acceptFormat){
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntitySetSegment("Product");
-		ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setAccept(acceptFormat);
-		try{
-			ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-			assertEquals(200,res.getStatusCode());
-			ODataEntitySet entitySet = res.getBody();
-			assertNotNull(entitySet);
-			List<ODataEntity> entity = entitySet.getEntities();
-			assertEquals(10,entity.size());
-			for(int i=0;i<entity.size();i++){
-				assertNotNull(entity.get(i));
-			}
-		}
-		catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415){
-				assertEquals(415, e.getStatusLine().getStatusCode());
-			}
-			else if(e.getStatusLine().getStatusCode() == 404){
-				assertEquals(404, e.getStatusLine().getStatusCode());
-			}
-		}
-	}
-	// get entity set with no metadata
-	private void retreiveNoMetadataEntityTest(final ODataPubFormat reqFormat,final String acceptFormat){
-		final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntitySetSegment("Product");
-		final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setFormat(reqFormat);
-		req.setAccept(acceptFormat);
-		
-		try{
-			
-			final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-			assertEquals(200,res.getStatusCode());
-			final ODataEntitySet entitySet = res.getBody();
-			assertNotNull(entitySet);
-			List<ODataEntity> entity = entitySet.getEntities();
-			assertEquals(10,entity.size());
-			for(int i=0;i<entity.size();i++){
-				assertNotNull(entity.get(i));
-			}
-		}catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415){
-				assertEquals(415, e.getStatusLine().getStatusCode());
-			}
-			else if(e.getStatusLine().getStatusCode() == 404){
-				assertEquals(404, e.getStatusLine().getStatusCode());
-			}
-		}
-	}
-	// get entity set with minimal metadata
-	private void retreiveMinimalMetadataEntityTest(final ODataPubFormat reqFormat, final String acceptFormat){
-		final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntitySetSegment("Product");
-		final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setFormat(reqFormat);
-		req.setAccept(acceptFormat);
-		try{
-			final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-			assertEquals(200,res.getStatusCode());
-			final ODataEntitySet entitySet = res.getBody();
-			assertNotNull(entitySet);
-			final List<ODataEntity> entity = entitySet.getEntities();
-			assertEquals(10,entity.size());
-			for(int i=0;i<entity.size();i++){
-				assertNotNull(entity.get(i));
-			}
-		}catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415){
-				assertEquals(415, e.getStatusLine().getStatusCode());
-			}
-			else if(e.getStatusLine().getStatusCode() == 404){
-				assertEquals(404, e.getStatusLine().getStatusCode());
-			}
-		}
-	}
-	// retrieve entity set with expand
-	private void retreiveEntityTestWithExpand(final ODataPubFormat reqFormat, final String acceptFormat,final String expandFormat){
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntitySetSegment("Customer").expand(expandFormat);
-		ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setFormat(reqFormat);
-		req.setAccept(acceptFormat);
-		try{
-			ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-			assertEquals(200,res.getStatusCode());
-			ODataEntitySet entitySet = res.getBody();
-			assertNotNull(entitySet);
-			final List<ODataEntity> entity = entitySet.getEntities();
-			assertNotNull(entity);
-			
-		}catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415){
-				assertEquals(415, e.getStatusLine().getStatusCode());
-			}
-			else if(e.getStatusLine().getStatusCode() == 404){
-				assertEquals(404, e.getStatusLine().getStatusCode());
-			}
-		}
-	}
-	// retrieve entity set with select
-	private void retreiveEntityTestWithSelect(ODataPubFormat reqFormat, String acceptFormat,String selectFormat){
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntitySetSegment("Customer").select(selectFormat);
-		ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setFormat(reqFormat);
-		req.setAccept(acceptFormat);
-		try{
-			ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-			assertEquals(200,res.getStatusCode());
-			ODataEntitySet entitySet = res.getBody();
-			assertNotNull(entitySet);
-			final List<ODataEntity> entity = entitySet.getEntities();
-			assertNotNull(entity);
-			/*if(reqFormat.equals(ODataPubFormat.ATOM)){
-				AtomEntry atomEntry = Deserializer.toEntry(req.execute().getRawResponse(), AtomEntry.class);
-				String name = atomEntry.getSummary();
-				System.out.println("Name ------------------------"+name);
-			}*/
-		
-			}catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415){
-				assertEquals(415, e.getStatusLine().getStatusCode());
-			}
-			else if(e.getStatusLine().getStatusCode() == 404){
-				assertEquals(404, e.getStatusLine().getStatusCode());
-			}
-		}
-	}
-	// retrieve entity set with expand and select
-	private void retreiveEntityTestWithSelectAndExpand(ODataPubFormat reqFormat, String acceptFormat,String selectFormat, String expandFormat){
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntitySetSegment("Customer").select(selectFormat).expand(expandFormat);
-		ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setFormat(reqFormat);
-		req.setAccept(acceptFormat);
-		try{
-			ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-			assertEquals(200,res.getStatusCode());
-			ODataEntitySet entitySet = res.getBody();
-			assertNotNull(entitySet);
-			final List<ODataEntity> entity = entitySet.getEntities();
-			assertNotNull(entity);
-		}catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415){
-				assertEquals(415, e.getStatusLine().getStatusCode());
-			}
-			else if(e.getStatusLine().getStatusCode() == 404){
-				assertEquals(404, e.getStatusLine().getStatusCode());
-			}
-		}
-	}
-	//general query
-	private void generalQuery(final ODataPubFormat format, final String acceptHeader, String query){
-		final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment(query);
-		final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setFormat(format);
-		req.setAccept(acceptHeader);
-		try{
-			final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-			assertEquals(200,res.getStatusCode());
-			final ODataEntitySet entitySet = res.getBody();
-			assertNotNull(entitySet);
-		}catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415){
-				assertEquals(415, e.getStatusLine().getStatusCode());
-			}
-			else if(e.getStatusLine().getStatusCode() == 404){
-				assertEquals(404, e.getStatusLine().getStatusCode());
-			}
-		}
-	}
-	// inline count and filter test
-	private void inlineCountTest(final ODataPubFormat format, final String acceptHeader,final String filterValue){
-		final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Customer").inlineCount().filter(filterValue);
-		System.out.println(uriBuilder.build());
-		final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
-		req.setFormat(format);
-		req.setAccept(acceptHeader);
-		try{
-			final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
-			assertEquals(200,res.getStatusCode());
-			final ODataEntitySet entitySet = res.getBody();
-			assertNotNull(entitySet);
-			List<ODataEntity> entity = entitySet.getEntities();
-			System.out.println("Count -----"+entity.size());
-			for(int i=0;i<entity.size();i++){
-				assertNotNull(entity.get(i));
-			}
-		}catch(ODataClientErrorException e){
-			if(e.getStatusLine().getStatusCode() == 415){
-				assertEquals(415, e.getStatusLine().getStatusCode());
-			}
-			else if(e.getStatusLine().getStatusCode() == 404){
-				assertEquals(404, e.getStatusLine().getStatusCode());
-			}
-		}
-	}
-	//inlinecount and filter test
-	@Test
-	public void inlineAndFilterTest(){
-		inlineCountTest(ODataPubFormat.ATOM,"application/atom+xml","CustomerId eq -10");
-		inlineCountTest(ODataPubFormat.JSON,"application/json","CustomerId eq -10");
-		inlineCountTest(ODataPubFormat.JSON_FULL_METADATA,"application/json;odata=fullmetadata","CustomerId eq -10");
-		inlineCountTest(ODataPubFormat.JSON_NO_METADATA,"application/json;odata=nometadata","CustomerId eq -10");
-		
-		//xml headers is not a supported media type 
-		inlineCountTest(ODataPubFormat.ATOM,"application/xml","CustomerId eq -10");
-		
-		//with different filters
-		inlineCountTest(ODataPubFormat.ATOM,"application/atom+xml","CustomerId lt -10");
-		inlineCountTest(ODataPubFormat.ATOM,"application/atom+xml","CustomerId gt -10");
-	}
-	// test with json
-	@Test
-	public void jsonHeader(){
-		retreiveEntityTest(ODataPubFormat.JSON,"application/json" );
-		generalQuery(ODataPubFormat.JSON,"application/json", "Products");
-		retreiveEntityTestWithExpand(ODataPubFormat.JSON,"application/json","Orders" );
-		retreiveEntityTestWithSelect(ODataPubFormat.JSON,"application/json","CustomerId,Name,PrimaryContactInfo" );
-		retreiveEntityTestWithSelectAndExpand(ODataPubFormat.JSON,"application/json","CustomerId,Name","Orders" );
-	}
-	// test with json full metadata
-	@Test
-	public void jsonFullMetaDataHeader(){
-		retreiveFullMetadataEntityTest(ODataPubFormat.JSON,"application/json;odata=fullmetadata" );
-		generalQuery(ODataPubFormat.JSON,"application/json;odata=fullmetadata", "Product");
-	}
-	//json with no metadata
-	@Test
-	public void jsonNoMetaDataHeader(){
-		retreiveNoMetadataEntityTest(ODataPubFormat.JSON_NO_METADATA,"application/json;odata=nometadata" );
-	}
-	//deserializing JSON error.
-	@Test(expected = IllegalArgumentException.class)
-	public void jsonMinimalMetadataDataHeader(){
-		retreiveMinimalMetadataEntityTest(ODataPubFormat.JSON,"application/json;odata=minimal" );
-		retreiveEntityTestWithExpand(ODataPubFormat.JSON,"application/json;odata=minimal","Orders" );
-		retreiveEntityTestWithExpand(ODataPubFormat.JSON,"application/json;odata=minimal","Orders,Info" );
-	}
-	// with atom header
-	@Test
-	public void atomHeader(){
-		retreiveEntityTest(ODataPubFormat.ATOM,"application/atom+xml" );
-		retreiveEntityTestWithExpand(ODataPubFormat.ATOM,"application/atom+xml","Orders" );
-		retreiveEntityTestWithExpand(ODataPubFormat.ATOM,"application/atom+xml","Orders,Info" );
-		retreiveEntityTestWithSelect(ODataPubFormat.ATOM,"application/atom+xml","CustomerId" );
-		retreiveEntityTestWithSelect(ODataPubFormat.ATOM,"application/atom+xml","Name" );
-		retreiveEntityTestWithSelect(ODataPubFormat.ATOM,"application/atom+xml","CustomerId,Name,PrimaryContactInfo" );
-		retreiveEntityTestWithSelectAndExpand(ODataPubFormat.ATOM,"application/atom+xml","CustomerId,Name","Orders" );
-	}
-	//with xml header
-	@Test
-	public void xmlHeader(){
-		retreiveEntityTest(ODataPubFormat.ATOM,"application/xml" );
-		retreiveEntityTestWithExpand(ODataPubFormat.ATOM,"application/xml", "Orders" );
-		retreiveEntityTestWithExpand(ODataPubFormat.ATOM,"application/xml", "Orders,Info" );
-		retreiveEntityTestWithSelect(ODataPubFormat.ATOM,"application/xml","CustomerId" );
-		retreiveEntityTestWithSelect(ODataPubFormat.ATOM,"application/xml","Name" );
-		retreiveEntityTestWithSelect(ODataPubFormat.ATOM,"application/xml","CustomerId,Name,PrimaryContactInfo" );
-		retreiveEntityTestWithSelectAndExpand(ODataPubFormat.ATOM,"application/xml","CustomerId,Name","Orders" );
-	}
-	// with null format
-	@Test(expected=NullPointerException.class)
-	public void nullFormat(){
-		retreiveEntityTest(null,"application/xml" );
-		retreiveEntityTestWithExpand(null,"application/xml", "Orders" );
-		retreiveEntityTestWithExpand(null,"application/xml", "Orders,Info" );
-		retreiveEntityTestWithSelect(null,"application/xml","CustomerId" );
-		retreiveEntityTestWithSelect(null,"application/xml","Name" );
-		retreiveEntityTestWithSelect(null,"application/xml","CustomerId,Name,,PrimaryContactInfo" );
-		retreiveEntityTestWithSelectAndExpand(null,"application/xml","CustomerId,Name","Orders" );
-	}
-	@Test
-	public void nullHeaderWithJSONFormat(){
-		retreiveEntityTest(ODataPubFormat.JSON,null);
-		retreiveEntityTestWithExpand(ODataPubFormat.JSON,null,"Orders");
-		retreiveEntityTestWithExpand(ODataPubFormat.JSON,null,"Orders,Info");
-		retreiveEntityTestWithSelect(ODataPubFormat.JSON,null,"CustomerId" );
-		retreiveEntityTestWithSelect(ODataPubFormat.JSON,null,"Name" );
-		retreiveEntityTestWithSelect(ODataPubFormat.JSON,null,"CustomerId,Name,,PrimaryContactInfo" );
-		retreiveEntityTestWithSelectAndExpand(ODataPubFormat.JSON,null,"CustomerId,Name","Orders" );
-	}
-	//While deserializing atom entry an error is thrown
-	@Test(expected = IllegalArgumentException.class)
-	public void nullHeaderWithAtomFormat(){
-		retreiveEntityTest(ODataPubFormat.ATOM,null);
-		retreiveEntityTestWithExpand(ODataPubFormat.ATOM,null,"Orders");
-		retreiveEntityTestWithExpand(ODataPubFormat.ATOM,null,"Orders,Info");
-		retreiveEntityTestWithSelect(ODataPubFormat.ATOM,null,"CustomerId" );
-		retreiveEntityTestWithSelect(ODataPubFormat.ATOM,null,"Name" );
-		retreiveEntityTestWithSelect(ODataPubFormat.ATOM,null,"CustomerId,Name,,PrimaryContactInfo" );
-		retreiveEntityTestWithSelectAndExpand(ODataPubFormat.ATOM,null,"CustomerId,Name","Orders" );
-	}
+    private void retreiveEntityTest(ODataPubFormat reqFormat, String acceptFormat) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Product");
+        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(reqFormat);
+        req.setAccept(acceptFormat);
+        try {
+            ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            ODataEntitySet entitySet = res.getBody();
+            List<ODataEntity> entity = entitySet.getEntities();
+            for (int i = 0; i < entity.size(); i++) {
+                assertNotNull(entity.get(i));
+            }
+            assertEquals(10, entity.size());
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            } else if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    // get entity set with fullmetadata
 
+    private void retreiveFullMetadataEntityTest(ODataPubFormat reqFormat, String acceptFormat) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntitySetSegment("Product");
+        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setAccept(acceptFormat);
+        try {
+            ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            ODataEntitySet entitySet = res.getBody();
+            assertNotNull(entitySet);
+            List<ODataEntity> entity = entitySet.getEntities();
+            assertEquals(10, entity.size());
+            for (int i = 0; i < entity.size(); i++) {
+                assertNotNull(entity.get(i));
+            }
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            } else if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    // get entity set with no metadata
+
+    private void retreiveNoMetadataEntityTest(final ODataPubFormat reqFormat, final String acceptFormat) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntitySetSegment("Product");
+        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(reqFormat);
+        req.setAccept(acceptFormat);
+
+        try {
+
+            final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            final ODataEntitySet entitySet = res.getBody();
+            assertNotNull(entitySet);
+            List<ODataEntity> entity = entitySet.getEntities();
+            assertEquals(10, entity.size());
+            for (int i = 0; i < entity.size(); i++) {
+                assertNotNull(entity.get(i));
+            }
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            } else if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    // get entity set with minimal metadata
+
+    private void retreiveMinimalMetadataEntityTest(final ODataPubFormat reqFormat, final String acceptFormat) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntitySetSegment("Product");
+        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(reqFormat);
+        req.setAccept(acceptFormat);
+        try {
+            final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            final ODataEntitySet entitySet = res.getBody();
+            assertNotNull(entitySet);
+            final List<ODataEntity> entity = entitySet.getEntities();
+            assertEquals(10, entity.size());
+            for (int i = 0; i < entity.size(); i++) {
+                assertNotNull(entity.get(i));
+            }
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            } else if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    // retrieve entity set with expand
+
+    private void retreiveEntityTestWithExpand(final ODataPubFormat reqFormat, final String acceptFormat,
+            final String expandFormat) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntitySetSegment("Customer").expand(expandFormat);
+        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(reqFormat);
+        req.setAccept(acceptFormat);
+        try {
+            ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            ODataEntitySet entitySet = res.getBody();
+            assertNotNull(entitySet);
+            final List<ODataEntity> entity = entitySet.getEntities();
+            assertNotNull(entity);
+
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            } else if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    // retrieve entity set with select
+
+    private void retreiveEntityTestWithSelect(ODataPubFormat reqFormat, String acceptFormat, String selectFormat) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntitySetSegment("Customer").select(selectFormat);
+        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(reqFormat);
+        req.setAccept(acceptFormat);
+        try {
+            ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            ODataEntitySet entitySet = res.getBody();
+            assertNotNull(entitySet);
+            final List<ODataEntity> entity = entitySet.getEntities();
+            assertNotNull(entity);
+            /* if(reqFormat.equals(ODataPubFormat.ATOM)){
+             * AtomEntry atomEntry = Deserializer.toEntry(req.execute().getRawResponse(), AtomEntry.class);
+             * String name = atomEntry.getSummary();
+             * } */
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            } else if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    // retrieve entity set with expand and select
+
+    private void retreiveEntityTestWithSelectAndExpand(ODataPubFormat reqFormat, String acceptFormat,
+            String selectFormat, String expandFormat) {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntitySetSegment("Customer").select(selectFormat).expand(expandFormat);
+        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(reqFormat);
+        req.setAccept(acceptFormat);
+        try {
+            ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            ODataEntitySet entitySet = res.getBody();
+            assertNotNull(entitySet);
+            final List<ODataEntity> entity = entitySet.getEntities();
+            assertNotNull(entity);
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            } else if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    //general query
+
+    private void generalQuery(final ODataPubFormat format, final String acceptHeader, String query) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment(query);
+        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(format);
+        req.setAccept(acceptHeader);
+        try {
+            final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            final ODataEntitySet entitySet = res.getBody();
+            assertNotNull(entitySet);
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            } else if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    // inline count and filter test
+
+    private void inlineCountTest(final ODataPubFormat format, final String acceptHeader, final String filterValue) {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Customer").inlineCount().filter(filterValue);
+        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        req.setFormat(format);
+        req.setAccept(acceptHeader);
+        try {
+            final ODataRetrieveResponse<ODataEntitySet> res = req.execute();
+            assertEquals(200, res.getStatusCode());
+            final ODataEntitySet entitySet = res.getBody();
+            assertNotNull(entitySet);
+            List<ODataEntity> entity = entitySet.getEntities();
+            for (int i = 0; i < entity.size(); i++) {
+                assertNotNull(entity.get(i));
+            }
+        } catch (ODataClientErrorException e) {
+            if (e.getStatusLine().getStatusCode() == 415) {
+                assertEquals(415, e.getStatusLine().getStatusCode());
+            } else if (e.getStatusLine().getStatusCode() == 404) {
+                assertEquals(404, e.getStatusLine().getStatusCode());
+            }
+        }
+    }
+    //inlinecount and filter test
+
+    @Test
+    public void inlineAndFilterTest() {
+        inlineCountTest(ODataPubFormat.ATOM, "application/atom+xml", "CustomerId eq -10");
+        inlineCountTest(ODataPubFormat.JSON, "application/json", "CustomerId eq -10");
+        inlineCountTest(ODataPubFormat.JSON_FULL_METADATA, "application/json;odata=fullmetadata", "CustomerId eq -10");
+        inlineCountTest(ODataPubFormat.JSON_NO_METADATA, "application/json;odata=nometadata", "CustomerId eq -10");
+
+        //xml headers is not a supported media type 
+        inlineCountTest(ODataPubFormat.ATOM, "application/xml", "CustomerId eq -10");
+
+        //with different filters
+        inlineCountTest(ODataPubFormat.ATOM, "application/atom+xml", "CustomerId lt -10");
+        inlineCountTest(ODataPubFormat.ATOM, "application/atom+xml", "CustomerId gt -10");
+    }
+    // test with json
+
+    @Test
+    public void jsonHeader() {
+        retreiveEntityTest(ODataPubFormat.JSON, "application/json");
+        generalQuery(ODataPubFormat.JSON, "application/json", "Products");
+        retreiveEntityTestWithExpand(ODataPubFormat.JSON, "application/json", "Orders");
+        retreiveEntityTestWithSelect(ODataPubFormat.JSON, "application/json", "CustomerId,Name,PrimaryContactInfo");
+        retreiveEntityTestWithSelectAndExpand(ODataPubFormat.JSON, "application/json", "CustomerId,Name", "Orders");
+    }
+    // test with json full metadata
+
+    @Test
+    public void jsonFullMetaDataHeader() {
+        retreiveFullMetadataEntityTest(ODataPubFormat.JSON, "application/json;odata=fullmetadata");
+        generalQuery(ODataPubFormat.JSON, "application/json;odata=fullmetadata", "Product");
+    }
+    //json with no metadata
+
+    @Test
+    public void jsonNoMetaDataHeader() {
+        retreiveNoMetadataEntityTest(ODataPubFormat.JSON_NO_METADATA, "application/json;odata=nometadata");
+    }
+    //deserializing JSON error.
+
+    @Test
+    public void jsonMinimalMetadataDataHeader() {
+        retreiveMinimalMetadataEntityTest(ODataPubFormat.JSON, "application/json;odata=minimal");
+        retreiveEntityTestWithExpand(ODataPubFormat.JSON, "application/json;odata=minimal", "Orders");
+        retreiveEntityTestWithExpand(ODataPubFormat.JSON, "application/json;odata=minimal", "Orders,Info");
+    }
+    // with atom header
+
+    @Test
+    public void atomHeader() {
+        retreiveEntityTest(ODataPubFormat.ATOM, "application/atom+xml");
+        retreiveEntityTestWithExpand(ODataPubFormat.ATOM, "application/atom+xml", "Orders");
+        retreiveEntityTestWithExpand(ODataPubFormat.ATOM, "application/atom+xml", "Orders,Info");
+        retreiveEntityTestWithSelect(ODataPubFormat.ATOM, "application/atom+xml", "CustomerId");
+        retreiveEntityTestWithSelect(ODataPubFormat.ATOM, "application/atom+xml", "Name");
+        retreiveEntityTestWithSelect(ODataPubFormat.ATOM, "application/atom+xml", "CustomerId,Name,PrimaryContactInfo");
+        retreiveEntityTestWithSelectAndExpand(ODataPubFormat.ATOM, "application/atom+xml", "CustomerId,Name", "Orders");
+    }
+    //with xml header
+
+    @Test
+    public void xmlHeader() {
+        retreiveEntityTest(ODataPubFormat.ATOM, "application/xml");
+        retreiveEntityTestWithExpand(ODataPubFormat.ATOM, "application/xml", "Orders");
+        retreiveEntityTestWithExpand(ODataPubFormat.ATOM, "application/xml", "Orders,Info");
+        retreiveEntityTestWithSelect(ODataPubFormat.ATOM, "application/xml", "CustomerId");
+        retreiveEntityTestWithSelect(ODataPubFormat.ATOM, "application/xml", "Name");
+        retreiveEntityTestWithSelect(ODataPubFormat.ATOM, "application/xml", "CustomerId,Name,PrimaryContactInfo");
+        retreiveEntityTestWithSelectAndExpand(ODataPubFormat.ATOM, "application/xml", "CustomerId,Name", "Orders");
+    }
+    // with null format
+
+    @Test
+    public void nullFormat() {
+        retreiveEntityTest(null, "application/xml");
+        retreiveEntityTestWithExpand(null, "application/xml", "Orders");
+        retreiveEntityTestWithExpand(null, "application/xml", "Orders,Info");
+        retreiveEntityTestWithSelect(null, "application/xml", "CustomerId");
+        retreiveEntityTestWithSelect(null, "application/xml", "Name");
+        retreiveEntityTestWithSelect(null, "application/xml", "CustomerId,Name,,PrimaryContactInfo");
+        retreiveEntityTestWithSelectAndExpand(null, "application/xml", "CustomerId,Name", "Orders");
+    }
+
+    @Test
+    public void nullHeaderWithJSONFormat() {
+        retreiveEntityTest(ODataPubFormat.JSON, null);
+        retreiveEntityTestWithExpand(ODataPubFormat.JSON, null, "Orders");
+        retreiveEntityTestWithExpand(ODataPubFormat.JSON, null, "Orders,Info");
+        retreiveEntityTestWithSelect(ODataPubFormat.JSON, null, "CustomerId");
+        retreiveEntityTestWithSelect(ODataPubFormat.JSON, null, "Name");
+        retreiveEntityTestWithSelect(ODataPubFormat.JSON, null, "CustomerId,Name,,PrimaryContactInfo");
+        retreiveEntityTestWithSelectAndExpand(ODataPubFormat.JSON, null, "CustomerId,Name", "Orders");
+    }
+    //While deserializing atom entry an error is thrown
+
+    @Test
+    public void nullHeaderWithAtomFormat() {
+        retreiveEntityTest(ODataPubFormat.ATOM, null);
+        retreiveEntityTestWithExpand(ODataPubFormat.ATOM, null, "Orders");
+        retreiveEntityTestWithExpand(ODataPubFormat.ATOM, null, "Orders,Info");
+        retreiveEntityTestWithSelect(ODataPubFormat.ATOM, null, "CustomerId");
+        retreiveEntityTestWithSelect(ODataPubFormat.ATOM, null, "Name");
+        retreiveEntityTestWithSelect(ODataPubFormat.ATOM, null, "CustomerId,Name,,PrimaryContactInfo");
+        retreiveEntityTestWithSelectAndExpand(ODataPubFormat.ATOM, null, "CustomerId,Name", "Orders");
+    }
 }
-

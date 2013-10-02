@@ -172,22 +172,6 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
-    public void setMaxDataServiceVersion(final String value) {
-        odataHeaders.setHeader(ODataHeaders.HeaderName.maxDataServiceVersion, value);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setMinDataServiceVersion(final String value) {
-        odataHeaders.setHeader(ODataHeaders.HeaderName.minDataServiceVersion, value);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void setAccept(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.accept, value);
     }
@@ -236,14 +220,6 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
-    public void setDataServiceVersion(final String value) {
-        odataHeaders.setHeader(ODataHeaders.HeaderName.dataServiceVersion, value);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void setSlug(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.slug, value);
     }
@@ -254,22 +230,6 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
     @Override
     public void addCustomHeader(final String name, final String value) {
         odataHeaders.setHeader(name, value);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMaxDataServiceVersion() {
-        return odataHeaders.getHeader(ODataHeaders.HeaderName.maxDataServiceVersion);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMinDataServiceVersion() {
-        return odataHeaders.getHeader(ODataHeaders.HeaderName.minDataServiceVersion);
     }
 
     /**
@@ -312,14 +272,6 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
     public String getContentType() {
         final String contentTypeHead = odataHeaders.getHeader(ODataHeaders.HeaderName.contentType);
         return StringUtils.isBlank(contentTypeHead) ? getDefaultFormat().toString() : contentTypeHead;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getDataServiceVersion() {
-        return odataHeaders.getHeader(ODataHeaders.HeaderName.dataServiceVersion);
     }
 
     /**

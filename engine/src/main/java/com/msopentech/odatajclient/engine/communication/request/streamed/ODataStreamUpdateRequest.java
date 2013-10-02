@@ -114,16 +114,16 @@ public class ODataStreamUpdateRequest
         }
 
         /**
-         * {@inheritDoc }
+         * Gets query result objects.
+         * <br/>
+         * <b>WARNING</b>: Closing this <tt>ODataResponse</tt> instance is left to the caller.
+         *
+         * @return query result objects as <tt>InputStream</tt>.
          */
         @Override
         public InputStream getBody() {
             if (input == null) {
-                try {
-                    input = getRawResponse();
-                } finally {
-                    this.close();
-                }
+                input = getRawResponse();
             }
             return input;
         }

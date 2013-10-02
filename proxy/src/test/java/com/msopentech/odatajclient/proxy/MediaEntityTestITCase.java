@@ -19,7 +19,6 @@
  */
 package com.msopentech.odatajclient.proxy;
 
-import static com.msopentech.odatajclient.proxy.AbstractTest.container;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -41,7 +40,7 @@ public class MediaEntityTestITCase extends AbstractTest {
     @Test
     public void read() throws IOException {
         final InputStream is = container.getCar().get(12).getStream();
-        assertTrue(IOUtils.toString(is).isEmpty());
+        assertNotNull(is);
         IOUtils.closeQuietly(is);
     }
 
@@ -63,7 +62,7 @@ public class MediaEntityTestITCase extends AbstractTest {
 
     @Test
     public void update() throws IOException {
-        Car car = container.getCar().get(14);
+        final Car car = container.getCar().get(14);
         assertNotNull(car);
 
         final String TO_BE_UPDATED = "buffered stream sample (" + System.currentTimeMillis() + ")";

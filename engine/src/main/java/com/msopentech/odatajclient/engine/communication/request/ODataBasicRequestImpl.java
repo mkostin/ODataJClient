@@ -56,8 +56,10 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      */
     @Override
     public void setFormat(final T format) {
-        setAccept(format.toString());
-        setContentType(format.toString());
+        if (format != null) {
+            setAccept(format.toString());
+            setContentType(format.toString());
+        }
     }
 
     /**

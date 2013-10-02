@@ -93,7 +93,6 @@ public final class Deserializer {
             });
             return xmlMapper.readValue(input, Edmx.class);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new IllegalArgumentException("Could not parse as Edmx document", e);
         }
     }

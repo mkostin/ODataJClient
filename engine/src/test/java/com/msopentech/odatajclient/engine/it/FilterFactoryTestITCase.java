@@ -138,10 +138,10 @@ public class FilterFactoryTestITCase extends AbstractTest {
         final ODataFilter filter =
                 ODataFilterFactory.eq(
                 ODataFilterArgFactory.month(
-                ODataFilterArgFactory.property("ComplexConcurrency/QueriedDateTime")),
-                ODataFilterArgFactory.literal(1));
+                ODataFilterArgFactory.property("PurchaseDate")),
+                ODataFilterArgFactory.literal(12));
 
-        match("Product", filter, 2);
+        match("ComputerDetail", filter, 1);
     }
 
     @Test

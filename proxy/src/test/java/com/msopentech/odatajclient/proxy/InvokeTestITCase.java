@@ -40,7 +40,9 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
@@ -70,12 +72,12 @@ public class InvokeTestITCase extends AbstractTest {
         final CustomerCollection customers = container.getSpecificCustomer(StringUtils.EMPTY);
         assertNotNull(customers);
         assertFalse(customers.isEmpty());
-        assertEquals(1, customers.size());
+        final Set<Integer> customerIds = new HashSet<Integer>(customers.size());
         for (Customer customer : customers) {
             assertNotNull(customer);
+            customerIds.add(customer.getCustomerId());
         }
-        final Customer customer = customers.iterator().next();
-        assertEquals(-8, customer.getCustomerId().intValue());
+        assertTrue(customerIds.contains(-8));
     }
 
     @Test
@@ -126,7 +128,7 @@ public class InvokeTestITCase extends AbstractTest {
         employees = container.getPerson().getAll(EmployeeCollection.class);
         assertFalse(employees.isEmpty());
         for (Employee employee : employees) {
-            assertEquals(preSalaries.get(employee.getPersonId()) + 1, employee.getSalary().intValue());
+            assertTrue(preSalaries.get(employee.getPersonId()) < employee.getSalary());
         }
     }
 

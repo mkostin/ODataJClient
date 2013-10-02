@@ -29,37 +29,36 @@ import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 
+public class CountTestITCase extends AbstractTest {
+    //counts the total number of customers
 
-public class CountTestITCase extends AbstractTest{
-	//counts the total number of customers
-	@Test
-	public void entityCount() {
-		System.out.println(testDefaultServiceRootURL);
-		ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Customer").appendCountSegment();
-		final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-		req.setFormat(ODataValueFormat.TEXT);
-		try{
-			final ODataValue value = req.execute().getBody();
-			assertEquals(10,Integer.parseInt(value.toString()));
-		}catch(ODataClientErrorException e){
-			System.out.println(e.getStatusLine().getStatusCode());
-		}
-	}
-	//returns 415 error for invalid header.
-	@Test
-	public void invalidAccept() {
-		final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
-		appendEntityTypeSegment("Customer").appendCountSegment();
-		System.out.println(uriBuilder.build());
-		final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
-		req.setFormat(ODataValueFormat.TEXT);
-		req.setAccept("application/json;odata=fullmetadata");
-		try{
-			final ODataValue value = req.execute().getBody();
-			System.out.println(value);
-		}catch(ODataClientErrorException e){
-			assertEquals(415,e.getStatusLine().getStatusCode());
-		}
-	}
+    @Test
+    public void entityCount() {
+        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Customer").appendCountSegment();
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+        try {
+            final ODataValue value = req.execute().getBody();
+            assertTrue(10 <= Integer.parseInt(value.toString()));
+        } catch (ODataClientErrorException e) {
+            LOG.error("Error code: {}", e.getStatusLine().getStatusCode(), e);
+        }
+    }
+    //returns 415 error for invalid header.
+
+    @Test
+    public void invalidAccept() {
+        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                appendEntityTypeSegment("Customer").appendCountSegment();
+        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        req.setFormat(ODataValueFormat.TEXT);
+        req.setAccept("application/json;odata=fullmetadata");
+        try {
+            final ODataValue value = req.execute().getBody();
+            fail();
+        } catch (ODataClientErrorException e) {
+            assertEquals(415, e.getStatusLine().getStatusCode());
+        }
+    }
 }

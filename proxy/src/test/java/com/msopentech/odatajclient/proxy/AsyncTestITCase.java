@@ -19,9 +19,11 @@
  */
 package com.msopentech.odatajclient.proxy;
 
+import static com.msopentech.odatajclient.proxy.AbstractTest.container;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.proxy.api.AsyncCall;
 import com.msopentech.odatajclient.proxy.api.Query;
@@ -101,8 +103,7 @@ public class AsyncTestITCase extends AbstractTest {
                 return container.getPerson().createQuery(EmployeeCollection.class);
             }
         };
-
-        assertEquals(7, queryEmployee.get().getResult().size());
+        assertFalse(queryEmployee.get().getResult().isEmpty());
 
         final Future<Query<SpecialEmployee, SpecialEmployeeCollection>> querySpecialEmployee =
                 new AsyncCall<Query<SpecialEmployee, SpecialEmployeeCollection>>() {
@@ -112,7 +113,9 @@ public class AsyncTestITCase extends AbstractTest {
                 return container.getPerson().createQuery(SpecialEmployeeCollection.class);
             }
         };
+        assertFalse(querySpecialEmployee.get().getResult().isEmpty());
 
-        assertEquals(4, querySpecialEmployee.get().getResult().size());
+        assertTrue(container.getPerson().getAll().size()
+                > queryEmployee.get().getResult().size() + querySpecialEmployee.get().getResult().size());
     }
 }

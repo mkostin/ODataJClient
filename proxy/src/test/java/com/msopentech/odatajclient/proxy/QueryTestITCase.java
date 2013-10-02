@@ -20,6 +20,7 @@
 package com.msopentech.odatajclient.proxy;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -96,10 +97,13 @@ public class QueryTestITCase extends AbstractTest {
     public void polymorph() {
         final Query<Employee, EmployeeCollection> queryEmployee =
                 container.getPerson().createQuery(EmployeeCollection.class);
-        assertEquals(7, queryEmployee.getResult().size());
+        assertFalse(queryEmployee.getResult().isEmpty());
 
         final Query<SpecialEmployee, SpecialEmployeeCollection> querySpecialEmployee =
                 container.getPerson().createQuery(SpecialEmployeeCollection.class);
-        assertEquals(4, querySpecialEmployee.getResult().size());
+        assertFalse(querySpecialEmployee.getResult().isEmpty());
+
+        assertTrue(container.getPerson().getAll().size()
+                > queryEmployee.getResult().size() + querySpecialEmployee.getResult().size());
     }
 }

@@ -53,8 +53,10 @@ import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
@@ -97,8 +99,7 @@ public class InvokeTestITCase extends AbstractTest {
         property = res.getBody();
         assertNotNull(property);
         assertTrue(property.hasCollectionValue());
-        assertEquals("Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails)",
-                property.getCollectionValue().getTypeName());
+        assertFalse(property.getCollectionValue().isEmpty());
     }
 
     @Test
@@ -171,9 +172,11 @@ public class InvokeTestITCase extends AbstractTest {
         final ODataEntitySet feed = feedRes.getBody();
         assertNotNull(feed);
 
-        final ODataProperty id = feed.getEntities().get(0).getProperty("CustomerId");
-        assertNotNull(id);
-        assertEquals(Integer.valueOf(-8), id.getPrimitiveValue().<Integer>toCastValue());
+        final Set<Integer> customerIds = new HashSet<Integer>(feed.getEntities().size());
+        for (ODataEntity entity : feed.getEntities()) {
+            customerIds.add(entity.getProperty("CustomerId").getPrimitiveValue().<Integer>toCastValue());
+        }
+        assertTrue(customerIds.contains(-8));
     }
 
     @Test
@@ -297,9 +300,9 @@ public class InvokeTestITCase extends AbstractTest {
         employees = ODataRetrieveRequestFactory.getEntitySetRequest(employeesURI).execute().getBody();
         assertFalse(employees.getEntities().isEmpty());
         for (ODataEntity employee : employees.getEntities()) {
-            assertEquals(
-                    preSalaries.get(employee.getProperty("PersonId").getPrimitiveValue().<Integer>toCastValue()) + 1,
-                    employee.getProperty("Salary").getPrimitiveValue().<Integer>toCastValue(), 0);
+            assertTrue(
+                    preSalaries.get(employee.getProperty("PersonId").getPrimitiveValue().<Integer>toCastValue())
+                    < employee.getProperty("Salary").getPrimitiveValue().<Integer>toCastValue());
         }
     }
 }

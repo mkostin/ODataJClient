@@ -22,7 +22,6 @@ package com.msopentech.odatajclient.engine.it;
 import static com.msopentech.odatajclient.engine.it.AbstractTest.testDefaultServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
@@ -61,7 +60,9 @@ public class MediaEntityTestITCase extends AbstractTest {
 
         final ODataRetrieveResponse<InputStream> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
-        assertTrue(IOUtils.toString(retrieveRes.getBody()).isEmpty());
+
+        final byte[] actual = new byte[Integer.parseInt(retrieveRes.getHeader("Content-Length").iterator().next())];
+        IOUtils.read(retrieveRes.getBody(), actual, 0, actual.length);
     }
 
     @Test(expected = ODataClientErrorException.class)
@@ -70,7 +71,7 @@ public class MediaEntityTestITCase extends AbstractTest {
                 appendEntityTypeSegment("Car").appendKeySegment(12).appendValueSegment();
 
         final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
-        retrieveReq.setFormat(ODataMediaFormat.APPLICATION_OCTET_STREAM);
+        retrieveReq.setFormat(ODataMediaFormat.APPLICATION_XML);
 
         retrieveReq.execute();
     }
