@@ -28,7 +28,7 @@
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient</artifactId>
   <version>0.9.0-SNAPSHOT</version>
-  <name>Client OData libray for Java</name>
+  <name>Client OData library for Java</name>
   <description>Java client API for OData 3.0 services</description>
 
   <url>https://github.com/MSOpenTech/ODataJClient</url>
