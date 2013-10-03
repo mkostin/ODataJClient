@@ -30,7 +30,7 @@
     <version>0.9.0-SNAPSHOT</version>
   </parent>
 
-  <name>Client OData libray for Java: Proxy </name>
+  <name>Client OData library for Java: Proxy </name>
   <description>Java client API for OData 3.0 services: Proxy</description>
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient-proxy</artifactId>
