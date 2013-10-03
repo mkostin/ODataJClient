@@ -30,7 +30,7 @@
     <version>0.9.0-SNAPSHOT</version>
   </parent>
 
-  <name>Client OData libray for Java: Engine XML parser</name>
+  <name>Client OData library for Java: Engine XML parser</name>
   <description>Java client API for OData 3.0 services: Engine XML parser</description>
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient-engine-xml</artifactId>
