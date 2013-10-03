@@ -18,4 +18,4 @@
 ODataJClient is an Open Source ([Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)) library that 
 enables Java applications to deal with [OData 3.0](http://www.odata.org/documentation/odata-v3-documentation/) services.
 
-Check how to [get started]((https://github.com/MSOpenTech/ODataJClient/wiki/User-guide) with ODataJClient.
+Check how to [get started](https://github.com/MSOpenTech/ODataJClient/wiki/User-guide) with ODataJClient.
