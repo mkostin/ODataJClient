@@ -30,7 +30,7 @@
     <version>0.9.0-SNAPSHOT</version>
   </parent>
 
-  <name>Client OData libray for Java: Test authenticating reverse proxy</name>
+  <name>Client OData library for Java: Test authenticating reverse proxy</name>
   <description>Reverse proxy adding authentication on top of OData test services.</description>
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient-test-auth-rproxy</artifactId>
