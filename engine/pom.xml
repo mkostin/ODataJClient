@@ -121,6 +121,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <inherited>true</inherited>
         <configuration>
+          <argLine>-Dfile.encoding=UTF-8</argLine>
           <systemPropertyVariables>
             <propertyName>org.slf4j.simpleLogger.defaultLogLevel</propertyName>
             <org.slf4j.simpleLogger.defaultLogLevel>ERROR</org.slf4j.simpleLogger.defaultLogLevel>
