@@ -30,7 +30,7 @@
     <version>0.9.0-SNAPSHOT</version>
   </parent>
 
-  <name>Client OData libray for Java: POJOs generator </name>
+  <name>Client OData library for Java: POJOs generator </name>
   <description>Java client API for OData 3.0 services: Maven plugin generating POJOs from metadata.</description>
   <groupId>com.msopentech.odatajclient</groupId>
   <artifactId>odatajclient-maven-plugin</artifactId>
