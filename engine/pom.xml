@@ -96,13 +96,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.msopentech.odatajclient</groupId>
-      <artifactId>odatajclient-test-auth-rproxy</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.carrotsearch</groupId>
       <artifactId>junit-benchmarks</artifactId>
       <scope>test</scope>
@@ -174,6 +167,16 @@
   <profiles>
     <profile>
       <id>it</id>
+      
+      <dependencies>
+        <dependency>
+          <groupId>com.msopentech.odatajclient</groupId>
+          <artifactId>odatajclient-test-auth-rproxy</artifactId>
+          <version>${project.version}</version>
+          <type>war</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
       
       <build>                    
         <testResources>

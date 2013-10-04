@@ -387,18 +387,9 @@
       </properties>
       
       <build>
-        <defaultGoal>clean verify</defaultGoal>
+        <defaultGoal>clean install</defaultGoal>
         
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <inherited>true</inherited>
-            <configuration>
-              <skipTests>true</skipTests>
-            </configuration>
-          </plugin>
-
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
@@ -482,6 +473,10 @@
           </plugin>
         </plugins>
       </build>
+
+      <modules>
+        <module>test-auth-rproxy</module>
+      </modules>
     </profile>
 
     <profile>
@@ -523,7 +518,6 @@
     <module>engine-xml</module>
     <module>engine</module>
     <module>proxy</module>
-    <module>test-auth-rproxy</module>
   </modules>
   
 </project>
