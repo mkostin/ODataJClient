@@ -22,4 +22,4 @@ This fork aims to extend the library to apply it to Microsoft SharePoint 2013 RE
 
 Original ODataJClient documentation/how-to's can be found in a [get started](https://github.com/MSOpenTech/ODataJClient/wiki/User-guide) section.
 
-List of changes introduced into the code by this fork are listed in a [fork wiki](https://github.com/mkostin/ODataJClient/wiki/User-guide)
+List of changes introduced into the code by this fork are listed in a [fork wiki](https://github.com/mkostin/ODataJClient/wiki/Change-list)
