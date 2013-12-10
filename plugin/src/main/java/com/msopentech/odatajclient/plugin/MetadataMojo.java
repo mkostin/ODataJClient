@@ -111,7 +111,14 @@ public class MetadataMojo extends AbstractMojo {
                 utility = new Utility(metadata, schema, basePackage);
 
                 // write package-info for the base package
-                final String schemaPath = utility.getNamespace().toLowerCase().replaceAll("\\.", File.separator);
+                final String schemaNS = utility.getNamespace();
+                final String[] schemaPathParts = schemaNS.toLowerCase().split("\\.");
+                StringBuilder builder = new StringBuilder();
+                for (String part: schemaPathParts) {
+                    builder.append(File.separator);
+                    builder.append(part);
+                }
+                final String schemaPath = builder.toString().substring(File.separator.length());
                 final File base = mkPkgDir(schemaPath);
                 final String pkg = basePackage + "." + utility.getNamespace().toLowerCase();
                 parseObj(base, pkg, "package-info", "package-info.java");
@@ -133,6 +140,7 @@ public class MetadataMojo extends AbstractMojo {
                 }
 
                 for (EntityType entity : schema.getEntityTypes()) {
+                    try {
                     objs.clear();
                     objs.put("entityType", entity);
 
@@ -163,10 +171,18 @@ public class MetadataMojo extends AbstractMojo {
                         }
                     }
 
-                    parseObj(typesBaseDir, typesPkg, "entityType",
-                            utility.capitalize(entity.getName()) + ".java", objs);
-                    parseObj(typesBaseDir, typesPkg, "entityCollection",
-                            utility.capitalize(entity.getName()) + "Collection.java", objs);
+                        parseObj(typesBaseDir, typesPkg, "entityType", utility.capitalize(entity.getName()) + ".java", objs);
+                        parseObj(typesBaseDir, typesPkg, "entityCollection", utility.capitalize(entity.getName()) + "Collection.java", objs);
+                    } catch (Exception e) {
+                        getLog().error(e.getMessage());
+                        if (e instanceof NullPointerException) {
+                            final StringWriter stringWriter = new StringWriter();
+                            final PrintWriter printWriter = new PrintWriter(stringWriter);
+                            e.printStackTrace(printWriter);
+                            getLog().error(stringWriter.toString());
+                        }
+                        continue;
+                    }
                 }
 
                 // write container and top entity sets into the base package
