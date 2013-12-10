@@ -18,4 +18,8 @@
 ODataJClient is an Open Source ([Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)) library that 
 enables Java applications to deal with [OData 3.0](http://www.odata.org/documentation/odata-v3-documentation/) services.
 
-Check how to [get started](https://github.com/MSOpenTech/ODataJClient/wiki/User-guide) with ODataJClient.
+This fork aims to extend the library to apply it to Microsoft SharePoint 2013 REST API (Lists, Exchange: contacts, mails, calendar; etc.). As this API is based on OAuth v4 the goal is to modify the library to comply with v4 standard in a way that is enough to make interaction with SP API work.
+
+Original ODataJClient documentation/how-to's can be found in a [get started](https://github.com/MSOpenTech/ODataJClient/wiki/User-guide) section.
+
+List of changes introduced into the code by this fork are listed in a [fork wiki](https://github.com/mkostin/ODataJClient/wiki/User-guide)
