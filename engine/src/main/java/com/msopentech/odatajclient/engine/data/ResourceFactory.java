@@ -114,6 +114,7 @@ public class ResourceFactory {
             case JSON:
             case JSON_FULL_METADATA:
             case JSON_NO_METADATA:
+            case JSON_VERBOSE_METADATA:
                 result = (Class<T>) JSONFeed.class;
                 break;
         }
@@ -140,6 +141,7 @@ public class ResourceFactory {
             case JSON:
             case JSON_FULL_METADATA:
             case JSON_NO_METADATA:
+            case JSON_VERBOSE_METADATA:
                 result = (Class<T>) JSONEntry.class;
                 break;
         }
