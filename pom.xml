@@ -81,10 +81,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
     <hc.client.version>4.2.6</hc.client.version>
-    <jackson.version>2.2.3</jackson.version>
+    <jackson.version>2.3.1</jackson.version>
     
     <commons.io.version>2.4</commons.io.version>
-    <commons.lang3.version>3.1</commons.lang3.version>
+    <commons.lang3.version>3.2.1</commons.lang3.version>
     <commons.beanutils.version>1.8.3</commons.beanutils.version>
 
     <sl4j.version>1.7.5</sl4j.version>
@@ -394,7 +394,7 @@
         
         <log.directory>${project.build.directory}/log</log.directory>
         
-        <tomcat.version>7.0.42</tomcat.version>
+        <tomcat.version>7.0.47</tomcat.version>
         
         <cargo.servlet.port>9080</cargo.servlet.port>
         <cargo.tomcat.ajp.port>9889</cargo.tomcat.ajp.port>
@@ -435,7 +435,7 @@
           <plugin>
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-maven2-plugin</artifactId>
-            <version>1.4.4</version>
+            <version>1.4.6</version>
             <configuration>
               <container>
                 <containerId>tomcat7x</containerId>
