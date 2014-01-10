@@ -50,6 +50,9 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
     @JsonProperty(value = "odata.nextLink", required = false)
     private String next;
 
+    @JsonProperty(value = "odata.context", required = false)
+    private String context;
+
     /**
      * Constructor.
      */
@@ -143,5 +146,25 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
     @Override
     public URI getNext() {
         return next == null ? null : URI.create(next);
+    }
+
+    /**
+    * Gets URI to context of current entries list.
+    *
+    * @return Context URI.
+    */
+    @JsonIgnore
+    public URI getContext() {
+        return context == null ? null : URI.create(context);
+    }
+
+    /**
+    * Sets URI to context of current entries list.
+    *
+    * @param context Context URI.
+    */
+    @JsonIgnore
+    public void setContext(final URI context) {
+        this.context = context.toASCIIString();
     }
 }
