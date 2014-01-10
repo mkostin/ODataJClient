@@ -24,15 +24,18 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRe
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ComplexType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EnumType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntitySet;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,6 +46,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
@@ -79,6 +83,8 @@ public class MetadataMojo extends AbstractMojo {
     private final Set<String> namespaces = new HashSet<String>();
 
     private static String TOOL_DIR = "ojc-plugin";
+    
+    private static String AUTH_HEADER = "Basic b2RhdGExQENUU1Rlc3QuY2NzY3RwLm5ldDowN0FwcGxlcw==";
 
     @Override
     public void execute() throws MojoExecutionException {
@@ -93,6 +99,8 @@ public class MetadataMojo extends AbstractMojo {
 
             final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(serviceRootURL);
 
+            req.addCustomHeader("Authorization", AUTH_HEADER);
+            
             final ODataRetrieveResponse<EdmMetadata> res = req.execute();
             final EdmMetadata metadata = res.getBody();
 
@@ -139,37 +147,45 @@ public class MetadataMojo extends AbstractMojo {
                     parseObj(typesBaseDir, typesPkg, "complexType", className + ".java", objs);
                 }
 
+                for (EnumType enumType : schema.getEnumTypes()) {
+                    final String className = utility.capitalize(enumType.getName());
+                    complexTypeNames.add(typesPkg + "." + className);
+                    objs.clear();
+                    objs.put("enumType", enumType);
+                    parseObj(typesBaseDir, typesPkg, "enumType", className + ".java", objs);
+                }
+
                 for (EntityType entity : schema.getEntityTypes()) {
                     try {
-                    objs.clear();
-                    objs.put("entityType", entity);
+                        objs.clear();
+                        objs.put("entityType", entity);
 
-                    final Map<String, String> keys;
+                        final Map<String, String> keys;
 
-                    EntityType baseType = null;
-                    if (entity.getBaseType() == null) {
-                        keys = utility.getEntityKeyType(entity);
-                    } else {
-                        baseType = schema.getEntityType(utility.getNameFromNS(entity.getBaseType()));
-                        objs.put("baseType", utility.getJavaType(entity.getBaseType()));
-                        while (baseType.getBaseType() != null) {
-                            baseType = schema.getEntityType(utility.getNameFromNS(baseType.getBaseType()));
+                        EntityType baseType = null;
+                        if (entity.getBaseType() == null) {
+                            keys = utility.getEntityKeyType(entity);
+                        } else {
+                            baseType = schema.getEntityType(utility.getNameFromNS(entity.getBaseType()));
+                            objs.put("baseType", utility.getJavaType(entity.getBaseType()));
+                            while (baseType.getBaseType() != null) {
+                                baseType = schema.getEntityType(utility.getNameFromNS(baseType.getBaseType()));
+                            }
+                            keys = utility.getEntityKeyType(baseType);
                         }
-                        keys = utility.getEntityKeyType(baseType);
-                    }
 
-                    if (keys.size() > 1) {
-                        // create compound key class
+                        if (keys.size() > 1) {
+                            // create compound key class
                         final String keyClassName = utility.capitalize(baseType == null
                                 ? entity.getName()
                                 : baseType.getName()) + "Key";
-                        objs.put("keyRef", keyClassName);
+                            objs.put("keyRef", keyClassName);
 
-                        if (entity.getBaseType() == null) {
-                            objs.put("keys", keys);
-                            parseObj(typesBaseDir, typesPkg, "entityTypeKey", keyClassName + ".java", objs);
+                            if (entity.getBaseType() == null) {
+                                objs.put("keys", keys);
+                                parseObj(typesBaseDir, typesPkg, "entityTypeKey", keyClassName + ".java", objs);
+                            }
                         }
-                    }
 
                         parseObj(typesBaseDir, typesPkg, "entityType", utility.capitalize(entity.getName()) + ".java", objs);
                         parseObj(typesBaseDir, typesPkg, "entityCollection", utility.capitalize(entity.getName()) + "Collection.java", objs);
@@ -187,17 +203,17 @@ public class MetadataMojo extends AbstractMojo {
 
                 // write container and top entity sets into the base package
                 for (EntityContainer container : schema.getEntityContainers()) {
-                    objs.clear();
-                    objs.put("container", container);
+                        objs.clear();
+                        objs.put("container", container);
                     parseObj(base, pkg, "container",
                             utility.capitalize(container.getName()) + ".java", objs);
 
-                    for (EntitySet entitySet : container.getEntitySets()) {
-                        objs.clear();
-                        objs.put("entitySet", entitySet);
+                        for (EntitySet entitySet : container.getEntitySets()) {
+                                objs.clear();
+                                objs.put("entitySet", entitySet);
                         parseObj(base, pkg, "entitySet",
                                 utility.capitalize(entitySet.getName()) + ".java", objs);
-                    }
+                        }
                 }
 
                 parseObj(services, true, null, "services", "com.msopentech.odatajclient.proxy.api.AbstractComplexType",

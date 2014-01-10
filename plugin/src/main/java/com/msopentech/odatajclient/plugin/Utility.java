@@ -120,13 +120,13 @@ public class Utility {
             res.append(edmType.getSimpleType().javaType().getSimpleName());
         } else if (edmType.isComplexType()) {
             res.append(basePackage).append('.').append(edmType.getNamespaceOrAlias().toLowerCase()).append('.').
-                    append(TYPE_SUB_PKG).append('.').append(capitalize(edmType.getComplexType().getName()));
+            append(TYPE_SUB_PKG).append('.').append(capitalize(edmType.getComplexType().getName()));
         } else if (edmType.isEntityType()) {
             res.append(basePackage).append('.').append(edmType.getNamespaceOrAlias().toLowerCase()).append('.').
-                    append(TYPE_SUB_PKG).append('.').append(capitalize(edmType.getEntityType().getName()));
+            append(TYPE_SUB_PKG).append('.').append(capitalize(edmType.getEntityType().getName()));
         } else if (edmType.isEnumType()) {
             res.append(basePackage).append('.').append(edmType.getNamespaceOrAlias().toLowerCase()).
-                    append('.').append(TYPE_SUB_PKG).append('.').append(capitalize(edmType.getEnumType().getName()));
+            append('.').append(TYPE_SUB_PKG).append('.').append(capitalize(edmType.getEnumType().getName()));
         } else {
             throw new IllegalArgumentException("Invalid type expression '" + typeExpression + "'");
         }
@@ -195,13 +195,16 @@ public class Utility {
 
     public String getNavigationRoleType(final String associationName, final String associationRole) {
         final String name = getNameFromNS(associationName);
-        final Association association = schema.getAssociation(name);
-        if (association != null) {
-            for (AssociationEnd end : association.getEnds()) {
-                if (end.getRole().equalsIgnoreCase(associationRole)) {
-                    return "*".equals(end.getMultiplicity())
-                            ? "Collection(" + end.getType() + ")"
-                            : end.getType();
+        if (name != null) {
+            final Association association = schema.getAssociation(name);
+            if (association != null) {
+                for (AssociationEnd end : association.getEnds()) {
+                    if (end == null) continue;
+                    if (end.getRole().equalsIgnoreCase(associationRole)) {
+                        return "*".equals(end.getMultiplicity())
+                        ? "Collection(" + end.getType() + ")"
+                        : end.getType();
+                    }
                 }
             }
         }
@@ -222,23 +225,26 @@ public class Utility {
     }
 
     public final String getNameFromNS(final String ns, final boolean toLowerCase) {
+        if (ns == null) {
+            return null;
+        }
         final int lastpt = ns.lastIndexOf('.');
         final String res = ns.substring(lastpt < 0 ? 0 : lastpt + 1);
         return toLowerCase ? res.toLowerCase() : res;
     }
 
     public boolean isSameType(
-            final String entityTypeExpression, final String fullTypeExpression, final boolean collection) {
+        final String entityTypeExpression, final String fullTypeExpression, final boolean collection) {
 
         final Set<String> types = new HashSet<String>(2);
 
         types.add((collection ? "Collection(" : StringUtils.EMPTY)
-                + getNameInNamespace(entityTypeExpression)
-                + (collection ? ")" : StringUtils.EMPTY));
+            + getNameInNamespace(entityTypeExpression)
+            + (collection ? ")" : StringUtils.EMPTY));
         if (StringUtils.isNotBlank(schema.getAlias())) {
             types.add((collection ? "Collection(" : StringUtils.EMPTY)
-                    + schema.getAlias() + "." + entityTypeExpression
-                    + (collection ? ")" : StringUtils.EMPTY));
+                + schema.getAlias() + "." + entityTypeExpression
+                + (collection ? ")" : StringUtils.EMPTY));
         }
 
         return types.contains(fullTypeExpression);
@@ -248,66 +254,66 @@ public class Utility {
         for (Map.Entry<String, List<EntityType>> entry : allEntityTypes.entrySet()) {
             for (EntityType type : entry.getValue()) {
                 if (StringUtils.isNotBlank(type.getBaseType())
-                        && base.getEntityType().getName().equals(getNameFromNS(type.getBaseType()))) {
+                    && base.getEntityType().getName().equals(getNameFromNS(type.getBaseType()))) {
 
                     final EdmType entityType = new EdmType(metadata, entry.getKey() + "." + type.getName());
 
-                    descendants.add(getNameInNamespace(entityType));
-                    populateDescendants(entityType, descendants);
-                }
+                descendants.add(getNameInNamespace(entityType));
+                populateDescendants(entityType, descendants);
             }
         }
     }
+}
 
-    public List<String> getDescendantsOrSelf(final EdmType entityType) {
-        final List<String> descendants = new ArrayList<String>();
+public List<String> getDescendantsOrSelf(final EdmType entityType) {
+    final List<String> descendants = new ArrayList<String>();
 
-        descendants.add(getNameInNamespace(entityType));
-        populateDescendants(entityType, descendants);
+    descendants.add(getNameInNamespace(entityType));
+    populateDescendants(entityType, descendants);
 
-        return descendants;
-    }
+    return descendants;
+}
 
-    public List<FunctionImport> getFunctionImportsBoundTo(
-            final String typeExpression, final boolean collection) {
+public List<FunctionImport> getFunctionImportsBoundTo(
+    final String typeExpression, final boolean collection) {
 
-        final List<FunctionImport> result = new ArrayList<FunctionImport>();
+    final List<FunctionImport> result = new ArrayList<FunctionImport>();
 
-        for (EntityContainer entityContainer : schema.getEntityContainers()) {
-            for (FunctionImport functionImport : entityContainer.getFunctionImports()) {
-                if (functionImport.isBindable()) {
-                    for (int i = 0; i < functionImport.getParameters().size(); i++) {
-                        if (isSameType(typeExpression, functionImport.getParameters().get(i).getType(), collection)) {
-                            result.add(functionImport);
-                        }
+    for (EntityContainer entityContainer : schema.getEntityContainers()) {
+        for (FunctionImport functionImport : entityContainer.getFunctionImports()) {
+            if (functionImport.isBindable()) {
+                for (int i = 0; i < functionImport.getParameters().size(); i++) {
+                    if (isSameType(typeExpression, functionImport.getParameters().get(i).getType(), collection)) {
+                        result.add(functionImport);
                     }
                 }
             }
         }
-
-        return result;
     }
 
-    public static Map.Entry<String, String> getDocumentation(final Object obj) {
-        final String summary;
-        final String description;
+    return result;
+}
 
-        try {
-            final Method method = obj.getClass().getMethod("getDocumentation");
+public static Map.Entry<String, String> getDocumentation(final Object obj) {
+    final String summary;
+    final String description;
 
-            if (method == null || method.getReturnType() != Documentation.class) {
-                throw new Exception("Documentation not found");
-            }
+    try {
+        final Method method = obj.getClass().getMethod("getDocumentation");
 
-            final Documentation doc = (Documentation) method.invoke(obj);
-
-            summary = doc.getSummary() == null ? "" : doc.getSummary();
-            description = doc.getLongDescription() == null ? "" : doc.getLongDescription();
-
-            return new AbstractMap.SimpleEntry<String, String>(summary, description);
-        } catch (Exception e) {
-            return null;
+        if (method == null || method.getReturnType() != Documentation.class) {
+            throw new Exception("Documentation not found");
         }
 
+        final Documentation doc = (Documentation) method.invoke(obj);
+
+        summary = doc.getSummary() == null ? "" : doc.getSummary();
+        description = doc.getLongDescription() == null ? "" : doc.getLongDescription();
+
+        return new AbstractMap.SimpleEntry<String, String>(summary, description);
+    } catch (Exception e) {
+        return null;
     }
+
+}
 }

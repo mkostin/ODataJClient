@@ -109,17 +109,19 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
     public void set$utility.capitalize($property.Name)(final $utility.getJavaType($property.Type) _$utility.uncapitalize($property.Name));
 
 #end
-    
+
 #foreach($property in $entityType.NavigationProperties)
     #set( $toRoleType = $utility.getNavigationRoleType($property.Relationship, $property.ToRole) )
+    #* $toRoleType cant be null <NavigationProperty Name="Folders" Type="Collection(Microsoft.Exchange.Services.OData.Model.Folder)"/> *#
+    #if($toRoleType)
+        @NavigationProperty(name = "$property.Name", 
+                    relationship = "$property.Relationship", 
+                    fromRole = "$property.FromRole", 
+                    toRole = "$property.ToRole")
+        public $utility.getJavaType($toRoleType) get$utility.capitalize($property.Name)();
 
-    @NavigationProperty(name = "$property.Name", 
-                relationship = "$property.Relationship", 
-                fromRole = "$property.FromRole", 
-                toRole = "$property.ToRole")
-    public $utility.getJavaType($toRoleType) get$utility.capitalize($property.Name)();
-
-    public void set$utility.capitalize($property.Name)(final $utility.getJavaType($toRoleType) _$utility.uncapitalize($property.Name));
+        public void set$utility.capitalize($property.Name)(final $utility.getJavaType($toRoleType) _$utility.uncapitalize($property.Name));
+    #end
 
 #end
 
