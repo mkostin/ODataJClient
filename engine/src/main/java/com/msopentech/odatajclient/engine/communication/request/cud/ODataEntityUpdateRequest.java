@@ -28,7 +28,9 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -70,7 +72,18 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
     @Override
     public ODataEntityUpdateResponse execute() {
         final InputStream input = getPayload();
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
+        int len = -1;
+        InputStreamEntity entity;
+        try {
+            byte[] bytes = IOUtils.toByteArray(input);
+            len = bytes.length;
+            entity = new InputStreamEntity(new ByteArrayInputStream(bytes), len);
+        } catch (IOException e) {
+            entity = new InputStreamEntity(input, -1);
+        }
+
+        entity.setChunked(false);
+        ((HttpEntityEnclosingRequestBase) request).setEntity(entity);
 
         try {
             return new ODataEntityUpdateResponseImpl(client, doExecute());
