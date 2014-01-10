@@ -28,12 +28,10 @@ import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataPropertyUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataValueUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUpdateResponse;
@@ -41,7 +39,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
@@ -49,10 +47,9 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
 
-public class PropertyUpdateITCase extends AbstractTest {
+public class PropertyUpdateTestITCase extends AbstractTest {
     // update complex property
 
     public void updateComplexProperty(
@@ -62,10 +59,10 @@ public class PropertyUpdateITCase extends AbstractTest {
             final UpdateType type,
             final String entity,
             final String propertyType) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment(entity).appendKeySegment(-9).appendStructuralSegment(propertyType);
 
-        ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        ODataPropertyRequest retrieveReq = client.getRetrieveRequestFactory().getPropertyRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
         retrieveReq.setContentType(contentType);
         retrieveReq.setPrefer(prefer);
@@ -75,19 +72,19 @@ public class PropertyUpdateITCase extends AbstractTest {
         String etag = retrieveRes.getEtag();
         final ODataComplexValue dimensions = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions");
-        dimensions.add(ODataFactory.newPrimitiveProperty("Width",
+        dimensions.add(ODataObjectFactory.newPrimitiveProperty("Width",
                 new ODataPrimitiveValue.Builder().setText("-1.12").setType(EdmSimpleType.Decimal).build()));
-        dimensions.add(ODataFactory.newPrimitiveProperty("Height",
+        dimensions.add(ODataObjectFactory.newPrimitiveProperty("Height",
                 new ODataPrimitiveValue.Builder().setText("-1.12").setType(EdmSimpleType.Decimal).build()));
-        dimensions.add(ODataFactory.newPrimitiveProperty("Depth",
+        dimensions.add(ODataObjectFactory.newPrimitiveProperty("Depth",
                 new ODataPrimitiveValue.Builder().setText("-1.12").setType(EdmSimpleType.Decimal).build()));
 
-        ODataProperty dimensionToBeUpdated = ODataFactory.newComplexProperty("Dimensions",
+        ODataProperty dimensionToBeUpdated = ODataObjectFactory.newComplexProperty("Dimensions",
                 dimensions);
 
-        final ODataPropertyUpdateRequest req = ODataCUDRequestFactory.getPropertyComplexValueUpdateRequest(uriBuilder.
-                build(), type, dimensionToBeUpdated);
-        if (Configuration.isUseXHTTPMethod()) {
+        final ODataPropertyUpdateRequest req = client.getCUDRequestFactory().
+                getPropertyComplexValueUpdateRequest(uriBuilder.build(), type, dimensionToBeUpdated);
+        if (client.getConfiguration().isUseXHTTPMethod()) {
             assertEquals(HttpMethod.POST, req.getMethod());
         } else {
             assertEquals(type.getMethod(), req.getMethod());
@@ -331,11 +328,11 @@ public class PropertyUpdateITCase extends AbstractTest {
             final UpdateType type,
             final String entity,
             final String propertyType) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment(entity).appendKeySegment(-9).appendStructuralSegment("PrimaryContactInfo").
                 appendStructuralSegment(propertyType);
 
-        ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        ODataPropertyRequest retrieveReq = client.getRetrieveRequestFactory().getPropertyRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
         retrieveReq.setContentType(contentType);
         retrieveReq.setPrefer(prefer);
@@ -343,7 +340,7 @@ public class PropertyUpdateITCase extends AbstractTest {
         assertEquals(200, retrieveRes.getStatusCode());
         String etag = retrieveRes.getEtag();
 
-        ODataProperty updateProperty = ODataFactory.newCollectionProperty(propertyType,
+        ODataProperty updateProperty = ODataObjectFactory.newCollectionProperty(propertyType,
                 retrieveRes.getBody().getCollectionValue());
 
         final String newItem = "new update " + System.currentTimeMillis();
@@ -355,8 +352,9 @@ public class PropertyUpdateITCase extends AbstractTest {
         originalValue.add(new ODataPrimitiveValue.Builder().setText(newItem).build());
         assertEquals(origSize + 1, originalValue.size());
         final ODataPropertyUpdateRequest updateReq =
-                ODataCUDRequestFactory.getPropertyCollectionValueUpdateRequest(uriBuilder.build(), updateProperty);
-        if (Configuration.isUseXHTTPMethod()) {
+                client.getCUDRequestFactory().
+                getPropertyCollectionValueUpdateRequest(uriBuilder.build(), updateProperty);
+        if (client.getConfiguration().isUseXHTTPMethod()) {
             assertEquals(HttpMethod.POST, updateReq.getMethod());
         } else {
             assertEquals(HttpMethod.PUT, updateReq.getMethod());
@@ -385,13 +383,13 @@ public class PropertyUpdateITCase extends AbstractTest {
             final UpdateType type,
             final String entity,
             final String propertyType) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment(entity).appendKeySegment(-9).
                 appendStructuralSegment("PrimaryContactInfo")
                 .appendStructuralSegment("HomePhone")
                 .appendStructuralSegment(propertyType);
 
-        ODataPropertyRequest retrieveReq = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        ODataPropertyRequest retrieveReq = client.getRetrieveRequestFactory().getPropertyRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
         retrieveReq.setContentType(contentType);
         retrieveReq.setPrefer(prefer);
@@ -403,12 +401,12 @@ public class PropertyUpdateITCase extends AbstractTest {
         final String newItem = "new update " + System.currentTimeMillis();
         assertNotEquals(oldItem, newItem);
 
-        updateProperty = ODataFactory.newPrimitiveProperty(propertyType,
+        updateProperty = ODataObjectFactory.newPrimitiveProperty(propertyType,
                 new ODataPrimitiveValue.Builder().setText(newItem).build());
 
         final ODataPropertyUpdateRequest updateReq =
-                ODataCUDRequestFactory.getPropertyPrimitiveValueUpdateRequest(uriBuilder.build(), updateProperty);
-        if (Configuration.isUseXHTTPMethod()) {
+                client.getCUDRequestFactory().getPropertyPrimitiveValueUpdateRequest(uriBuilder.build(), updateProperty);
+        if (client.getConfiguration().isUseXHTTPMethod()) {
             assertEquals(HttpMethod.POST, updateReq.getMethod());
         } else {
             assertEquals(HttpMethod.PUT, updateReq.getMethod());
@@ -435,13 +433,13 @@ public class PropertyUpdateITCase extends AbstractTest {
             final String contentType,
             final String prefer,
             final UpdateType type) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-8).
                 appendStructuralSegment("PrimaryContactInfo").
                 appendStructuralSegment("WorkPhone").
                 appendStructuralSegment("PhoneNumber").
                 appendValueSegment();
-        ODataValueRequest retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        ODataValueRequest retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
         retrieveReq.setPrefer(prefer);
         ODataRetrieveResponse<ODataValue> retrieveRes = retrieveReq.execute();
@@ -457,7 +455,7 @@ public class PropertyUpdateITCase extends AbstractTest {
 
         final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setText(newItem).build();
         final ODataValueUpdateRequest updateReq =
-                ODataCUDRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
+                client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
         updateReq.setFormat(ODataValueFormat.TEXT);
         updateReq.setPrefer(prefer);
         if (StringUtils.isNotBlank(etag)) {
@@ -472,7 +470,7 @@ public class PropertyUpdateITCase extends AbstractTest {
         } else {
             assertEquals(204, updateRes.getStatusCode());
         }
-        retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
         retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
@@ -512,11 +510,11 @@ public class PropertyUpdateITCase extends AbstractTest {
             final String prefer,
             final UpdateType type) {
         try {
-            final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment("ComputerDetail").appendKeySegment(-10).
                     appendStructuralSegment("PurchaseDate").
                     appendValueSegment();
-            ODataValueRequest retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+            ODataValueRequest retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
             retrieveReq.setFormat(format);
             retrieveReq.setPrefer(prefer);
             ODataRetrieveResponse<ODataValue> retrieveRes = retrieveReq.execute();
@@ -527,7 +525,7 @@ public class PropertyUpdateITCase extends AbstractTest {
             final String newItem = "2005-02-09T23:59:59.9999999";
             final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setText(newItem).build();
             final ODataValueUpdateRequest updateReq =
-                    ODataCUDRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
+                    client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
             updateReq.setFormat(ODataValueFormat.TEXT);
             updateReq.setPrefer(prefer);
             if (StringUtils.isNotBlank(etag)) {
@@ -543,7 +541,7 @@ public class PropertyUpdateITCase extends AbstractTest {
             } else {
                 assertEquals(204, updateRes.getStatusCode());
             }
-            retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+            retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
             retrieveReq.setFormat(format);
             retrieveRes = retrieveReq.execute();
             assertEquals(200, retrieveRes.getStatusCode());
@@ -588,11 +586,11 @@ public class PropertyUpdateITCase extends AbstractTest {
             final HashMap<String, Object> multiKey = new HashMap<String, Object>();
             multiKey.put("OrderId", -10);
             multiKey.put("ProductId", -10);
-            final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment("OrderLine").appendKeySegment(multiKey).
                     appendStructuralSegment("Quantity").
                     appendValueSegment();
-            ODataValueRequest retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+            ODataValueRequest retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
             retrieveReq.setFormat(format);
             retrieveReq.setPrefer(prefer);
             ODataRetrieveResponse<ODataValue> retrieveRes = retrieveReq.execute();
@@ -606,7 +604,7 @@ public class PropertyUpdateITCase extends AbstractTest {
             final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setValue(newItem).setType(
                     EdmSimpleType.Int32).build();
             final ODataValueUpdateRequest updateReq =
-                    ODataCUDRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
+                    client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
             updateReq.setFormat(ODataValueFormat.TEXT);
             updateReq.setPrefer(prefer);
             if (StringUtils.isNotBlank(etag)) {
@@ -621,7 +619,7 @@ public class PropertyUpdateITCase extends AbstractTest {
             } else {
                 assertEquals(204, updateRes.getStatusCode());
             }
-            retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+            retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
             retrieveReq.setFormat(format);
             retrieveRes = retrieveReq.execute();
             assertEquals(200, retrieveRes.getStatusCode());
@@ -662,12 +660,12 @@ public class PropertyUpdateITCase extends AbstractTest {
             final String contentType,
             final String prefer,
             final UpdateType type) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("ComputerDetail").appendKeySegment(-9).
                 appendStructuralSegment("Dimensions").
                 appendStructuralSegment("Width").
                 appendValueSegment();
-        ODataValueRequest retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        ODataValueRequest retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
         retrieveReq.setPrefer(prefer);
         ODataRetrieveResponse<ODataValue> retrieveRes = retrieveReq.execute();
@@ -683,7 +681,7 @@ public class PropertyUpdateITCase extends AbstractTest {
 
         final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setText(newItem).build();
         final ODataValueUpdateRequest updateReq =
-                ODataCUDRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
+                client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
         updateReq.setFormat(ODataValueFormat.TEXT);
         updateReq.setPrefer(prefer);
         if (StringUtils.isNotBlank(etag)) {
@@ -695,7 +693,7 @@ public class PropertyUpdateITCase extends AbstractTest {
         } else {
             assertEquals(204, updateRes.getStatusCode());
         }
-        retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
         retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
@@ -737,11 +735,11 @@ public class PropertyUpdateITCase extends AbstractTest {
         final HashMap<String, Object> multiKey = new HashMap<String, Object>();
         multiKey.put("MessageId", -1);
         multiKey.put("FromUsername", "10");
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Message").appendKeySegment(multiKey).
                 appendStructuralSegment("IsRead").
                 appendValueSegment();
-        ODataValueRequest retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        ODataValueRequest retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
         retrieveReq.setPrefer(prefer);
         ODataRetrieveResponse<ODataValue> retrieveRes = retrieveReq.execute();
@@ -752,7 +750,7 @@ public class PropertyUpdateITCase extends AbstractTest {
         final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setValue(!oldItem).setType(
                 EdmSimpleType.Boolean).build();
         final ODataValueUpdateRequest updateReq =
-                ODataCUDRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
+                client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
         updateReq.setFormat(ODataValueFormat.TEXT);
         updateReq.setPrefer(prefer);
         if (StringUtils.isNotBlank(etag)) {
@@ -764,7 +762,7 @@ public class PropertyUpdateITCase extends AbstractTest {
         } else {
             assertEquals(204, updateRes.getStatusCode());
         }
-        retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
         retrieveReq.setFormat(format);
         retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());
@@ -805,11 +803,11 @@ public class PropertyUpdateITCase extends AbstractTest {
             final HashMap<String, Object> multiKey = new HashMap<String, Object>();
             multiKey.put("OrderId", -10);
             multiKey.put("ProductId", -10);
-            final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment("OrderLine").appendKeySegment(multiKey).
                     appendStructuralSegment("OrderId").
                     appendValueSegment();
-            ODataValueRequest retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+            ODataValueRequest retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
             retrieveReq.setFormat(format);
             retrieveReq.setPrefer(prefer);
             ODataRetrieveResponse<ODataValue> retrieveRes = retrieveReq.execute();
@@ -823,7 +821,7 @@ public class PropertyUpdateITCase extends AbstractTest {
             final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder().setValue(newItem).setType(
                     EdmSimpleType.Int32).build();
             final ODataValueUpdateRequest updateReq =
-                    ODataCUDRequestFactory.getValueUpdateRequest(uriBuilder.build(), type, newVal);
+                    client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
             updateReq.setFormat(ODataValueFormat.TEXT);
             updateReq.setPrefer(prefer);
             if (StringUtils.isNotBlank(etag)) {
@@ -839,7 +837,7 @@ public class PropertyUpdateITCase extends AbstractTest {
                 assertEquals(204, updateRes.getStatusCode());
             }
 
-            retrieveReq = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+            retrieveReq = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
             retrieveReq.setFormat(format);
             retrieveRes = retrieveReq.execute();
             assertEquals(200, retrieveRes.getStatusCode());
@@ -874,11 +872,11 @@ public class PropertyUpdateITCase extends AbstractTest {
     // delete a non nullable property
 
     public void deleteNonNullableproperty(final ODataPubFormat format, final String contentType) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).
                 appendStructuralSegment("CustomerId").
                 appendValueSegment();
-        ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(uriBuilder.build());
+        ODataDeleteRequest deleteReq = client.getCUDRequestFactory().getDeleteRequest(uriBuilder.build());
         deleteReq.setFormat(format);
         deleteReq.setContentType(contentType);
         ODataDeleteResponse deleteRes = deleteReq.execute();
@@ -946,11 +944,11 @@ public class PropertyUpdateITCase extends AbstractTest {
 
     // delete a nullable property
     public void deleteNullableProperty(final ODataPubFormat format, final String contentType) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).
                 appendStructuralSegment("Name").
                 appendValueSegment();
-        ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(uriBuilder.build());
+        ODataDeleteRequest deleteReq = client.getCUDRequestFactory().getDeleteRequest(uriBuilder.build());
         deleteReq.setFormat(format);
         deleteReq.setContentType(contentType);
         ODataDeleteResponse deleteRes = deleteReq.execute();

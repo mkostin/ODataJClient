@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.invoke;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
@@ -36,7 +37,13 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * OData request factory class.
  */
-public class ODataInvokeRequestFactory {
+public abstract class AbstractInvokeRequestFactory {
+
+    protected final ODataClient client;
+
+    protected AbstractInvokeRequestFactory(final ODataClient client) {
+        this.client = client;
+    }
 
     /**
      * Gets an invoke request instance.
@@ -48,7 +55,7 @@ public class ODataInvokeRequestFactory {
      * @return new ODataInvokeRequest instance.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
+    public <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
             final URI uri, final EdmMetadata metadata, final FunctionImport functionImport) {
 
         HttpMethod method = null;
@@ -66,19 +73,20 @@ public class ODataInvokeRequestFactory {
 
         ODataInvokeRequest<T> result;
         if (StringUtils.isBlank(functionImport.getReturnType())) {
-            result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataNoContent>(ODataNoContent.class, method, uri);
+            result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataNoContent>(
+                    client, ODataNoContent.class, method, uri);
         } else {
             final EdmType returnType = new EdmType(metadata, functionImport.getReturnType());
 
             if (returnType.isCollection() && returnType.isEntityType()) {
                 result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntitySet>(
-                        ODataEntitySet.class, method, uri);
+                        client, ODataEntitySet.class, method, uri);
             } else if (!returnType.isCollection() && returnType.isEntityType()) {
                 result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntity>(
-                        ODataEntity.class, method, uri);
+                        client, ODataEntity.class, method, uri);
             } else {
                 result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataProperty>(
-                        ODataProperty.class, method, uri);
+                        client, ODataProperty.class, method, uri);
             }
         }
 
@@ -96,7 +104,7 @@ public class ODataInvokeRequestFactory {
      * @return new ODataInvokeRequest instance.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
+    public <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
             final URI uri, final EdmMetadata metadata, final FunctionImport functionImport,
             final Map<String, ODataValue> parameters) {
 

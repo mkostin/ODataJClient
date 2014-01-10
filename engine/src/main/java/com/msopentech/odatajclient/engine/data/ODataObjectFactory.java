@@ -29,9 +29,9 @@ import java.net.URI;
  * @see ODataProperty
  * @see ODataLink
  */
-public final class ODataFactory {
+public final class ODataObjectFactory {
 
-    private ODataFactory() {
+    private ODataObjectFactory() {
         // Empty private constructor for static utility classes
     }
 

@@ -19,11 +19,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataLinkCollection;
-import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.IOException;
 import java.net.URI;
@@ -32,20 +31,19 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData link query request.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getLinkCollectionRequest(java.net.URI, java.lang.String)
  */
-public class ODataLinkCollectionRequest extends ODataRetrieveRequest<ODataLinkCollection, ODataFormat> {
+public class ODataLinkCollectionRequest extends AbstractODataRetrieveRequest<ODataLinkCollection, ODataFormat> {
 
     /**
      * Private constructor.
      *
+     * @param odataClient client instance getting this request
      * @param targetURI target URI.
      * @param linkName link name.
      */
-    ODataLinkCollectionRequest(final URI targetURI, final String linkName) {
-        super(ODataFormat.class, new ODataURIBuilder(targetURI.toASCIIString()).appendLinksSegment(linkName).build());
+    ODataLinkCollectionRequest(final ODataClient odataClient, final URI targetURI, final String linkName) {
+        super(odataClient, ODataFormat.class,
+                odataClient.getURIBuilder(targetURI.toASCIIString()).appendLinksSegment(linkName).build());
     }
 
     /**
@@ -53,7 +51,7 @@ public class ODataLinkCollectionRequest extends ODataRetrieveRequest<ODataLinkCo
      */
     @Override
     public ODataRetrieveResponse<ODataLinkCollection> execute() {
-        return new ODataLinkCollectionResponseImpl(client, doExecute());
+        return new ODataLinkCollectionResponseImpl(httpClient, doExecute());
     }
 
     protected class ODataLinkCollectionResponseImpl extends ODataRetrieveResponseImpl {
@@ -85,7 +83,7 @@ public class ODataLinkCollectionRequest extends ODataRetrieveRequest<ODataLinkCo
         public ODataLinkCollection getBody() {
             if (links == null) {
                 try {
-                    links = ODataReader.readLinks(
+                    links = odataClient.getODataReader().readLinks(
                             res.getEntity().getContent(), ODataFormat.fromString(getContentType()));
                 } catch (IOException e) {
                     throw new HttpClientException(e);

@@ -19,13 +19,13 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.AbstractODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.InputStream;
 import java.net.URI;
@@ -37,11 +37,8 @@ import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an insert link OData request.
- * Get instance by using ODataCUDRequestFactory.
- *
- * @see ODataCUDRequestFactory#getLinkCreateRequest(java.net.URI, com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
+public class ODataLinkCreateRequest extends AbstractODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -52,11 +49,12 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param targetURI entity set URI.
      * @param link entity to be linked.
      */
-    ODataLinkCreateRequest(final URI targetURI, final ODataLink link) {
-        super(ODataFormat.class, HttpMethod.POST, targetURI);
+    ODataLinkCreateRequest(final ODataClient odataClient, final URI targetURI, final ODataLink link) {
+        super(odataClient, ODataFormat.class, HttpMethod.POST, targetURI);
         // set request body
         this.link = link;
     }
@@ -70,7 +68,7 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
         ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
 
         try {
-            return new ODataLinkCreateResponseImpl(client, doExecute());
+            return new ODataLinkCreateResponseImpl(httpClient, doExecute());
         } finally {
             IOUtils.closeQuietly(input);
         }
@@ -81,7 +79,7 @@ public class ODataLinkCreateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeLink(link, ODataFormat.fromString(getContentType()));
+        return odataClient.getODataWriter().writeLink(link, ODataFormat.fromString(getContentType()));
     }
 
     /**

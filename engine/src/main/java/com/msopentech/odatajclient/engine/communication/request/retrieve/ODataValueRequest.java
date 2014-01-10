@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
@@ -33,19 +34,17 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData entity property value query request.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getValueRequest(java.net.URI)
  */
-public class ODataValueRequest extends ODataRetrieveRequest<ODataValue, ODataValueFormat> {
+public class ODataValueRequest extends AbstractODataRetrieveRequest<ODataValue, ODataValueFormat> {
 
     /**
      * Private constructor.
      *
+     * @param odataClient client instance getting this request
      * @param query query to be executed.
      */
-    ODataValueRequest(final URI query) {
-        super(ODataValueFormat.class, query);
+    ODataValueRequest(final ODataClient odataClient, final URI query) {
+        super(odataClient, ODataValueFormat.class, query);
     }
 
     /**
@@ -54,7 +53,7 @@ public class ODataValueRequest extends ODataRetrieveRequest<ODataValue, ODataVal
     @Override
     public ODataRetrieveResponse<ODataValue> execute() {
         final HttpResponse res = doExecute();
-        return new ODataValueResponseImpl(client, res);
+        return new ODataValueResponseImpl(httpClient, res);
     }
 
     /**

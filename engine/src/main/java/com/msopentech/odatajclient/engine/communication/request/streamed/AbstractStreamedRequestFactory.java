@@ -19,18 +19,20 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.io.InputStream;
 import java.net.URI;
 
 /**
  * OData request factory class.
  */
-public final class ODataStreamedRequestFactory {
+public abstract class AbstractStreamedRequestFactory {
 
-    private ODataStreamedRequestFactory() {
-        // Empty private constructor for static utility classes
+    protected final ODataClient client;
+
+    protected AbstractStreamedRequestFactory(final ODataClient client) {
+        this.client = client;
     }
 
     /**
@@ -42,10 +44,10 @@ public final class ODataStreamedRequestFactory {
      * @param media entity blob to be created.
      * @return new ODataMediaEntityCreateRequest instance.
      */
-    public static ODataMediaEntityCreateRequest getMediaEntityCreateRequest(
+    public ODataMediaEntityCreateRequest getMediaEntityCreateRequest(
             final URI targetURI, final InputStream media) {
 
-        return new ODataMediaEntityCreateRequest(targetURI, media);
+        return new ODataMediaEntityCreateRequest(client, targetURI, media);
     }
 
     /**
@@ -57,14 +59,14 @@ public final class ODataStreamedRequestFactory {
      * @param stream stream to be updated.
      * @return new ODataStreamUpdateRequest instance.
      */
-    public static ODataStreamUpdateRequest getStreamUpdateRequest(final URI targetURI, final InputStream stream) {
+    public ODataStreamUpdateRequest getStreamUpdateRequest(final URI targetURI, final InputStream stream) {
         final ODataStreamUpdateRequest req;
 
-        if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataStreamUpdateRequest(HttpMethod.POST, targetURI, stream);
+        if (client.getConfiguration().isUseXHTTPMethod()) {
+            req = new ODataStreamUpdateRequest(client, HttpMethod.POST, targetURI, stream);
             req.setXHTTPMethod(HttpMethod.PUT.name());
         } else {
-            req = new ODataStreamUpdateRequest(HttpMethod.PUT, targetURI, stream);
+            req = new ODataStreamUpdateRequest(client, HttpMethod.PUT, targetURI, stream);
         }
 
         return req;
@@ -79,16 +81,16 @@ public final class ODataStreamedRequestFactory {
      * @param media entity blob to be updated.
      * @return new ODataMediaEntityUpdateRequest instance.
      */
-    public static ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(
+    public ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(
             final URI editURI, final InputStream media) {
 
         final ODataMediaEntityUpdateRequest req;
 
-        if (Configuration.isUseXHTTPMethod()) {
-            req = new ODataMediaEntityUpdateRequest(HttpMethod.POST, editURI, media);
+        if (client.getConfiguration().isUseXHTTPMethod()) {
+            req = new ODataMediaEntityUpdateRequest(client, HttpMethod.POST, editURI, media);
             req.setXHTTPMethod(HttpMethod.PUT.name());
         } else {
-            req = new ODataMediaEntityUpdateRequest(HttpMethod.PUT, editURI, media);
+            req = new ODataMediaEntityUpdateRequest(client, HttpMethod.PUT, editURI, media);
         }
 
         return req;

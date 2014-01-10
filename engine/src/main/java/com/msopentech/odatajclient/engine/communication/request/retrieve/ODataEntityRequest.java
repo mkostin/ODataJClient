@@ -19,9 +19,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
@@ -29,19 +29,17 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData retrieve query request returning a single entity.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getEntityRequest(java.net.URI)
  */
-public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataPubFormat> {
+public class ODataEntityRequest extends AbstractODataRetrieveRequest<ODataEntity, ODataPubFormat> {
 
     /**
      * Private constructor.
      *
+     * @param odataClient client instance getting this request
      * @param query query to be executed.
      */
-    ODataEntityRequest(final URI query) {
-        super(ODataPubFormat.class, query);
+    ODataEntityRequest(final ODataClient odataClient, final URI query) {
+        super(odataClient, ODataPubFormat.class, query);
     }
 
     /**
@@ -49,7 +47,7 @@ public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataP
      */
     @Override
     public ODataRetrieveResponse<ODataEntity> execute() {
-        return new ODataEntityResponseImpl(client, doExecute());
+        return new ODataEntityResponseImpl(httpClient, doExecute());
     }
 
     /**
@@ -84,7 +82,8 @@ public class ODataEntityRequest extends ODataRetrieveRequest<ODataEntity, ODataP
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.readEntity(getRawResponse(), ODataPubFormat.fromString(getContentType()));
+                    entity = odataClient.getODataReader().
+                            readEntity(getRawResponse(), ODataPubFormat.fromString(getContentType()));
                 } finally {
                     this.close();
                 }

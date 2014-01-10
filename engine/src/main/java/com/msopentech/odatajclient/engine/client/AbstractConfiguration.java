@@ -17,7 +17,7 @@
  * See the Apache License, Version 2.0 for the specific language
  * governing permissions and limitations under the License.
  */
-package com.msopentech.odatajclient.engine.utils;
+package com.msopentech.odatajclient.engine.client;
 
 import com.msopentech.odatajclient.engine.client.http.DefaultHttpClientFactory;
 import com.msopentech.odatajclient.engine.client.http.DefaultHttpUriRequestFactory;
@@ -35,7 +35,7 @@ import java.util.concurrent.Executors;
 /**
  * Configuration wrapper.
  */
-public final class Configuration {
+public abstract class AbstractConfiguration {
 
     private static final String DEFAULT_PUB_FORMAT = "pubFormat";
 
@@ -53,13 +53,9 @@ public final class Configuration {
 
     private static final String GZIP_COMPRESSION = "gzipCompression";
 
-    private static final Map<String, Object> CONF = new HashMap<String, Object>();
+    private final Map<String, Object> CONF = new HashMap<String, Object>();
 
-    private static ExecutorService EXECUTOR = Executors.newFixedThreadPool(10);
-
-    private Configuration() {
-        // Empty private constructor for static utility classes
-    }
+    private ExecutorService executor = Executors.newFixedThreadPool(10);
 
     /**
      * Gets given configuration property.
@@ -68,7 +64,7 @@ public final class Configuration {
      * @param defaultValue default value to be used in case of the given key doesn't exist.
      * @return property value if exists; default value if does not exist.
      */
-    private static Object getProperty(final String key, final Object defaultValue) {
+    private Object getProperty(final String key, final Object defaultValue) {
         return CONF.containsKey(key) ? CONF.get(key) : defaultValue;
     }
 
@@ -79,7 +75,7 @@ public final class Configuration {
      * @param value configuration property value.
      * @return given value.
      */
-    private static Object setProperty(final String key, final Object value) {
+    private Object setProperty(final String key, final Object value) {
         return CONF.put(key, value);
     }
 
@@ -90,7 +86,7 @@ public final class Configuration {
      * @return configured OData format for AtomPub if specified; JSON_FULL_METADATA format otherwise.
      * @see ODataPubFormat#JSON_FULL_METADATA
      */
-    public static ODataPubFormat getDefaultPubFormat() {
+    public ODataPubFormat getDefaultPubFormat() {
         return ODataPubFormat.valueOf(
                 getProperty(DEFAULT_PUB_FORMAT, ODataPubFormat.JSON_FULL_METADATA.name()).toString());
     }
@@ -100,7 +96,7 @@ public final class Configuration {
      *
      * @param format default format.
      */
-    public static void setDefaultPubFormat(final ODataPubFormat format) {
+    public void setDefaultPubFormat(final ODataPubFormat format) {
         setProperty(DEFAULT_PUB_FORMAT, format.name());
     }
 
@@ -111,7 +107,7 @@ public final class Configuration {
      * @return configured OData format
      * @see #getDefaultPubFormat()
      */
-    public static ODataFormat getDefaultFormat() {
+    public ODataFormat getDefaultFormat() {
         ODataFormat format;
 
         switch (getDefaultPubFormat()) {
@@ -142,7 +138,7 @@ public final class Configuration {
      * @return configured OData value format if specified; TEXT format otherwise.
      * @see ODataValueFormat#TEXT
      */
-    public static ODataValueFormat getDefaultValueFormat() {
+    public ODataValueFormat getDefaultValueFormat() {
         return ODataValueFormat.valueOf(
                 getProperty(DEFAULT_VALUE_FORMAT, ODataValueFormat.TEXT.name()).toString());
     }
@@ -152,7 +148,7 @@ public final class Configuration {
      *
      * @param format default format.
      */
-    public static void setDefaultValueFormat(final ODataValueFormat format) {
+    public void setDefaultValueFormat(final ODataValueFormat format) {
         setProperty(DEFAULT_VALUE_FORMAT, format.name());
     }
 
@@ -163,7 +159,7 @@ public final class Configuration {
      * @return configured OData media format if specified; APPLICATION_OCTET_STREAM format otherwise.
      * @see ODataMediaFormat#WILDCARD
      */
-    public static ODataMediaFormat getDefaultMediaFormat() {
+    public ODataMediaFormat getDefaultMediaFormat() {
         return ODataMediaFormat.valueOf(
                 getProperty(DEFAULT_VALUE_FORMAT, ODataMediaFormat.APPLICATION_OCTET_STREAM.name()).toString());
     }
@@ -173,7 +169,7 @@ public final class Configuration {
      *
      * @param format default format.
      */
-    public static void setDefaultMediaFormat(final ODataMediaFormat format) {
+    public void setDefaultMediaFormat(final ODataMediaFormat format) {
         setProperty(DEFAULT_MEDIA_FORMAT, format.name());
     }
 
@@ -183,7 +179,7 @@ public final class Configuration {
      * @return provided implementation (if configured via <tt>setHttpClientFactory</tt> or default.
      * @see DefaultHttpClientFactory
      */
-    public static HttpClientFactory getHttpClientFactory() {
+    public HttpClientFactory getHttpClientFactory() {
         return (HttpClientFactory) getProperty(HTTP_CLIENT_FACTORY, new DefaultHttpClientFactory());
     }
 
@@ -193,7 +189,7 @@ public final class Configuration {
      * @param factory implementation of <tt>HttpClientFactory</tt>.
      * @see HttpClientFactory
      */
-    public static void setHttpClientFactory(final HttpClientFactory factory) {
+    public void setHttpClientFactory(final HttpClientFactory factory) {
         setProperty(HTTP_CLIENT_FACTORY, factory);
     }
 
@@ -203,7 +199,7 @@ public final class Configuration {
      * @return provided implementation (if configured via <tt>setHttpUriRequestFactory</tt> or default.
      * @see DefaultHttpUriRequestFactory
      */
-    public static HttpUriRequestFactory getHttpUriRequestFactory() {
+    public HttpUriRequestFactory getHttpUriRequestFactory() {
         return (HttpUriRequestFactory) getProperty(HTTP_URI_REQUEST_FACTORY, new DefaultHttpUriRequestFactory());
     }
 
@@ -213,7 +209,7 @@ public final class Configuration {
      * @param factory implementation of <tt>HttpUriRequestFactory</tt>.
      * @see HttpUriRequestFactory
      */
-    public static void setHttpUriRequestFactory(final HttpUriRequestFactory factory) {
+    public void setHttpUriRequestFactory(final HttpUriRequestFactory factory) {
         setProperty(HTTP_URI_REQUEST_FACTORY, factory);
     }
 
@@ -223,7 +219,7 @@ public final class Configuration {
      *
      * @return whether <tt>X-HTTTP-Method</tt> header is to be used
      */
-    public static boolean isUseXHTTPMethod() {
+    public boolean isUseXHTTPMethod() {
         return (Boolean) getProperty(USE_XHTTP_METHOD, false);
     }
 
@@ -233,15 +229,15 @@ public final class Configuration {
      *
      * @param value 'TRUE' to use tunneling.
      */
-    public static void setUseXHTTPMethod(final boolean value) {
+    public void setUseXHTTPMethod(final boolean value) {
         setProperty(USE_XHTTP_METHOD, value);
     }
 
-    public static boolean isKeyAsSegment() {
+    public boolean isKeyAsSegment() {
         return (Boolean) getProperty(KEY_AS_SEGMENT, false);
     }
 
-    public static void setKeyAsSegment(final boolean value) {
+    public void setKeyAsSegment(final boolean value) {
         setProperty(KEY_AS_SEGMENT, value);
     }
 
@@ -251,15 +247,17 @@ public final class Configuration {
      *
      * @return whether HTTP Gzip compression is enabled
      */
-    public static boolean isGzipCompression() {
+    public boolean isGzipCompression() {
         return (Boolean) getProperty(GZIP_COMPRESSION, false);
     }
 
     /**
      * Sets Gzip compression (e.g. support for <tt>Accept-Encoding: gzip</tt> and
      * <tt>Content-Encoding: gzip</tt> HTTP headers) enabled or disabled.
+     *
+     * @param value whether to use Gzip compression.
      */
-    public static void setGzipCompression(final boolean value) {
+    public void setGzipCompression(final boolean value) {
         setProperty(GZIP_COMPRESSION, value);
     }
 
@@ -268,8 +266,8 @@ public final class Configuration {
      *
      * @return request executor service.
      */
-    public static ExecutorService getExecutor() {
-        return EXECUTOR;
+    public ExecutorService getExecutor() {
+        return executor;
     }
 
     /**
@@ -277,7 +275,7 @@ public final class Configuration {
      *
      * @param executorService new executor services.
      */
-    public static void setExecutor(final ExecutorService executorService) {
-        EXECUTOR = executorService;
+    public void setExecutor(final ExecutorService executorService) {
+        executor = executorService;
     }
 }

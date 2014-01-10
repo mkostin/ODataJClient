@@ -19,8 +19,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.net.URI;
@@ -30,31 +31,31 @@ import org.apache.http.entity.ContentType;
 
 /**
  * This class implements a metadata query request.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getMetadataRequest(java.lang.String)
  */
-public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODataPubFormat> {
+public class ODataMetadataRequest extends AbstractODataRetrieveRequest<EdmMetadata, ODataPubFormat> {
 
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param uri metadata URI.
      */
-    ODataMetadataRequest(final URI uri) {
-        super(ODataPubFormat.class, uri);
+    ODataMetadataRequest(final ODataClient odataClient, final URI uri) {
+        super(odataClient, ODataPubFormat.class, uri);
         super.setAccept(ContentType.APPLICATION_XML.getMimeType());
         super.setContentType(ContentType.APPLICATION_XML.getMimeType());
     }
 
     @Override
-    public void setAccept(final String value) {
+    public ODataRequest setAccept(final String value) {
         // do nothing: Accept is application/XML
+        return this;
     }
 
     @Override
-    public void setContentType(final String value) {
+    public ODataRequest setContentType(final String value) {
         // do nothing: Accept is application/XML
+        return this;
     }
 
     /**
@@ -63,7 +64,7 @@ public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODat
     @Override
     public ODataRetrieveResponse<EdmMetadata> execute() {
         final HttpResponse res = doExecute();
-        return new ODataMetadataResponsImpl(client, res);
+        return new ODataMetadataResponsImpl(httpClient, res);
     }
 
     /**
@@ -98,7 +99,7 @@ public class ODataMetadataRequest extends ODataRetrieveRequest<EdmMetadata, ODat
         public EdmMetadata getBody() {
             if (metadata == null) {
                 try {
-                    metadata = ODataReader.readMetadata(getRawResponse());
+                    metadata = odataClient.getODataReader().readMetadata(getRawResponse());
                 } finally {
                     this.close();
                 }

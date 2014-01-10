@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamer;
@@ -26,7 +27,6 @@ import com.msopentech.odatajclient.engine.communication.request.ODataStreamManag
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import com.msopentech.odatajclient.engine.utils.Wrapper;
 import java.io.IOException;
@@ -47,7 +47,7 @@ import org.apache.http.entity.InputStreamEntity;
  * @param <V> OData response type corresponding to the request implementation.
  * @param <T> OData request payload type corresponding to the request implementation.
  */
-public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extends ODataStreamManager<V>>
+public abstract class AbstractODataStreamedRequestImpl<V extends ODataResponse, T extends ODataStreamManager<V>>
         extends ODataRequestImpl<ODataMediaFormat> implements ODataStreamedRequest<V, T> {
 
     /**
@@ -64,12 +64,14 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param method OData request HTTP method.
      * @param uri OData request URI.
      */
-    @SuppressWarnings("unchecked")
-    public ODataStreamedRequestImpl(final HttpMethod method, final URI uri) {
-        super(ODataMediaFormat.class, method, uri);
+    public AbstractODataStreamedRequestImpl(final ODataClient odataClient,
+            final HttpMethod method, final URI uri) {
+
+        super(odataClient, ODataMediaFormat.class, method, uri);
         setAccept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
         setContentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
     }
@@ -88,10 +90,10 @@ public abstract class ODataStreamedRequestImpl<V extends ODataResponse, T extend
     @SuppressWarnings("unchecked")
     public T execute() {
         streamManager = getStreamManager();
-        
+
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(streamManager.getBody(), -65000));
 
-        futureWrapper.setWrapped(Configuration.getExecutor().submit(new Callable<HttpResponse>() {
+        futureWrapper.setWrapped(odataClient.getConfiguration().getExecutor().submit(new Callable<HttpResponse>() {
 
             @Override
             public HttpResponse call() throws Exception {

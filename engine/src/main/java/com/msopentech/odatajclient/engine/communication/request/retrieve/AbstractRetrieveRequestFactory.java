@@ -19,17 +19,19 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import java.net.URI;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * OData request factory class.
  */
-public final class ODataRetrieveRequestFactory {
+public abstract class AbstractRetrieveRequestFactory {
 
-    private ODataRetrieveRequestFactory() {
-        // Empty private constructor for static utility classes
+    protected final ODataClient client;
+
+    protected AbstractRetrieveRequestFactory(final ODataClient client) {
+        this.client = client;
     }
 
     /**
@@ -39,9 +41,10 @@ public final class ODataRetrieveRequestFactory {
      * data service.
      * @return new ODataServiceDocumentRequest instance.
      */
-    public static ODataServiceDocumentRequest getServiceDocumentRequest(final String serviceRoot) {
-        return new ODataServiceDocumentRequest(StringUtils.isNotBlank(serviceRoot) && serviceRoot.endsWith("/")
-                ? new ODataURIBuilder(serviceRoot).build() : new ODataURIBuilder(serviceRoot + "/").build());
+    public ODataServiceDocumentRequest getServiceDocumentRequest(final String serviceRoot) {
+        return new ODataServiceDocumentRequest(client, StringUtils.isNotBlank(serviceRoot) && serviceRoot.endsWith("/")
+                ? client.getURIBuilder(serviceRoot).build()
+                : client.getURIBuilder(serviceRoot + "/").build());
     }
 
     /**
@@ -51,8 +54,8 @@ public final class ODataRetrieveRequestFactory {
      * data service.
      * @return new ODataMetadataRequest instance.
      */
-    public static ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
-        return new ODataMetadataRequest(new ODataURIBuilder(serviceRoot).appendMetadataSegment().build());
+    public ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
+        return new ODataMetadataRequest(client, client.getURIBuilder(serviceRoot).appendMetadataSegment().build());
     }
 
     /**
@@ -61,8 +64,8 @@ public final class ODataRetrieveRequestFactory {
      * @param query query to be performed.
      * @return new ODataEntitySetRequest instance.
      */
-    public static ODataEntitySetRequest getEntitySetRequest(final URI query) {
-        return new ODataEntitySetRequest(query);
+    public ODataEntitySetRequest getEntitySetRequest(final URI query) {
+        return new ODataEntitySetRequest(client, query);
     }
 
     /**
@@ -74,8 +77,8 @@ public final class ODataRetrieveRequestFactory {
      * @param query query to be performed.
      * @return new ODataEntitySetIteratorRequest instance.
      */
-    public static ODataEntitySetIteratorRequest getEntitySetIteratorRequest(final URI query) {
-        return new ODataEntitySetIteratorRequest(query);
+    public ODataEntitySetIteratorRequest getEntitySetIteratorRequest(final URI query) {
+        return new ODataEntitySetIteratorRequest(client, query);
     }
 
     /**
@@ -84,8 +87,8 @@ public final class ODataRetrieveRequestFactory {
      * @param query query to be performed.
      * @return new ODataEntityRequest instance.
      */
-    public static ODataEntityRequest getEntityRequest(final URI query) {
-        return new ODataEntityRequest(query);
+    public ODataEntityRequest getEntityRequest(final URI query) {
+        return new ODataEntityRequest(client, query);
     }
 
     /**
@@ -94,8 +97,8 @@ public final class ODataRetrieveRequestFactory {
      * @param query query to be performed.
      * @return new ODataPropertyRequest instance.
      */
-    public static ODataPropertyRequest getPropertyRequest(final URI query) {
-        return new ODataPropertyRequest(query);
+    public ODataPropertyRequest getPropertyRequest(final URI query) {
+        return new ODataPropertyRequest(client, query);
     }
 
     /**
@@ -104,8 +107,8 @@ public final class ODataRetrieveRequestFactory {
      * @param query query to be performed.
      * @return new ODataValueRequest instance.
      */
-    public static ODataValueRequest getValueRequest(final URI query) {
-        return new ODataValueRequest(query);
+    public ODataValueRequest getValueRequest(final URI query) {
+        return new ODataValueRequest(client, query);
     }
 
     /**
@@ -115,8 +118,8 @@ public final class ODataRetrieveRequestFactory {
      * @param linkName link name.
      * @return new ODataLinkRequest instance.
      */
-    public static ODataLinkCollectionRequest getLinkCollectionRequest(final URI targetURI, final String linkName) {
-        return new ODataLinkCollectionRequest(targetURI, linkName);
+    public ODataLinkCollectionRequest getLinkCollectionRequest(final URI targetURI, final String linkName) {
+        return new ODataLinkCollectionRequest(client, targetURI, linkName);
     }
 
     /**
@@ -125,8 +128,8 @@ public final class ODataRetrieveRequestFactory {
      * @param query query to be performed.
      * @return new ODataMediaRequest instance.
      */
-    public static ODataMediaRequest getMediaRequest(final URI query) {
-        return new ODataMediaRequest(query);
+    public ODataMediaRequest getMediaRequest(final URI query) {
+        return new ODataMediaRequest(client, query);
     }
 
     /**
@@ -135,8 +138,8 @@ public final class ODataRetrieveRequestFactory {
      * @param uri query to be performed.
      * @return new ODataRawRequest instance.
      */
-    public static ODataRawRequest getRawRequest(final URI uri) {
-        return new ODataRawRequest(uri);
+    public ODataRawRequest getRawRequest(final URI uri) {
+        return new ODataRawRequest(client, uri);
     }
 
     /**
@@ -145,7 +148,7 @@ public final class ODataRetrieveRequestFactory {
      * @param uri query to be performed.
      * @return new ODataGenericRerieveRequest instance.
      */
-    public static ODataGenericRetrieveRequest getGenericRetrieveRequest(final URI uri) {
-        return new ODataGenericRetrieveRequest(uri);
+    public ODataGenericRetrieveRequest getGenericRetrieveRequest(final URI uri) {
+        return new ODataGenericRetrieveRequest(client, uri);
     }
 }

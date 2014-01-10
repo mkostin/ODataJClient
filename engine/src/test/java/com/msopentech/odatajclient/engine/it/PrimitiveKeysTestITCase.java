@@ -23,11 +23,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataDuration;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -36,8 +36,8 @@ import org.junit.Test;
 public class PrimitiveKeysTestITCase extends AbstractTest {
 
     private void readEntity(final String entityType, final Object key, final ODataPubFormat format) {
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(
-                new ODataURIBuilder(testPrimitiveKeysServiceRootURL).appendEntityTypeSegment(entityType).
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(
+                client.getURIBuilder(testPrimitiveKeysServiceRootURL).appendEntityTypeSegment(entityType).
                 appendKeySegment(key).
                 build());
         req.setFormat(format);

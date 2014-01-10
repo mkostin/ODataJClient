@@ -25,7 +25,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ComplexType;
@@ -40,7 +39,8 @@ public class MetadataTest extends AbstractTest {
 
     @Test
     public void parse() {
-        final EdmMetadata metadata = ODataReader.readMetadata(getClass().getResourceAsStream("metadata.xml"));
+        final EdmMetadata metadata = client.getODataReader().
+                readMetadata(getClass().getResourceAsStream("metadata.xml"));
         assertNotNull(metadata);
 
         final EdmType orderCollection =
@@ -91,7 +91,8 @@ public class MetadataTest extends AbstractTest {
 
     @Test
     public void multipleSchemas() {
-        final EdmMetadata metadata = ODataReader.readMetadata(getClass().getResourceAsStream("northwind-metadata.xml"));
+        final EdmMetadata metadata = client.getODataReader().
+                readMetadata(getClass().getResourceAsStream("northwind-metadata.xml"));
         assertNotNull(metadata);
 
         final Schema first = metadata.getSchema("NorthwindModel");
@@ -107,7 +108,8 @@ public class MetadataTest extends AbstractTest {
 
     @Test
     public void entityType() {
-        final EdmMetadata metadata = ODataReader.readMetadata(getClass().getResourceAsStream("metadata.xml"));
+        final EdmMetadata metadata = client.getODataReader().
+                readMetadata(getClass().getResourceAsStream("metadata.xml"));
         assertNotNull(metadata);
 
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
@@ -124,7 +126,8 @@ public class MetadataTest extends AbstractTest {
 
     @Test
     public void complexType() {
-        final EdmMetadata metadata = ODataReader.readMetadata(getClass().getResourceAsStream("metadata.xml"));
+        final EdmMetadata metadata = client.getODataReader().
+                readMetadata(getClass().getResourceAsStream("metadata.xml"));
         assertNotNull(metadata);
 
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
@@ -138,7 +141,8 @@ public class MetadataTest extends AbstractTest {
 
     @Test
     public void functionImport() {
-        final EdmMetadata metadata = ODataReader.readMetadata(getClass().getResourceAsStream("metadata.xml"));
+        final EdmMetadata metadata = client.getODataReader().
+                readMetadata(getClass().getResourceAsStream("metadata.xml"));
         assertNotNull(metadata);
 
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);

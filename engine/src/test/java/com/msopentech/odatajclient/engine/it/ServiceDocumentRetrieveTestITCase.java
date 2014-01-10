@@ -24,7 +24,6 @@ import java.net.URI;
 import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataServiceDocumentRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
@@ -34,7 +33,7 @@ public class ServiceDocumentRetrieveTestITCase extends AbstractTest {
     // retrieve service document
 
     private void retrieveServiceDocumentTest(final ODataFormat reqFormat, final String acceptFormat) {
-        final ODataServiceDocumentRequest req = ODataRetrieveRequestFactory.getServiceDocumentRequest(
+        final ODataServiceDocumentRequest req = client.getRetrieveRequestFactory().getServiceDocumentRequest(
                 testDefaultServiceRootURL);
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);

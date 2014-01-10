@@ -31,25 +31,22 @@ import org.junit.Test;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
 
-public class EntityUpdateITCase extends AbstractTest {
+public class EntityUpdateMoreTestITCase extends AbstractTest {
     // update an entity
 
     private void updateEntity(
@@ -60,12 +57,12 @@ public class EntityUpdateITCase extends AbstractTest {
             final boolean inlineInfo) {
         // create an entity to be updated
         final ODataEntity entity =
-                ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
+                ODataObjectFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
         // add name attribute
-        entity.addProperty(ODataFactory.newPrimitiveProperty("Name",
+        entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Name",
                 new ODataPrimitiveValue.Builder().setText("Updated Customer name").setType(EdmSimpleType.String).build()));
         // add key attribute
-        entity.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
+        entity.addProperty(ODataObjectFactory.newPrimitiveProperty("CustomerId",
                 new ODataPrimitiveValue.Builder().setText(String.valueOf(-10)).setType(EdmSimpleType.Int32).build()));
 
         final ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
@@ -75,54 +72,54 @@ public class EntityUpdateITCase extends AbstractTest {
         final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
         altNamesValue.add(new ODataPrimitiveValue.Builder().
                 setText("My Alternative name").setType(EdmSimpleType.String).build());
-        contactDetails.add(ODataFactory.newCollectionProperty("AlternativeNames", altNamesValue));
+        contactDetails.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", altNamesValue));
 
         final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
         emailBagValue.add(new ODataPrimitiveValue.Builder().
                 setText("altname@mydomain.com").setType(EdmSimpleType.String).build());
-        contactDetails.add(ODataFactory.newCollectionProperty("EmailBag", emailBagValue));
+        contactDetails.add(ODataObjectFactory.newCollectionProperty("EmailBag", emailBagValue));
 
         final ODataComplexValue contactAliasValue = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Aliases");
-        contactDetails.add(ODataFactory.newComplexProperty("ContactAlias", contactAliasValue));
+        contactDetails.add(ODataObjectFactory.newComplexProperty("ContactAlias", contactAliasValue));
 
         final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
         aliasAltNamesValue.add(new ODataPrimitiveValue.Builder().
                 setText("myAlternativeName").setType(EdmSimpleType.String).build());
-        contactAliasValue.add(ODataFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
+        contactAliasValue.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
 
         final ODataComplexValue homePhone = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Phone");
-        homePhone.add(ODataFactory.newPrimitiveProperty("PhoneNumber",
+        homePhone.add(ODataObjectFactory.newPrimitiveProperty("PhoneNumber",
                 new ODataPrimitiveValue.Builder().setText("8437568356834568").setType(EdmSimpleType.String).build()));
-        homePhone.add(ODataFactory.newPrimitiveProperty("Extension",
+        homePhone.add(ODataObjectFactory.newPrimitiveProperty("Extension",
                 new ODataPrimitiveValue.Builder().setText("1243654265346267651534423ttrf").setType(EdmSimpleType.String).
                 build()));
-        contactDetails.add(ODataFactory.newComplexProperty("HomePhone", homePhone));
+        contactDetails.add(ODataObjectFactory.newComplexProperty("HomePhone", homePhone));
 
         backupContactInfoValue.add(contactDetails);
-        entity.addProperty(ODataFactory.newCollectionProperty("BackupContactInfo",
+        entity.addProperty(ODataObjectFactory.newCollectionProperty("BackupContactInfo",
                 backupContactInfoValue));
 
         if (inlineInfo) {
-            final ODataInlineEntity info = ODataFactory.newInlineEntity(
+            final ODataInlineEntity info = ODataObjectFactory.newInlineEntity(
                     "Info",
                     URI.create("Customer(-10)/Info"),
                     getSampleCustomerInfo(-10, "Updated customer information" + "_Info"));
             info.getEntity().setMediaEntity(true);
             entity.addLink(info);
         }
-        final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URI uri = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).build();
         final String etag = getETag(uri);
         entity.setEditLink(uri);
         // update code
         update(format, contentType, prefer, type, entity, etag);
-        final ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(type, entity);
+        final ODataEntityUpdateRequest req = client.getCUDRequestFactory().getEntityUpdateRequest(type, entity);
         req.setFormat(format);
         req.setContentType(contentType);
         req.setPrefer(prefer);
-        if (Configuration.isUseXHTTPMethod()) {
+        if (client.getConfiguration().isUseXHTTPMethod()) {
             assertEquals(HttpMethod.POST, req.getMethod());
         } else {
             assertEquals(UpdateType.REPLACE.getMethod(), req.getMethod());
@@ -168,7 +165,7 @@ public class EntityUpdateITCase extends AbstractTest {
             entitySetName.removeProperty(propertyValue);
         }
         assertNotEquals(newValue, oldValue);
-        entitySetName.addProperty(ODataFactory.newPrimitiveProperty(propertyName,
+        entitySetName.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
                 new ODataPrimitiveValue.Builder().setText(newValue).build()));
 
         update(type, entitySetName, format, etag);
@@ -203,7 +200,7 @@ public class EntityUpdateITCase extends AbstractTest {
             entitySetName.removeProperty(propertyValue);
         }
         assertNotEquals(newValue, oldValue);
-        entitySetName.addProperty(ODataFactory.newPrimitiveProperty(propertyName,
+        entitySetName.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
                 new ODataPrimitiveValue.Builder().setText(newValue).setType(EdmSimpleType.DateTime).build()));
         update(type, entitySetName, format, etag);
         propertyValue = null;
@@ -236,7 +233,7 @@ public class EntityUpdateITCase extends AbstractTest {
         }
         assertNotEquals(newValue, oldValue);
 
-        entitySetName.addProperty(ODataFactory.newPrimitiveProperty(propertyName,
+        entitySetName.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
                 new ODataPrimitiveValue.Builder().setValue(newValue).setType(EdmSimpleType.Int32).build()));
         update(type, entitySetName, format, etag);
         propertyValue = null;
@@ -252,7 +249,7 @@ public class EntityUpdateITCase extends AbstractTest {
         ODataProperty replaceProperty = entitySetName.getProperty(propertyName);
         entitySetName.removeProperty(replaceProperty);
 
-        entitySetName.addProperty(ODataFactory.newPrimitiveProperty(propertyName,
+        entitySetName.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
                 new ODataPrimitiveValue.Builder().setValue(oldValue).setType(EdmSimpleType.Int32).build()));
 
         update(type, entitySetName, format, etag);
@@ -266,8 +263,8 @@ public class EntityUpdateITCase extends AbstractTest {
             final UpdateType type,
             final ODataEntity entitySetName,
             String etag) {
-        final ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(type, entitySetName);
-        if (Configuration.isUseXHTTPMethod()) {
+        final ODataEntityUpdateRequest req = client.getCUDRequestFactory().getEntityUpdateRequest(type, entitySetName);
+        if (client.getConfiguration().isUseXHTTPMethod()) {
             assertEquals(HttpMethod.POST, req.getMethod());
         } else {
             assertEquals(type.getMethod(), req.getMethod());
@@ -303,9 +300,9 @@ public class EntityUpdateITCase extends AbstractTest {
             final HashMap<String, Object> multiKey = new HashMap<String, Object>();
             multiKey.put("OrderId", -10);
             multiKey.put("ProductId", -10);
-            final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(multiKey);
-            final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+            final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
             req.setFormat(format);
             req.setAccept(contentType);
 
@@ -337,9 +334,9 @@ public class EntityUpdateITCase extends AbstractTest {
             final HashMap<String, Object> multiKey = new HashMap<String, Object>();
             multiKey.put("OrderId", -10);
             multiKey.put("ProductId", -10);
-            final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(multiKey);
-            final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+            final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
             req.setFormat(format);
             req.setAccept(contentType);
 
@@ -369,10 +366,10 @@ public class EntityUpdateITCase extends AbstractTest {
         final String propertyType = "PurchaseDate";
         final UpdateType replace = UpdateType.REPLACE;
         try {
-            final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+            final URI uri = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(-10).build();
             final String etag = getETag(uri);
-            final ODataEntity entity = ODataFactory.newEntity(
+            final ODataEntity entity = ODataObjectFactory.newEntity(
                     "Microsoft.Test.OData.Services.AstoriaDefaultService.ComputerDetail");
             entity.setEditLink(uri);
             updateEntityDateProperty(format, contentType, prefer, propertyType, entity, replace, etag);
@@ -395,10 +392,10 @@ public class EntityUpdateITCase extends AbstractTest {
         final UpdateType merge = UpdateType.MERGE;
         final UpdateType patch = UpdateType.PATCH;
         try {
-            final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+            final URI uri = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(-10).build();
             final String etag = getETag(uri);
-            final ODataEntity entity = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
+            final ODataEntity entity = ODataObjectFactory.newEntity(TEST_PRODUCT_TYPE);
             entity.setEditLink(uri);
             updateEntityStringProperty(format, contentType, prefer, propertyType, entity, replace, etag);
             updateEntityStringProperty(format, contentType, prefer, propertyType, entity, merge, etag);
@@ -421,10 +418,10 @@ public class EntityUpdateITCase extends AbstractTest {
         final UpdateType merge = UpdateType.MERGE;
         final UpdateType patch = UpdateType.PATCH;
         try {
-            final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+            final URI uri = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(-10).build();
             final String etag = getETag(uri);
-            final ODataEntity entity = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
+            final ODataEntity entity = ODataObjectFactory.newEntity(TEST_PRODUCT_TYPE);
             entity.setEditLink(uri);
             updateEntityStringProperty(format, contentType, prefer, propertyType, entity, replace, etag);
             updateEntityStringProperty(format, contentType, prefer, propertyType, entity, merge, etag);
@@ -448,10 +445,10 @@ public class EntityUpdateITCase extends AbstractTest {
         final UpdateType merge = UpdateType.MERGE;
         final UpdateType patch = UpdateType.PATCH;
         try {
-            final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+            final URI uri = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(-10).build();
             final String etag = getETag(uri);
-            final ODataEntity entity = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
+            final ODataEntity entity = ODataObjectFactory.newEntity(TEST_PRODUCT_TYPE);
             entity.setEditLink(uri);
             updateEntityStringProperty(format, contentType, prefer, propertyType, entity, replace, etag);
             updateEntityStringProperty(format, contentType, prefer, propertyType, entity, merge, etag);
@@ -475,10 +472,10 @@ public class EntityUpdateITCase extends AbstractTest {
         final UpdateType merge = UpdateType.MERGE;
         final UpdateType patch = UpdateType.PATCH;
         try {
-            final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+            final URI uri = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(-10).build();
             final String etag = getETag(uri);
-            final ODataEntity entity = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
+            final ODataEntity entity = ODataObjectFactory.newEntity(TEST_PRODUCT_TYPE);
             entity.setEditLink(uri);
             updateEntityStringProperty(format, contentType, prefer, propertyType, entity, replace, etag);
             updateEntityStringProperty(format, contentType, prefer, propertyType, entity, merge, etag);
@@ -500,10 +497,10 @@ public class EntityUpdateITCase extends AbstractTest {
         final String propertyType = "ProductId";
         final UpdateType replace = UpdateType.REPLACE;
         try {
-            final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+            final URI uri = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(-10).build();
             final String etag = getETag(uri);
-            final ODataEntity entity = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
+            final ODataEntity entity = ODataObjectFactory.newEntity(TEST_PRODUCT_TYPE);
             entity.setEditLink(uri);
             updateEntityStringProperty(format, contentType, prefer, propertyType, entity, replace, etag);
         } catch (Exception e) {
@@ -526,10 +523,10 @@ public class EntityUpdateITCase extends AbstractTest {
         final String propertyType = "Product";
         final UpdateType replace = UpdateType.REPLACE;
         try {
-            final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+            final URI uri = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(propertyType).appendKeySegment(-10).build();
             final String etag = getETag(uri);
-            final ODataEntity entity = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
+            final ODataEntity entity = ODataObjectFactory.newEntity(TEST_PRODUCT_TYPE);
             entity.setEditLink(uri);
             updateEntityStringProperty(format, contentType, prefer, "Description", entity, replace, etag);
         } catch (Exception e) {

@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequestImpl;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -26,18 +27,16 @@ import java.net.URI;
 
 /**
  * This class implements a generic OData request.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getRawRequest(java.net.URI)
  */
 public class ODataRawRequest extends ODataRequestImpl<ODataPubFormat> {
 
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param uri request URI.
      */
-    ODataRawRequest(final URI uri) {
-        super(ODataPubFormat.class, HttpMethod.GET, uri);
+    ODataRawRequest(final ODataClient odataClient, final URI uri) {
+        super(odataClient, ODataPubFormat.class, HttpMethod.GET, uri);
     }
 }

@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -36,20 +37,22 @@ import org.w3c.dom.NodeList;
 
 /**
  * OData reader.
- * <p>
+ * <br/>
  * Use this class to de-serialize an OData response body.
- * <p>
+ * <br/>
  * This class provides method helpers to de-serialize an entire feed, a set of entities and a single entity as well.
  */
-public final class ODataReader {
+public abstract class AbstractODataReader {
 
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(ODataReader.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(AbstractODataReader.class);
 
-    private ODataReader() {
-        // Empty private constructor for static utility classes
+    protected final ODataClient client;
+
+    protected AbstractODataReader(final ODataClient client) {
+        this.client = client;
     }
 
     /**
@@ -59,8 +62,9 @@ public final class ODataReader {
      * @param format de-serialize as AtomFeed or JSONFeed
      * @return de-serialized entity set.
      */
-    public static ODataEntitySet readEntitySet(final InputStream input, final ODataPubFormat format) {
-        return ODataBinder.getODataEntitySet(Deserializer.toFeed(input, ResourceFactory.feedClassForFormat(format)));
+    public ODataEntitySet readEntitySet(final InputStream input, final ODataPubFormat format) {
+        return client.getODataBinder().getODataEntitySet(
+                Deserializer.toFeed(input, ResourceFactory.feedClassForFormat(format)));
     }
 
     /**
@@ -70,8 +74,9 @@ public final class ODataReader {
      * @param format de-serialize as AtomEntry or JSONEntry
      * @return entity de-serialized.
      */
-    public static ODataEntity readEntity(final InputStream input, final ODataPubFormat format) {
-        return ODataBinder.getODataEntity(Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
+    public ODataEntity readEntity(final InputStream input, final ODataPubFormat format) {
+        return client.getODataBinder().getODataEntity(
+                Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
     }
 
     /**
@@ -81,7 +86,7 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return OData entity property de-serialized.
      */
-    public static ODataProperty readProperty(final InputStream input, final ODataFormat format) {
+    public ODataProperty readProperty(final InputStream input, final ODataFormat format) {
         final Element property = Deserializer.toPropertyDOM(input, format);
 
         // The ODataProperty object is used either for actual entity properties and for invoke result (when return type
@@ -109,7 +114,7 @@ public final class ODataReader {
             }
         }
 
-        return ODataBinder.getProperty(property);
+        return client.getODataBinder().getProperty(property);
     }
 
     /**
@@ -119,8 +124,8 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return List of URIs.
      */
-    public static ODataLinkCollection readLinks(final InputStream input, final ODataFormat format) {
-        return ODataBinder.getLinkCollection(Deserializer.toLinkCollection(input, format));
+    public ODataLinkCollection readLinks(final InputStream input, final ODataFormat format) {
+        return client.getODataBinder().getLinkCollection(Deserializer.toLinkCollection(input, format));
     }
 
     /**
@@ -130,8 +135,8 @@ public final class ODataReader {
      * @param format de-serialize as XML or JSON
      * @return List of URIs.
      */
-    public static ODataServiceDocument readServiceDocument(final InputStream input, final ODataFormat format) {
-        return ODataBinder.getODataServiceDocument(Deserializer.toServiceDocument(input, format));
+    public ODataServiceDocument readServiceDocument(final InputStream input, final ODataFormat format) {
+        return client.getODataBinder().getODataServiceDocument(Deserializer.toServiceDocument(input, format));
     }
 
     /**
@@ -140,7 +145,7 @@ public final class ODataReader {
      * @param input stream to de-serialize.
      * @return metadata representation.
      */
-    public static EdmMetadata readMetadata(final InputStream input) {
+    public EdmMetadata readMetadata(final InputStream input) {
         return new EdmMetadata(input);
     }
 
@@ -151,15 +156,13 @@ public final class ODataReader {
      * @param isXML 'TRUE' if the error is in XML format.
      * @return OData error.
      */
-    public static ODataError readError(final InputStream inputStream, final boolean isXML) {
+    public ODataError readError(final InputStream inputStream, final boolean isXML) {
         return Deserializer.toODataError(inputStream, isXML);
     }
 
     /**
      * Parses a stream into the object type specified by the given reference.
      *
-     * @param <V> format type (<tt>ODataPubFormat</tt>, <tt>ODataFormat</tt>, <tt>ODataValueFormat</tt>,
-     * <tt>ODataServiceDocumentFormat</tt>)
      * @param <T> expected object type.
      * @param src input stream.
      * @param format format
@@ -167,33 +170,33 @@ public final class ODataReader {
      * @return read object.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T read(final InputStream src, final String format, final Class<T> reference) {
+    public <T> T read(final InputStream src, final String format, final Class<T> reference) {
 
         Object res;
 
         try {
             if (ODataEntitySetIterator.class.isAssignableFrom(reference)) {
-                res = new ODataEntitySetIterator(src, ODataPubFormat.fromString(format));
+                res = new ODataEntitySetIterator(client, src, ODataPubFormat.fromString(format));
             } else if (ODataEntitySet.class.isAssignableFrom(reference)) {
-                res = ODataReader.readEntitySet(src, ODataPubFormat.fromString(format));
+                res = readEntitySet(src, ODataPubFormat.fromString(format));
             } else if (ODataEntity.class.isAssignableFrom(reference)) {
-                res = ODataReader.readEntity(src, ODataPubFormat.fromString(format));
+                res = readEntity(src, ODataPubFormat.fromString(format));
             } else if (ODataProperty.class.isAssignableFrom(reference)) {
-                res = ODataReader.readProperty(src, ODataFormat.fromString(format));
+                res = readProperty(src, ODataFormat.fromString(format));
             } else if (ODataLinkCollection.class.isAssignableFrom(reference)) {
-                res = ODataReader.readLinks(src, ODataFormat.fromString(format));
+                res = readLinks(src, ODataFormat.fromString(format));
             } else if (ODataValue.class.isAssignableFrom(reference)) {
                 res = new ODataPrimitiveValue.Builder().
                         setType(ODataValueFormat.fromString(format) == ODataValueFormat.TEXT
-                        ? EdmSimpleType.String : EdmSimpleType.Stream).
+                                ? EdmSimpleType.String : EdmSimpleType.Stream).
                         setText(IOUtils.toString(src)).
                         build();
             } else if (EdmMetadata.class.isAssignableFrom(reference)) {
-                res = ODataReader.readMetadata(src);
+                res = readMetadata(src);
             } else if (ODataServiceDocument.class.isAssignableFrom(reference)) {
-                res = ODataReader.readServiceDocument(src, ODataFormat.fromString(format));
+                res = readServiceDocument(src, ODataFormat.fromString(format));
             } else if (ODataError.class.isAssignableFrom(reference)) {
-                res = ODataReader.readError(src, !format.toString().contains("json"));
+                res = readError(src, !format.toString().contains("json"));
             } else {
                 throw new IllegalArgumentException("Invalid reference type " + reference);
             }

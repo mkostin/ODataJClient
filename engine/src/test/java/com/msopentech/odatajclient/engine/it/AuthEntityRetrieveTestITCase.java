@@ -21,7 +21,6 @@ package com.msopentech.odatajclient.engine.it;
 
 import com.msopentech.odatajclient.engine.client.http.AbstractBasicAuthHttpClientFactory;
 import com.msopentech.odatajclient.engine.client.http.DefaultHttpClientFactory;
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -29,7 +28,7 @@ public class AuthEntityRetrieveTestITCase extends EntityRetrieveTestITCase {
 
     @BeforeClass
     public static void enableBasicAuth() {
-        Configuration.setHttpClientFactory(new AbstractBasicAuthHttpClientFactory() {
+        client.getConfiguration().setHttpClientFactory(new AbstractBasicAuthHttpClientFactory() {
 
             @Override
             protected String getUsername() {
@@ -45,7 +44,7 @@ public class AuthEntityRetrieveTestITCase extends EntityRetrieveTestITCase {
 
     @AfterClass
     public static void disableBasicAuth() {
-        Configuration.setHttpClientFactory(new DefaultHttpClientFactory());
+        client.getConfiguration().setHttpClientFactory(new DefaultHttpClientFactory());
     }
 
     @Override

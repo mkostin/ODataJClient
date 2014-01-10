@@ -19,9 +19,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.AbstractODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import java.io.InputStream;
@@ -33,17 +34,19 @@ import org.apache.http.client.HttpClient;
  * This is an abstract representation of an OData retrieve query request returning one or more result item.
  * Get instance by using ODataRetrieveRequestFactory.
  */
-abstract class ODataRetrieveRequest<V, T extends Enum<T>>
-        extends ODataBasicRequestImpl<ODataRetrieveResponse<V>, T>
+abstract class AbstractODataRetrieveRequest<V, T extends Enum<T>>
+        extends AbstractODataBasicRequestImpl<ODataRetrieveResponse<V>, T>
         implements ODataBatchableRequest {
 
     /**
      * Private constructor.
      *
+     * @param odataClient client instance getting this request
+     * @param formatRef reference class for the format being used
      * @param query query to be executed.
      */
-    ODataRetrieveRequest(final Class<T> formatRef, final URI query) {
-        super(formatRef, HttpMethod.GET, query);
+    AbstractODataRetrieveRequest(final ODataClient odataClient, final Class<T> formatRef, final URI query) {
+        super(odataClient, formatRef, HttpMethod.GET, query);
     }
 
     /**
@@ -73,6 +76,7 @@ abstract class ODataRetrieveRequest<V, T extends Enum<T>>
          * Just to create response templates to be initialized from batch.
          */
         protected ODataRetrieveResponseImpl() {
+            super();
         }
 
         /**

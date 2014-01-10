@@ -19,7 +19,6 @@
  */
 package com.msopentech.odatajclient.engine.it;
 
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -30,11 +29,11 @@ public class XHTTPMethodEntityUpdateTestITCase extends EntityUpdateTestITCase {
 
     @BeforeClass
     public static void enableXHTTPMethod() {
-        Configuration.setUseXHTTPMethod(true);
+        client.getConfiguration().setUseXHTTPMethod(true);
     }
 
     @AfterClass
     public static void disableXHTTPMethod() {
-        Configuration.setUseXHTTPMethod(false);
+        client.getConfiguration().setUseXHTTPMethod(false);
     }
 }

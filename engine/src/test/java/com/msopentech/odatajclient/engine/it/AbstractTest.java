@@ -29,12 +29,10 @@ import static org.junit.Assert.fail;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
@@ -45,7 +43,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -58,13 +56,13 @@ import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
-import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
 import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.client.ODataClientFactory;
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,6 +89,8 @@ public abstract class AbstractTest {
 
     protected static final String servicesODataServiceRootURL =
             "http://services.odata.org/V3/(S(csquyjnoaywmz5xcdbfhlc1p))/OData/OData.svc/";
+
+    protected static ODataV3Client client;
 
     protected static String testDefaultServiceRootURL;
 
@@ -144,6 +144,11 @@ public abstract class AbstractTest {
     @BeforeClass
     public static void setEnglishLocale() {
         Locale.setDefault(Locale.ENGLISH);
+    }
+
+    @BeforeClass
+    public static void setClientInstance() {
+        client = ODataClientFactory.getV3();
     }
 
     protected void checkLinks(final Collection<ODataLink> original, final Collection<ODataLink> actual) {
@@ -258,10 +263,10 @@ public abstract class AbstractTest {
 
     protected ODataEntity getSampleCustomerInfo(final int id, final String sampleinfo) {
         final ODataEntity entity =
-                ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.CustomerInfo");
+                ODataObjectFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.CustomerInfo");
         entity.setMediaEntity(true);
 
-        entity.addProperty(ODataFactory.newPrimitiveProperty("Information",
+        entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Information",
                 new ODataPrimitiveValue.Builder().setText(sampleinfo).setType(EdmSimpleType.String).build()));
 
         return entity;
@@ -271,20 +276,20 @@ public abstract class AbstractTest {
             final int id, final String sampleName, final boolean withInlineInfo) {
 
         final ODataEntity entity =
-                ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
+                ODataObjectFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
 
         // add name attribute
-        entity.addProperty(ODataFactory.newPrimitiveProperty("Name",
+        entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Name",
                 new ODataPrimitiveValue.Builder().setText(sampleName).setType(EdmSimpleType.String).build()));
 
         // add key attribute
-        entity.addProperty(ODataFactory.newPrimitiveProperty("CustomerId",
+        entity.addProperty(ODataObjectFactory.newPrimitiveProperty("CustomerId",
                 new ODataPrimitiveValue.Builder().setText(String.valueOf(id)).setType(EdmSimpleType.Int32).build()));
 
         // add BackupContactInfo attribute (collection)
         final ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
                 "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails)");
-        entity.addProperty(ODataFactory.newCollectionProperty("BackupContactInfo",
+        entity.addProperty(ODataObjectFactory.newCollectionProperty("BackupContactInfo",
                 backupContactInfoValue));
 
         // add BackupContactInfo.ContactDetails attribute (complex)
@@ -296,27 +301,27 @@ public abstract class AbstractTest {
         final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
         altNamesValue.add(new ODataPrimitiveValue.Builder().
                 setText("myname").setType(EdmSimpleType.String).build());
-        contactDetails.add(ODataFactory.newCollectionProperty("AlternativeNames", altNamesValue));
+        contactDetails.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", altNamesValue));
 
         // add BackupContactInfo.ContactDetails.EmailBag attribute (collection)
         final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
         emailBagValue.add(new ODataPrimitiveValue.Builder().
                 setText("myname@mydomain.com").setType(EdmSimpleType.String).build());
-        contactDetails.add(ODataFactory.newCollectionProperty("EmailBag", emailBagValue));
+        contactDetails.add(ODataObjectFactory.newCollectionProperty("EmailBag", emailBagValue));
 
         // add BackupContactInfo.ContactDetails.ContactAlias attribute (complex)
         final ODataComplexValue contactAliasValue = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Aliases");
-        contactDetails.add(ODataFactory.newComplexProperty("ContactAlias", contactAliasValue));
+        contactDetails.add(ODataObjectFactory.newComplexProperty("ContactAlias", contactAliasValue));
 
         // add BackupContactInfo.ContactDetails.ContactAlias.AlternativeNames attribute (collection)
         final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
         aliasAltNamesValue.add(new ODataPrimitiveValue.Builder().
                 setText("myAlternativeName").setType(EdmSimpleType.String).build());
-        contactAliasValue.add(ODataFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
+        contactAliasValue.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
 
         if (withInlineInfo) {
-            final ODataInlineEntity inlineInfo = ODataFactory.newInlineEntity(
+            final ODataInlineEntity inlineInfo = ODataObjectFactory.newInlineEntity(
                     "Info",
                     URI.create("Customer(" + id + ")/Info"),
                     getSampleCustomerInfo(id, sampleName + "_Info"));
@@ -356,12 +361,12 @@ public abstract class AbstractTest {
     protected void debugODataEntity(final ODataEntity entity, final String message) {
         if (LOG.isDebugEnabled()) {
             StringWriter writer = new StringWriter();
-            Serializer.entry(ODataBinder.getEntry(entity, AtomEntry.class), writer);
+            Serializer.entry(client.getODataBinder().getEntry(entity, AtomEntry.class), writer);
             writer.flush();
             LOG.debug(message + " (Atom)\n{}", writer.toString());
 
             writer = new StringWriter();
-            Serializer.entry(ODataBinder.getEntry(entity, JSONEntry.class), writer);
+            Serializer.entry(client.getODataBinder().getEntry(entity, JSONEntry.class), writer);
             writer.flush();
             LOG.debug(message + " (JSON)\n{}", writer.toString());
         }
@@ -380,7 +385,8 @@ public abstract class AbstractTest {
     }
 
     protected String getETag(final URI uri) {
-        final ODataRetrieveResponse<ODataEntity> res = ODataRetrieveRequestFactory.getEntityRequest(uri).execute();
+        final ODataRetrieveResponse<ODataEntity> res = client.getRetrieveRequestFactory().
+                getEntityRequest(uri).execute();
         try {
             return res.getEtag();
         } finally {
@@ -389,7 +395,7 @@ public abstract class AbstractTest {
     }
 
     protected ODataEntity read(final ODataPubFormat format, final URI editLink) {
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(editLink);
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(editLink);
         req.setFormat(format);
 
         final ODataRetrieveResponse<ODataEntity> res = req.execute();
@@ -410,13 +416,13 @@ public abstract class AbstractTest {
             final ODataEntity original,
             final String entitySetName) {
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(serviceRootURL);
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(serviceRootURL);
         uriBuilder.appendEntitySetSegment(entitySetName);
 
         debugODataEntity(original, "About to create");
 
         final ODataEntityCreateRequest createReq =
-                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), original);
+                client.getCUDRequestFactory().getEntityCreateRequest(uriBuilder.build(), original);
         createReq.setFormat(format);
 
         final ODataEntityCreateResponse createRes = createReq.execute();
@@ -437,7 +443,7 @@ public abstract class AbstractTest {
             final int actualObjectId,
             final Collection<String> expands) {
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(serviceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(serviceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(actualObjectId);
 
         // search expanded
@@ -447,7 +453,7 @@ public abstract class AbstractTest {
             }
         }
 
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
         final ODataRetrieveResponse<ODataEntity> res = req.execute();
@@ -499,7 +505,7 @@ public abstract class AbstractTest {
         assertFalse(toBeDeleted.isEmpty());
 
         for (URI link : toBeDeleted) {
-            final ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(link);
+            final ODataDeleteRequest deleteReq = client.getCUDRequestFactory().getDeleteRequest(link);
             final ODataDeleteResponse deleteRes = deleteReq.execute();
 
             assertEquals(204, deleteRes.getStatusCode());
@@ -507,7 +513,7 @@ public abstract class AbstractTest {
 
             deleteRes.close();
 
-            final ODataEntityRequest retrieveReq = ODataRetrieveRequestFactory.getEntityRequest(link);
+            final ODataEntityRequest retrieveReq = client.getRetrieveRequestFactory().getEntityRequest(link);
             // bug that needs to be fixed on the SampleService - cannot get entity not found with header
             // Accept: application/json;odata=minimalmetadata
             retrieveReq.setFormat(format == ODataPubFormat.JSON_FULL_METADATA ? ODataPubFormat.JSON : format);
@@ -555,7 +561,7 @@ public abstract class AbstractTest {
 
         assertNotEquals(newm, oldm);
 
-        changes.addProperty(ODataFactory.newPrimitiveProperty(propertyName,
+        changes.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
                 new ODataPrimitiveValue.Builder().setText(newm).build()));
 
         update(type, changes, format, etag);
@@ -576,8 +582,9 @@ public abstract class AbstractTest {
 
     protected void update(
             final UpdateType type, final ODataEntity changes, final ODataPubFormat format, final String etag) {
-        final ODataEntityUpdateRequest req = ODataCUDRequestFactory.getEntityUpdateRequest(type, changes);
-        if (Configuration.isUseXHTTPMethod()) {
+        final ODataEntityUpdateRequest req = client.getCUDRequestFactory().getEntityUpdateRequest(type, changes);
+
+        if (client.getConfiguration().isUseXHTTPMethod()) {
             assertEquals(HttpMethod.POST, req.getMethod());
         } else {
             assertEquals(type.getMethod(), req.getMethod());

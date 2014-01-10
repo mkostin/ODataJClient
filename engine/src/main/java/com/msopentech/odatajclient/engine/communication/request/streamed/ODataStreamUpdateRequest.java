@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
@@ -34,11 +35,9 @@ import org.apache.http.client.HttpClient;
 /**
  * This class implements an OData stream create/update request.
  * Get instance by using ODataStreamedRequestFactory.
- *
- * @see ODataStreamedRequestFactory#getStreamUpdateRequest(java.net.URI, java.io.InputStream)
  */
 public class ODataStreamUpdateRequest
-        extends ODataStreamedRequestImpl<ODataStreamUpdateResponse, StreamUpdateStreamManager>
+        extends AbstractODataStreamedRequestImpl<ODataStreamUpdateResponse, StreamUpdateStreamManager>
         implements ODataBatchableRequest {
 
     private final InputStream stream;
@@ -46,12 +45,15 @@ public class ODataStreamUpdateRequest
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param method request method.
      * @param targetURI target URI.
      * @param stream stream to be updated.
      */
-    ODataStreamUpdateRequest(final HttpMethod method, final URI targetURI, final InputStream stream) {
-        super(method, targetURI);
+    ODataStreamUpdateRequest(final ODataClient odataClient,
+            final HttpMethod method, final URI targetURI, final InputStream stream) {
+
+        super(odataClient, method, targetURI);
         this.stream = stream;
     }
 
@@ -84,7 +86,7 @@ public class ODataStreamUpdateRequest
         @Override
         protected ODataStreamUpdateResponse getResponse(final long timeout, final TimeUnit unit) {
             finalizeBody();
-            return new ODataStreamUpdateResponseImpl(client, getHttpResponse(timeout, unit));
+            return new ODataStreamUpdateResponseImpl(httpClient, getHttpResponse(timeout, unit));
         }
     }
 

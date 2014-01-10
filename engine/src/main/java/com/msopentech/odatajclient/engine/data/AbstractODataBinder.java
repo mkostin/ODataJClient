@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.ODataProperty.PropertyType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -39,18 +40,20 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public final class ODataBinder {
+public abstract class AbstractODataBinder {
 
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(ODataBinder.class);
+    protected final Logger LOG = LoggerFactory.getLogger(AbstractODataBinder.class);
 
-    private ODataBinder() {
-        // Empty private constructor for static utility classes
+    protected final ODataClient client;
+
+    protected AbstractODataBinder(final ODataClient client) {
+        this.client = client;
     }
 
-    private static Element newEntryContent() {
+    private Element newEntryContent() {
         Element properties = null;
         try {
             final DocumentBuilder builder = ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder();
@@ -75,7 +78,7 @@ public final class ODataBinder {
      * @param reference reference class.
      * @return <tt>FeedResource</tt> object.
      */
-    public static <T extends FeedResource> T getFeed(final ODataEntitySet feed, final Class<T> reference) {
+    public <T extends FeedResource> T getFeed(final ODataEntitySet feed, final Class<T> reference) {
         final T feedResource = ResourceFactory.newFeed(reference);
 
         final List<EntryResource> entries = new ArrayList<EntryResource>();
@@ -103,7 +106,7 @@ public final class ODataBinder {
      * @param reference reference class.
      * @return <tt>EntryResource</tt> object.
      */
-    public static <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference) {
+    public <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference) {
         return getEntry(entity, reference, true);
     }
 
@@ -117,7 +120,7 @@ public final class ODataBinder {
      * @return <tt>EntryResource</tt> object.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference,
+    public <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference,
             final boolean setType) {
 
         final T entry = ResourceFactory.newEntry(reference);
@@ -195,7 +198,7 @@ public final class ODataBinder {
      * @param prop OData property.
      * @return <tt>Element</tt> object.
      */
-    public static Element toDOMElement(final ODataProperty prop) {
+    public Element toDOMElement(final ODataProperty prop) {
         try {
             return toDOMElement(prop, ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder().newDocument(), true);
         } catch (ParserConfigurationException e) {
@@ -204,7 +207,7 @@ public final class ODataBinder {
         }
     }
 
-    public static ODataLinkCollection getLinkCollection(final LinkCollectionResource linkCollection) {
+    public ODataLinkCollection getLinkCollection(final LinkCollectionResource linkCollection) {
         final ODataLinkCollection collection = new ODataLinkCollection(linkCollection.getNext());
         collection.setLinks(linkCollection.getLinks());
         return collection;
@@ -216,11 +219,12 @@ public final class ODataBinder {
      * @param resource service document resource.
      * @return <tt>ODataServiceDocument</tt> object.
      */
-    public static ODataServiceDocument getODataServiceDocument(final ServiceDocumentResource resource) {
+    public ODataServiceDocument getODataServiceDocument(final ServiceDocumentResource resource) {
         final ODataServiceDocument serviceDocument = new ODataServiceDocument();
 
         for (Map.Entry<String, String> entry : resource.getToplevelEntitySets().entrySet()) {
-            serviceDocument.addEntitySet(entry.getKey(), URIUtils.getURI(resource.getBaseURI(), entry.getValue()));
+            serviceDocument.addEntitySet(entry.getKey(),
+                    URIUtils.getURI(resource.getBaseURI(), entry.getValue()));
         }
 
         return serviceDocument;
@@ -232,7 +236,7 @@ public final class ODataBinder {
      * @param resource feed resource.
      * @return <tt>ODataEntitySet</tt> object.
      */
-    public static ODataEntitySet getODataEntitySet(final FeedResource resource) {
+    public ODataEntitySet getODataEntitySet(final FeedResource resource) {
         return getODataEntitySet(resource, null);
     }
 
@@ -243,7 +247,7 @@ public final class ODataBinder {
      * @param defaultBaseURI default base URI.
      * @return <tt>ODataEntitySet</tt> object.
      */
-    public static ODataEntitySet getODataEntitySet(final FeedResource resource, final URI defaultBaseURI) {
+    public ODataEntitySet getODataEntitySet(final FeedResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
             Serializer.feed(resource, writer);
@@ -256,8 +260,8 @@ public final class ODataBinder {
         final URI next = resource.getNext();
 
         final ODataEntitySet entitySet = next == null
-                ? ODataFactory.newEntitySet()
-                : ODataFactory.newEntitySet(URIUtils.getURI(base, next.toASCIIString()));
+                ? ODataObjectFactory.newEntitySet()
+                : ODataObjectFactory.newEntitySet(URIUtils.getURI(base, next.toASCIIString()));
 
         if (resource.getCount() != null) {
             entitySet.setCount(resource.getCount());
@@ -276,7 +280,7 @@ public final class ODataBinder {
      * @param resource entry resource.
      * @return <tt>ODataEntity</tt> object.
      */
-    public static ODataEntity getODataEntity(final EntryResource resource) {
+    public ODataEntity getODataEntity(final EntryResource resource) {
         return getODataEntity(resource, null);
     }
 
@@ -287,7 +291,7 @@ public final class ODataBinder {
      * @param defaultBaseURI default base URI.
      * @return <tt>ODataEntity</tt> object.
      */
-    public static ODataEntity getODataEntity(final EntryResource resource, final URI defaultBaseURI) {
+    public ODataEntity getODataEntity(final EntryResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
             Serializer.entry(resource, writer);
@@ -298,8 +302,9 @@ public final class ODataBinder {
         final URI base = defaultBaseURI == null ? resource.getBaseURI() : defaultBaseURI;
 
         final ODataEntity entity = resource.getSelfLink() == null
-                ? ODataFactory.newEntity(resource.getType())
-                : ODataFactory.newEntity(resource.getType(), URIUtils.getURI(base, resource.getSelfLink().getHref()));
+                ? ODataObjectFactory.newEntity(resource.getType())
+                : ODataObjectFactory.newEntity(resource.getType(),
+                        URIUtils.getURI(base, resource.getSelfLink().getHref()));
 
         if (StringUtils.isNotBlank(resource.getETag())) {
             entity.setETag(resource.getETag());
@@ -310,7 +315,7 @@ public final class ODataBinder {
         }
 
         for (LinkResource link : resource.getAssociationLinks()) {
-            entity.addLink(ODataFactory.newAssociationLink(link.getTitle(), base, link.getHref()));
+            entity.addLink(ODataObjectFactory.newAssociationLink(link.getTitle(), base, link.getHref()));
         }
 
         for (LinkResource link : resource.getNavigationLinks()) {
@@ -318,20 +323,22 @@ public final class ODataBinder {
             final FeedResource inlineFeed = link.getInlineFeed();
 
             if (inlineEntry == null && inlineFeed == null) {
-                entity.addLink(ODataFactory.newEntityNavigationLink(link.getTitle(), base, link.getHref()));
+                entity.addLink(ODataObjectFactory.newEntityNavigationLink(link.getTitle(), base, link.getHref()));
             } else if (inlineFeed == null) {
-                entity.addLink(ODataFactory.newInlineEntity(
+                entity.addLink(ODataObjectFactory.newInlineEntity(
                         link.getTitle(), base, link.getHref(),
-                        getODataEntity(inlineEntry, inlineEntry.getBaseURI() == null ? base : inlineEntry.getBaseURI())));
+                        getODataEntity(inlineEntry,
+                                inlineEntry.getBaseURI() == null ? base : inlineEntry.getBaseURI())));
             } else {
-                entity.addLink(ODataFactory.newInlineEntitySet(
+                entity.addLink(ODataObjectFactory.newInlineEntitySet(
                         link.getTitle(), base, link.getHref(),
-                        getODataEntitySet(inlineFeed, inlineFeed.getBaseURI() == null ? base : inlineFeed.getBaseURI())));
+                        getODataEntitySet(inlineFeed,
+                                inlineFeed.getBaseURI() == null ? base : inlineFeed.getBaseURI())));
             }
         }
 
         for (LinkResource link : resource.getMediaEditLinks()) {
-            entity.addLink(ODataFactory.newMediaEditLink(link.getTitle(), base, link.getHref()));
+            entity.addLink(ODataObjectFactory.newMediaEditLink(link.getTitle(), base, link.getHref()));
         }
 
         for (ODataOperation operation : resource.getOperations()) {
@@ -370,7 +377,7 @@ public final class ODataBinder {
      * @return <tt>LinkResource</tt> object.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends LinkResource> T getLinkResource(final ODataLink link, final Class<T> reference) {
+    public <T extends LinkResource> T getLinkResource(final ODataLink link, final Class<T> reference) {
         final T linkResource = ResourceFactory.newLink(reference);
         linkResource.setRel(link.getRel());
         linkResource.setTitle(link.getName());
@@ -400,7 +407,7 @@ public final class ODataBinder {
      * @param property content.
      * @return <tt>ODataProperty</tt> object.
      */
-    public static ODataProperty getProperty(final Element property) {
+    public ODataProperty getProperty(final Element property) {
         final ODataProperty res;
 
         final Node nullNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_NULL);
@@ -433,16 +440,16 @@ public final class ODataBinder {
 
                 case EMPTY:
                 default:
-                    res = ODataFactory.newPrimitiveProperty(XMLUtils.getSimpleName(property), null);
+                    res = ODataObjectFactory.newPrimitiveProperty(XMLUtils.getSimpleName(property), null);
             }
         } else {
-            res = ODataFactory.newPrimitiveProperty(XMLUtils.getSimpleName(property), null);
+            res = ODataObjectFactory.newPrimitiveProperty(XMLUtils.getSimpleName(property), null);
         }
 
         return res;
     }
 
-    private static PropertyType guessPropertyType(final Element property) {
+    private PropertyType guessPropertyType(final Element property) {
         PropertyType res = null;
 
         if (property.hasChildNodes()) {
@@ -470,7 +477,7 @@ public final class ODataBinder {
         return res;
     }
 
-    private static Element toDOMElement(final ODataProperty prop, final Document doc, final boolean setType) {
+    private Element toDOMElement(final ODataProperty prop, final Document doc, final boolean setType) {
         final Element element;
 
         if (prop.hasNullValue()) {
@@ -495,19 +502,19 @@ public final class ODataBinder {
         return element;
     }
 
-    private static Element toNullPropertyElement(final ODataProperty prop, final Document doc) {
+    private Element toNullPropertyElement(final ODataProperty prop, final Document doc) {
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + prop.getName());
         element.setAttribute(ODataConstants.ATTR_NULL, Boolean.toString(true));
         return element;
     }
 
-    private static Element toPrimitivePropertyElement(
+    private Element toPrimitivePropertyElement(
             final ODataProperty prop, final Document doc, final boolean setType) {
 
         return toPrimitivePropertyElement(prop.getName(), prop.getPrimitiveValue(), doc, setType);
     }
 
-    private static Element toPrimitivePropertyElement(
+    private Element toPrimitivePropertyElement(
             final String name, final ODataPrimitiveValue value, final Document doc, final boolean setType) {
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
@@ -524,7 +531,7 @@ public final class ODataBinder {
         return element;
     }
 
-    private static Element toCollectionPropertyElement(
+    private Element toCollectionPropertyElement(
             final ODataProperty prop, final Document doc, final boolean setType) {
 
         if (!prop.hasCollectionValue()) {
@@ -552,13 +559,13 @@ public final class ODataBinder {
         return element;
     }
 
-    private static Element toComplexPropertyElement(
+    private Element toComplexPropertyElement(
             final ODataProperty prop, final Document doc, final boolean setType) {
 
         return toComplexPropertyElement(prop.getName(), prop.getComplexValue(), doc, setType);
     }
 
-    private static Element toComplexPropertyElement(
+    private Element toComplexPropertyElement(
             final String name, final ODataComplexValue value, final Document doc, final boolean setType) {
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
@@ -572,7 +579,7 @@ public final class ODataBinder {
         return element;
     }
 
-    private static ODataPrimitiveValue fromPrimitiveValueElement(final Element prop, final EdmType edmType) {
+    private ODataPrimitiveValue fromPrimitiveValueElement(final Element prop, final EdmType edmType) {
         final ODataPrimitiveValue value;
         if (edmType != null && edmType.getSimpleType().isGeospatial()) {
             final Element geoProp = ODataConstants.PREFIX_GML.equals(prop.getPrefix())
@@ -586,12 +593,12 @@ public final class ODataBinder {
         return value;
     }
 
-    private static ODataProperty fromPrimitivePropertyElement(final Element prop, final EdmType edmType) {
-        return ODataFactory.newPrimitiveProperty(
+    private ODataProperty fromPrimitivePropertyElement(final Element prop, final EdmType edmType) {
+        return ODataObjectFactory.newPrimitiveProperty(
                 XMLUtils.getSimpleName(prop), fromPrimitiveValueElement(prop, edmType));
     }
 
-    private static ODataComplexValue fromComplexValueElement(final Element prop, final EdmType edmType) {
+    private ODataComplexValue fromComplexValueElement(final Element prop, final EdmType edmType) {
         final ODataComplexValue value = new ODataComplexValue(edmType == null ? null : edmType.getTypeExpression());
 
         for (Node child : XMLUtils.getChildNodes(prop, Node.ELEMENT_NODE)) {
@@ -601,11 +608,12 @@ public final class ODataBinder {
         return value;
     }
 
-    private static ODataProperty fromComplexPropertyElement(final Element prop, final EdmType edmType) {
-        return ODataFactory.newComplexProperty(XMLUtils.getSimpleName(prop), fromComplexValueElement(prop, edmType));
+    private ODataProperty fromComplexPropertyElement(final Element prop, final EdmType edmType) {
+        return ODataObjectFactory.newComplexProperty(XMLUtils.getSimpleName(prop),
+                fromComplexValueElement(prop, edmType));
     }
 
-    private static ODataProperty fromCollectionPropertyElement(final Element prop, final EdmType edmType) {
+    private ODataProperty fromCollectionPropertyElement(final Element prop, final EdmType edmType) {
         final ODataCollectionValue value =
                 new ODataCollectionValue(edmType == null ? null : edmType.getTypeExpression());
 
@@ -628,6 +636,6 @@ public final class ODataBinder {
             }
         }
 
-        return ODataFactory.newCollectionProperty(XMLUtils.getSimpleName(prop), value);
+        return ODataObjectFactory.newCollectionProperty(XMLUtils.getSimpleName(prop), value);
     }
 }

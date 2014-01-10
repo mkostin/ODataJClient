@@ -19,10 +19,6 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import static com.msopentech.odatajclient.engine.data.ODataLinkType.ASSOCIATION;
-import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_NAVIGATION;
-import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_SET_NAVIGATION;
-import static com.msopentech.odatajclient.engine.data.ODataLinkType.MEDIA_EDIT;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.net.URI;

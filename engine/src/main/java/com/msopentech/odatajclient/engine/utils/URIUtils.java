@@ -22,7 +22,6 @@ package com.msopentech.odatajclient.engine.utils;
 import com.msopentech.odatajclient.engine.data.ODataDuration;
 import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
 import java.math.BigDecimal;
@@ -65,7 +64,7 @@ public final class URIUtils {
         URI uri = URI.create(href);
 
         if (!uri.isAbsolute() && base != null) {
-            uri = new ODataURIBuilder(base).appendEntityTypeSegment(href).build();
+            uri = URI.create(base + "/" + href);
         }
 
         return uri.normalize();
@@ -73,7 +72,7 @@ public final class URIUtils {
 
     /**
      * Build URI starting from the given base and href.
-     * <p>
+     * <br/>
      * If href is absolute or base is null then base will be ignored.
      *
      * @param base URI prefix.
@@ -89,7 +88,7 @@ public final class URIUtils {
 
     /**
      * Build URI starting from the given base and href.
-     * <p>
+     * <br/>
      * If href is absolute or base is null then base will be ignored.
      *
      * @param base URI prefix.
@@ -104,7 +103,7 @@ public final class URIUtils {
         URI uri = URI.create(href);
 
         if (!uri.isAbsolute() && base != null) {
-            uri = new ODataURIBuilder(base.toString()).appendEntityTypeSegment(href).build();
+            uri = URI.create(base.toASCIIString() + "/" + href);
         }
 
         return uri.normalize();

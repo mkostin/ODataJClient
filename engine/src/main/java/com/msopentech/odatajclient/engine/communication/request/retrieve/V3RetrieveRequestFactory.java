@@ -17,26 +17,28 @@
  * See the Apache License, Version 2.0 for the specific language
  * governing permissions and limitations under the License.
  */
-package com.msopentech.odatajclient.engine.communication.request.batch;
+package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
 
-/**
- * OData batch request factory class.
- */
-public final class ODataBatchRequestFactory {
+public class V3RetrieveRequestFactory extends AbstractRetrieveRequestFactory {
 
-    private ODataBatchRequestFactory() {
-        // Empty private constructor for static utility classes
+    private static final Object MONITOR = new Object();
+
+    private static V3RetrieveRequestFactory instance;
+
+    public static V3RetrieveRequestFactory getInstance(final ODataV3Client client) {
+        synchronized (MONITOR) {
+            if (instance == null) {
+                instance = new V3RetrieveRequestFactory(client);
+            }
+        }
+
+        return instance;
     }
 
-    /**
-     * Gets a batch request object instance.
-     *
-     * @param serviceRoot service root.
-     * @return new ODataBatchRequest instance.
-     */
-    public static ODataBatchRequest getBatchRequest(final String serviceRoot) {
-        return new ODataBatchRequest(new ODataURIBuilder(serviceRoot).appendBatchSegment().build());
+    private V3RetrieveRequestFactory(final ODataV3Client client) {
+        super(client);
     }
+
 }

@@ -19,10 +19,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,19 +36,24 @@ import org.apache.commons.lang3.StringUtils;
  * Basic request abstract implementation.
  *
  * @param <V> OData response type corresponding to the request implementation.
+ * @param <T> OData format being used.
  */
-public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends Enum<T>>
+public abstract class AbstractODataBasicRequestImpl<V extends ODataResponse, T extends Enum<T>>
         extends ODataRequestImpl<T>
         implements ODataBasicRequest<V, T> {
 
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
+     * @param formatRef reference class for the format being used
      * @param method request method.
      * @param uri OData request URI.
      */
-    public ODataBasicRequestImpl(final Class<T> formatRef, final HttpMethod method, final URI uri) {
-        super(formatRef, method, uri);
+    public AbstractODataBasicRequestImpl(final ODataClient odataClient,
+            final Class<T> formatRef, final HttpMethod method, final URI uri) {
+
+        super(odataClient, formatRef, method, uri);
     }
 
     /**
@@ -67,7 +72,7 @@ public abstract class ODataBasicRequestImpl<V extends ODataResponse, T extends E
      */
     @Override
     public final Future<V> asyncExecute() {
-        return Configuration.getExecutor().submit(new Callable<V>() {
+        return odataClient.getConfiguration().getExecutor().submit(new Callable<V>() {
 
             @Override
             public V call() throws Exception {

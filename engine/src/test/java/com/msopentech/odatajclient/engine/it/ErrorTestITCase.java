@@ -26,17 +26,15 @@ import static org.junit.Assert.assertNull;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.AbstractODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequest;
-import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
+import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
@@ -54,10 +52,11 @@ import org.junit.Test;
  */
 public class ErrorTestITCase extends AbstractTest {
 
-    private class ErrorGeneratingRequest extends ODataBasicRequestImpl<ODataEntityCreateResponse, ODataPubFormat> {
+    private class ErrorGeneratingRequest
+            extends AbstractODataBasicRequestImpl<ODataEntityCreateResponse, ODataPubFormat> {
 
         public ErrorGeneratingRequest(final HttpMethod method, final URI uri) {
-            super(ODataPubFormat.class, method, uri);
+            super(client, ODataPubFormat.class, method, uri);
         }
 
         @Override
@@ -68,7 +67,7 @@ public class ErrorTestITCase extends AbstractTest {
         @Override
         public ODataEntityCreateResponse execute() {
             final HttpResponse res = doExecute();
-            return new ODataEntityCreateResponseImpl(client, res);
+            return new ODataEntityCreateResponseImpl(httpClient, res);
         }
 
         private class ODataEntityCreateResponseImpl extends ODataResponseImpl implements ODataEntityCreateResponse {
@@ -79,13 +78,13 @@ public class ErrorTestITCase extends AbstractTest {
 
             @Override
             public ODataEntity getBody() {
-                return ODataFactory.newEntity("Invalid");
+                return ODataObjectFactory.newEntity("Invalid");
             }
         }
     }
 
     private void stacktraceError(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
         final ErrorGeneratingRequest errorReq = new ErrorGeneratingRequest(HttpMethod.POST, uriBuilder.build());
@@ -115,10 +114,10 @@ public class ErrorTestITCase extends AbstractTest {
     }
 
     private void notfoundError(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer(154)");
 
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
         ODataClientErrorException ocee = null;
@@ -146,17 +145,17 @@ public class ErrorTestITCase extends AbstractTest {
 
     private void instreamError(final ODataPubFormat format) {
         final EdmMetadata metadata =
-                ODataRetrieveRequestFactory.getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
+                client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
         final FunctionImport funcImp = container.getFunctionImport("InStreamErrorGetCustomer");
 
-        final ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
         final ODataInvokeRequest<ODataEntitySet> req =
-                ODataInvokeRequestFactory.getInvokeRequest(builder.build(), metadata, funcImp);
+                client.getInvokeRequestFactory().getInvokeRequest(builder.build(), metadata, funcImp);
         req.setFormat(format);
 
         final ODataInvokeResponse<ODataEntitySet> res = req.execute();

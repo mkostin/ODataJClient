@@ -19,6 +19,8 @@
  */
 package com.msopentech.odatajclient.engine;
 
+import com.msopentech.odatajclient.engine.client.ODataClientFactory;
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.Locale;
@@ -26,12 +28,19 @@ import org.junit.BeforeClass;
 
 public abstract class AbstractTest {
 
+    protected static ODataV3Client client;
+
     /**
      * This is needed for correct number handling (Double, for example).
      */
     @BeforeClass
     public static void setEnglishLocale() {
         Locale.setDefault(Locale.ENGLISH);
+    }
+
+    @BeforeClass
+    public static void setClientInstance() {
+        client = ODataClientFactory.getV3();
     }
 
     protected String getSuffix(final ODataPubFormat format) {

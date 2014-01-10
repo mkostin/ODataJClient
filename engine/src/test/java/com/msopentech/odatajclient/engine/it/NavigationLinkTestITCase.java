@@ -28,19 +28,18 @@ import org.junit.Test;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
 
 public class NavigationLinkTestITCase extends AbstractTest {
     //collection of navigation links
 
     private void getListNavigationLinks(String acceptFormat) {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Orders");
-        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setAccept(acceptFormat);
         ODataRetrieveResponse<ODataEntitySet> res = req.execute();
         assertEquals(200, res.getStatusCode());
@@ -55,9 +54,9 @@ public class NavigationLinkTestITCase extends AbstractTest {
     //invalid query
 
     private void getListNavigationLinksInvalidSegment(String acceptFormat) {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Address");
-        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setAccept(acceptFormat);
         ODataRetrieveResponse<ODataEntitySet> res = req.execute();
         assertEquals(415, res.getStatusCode());
@@ -65,10 +64,10 @@ public class NavigationLinkTestITCase extends AbstractTest {
     //Reference navigation link
 
     private void getSingleNavigationLinks(String acceptFormat) {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Orders").
                 appendKeySegment(-10);
-        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setAccept(acceptFormat);
         ODataRetrieveResponse<ODataEntity> res = req.execute();
         assertEquals(200, res.getStatusCode());
@@ -78,10 +77,10 @@ public class NavigationLinkTestITCase extends AbstractTest {
     // reference navigation link
 
     private void getReferenceNavigationLinks(String acceptFormat) {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Logins").
                 appendKeySegment(-1);
-        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setAccept(acceptFormat);
         try {
             ODataRetrieveResponse<ODataEntity> res = req.execute();

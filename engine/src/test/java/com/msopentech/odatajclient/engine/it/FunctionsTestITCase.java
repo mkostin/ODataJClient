@@ -27,7 +27,6 @@ import org.junit.Test;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
@@ -35,7 +34,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.Iterator;
 
@@ -44,9 +43,9 @@ public class FunctionsTestITCase extends AbstractTest {
 
     private void refReturnFunction(final ODataPubFormat format, final String accept) {
         // GetSpecificCustomer takes 'Name' parameter, but seems to be buggy in the sample services
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("GetSpecificCustomer?CustomerId=-8");
-        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
         req.setAccept(accept);
         try {
@@ -78,9 +77,9 @@ public class FunctionsTestITCase extends AbstractTest {
 
     private void withInvalidQuery(final ODataPubFormat format, final String accept) {
         // GetSpecificCustomer takes 'Name' parameter, but seems to be buggy in the sample services
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("GetSpecificCustomer?CustomerIds=-10");
-        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
         req.setAccept(accept);
         try {
@@ -106,9 +105,9 @@ public class FunctionsTestITCase extends AbstractTest {
     //function returning collection of complex types
 
     private void collectionFunction(final ODataFormat format, final String accept) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("EntityProjectionReturnsCollectionOfComplexTypes");
-        final ODataPropertyRequest req = ODataRetrieveRequestFactory.getPropertyRequest(uriBuilder.build());
+        final ODataPropertyRequest req = client.getRetrieveRequestFactory().getPropertyRequest(uriBuilder.build());
         req.setFormat(format);
         req.setAccept(accept);
         try {

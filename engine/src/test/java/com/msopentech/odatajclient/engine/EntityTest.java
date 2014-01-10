@@ -24,7 +24,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.data.Deserializer;
-import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataOperation;
@@ -42,7 +41,7 @@ public class EntityTest extends AbstractTest {
 
     private void readAndWrite(final ODataPubFormat format) {
         final InputStream input = getClass().getResourceAsStream("Customer_-10." + getSuffix(format));
-        final ODataEntity entity = ODataBinder.getODataEntity(
+        final ODataEntity entity = client.getODataBinder().getODataEntity(
                 Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
         assertNotNull(entity);
 
@@ -61,8 +60,8 @@ public class EntityTest extends AbstractTest {
 
         assertTrue(check);
 
-        final ODataEntity written = ODataBinder.getODataEntity(
-                ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)));
+        final ODataEntity written = client.getODataBinder().getODataEntity(
+                client.getODataBinder().getEntry(entity, ResourceFactory.entryClassForFormat(format)));
         assertEquals(entity, written);
     }
 
@@ -78,7 +77,7 @@ public class EntityTest extends AbstractTest {
 
     private void readGeospatial(final ODataPubFormat format) {
         final InputStream input = getClass().getResourceAsStream("AllGeoTypesSet_-8." + getSuffix(format));
-        final ODataEntity entity = ODataBinder.getODataEntity(
+        final ODataEntity entity = client.getODataBinder().getODataEntity(
                 Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
         assertNotNull(entity);
 
@@ -93,8 +92,8 @@ public class EntityTest extends AbstractTest {
         }
         assertTrue(found);
 
-        final ODataEntity written = ODataBinder.getODataEntity(
-                ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)));
+        final ODataEntity written = client.getODataBinder().getODataEntity(
+                client.getODataBinder().getEntry(entity, ResourceFactory.entryClassForFormat(format)));
         assertEquals(entity, written);
     }
 
@@ -111,15 +110,15 @@ public class EntityTest extends AbstractTest {
 
     private void withActions(final ODataPubFormat format) {
         final InputStream input = getClass().getResourceAsStream("ComputerDetail_-10." + getSuffix(format));
-        final ODataEntity entity = ODataBinder.getODataEntity(
+        final ODataEntity entity = client.getODataBinder().getODataEntity(
                 Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
         assertNotNull(entity);
 
         assertEquals(1, entity.getOperations().size());
         assertEquals("ResetComputerDetailsSpecifications", entity.getOperations().get(0).getTitle());
 
-        final ODataEntity written = ODataBinder.getODataEntity(
-                ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)));
+        final ODataEntity written = client.getODataBinder().getODataEntity(
+                client.getODataBinder().getEntry(entity, ResourceFactory.entryClassForFormat(format)));
         entity.setOperations(Collections.<ODataOperation>emptyList());
         assertEquals(entity, written);
     }
@@ -137,16 +136,15 @@ public class EntityTest extends AbstractTest {
 
     private void mediaEntity(final ODataPubFormat format) {
         final InputStream input = getClass().getResourceAsStream("Car_16." + getSuffix(format));
-        final ODataEntity entity = ODataBinder.getODataEntity(
+        final ODataEntity entity = client.getODataBinder().getODataEntity(
                 Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
         assertNotNull(entity);
         assertTrue(entity.isMediaEntity());
         assertNotNull(entity.getMediaContentSource());
         assertNotNull(entity.getMediaContentType());
 
-
-        final ODataEntity written = ODataBinder.getODataEntity(
-                ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format)));
+        final ODataEntity written = client.getODataBinder().getODataEntity(
+                client.getODataBinder().getEntry(entity, ResourceFactory.entryClassForFormat(format)));
         assertEquals(entity, written);
     }
 
@@ -162,7 +160,7 @@ public class EntityTest extends AbstractTest {
 
     private void issue128(final ODataPubFormat format) {
         final InputStream input = getClass().getResourceAsStream("AllGeoTypesSet_-5." + getSuffix(format));
-        final ODataEntity entity = ODataBinder.getODataEntity(
+        final ODataEntity entity = client.getODataBinder().getODataEntity(
                 Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
         assertNotNull(entity);
 

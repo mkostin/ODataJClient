@@ -24,12 +24,10 @@ import static org.junit.Assert.assertNotNull;
 
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,14 +36,14 @@ public class KeyAsSegmentTestITCase extends AbstractTest {
 
     @BeforeClass
     public static void enableKeyAsSegment() {
-        Configuration.setKeyAsSegment(true);
+        client.getConfiguration().setKeyAsSegment(true);
     }
 
     private void read(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testKeyAsSegmentServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testKeyAsSegmentServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10);
 
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
         final ODataRetrieveResponse<ODataEntity> res = req.execute();
@@ -93,7 +91,7 @@ public class KeyAsSegmentTestITCase extends AbstractTest {
     @Test
     public void replaceODataEntityAsAtom() {
         final ODataPubFormat format = ODataPubFormat.ATOM;
-        final ODataEntity changes = read(format, new ODataURIBuilder(testKeyAsSegmentServiceRootURL).
+        final ODataEntity changes = read(format, client.getURIBuilder(testKeyAsSegmentServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(14).build());
         updateEntityDescription(format, changes, UpdateType.REPLACE);
     }
@@ -101,13 +99,13 @@ public class KeyAsSegmentTestITCase extends AbstractTest {
     @Test
     public void replaceODataEntityAsJSON() {
         final ODataPubFormat format = ODataPubFormat.JSON_FULL_METADATA;
-        final ODataEntity changes = read(format, new ODataURIBuilder(testKeyAsSegmentServiceRootURL).
+        final ODataEntity changes = read(format, client.getURIBuilder(testKeyAsSegmentServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(14).build());
         updateEntityDescription(format, changes, UpdateType.REPLACE);
     }
 
     @AfterClass
     public static void disableKeyAsSegment() {
-        Configuration.setKeyAsSegment(false);
+        client.getConfiguration().setKeyAsSegment(false);
     }
 }

@@ -21,6 +21,7 @@ package com.msopentech.odatajclient.engine.data;
 
 import static com.msopentech.odatajclient.engine.data.Deserializer.toEntry;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -50,6 +51,8 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
 
     private static final long serialVersionUID = 9039605899821494025L;
 
+    private final ODataClient odataClient;
+
     private final InputStream stream;
 
     private final ODataPubFormat format;
@@ -67,10 +70,14 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param stream source stream.
      * @param format OData format.
      */
-    public ODataEntitySetIterator(final InputStream stream, final ODataPubFormat format) {
+    public ODataEntitySetIterator(final ODataClient odataClient,
+            final InputStream stream, final ODataPubFormat format) {
+
+        this.odataClient = odataClient;
         this.stream = stream;
         this.format = format;
         this.osFeed = new ByteArrayOutputStream();
@@ -107,7 +114,8 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
 
             if (cached == null) {
                 available = false;
-                entitySet = ODataReader.readEntitySet(new ByteArrayInputStream(osFeed.toByteArray()), format);
+                entitySet = odataClient.getODataReader().
+                        readEntitySet(new ByteArrayInputStream(osFeed.toByteArray()), format);
                 close();
             }
         }
@@ -121,7 +129,7 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
     @Override
     public ODataEntity next() {
         if (hasNext()) {
-            final ODataEntity res = ODataBinder.getODataEntity(cached);
+            final ODataEntity res = odataClient.getODataBinder().getODataEntity(cached);
             cached = null;
             return res;
         }

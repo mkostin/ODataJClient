@@ -19,14 +19,13 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.AbstractODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataReader;
-import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.InputStream;
 import java.net.URI;
@@ -38,13 +37,8 @@ import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData update request.
- * Get instance by using ODataCUDRequestFactory.
- *
- * @see ODataCUDRequestFactory#getEntityUpdateRequest(java.net.URI,
- * com.msopentech.odatajclient.engine.communication.request.UpdateType,
- * com.msopentech.odatajclient.engine.data.ODataEntity)
  */
-public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityUpdateResponse, ODataPubFormat>
+public class ODataEntityUpdateRequest extends AbstractODataBasicRequestImpl<ODataEntityUpdateResponse, ODataPubFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -55,12 +49,15 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param method request method.
      * @param uri URI of the entity to be updated.
      * @param changes changes to be applied.
      */
-    ODataEntityUpdateRequest(final HttpMethod method, final URI uri, final ODataEntity changes) {
-        super(ODataPubFormat.class, method, uri);
+    ODataEntityUpdateRequest(final ODataClient odataClient,
+            final HttpMethod method, final URI uri, final ODataEntity changes) {
+
+        super(odataClient, ODataPubFormat.class, method, uri);
         this.changes = changes;
     }
 
@@ -73,7 +70,7 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
         ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
 
         try {
-            return new ODataEntityUpdateResponseImpl(client, doExecute());
+            return new ODataEntityUpdateResponseImpl(httpClient, doExecute());
         } finally {
             IOUtils.closeQuietly(input);
         }
@@ -84,7 +81,7 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeEntity(changes, ODataPubFormat.fromString(getContentType()));
+        return odataClient.getODataWriter().writeEntity(changes, ODataPubFormat.fromString(getContentType()));
     }
 
     /**
@@ -122,7 +119,8 @@ public class ODataEntityUpdateRequest extends ODataBasicRequestImpl<ODataEntityU
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.readEntity(getRawResponse(), ODataPubFormat.fromString(getAccept()));
+                    entity = odataClient.getODataReader().
+                            readEntity(getRawResponse(), ODataPubFormat.fromString(getAccept()));
                 } finally {
                     this.close();
                 }

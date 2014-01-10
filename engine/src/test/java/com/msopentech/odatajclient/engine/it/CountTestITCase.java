@@ -23,9 +23,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
 
@@ -34,9 +33,9 @@ public class CountTestITCase extends AbstractTest {
 
     @Test
     public void entityCount() {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendCountSegment();
-        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        final ODataValueRequest req = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
         req.setFormat(ODataValueFormat.TEXT);
         try {
             final ODataValue value = req.execute().getBody();
@@ -49,9 +48,9 @@ public class CountTestITCase extends AbstractTest {
 
     @Test
     public void invalidAccept() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendCountSegment();
-        final ODataValueRequest req = ODataRetrieveRequestFactory.getValueRequest(uriBuilder.build());
+        final ODataValueRequest req = client.getRetrieveRequestFactory().getValueRequest(uriBuilder.build());
         req.setFormat(ODataValueFormat.TEXT);
         req.setAccept("application/json;odata=fullmetadata");
         try {

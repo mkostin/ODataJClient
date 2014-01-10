@@ -19,8 +19,9 @@
  */
 package com.msopentech.odatajclient.engine.uri;
 
+import com.msopentech.odatajclient.engine.client.AbstractConfiguration;
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
-import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.uri.filter.AbstractFilterFactory;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.Serializable;
 import java.net.URI;
@@ -36,9 +37,9 @@ import org.slf4j.LoggerFactory;
 /**
  * OData URI builder.
  */
-public class ODataURIBuilder implements Serializable {
+public abstract class AbstractURIBuilder implements Serializable {
 
-    private static class Segment {
+    protected static class Segment {
 
         private final SegmentType type;
 
@@ -55,14 +56,14 @@ public class ODataURIBuilder implements Serializable {
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(ODataURIBuilder.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(AbstractURIBuilder.class);
 
-    private final List<Segment> segments;
+    protected final List<Segment> segments;
 
     /**
      * Case-insensitive map of query options.
      */
-    private final Map<String, String> queryOptions = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+    protected final Map<String, String> queryOptions = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 
     /**
      * Constructor.
@@ -70,10 +71,12 @@ public class ODataURIBuilder implements Serializable {
      * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
      * data service.
      */
-    public ODataURIBuilder(final String serviceRoot) {
+    protected AbstractURIBuilder(final String serviceRoot) {
         segments = new ArrayList<Segment>();
         segments.add(new Segment(SegmentType.SERVICEROOT, serviceRoot));
     }
+
+    protected abstract AbstractConfiguration getConfiguration();
 
     /**
      * Adds the specified query option to the URI.
@@ -82,7 +85,7 @@ public class ODataURIBuilder implements Serializable {
      * @param value query option value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder addQueryOption(final QueryOption option, final String value) {
+    public AbstractURIBuilder addQueryOption(final QueryOption option, final String value) {
         return addQueryOption(option.toString(), value);
     }
 
@@ -93,7 +96,7 @@ public class ODataURIBuilder implements Serializable {
      * @param value query option value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder addQueryOption(final String option, final String value) {
+    public AbstractURIBuilder addQueryOption(final String option, final String value) {
         queryOptions.put(option, value);
         return this;
     }
@@ -104,7 +107,7 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendEntitySetSegment(final String segmentValue) {
+    public AbstractURIBuilder appendEntitySetSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.ENTITYSET, segmentValue));
         return this;
     }
@@ -115,7 +118,7 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendEntityTypeSegment(final String segmentValue) {
+    public AbstractURIBuilder appendEntityTypeSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.ENTITYTYPE, segmentValue));
         return this;
     }
@@ -126,10 +129,10 @@ public class ODataURIBuilder implements Serializable {
      * @param val segment value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendKeySegment(final Object val) {
+    public AbstractURIBuilder appendKeySegment(final Object val) {
         final String segValue = URIUtils.escape(val);
 
-        segments.add(Configuration.isKeyAsSegment()
+        segments.add(getConfiguration().isKeyAsSegment()
                 ? new Segment(SegmentType.KEY_AS_SEGMENT, segValue)
                 : new Segment(SegmentType.KEY, "(" + segValue + ")"));
         return this;
@@ -141,8 +144,8 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendKeySegment(final Map<String, Object> segmentValues) {
-        if (!Configuration.isKeyAsSegment()) {
+    public AbstractURIBuilder appendKeySegment(final Map<String, Object> segmentValues) {
+        if (!getConfiguration().isKeyAsSegment()) {
             final StringBuilder keyBuilder = new StringBuilder().append('(');
             for (Map.Entry<String, Object> entry : segmentValues.entrySet()) {
                 keyBuilder.append(entry.getKey()).append('=').append(URIUtils.escape(entry.getValue()));
@@ -162,7 +165,7 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendNavigationLinkSegment(final String segmentValue) {
+    public AbstractURIBuilder appendNavigationLinkSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.NAVIGATION, segmentValue));
         return this;
     }
@@ -173,12 +176,12 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendStructuralSegment(final String segmentValue) {
+    public AbstractURIBuilder appendStructuralSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.STRUCTURAL, segmentValue));
         return this;
     }
 
-    public ODataURIBuilder appendLinksSegment(final String segmentValue) {
+    public AbstractURIBuilder appendLinksSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.LINKS, SegmentType.LINKS.getValue()));
         segments.add(new Segment(SegmentType.ENTITYTYPE, segmentValue));
         return this;
@@ -189,7 +192,7 @@ public class ODataURIBuilder implements Serializable {
      *
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendValueSegment() {
+    public AbstractURIBuilder appendValueSegment() {
         segments.add(new Segment(SegmentType.VALUE, SegmentType.VALUE.getValue()));
         return this;
     }
@@ -199,7 +202,7 @@ public class ODataURIBuilder implements Serializable {
      *
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendCountSegment() {
+    public AbstractURIBuilder appendCountSegment() {
         segments.add(new Segment(SegmentType.COUNT, SegmentType.COUNT.getValue()));
         return this;
     }
@@ -210,7 +213,7 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendFunctionImportSegment(final String segmentValue) {
+    public AbstractURIBuilder appendFunctionImportSegment(final String segmentValue) {
         segments.add(new Segment(SegmentType.FUNCTIONIMPORT, segmentValue));
         return this;
     }
@@ -221,7 +224,7 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendMetadataSegment() {
+    public AbstractURIBuilder appendMetadataSegment() {
         segments.add(new Segment(SegmentType.METADATA, SegmentType.METADATA.getValue()));
         return this;
     }
@@ -232,7 +235,7 @@ public class ODataURIBuilder implements Serializable {
      * @param segmentValue segment value.
      * @return current ODataURIBuilder object.
      */
-    public ODataURIBuilder appendBatchSegment() {
+    public AbstractURIBuilder appendBatchSegment() {
         segments.add(new Segment(SegmentType.BATCH, SegmentType.BATCH.getValue()));
         return this;
     }
@@ -244,7 +247,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#EXPAND
      */
-    public ODataURIBuilder expand(final String entityName) {
+    public AbstractURIBuilder expand(final String entityName) {
         return addQueryOption(QueryOption.EXPAND, entityName);
     }
 
@@ -255,7 +258,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#FORMAT
      */
-    public ODataURIBuilder format(final String format) {
+    public AbstractURIBuilder format(final String format) {
         return addQueryOption(QueryOption.FORMAT, format);
     }
 
@@ -267,9 +270,9 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#FILTER
      * @see ODataFilter
-     * @see ODataFilterFactory
+     * @see AbstractFilterFactory
      */
-    public ODataURIBuilder filter(final ODataFilter filter) {
+    public AbstractURIBuilder filter(final ODataFilter filter) {
         return addQueryOption(QueryOption.FILTER, filter.build());
     }
 
@@ -280,7 +283,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#FILTER
      */
-    public ODataURIBuilder filter(final String filter) {
+    public AbstractURIBuilder filter(final String filter) {
         return addQueryOption(QueryOption.FILTER, filter);
     }
 
@@ -291,7 +294,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#SELECT
      */
-    public ODataURIBuilder select(final String select) {
+    public AbstractURIBuilder select(final String select) {
         return addQueryOption(QueryOption.SELECT, select);
     }
 
@@ -302,7 +305,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#ORDERBY
      */
-    public ODataURIBuilder orderBy(final String order) {
+    public AbstractURIBuilder orderBy(final String order) {
         return addQueryOption(QueryOption.ORDERBY, order);
     }
 
@@ -313,7 +316,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#TOP
      */
-    public ODataURIBuilder top(final int top) {
+    public AbstractURIBuilder top(final int top) {
         return addQueryOption(QueryOption.TOP, String.valueOf(top));
     }
 
@@ -324,7 +327,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#SKIP
      */
-    public ODataURIBuilder skip(final int skip) {
+    public AbstractURIBuilder skip(final int skip) {
         return addQueryOption(QueryOption.SKIP, String.valueOf(skip));
     }
 
@@ -335,7 +338,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#SKIPTOKEN
      */
-    public ODataURIBuilder skipToken(final String skipToken) {
+    public AbstractURIBuilder skipToken(final String skipToken) {
         return addQueryOption(QueryOption.SKIPTOKEN, skipToken);
     }
 
@@ -345,7 +348,7 @@ public class ODataURIBuilder implements Serializable {
      * @return current ODataURIBuilder object.
      * @see QueryOption#INLINECOUNT
      */
-    public ODataURIBuilder inlineCount() {
+    public AbstractURIBuilder inlineCount() {
         return addQueryOption(QueryOption.INLINECOUNT, "allpages");
     }
 

@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
@@ -31,19 +32,17 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData media query request.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getMediaRequest(java.net.URI)
  */
-public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMediaFormat> {
+public class ODataMediaRequest extends AbstractODataRetrieveRequest<InputStream, ODataMediaFormat> {
 
     /**
      * Private constructor.
      *
+     * @param odataClient client instance getting this request
      * @param query query to be executed.
      */
-    ODataMediaRequest(final URI query) {
-        super(ODataMediaFormat.class, query);
+    ODataMediaRequest(final ODataClient odataClient, final URI query) {
+        super(odataClient, ODataMediaFormat.class, query);
 
         setAccept(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
         setContentType(ODataMediaFormat.APPLICATION_OCTET_STREAM.toString());
@@ -59,7 +58,7 @@ public class ODataMediaRequest extends ODataRetrieveRequest<InputStream, ODataMe
     @Override
     public ODataRetrieveResponse<InputStream> execute() {
         final HttpResponse res = doExecute();
-        return new ODataMediaResponseImpl(client, res);
+        return new ODataMediaResponseImpl(httpClient, res);
     }
 
     /**

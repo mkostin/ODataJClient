@@ -19,13 +19,14 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import java.net.URI;
+import javax.security.auth.login.Configuration;
 
 /**
  * Abstract class representing a request concerning a streamed entity.
@@ -33,19 +34,21 @@ import java.net.URI;
  * @param <V> OData response type corresponding to the request implementation.
  * @param <T> OData request payload type corresponding to the request implementation.
  */
-public abstract class ODataStreamedEntityRequestImpl<V extends ODataResponse, T extends ODataStreamManager<V>>
-        extends ODataStreamedRequestImpl<V, T> {
+public abstract class AbstractODataStreamedEntityRequestImpl<V extends ODataResponse, T extends ODataStreamManager<V>>
+        extends AbstractODataStreamedRequestImpl<V, T> {
 
     private ODataPubFormat format;
 
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param method HTTP request method.
      * @param uri request URI.
      */
-    public ODataStreamedEntityRequestImpl(final HttpMethod method, URI uri) {
-        super(method, uri);
+    public AbstractODataStreamedEntityRequestImpl(final ODataClient odataClient, final HttpMethod method,
+            URI uri) {
+        super(odataClient, method, uri);
         setAccept(getFormat().toString());
     }
 
@@ -56,7 +59,7 @@ public abstract class ODataStreamedEntityRequestImpl<V extends ODataResponse, T 
      * @see Configuration#getDefaultPubFormat()
      */
     public final ODataPubFormat getFormat() {
-        return format == null ? Configuration.getDefaultPubFormat() : format;
+        return format == null ? odataClient.getConfiguration().getDefaultPubFormat() : format;
     }
 
     /**

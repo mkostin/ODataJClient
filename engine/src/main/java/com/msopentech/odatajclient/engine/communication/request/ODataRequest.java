@@ -20,11 +20,11 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.batch.AbstractBatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.AbstractCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.invoke.AbstractInvokeRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.AbstractStreamedRequestFactory;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
@@ -33,11 +33,11 @@ import java.util.Collection;
  * Abstract representation of an OData request.
  * Get instance by using factories.
  *
- * @see ODataCUDRequestFactory
- * @see ODataRetrieveRequestFactory
- * @see ODataBatchRequestFactory
- * @see ODataInvokeRequestFactory
- * @see ODataStreamedRequestFactory
+ * @see AbstractCUDRequestFactory
+ * @see AbstractRetrieveRequestFactory
+ * @see AbstractBatchRequestFactory
+ * @see AbstractInvokeRequestFactory
+ * @see AbstractStreamedRequestFactory
  */
 public interface ODataRequest {
 
@@ -74,9 +74,10 @@ public interface ODataRequest {
      * Adds <tt>Accept</tt> OData request header.
      *
      * @param value header value.
+     * @return current object
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#accept
      */
-    void setAccept(final String value);
+    ODataRequest setAccept(final String value);
 
     /**
      * Gets <tt>Accept</tt> OData request header.
@@ -90,9 +91,10 @@ public interface ODataRequest {
      * Adds <tt>If-Match</tt> OData request header.
      *
      * @param value header value.
+     * @return current object
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#ifMatch
      */
-    void setIfMatch(final String value);
+    ODataRequest setIfMatch(final String value);
 
     /**
      * Gets <tt>If-Match</tt> OData request header.
@@ -106,9 +108,10 @@ public interface ODataRequest {
      * Adds <tt>If-None-Match</tt> OData request header.
      *
      * @param value header value.
+     * @return current object
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#ifNoneMatch
      */
-    void setIfNoneMatch(final String value);
+    ODataRequest setIfNoneMatch(final String value);
 
     /**
      * Gets <tt>If-None-Match</tt> OData request header.
@@ -122,9 +125,10 @@ public interface ODataRequest {
      * Adds <tt>Prefer</tt> OData request header.
      *
      * @param value header value.
+     * @return current object
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#prefer
      */
-    void setPrefer(final String value);
+    ODataRequest setPrefer(final String value);
 
     /**
      * Gets <tt>Prefer</tt> OData request header.
@@ -138,9 +142,10 @@ public interface ODataRequest {
      * Adds <tt>contentType</tt> OData request header.
      *
      * @param value header value.
+     * @return current object
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#contentType
      */
-    void setContentType(final String value);
+    ODataRequest setContentType(final String value);
 
     /**
      * Gets <tt>contentType</tt> OData request header.
@@ -154,25 +159,28 @@ public interface ODataRequest {
      * Adds <tt>Slug</tt> OData request header.
      *
      * @param value header value.
+     * @return current object
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#slug
      */
-    void setSlug(final String value);
+    ODataRequest setSlug(final String value);
 
     /**
      * Adds <tt>X-HTTP-METHOD</tt> OData request header.
      *
      * @param value header value.
+     * @return current object
      * @see com.msopentech.odatajclient.engine.communication.header.ODataHeaders.HeaderName#xHttpMethod
      */
-    void setXHTTPMethod(final String value);
+    ODataRequest setXHTTPMethod(final String value);
 
     /**
      * Adds a custom OData request header.
      *
      * @param name header name.
      * @param value header value.
+     * @return current object
      */
-    void addCustomHeader(final String name, final String value);
+    ODataRequest addCustomHeader(final String name, final String value);
 
     /**
      * Gets byte array representation of the full request header.
