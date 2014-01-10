@@ -177,6 +177,8 @@ public class ODataConstants {
 
     public final static String JSON_NAVIGATION_LINK_SUFFIX = "@odata.navigationLinkUrl";
 
+    public final static String JSON_NAVIGATION_LINK_ODATA_4_SUFFIX = "@odata.navigationLink";
+
     public final static String JSON_BIND_LINK_SUFFIX = "@odata.bind";
 
     public final static String JSON_ASSOCIATION_LINK_SUFFIX = "@odata.associationLinkUrl";
