@@ -165,7 +165,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
         while (itor.hasNext()) {
             final Map.Entry<String, JsonNode> field = itor.next();
 
-            if (field.getKey().endsWith(ODataConstants.JSON_NAVIGATION_LINK_SUFFIX)) {
+            if (field.getKey().endsWith(ODataConstants.JSON_NAVIGATION_LINK_SUFFIX) || field.getKey().endsWith(ODataConstants.JSON_NAVIGATION_LINK_ODATA_4_SUFFIX)) {
                 final JSONLink link = new JSONLink();
                 link.setTitle(getTitle(field));
                 link.setRel(ODataConstants.NAVIGATION_LINK_REL + getTitle(field));
@@ -182,7 +182,9 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
 
                 toRemove.add(field.getKey());
                 toRemove.add(setInline(field.getKey(),
-                        ODataConstants.JSON_NAVIGATION_LINK_SUFFIX, tree, parser.getCodec(), link));
+                        field.getKey().endsWith(ODataConstants.JSON_NAVIGATION_LINK_SUFFIX) ?
+                        ODataConstants.JSON_NAVIGATION_LINK_SUFFIX :
+                        ODataConstants.JSON_NAVIGATION_LINK_ODATA_4_SUFFIX, tree, parser.getCodec(), link));
             } else if (field.getKey().endsWith(ODataConstants.JSON_ASSOCIATION_LINK_SUFFIX)) {
                 final JSONLink link = new JSONLink();
                 link.setTitle(getTitle(field));
