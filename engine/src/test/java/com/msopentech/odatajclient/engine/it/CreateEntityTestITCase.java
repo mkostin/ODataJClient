@@ -37,11 +37,11 @@ import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
-import com.msopentech.odatajclient.engine.communication.request.cud.AbstractCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
@@ -58,7 +58,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 
 public class CreateEntityTestITCase extends AbstractTest {
@@ -296,7 +296,7 @@ public class CreateEntityTestITCase extends AbstractTest {
             message.addProperty(ODataObjectFactory.newPrimitiveProperty("IsRead",
                     new ODataPrimitiveValue.Builder().setValue(false).setType(EdmSimpleType.Boolean).build()));
 
-            final AbstractURIBuilder builder =
+            final URIBuilder builder =
                     client.getURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Message");
             final ODataEntityCreateRequest req = client.getCUDRequestFactory().getEntityCreateRequest(builder.build(), message);
             req.setFormat(format);
@@ -347,7 +347,7 @@ public class CreateEntityTestITCase extends AbstractTest {
             message.addProperty(ODataObjectFactory.newPrimitiveProperty("IsRead",
                     new ODataPrimitiveValue.Builder().setValue(false).setType(EdmSimpleType.Boolean).build()));
 
-            final AbstractURIBuilder builder =
+            final URIBuilder builder =
                     client.getURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Message");
             final ODataEntityCreateRequest req = client.getCUDRequestFactory().getEntityCreateRequest(builder.build(), message);
             req.setFormat(format);
@@ -653,7 +653,7 @@ public class CreateEntityTestITCase extends AbstractTest {
             final String contentType,
             final String prefer) {
 
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(serviceRootURL);
+        final URIBuilder uriBuilder = client.getURIBuilder(serviceRootURL);
         uriBuilder.appendEntitySetSegment(entitySetName);
         final ODataEntityCreateRequest createReq =
                 client.getCUDRequestFactory().getEntityCreateRequest(uriBuilder.build(), original);
@@ -682,7 +682,7 @@ public class CreateEntityTestITCase extends AbstractTest {
             final int actualObjectId,
             final Collection<String> expands, final String entitySetName) {
 
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(serviceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(serviceRootURL).
                 appendEntityTypeSegment(entitySetName).appendKeySegment(actualObjectId);
 
         // search expanded

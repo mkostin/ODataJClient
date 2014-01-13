@@ -29,19 +29,19 @@ import com.msopentech.odatajclient.engine.client.http.NoContentException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.request.cud.AbstractCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
@@ -258,7 +258,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         final int id = 2;
         final ODataEntity original = getSampleCustomerProfile(id, "Sample customer for issue 135", false);
 
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer");
+        final URIBuilder uriBuilder = client.getURIBuilder(getServiceRoot()).appendEntitySetSegment("Customer");
         final ODataEntityCreateRequest createReq =
                 client.getCUDRequestFactory().getEntityCreateRequest(uriBuilder.build(), original);
         createReq.setFormat(ODataPubFormat.JSON_FULL_METADATA);
@@ -309,7 +309,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         // now, compare the created one with the actual one and go deeply into the associated customer info.....
         final ODataEntity actual = compareEntities(getServiceRoot(), format, created, id, null);
 
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
+        final URIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Orders");
 
         final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
@@ -350,7 +350,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         // now, compare the created one with the actual one and go deeply into the associated customer info.....
         final ODataEntity actual = compareEntities(getServiceRoot(), format, created, id, null);
 
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
+        final URIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Info");
 
         final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
@@ -457,7 +457,7 @@ public class EntityCreateTestITCase extends AbstractTest {
         message.addProperty(ODataObjectFactory.newPrimitiveProperty("IsRead",
                 new ODataPrimitiveValue.Builder().setValue(false).setType(EdmSimpleType.Boolean).build()));
 
-        final AbstractURIBuilder builder =
+        final URIBuilder builder =
                 client.getURIBuilder(getServiceRoot()).appendEntitySetSegment("Message");
         final ODataEntityCreateRequest req = client.getCUDRequestFactory().getEntityCreateRequest(builder.build(), message);
         req.setFormat(format);

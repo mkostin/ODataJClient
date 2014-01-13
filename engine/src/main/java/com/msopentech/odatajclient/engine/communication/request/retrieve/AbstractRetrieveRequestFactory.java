@@ -23,10 +23,7 @@ import com.msopentech.odatajclient.engine.client.ODataClient;
 import java.net.URI;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * OData request factory class.
- */
-public abstract class AbstractRetrieveRequestFactory {
+public abstract class AbstractRetrieveRequestFactory implements RetrieveRequestFactory {
 
     protected final ODataClient client;
 
@@ -34,120 +31,59 @@ public abstract class AbstractRetrieveRequestFactory {
         this.client = client;
     }
 
-    /**
-     * Gets a service document request instance.
-     *
-     * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
-     * data service.
-     * @return new ODataServiceDocumentRequest instance.
-     */
+    @Override
     public ODataServiceDocumentRequest getServiceDocumentRequest(final String serviceRoot) {
         return new ODataServiceDocumentRequest(client, StringUtils.isNotBlank(serviceRoot) && serviceRoot.endsWith("/")
                 ? client.getURIBuilder(serviceRoot).build()
                 : client.getURIBuilder(serviceRoot + "/").build());
     }
 
-    /**
-     * Gets a metadata request instance.
-     *
-     * @param serviceRoot absolute URL (schema, host and port included) representing the location of the root of the
-     * data service.
-     * @return new ODataMetadataRequest instance.
-     */
+    @Override
     public ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
         return new ODataMetadataRequest(client, client.getURIBuilder(serviceRoot).appendMetadataSegment().build());
     }
 
-    /**
-     * Gets a query request returning a set of one or more OData entities.
-     *
-     * @param query query to be performed.
-     * @return new ODataEntitySetRequest instance.
-     */
+    @Override
     public ODataEntitySetRequest getEntitySetRequest(final URI query) {
         return new ODataEntitySetRequest(client, query);
     }
 
-    /**
-     * Gets a query request returning a set of one or more OData entities.
-     * <p>
-     * Returned request gives the possibility to consume entities iterating on them without parsing and loading in
-     * memory the entire entity set.
-     *
-     * @param query query to be performed.
-     * @return new ODataEntitySetIteratorRequest instance.
-     */
+    @Override
     public ODataEntitySetIteratorRequest getEntitySetIteratorRequest(final URI query) {
         return new ODataEntitySetIteratorRequest(client, query);
     }
 
-    /**
-     * Gets a query request returning a single OData entity.
-     *
-     * @param query query to be performed.
-     * @return new ODataEntityRequest instance.
-     */
+    @Override
     public ODataEntityRequest getEntityRequest(final URI query) {
         return new ODataEntityRequest(client, query);
     }
 
-    /**
-     * Gets a query request returning a single OData entity property.
-     *
-     * @param query query to be performed.
-     * @return new ODataPropertyRequest instance.
-     */
+    @Override
     public ODataPropertyRequest getPropertyRequest(final URI query) {
         return new ODataPropertyRequest(client, query);
     }
 
-    /**
-     * Gets a query request returning a single OData entity property value.
-     *
-     * @param query query to be performed.
-     * @return new ODataValueRequest instance.
-     */
+    @Override
     public ODataValueRequest getValueRequest(final URI query) {
         return new ODataValueRequest(client, query);
     }
 
-    /**
-     * Gets a query request returning a single OData link.
-     *
-     * @param targetURI target URI.
-     * @param linkName link name.
-     * @return new ODataLinkRequest instance.
-     */
+    @Override
     public ODataLinkCollectionRequest getLinkCollectionRequest(final URI targetURI, final String linkName) {
         return new ODataLinkCollectionRequest(client, targetURI, linkName);
     }
 
-    /**
-     * Gets a query request returning a media stream.
-     *
-     * @param query query to be performed.
-     * @return new ODataMediaRequest instance.
-     */
+    @Override
     public ODataMediaRequest getMediaRequest(final URI query) {
         return new ODataMediaRequest(client, query);
     }
 
-    /**
-     * Implements a raw request returning a stream.
-     *
-     * @param uri query to be performed.
-     * @return new ODataRawRequest instance.
-     */
+    @Override
     public ODataRawRequest getRawRequest(final URI uri) {
         return new ODataRawRequest(client, uri);
     }
 
-    /**
-     * Implements a generic retrieve request without specifying any return type.
-     *
-     * @param uri query to be performed.
-     * @return new ODataGenericRerieveRequest instance.
-     */
+    @Override
     public ODataGenericRetrieveRequest getGenericRetrieveRequest(final URI uri) {
         return new ODataGenericRetrieveRequest(client, uri);
     }

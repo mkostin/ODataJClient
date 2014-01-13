@@ -58,7 +58,7 @@ import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONEntry;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.client.ODataClientFactory;
@@ -416,7 +416,7 @@ public abstract class AbstractTest {
             final ODataEntity original,
             final String entitySetName) {
 
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(serviceRootURL);
+        final URIBuilder uriBuilder = client.getURIBuilder(serviceRootURL);
         uriBuilder.appendEntitySetSegment(entitySetName);
 
         debugODataEntity(original, "About to create");
@@ -443,7 +443,7 @@ public abstract class AbstractTest {
             final int actualObjectId,
             final Collection<String> expands) {
 
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(serviceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(serviceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(actualObjectId);
 
         // search expanded

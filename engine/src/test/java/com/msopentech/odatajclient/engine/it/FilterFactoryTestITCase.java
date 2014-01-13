@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilterArgFactory;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import org.junit.Test;
 public class FilterFactoryTestITCase extends AbstractTest {
 
     private void match(final String entitySet, final ODataFilter filter, final int expected) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment(entitySet).filter(filter);
 
         final ODataEntitySet feed = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build()).

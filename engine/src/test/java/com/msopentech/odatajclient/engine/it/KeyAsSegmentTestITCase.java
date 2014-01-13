@@ -26,7 +26,7 @@ import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -40,7 +40,7 @@ public class KeyAsSegmentTestITCase extends AbstractTest {
     }
 
     private void read(final ODataPubFormat format) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testKeyAsSegmentServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testKeyAsSegmentServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10);
 
         final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());

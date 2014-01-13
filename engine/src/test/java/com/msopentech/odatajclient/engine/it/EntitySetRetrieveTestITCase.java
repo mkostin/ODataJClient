@@ -29,14 +29,14 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEn
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 
 public class EntitySetRetrieveTestITCase extends AbstractTest {
     // retrieves an entity set
 
     private void retreiveEntityTest(ODataPubFormat reqFormat, String acceptFormat) {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product");
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(reqFormat);
@@ -61,7 +61,7 @@ public class EntitySetRetrieveTestITCase extends AbstractTest {
     // get entity set with fullmetadata
 
     private void retreiveFullMetadataEntityTest(ODataPubFormat reqFormat, String acceptFormat) {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Product");
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setAccept(acceptFormat);
@@ -86,7 +86,7 @@ public class EntitySetRetrieveTestITCase extends AbstractTest {
     // get entity set with no metadata
 
     private void retreiveNoMetadataEntityTest(final ODataPubFormat reqFormat, final String acceptFormat) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Product");
         final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(reqFormat);
@@ -114,7 +114,7 @@ public class EntitySetRetrieveTestITCase extends AbstractTest {
     // get entity set with minimal metadata
 
     private void retreiveMinimalMetadataEntityTest(final ODataPubFormat reqFormat, final String acceptFormat) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Product");
         final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(reqFormat);
@@ -141,7 +141,7 @@ public class EntitySetRetrieveTestITCase extends AbstractTest {
 
     private void retreiveEntityTestWithExpand(final ODataPubFormat reqFormat, final String acceptFormat,
             final String expandFormat) {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Customer").expand(expandFormat);
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(reqFormat);
@@ -165,7 +165,7 @@ public class EntitySetRetrieveTestITCase extends AbstractTest {
     // retrieve entity set with select
 
     private void retreiveEntityTestWithSelect(ODataPubFormat reqFormat, String acceptFormat, String selectFormat) {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Customer").select(selectFormat);
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(reqFormat);
@@ -193,7 +193,7 @@ public class EntitySetRetrieveTestITCase extends AbstractTest {
 
     private void retreiveEntityTestWithSelectAndExpand(ODataPubFormat reqFormat, String acceptFormat,
             String selectFormat, String expandFormat) {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Customer").select(selectFormat).expand(expandFormat);
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(reqFormat);
@@ -216,7 +216,7 @@ public class EntitySetRetrieveTestITCase extends AbstractTest {
     //general query
 
     private void generalQuery(final ODataPubFormat format, final String acceptHeader, String query) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment(query);
         final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
@@ -237,7 +237,7 @@ public class EntitySetRetrieveTestITCase extends AbstractTest {
     // inline count and filter test
 
     private void inlineCountTest(final ODataPubFormat format, final String acceptHeader, final String filterValue) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").inlineCount().filter(filterValue);
         final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);

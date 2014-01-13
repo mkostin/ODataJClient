@@ -29,14 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import org.apache.commons.io.IOUtils;
 
-/**
- * OData writer.
- * <br/>
- * Use this class to serialize an OData request body.
- * <br/>
- * This class provides method helpers to serialize a set of entities and a single entity as well.
- */
-public abstract class AbstractODataWriter {
+public abstract class AbstractODataWriter implements ODataWriter {
 
     protected final ODataClient client;
 
@@ -44,25 +37,12 @@ public abstract class AbstractODataWriter {
         this.client = client;
     }
 
-    /**
-     * Writes a collection of OData entities.
-     *
-     * @param entities entities to be serialized.
-     * @param format serialization format.
-     * @return stream of serialized objects.
-     */
+    @Override
     public InputStream writeEntities(final Collection<ODataEntity> entities, final ODataPubFormat format) {
         return writeEntities(entities, format, true);
     }
 
-    /**
-     * Writes a collection of OData entities.
-     *
-     * @param entities entities to be serialized.
-     * @param format serialization format.
-     * @param outputType whether to explicitly output type information.
-     * @return stream of serialized objects.
-     */
+    @Override
     public InputStream writeEntities(
             final Collection<ODataEntity> entities, final ODataPubFormat format, final boolean outputType) {
 
@@ -79,38 +59,17 @@ public abstract class AbstractODataWriter {
         }
     }
 
-    /**
-     * Serializes a single OData entity.
-     *
-     * @param entity entity to be serialized.
-     * @param format serialization format.
-     * @return stream of serialized object.
-     */
+    @Override
     public InputStream writeEntity(final ODataEntity entity, final ODataPubFormat format) {
         return writeEntity(entity, format, true);
     }
 
-    /**
-     * Serializes a single OData entity.
-     *
-     * @param entity entity to be serialized.
-     * @param format serialization format.
-     * @param outputType whether to explicitly output type information.
-     * @return stream of serialized object.
-     */
-    public InputStream writeEntity(
-            final ODataEntity entity, final ODataPubFormat format, final boolean outputType) {
-
+    @Override
+    public InputStream writeEntity(final ODataEntity entity, final ODataPubFormat format, final boolean outputType) {
         return writeEntities(Collections.<ODataEntity>singleton(entity), format, outputType);
     }
 
-    /**
-     * Writes a single OData entity property.
-     *
-     * @param property entity property to be serialized.
-     * @param format serialization format.
-     * @return stream of serialized object.
-     */
+    @Override
     public InputStream writeProperty(final ODataProperty property, final ODataFormat format) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
@@ -122,13 +81,7 @@ public abstract class AbstractODataWriter {
         }
     }
 
-    /**
-     * Writes an OData link.
-     *
-     * @param link link to be serialized.
-     * @param format serialization format.
-     * @return stream of serialized object.
-     */
+    @Override
     public InputStream writeLink(final ODataLink link, final ODataFormat format) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {

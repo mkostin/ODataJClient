@@ -28,10 +28,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import java.net.URI;
 
-/**
- * OData request factory class.
- */
-public abstract class AbstractCUDRequestFactory {
+public abstract class AbstractCUDRequestFactory implements CUDRequestFactory {
 
     protected final ODataClient client;
 
@@ -39,27 +36,12 @@ public abstract class AbstractCUDRequestFactory {
         this.client = client;
     }
 
-    /**
-     * Gets a create request object instance.
-     * <br/>
-     * Use this kind of request to create a new entity.
-     *
-     * @param targetURI entity set URI.
-     * @param entity entity to be created.
-     * @return new ODataEntityCreateRequest instance.
-     */
+    @Override
     public ODataEntityCreateRequest getEntityCreateRequest(final URI targetURI, final ODataEntity entity) {
         return new ODataEntityCreateRequest(client, targetURI, entity);
     }
 
-    /**
-     * Gets an update request object instance.
-     *
-     * @param targetURI edit link of the object to be updated.
-     * @param type type of update to be performed.
-     * @param changes changes to be applied.
-     * @return new ODataEntityUpdateRequest instance.
-     */
+    @Override
     public ODataEntityUpdateRequest getEntityUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataEntity changes) {
 
@@ -75,13 +57,7 @@ public abstract class AbstractCUDRequestFactory {
         return req;
     }
 
-    /**
-     * Gets an update request object instance; uses entity's edit link as endpoint.
-     *
-     * @param type type of update to be performed.
-     * @param entity changes to be applied.
-     * @return new ODataEntityUpdateRequest instance.
-     */
+    @Override
     public ODataEntityUpdateRequest getEntityUpdateRequest(final UpdateType type, final ODataEntity entity) {
         if (entity.getEditLink() == null) {
             throw new IllegalArgumentException("No edit link found");
@@ -99,16 +75,7 @@ public abstract class AbstractCUDRequestFactory {
         return req;
     }
 
-    /**
-     * Gets a create request object instance.
-     * <br/>
-     * Use this kind of request to create a new value (e.g. http://Northwind.svc/Customer(1)/Picture/$value).
-     *
-     * @param targetURI entity set or entity or entity property URI.
-     * @param type type of update to be performed.
-     * @param value value to be created.
-     * @return new ODataValueUpdateRequest instance.
-     */
+    @Override
     public ODataValueUpdateRequest getValueUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataPrimitiveValue value) {
 
@@ -124,15 +91,7 @@ public abstract class AbstractCUDRequestFactory {
         return req;
     }
 
-    /**
-     * Gets an update request object instance.
-     * <br/>
-     * Use this kind of request to update a primitive property value.
-     *
-     * @param targetURI entity set or entity or entity property URI.
-     * @param property value to be update.
-     * @return new ODataPropertyUpdateRequest instance.
-     */
+    @Override
     public ODataPropertyUpdateRequest getPropertyPrimitiveValueUpdateRequest(
             final URI targetURI, final ODataProperty property) {
 
@@ -152,16 +111,7 @@ public abstract class AbstractCUDRequestFactory {
         return req;
     }
 
-    /**
-     * Gets an update request object instance.
-     * <br/>
-     * Use this kind of request to update a complex property value.
-     *
-     * @param targetURI entity set or entity or entity property URI.
-     * @param type type of update to be performed.
-     * @param property value to be update.
-     * @return new ODataPropertyUpdateRequest instance.
-     */
+    @Override
     public ODataPropertyUpdateRequest getPropertyComplexValueUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataProperty property) {
 
@@ -181,15 +131,7 @@ public abstract class AbstractCUDRequestFactory {
         return req;
     }
 
-    /**
-     * Gets an update request object instance.
-     * <br/>
-     * Use this kind of request to update a collection property value.
-     *
-     * @param targetURI entity set or entity or entity property URI.
-     * @param property value to be update.
-     * @return new ODataPropertyUpdateRequest instance.
-     */
+    @Override
     public ODataPropertyUpdateRequest getPropertyCollectionValueUpdateRequest(
             final URI targetURI, final ODataProperty property) {
 
@@ -209,31 +151,12 @@ public abstract class AbstractCUDRequestFactory {
         return req;
     }
 
-    /**
-     * Gets an add link request object instance.
-     * <br/>
-     * Use this kind of request to create a navigation link between existing entities.
-     *
-     * @param targetURI navigation property's link collection.
-     * @param link navigation link to be added.
-     * @return new ODataLinkCreateRequest instance.
-     */
+    @Override
     public ODataLinkCreateRequest getLinkCreateRequest(final URI targetURI, final ODataLink link) {
         return new ODataLinkCreateRequest(client, targetURI, link);
     }
 
-    /**
-     * Gets a link update request object instance.
-     * <br/>
-     * Use this kind of request to update a navigation link between existing entities.
-     * <br/>
-     * In case of the old navigation link doesn't exist the new one will be added as well.
-     *
-     * @param targetURI navigation property's link collection.
-     * @param type type of update to be performed.
-     * @param link URL that identifies the entity to be linked.
-     * @return new ODataLinkUpdateRequest instance.
-     */
+    @Override
     public ODataLinkUpdateRequest getLinkUpdateRequest(
             final URI targetURI, final UpdateType type, final ODataLink link) {
 
@@ -249,14 +172,7 @@ public abstract class AbstractCUDRequestFactory {
         return req;
     }
 
-    /**
-     * Gets a delete request object instance.
-     * <br/>
-     * Use this kind of request to delete an entity and media entity as well.
-     *
-     * @param targetURI edit link of the object to be removed.
-     * @return new ODataDeleteRequest instance.
-     */
+    @Override
     public ODataDeleteRequest getDeleteRequest(final URI targetURI) {
         final ODataDeleteRequest req;
 

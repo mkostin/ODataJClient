@@ -45,7 +45,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
@@ -104,7 +104,7 @@ public class BatchTestITCase extends AbstractTest {
         final BatchStreamManager payload = request.execute();
         final ODataChangeset changeset = payload.addChangeset();
 
-        AbstractURIBuilder targetURI;
+        URIBuilder targetURI;
         ODataEntityCreateRequest create;
 
         targetURI = client.getURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Customer");
@@ -158,7 +158,7 @@ public class BatchTestITCase extends AbstractTest {
         final ODataChangeset changeset = streamManager.addChangeset();
         ODataEntity customer = getSampleCustomerProfile(20, "sample customer", false);
 
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testAuthServiceRootURL).appendEntitySetSegment("Customer");
+        URIBuilder uriBuilder = client.getURIBuilder(testAuthServiceRootURL).appendEntitySetSegment("Customer");
 
         // add create request
         final ODataEntityCreateRequest createReq =
@@ -237,7 +237,7 @@ public class BatchTestITCase extends AbstractTest {
         ODataRetrieve retrieve = streamManager.addRetrieve();
 
         // prepare URI
-        AbstractURIBuilder targetURI = client.getURIBuilder(testDefaultServiceRootURL);
+        URIBuilder targetURI = client.getURIBuilder(testDefaultServiceRootURL);
         targetURI.appendEntityTypeSegment("Customer").appendKeySegment(-10).
                 expand("Logins").select("CustomerId,Logins/Username");
 

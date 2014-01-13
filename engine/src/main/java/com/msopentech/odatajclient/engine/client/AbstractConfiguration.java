@@ -32,10 +32,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Configuration wrapper.
- */
-public abstract class AbstractConfiguration {
+public abstract class AbstractConfiguration implements Configuration {
 
     private static final String DEFAULT_PUB_FORMAT = "pubFormat";
 
@@ -79,34 +76,18 @@ public abstract class AbstractConfiguration {
         return CONF.put(key, value);
     }
 
-    /**
-     * Gets the configured OData format for AtomPub exchanges.
-     * If this configuration parameter doesn't exist the JSON_FULL_METADATA format will be used as default.
-     *
-     * @return configured OData format for AtomPub if specified; JSON_FULL_METADATA format otherwise.
-     * @see ODataPubFormat#JSON_FULL_METADATA
-     */
+    @Override
     public ODataPubFormat getDefaultPubFormat() {
         return ODataPubFormat.valueOf(
                 getProperty(DEFAULT_PUB_FORMAT, ODataPubFormat.JSON_FULL_METADATA.name()).toString());
     }
 
-    /**
-     * Sets the default OData format for AtomPub exchanges.
-     *
-     * @param format default format.
-     */
+    @Override
     public void setDefaultPubFormat(final ODataPubFormat format) {
         setProperty(DEFAULT_PUB_FORMAT, format.name());
     }
 
-    /**
-     * Gets the configured OData format.
-     * This value depends on what is returned from <tt>getDefaultPubFormat()</tt>.
-     *
-     * @return configured OData format
-     * @see #getDefaultPubFormat()
-     */
+    @Override
     public ODataFormat getDefaultFormat() {
         ODataFormat format;
 
@@ -131,151 +112,86 @@ public abstract class AbstractConfiguration {
         return format;
     }
 
-    /**
-     * Gets the configured OData value format.
-     * If this configuration parameter doesn't exist the TEXT format will be used as default.
-     *
-     * @return configured OData value format if specified; TEXT format otherwise.
-     * @see ODataValueFormat#TEXT
-     */
+    @Override
     public ODataValueFormat getDefaultValueFormat() {
         return ODataValueFormat.valueOf(
                 getProperty(DEFAULT_VALUE_FORMAT, ODataValueFormat.TEXT.name()).toString());
     }
 
-    /**
-     * Sets the default OData value format.
-     *
-     * @param format default format.
-     */
+    @Override
     public void setDefaultValueFormat(final ODataValueFormat format) {
         setProperty(DEFAULT_VALUE_FORMAT, format.name());
     }
 
-    /**
-     * Gets the configured OData media format.
-     * If this configuration parameter doesn't exist the APPLICATION_OCTET_STREAM format will be used as default.
-     *
-     * @return configured OData media format if specified; APPLICATION_OCTET_STREAM format otherwise.
-     * @see ODataMediaFormat#WILDCARD
-     */
+    @Override
     public ODataMediaFormat getDefaultMediaFormat() {
         return ODataMediaFormat.valueOf(
                 getProperty(DEFAULT_VALUE_FORMAT, ODataMediaFormat.APPLICATION_OCTET_STREAM.name()).toString());
     }
 
-    /**
-     * Sets the default OData media format.
-     *
-     * @param format default format.
-     */
+    @Override
     public void setDefaultMediaFormat(final ODataMediaFormat format) {
         setProperty(DEFAULT_MEDIA_FORMAT, format.name());
     }
 
-    /**
-     * Gets the HttpClient factory to be used for executing requests.
-     *
-     * @return provided implementation (if configured via <tt>setHttpClientFactory</tt> or default.
-     * @see DefaultHttpClientFactory
-     */
+    @Override
     public HttpClientFactory getHttpClientFactory() {
         return (HttpClientFactory) getProperty(HTTP_CLIENT_FACTORY, new DefaultHttpClientFactory());
     }
 
-    /**
-     * Sets the HttpClient factory to be used for executing requests.
-     *
-     * @param factory implementation of <tt>HttpClientFactory</tt>.
-     * @see HttpClientFactory
-     */
+    @Override
     public void setHttpClientFactory(final HttpClientFactory factory) {
         setProperty(HTTP_CLIENT_FACTORY, factory);
     }
 
-    /**
-     * Gets the HttpUriRequest factory for generating requests to be executed.
-     *
-     * @return provided implementation (if configured via <tt>setHttpUriRequestFactory</tt> or default.
-     * @see DefaultHttpUriRequestFactory
-     */
+    @Override
     public HttpUriRequestFactory getHttpUriRequestFactory() {
         return (HttpUriRequestFactory) getProperty(HTTP_URI_REQUEST_FACTORY, new DefaultHttpUriRequestFactory());
     }
 
-    /**
-     * Sets the HttpUriRequest factory generating requests to be executed.
-     *
-     * @param factory implementation of <tt>HttpUriRequestFactory</tt>.
-     * @see HttpUriRequestFactory
-     */
+    @Override
     public void setHttpUriRequestFactory(final HttpUriRequestFactory factory) {
         setProperty(HTTP_URI_REQUEST_FACTORY, factory);
     }
 
-    /**
-     * Gets whether <tt>PUT</tt>, <tt>MERGE</tt>, <tt>PATCH</tt>, <tt>DELETE</tt> HTTP methods need to be translated to
-     * <tt>POST</tt> with additional <tt>X-HTTTP-Method</tt> header.
-     *
-     * @return whether <tt>X-HTTTP-Method</tt> header is to be used
-     */
+    @Override
     public boolean isUseXHTTPMethod() {
         return (Boolean) getProperty(USE_XHTTP_METHOD, false);
     }
 
-    /**
-     * Sets whether <tt>PUT</tt>, <tt>MERGE</tt>, <tt>PATCH</tt>, <tt>DELETE</tt> HTTP methods need to be translated to
-     * <tt>POST</tt> with additional <tt>X-HTTTP-Method</tt> header.
-     *
-     * @param value 'TRUE' to use tunneling.
-     */
+    @Override
     public void setUseXHTTPMethod(final boolean value) {
         setProperty(USE_XHTTP_METHOD, value);
     }
 
+    @Override
     public boolean isKeyAsSegment() {
         return (Boolean) getProperty(KEY_AS_SEGMENT, false);
     }
 
+    @Override
     public void setKeyAsSegment(final boolean value) {
         setProperty(KEY_AS_SEGMENT, value);
     }
 
-    /**
-     * Checks whether Gzip compression (e.g. support for <tt>Accept-Encoding: gzip</tt> and
-     * <tt>Content-Encoding: gzip</tt> HTTP headers) is enabled.
-     *
-     * @return whether HTTP Gzip compression is enabled
-     */
+    @Override
     public boolean isGzipCompression() {
         return (Boolean) getProperty(GZIP_COMPRESSION, false);
     }
 
-    /**
-     * Sets Gzip compression (e.g. support for <tt>Accept-Encoding: gzip</tt> and
-     * <tt>Content-Encoding: gzip</tt> HTTP headers) enabled or disabled.
-     *
-     * @param value whether to use Gzip compression.
-     */
+    @Override
     public void setGzipCompression(final boolean value) {
         setProperty(GZIP_COMPRESSION, value);
     }
 
-    /**
-     * Retrieves request executor service.
-     *
-     * @return request executor service.
-     */
+    @Override
     public ExecutorService getExecutor() {
         return executor;
     }
 
-    /**
-     * Sets request executor service.
-     *
-     * @param executorService new executor services.
-     */
+    @Override
     public void setExecutor(final ExecutorService executorService) {
         executor = executorService;
     }
+
 }

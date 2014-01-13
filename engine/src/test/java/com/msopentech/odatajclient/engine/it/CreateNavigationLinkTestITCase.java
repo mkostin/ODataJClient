@@ -36,12 +36,12 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
-import com.msopentech.odatajclient.engine.communication.request.cud.AbstractCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
@@ -58,7 +58,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 
 public class CreateNavigationLinkTestITCase extends AbstractTest {
@@ -156,7 +156,7 @@ public class CreateNavigationLinkTestITCase extends AbstractTest {
 
         final ODataEntity actual = validateEntities(testDefaultServiceRootURL, format, created, id, null, "Customer");
 
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Info");
 
         final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
@@ -179,7 +179,7 @@ public class CreateNavigationLinkTestITCase extends AbstractTest {
     // create a navigation link
     public ODataEntity createNav(final String url, final ODataPubFormat format, final ODataEntity original,
             final String entitySetName, final String contentType, final String prefer) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(url);
+        final URIBuilder uriBuilder = client.getURIBuilder(url);
         uriBuilder.appendEntitySetSegment(entitySetName);
         final ODataEntityCreateRequest createReq =
                 client.getCUDRequestFactory().getEntityCreateRequest(uriBuilder.build(), original);
@@ -230,7 +230,7 @@ public class CreateNavigationLinkTestITCase extends AbstractTest {
             final ODataEntity actualEntity =
                     validateEntities(testDefaultServiceRootURL, format, createdEntity, id, null, "Customer");
 
-            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
+            final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
             uriBuilder.appendEntityTypeSegment("Customer").appendKeySegment(id).appendEntityTypeSegment("Orders");
 
             final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
@@ -382,7 +382,7 @@ public class CreateNavigationLinkTestITCase extends AbstractTest {
             final int actualObjectId,
             final Collection<String> expands, final String entitySetName) {
 
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(serviceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(serviceRootURL).
                 appendEntityTypeSegment(entitySetName).appendKeySegment(actualObjectId);
 
         if (expands != null) {

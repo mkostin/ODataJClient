@@ -32,7 +32,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +60,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void filterOrderby() {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Car").filter("VIN lt 16");
 
         // 1. check that filtered entity set looks as expected
@@ -99,7 +99,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void format() {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).format("json");
 
         final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
@@ -133,7 +133,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void skiptoken() {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer").skipToken("-10");
 
         final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
@@ -151,7 +151,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void inlinecount() {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Car").inlineCount();
 
         final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
@@ -166,7 +166,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void select() {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).select("CustomerId,Orders").expand("Orders");
 
         final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
@@ -178,7 +178,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
 
     @Test
     public void issue131() {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-7).select("Name");
 
         ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());

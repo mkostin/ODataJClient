@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public abstract class AbstractODataBinder {
+public abstract class AbstractODataBinder implements ODataBinder {
 
     /**
      * Logger.
@@ -53,7 +53,7 @@ public abstract class AbstractODataBinder {
         this.client = client;
     }
 
-    private Element newEntryContent() {
+    protected Element newEntryContent() {
         Element properties = null;
         try {
             final DocumentBuilder builder = ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder();
@@ -70,14 +70,7 @@ public abstract class AbstractODataBinder {
         return properties;
     }
 
-    /**
-     * Gets a <tt>FeedResource</tt> from the given OData entity set.
-     *
-     * @param <T> feed resource type.
-     * @param feed OData entity set.
-     * @param reference reference class.
-     * @return <tt>FeedResource</tt> object.
-     */
+    @Override
     public <T extends FeedResource> T getFeed(final ODataEntitySet feed, final Class<T> reference) {
         final T feedResource = ResourceFactory.newFeed(reference);
 
@@ -98,27 +91,12 @@ public abstract class AbstractODataBinder {
         return feedResource;
     }
 
-    /**
-     * Gets an <tt>EntryResource</tt> from the given OData entity.
-     *
-     * @param <T> entry resource type.
-     * @param entity OData entity.
-     * @param reference reference class.
-     * @return <tt>EntryResource</tt> object.
-     */
+    @Override
     public <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference) {
         return getEntry(entity, reference, true);
     }
 
-    /**
-     * Gets an <tt>EntryResource</tt> from the given OData entity.
-     *
-     * @param <T> entry resource type.
-     * @param entity OData entity.
-     * @param reference reference class.
-     * @param setType whether to explicitly output type information.
-     * @return <tt>EntryResource</tt> object.
-     */
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference,
             final boolean setType) {
@@ -192,12 +170,7 @@ public abstract class AbstractODataBinder {
         return entry;
     }
 
-    /**
-     * Gets the given OData property as DOM element.
-     *
-     * @param prop OData property.
-     * @return <tt>Element</tt> object.
-     */
+    @Override
     public Element toDOMElement(final ODataProperty prop) {
         try {
             return toDOMElement(prop, ODataConstants.DOC_BUILDER_FACTORY.newDocumentBuilder().newDocument(), true);
@@ -207,18 +180,14 @@ public abstract class AbstractODataBinder {
         }
     }
 
+    @Override
     public ODataLinkCollection getLinkCollection(final LinkCollectionResource linkCollection) {
         final ODataLinkCollection collection = new ODataLinkCollection(linkCollection.getNext());
         collection.setLinks(linkCollection.getLinks());
         return collection;
     }
 
-    /**
-     * Gets <tt>ODataServiceDocument</tt> from the given service document resource.
-     *
-     * @param resource service document resource.
-     * @return <tt>ODataServiceDocument</tt> object.
-     */
+    @Override
     public ODataServiceDocument getODataServiceDocument(final ServiceDocumentResource resource) {
         final ODataServiceDocument serviceDocument = new ODataServiceDocument();
 
@@ -230,23 +199,12 @@ public abstract class AbstractODataBinder {
         return serviceDocument;
     }
 
-    /**
-     * Gets <tt>ODataEntitySet</tt> from the given feed resource.
-     *
-     * @param resource feed resource.
-     * @return <tt>ODataEntitySet</tt> object.
-     */
+    @Override
     public ODataEntitySet getODataEntitySet(final FeedResource resource) {
         return getODataEntitySet(resource, null);
     }
 
-    /**
-     * Gets <tt>ODataEntitySet</tt> from the given feed resource.
-     *
-     * @param resource feed resource.
-     * @param defaultBaseURI default base URI.
-     * @return <tt>ODataEntitySet</tt> object.
-     */
+    @Override
     public ODataEntitySet getODataEntitySet(final FeedResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
@@ -274,23 +232,12 @@ public abstract class AbstractODataBinder {
         return entitySet;
     }
 
-    /**
-     * Gets <tt>ODataEntity</tt> from the given entry resource.
-     *
-     * @param resource entry resource.
-     * @return <tt>ODataEntity</tt> object.
-     */
+    @Override
     public ODataEntity getODataEntity(final EntryResource resource) {
         return getODataEntity(resource, null);
     }
 
-    /**
-     * Gets <tt>ODataEntity</tt> from the given entry resource.
-     *
-     * @param resource entry resource.
-     * @param defaultBaseURI default base URI.
-     * @return <tt>ODataEntity</tt> object.
-     */
+    @Override
     public ODataEntity getODataEntity(final EntryResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
@@ -368,14 +315,7 @@ public abstract class AbstractODataBinder {
         return entity;
     }
 
-    /**
-     * Gets a <tt>LinkResource</tt> from the given OData link.
-     *
-     * @param <T> link resource type.
-     * @param link OData link.
-     * @param reference reference class.
-     * @return <tt>LinkResource</tt> object.
-     */
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends LinkResource> T getLinkResource(final ODataLink link, final Class<T> reference) {
         final T linkResource = ResourceFactory.newLink(reference);
@@ -401,12 +341,7 @@ public abstract class AbstractODataBinder {
         return linkResource;
     }
 
-    /**
-     * Gets an <tt>ODataProperty</tt> from the given DOM element.
-     *
-     * @param property content.
-     * @return <tt>ODataProperty</tt> object.
-     */
+    @Override
     public ODataProperty getProperty(final Element property) {
         final ODataProperty res;
 
@@ -449,7 +384,7 @@ public abstract class AbstractODataBinder {
         return res;
     }
 
-    private PropertyType guessPropertyType(final Element property) {
+    protected PropertyType guessPropertyType(final Element property) {
         PropertyType res = null;
 
         if (property.hasChildNodes()) {
@@ -477,7 +412,7 @@ public abstract class AbstractODataBinder {
         return res;
     }
 
-    private Element toDOMElement(final ODataProperty prop, final Document doc, final boolean setType) {
+    protected Element toDOMElement(final ODataProperty prop, final Document doc, final boolean setType) {
         final Element element;
 
         if (prop.hasNullValue()) {
@@ -502,19 +437,19 @@ public abstract class AbstractODataBinder {
         return element;
     }
 
-    private Element toNullPropertyElement(final ODataProperty prop, final Document doc) {
+    protected Element toNullPropertyElement(final ODataProperty prop, final Document doc) {
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + prop.getName());
         element.setAttribute(ODataConstants.ATTR_NULL, Boolean.toString(true));
         return element;
     }
 
-    private Element toPrimitivePropertyElement(
+    protected Element toPrimitivePropertyElement(
             final ODataProperty prop, final Document doc, final boolean setType) {
 
         return toPrimitivePropertyElement(prop.getName(), prop.getPrimitiveValue(), doc, setType);
     }
 
-    private Element toPrimitivePropertyElement(
+    protected Element toPrimitivePropertyElement(
             final String name, final ODataPrimitiveValue value, final Document doc, final boolean setType) {
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
@@ -531,7 +466,7 @@ public abstract class AbstractODataBinder {
         return element;
     }
 
-    private Element toCollectionPropertyElement(
+    protected Element toCollectionPropertyElement(
             final ODataProperty prop, final Document doc, final boolean setType) {
 
         if (!prop.hasCollectionValue()) {
@@ -559,13 +494,13 @@ public abstract class AbstractODataBinder {
         return element;
     }
 
-    private Element toComplexPropertyElement(
+    protected Element toComplexPropertyElement(
             final ODataProperty prop, final Document doc, final boolean setType) {
 
         return toComplexPropertyElement(prop.getName(), prop.getComplexValue(), doc, setType);
     }
 
-    private Element toComplexPropertyElement(
+    protected Element toComplexPropertyElement(
             final String name, final ODataComplexValue value, final Document doc, final boolean setType) {
 
         final Element element = doc.createElement(ODataConstants.PREFIX_DATASERVICES + name);
@@ -579,7 +514,7 @@ public abstract class AbstractODataBinder {
         return element;
     }
 
-    private ODataPrimitiveValue fromPrimitiveValueElement(final Element prop, final EdmType edmType) {
+    protected ODataPrimitiveValue fromPrimitiveValueElement(final Element prop, final EdmType edmType) {
         final ODataPrimitiveValue value;
         if (edmType != null && edmType.getSimpleType().isGeospatial()) {
             final Element geoProp = ODataConstants.PREFIX_GML.equals(prop.getPrefix())
@@ -593,12 +528,12 @@ public abstract class AbstractODataBinder {
         return value;
     }
 
-    private ODataProperty fromPrimitivePropertyElement(final Element prop, final EdmType edmType) {
+    protected ODataProperty fromPrimitivePropertyElement(final Element prop, final EdmType edmType) {
         return ODataObjectFactory.newPrimitiveProperty(
                 XMLUtils.getSimpleName(prop), fromPrimitiveValueElement(prop, edmType));
     }
 
-    private ODataComplexValue fromComplexValueElement(final Element prop, final EdmType edmType) {
+    protected ODataComplexValue fromComplexValueElement(final Element prop, final EdmType edmType) {
         final ODataComplexValue value = new ODataComplexValue(edmType == null ? null : edmType.getTypeExpression());
 
         for (Node child : XMLUtils.getChildNodes(prop, Node.ELEMENT_NODE)) {
@@ -608,12 +543,12 @@ public abstract class AbstractODataBinder {
         return value;
     }
 
-    private ODataProperty fromComplexPropertyElement(final Element prop, final EdmType edmType) {
+    protected ODataProperty fromComplexPropertyElement(final Element prop, final EdmType edmType) {
         return ODataObjectFactory.newComplexProperty(XMLUtils.getSimpleName(prop),
                 fromComplexValueElement(prop, edmType));
     }
 
-    private ODataProperty fromCollectionPropertyElement(final Element prop, final EdmType edmType) {
+    protected ODataProperty fromCollectionPropertyElement(final Element prop, final EdmType edmType) {
         final ODataCollectionValue value =
                 new ODataCollectionValue(edmType == null ? null : edmType.getTypeExpression());
 

@@ -19,21 +19,16 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
-
 /**
  * OData batch request factory class.
  */
-public abstract class AbstractBatchRequestFactory implements BatchRequestFactory {
+public interface BatchRequestFactory {
 
-    protected final ODataClient client;
-
-    protected AbstractBatchRequestFactory(final ODataClient client) {
-        this.client = client;
-    }
-
-    @Override
-    public ODataBatchRequest getBatchRequest(final String serviceRoot) {
-        return new ODataBatchRequest(client, client.getURIBuilder(serviceRoot).appendBatchSegment().build());
-    }
+    /**
+     * Gets a batch request object instance.
+     *
+     * @param serviceRoot service root.
+     * @return new ODataBatchRequest instance.
+     */
+    ODataBatchRequest getBatchRequest(String serviceRoot);
 }

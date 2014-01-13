@@ -23,13 +23,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 
 public class FilterTestITCase extends AbstractTest {
     // filter test
 
     private void filterQueryTest(final String entity, final String filter, final int expected) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment(entity).filter(filter);
         final ODataEntitySet entitySet = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build()).
                 execute().getBody();

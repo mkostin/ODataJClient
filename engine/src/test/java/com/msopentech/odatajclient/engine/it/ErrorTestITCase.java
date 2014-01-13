@@ -34,7 +34,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResp
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
@@ -84,7 +84,7 @@ public class ErrorTestITCase extends AbstractTest {
     }
 
     private void stacktraceError(final ODataPubFormat format) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer");
 
         final ErrorGeneratingRequest errorReq = new ErrorGeneratingRequest(HttpMethod.POST, uriBuilder.build());
@@ -114,7 +114,7 @@ public class ErrorTestITCase extends AbstractTest {
     }
 
     private void notfoundError(final ODataPubFormat format) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntitySetSegment("Customer(154)");
 
         final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
@@ -151,7 +151,7 @@ public class ErrorTestITCase extends AbstractTest {
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
         final FunctionImport funcImp = container.getFunctionImport("InStreamErrorGetCustomer");
 
-        final AbstractURIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
         final ODataInvokeRequest<ODataEntitySet> req =

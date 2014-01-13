@@ -24,10 +24,7 @@ import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import java.io.InputStream;
 import java.net.URI;
 
-/**
- * OData request factory class.
- */
-public abstract class AbstractStreamedRequestFactory {
+public abstract class AbstractStreamedRequestFactory implements StreamedRequestFactory {
 
     protected final ODataClient client;
 
@@ -35,30 +32,14 @@ public abstract class AbstractStreamedRequestFactory {
         this.client = client;
     }
 
-    /**
-     * Gets a media entity create request object instance.
-     * <p>
-     * Use this kind of request to create a new media entity.
-     *
-     * @param targetURI entity set URI.
-     * @param media entity blob to be created.
-     * @return new ODataMediaEntityCreateRequest instance.
-     */
+    @Override
     public ODataMediaEntityCreateRequest getMediaEntityCreateRequest(
             final URI targetURI, final InputStream media) {
 
         return new ODataMediaEntityCreateRequest(client, targetURI, media);
     }
 
-    /**
-     * Gets a stream update request object instance.
-     * <p>
-     * Use this kind of request to update a named stream property.
-     *
-     * @param targetURI target URI.
-     * @param stream stream to be updated.
-     * @return new ODataStreamUpdateRequest instance.
-     */
+    @Override
     public ODataStreamUpdateRequest getStreamUpdateRequest(final URI targetURI, final InputStream stream) {
         final ODataStreamUpdateRequest req;
 
@@ -72,15 +53,7 @@ public abstract class AbstractStreamedRequestFactory {
         return req;
     }
 
-    /**
-     * Gets a media entity update request object instance.
-     * <p>
-     * Use this kind of request to update a media entity.
-     *
-     * @param editURI media entity edit link URI.
-     * @param media entity blob to be updated.
-     * @return new ODataMediaEntityUpdateRequest instance.
-     */
+    @Override
     public ODataMediaEntityUpdateRequest getMediaEntityUpdateRequest(
             final URI editURI, final InputStream media) {
 

@@ -20,11 +20,11 @@
 package com.msopentech.odatajclient.engine.communication.request;
 
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.communication.request.batch.AbstractBatchRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.AbstractCUDRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.invoke.AbstractInvokeRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.streamed.AbstractStreamedRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.batch.BatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.invoke.InvokeRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.StreamedRequestFactory;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
@@ -33,11 +33,11 @@ import java.util.Collection;
  * Abstract representation of an OData request.
  * Get instance by using factories.
  *
- * @see AbstractCUDRequestFactory
- * @see AbstractRetrieveRequestFactory
- * @see AbstractBatchRequestFactory
- * @see AbstractInvokeRequestFactory
- * @see AbstractStreamedRequestFactory
+ * @see CUDRequestFactory
+ * @see RetrieveRequestFactory
+ * @see BatchRequestFactory
+ * @see InvokeRequestFactory
+ * @see StreamedRequestFactory
  */
 public interface ODataRequest {
 

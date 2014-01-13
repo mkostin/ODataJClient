@@ -44,7 +44,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 
 public class EntityUpdateMoreTestITCase extends AbstractTest {
     // update an entity
@@ -300,7 +300,7 @@ public class EntityUpdateMoreTestITCase extends AbstractTest {
             final HashMap<String, Object> multiKey = new HashMap<String, Object>();
             multiKey.put("OrderId", -10);
             multiKey.put("ProductId", -10);
-            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+            final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(multiKey);
             final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
             req.setFormat(format);
@@ -334,7 +334,7 @@ public class EntityUpdateMoreTestITCase extends AbstractTest {
             final HashMap<String, Object> multiKey = new HashMap<String, Object>();
             multiKey.put("OrderId", -10);
             multiKey.put("ProductId", -10);
-            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+            final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment(entitySet).appendKeySegment(multiKey);
             final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
             req.setFormat(format);

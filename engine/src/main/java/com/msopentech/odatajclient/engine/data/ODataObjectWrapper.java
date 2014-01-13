@@ -34,7 +34,7 @@ public class ODataObjectWrapper {
      */
     protected static final Logger LOG = LoggerFactory.getLogger(ODataObjectWrapper.class);
 
-    private final AbstractODataReader reader;
+    private final ODataReader reader;
 
     private final byte[] obj;
 
@@ -47,7 +47,7 @@ public class ODataObjectWrapper {
      * @param format source format (<tt>ODataPubFormat</tt>, <tt>ODataFormat</tt>, <tt>ODataValueFormat</tt>,
      * <tt>ODataServiceDocumentFormat</tt>).
      */
-    public ODataObjectWrapper(final AbstractODataReader reader, final InputStream is, final String format) {
+    public ODataObjectWrapper(final ODataReader reader, final InputStream is, final String format) {
         this.reader = reader;
         try {
             this.obj = IOUtils.toByteArray(is);

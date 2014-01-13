@@ -35,14 +35,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * OData reader.
- * <br/>
- * Use this class to de-serialize an OData response body.
- * <br/>
- * This class provides method helpers to de-serialize an entire feed, a set of entities and a single entity as well.
- */
-public abstract class AbstractODataReader {
+public abstract class AbstractODataReader implements ODataReader {
 
     /**
      * Logger.
@@ -55,37 +48,19 @@ public abstract class AbstractODataReader {
         this.client = client;
     }
 
-    /**
-     * De-Serializes a stream into an OData entity set.
-     *
-     * @param input stream to de-serialize.
-     * @param format de-serialize as AtomFeed or JSONFeed
-     * @return de-serialized entity set.
-     */
+    @Override
     public ODataEntitySet readEntitySet(final InputStream input, final ODataPubFormat format) {
         return client.getODataBinder().getODataEntitySet(
                 Deserializer.toFeed(input, ResourceFactory.feedClassForFormat(format)));
     }
 
-    /**
-     * Parses a stream taking care to de-serializes the first OData entity found.
-     *
-     * @param input stream to de-serialize.
-     * @param format de-serialize as AtomEntry or JSONEntry
-     * @return entity de-serialized.
-     */
+    @Override
     public ODataEntity readEntity(final InputStream input, final ODataPubFormat format) {
         return client.getODataBinder().getODataEntity(
                 Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
     }
 
-    /**
-     * Parses a stream taking care to de-serialize the first OData entity property found.
-     *
-     * @param input stream to de-serialize.
-     * @param format de-serialize as XML or JSON
-     * @return OData entity property de-serialized.
-     */
+    @Override
     public ODataProperty readProperty(final InputStream input, final ODataFormat format) {
         final Element property = Deserializer.toPropertyDOM(input, format);
 
@@ -117,61 +92,29 @@ public abstract class AbstractODataReader {
         return client.getODataBinder().getProperty(property);
     }
 
-    /**
-     * Parses a $links request response.
-     *
-     * @param input stream to de-serialize.
-     * @param format de-serialize as XML or JSON
-     * @return List of URIs.
-     */
+    @Override
     public ODataLinkCollection readLinks(final InputStream input, final ODataFormat format) {
         return client.getODataBinder().getLinkCollection(Deserializer.toLinkCollection(input, format));
     }
 
-    /**
-     * Parses an OData service document.
-     *
-     * @param input stream to de-serialize.
-     * @param format de-serialize as XML or JSON
-     * @return List of URIs.
-     */
+    @Override
     public ODataServiceDocument readServiceDocument(final InputStream input, final ODataFormat format) {
         return client.getODataBinder().getODataServiceDocument(Deserializer.toServiceDocument(input, format));
     }
 
-    /**
-     * Parses a stream into metadata representation.
-     *
-     * @param input stream to de-serialize.
-     * @return metadata representation.
-     */
+    @Override
     public EdmMetadata readMetadata(final InputStream input) {
         return new EdmMetadata(input);
     }
 
-    /**
-     * Parses a stream into an OData error.
-     *
-     * @param inputStream stream to de-serialize.
-     * @param isXML 'TRUE' if the error is in XML format.
-     * @return OData error.
-     */
+    @Override
     public ODataError readError(final InputStream inputStream, final boolean isXML) {
         return Deserializer.toODataError(inputStream, isXML);
     }
 
-    /**
-     * Parses a stream into the object type specified by the given reference.
-     *
-     * @param <T> expected object type.
-     * @param src input stream.
-     * @param format format
-     * @param reference reference.
-     * @return read object.
-     */
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T read(final InputStream src, final String format, final Class<T> reference) {
-
         Object res;
 
         try {
