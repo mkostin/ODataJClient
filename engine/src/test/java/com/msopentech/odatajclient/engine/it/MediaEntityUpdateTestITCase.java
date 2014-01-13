@@ -28,10 +28,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest.MediaEntityUpdateStreamManager;
-import com.msopentech.odatajclient.engine.communication.request.streamed.AbstractStreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
