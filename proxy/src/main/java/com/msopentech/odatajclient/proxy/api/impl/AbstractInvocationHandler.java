@@ -19,7 +19,7 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
-import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
@@ -54,10 +54,19 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
     private static final long serialVersionUID = 358520026931462958L;
 
+    protected final ODataClient client;
+
     protected EntityContainerInvocationHandler containerHandler;
 
-    protected AbstractInvocationHandler(final EntityContainerInvocationHandler containerHandler) {
+    protected AbstractInvocationHandler(
+            final ODataClient client, final EntityContainerInvocationHandler containerHandler) {
+
+        this.client = client;
         this.containerHandler = containerHandler;
+    }
+
+    protected ODataClient getClient() {
+        return client;
     }
 
     protected boolean isSelfMethod(final Method method, final Object[] args) {
@@ -78,7 +87,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
         return getClass().getMethod(method.getName(), method.getParameterTypes()).invoke(this, args);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected Object getEntityCollection(
             final Class<?> typeRef,
             final Class<?> typeCollectionRef,
@@ -96,7 +105,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
         return Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {typeCollectionRef},
+                new Class<?>[] { typeCollectionRef },
                 new EntityCollectionInvocationHandler(containerHandler, items, typeRef, entityContainerName, uri));
     }
 
@@ -133,7 +142,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
         return (T) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {type},
+                new Class<?>[] { type },
                 handler);
     }
 
@@ -163,7 +172,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
                 final ODataValue paramValue = args[i] == null
                         ? null
                         : EngineUtils.getODataValue(containerHandler.getFactory().getMetadata(),
-                        new EdmType(containerHandler.getFactory().getMetadata(), parAnnot.type()), args[i]);
+                                new EdmType(containerHandler.getFactory().getMetadata(), parAnnot.type()), args[i]);
 
                 parameters.put(parAnnot.name(), paramValue);
             }
@@ -171,11 +180,11 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
         // 2. IMPORTANT: flush any pending change *before* invoke if this operation is side effecting
         if (annotation.isSideEffecting()) {
-            new Container(containerHandler.getFactory()).flush();
+            new Container(client, containerHandler.getFactory()).flush();
         }
 
         // 3. invoke
-        final ODataInvokeResult result = ODataInvokeRequestFactory.getInvokeRequest(
+        final ODataInvokeResult result = client.getInvokeRequestFactory().getInvokeRequest(
                 target, containerHandler.getFactory().getMetadata(), funcImp, parameters).execute().getBody();
 
         // 3. process invoke result

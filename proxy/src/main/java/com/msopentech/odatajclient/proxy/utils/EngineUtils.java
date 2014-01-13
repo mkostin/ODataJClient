@@ -24,10 +24,10 @@ import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_SET_N
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataGeospatialValue;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
@@ -149,10 +149,10 @@ public final class EngineUtils {
     public static ODataLink getNavigationLink(final String name, final URI uri, final ODataLinkType type) {
         switch (type) {
             case ENTITY_NAVIGATION:
-                return ODataFactory.newEntityNavigationLink(name, uri);
+                return ODataObjectFactory.newEntityNavigationLink(name, uri);
 
             case ENTITY_SET_NAVIGATION:
-                return ODataFactory.newFeedNavigationLink(name, uri);
+                return ODataObjectFactory.newFeedNavigationLink(name, uri);
 
             default:
                 throw new IllegalArgumentException("Invalid link type " + type.name());
@@ -217,18 +217,18 @@ public final class EngineUtils {
         final EdmType type = getEdmType(metadata, obj);
         try {
             if (type == null || obj == null) {
-                oprop = ODataFactory.newPrimitiveProperty(name, null);
+                oprop = ODataObjectFactory.newPrimitiveProperty(name, null);
             } else if (type.isCollection()) {
                 // create collection property
-                oprop = ODataFactory.newCollectionProperty(
+                oprop = ODataObjectFactory.newCollectionProperty(
                         name, getODataValue(metadata, type, obj).asCollection());
             } else if (type.isSimpleType()) {
                 // create a primitive property
-                oprop = ODataFactory.newPrimitiveProperty(
+                oprop = ODataObjectFactory.newPrimitiveProperty(
                         name, getODataValue(metadata, type, obj).asPrimitive());
             } else if (type.isComplexType()) {
                 // create a complex property
-                oprop = ODataFactory.newComplexProperty(
+                oprop = ODataObjectFactory.newComplexProperty(
                         name, getODataValue(metadata, type, obj).asComplex());
             } else if (type.isEnumType()) {
                 // TODO: manage enum types
@@ -407,7 +407,7 @@ public final class EngineUtils {
         return null;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Object getValueFromProperty(
             final EdmMetadata metadata, final ODataProperty property, final Type type)
             throws InstantiationException, IllegalAccessException {

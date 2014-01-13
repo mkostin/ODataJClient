@@ -38,7 +38,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
 
     @Test
     public void retrieveProduct() {
-        final DefaultContainer aocontainer = EntityContainerFactory.getInstance(testActionOverloadingServiceRootURL).
+        final DefaultContainer aocontainer = EntityContainerFactory.getV3Instance(testActionOverloadingServiceRootURL).
                 getEntityContainer(DefaultContainer.class);
 
         int res = aocontainer.retrieveProduct();
@@ -61,7 +61,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
 
     @Test
     public void increaseSalaries() {
-        final DefaultContainer aocontainer = EntityContainerFactory.getInstance(testActionOverloadingServiceRootURL).
+        final DefaultContainer aocontainer = EntityContainerFactory.getV3Instance(testActionOverloadingServiceRootURL).
                 getEntityContainer(DefaultContainer.class);
 
         EmployeeCollection ecoll = aocontainer.getPerson().getAll(EmployeeCollection.class);

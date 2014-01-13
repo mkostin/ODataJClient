@@ -23,7 +23,6 @@ import static org.junit.Assert.assertNotNull;
 
 import com.msopentech.odatajclient.engine.client.http.AbstractBasicAuthHttpClientFactory;
 import com.msopentech.odatajclient.engine.client.http.DefaultHttpClientFactory;
-import com.msopentech.odatajclient.engine.utils.Configuration;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
 import org.junit.AfterClass;
@@ -33,7 +32,7 @@ public class AuthEntityRetrieveTestITCase extends EntityRetrieveTestITCase {
 
     @BeforeClass
     public static void enableBasicAuth() {
-        Configuration.setHttpClientFactory(new AbstractBasicAuthHttpClientFactory() {
+        containerFactory.getConfiguration().setHttpClientFactory(new AbstractBasicAuthHttpClientFactory() {
 
             @Override
             protected String getUsername() {
@@ -49,13 +48,13 @@ public class AuthEntityRetrieveTestITCase extends EntityRetrieveTestITCase {
 
     @AfterClass
     public static void disableBasicAuth() {
-        Configuration.setHttpClientFactory(new DefaultHttpClientFactory());
+        containerFactory.getConfiguration().setHttpClientFactory(new DefaultHttpClientFactory());
     }
 
     @BeforeClass
     public static void setupContaner() {
-        container = EntityContainerFactory.getInstance(testAuthServiceRootURL).
-                getEntityContainer(DefaultContainer.class);
+        containerFactory = EntityContainerFactory.getV3Instance(testAuthServiceRootURL);
+        container = containerFactory.getEntityContainer(DefaultContainer.class);
         assertNotNull(container);
     }
 

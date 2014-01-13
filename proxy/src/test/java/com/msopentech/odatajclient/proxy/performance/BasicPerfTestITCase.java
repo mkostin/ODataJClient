@@ -24,16 +24,16 @@ import static org.junit.Assert.assertTrue;
 
 import com.carrotsearch.junitbenchmarks.BenchmarkOptions;
 import com.carrotsearch.junitbenchmarks.BenchmarkRule;
+import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.client.ODataClientFactory;
 import com.msopentech.odatajclient.engine.client.http.AbstractBasicAuthHttpClientFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
-import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.proxy.AbstractTest;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.DefaultContainer;
@@ -54,7 +54,7 @@ public class BasicPerfTestITCase extends AbstractTest {
 
     @BeforeClass
     public static void enableBasicAuth() {
-        Configuration.setHttpClientFactory(new AbstractBasicAuthHttpClientFactory() {
+        containerFactory.getConfiguration().setHttpClientFactory(new AbstractBasicAuthHttpClientFactory() {
 
             @Override
             protected String getUsername() {
@@ -69,10 +69,11 @@ public class BasicPerfTestITCase extends AbstractTest {
     }
 
     private void engine(final ODataPubFormat format) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testAuthServiceRootURL).
+        final ODataClient client = ODataClientFactory.getV3();
+        final URIBuilder uriBuilder = client.getURIBuilder(testAuthServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).expand("Info");
 
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(format);
 
         final ODataRetrieveResponse<ODataEntity> res = req.execute();
@@ -102,8 +103,8 @@ public class BasicPerfTestITCase extends AbstractTest {
 
     private void proxy() {
         EntityContainerFactory.getContext().detachAll();
-        container = EntityContainerFactory.getInstance(testAuthServiceRootURL).
-                getEntityContainer(DefaultContainer.class);
+        containerFactory = EntityContainerFactory.getV3Instance(testAuthServiceRootURL);
+        container = containerFactory.getEntityContainer(DefaultContainer.class);
 
         final Customer customer = container.getCustomer().get(-10);
         assertNotNull(customer);
@@ -112,9 +113,9 @@ public class BasicPerfTestITCase extends AbstractTest {
 
     @Test
     public void proxyFromAtom() {
-        Configuration.setDefaultPubFormat(ODataPubFormat.ATOM);
+        containerFactory.getConfiguration().setDefaultPubFormat(ODataPubFormat.ATOM);
         proxy();
-        Configuration.setDefaultPubFormat(ODataPubFormat.JSON_FULL_METADATA);
+        containerFactory.getConfiguration().setDefaultPubFormat(ODataPubFormat.JSON_FULL_METADATA);
     }
 
     @Test

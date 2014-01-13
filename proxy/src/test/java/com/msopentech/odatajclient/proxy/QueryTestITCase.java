@@ -25,7 +25,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.msopentech.odatajclient.engine.uri.filter.ODataFilterFactory;
 import com.msopentech.odatajclient.proxy.api.NonUniqueResultException;
 import com.msopentech.odatajclient.proxy.api.Query;
 import com.msopentech.odatajclient.proxy.api.Sort;
@@ -88,7 +87,7 @@ public class QueryTestITCase extends AbstractTest {
         }
         assertNotNull(exception);
 
-        query.setFilter(ODataFilterFactory.eq("VIN", 16));
+        query.setFilter(containerFactory.getFilterFactory().eq("VIN", 16));
         final Car result = query.getSingleResult();
         assertNotNull(result);
     }

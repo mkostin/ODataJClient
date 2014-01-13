@@ -19,7 +19,6 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
@@ -53,7 +52,7 @@ public class EntityCollectionInvocationHandler<T extends Serializable>
     public EntityCollectionInvocationHandler(final EntityContainerInvocationHandler containerHandler,
             final Collection<T> items, final Class<?> itemRef, final String entityContainerName, final URI uri) {
 
-        super(containerHandler);
+        super(containerHandler.getClient(), containerHandler);
 
         this.items = items;
         this.itemRef = itemRef;
@@ -79,7 +78,7 @@ public class EntityCollectionInvocationHandler<T extends Serializable>
                     container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
 
             return functionImport((FunctionImport) methodAnnots[0], method, args,
-                    new ODataURIBuilder(this.uri.toASCIIString()).
+                    client.getURIBuilder(this.uri.toASCIIString()).
                     appendFunctionImportSegment(((FunctionImport) methodAnnots[0]).name()).build(),
                     funcImp);
         } else {

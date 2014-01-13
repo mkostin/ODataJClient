@@ -19,14 +19,13 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataValueRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.AbstractEntitySet;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
@@ -77,7 +76,7 @@ class EntitySetInvocationHandler<
 
     private final URI uri;
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     static EntitySetInvocationHandler getInstance(
             final Class<?> ref, final EntityContainerInvocationHandler containerHandler) {
 
@@ -89,7 +88,7 @@ class EntitySetInvocationHandler<
             final Class<?> ref,
             final EntityContainerInvocationHandler containerHandler) {
 
-        super(containerHandler);
+        super(containerHandler.getClient(), containerHandler);
 
         final Annotation annotation = ref.getAnnotation(EntitySet.class);
         if (!(annotation instanceof EntitySet)) {
@@ -108,7 +107,7 @@ class EntitySetInvocationHandler<
         }
         this.collTypeRef = (Class<EC>) abstractEntitySetParams[2];
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(containerHandler.getFactory().getServiceRoot());
+        final URIBuilder uriBuilder = client.getURIBuilder(containerHandler.getFactory().getServiceRoot());
 
         if (!containerHandler.isDefaultEntityContainer()) {
             uriBuilder.appendStructuralSegment(containerHandler.getEntityContainerName()).appendStructuralSegment(".");
@@ -152,7 +151,7 @@ class EntitySetInvocationHandler<
 
     @SuppressWarnings("unchecked")
     private <NE> NE newEntity(final Class<NE> reference) {
-        final ODataEntity entity = ODataFactory.newEntity(
+        final ODataEntity entity = ODataObjectFactory.newEntity(
                 containerHandler.getSchemaName() + "." + ClassUtils.getEntityTypeName(reference));
 
         final EntityTypeInvocationHandler handler = EntityTypeInvocationHandler.getInstance(
@@ -161,7 +160,7 @@ class EntitySetInvocationHandler<
 
         return (NE) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {reference},
+                new Class<?>[] { reference },
                 handler);
     }
 
@@ -169,15 +168,15 @@ class EntitySetInvocationHandler<
     private <NEC> NEC newEntityCollection(final Class<NEC> reference) {
         return (NEC) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {reference},
+                new Class<?>[] { reference },
                 new EntityCollectionInvocationHandler<T>(
-                containerHandler, new ArrayList<T>(), typeRef, containerHandler.getEntityContainerName()));
+                        containerHandler, new ArrayList<T>(), typeRef, containerHandler.getEntityContainerName()));
     }
 
     @Override
     public Long count() {
-        final ODataValueRequest req = ODataRetrieveRequestFactory.
-                getValueRequest(new ODataURIBuilder(this.uri.toASCIIString()).appendCountSegment().build());
+        final ODataValueRequest req = client.getRetrieveRequestFactory().
+                getValueRequest(client.getURIBuilder(this.uri.toASCIIString()).appendCountSegment().build());
         req.setFormat(ODataValueFormat.TEXT);
         return Long.valueOf(req.execute().getBody().asPrimitive().toString());
     }
@@ -247,7 +246,7 @@ class EntitySetInvocationHandler<
             // not yet attached: search against the service
             try {
                 LOG.debug("Search for '{}({})' into the service", typeRef.getSimpleName(), key);
-                final ODataURIBuilder uriBuilder = new ODataURIBuilder(this.uri.toASCIIString());
+                final URIBuilder uriBuilder = client.getURIBuilder(this.uri.toASCIIString());
 
                 if (key.getClass().getAnnotation(CompoundKey.class) == null) {
                     LOG.debug("Append key segment '{}'", key);
@@ -260,7 +259,7 @@ class EntitySetInvocationHandler<
                 LOG.debug("Execute query '{}'", uriBuilder.toString());
 
                 final ODataRetrieveResponse<ODataEntity> res =
-                        ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build()).execute();
+                        client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build()).execute();
 
                 handler = EntityTypeInvocationHandler.getInstance(res.getBody(), this, typeRef);
                 handler.setETag(res.getEtag());
@@ -275,14 +274,14 @@ class EntitySetInvocationHandler<
 
         return handler == null ? null : (S) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {typeRef},
+                new Class<?>[] { typeRef },
                 handler);
     }
 
     @SuppressWarnings("unchecked")
     public <S extends T> Map.Entry<List<S>, URI> fetchPartialEntitySet(final URI uri, final Class<S> typeRef) {
         final ODataRetrieveResponse<ODataEntitySet> res =
-                ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute();
+                client.getRetrieveRequestFactory().getEntitySetRequest(uri).execute();
 
         final ODataEntitySet entitySet = res.getBody();
 
@@ -295,7 +294,7 @@ class EntitySetInvocationHandler<
 
             items.add((S) Proxy.newProxyInstance(
                     Thread.currentThread().getContextClassLoader(),
-                    new Class<?>[] {typeRef},
+                    new Class<?>[] { typeRef },
                     handlerInTheContext == null ? handler : handlerInTheContext));
         }
 
@@ -317,9 +316,9 @@ class EntitySetInvocationHandler<
 
         return (SEC) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
-                new Class<?>[] {collTypeRef},
+                new Class<?>[] { collTypeRef },
                 new EntityCollectionInvocationHandler<S>(
-                containerHandler, items, typeRef, containerHandler.getEntityContainerName(), entitySetURI));
+                        containerHandler, items, typeRef, containerHandler.getEntityContainerName(), entitySetURI));
     }
 
     @Override
@@ -332,7 +331,7 @@ class EntitySetInvocationHandler<
     public <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(final Class<SEC> collTypeRef) {
         final Class<S> typeRef = (Class<S>) ClassUtils.extractTypeArg(collTypeRef);
 
-        final URI entitySetURI = new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
+        final URI entitySetURI = client.getURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
                 ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).build();
 
         return fetchWholeEntitySet(entitySetURI, typeRef, collTypeRef);
@@ -340,14 +339,14 @@ class EntitySetInvocationHandler<
 
     @Override
     public Query<T, EC> createQuery() {
-        return new QueryImpl<T, EC>(this.collTypeRef, this.uri, this);
+        return new QueryImpl<T, EC>(this.client, this.collTypeRef, this.uri, this);
     }
 
     @Override
     public <S extends T, SEC extends AbstractEntityCollection<S>> Query<S, SEC> createQuery(
             final Class<SEC> reference) {
 
-        return new QueryImpl<S, SEC>(reference, this.uri, this);
+        return new QueryImpl<S, SEC>(this.client, reference, this.uri, this);
     }
 
     @Override
@@ -392,8 +391,8 @@ class EntitySetInvocationHandler<
     @Override
     public EntitySetIterator<T, KEY, EC> iterator() {
         return new EntitySetIterator<T, KEY, EC>(
-                new ODataURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
-                ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).build(),
+                client.getURIBuilder(this.uri.toASCIIString()).appendStructuralSegment(
+                        ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef)).build(),
                 this);
     }
 }

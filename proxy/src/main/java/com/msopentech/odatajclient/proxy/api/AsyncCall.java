@@ -19,7 +19,7 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
-import com.msopentech.odatajclient.engine.utils.Configuration;
+import com.msopentech.odatajclient.engine.client.Configuration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -30,8 +30,8 @@ public abstract class AsyncCall<V> implements Future<V> {
 
     private final Future<V> future;
 
-    public AsyncCall() {
-        this.future = Configuration.getExecutor().submit(new Callable<V>() {
+    public AsyncCall(final Configuration configuration) {
+        this.future = configuration.getExecutor().submit(new Callable<V>() {
 
             @Override
             public V call() throws Exception {

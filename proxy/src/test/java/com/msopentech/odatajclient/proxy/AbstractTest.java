@@ -73,6 +73,8 @@ public abstract class AbstractTest {
 
     protected final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
 
+    protected static EntityContainerFactory containerFactory;
+
     protected static DefaultContainer container;
 
     /**
@@ -112,8 +114,8 @@ public abstract class AbstractTest {
         testLargeModelServiceRootURL = testBaseURL + "/LargeModelService.svc";
         testAuthServiceRootURL = "http://localhost:9080/DefaultService.svc";
 
-        container = EntityContainerFactory.getInstance(testDefaultServiceRootURL).
-                getEntityContainer(DefaultContainer.class);
+        containerFactory = EntityContainerFactory.getV3Instance(testDefaultServiceRootURL);
+        container = containerFactory.getEntityContainer(DefaultContainer.class);
         assertNotNull(container);
     }
 
