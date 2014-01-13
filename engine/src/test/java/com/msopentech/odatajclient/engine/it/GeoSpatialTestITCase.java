@@ -48,7 +48,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 
 public class GeoSpatialTestITCase extends AbstractTest {
     // test with json full metadata
@@ -321,7 +321,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             //updateGeog(format,contentType, prefer, entityAfterCreate, UpdateType.REPLACE,entityAfterCreate.getETag());
 
             // delete the entity
-            AbstractURIBuilder deleteUriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+            URIBuilder deleteUriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment("AllGeoTypesSet(" + id + ")");
             ODataDeleteRequest deleteReq = client.getCUDRequestFactory().getDeleteRequest(deleteUriBuilder.build());
             deleteReq.setFormat(format);

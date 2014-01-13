@@ -28,14 +28,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest.MediaEntityUpdateStreamManager;
-import com.msopentech.odatajclient.engine.communication.request.streamed.AbstractStreamedRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.StreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.commons.lang3.ArrayUtils;
@@ -48,7 +48,7 @@ public class MediaEntityUpdateTestITCase extends AbstractTest {
             final String image,
             final int id) throws Exception {
 
-        AbstractURIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
         // The sample service has an upload request size of 65k

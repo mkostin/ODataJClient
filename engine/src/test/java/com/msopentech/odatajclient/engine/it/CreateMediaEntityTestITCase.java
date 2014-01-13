@@ -27,15 +27,15 @@ import java.io.InputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.request.cud.AbstractCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest.MediaEntityCreateStreamManager;
-import com.msopentech.odatajclient.engine.communication.request.streamed.AbstractStreamedRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.StreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityCreateResponse;
@@ -47,7 +47,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import org.apache.commons.io.input.BoundedInputStream;
 
 public class CreateMediaEntityTestITCase extends AbstractTest {
@@ -176,7 +176,7 @@ public class CreateMediaEntityTestITCase extends AbstractTest {
             final String file) throws IOException {
 
         try {
-            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+            final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntitySetSegment("Car");
 
             // The sample service has an upload request size of 65k
@@ -253,7 +253,7 @@ public class CreateMediaEntityTestITCase extends AbstractTest {
                 assertEquals(newValue, entityAfterUpdate.getProperty("Description").getValue().toString());
 
                 // delete the entity
-                AbstractURIBuilder deleteUriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+                URIBuilder deleteUriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                         appendEntityTypeSegment("Car(" + id + ")");
                 ODataDeleteRequest deleteReq = client.getCUDRequestFactory().getDeleteRequest(deleteUriBuilder.build());
                 deleteReq.setFormat(format);

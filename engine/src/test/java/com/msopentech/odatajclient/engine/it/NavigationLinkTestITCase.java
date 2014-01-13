@@ -31,13 +31,13 @@ import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEn
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 
 public class NavigationLinkTestITCase extends AbstractTest {
     //collection of navigation links
 
     private void getListNavigationLinks(String acceptFormat) {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Orders");
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setAccept(acceptFormat);
@@ -54,7 +54,7 @@ public class NavigationLinkTestITCase extends AbstractTest {
     //invalid query
 
     private void getListNavigationLinksInvalidSegment(String acceptFormat) {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Address");
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setAccept(acceptFormat);
@@ -64,7 +64,7 @@ public class NavigationLinkTestITCase extends AbstractTest {
     //Reference navigation link
 
     private void getSingleNavigationLinks(String acceptFormat) {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Orders").
                 appendKeySegment(-10);
         ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
@@ -77,7 +77,7 @@ public class NavigationLinkTestITCase extends AbstractTest {
     // reference navigation link
 
     private void getReferenceNavigationLinks(String acceptFormat) {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Logins").
                 appendKeySegment(-1);
         ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());

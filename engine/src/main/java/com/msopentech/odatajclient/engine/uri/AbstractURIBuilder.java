@@ -19,46 +19,28 @@
  */
 package com.msopentech.odatajclient.engine.uri;
 
-import com.msopentech.odatajclient.engine.client.AbstractConfiguration;
+import com.msopentech.odatajclient.engine.client.Configuration;
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
-import com.msopentech.odatajclient.engine.uri.filter.AbstractFilterFactory;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * OData URI builder.
- */
-public abstract class AbstractURIBuilder implements Serializable {
-
-    protected static class Segment {
-
-        private final SegmentType type;
-
-        private final String value;
-
-        public Segment(final SegmentType type, final String value) {
-            this.type = type;
-            this.value = value;
-        }
-    }
+public abstract class AbstractURIBuilder implements URIBuilder {
 
     private static final long serialVersionUID = -3267515371720408124L;
 
     /**
      * Logger.
      */
-    protected static final Logger LOG = LoggerFactory.getLogger(AbstractURIBuilder.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(URIBuilder.class);
 
-    protected final List<Segment> segments;
+    protected final List<URIBuilder.Segment> segments;
 
     /**
      * Case-insensitive map of query options.
@@ -72,79 +54,47 @@ public abstract class AbstractURIBuilder implements Serializable {
      * data service.
      */
     protected AbstractURIBuilder(final String serviceRoot) {
-        segments = new ArrayList<Segment>();
-        segments.add(new Segment(SegmentType.SERVICEROOT, serviceRoot));
+        segments = new ArrayList<URIBuilder.Segment>();
+        segments.add(new URIBuilder.Segment(SegmentType.SERVICEROOT, serviceRoot));
     }
 
-    protected abstract AbstractConfiguration getConfiguration();
+    protected abstract Configuration getConfiguration();
 
-    /**
-     * Adds the specified query option to the URI.
-     *
-     * @param option query option.
-     * @param value query option value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder addQueryOption(final QueryOption option, final String value) {
+    @Override
+    public URIBuilder addQueryOption(final QueryOption option, final String value) {
         return addQueryOption(option.toString(), value);
     }
 
-    /**
-     * Adds the specified (custom) query option to the URI.
-     *
-     * @param option query option.
-     * @param value query option value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder addQueryOption(final String option, final String value) {
+    @Override
+    public URIBuilder addQueryOption(final String option, final String value) {
         queryOptions.put(option, value);
         return this;
     }
 
-    /**
-     * Append EntitySet segment to the URI.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendEntitySetSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.ENTITYSET, segmentValue));
+    @Override
+    public URIBuilder appendEntitySetSegment(final String segmentValue) {
+        segments.add(new URIBuilder.Segment(SegmentType.ENTITYSET, segmentValue));
         return this;
     }
 
-    /**
-     * Append EntityType segment to the URI.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendEntityTypeSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.ENTITYTYPE, segmentValue));
+    @Override
+    public URIBuilder appendEntityTypeSegment(final String segmentValue) {
+        segments.add(new URIBuilder.Segment(SegmentType.ENTITYTYPE, segmentValue));
         return this;
     }
 
-    /**
-     * Append key segment to the URI.
-     *
-     * @param val segment value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendKeySegment(final Object val) {
+    @Override
+    public URIBuilder appendKeySegment(final Object val) {
         final String segValue = URIUtils.escape(val);
 
         segments.add(getConfiguration().isKeyAsSegment()
-                ? new Segment(SegmentType.KEY_AS_SEGMENT, segValue)
-                : new Segment(SegmentType.KEY, "(" + segValue + ")"));
+                ? new URIBuilder.Segment(SegmentType.KEY_AS_SEGMENT, segValue)
+                : new URIBuilder.Segment(SegmentType.KEY, "(" + segValue + ")"));
         return this;
     }
 
-    /**
-     * Append key segment to the URI, for multiple keys.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendKeySegment(final Map<String, Object> segmentValues) {
+    @Override
+    public URIBuilder appendKeySegment(final Map<String, Object> segmentValues) {
         if (!getConfiguration().isKeyAsSegment()) {
             final StringBuilder keyBuilder = new StringBuilder().append('(');
             for (Map.Entry<String, Object> entry : segmentValues.entrySet()) {
@@ -153,222 +103,125 @@ public abstract class AbstractURIBuilder implements Serializable {
             }
             keyBuilder.deleteCharAt(keyBuilder.length() - 1).append(')');
 
-            segments.add(new Segment(SegmentType.KEY, keyBuilder.toString()));
+            segments.add(new URIBuilder.Segment(SegmentType.KEY, keyBuilder.toString()));
         }
 
         return this;
     }
 
-    /**
-     * Append navigation link segment to the URI.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendNavigationLinkSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.NAVIGATION, segmentValue));
+    @Override
+    public URIBuilder appendNavigationLinkSegment(final String segmentValue) {
+        segments.add(new URIBuilder.Segment(SegmentType.NAVIGATION, segmentValue));
         return this;
     }
 
-    /**
-     * Append structural segment to the URI.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendStructuralSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.STRUCTURAL, segmentValue));
+    @Override
+    public URIBuilder appendStructuralSegment(final String segmentValue) {
+        segments.add(new URIBuilder.Segment(SegmentType.STRUCTURAL, segmentValue));
         return this;
     }
 
-    public AbstractURIBuilder appendLinksSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.LINKS, SegmentType.LINKS.getValue()));
-        segments.add(new Segment(SegmentType.ENTITYTYPE, segmentValue));
+    @Override
+    public URIBuilder appendLinksSegment(final String segmentValue) {
+        segments.add(new URIBuilder.Segment(SegmentType.LINKS, SegmentType.LINKS.getValue()));
+        segments.add(new URIBuilder.Segment(SegmentType.ENTITYTYPE, segmentValue));
         return this;
     }
 
-    /**
-     * Append value segment to the URI.
-     *
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendValueSegment() {
-        segments.add(new Segment(SegmentType.VALUE, SegmentType.VALUE.getValue()));
+    @Override
+    public URIBuilder appendValueSegment() {
+        segments.add(new URIBuilder.Segment(SegmentType.VALUE, SegmentType.VALUE.getValue()));
         return this;
     }
 
-    /**
-     * Append count segment to the URI.
-     *
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendCountSegment() {
-        segments.add(new Segment(SegmentType.COUNT, SegmentType.COUNT.getValue()));
+    @Override
+    public URIBuilder appendCountSegment() {
+        segments.add(new URIBuilder.Segment(SegmentType.COUNT, SegmentType.COUNT.getValue()));
         return this;
     }
 
-    /**
-     * Append function import segment to the URI.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendFunctionImportSegment(final String segmentValue) {
-        segments.add(new Segment(SegmentType.FUNCTIONIMPORT, segmentValue));
+    @Override
+    public URIBuilder appendFunctionImportSegment(final String segmentValue) {
+        segments.add(new URIBuilder.Segment(SegmentType.FUNCTIONIMPORT, segmentValue));
         return this;
     }
 
-    /**
-     * Append metadata segment to the URI.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendMetadataSegment() {
-        segments.add(new Segment(SegmentType.METADATA, SegmentType.METADATA.getValue()));
+    @Override
+    public URIBuilder appendMetadataSegment() {
+        segments.add(new URIBuilder.Segment(SegmentType.METADATA, SegmentType.METADATA.getValue()));
         return this;
     }
 
-    /**
-     * Append batch segment to the URI.
-     *
-     * @param segmentValue segment value.
-     * @return current ODataURIBuilder object.
-     */
-    public AbstractURIBuilder appendBatchSegment() {
-        segments.add(new Segment(SegmentType.BATCH, SegmentType.BATCH.getValue()));
+    @Override
+    public URIBuilder appendBatchSegment() {
+        segments.add(new URIBuilder.Segment(SegmentType.BATCH, SegmentType.BATCH.getValue()));
         return this;
     }
 
-    /**
-     * Adds expand query option.
-     *
-     * @param entityName entity object to be in-line expanded.
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#EXPAND
-     */
-    public AbstractURIBuilder expand(final String entityName) {
+    @Override
+    public URIBuilder expand(final String entityName) {
         return addQueryOption(QueryOption.EXPAND, entityName);
     }
 
-    /**
-     * Adds format query option.
-     *
-     * @param format media type acceptable in a response.
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#FORMAT
-     */
-    public AbstractURIBuilder format(final String format) {
+    @Override
+    public URIBuilder format(final String format) {
         return addQueryOption(QueryOption.FORMAT, format);
     }
 
-    /**
-     * Adds filter for filter query option.
-     *
-     * @param filter filter instance (to be obtained via <tt>ODataFilterFactory</tt>):
-     * note that <tt>build()</tt> method will be immediately invoked.
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#FILTER
-     * @see ODataFilter
-     * @see AbstractFilterFactory
-     */
-    public AbstractURIBuilder filter(final ODataFilter filter) {
+    @Override
+    public URIBuilder filter(final ODataFilter filter) {
         return addQueryOption(QueryOption.FILTER, filter.build());
     }
 
-    /**
-     * Adds filter query option.
-     *
-     * @param filter filter string.
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#FILTER
-     */
-    public AbstractURIBuilder filter(final String filter) {
+    @Override
+    public URIBuilder filter(final String filter) {
         return addQueryOption(QueryOption.FILTER, filter);
     }
 
-    /**
-     * Adds select query option.
-     *
-     * @param select select query option value.
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#SELECT
-     */
-    public AbstractURIBuilder select(final String select) {
+    @Override
+    public URIBuilder select(final String select) {
         return addQueryOption(QueryOption.SELECT, select);
     }
 
-    /**
-     * Adds orderby query option.
-     *
-     * @param order order string.
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#ORDERBY
-     */
-    public AbstractURIBuilder orderBy(final String order) {
+    @Override
+    public URIBuilder orderBy(final String order) {
         return addQueryOption(QueryOption.ORDERBY, order);
     }
 
-    /**
-     * Adds top query option.
-     *
-     * @param top maximum number of entities to be returned.
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#TOP
-     */
-    public AbstractURIBuilder top(final int top) {
+    @Override
+    public URIBuilder top(final int top) {
         return addQueryOption(QueryOption.TOP, String.valueOf(top));
     }
 
-    /**
-     * Adds skip query option.
-     *
-     * @param skip number of entities to be skipped into the response.
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#SKIP
-     */
-    public AbstractURIBuilder skip(final int skip) {
+    @Override
+    public URIBuilder skip(final int skip) {
         return addQueryOption(QueryOption.SKIP, String.valueOf(skip));
     }
 
-    /**
-     * Adds skiptoken query option.
-     *
-     * @param skipToken opaque token.
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#SKIPTOKEN
-     */
-    public AbstractURIBuilder skipToken(final String skipToken) {
+    @Override
+    public URIBuilder skipToken(final String skipToken) {
         return addQueryOption(QueryOption.SKIPTOKEN, skipToken);
     }
 
-    /**
-     * Adds inlinecount query option.
-     *
-     * @return current ODataURIBuilder object.
-     * @see QueryOption#INLINECOUNT
-     */
-    public AbstractURIBuilder inlineCount() {
+    @Override
+    public URIBuilder inlineCount() {
         return addQueryOption(QueryOption.INLINECOUNT, "allpages");
     }
 
-    /**
-     * Build OData URI.
-     *
-     * @return OData URI.
-     */
+    @Override
     public URI build() {
         final StringBuilder segmentsBuilder = new StringBuilder();
-        for (Segment seg : segments) {
-            if (segmentsBuilder.length() > 0 && seg.type != SegmentType.KEY) {
+        for (URIBuilder.Segment seg : segments) {
+            if (segmentsBuilder.length() > 0 && seg.getType() != SegmentType.KEY) {
                 segmentsBuilder.append('/');
             }
 
-            segmentsBuilder.append(seg.value);
+            segmentsBuilder.append(seg.getValue());
         }
 
         try {
-            final URIBuilder builder = new URIBuilder(segmentsBuilder.toString());
+            final org.apache.http.client.utils.URIBuilder builder =
+                    new org.apache.http.client.utils.URIBuilder(segmentsBuilder.toString());
 
             for (Map.Entry<String, String> option : queryOptions.entrySet()) {
                 builder.addParameter("$" + option.getKey(), option.getValue());
@@ -380,11 +233,9 @@ public abstract class AbstractURIBuilder implements Serializable {
         }
     }
 
-    /**
-     * ${@inheritDoc }
-     */
     @Override
     public String toString() {
         return build().toASCIIString();
     }
+
 }

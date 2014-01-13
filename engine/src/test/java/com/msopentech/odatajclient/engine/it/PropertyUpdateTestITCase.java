@@ -47,7 +47,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 
 public class PropertyUpdateTestITCase extends AbstractTest {
     // update complex property
@@ -59,7 +59,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
             final UpdateType type,
             final String entity,
             final String propertyType) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment(entity).appendKeySegment(-9).appendStructuralSegment(propertyType);
 
         ODataPropertyRequest retrieveReq = client.getRetrieveRequestFactory().getPropertyRequest(uriBuilder.build());
@@ -328,7 +328,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
             final UpdateType type,
             final String entity,
             final String propertyType) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment(entity).appendKeySegment(-9).appendStructuralSegment("PrimaryContactInfo").
                 appendStructuralSegment(propertyType);
 
@@ -383,7 +383,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
             final UpdateType type,
             final String entity,
             final String propertyType) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment(entity).appendKeySegment(-9).
                 appendStructuralSegment("PrimaryContactInfo")
                 .appendStructuralSegment("HomePhone")
@@ -433,7 +433,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
             final String contentType,
             final String prefer,
             final UpdateType type) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-8).
                 appendStructuralSegment("PrimaryContactInfo").
                 appendStructuralSegment("WorkPhone").
@@ -510,7 +510,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
             final String prefer,
             final UpdateType type) {
         try {
-            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+            final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment("ComputerDetail").appendKeySegment(-10).
                     appendStructuralSegment("PurchaseDate").
                     appendValueSegment();
@@ -586,7 +586,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
             final HashMap<String, Object> multiKey = new HashMap<String, Object>();
             multiKey.put("OrderId", -10);
             multiKey.put("ProductId", -10);
-            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+            final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment("OrderLine").appendKeySegment(multiKey).
                     appendStructuralSegment("Quantity").
                     appendValueSegment();
@@ -660,7 +660,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
             final String contentType,
             final String prefer,
             final UpdateType type) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("ComputerDetail").appendKeySegment(-9).
                 appendStructuralSegment("Dimensions").
                 appendStructuralSegment("Width").
@@ -735,7 +735,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
         final HashMap<String, Object> multiKey = new HashMap<String, Object>();
         multiKey.put("MessageId", -1);
         multiKey.put("FromUsername", "10");
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Message").appendKeySegment(multiKey).
                 appendStructuralSegment("IsRead").
                 appendValueSegment();
@@ -803,7 +803,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
             final HashMap<String, Object> multiKey = new HashMap<String, Object>();
             multiKey.put("OrderId", -10);
             multiKey.put("ProductId", -10);
-            final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+            final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntityTypeSegment("OrderLine").appendKeySegment(multiKey).
                     appendStructuralSegment("OrderId").
                     appendValueSegment();
@@ -872,7 +872,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
     // delete a non nullable property
 
     public void deleteNonNullableproperty(final ODataPubFormat format, final String contentType) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).
                 appendStructuralSegment("CustomerId").
                 appendValueSegment();
@@ -944,7 +944,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
 
     // delete a nullable property
     public void deleteNullableProperty(final ODataPubFormat format, final String contentType) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).
                 appendStructuralSegment("Name").
                 appendValueSegment();

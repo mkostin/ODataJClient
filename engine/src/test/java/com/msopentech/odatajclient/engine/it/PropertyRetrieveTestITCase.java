@@ -28,7 +28,7 @@ import org.junit.Test;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataPropertyRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
@@ -36,7 +36,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 
 public class PropertyRetrieveTestITCase extends AbstractTest {
@@ -44,7 +44,7 @@ public class PropertyRetrieveTestITCase extends AbstractTest {
 
     private void retreivePropertyTest(final ODataFormat format, final String accept, String entitySegment,
             String structuralSegment) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment(entitySegment).appendStructuralSegment(structuralSegment);
         final ODataPropertyRequest req = client.getRetrieveRequestFactory().getPropertyRequest(uriBuilder.build());
         req.setFormat(format);
@@ -244,7 +244,7 @@ public class PropertyRetrieveTestITCase extends AbstractTest {
 
     @Test
     public void navigationMediaLink() {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Product").appendKeySegment(-7).appendLinksSegment("Photos");
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setAccept("application/json");
@@ -267,7 +267,7 @@ public class PropertyRetrieveTestITCase extends AbstractTest {
 
     @Test
     public void navigationMediaLinkInvalidQuery() {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Product").appendKeySegment(-7).appendLinksSegment("Photo");
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setAccept("application/json");
@@ -291,7 +291,7 @@ public class PropertyRetrieveTestITCase extends AbstractTest {
 
     @Test
     public void navigationMediaLinkInvalidFormat() {
-        AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Product").appendKeySegment(-7).appendLinksSegment("Photos");
         ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setAccept("application/atom+xml");

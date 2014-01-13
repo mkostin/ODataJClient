@@ -26,10 +26,10 @@ import com.msopentech.odatajclient.engine.communication.ODataClientErrorExceptio
 import com.msopentech.odatajclient.engine.communication.ODataServerErrorException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
-import com.msopentech.odatajclient.engine.communication.request.batch.AbstractBatchRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.AbstractCUDRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.invoke.AbstractInvokeRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.streamed.AbstractStreamedRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.batch.BatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.invoke.InvokeRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.StreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataError;
 import com.msopentech.odatajclient.engine.data.json.error.JSONODataError;
@@ -61,10 +61,10 @@ import org.slf4j.LoggerFactory;
  *
  * @param <T> Accepted content-type formats by the request in object.
  *
- * @see AbstractCUDRequestFactory
- * @see AbstractBatchRequestFactory
- * @see AbstractInvokeRequestFactory
- * @see AbstractStreamedRequestFactory
+ * @see CUDRequestFactory
+ * @see BatchRequestFactory
+ * @see InvokeRequestFactory
+ * @see StreamedRequestFactory
  */
 public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
 

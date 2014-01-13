@@ -20,40 +20,40 @@
 package com.msopentech.odatajclient.engine.client;
 
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
-import com.msopentech.odatajclient.engine.communication.request.batch.AbstractBatchRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.AbstractCUDRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.invoke.AbstractInvokeRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.streamed.AbstractStreamedRequestFactory;
-import com.msopentech.odatajclient.engine.data.AbstractODataBinder;
-import com.msopentech.odatajclient.engine.data.AbstractODataReader;
-import com.msopentech.odatajclient.engine.data.AbstractODataWriter;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
-import com.msopentech.odatajclient.engine.uri.filter.AbstractFilterFactory;
+import com.msopentech.odatajclient.engine.communication.request.batch.BatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.invoke.InvokeRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.StreamedRequestFactory;
+import com.msopentech.odatajclient.engine.data.ODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataReader;
+import com.msopentech.odatajclient.engine.data.ODataWriter;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
+import com.msopentech.odatajclient.engine.uri.filter.FilterFactory;
 
 public interface ODataClient {
 
-    public abstract ODataHeaders getVersionHeaders();
+    ODataHeaders getVersionHeaders();
 
-    public abstract AbstractConfiguration getConfiguration();
+    Configuration getConfiguration();
 
-    public abstract AbstractURIBuilder getURIBuilder(String serviceRoot);
+    URIBuilder getURIBuilder(String serviceRoot);
 
-    public abstract AbstractFilterFactory getFilterFactory();
+    FilterFactory getFilterFactory();
 
-    public abstract AbstractODataReader getODataReader();
+    ODataReader getODataReader();
 
-    public abstract AbstractODataWriter getODataWriter();
+    ODataWriter getODataWriter();
 
-    public abstract AbstractODataBinder getODataBinder();
+    ODataBinder getODataBinder();
 
-    public abstract AbstractRetrieveRequestFactory getRetrieveRequestFactory();
+    RetrieveRequestFactory getRetrieveRequestFactory();
 
-    public abstract AbstractCUDRequestFactory getCUDRequestFactory();
+    CUDRequestFactory getCUDRequestFactory();
 
-    public abstract AbstractStreamedRequestFactory getStreamedRequestFactory();
+    StreamedRequestFactory getStreamedRequestFactory();
 
-    public abstract AbstractInvokeRequestFactory getInvokeRequestFactory();
+    InvokeRequestFactory getInvokeRequestFactory();
 
-    public abstract AbstractBatchRequestFactory getBatchRequestFactory();
+    BatchRequestFactory getBatchRequestFactory();
 }

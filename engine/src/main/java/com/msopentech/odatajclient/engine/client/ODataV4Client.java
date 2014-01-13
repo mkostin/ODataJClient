@@ -28,7 +28,7 @@ import com.msopentech.odatajclient.engine.communication.request.streamed.V4Strea
 import com.msopentech.odatajclient.engine.data.ODataV4Binder;
 import com.msopentech.odatajclient.engine.data.ODataV4Reader;
 import com.msopentech.odatajclient.engine.data.ODataV4Writer;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.V4URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.V4FilterFactory;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -53,7 +53,7 @@ public class ODataV4Client implements ODataClient {
     }
 
     @Override
-    public AbstractURIBuilder getURIBuilder(final String serviceRoot) {
+    public URIBuilder getURIBuilder(final String serviceRoot) {
         return new V4URIBuilder(configuration, serviceRoot);
     }
 

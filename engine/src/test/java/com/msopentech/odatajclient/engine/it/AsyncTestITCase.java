@@ -33,7 +33,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -46,7 +46,7 @@ public class AsyncTestITCase extends AbstractTest {
 
     @Test
     public void retrieveEntitySet() throws InterruptedException, ExecutionException {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Product");
         final Future<ODataRetrieveResponse<ODataEntitySet>> futureRes =
                 client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build()).asyncExecute();
@@ -93,7 +93,7 @@ public class AsyncTestITCase extends AbstractTest {
      */
     @Test
     public void createMediaEntity() throws InterruptedException, ExecutionException, IOException {
-        AbstractURIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Car");
+        URIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Car");
 
         final String TO_BE_UPDATED = "async buffered stream sample";
         final InputStream input = IOUtils.toInputStream(TO_BE_UPDATED);

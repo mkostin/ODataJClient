@@ -26,13 +26,13 @@ import static org.junit.Assert.assertTrue;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetIteratorRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataGenericRetrieveRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.AbstractRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.AbstractODataBinder;
+import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataEntitySetIterator;
 import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
@@ -90,7 +90,7 @@ public class EntitySetTestITCase extends AbstractTest {
     }
 
     private void readEntitySetWithNextLink(final ODataPubFormat format) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
+        final URIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
         uriBuilder.appendEntitySetSegment("Customer");
 
         final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
@@ -113,7 +113,7 @@ public class EntitySetTestITCase extends AbstractTest {
     }
 
     private void readODataEntitySetIterator(final ODataPubFormat format) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
+        final URIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
         uriBuilder.appendEntitySetSegment("Customer");
 
         final ODataEntitySetIteratorRequest req =
@@ -136,7 +136,7 @@ public class EntitySetTestITCase extends AbstractTest {
     }
 
     private void genericRequest(final ODataPubFormat format) {
-        final AbstractURIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
+        final URIBuilder uriBuilder = client.getURIBuilder(getServiceRoot());
         uriBuilder.appendEntitySetSegment("Car");
 
         final ODataGenericRetrieveRequest req =

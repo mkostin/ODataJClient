@@ -28,7 +28,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataNoContent;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.uri.AbstractURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
@@ -54,7 +54,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
         for (FunctionImport funcImp : container.getFunctionImports("RetrieveProduct")) {
             final ODataInvokeResponse<ODataProperty> res;
             if (funcImp.getParameters().isEmpty()) {
-                final AbstractURIBuilder funcImpBuilder = client.getURIBuilder(testActionOverloadingServiceRootURL).
+                final URIBuilder funcImpBuilder = client.getURIBuilder(testActionOverloadingServiceRootURL).
                         appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
                 res = client.getInvokeRequestFactory().<ODataProperty>getInvokeRequest(
@@ -116,7 +116,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
             if ("Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Employee)".
                     equals(funcImp.getParameters().get(0).getType())) {
 
-                final AbstractURIBuilder builder = client.getURIBuilder(testActionOverloadingServiceRootURL).
+                final URIBuilder builder = client.getURIBuilder(testActionOverloadingServiceRootURL).
                         appendEntitySetSegment("Person").
                         appendStructuralSegment("Microsoft.Test.OData.Services.AstoriaDefaultService.Employee");
 
@@ -130,7 +130,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
             } else if ("Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.SpecialEmployee)".
                     equals(funcImp.getParameters().get(0).getType())) {
 
-                final AbstractURIBuilder builder = client.getURIBuilder(testActionOverloadingServiceRootURL).
+                final URIBuilder builder = client.getURIBuilder(testActionOverloadingServiceRootURL).
                         appendEntitySetSegment("Person").
                         appendStructuralSegment("Microsoft.Test.OData.Services.AstoriaDefaultService.SpecialEmployee");
 

@@ -37,7 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * OData request factory class.
  */
-public abstract class AbstractInvokeRequestFactory {
+public abstract class AbstractInvokeRequestFactory implements InvokeRequestFactory {
 
     protected final ODataClient client;
 
@@ -45,15 +45,7 @@ public abstract class AbstractInvokeRequestFactory {
         this.client = client;
     }
 
-    /**
-     * Gets an invoke request instance.
-     *
-     * @param <T> OData domain object result, derived from return type defined in the function import
-     * @param uri URI that identifies the function import
-     * @param metadata Edm metadata
-     * @param functionImport function import to be invoked
-     * @return new ODataInvokeRequest instance.
-     */
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
             final URI uri, final EdmMetadata metadata, final FunctionImport functionImport) {
@@ -93,16 +85,7 @@ public abstract class AbstractInvokeRequestFactory {
         return result;
     }
 
-    /**
-     * Gets an invoke request instance.
-     *
-     * @param <T> OData domain object result, derived from return type defined in the function import
-     * @param uri URI that identifies the function import
-     * @param metadata Edm metadata
-     * @param functionImport function import to be invoked
-     * @param parameters parameters to pass to function import invocation
-     * @return new ODataInvokeRequest instance.
-     */
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
             final URI uri, final EdmMetadata metadata, final FunctionImport functionImport,
