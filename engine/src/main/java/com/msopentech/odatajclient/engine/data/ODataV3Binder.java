@@ -23,21 +23,7 @@ import com.msopentech.odatajclient.engine.client.ODataV3Client;
 
 public class ODataV3Binder extends AbstractODataBinder {
 
-    private static final Object MONITOR = new Object();
-
-    private static ODataV3Binder instance;
-
-    public static ODataV3Binder getInstance(final ODataV3Client client) {
-        synchronized (MONITOR) {
-            if (instance == null) {
-                instance = new ODataV3Binder(client);
-            }
-        }
-
-        return instance;
-    }
-
-    private ODataV3Binder(final ODataV3Client client) {
+    public ODataV3Binder(final ODataV3Client client) {
         super(client);
     }
 }

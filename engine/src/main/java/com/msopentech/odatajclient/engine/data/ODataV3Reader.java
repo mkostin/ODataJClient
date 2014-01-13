@@ -23,21 +23,7 @@ import com.msopentech.odatajclient.engine.client.ODataV3Client;
 
 public class ODataV3Reader extends AbstractODataReader {
 
-    private static final Object MONITOR = new Object();
-
-    private static ODataV3Reader instance;
-
-    public static ODataV3Reader getInstance(final ODataV3Client client) {
-        synchronized (MONITOR) {
-            if (instance == null) {
-                instance = new ODataV3Reader(client);
-            }
-        }
-
-        return instance;
-    }
-
-    private ODataV3Reader(final ODataV3Client client) {
+    public ODataV3Reader(final ODataV3Client client) {
         super(client);
     }
 }

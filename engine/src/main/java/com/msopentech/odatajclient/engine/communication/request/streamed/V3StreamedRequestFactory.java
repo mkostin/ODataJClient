@@ -23,21 +23,7 @@ import com.msopentech.odatajclient.engine.client.ODataV3Client;
 
 public class V3StreamedRequestFactory extends AbstractStreamedRequestFactory {
 
-    private static final Object MONITOR = new Object();
-
-    private static V3StreamedRequestFactory instance;
-
-    public static V3StreamedRequestFactory getInstance(final ODataV3Client client) {
-        synchronized (MONITOR) {
-            if (instance == null) {
-                instance = new V3StreamedRequestFactory(client);
-            }
-        }
-
-        return instance;
-    }
-
-    private V3StreamedRequestFactory(final ODataV3Client client) {
+    public V3StreamedRequestFactory(final ODataV3Client client) {
         super(client);
     }
 

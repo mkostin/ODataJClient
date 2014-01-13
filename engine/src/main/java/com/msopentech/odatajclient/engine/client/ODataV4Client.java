@@ -39,6 +39,22 @@ public class ODataV4Client implements ODataClient {
 
     private final V4FilterFactory filterFactory = new V4FilterFactory();
 
+    private final ODataV4Reader reader = new ODataV4Reader(this);
+
+    private final ODataV4Writer writer = new ODataV4Writer(this);
+
+    private final ODataV4Binder binder = new ODataV4Binder(this);
+
+    private final V4RetrieveRequestFactory retrieveReqFact = new V4RetrieveRequestFactory(this);
+
+    private final V4CUDRequestFactory cudReqFact = new V4CUDRequestFactory(this);
+
+    private final V4StreamedRequestFactory streamedReqFact = new V4StreamedRequestFactory(this);
+
+    private final V4InvokeRequestFactory invokeReqFact = new V4InvokeRequestFactory(this);
+
+    private final V4BatchRequestFactory batchReqFact = new V4BatchRequestFactory(this);
+
     @Override
     public ODataHeaders getVersionHeaders() {
         final ODataHeaders odataHeaders = new ODataHeaders();
@@ -64,41 +80,41 @@ public class ODataV4Client implements ODataClient {
 
     @Override
     public ODataV4Reader getODataReader() {
-        return ODataV4Reader.getInstance(this);
+        return reader;
     }
 
     @Override
     public ODataV4Writer getODataWriter() {
-        return ODataV4Writer.getInstance(this);
+        return writer;
     }
 
     @Override
     public ODataV4Binder getODataBinder() {
-        return ODataV4Binder.getInstance(this);
+        return binder;
     }
 
     @Override
     public V4RetrieveRequestFactory getRetrieveRequestFactory() {
-        return V4RetrieveRequestFactory.getInstance(this);
+        return retrieveReqFact;
     }
 
     @Override
     public V4CUDRequestFactory getCUDRequestFactory() {
-        return V4CUDRequestFactory.getInstance(this);
+        return cudReqFact;
     }
 
     @Override
     public V4StreamedRequestFactory getStreamedRequestFactory() {
-        return V4StreamedRequestFactory.getInstance(this);
+        return streamedReqFact;
     }
 
     @Override
     public V4InvokeRequestFactory getInvokeRequestFactory() {
-        return V4InvokeRequestFactory.getInstance(this);
+        return invokeReqFact;
     }
 
     @Override
     public V4BatchRequestFactory getBatchRequestFactory() {
-        return V4BatchRequestFactory.getInstance(this);
+        return batchReqFact;
     }
 }

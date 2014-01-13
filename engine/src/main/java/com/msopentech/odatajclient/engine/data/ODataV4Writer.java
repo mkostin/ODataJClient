@@ -23,21 +23,7 @@ import com.msopentech.odatajclient.engine.client.ODataV4Client;
 
 public class ODataV4Writer extends AbstractODataWriter {
 
-    private static final Object MONITOR = new Object();
-
-    private static ODataV4Writer instance;
-
-    public static ODataV4Writer getInstance(final ODataV4Client client) {
-        synchronized (MONITOR) {
-            if (instance == null) {
-                instance = new ODataV4Writer(client);
-            }
-        }
-
-        return instance;
-    }
-
-    private ODataV4Writer(final ODataV4Client client) {
+    public ODataV4Writer(final ODataV4Client client) {
         super(client);
     }
 }

@@ -23,21 +23,7 @@ import com.msopentech.odatajclient.engine.client.ODataV4Client;
 
 public class V4CUDRequestFactory extends AbstractCUDRequestFactory {
 
-    private static final Object MONITOR = new Object();
-
-    private static V4CUDRequestFactory instance;
-
-    public static V4CUDRequestFactory getInstance(final ODataV4Client client) {
-        synchronized (MONITOR) {
-            if (instance == null) {
-                instance = new V4CUDRequestFactory(client);
-            }
-        }
-
-        return instance;
-    }
-
-    private V4CUDRequestFactory(final ODataV4Client client) {
+    public V4CUDRequestFactory(final ODataV4Client client) {
         super(client);
     }
 

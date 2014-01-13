@@ -23,21 +23,7 @@ import com.msopentech.odatajclient.engine.client.ODataV4Client;
 
 public class V4BatchRequestFactory extends AbstractBatchRequestFactory {
 
-    private static final Object MONITOR = new Object();
-
-    private static V4BatchRequestFactory instance;
-
-    public static V4BatchRequestFactory getInstance(final ODataV4Client client) {
-        synchronized (MONITOR) {
-            if (instance == null) {
-                instance = new V4BatchRequestFactory(client);
-            }
-        }
-
-        return instance;
-    }
-
-    private V4BatchRequestFactory(final ODataV4Client client) {
+    public V4BatchRequestFactory(final ODataV4Client client) {
         super(client);
     }
 

@@ -23,21 +23,7 @@ import com.msopentech.odatajclient.engine.client.ODataV3Client;
 
 public class V3InvokeRequestFactory extends AbstractInvokeRequestFactory {
 
-    private static final Object MONITOR = new Object();
-
-    private static V3InvokeRequestFactory instance;
-
-    public static V3InvokeRequestFactory getInstance(final ODataV3Client client) {
-        synchronized (MONITOR) {
-            if (instance == null) {
-                instance = new V3InvokeRequestFactory(client);
-            }
-        }
-
-        return instance;
-    }
-
-    private V3InvokeRequestFactory(final ODataV3Client client) {
+    public V3InvokeRequestFactory(final ODataV3Client client) {
         super(client);
     }
 

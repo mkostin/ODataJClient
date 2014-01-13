@@ -38,6 +38,22 @@ public class ODataV3Client implements ODataClient {
 
     private final V3FilterFactory filterFactory = new V3FilterFactory();
 
+    private final ODataV3Reader reader = new ODataV3Reader(this);
+
+    private final ODataV3Writer writer = new ODataV3Writer(this);
+
+    private final ODataV3Binder binder = new ODataV3Binder(this);
+
+    private final V3RetrieveRequestFactory retrieveReqFact = new V3RetrieveRequestFactory(this);
+
+    private final V3CUDRequestFactory cudReqFact = new V3CUDRequestFactory(this);
+
+    private final V3StreamedRequestFactory streamedReqFact = new V3StreamedRequestFactory(this);
+
+    private final V3InvokeRequestFactory invokeReqFact = new V3InvokeRequestFactory(this);
+
+    private final V3BatchRequestFactory batchReqFact = new V3BatchRequestFactory(this);
+
     @Override
     public ODataHeaders getVersionHeaders() {
         final ODataHeaders odataHeaders = new ODataHeaders();
@@ -64,42 +80,42 @@ public class ODataV3Client implements ODataClient {
 
     @Override
     public ODataV3Reader getODataReader() {
-        return ODataV3Reader.getInstance(this);
+        return reader;
     }
 
     @Override
     public ODataV3Writer getODataWriter() {
-        return ODataV3Writer.getInstance(this);
+        return writer;
     }
 
     @Override
     public ODataV3Binder getODataBinder() {
-        return ODataV3Binder.getInstance(this);
+        return binder;
     }
 
     @Override
     public V3RetrieveRequestFactory getRetrieveRequestFactory() {
-        return V3RetrieveRequestFactory.getInstance(this);
+        return retrieveReqFact;
     }
 
     @Override
     public V3CUDRequestFactory getCUDRequestFactory() {
-        return V3CUDRequestFactory.getInstance(this);
+        return cudReqFact;
     }
 
     @Override
     public V3StreamedRequestFactory getStreamedRequestFactory() {
-        return V3StreamedRequestFactory.getInstance(this);
+        return streamedReqFact;
     }
 
     @Override
     public V3InvokeRequestFactory getInvokeRequestFactory() {
-        return V3InvokeRequestFactory.getInstance(this);
+        return invokeReqFact;
     }
 
     @Override
     public V3BatchRequestFactory getBatchRequestFactory() {
-        return V3BatchRequestFactory.getInstance(this);
+        return batchReqFact;
     }
 
 }
