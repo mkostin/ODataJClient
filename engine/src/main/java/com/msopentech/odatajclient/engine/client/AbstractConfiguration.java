@@ -50,6 +50,8 @@ public abstract class AbstractConfiguration implements Configuration {
 
     private static final String GZIP_COMPRESSION = "gzipCompression";
 
+    private static final String CHUNKING = "chunking";
+
     private final Map<String, Object> CONF = new HashMap<String, Object>();
 
     private ExecutorService executor = Executors.newFixedThreadPool(10);
@@ -182,6 +184,16 @@ public abstract class AbstractConfiguration implements Configuration {
     @Override
     public void setGzipCompression(final boolean value) {
         setProperty(GZIP_COMPRESSION, value);
+    }
+
+    @Override
+    public boolean isUseChuncked() {
+        return (Boolean) getProperty(CHUNKING, true);
+    }
+
+    @Override
+    public void setUseChuncked(final boolean value) {
+        setProperty(CHUNKING, value);
     }
 
     @Override
