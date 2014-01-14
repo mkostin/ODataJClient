@@ -30,8 +30,11 @@ import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.FilterFactory;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 
 public interface ODataClient {
+
+    Version getWorkingVersion();
 
     ODataHeaders getVersionHeaders();
 

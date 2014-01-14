@@ -32,6 +32,7 @@ import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.V4URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.V4FilterFactory;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 
 public class ODataV4Client implements ODataClient {
 
@@ -54,6 +55,11 @@ public class ODataV4Client implements ODataClient {
     private final V4InvokeRequestFactory invokeReqFact = new V4InvokeRequestFactory(this);
 
     private final V4BatchRequestFactory batchReqFact = new V4BatchRequestFactory(this);
+
+    @Override
+    public Version getWorkingVersion() {
+        return Version.V4;
+    }
 
     @Override
     public ODataHeaders getVersionHeaders() {

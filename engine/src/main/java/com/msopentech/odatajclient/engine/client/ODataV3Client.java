@@ -31,6 +31,7 @@ import com.msopentech.odatajclient.engine.data.ODataV3Writer;
 import com.msopentech.odatajclient.engine.uri.V3URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.V3FilterFactory;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 
 public class ODataV3Client implements ODataClient {
 
@@ -53,6 +54,11 @@ public class ODataV3Client implements ODataClient {
     private final V3InvokeRequestFactory invokeReqFact = new V3InvokeRequestFactory(this);
 
     private final V3BatchRequestFactory batchReqFact = new V3BatchRequestFactory(this);
+
+    @Override
+    public Version getWorkingVersion() {
+        return Version.V3;
+    }
 
     @Override
     public ODataHeaders getVersionHeaders() {
@@ -117,5 +123,4 @@ public class ODataV3Client implements ODataClient {
     public V3BatchRequestFactory getBatchRequestFactory() {
         return batchReqFact;
     }
-
 }
