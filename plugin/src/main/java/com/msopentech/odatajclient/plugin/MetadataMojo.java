@@ -112,7 +112,7 @@ public class MetadataMojo extends AbstractMojo {
                 utility = new Utility(metadata, schema, basePackage);
 
                 // write package-info for the base package
-                final String schemaPath = utility.getNamespace().toLowerCase().replaceAll("\\.", File.separator);
+                final String schemaPath = utility.getNamespace().toLowerCase().replace('.', File.separatorChar);
                 final File base = mkPkgDir(schemaPath);
                 final String pkg = basePackage + "." + utility.getNamespace().toLowerCase();
                 parseObj(base, pkg, "package-info", "package-info.java");
