@@ -30,6 +30,7 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -37,7 +38,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData update entity property value request.
@@ -72,7 +72,7 @@ public class ODataValueUpdateRequest extends AbstractODataBasicRequestImpl<OData
     @Override
     public ODataValueUpdateResponseImpl execute() {
         final InputStream input = getPayload();
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
+        ((HttpEntityEnclosingRequestBase) request).setEntity(URIUtils.buildInputStreamEntity(odataClient, input));
 
         try {
             return new ODataValueUpdateResponseImpl(httpClient, doExecute());

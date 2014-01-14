@@ -27,6 +27,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataPropertyUp
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
@@ -68,7 +69,7 @@ public class ODataPropertyUpdateRequest extends AbstractODataBasicRequestImpl<OD
     @Override
     public ODataPropertyUpdateResponse execute() {
         final InputStream input = getPayload();
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
+        ((HttpEntityEnclosingRequestBase) request).setEntity(URIUtils.buildInputStreamEntity(odataClient, input));
 
         try {
             return new ODataPropertyUpdateResponseImpl(httpClient, doExecute());

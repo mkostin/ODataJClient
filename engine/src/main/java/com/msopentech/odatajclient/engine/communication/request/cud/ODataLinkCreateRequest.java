@@ -27,13 +27,13 @@ import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperat
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an insert link OData request.
@@ -65,7 +65,7 @@ public class ODataLinkCreateRequest extends AbstractODataBasicRequestImpl<ODataL
     @Override
     public ODataLinkOperationResponse execute() {
         final InputStream input = getPayload();
-        ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
+        ((HttpPost) request).setEntity(URIUtils.buildInputStreamEntity(odataClient, input));
 
         try {
             return new ODataLinkCreateResponseImpl(httpClient, doExecute());

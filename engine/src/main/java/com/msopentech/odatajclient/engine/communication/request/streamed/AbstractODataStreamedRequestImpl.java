@@ -28,6 +28,7 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatch
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.engine.utils.Wrapper;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +40,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.InputStreamEntity;
 
 /**
  * Streamed OData request abstract class.
@@ -91,7 +91,8 @@ public abstract class AbstractODataStreamedRequestImpl<V extends ODataResponse, 
     public T execute() {
         streamManager = getStreamManager();
 
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(streamManager.getBody(), -65000));
+        ((HttpEntityEnclosingRequestBase) request).setEntity(
+                URIUtils.buildInputStreamEntity(odataClient, streamManager.getBody()));
 
         futureWrapper.setWrapped(odataClient.getConfiguration().getExecutor().submit(new Callable<HttpResponse>() {
 

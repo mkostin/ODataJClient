@@ -27,13 +27,13 @@ import com.msopentech.odatajclient.engine.communication.response.ODataEntityCrea
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData create request.
@@ -72,7 +72,7 @@ public class ODataEntityCreateRequest extends AbstractODataBasicRequestImpl<ODat
     @Override
     public ODataEntityCreateResponse execute() {
         final InputStream input = getPayload();
-        ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
+        ((HttpPost) request).setEntity(URIUtils.buildInputStreamEntity(odataClient, input));
 
         try {
             return new ODataEntityCreateResponseImpl(httpClient, doExecute());

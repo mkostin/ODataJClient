@@ -35,6 +35,7 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -47,7 +48,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData invoke operation request.
@@ -160,7 +160,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
                     throw new IllegalArgumentException("While adding GET parameters", e);
                 }
             } else if (this.method == HttpMethod.POST) {
-                ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
+                ((HttpPost) request).setEntity(URIUtils.buildInputStreamEntity(odataClient, input));
 
                 setContentType(ODataPubFormat.JSON.toString());
             }

@@ -139,8 +139,24 @@ public interface Configuration {
      */
     void setUseXHTTPMethod(boolean value);
 
+    /**
+     * Checks whether URIs contain entity key between parentheses (standard) or instead as additional segment.
+     * Example: http://services.odata.org/V4/OData/OData.svc/Products(0) or
+     * http://services.odata.org/V4/OData/OData.svc/Products/0
+     *
+     * @return
+     */
     boolean isKeyAsSegment();
 
+    /**
+     * Sets whether URIs shall be built with entity key between parentheses (standard) or instead as additional
+     * segment.
+     * Example: http://services.odata.org/V4/OData/OData.svc/Products(0) or
+     * http://services.odata.org/V4/OData/OData.svc/Products/0
+     *
+     * @return whether URIs shall be built with entity key between parentheses (standard) or instead as additional
+     * segment.
+     */
     void setKeyAsSegment(boolean value);
 
     /**
@@ -158,6 +174,20 @@ public interface Configuration {
      * @param value whether to use Gzip compression.
      */
     void setGzipCompression(boolean value);
+
+    /**
+     * Checks whether chunk HTTP encoding is being used.
+     *
+     * @return whether chunk HTTP encoding is being used
+     */
+    boolean isUseChuncked();
+
+    /**
+     * Sets chunk HTTP encoding enabled or disabled.
+     *
+     * @param value whether to use chunk HTTP encoding.
+     */
+    void setUseChuncked(boolean value);
 
     /**
      * Retrieves request executor service.
