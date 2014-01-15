@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,17 +34,19 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Writes out JSON string from <tt>JSONEntry</tt>.
+ * Writes out JSON string from <tt>JSONV3Entry</tt>.
  *
- * @see JSONEntry
+ * @see JSONV3Entry
  */
-public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
+public abstract class AbstractJSONEntrySerializer extends JsonSerializer<JSONV3Entry> {
+
+    protected abstract Version getWorkingVersion();
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public void serialize(final JSONEntry entry, final JsonGenerator jgen, final SerializerProvider provider)
+    public void serialize(final JSONV3Entry entry, final JsonGenerator jgen, final SerializerProvider provider)
             throws IOException, JsonProcessingException {
 
         jgen.writeStartObject();
@@ -124,9 +127,9 @@ public class JSONEntrySerializer extends JsonSerializer<JSONEntry> {
         }
 
         if (entry.getMediaEntryProperties() == null) {
-            DOMTreeUtils.writeSubtree(jgen, entry.getContent());
+            DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, entry.getContent());
         } else {
-            DOMTreeUtils.writeSubtree(jgen, entry.getMediaEntryProperties());
+            DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, entry.getMediaEntryProperties());
         }
 
         jgen.writeEndObject();

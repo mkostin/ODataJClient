@@ -19,13 +19,16 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
-import com.msopentech.odatajclient.engine.data.AbstractLinkResource;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
- * Link from an entry, represented via JSON.
+ * A single entry, represented via JSON.
  */
-public class JSONLink extends AbstractLinkResource<JSONV3Entry, JSONFeed> {
+@JsonSerialize(using = JSONV3EntrySerializer.class)
+@JsonDeserialize(using = JSONEntryDeserializer.class)
+public class JSONV3Entry extends AbstractJSONEntry {
 
-    private static final long serialVersionUID = 4662606817302869095L;
+    private static final long serialVersionUID = -5275365545400797758L;
 
 }

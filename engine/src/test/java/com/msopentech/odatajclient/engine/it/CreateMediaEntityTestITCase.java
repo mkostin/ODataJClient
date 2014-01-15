@@ -229,7 +229,7 @@ public class CreateMediaEntityTestITCase extends AbstractTest {
                 }
                 // add new value for the property
                 entityToBeUpdated.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
-                        new ODataPrimitiveValue.Builder().setText(newValue).setType(EdmSimpleType.String).build()));
+                        new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(newValue).setType(EdmSimpleType.String).build()));
 
                 UpdateType type = UpdateType.REPLACE;
                 // update the entity in the server

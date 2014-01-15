@@ -110,7 +110,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
         for (FunctionImport funcImp : container.getFunctionImports("IncreaseSalaries")) {
             final Map<String, ODataValue> parameters = new LinkedHashMap<String, ODataValue>(1);
             parameters.put("n",
-                    new ODataPrimitiveValue.Builder().setType(EdmSimpleType.Int32).setValue(5).build());
+                    new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setType(EdmSimpleType.Int32).setValue(5).build());
 
             final ODataInvokeResponse<ODataNoContent> res;
             if ("Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Employee)".

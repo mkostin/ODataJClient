@@ -38,7 +38,9 @@ import org.w3c.dom.Element;
  *
  * @see JSONProperty
  */
-public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
+public abstract class AbstractJSONPropertySerializer extends JsonSerializer<JSONProperty> {
+
+    protected abstract ODataConstants.Version getWorkingVersion();
 
     /**
      * {@inheritDoc }
@@ -66,14 +68,14 @@ public class JSONPropertySerializer extends JsonSerializer<JSONProperty> {
                     wrapper.appendChild(document.renameNode(
                             document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 
-                    DOMTreeUtils.writeSubtree(jgen, wrapper);
+                    DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, wrapper);
                 } else if (EdmSimpleType.isGeospatial(content.getAttribute(ODataConstants.ATTR_M_TYPE))) {
                     wrapper.appendChild(document.renameNode(
                             document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 
-                    DOMTreeUtils.writeSubtree(jgen, wrapper, true);
+                    DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, wrapper, true);
                 } else {
-                    DOMTreeUtils.writeSubtree(jgen, content);
+                    DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, content);
                 }
             } catch (Exception e) {
                 throw new JsonParseException("Cannot serialize property", JsonLocation.NA, e);

@@ -20,6 +20,7 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -28,6 +29,7 @@ import java.util.Date;
 import java.util.UUID;
 import javax.xml.datatype.Duration;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -37,17 +39,39 @@ public class ODataPrimitiveValue extends ODataValue {
 
     private static final long serialVersionUID = 2841837627899878223L;
 
+    protected abstract static class AbstractBuilder {
+
+        private final Version workingVersion;
+
+        /**
+         * Constructor.
+         */
+        public AbstractBuilder(final Version workingVersion) {
+            this.workingVersion = workingVersion;
+        }
+
+        public AbstractBuilder isSupported(final EdmSimpleType type) {
+            if (type != null && !ArrayUtils.contains(type.getSupportedVersions(), workingVersion)) {
+                throw new IllegalArgumentException(String.format(
+                        "Type %s not supported by the current OData working version", EdmSimpleType.Stream.toString()));
+            }
+
+            return this;
+        }
+    }
+
     /**
      * Primitive value builder.
      */
-    public static class Builder {
+    public static class Builder extends AbstractBuilder {
 
         private final ODataPrimitiveValue opv;
 
         /**
          * Constructor.
          */
-        public Builder() {
+        public Builder(final Version workingVersion) {
+            super(workingVersion);
             this.opv = new ODataPrimitiveValue();
         }
 
@@ -80,10 +104,13 @@ public class ODataPrimitiveValue extends ODataValue {
          * @return the current builder.
          */
         public Builder setType(final EdmSimpleType type) {
+            isSupported(type);
+
             if (type == EdmSimpleType.Stream) {
-                throw new IllegalArgumentException("Cannot build a primitive value for "
-                        + EdmSimpleType.Stream.toString());
+                throw new IllegalArgumentException(String.format(
+                        "Cannot build a primitive value for %s", EdmSimpleType.Stream.toString()));
             }
+
             this.opv.type = type;
             return this;
         }

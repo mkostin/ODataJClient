@@ -295,7 +295,7 @@ class Container implements AbstractContainer {
 
         if (AttachedEntityStatus.DELETED != currentStatus) {
             entity.getProperties().clear();
-            EngineUtils.addProperties(factory.getMetadata(), handler.getPropertyChanges(), entity);
+            EngineUtils.addProperties(client, factory.getMetadata(), handler.getPropertyChanges(), entity);
         }
 
         for (Map.Entry<NavigationProperty, Object> property : handler.getLinkChanges().entrySet()) {
@@ -377,7 +377,7 @@ class Container implements AbstractContainer {
                 final URI targetURI = currentStatus == AttachedEntityStatus.NEW
                         ? URI.create("$" + startingPos + "/$value")
                         : URIUtils.getURI(
-                                factory.getServiceRoot(), handler.getEntity().getEditLink().toASCIIString() + "/$value");
+                        factory.getServiceRoot(), handler.getEntity().getEditLink().toASCIIString() + "/$value");
 
                 batchUpdateMediaEntity(handler, targetURI, handler.getStreamChanges(), changeset);
 
@@ -390,8 +390,8 @@ class Container implements AbstractContainer {
         for (Map.Entry<String, InputStream> streamedChanges : handler.getStreamedPropertyChanges().entrySet()) {
             final URI targetURI = currentStatus == AttachedEntityStatus.NEW
                     ? URI.create("$" + startingPos) : URIUtils.getURI(
-                            factory.getServiceRoot(),
-                            EngineUtils.getEditMediaLink(streamedChanges.getKey(), entity).toASCIIString());
+                    factory.getServiceRoot(),
+                    EngineUtils.getEditMediaLink(streamedChanges.getKey(), entity).toASCIIString());
 
             batchUpdateMediaResource(handler, targetURI, streamedChanges.getValue(), changeset);
 

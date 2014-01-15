@@ -23,7 +23,7 @@ import static com.msopentech.odatajclient.engine.data.Deserializer.toEntry;
 
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
-import com.msopentech.odatajclient.engine.data.json.JSONEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.ByteArrayInputStream;
@@ -176,10 +176,10 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
         super.finalize();
     }
 
-    private JSONEntry nextJsonEntryFromFeed(final InputStream input, final OutputStream osFeed) {
+    private JSONV3Entry nextJsonEntryFromFeed(final InputStream input, final OutputStream osFeed) {
         final ByteArrayOutputStream entry = new ByteArrayOutputStream();
 
-        JSONEntry entity = null;
+        JSONV3Entry entity = null;
         try {
             int c = 0;
 
@@ -213,7 +213,7 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
                 }
 
                 if (c >= 0) {
-                    entity = toEntry(new ByteArrayInputStream(entry.toByteArray()), JSONEntry.class);
+                    entity = toEntry(new ByteArrayInputStream(entry.toByteArray()), JSONV3Entry.class);
                 }
             } else {
                 while ((c = input.read()) >= 0) {

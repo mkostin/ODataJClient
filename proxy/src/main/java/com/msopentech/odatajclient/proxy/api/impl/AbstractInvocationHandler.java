@@ -171,8 +171,8 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
                 final ODataValue paramValue = args[i] == null
                         ? null
-                        : EngineUtils.getODataValue(containerHandler.getFactory().getMetadata(),
-                                new EdmType(containerHandler.getFactory().getMetadata(), parAnnot.type()), args[i]);
+                        : EngineUtils.getODataValue(client, containerHandler.getFactory().getMetadata(),
+                        new EdmType(containerHandler.getFactory().getMetadata(), parAnnot.type()), args[i]);
 
                 parameters.put(parAnnot.name(), paramValue);
             }

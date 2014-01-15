@@ -43,12 +43,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Parse JSON string into <tt>JSONEntry</tt>.
- * If metadata information is available, the corresponding JSONEntry fields and content will be populated.
+ * Parse JSON string into <tt>JSONV3Entry</tt>.
+ * If metadata information is available, the corresponding JSONV3Entry fields and content will be populated.
  *
- * @see JSONEntry
+ * @see JSONV3Entry
  */
-public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
+public class JSONEntryDeserializer extends JsonDeserializer<JSONV3Entry> {
 
     private String getTitle(final Map.Entry<String, JsonNode> entry) {
         return entry.getKey().substring(0, entry.getKey().indexOf('@'));
@@ -64,7 +64,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
             if (inline instanceof ObjectNode) {
                 final JsonParser inlineParser = inline.traverse();
                 inlineParser.setCodec(codec);
-                link.setInlineEntry(inlineParser.readValuesAs(JSONEntry.class).next());
+                link.setInlineEntry(inlineParser.readValuesAs(JSONV3Entry.class).next());
             }
 
             if (inline instanceof ArrayNode) {
@@ -73,7 +73,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
                 while (entries.hasNext()) {
                     final JsonParser inlineParser = entries.next().traverse();
                     inlineParser.setCodec(codec);
-                    feed.addEntry(inlineParser.readValuesAs(JSONEntry.class).next());
+                    feed.addEntry(inlineParser.readValuesAs(JSONV3Entry.class).next());
                 }
 
                 link.setInlineFeed(feed);
@@ -86,7 +86,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
      * {@inheritDoc }
      */
     @Override
-    public JSONEntry deserialize(final JsonParser parser, final DeserializationContext ctxt)
+    public JSONV3Entry deserialize(final JsonParser parser, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
         final ObjectNode tree = (ObjectNode) parser.getCodec().readTree(parser);
@@ -99,7 +99,7 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONEntry> {
                 tree.hasNonNull(ODataConstants.JSON_MEDIAREAD_LINK)
                 && tree.hasNonNull(ODataConstants.JSON_MEDIA_CONTENT_TYPE);
 
-        final JSONEntry entry = new JSONEntry();
+        final JSONV3Entry entry = new JSONV3Entry();
 
         if (tree.hasNonNull(ODataConstants.JSON_METADATA)) {
             entry.setMetadata(URI.create(tree.get(ODataConstants.JSON_METADATA).textValue()));

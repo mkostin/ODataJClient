@@ -129,7 +129,7 @@ public abstract class AbstractODataReader implements ODataReader {
             } else if (ODataLinkCollection.class.isAssignableFrom(reference)) {
                 res = readLinks(src, ODataFormat.fromString(format));
             } else if (ODataValue.class.isAssignableFrom(reference)) {
-                res = new ODataPrimitiveValue.Builder().
+                res = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
                         setType(ODataValueFormat.fromString(format) == ODataValueFormat.TEXT
                                 ? EdmSimpleType.String : EdmSimpleType.Stream).
                         setText(IOUtils.toString(src)).

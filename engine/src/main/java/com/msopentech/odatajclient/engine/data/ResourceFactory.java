@@ -22,7 +22,7 @@ package com.msopentech.odatajclient.engine.data;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.atom.AtomLink;
-import com.msopentech.odatajclient.engine.data.json.JSONEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
 import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONLink;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -66,8 +66,8 @@ public class ResourceFactory {
         if (AtomEntry.class.equals(resourceClass)) {
             result = (T) new AtomEntry();
         }
-        if (JSONEntry.class.equals(resourceClass)) {
-            result = (T) new JSONEntry();
+        if (JSONV3Entry.class.equals(resourceClass)) {
+            result = (T) new JSONV3Entry();
         }
 
         return result;
@@ -140,7 +140,7 @@ public class ResourceFactory {
             case JSON:
             case JSON_FULL_METADATA:
             case JSON_NO_METADATA:
-                result = (Class<T>) JSONEntry.class;
+                result = (Class<T>) JSONV3Entry.class;
                 break;
         }
 
@@ -186,7 +186,7 @@ public class ResourceFactory {
         if (AtomEntry.class.equals(resourceClass)) {
             result = (T) new AtomLink();
         }
-        if (JSONEntry.class.equals(resourceClass)) {
+        if (JSONV3Entry.class.equals(resourceClass)) {
             result = (T) new JSONLink();
         }
 
@@ -236,7 +236,7 @@ public class ResourceFactory {
         if (AtomEntry.class.equals(resourceClass)) {
             result = (Class<T>) AtomLink.class;
         }
-        if (JSONEntry.class.equals(resourceClass)) {
+        if (JSONV3Entry.class.equals(resourceClass)) {
             result = (Class<T>) JSONLink.class;
         }
 
@@ -262,7 +262,7 @@ public class ResourceFactory {
             result = (Class<K>) AtomEntry.class;
         }
         if (JSONLink.class.equals(resourceClass)) {
-            result = (Class<K>) JSONEntry.class;
+            result = (Class<K>) JSONV3Entry.class;
         }
 
         return result;
@@ -287,7 +287,7 @@ public class ResourceFactory {
             result = (Class<K>) AtomEntry.class;
         }
         if (JSONFeed.class.equals(resourceClass)) {
-            result = (Class<K>) JSONEntry.class;
+            result = (Class<K>) JSONV3Entry.class;
         }
 
         return result;

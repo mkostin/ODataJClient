@@ -60,22 +60,22 @@ public class EntityUpdateMoreTestITCase extends AbstractTest {
                 ODataObjectFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Customer");
         // add name attribute
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Name",
-                new ODataPrimitiveValue.Builder().setText("Updated Customer name").setType(EdmSimpleType.String).build()));
+                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText("Updated Customer name").setType(EdmSimpleType.String).build()));
         // add key attribute
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("CustomerId",
-                new ODataPrimitiveValue.Builder().setText(String.valueOf(-10)).setType(EdmSimpleType.Int32).build()));
+                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(String.valueOf(-10)).setType(EdmSimpleType.Int32).build()));
 
         final ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
                 "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails)");
         final ODataComplexValue contactDetails = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails");
         final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        altNamesValue.add(new ODataPrimitiveValue.Builder().
+        altNamesValue.add(new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
                 setText("My Alternative name").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", altNamesValue));
 
         final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
-        emailBagValue.add(new ODataPrimitiveValue.Builder().
+        emailBagValue.add(new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
                 setText("altname@mydomain.com").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataObjectFactory.newCollectionProperty("EmailBag", emailBagValue));
 
@@ -84,16 +84,16 @@ public class EntityUpdateMoreTestITCase extends AbstractTest {
         contactDetails.add(ODataObjectFactory.newComplexProperty("ContactAlias", contactAliasValue));
 
         final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        aliasAltNamesValue.add(new ODataPrimitiveValue.Builder().
+        aliasAltNamesValue.add(new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
                 setText("myAlternativeName").setType(EdmSimpleType.String).build());
         contactAliasValue.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
 
         final ODataComplexValue homePhone = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Phone");
         homePhone.add(ODataObjectFactory.newPrimitiveProperty("PhoneNumber",
-                new ODataPrimitiveValue.Builder().setText("8437568356834568").setType(EdmSimpleType.String).build()));
+                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText("8437568356834568").setType(EdmSimpleType.String).build()));
         homePhone.add(ODataObjectFactory.newPrimitiveProperty("Extension",
-                new ODataPrimitiveValue.Builder().setText("1243654265346267651534423ttrf").setType(EdmSimpleType.String).
+                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText("1243654265346267651534423ttrf").setType(EdmSimpleType.String).
                 build()));
         contactDetails.add(ODataObjectFactory.newComplexProperty("HomePhone", homePhone));
 
@@ -166,7 +166,7 @@ public class EntityUpdateMoreTestITCase extends AbstractTest {
         }
         assertNotEquals(newValue, oldValue);
         entitySetName.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
-                new ODataPrimitiveValue.Builder().setText(newValue).build()));
+                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(newValue).build()));
 
         update(type, entitySetName, format, etag);
         propertyValue = null;
@@ -201,7 +201,7 @@ public class EntityUpdateMoreTestITCase extends AbstractTest {
         }
         assertNotEquals(newValue, oldValue);
         entitySetName.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
-                new ODataPrimitiveValue.Builder().setText(newValue).setType(EdmSimpleType.DateTime).build()));
+                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(newValue).setType(EdmSimpleType.DateTime).build()));
         update(type, entitySetName, format, etag);
         propertyValue = null;
         for (ODataProperty prop : entitySetName.getProperties()) {
@@ -234,7 +234,7 @@ public class EntityUpdateMoreTestITCase extends AbstractTest {
         assertNotEquals(newValue, oldValue);
 
         entitySetName.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
-                new ODataPrimitiveValue.Builder().setValue(newValue).setType(EdmSimpleType.Int32).build()));
+                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setValue(newValue).setType(EdmSimpleType.Int32).build()));
         update(type, entitySetName, format, etag);
         propertyValue = null;
         for (ODataProperty prop : entitySetName.getProperties()) {
@@ -250,7 +250,7 @@ public class EntityUpdateMoreTestITCase extends AbstractTest {
         entitySetName.removeProperty(replaceProperty);
 
         entitySetName.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
-                new ODataPrimitiveValue.Builder().setValue(oldValue).setType(EdmSimpleType.Int32).build()));
+                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setValue(oldValue).setType(EdmSimpleType.Int32).build()));
 
         update(type, entitySetName, format, etag);
     }
