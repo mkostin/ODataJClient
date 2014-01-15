@@ -24,15 +24,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.V3Edmx;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.V4Edmx;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import java.io.IOException;
 
-public class EdmxDeserializer extends JsonDeserializer<Edmx> {
+public class EdmxDeserializer extends JsonDeserializer<AbstractEdmx> {
 
     @Override
-    public Edmx deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    public AbstractEdmx deserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
-        final Edmx edmx = new Edmx();
+        final AbstractEdmx edmx = Version.V3 == ctxt.findInjectableValue(Version.class.getName(), null, null)
+                ? new V3Edmx()
+                : new V4Edmx();
 
         for (; jp.getCurrentToken() != JsonToken.END_OBJECT; jp.nextToken()) {
             final JsonToken token = jp.getCurrentToken();

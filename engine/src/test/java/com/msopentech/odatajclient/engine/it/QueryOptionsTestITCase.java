@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.Deserializer;
+import com.msopentech.odatajclient.engine.data.AbstractDeserializer;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
@@ -190,7 +190,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
         req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
 
-        final AtomEntry atomEntry = Deserializer.toEntry(req.execute().getRawResponse(), AtomEntry.class);
+        final AtomEntry atomEntry = client.getDeserializer().toEntry(req.execute().getRawResponse(), AtomEntry.class);
         assertEquals("remotingdestructorprinterswitcheschannelssatellitelanguageresolve",
                 atomEntry.getSummary());
     }

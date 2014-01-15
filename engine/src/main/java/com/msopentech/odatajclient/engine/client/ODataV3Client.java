@@ -28,6 +28,8 @@ import com.msopentech.odatajclient.engine.communication.request.streamed.V3Strea
 import com.msopentech.odatajclient.engine.data.ODataV3Binder;
 import com.msopentech.odatajclient.engine.data.ODataV3Reader;
 import com.msopentech.odatajclient.engine.data.ODataV3Writer;
+import com.msopentech.odatajclient.engine.data.V3Deserializer;
+import com.msopentech.odatajclient.engine.data.V3Serializer;
 import com.msopentech.odatajclient.engine.uri.V3URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.V3FilterFactory;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -35,9 +37,15 @@ import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 
 public class ODataV3Client implements ODataClient {
 
+    private static final long serialVersionUID = -1655712193243609209L;
+
     private final V3Configuration configuration = new V3Configuration();
 
     private final V3FilterFactory filterFactory = new V3FilterFactory();
+
+    private final V3Deserializer deserializer = new V3Deserializer(this);
+
+    private final V3Serializer serializer = new V3Serializer(this);
 
     private final ODataV3Reader reader = new ODataV3Reader(this);
 
@@ -82,6 +90,16 @@ public class ODataV3Client implements ODataClient {
     @Override
     public V3FilterFactory getFilterFactory() {
         return filterFactory;
+    }
+
+    @Override
+    public V3Deserializer getDeserializer() {
+        return deserializer;
+    }
+
+    @Override
+    public V3Serializer getSerializer() {
+        return serializer;
     }
 
     @Override

@@ -24,7 +24,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -43,12 +42,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Parse JSON string into <tt>JSONV3Entry</tt>.
- * If metadata information is available, the corresponding JSONV3Entry fields and content will be populated.
+ * Parse JSON string into <tt>JSONV3Entry</tt> or <tt>JSONV4Entry</tt>.
+ * If metadata information is available, the corresponding entry fields and content will be populated.
  *
  * @see JSONV3Entry
+ * @see JSONV4Entry
  */
-public class JSONEntryDeserializer extends JsonDeserializer<JSONV3Entry> {
+public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEntry> {
 
     private String getTitle(final Map.Entry<String, JsonNode> entry) {
         return entry.getKey().substring(0, entry.getKey().indexOf('@'));
@@ -82,11 +82,8 @@ public class JSONEntryDeserializer extends JsonDeserializer<JSONV3Entry> {
         return entryNamePrefix;
     }
 
-    /**
-     * {@inheritDoc }
-     */
     @Override
-    public JSONV3Entry deserialize(final JsonParser parser, final DeserializationContext ctxt)
+    protected AbstractJSONEntry doDeserialize(final JsonParser parser, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
         final ObjectNode tree = (ObjectNode) parser.getCodec().readTree(parser);

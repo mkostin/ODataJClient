@@ -125,7 +125,7 @@ public class InvokeTestITCase extends AbstractTest {
                 appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
         EdmType type = new EdmType(funcImp.getParameters().get(0).getType());
-        ODataPrimitiveValue argument = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        ODataPrimitiveValue argument = new ODataPrimitiveValue.Builder(client).
                 setType(type.getSimpleType()).
                 setValue(154).
                 build();
@@ -155,7 +155,7 @@ public class InvokeTestITCase extends AbstractTest {
                 appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
         type = new EdmType(funcImp.getParameters().get(0).getType());
-        argument = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        argument = new ODataPrimitiveValue.Builder(client).
                 setType(type.getSimpleType()).
                 setText(StringUtils.EMPTY).
                 build();
@@ -193,15 +193,15 @@ public class InvokeTestITCase extends AbstractTest {
         final ODataEntity employee = ODataObjectFactory.newEntity(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Employee");
 
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("PersonId", new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("PersonId", new ODataPrimitiveValue.Builder(client).
                 setText("1244").setType(EdmSimpleType.Int32).build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Name", new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Name", new ODataPrimitiveValue.Builder(client).
                 setText("Test employee").build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("ManagersPersonId", new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("ManagersPersonId", new ODataPrimitiveValue.Builder(client).
                 setText("3777").setType(EdmSimpleType.Int32).build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Salary", new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Salary", new ODataPrimitiveValue.Builder(client).
                 setText("1000").setType(EdmSimpleType.Int32).build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Title", new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Title", new ODataPrimitiveValue.Builder(client).
                 setText("CEO").build()));
 
         final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
@@ -291,7 +291,7 @@ public class InvokeTestITCase extends AbstractTest {
         final ODataInvokeRequest<ODataNoContent> req = client.getInvokeRequestFactory().getInvokeRequest(
                 builder.appendStructuralSegment(funcImp.getName()).build(), metadata, funcImp,
                 Collections.<String, ODataValue>singletonMap(
-                "n", new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setValue(1).setType(EdmSimpleType.Int32).build()));
+                "n", new ODataPrimitiveValue.Builder(client).setValue(1).setType(EdmSimpleType.Int32).build()));
         final ODataInvokeResponse<ODataNoContent> res = req.execute();
         assertNotNull(res);
         assertEquals(204, res.getStatusCode());

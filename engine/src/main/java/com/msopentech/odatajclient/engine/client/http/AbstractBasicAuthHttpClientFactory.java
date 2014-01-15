@@ -31,6 +31,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public abstract class AbstractBasicAuthHttpClientFactory extends DefaultHttpClientFactory {
 
+    private static final long serialVersionUID = 7985626503125490244L;
+
     protected abstract String getUsername();
 
     protected abstract String getPassword();

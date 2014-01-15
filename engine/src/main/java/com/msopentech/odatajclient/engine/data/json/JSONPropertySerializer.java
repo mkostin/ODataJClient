@@ -23,7 +23,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
@@ -38,15 +37,10 @@ import org.w3c.dom.Element;
  *
  * @see JSONProperty
  */
-public abstract class AbstractJSONPropertySerializer extends JsonSerializer<JSONProperty> {
+public class JSONPropertySerializer extends ODataJsonSerializer<JSONProperty> {
 
-    protected abstract ODataConstants.Version getWorkingVersion();
-
-    /**
-     * {@inheritDoc }
-     */
     @Override
-    public void serialize(final JSONProperty property, final JsonGenerator jgen, final SerializerProvider provider)
+    public void doSerialize(final JSONProperty property, final JsonGenerator jgen, final SerializerProvider provider)
             throws IOException, JsonProcessingException {
 
         jgen.writeStartObject();
@@ -68,14 +62,14 @@ public abstract class AbstractJSONPropertySerializer extends JsonSerializer<JSON
                     wrapper.appendChild(document.renameNode(
                             document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 
-                    DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, wrapper);
+                    DOMTreeUtils.writeSubtree(client, jgen, wrapper);
                 } else if (EdmSimpleType.isGeospatial(content.getAttribute(ODataConstants.ATTR_M_TYPE))) {
                     wrapper.appendChild(document.renameNode(
                             document.importNode(content, true), null, ODataConstants.JSON_VALUE));
 
-                    DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, wrapper, true);
+                    DOMTreeUtils.writeSubtree(client, jgen, wrapper, true);
                 } else {
-                    DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, content);
+                    DOMTreeUtils.writeSubtree(client, jgen, content);
                 }
             } catch (Exception e) {
                 throw new JsonParseException("Cannot serialize property", JsonLocation.NA, e);

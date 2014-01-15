@@ -19,10 +19,12 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
+import java.io.Serializable;
+
 /**
  * OData batch request factory class.
  */
-public interface BatchRequestFactory {
+public interface BatchRequestFactory extends Serializable {
 
     /**
      * Gets a batch request object instance.

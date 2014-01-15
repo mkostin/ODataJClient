@@ -23,6 +23,8 @@ import com.msopentech.odatajclient.engine.client.ODataV4Client;
 
 public class V4StreamedRequestFactory extends AbstractStreamedRequestFactory {
 
+    private static final long serialVersionUID = 960862845654673053L;
+
     public V4StreamedRequestFactory(final ODataV4Client client) {
         super(client);
     }

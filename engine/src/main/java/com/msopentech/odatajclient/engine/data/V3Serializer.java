@@ -17,19 +17,16 @@
  * See the Apache License, Version 2.0 for the specific language
  * governing permissions and limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data.json;
+package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
+import com.msopentech.odatajclient.engine.client.ODataClient;
 
-/**
- * Writes out JSON string from <tt>JSONProperty</tt>.
- *
- * @see JSON3Property
- */
-public class JSONV3PropertySerializer extends AbstractJSONPropertySerializer {
+public class V3Serializer extends AbstractSerializer {
 
-    @Override
-    protected Version getWorkingVersion() {
-        return Version.V3;
+    private static final long serialVersionUID = -8861908250297989806L;
+
+    public V3Serializer(final ODataClient client) {
+        super(client);
     }
+
 }

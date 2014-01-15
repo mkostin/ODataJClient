@@ -39,6 +39,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public abstract class AbstractInvokeRequestFactory implements InvokeRequestFactory {
 
+    private static final long serialVersionUID = -906760270085197249L;
+
     protected final ODataClient client;
 
     protected AbstractInvokeRequestFactory(final ODataClient client) {

@@ -19,10 +19,10 @@
  */
 package com.msopentech.odatajclient.engine.data.metadata;
 
-import com.msopentech.odatajclient.engine.data.Deserializer;
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import com.msopentech.odatajclient.engine.data.metadata.edm.DataServices;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Edmx;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEdmx;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -44,11 +44,12 @@ public class EdmMetadata implements Serializable {
     /**
      * Constructor.
      *
+     * @param client OData client
      * @param inputStream source stream.
      */
     @SuppressWarnings("unchecked")
-    public EdmMetadata(final InputStream inputStream) {
-        final Edmx edmx = Deserializer.toMetadata(inputStream);
+    public EdmMetadata(final ODataClient client, final InputStream inputStream) {
+        final AbstractEdmx edmx = client.getDeserializer().toMetadata(inputStream);
         this.dataservices = edmx.getDataServices();
 
         this.schemaByNsOrAlias = new HashMap<String, Schema>();

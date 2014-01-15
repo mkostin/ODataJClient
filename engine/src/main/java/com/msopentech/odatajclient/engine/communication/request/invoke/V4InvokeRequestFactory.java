@@ -23,6 +23,8 @@ import com.msopentech.odatajclient.engine.client.ODataV4Client;
 
 public class V4InvokeRequestFactory extends AbstractInvokeRequestFactory {
 
+    private static final long serialVersionUID = 8452737360003104372L;
+
     public V4InvokeRequestFactory(final ODataV4Client client) {
         super(client);
     }

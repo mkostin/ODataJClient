@@ -30,6 +30,8 @@ import java.net.URI;
 
 public abstract class AbstractCUDRequestFactory implements CUDRequestFactory {
 
+    private static final long serialVersionUID = -2723641791198745990L;
+
     protected final ODataClient client;
 
     protected AbstractCUDRequestFactory(final ODataClient client) {

@@ -31,6 +31,8 @@ import org.apache.commons.io.IOUtils;
 
 public abstract class AbstractODataWriter implements ODataWriter {
 
+    private static final long serialVersionUID = 3265794768412314485L;
+
     protected final ODataClient client;
 
     protected AbstractODataWriter(final ODataClient client) {
@@ -49,7 +51,7 @@ public abstract class AbstractODataWriter implements ODataWriter {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             for (ODataEntity entity : entities) {
-                Serializer.entry(client.getODataBinder().
+                client.getSerializer().entry(client.getODataBinder().
                         getEntry(entity, ResourceFactory.entryClassForFormat(format), outputType), output);
             }
 
@@ -73,7 +75,7 @@ public abstract class AbstractODataWriter implements ODataWriter {
     public InputStream writeProperty(final ODataProperty property, final ODataFormat format) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
-            Serializer.property(client.getODataBinder().toDOMElement(property), format, output);
+            client.getSerializer().property(client.getODataBinder().toDOMElement(property), format, output);
 
             return new ByteArrayInputStream(output.toByteArray());
         } finally {
@@ -85,7 +87,7 @@ public abstract class AbstractODataWriter implements ODataWriter {
     public InputStream writeLink(final ODataLink link, final ODataFormat format) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
-            Serializer.link(link, format, output);
+            client.getSerializer().link(link, format, output);
 
             return new ByteArrayInputStream(output.toByteArray());
         } finally {

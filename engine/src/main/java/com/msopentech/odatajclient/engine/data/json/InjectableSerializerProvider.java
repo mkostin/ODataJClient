@@ -19,17 +19,26 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.DefaultSerializerProvider;
+import com.fasterxml.jackson.databind.ser.SerializerFactory;
 
-/**
- * Writes out JSON string from <tt>JSONProperty</tt>.
- *
- * @see JSONV4Property
- */
-public class JSONV4PropertySerializer extends AbstractJSONPropertySerializer {
+public class InjectableSerializerProvider extends DefaultSerializerProvider {
+
+    private static final long serialVersionUID = 3432260063063739646L;
+
+    public InjectableSerializerProvider(
+            final SerializerProvider src, final SerializationConfig config, final SerializerFactory factory) {
+
+        super(src, config, factory);
+    }
 
     @Override
-    protected Version getWorkingVersion() {
-        return Version.V4;
+    public InjectableSerializerProvider createInstance(
+            final SerializationConfig config, final SerializerFactory factory) {
+
+        return this;
     }
+
 }

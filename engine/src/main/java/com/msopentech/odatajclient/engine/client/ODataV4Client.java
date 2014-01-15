@@ -28,6 +28,8 @@ import com.msopentech.odatajclient.engine.communication.request.streamed.V4Strea
 import com.msopentech.odatajclient.engine.data.ODataV4Binder;
 import com.msopentech.odatajclient.engine.data.ODataV4Reader;
 import com.msopentech.odatajclient.engine.data.ODataV4Writer;
+import com.msopentech.odatajclient.engine.data.V4Deserializer;
+import com.msopentech.odatajclient.engine.data.V4Serializer;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.V4URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.V4FilterFactory;
@@ -36,9 +38,15 @@ import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 
 public class ODataV4Client implements ODataClient {
 
+    private static final long serialVersionUID = -6653176125573631964L;
+
     private final V4Configuration configuration = new V4Configuration();
 
     private final V4FilterFactory filterFactory = new V4FilterFactory();
+
+    private final V4Deserializer deserializer = new V4Deserializer(this);
+
+    private final V4Serializer serializer = new V4Serializer(this);
 
     private final ODataV4Reader reader = new ODataV4Reader(this);
 
@@ -82,6 +90,16 @@ public class ODataV4Client implements ODataClient {
     @Override
     public V4FilterFactory getFilterFactory() {
         return filterFactory;
+    }
+
+    @Override
+    public V4Deserializer getDeserializer() {
+        return deserializer;
+    }
+
+    @Override
+    public V4Serializer getSerializer() {
+        return serializer;
     }
 
     @Override

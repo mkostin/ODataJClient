@@ -23,6 +23,8 @@ import com.msopentech.odatajclient.engine.client.ODataV4Client;
 
 public class V4BatchRequestFactory extends AbstractBatchRequestFactory {
 
+    private static final long serialVersionUID = 788349446729208639L;
+
     public V4BatchRequestFactory(final ODataV4Client client) {
         super(client);
     }

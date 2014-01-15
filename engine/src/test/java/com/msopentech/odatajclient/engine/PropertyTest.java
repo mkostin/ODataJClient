@@ -43,7 +43,7 @@ public class PropertyTest extends AbstractTest {
     public void readPropertyValue() throws IOException {
         final InputStream input = getClass().getResourceAsStream("Customer_-10_CustomerId_value.txt");
 
-        final ODataValue value = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        final ODataValue value = new ODataPrimitiveValue.Builder(client).
                 setType(EdmSimpleType.String).
                 setText(IOUtils.toString(input)).
                 build();
@@ -65,7 +65,7 @@ public class PropertyTest extends AbstractTest {
             comparable = written;
         } else {
             // This is needed because type information gets lost with JSON serialization
-            final ODataPrimitiveValue typedValue = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+            final ODataPrimitiveValue typedValue = new ODataPrimitiveValue.Builder(client).
                     setType(EdmSimpleType.fromValue(property.getPrimitiveValue().getTypeName())).
                     setText(written.getPrimitiveValue().toString()).
                     build();

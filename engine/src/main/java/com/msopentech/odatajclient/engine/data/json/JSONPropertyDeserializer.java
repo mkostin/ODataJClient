@@ -23,7 +23,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
@@ -44,13 +43,10 @@ import org.w3c.dom.Node;
  *
  * @see JSONProperty
  */
-public class JSONPropertyDeserializer extends JsonDeserializer<JSONProperty> {
+public class JSONPropertyDeserializer extends ODataJsonDeserializer<JSONProperty> {
 
-    /**
-     * {@inheritDoc }
-     */
     @Override
-    public JSONProperty deserialize(final JsonParser parser, final DeserializationContext ctxt)
+    protected JSONProperty doDeserialize(final JsonParser parser, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
         final ObjectNode tree = (ObjectNode) parser.getCodec().readTree(parser);

@@ -19,8 +19,6 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import static com.msopentech.odatajclient.engine.data.Deserializer.toEntry;
-
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
@@ -213,7 +211,8 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
                 }
 
                 if (c >= 0) {
-                    entity = toEntry(new ByteArrayInputStream(entry.toByteArray()), JSONV3Entry.class);
+                    entity = odataClient.getDeserializer().toEntry(
+                            new ByteArrayInputStream(entry.toByteArray()), JSONV3Entry.class);
                 }
             } else {
                 while ((c = input.read()) >= 0) {
@@ -246,7 +245,8 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
                 entry.write(">".getBytes(ODataConstants.UTF8));
 
                 if (consume(input, "</entry>", entry, true) >= 0) {
-                    entity = toEntry(new ByteArrayInputStream(entry.toByteArray()), AtomEntry.class);
+                    entity = odataClient.getDeserializer().
+                            toEntry(new ByteArrayInputStream(entry.toByteArray()), AtomEntry.class);
                 }
             }
         } catch (Exception e) {

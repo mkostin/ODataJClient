@@ -23,6 +23,8 @@ import com.msopentech.odatajclient.engine.client.ODataV3Client;
 
 public class V3InvokeRequestFactory extends AbstractInvokeRequestFactory {
 
+    private static final long serialVersionUID = -659256862901915496L;
+
     public V3InvokeRequestFactory(final ODataV3Client client) {
         super(client);
     }

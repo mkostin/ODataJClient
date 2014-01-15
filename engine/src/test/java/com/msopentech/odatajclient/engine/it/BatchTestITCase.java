@@ -262,7 +262,7 @@ public class BatchTestITCase extends AbstractTest {
         merge.setEditLink(editLink);
 
         merge.addProperty(ODataObjectFactory.newPrimitiveProperty(
-                "Description", new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText("new description from batch").build()));
+                "Description", new ODataPrimitiveValue.Builder(client).setText("new description from batch").build()));
 
         final ODataEntityUpdateRequest changes =
                 client.getCUDRequestFactory().getEntityUpdateRequest(UpdateType.MERGE, merge);

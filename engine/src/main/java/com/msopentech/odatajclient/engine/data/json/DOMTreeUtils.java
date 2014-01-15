@@ -21,10 +21,10 @@ package com.msopentech.odatajclient.engine.data.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.util.Iterator;
@@ -150,26 +150,28 @@ final class DOMTreeUtils {
     /**
      * Serializes DOM content as JSON.
      *
+     * @param client OData client.
      * @param jgen JSON generator.
      * @param content content.
      * @throws IOException in case of write error.
      */
-    public static void writeSubtree(final Version workingVersion, final JsonGenerator jgen, final Node content)
+    public static void writeSubtree(final ODataClient client, final JsonGenerator jgen, final Node content)
             throws IOException {
 
-        writeSubtree(workingVersion, jgen, content, false);
+        writeSubtree(client, jgen, content, false);
     }
 
     /**
      * Serializes DOM content as JSON.
      *
+     * @param client OData client.
      * @param jgen JSON generator.
      * @param content content.
      * @param propType whether to output type information in the way needed for property values or not.
      * @throws IOException in case of write error.
      */
     public static void writeSubtree(
-            final Version workingVersion, final JsonGenerator jgen, final Node content, final boolean propType)
+            final ODataClient client, final JsonGenerator jgen, final Node content, final boolean propType)
             throws IOException {
 
         for (Node child : XMLUtils.getChildNodes(content, Node.ELEMENT_NODE)) {
@@ -190,7 +192,7 @@ final class DOMTreeUtils {
                         out = child.getChildNodes().item(0).getNodeValue();
                     } else {
                         final EdmSimpleType type = EdmSimpleType.fromValue(typeAttr.getTextContent());
-                        final ODataPrimitiveValue value = new ODataPrimitiveValue.Builder(workingVersion).setType(type).
+                        final ODataPrimitiveValue value = new ODataPrimitiveValue.Builder(client).setType(type).
                                 setText(child.getChildNodes().item(0).getNodeValue()).build();
                         out = value.toString();
 
@@ -219,7 +221,7 @@ final class DOMTreeUtils {
                             jgen.writeString(nephew.getChildNodes().item(0).getNodeValue());
                         } else {
                             jgen.writeStartObject();
-                            writeSubtree(workingVersion, jgen, nephew);
+                            writeSubtree(client, jgen, nephew);
                             jgen.writeEndObject();
                         }
                     }
@@ -231,7 +233,7 @@ final class DOMTreeUtils {
                         jgen.writeStringField(ODataConstants.JSON_TYPE, typeAttr.getTextContent());
                     }
 
-                    writeSubtree(workingVersion, jgen, child);
+                    writeSubtree(client, jgen, child);
 
                     jgen.writeEndObject();
                 }

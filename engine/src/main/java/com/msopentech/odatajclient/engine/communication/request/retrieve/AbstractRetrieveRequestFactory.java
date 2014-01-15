@@ -25,6 +25,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public abstract class AbstractRetrieveRequestFactory implements RetrieveRequestFactory {
 
+    private static final long serialVersionUID = -111683263158803362L;
+
     protected final ODataClient client;
 
     protected AbstractRetrieveRequestFactory(final ODataClient client) {

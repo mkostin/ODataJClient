@@ -20,12 +20,13 @@
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * OData request factory class.
  */
-public interface StreamedRequestFactory {
+public interface StreamedRequestFactory extends Serializable {
 
     /**
      * Gets a media entity create request object instance.

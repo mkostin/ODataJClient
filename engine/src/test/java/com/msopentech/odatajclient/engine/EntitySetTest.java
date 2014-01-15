@@ -22,7 +22,6 @@ package com.msopentech.odatajclient.engine;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
-import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -35,7 +34,7 @@ public class EntitySetTest extends AbstractTest {
     private void read(final ODataPubFormat format) throws IOException {
         final InputStream input = getClass().getResourceAsStream("Customer." + getSuffix(format));
         final ODataEntitySet entitySet = client.getODataBinder().getODataEntitySet(
-                Deserializer.toFeed(input, ResourceFactory.feedClassForFormat(format)));
+                client.getDeserializer().toFeed(input, ResourceFactory.feedClassForFormat(format)));
         assertNotNull(entitySet);
 
         assertEquals(2, entitySet.getEntities().size());

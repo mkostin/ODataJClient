@@ -19,8 +19,8 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -41,17 +41,17 @@ public class ODataPrimitiveValue extends ODataValue {
 
     protected abstract static class AbstractBuilder {
 
-        private final Version workingVersion;
+        private final ODataClient client;
 
         /**
          * Constructor.
          */
-        public AbstractBuilder(final Version workingVersion) {
-            this.workingVersion = workingVersion;
+        public AbstractBuilder(final ODataClient client) {
+            this.client = client;
         }
 
         public AbstractBuilder isSupported(final EdmSimpleType type) {
-            if (type != null && !ArrayUtils.contains(type.getSupportedVersions(), workingVersion)) {
+            if (type != null && !ArrayUtils.contains(type.getSupportedVersions(), client.getWorkingVersion())) {
                 throw new IllegalArgumentException(String.format(
                         "Type %s not supported by the current OData working version", EdmSimpleType.Stream.toString()));
             }
@@ -70,9 +70,9 @@ public class ODataPrimitiveValue extends ODataValue {
         /**
          * Constructor.
          */
-        public Builder(final Version workingVersion) {
-            super(workingVersion);
-            this.opv = new ODataPrimitiveValue();
+        public Builder(final ODataClient client) {
+            super(client);
+            this.opv = new ODataPrimitiveValue(client);
         }
 
         /**
@@ -162,6 +162,8 @@ public class ODataPrimitiveValue extends ODataValue {
         }
     }
 
+    protected ODataClient client;
+
     /**
      * Text value.
      */
@@ -182,8 +184,9 @@ public class ODataPrimitiveValue extends ODataValue {
      *
      * @see Builder
      */
-    protected ODataPrimitiveValue() {
+    protected ODataPrimitiveValue(final ODataClient client) {
         super();
+        this.client = client;
     }
 
     /**

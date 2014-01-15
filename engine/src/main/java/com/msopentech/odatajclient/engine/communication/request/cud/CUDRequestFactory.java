@@ -24,12 +24,13 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * OData request factory class.
  */
-public interface CUDRequestFactory {
+public interface CUDRequestFactory extends Serializable {
 
     /**
      * Gets a create request object instance.

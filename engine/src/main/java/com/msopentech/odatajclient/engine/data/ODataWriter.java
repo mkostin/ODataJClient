@@ -22,6 +22,7 @@ package com.msopentech.odatajclient.engine.data;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -31,7 +32,7 @@ import java.util.Collection;
  * <br/>
  * This interface provides method helpers to serialize a set of entities and a single entity as well.
  */
-public interface ODataWriter {
+public interface ODataWriter extends Serializable {
 
     /**
      * Writes a collection of OData entities.

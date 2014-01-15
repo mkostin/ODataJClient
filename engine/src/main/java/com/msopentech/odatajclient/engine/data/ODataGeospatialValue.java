@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
@@ -29,7 +30,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoly
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -57,9 +57,9 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
         /**
          * Constructor.
          */
-        public Builder(final Version workingVersion) {
-            super(workingVersion);
-            this.ogv = new ODataGeospatialValue();
+        public Builder(final ODataClient client) {
+            super(client);
+            this.ogv = new ODataGeospatialValue(client);
         }
 
         /**
@@ -147,8 +147,8 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
      *
      * @see Builder
      */
-    protected ODataGeospatialValue() {
-        super();
+    protected ODataGeospatialValue(final ODataClient client) {
+        super(client);
     }
 
     private Geospatial.Dimension getDimension() {
@@ -483,7 +483,7 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
     @Override
     public String toString() {
         final StringWriter writer = new StringWriter();
-        Serializer.dom(this.tree, writer);
+        client.getSerializer().dom(this.tree, writer);
         return writer.toString();
     }
 }

@@ -20,9 +20,6 @@
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEdm;
-import com.msopentech.odatajclient.engine.data.metadata.edm.DataServicesDeserializer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -40,16 +39,15 @@ public class EntryReadTest extends AbstractTest {
     private void read(final ODataPubFormat format) throws IOException {
         InputStream input = getClass().getResourceAsStream("Car_16." + getSuffix(format));
 
-        EntryResource entry = Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format));
+        EntryResource entry = client.getDeserializer().toEntry(input, ResourceFactory.entryClassForFormat(format));
         assertNotNull(entry);
 
         input.close();
 
         // ---------------------------------------------
-
         input = getClass().getResourceAsStream("Customer_-10." + getSuffix(format));
 
-        entry = Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format));
+        entry = client.getDeserializer().toEntry(input, ResourceFactory.entryClassForFormat(format));
         assertNotNull(entry);
 
         input.close();

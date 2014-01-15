@@ -23,6 +23,7 @@ import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * OData reader.
@@ -31,7 +32,7 @@ import java.io.InputStream;
  * <br/>
  * This class provides method helpers to de-serialize an entire feed, a set of entities and a single entity as well.
  */
-public interface ODataReader {
+public interface ODataReader extends Serializable {
 
     /**
      * De-Serializes a stream into an OData entity set.

@@ -20,11 +20,9 @@
 package com.msopentech.odatajclient.engine.data.metadata.edm;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEdm;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EdmxDeserializer;
 
 @JsonDeserialize(using = EdmxDeserializer.class)
-public class Edmx extends AbstractEdm {
+public abstract class AbstractEdmx extends AbstractEdm {
 
     private static final long serialVersionUID = -5480835122183091469L;
 
