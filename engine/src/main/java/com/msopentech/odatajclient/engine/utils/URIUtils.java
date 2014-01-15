@@ -19,18 +19,23 @@
  */
 package com.msopentech.odatajclient.engine.utils;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.ODataDuration;
 import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.entity.InputStreamEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +55,7 @@ public final class URIUtils {
 
     /**
      * Build URI starting from the given base and href.
-     * <p>
+     * <br/>
      * If href is absolute or base is null then base will be ignored.
      *
      * @param base URI prefix.
@@ -65,7 +70,7 @@ public final class URIUtils {
         URI uri = URI.create(href);
 
         if (!uri.isAbsolute() && base != null) {
-            uri = new ODataURIBuilder(base).appendEntityTypeSegment(href).build();
+            uri = URI.create(base + "/" + href);
         }
 
         return uri.normalize();
@@ -73,7 +78,7 @@ public final class URIUtils {
 
     /**
      * Build URI starting from the given base and href.
-     * <p>
+     * <br/>
      * If href is absolute or base is null then base will be ignored.
      *
      * @param base URI prefix.
@@ -89,7 +94,7 @@ public final class URIUtils {
 
     /**
      * Build URI starting from the given base and href.
-     * <p>
+     * <br/>
      * If href is absolute or base is null then base will be ignored.
      *
      * @param base URI prefix.
@@ -104,7 +109,7 @@ public final class URIUtils {
         URI uri = URI.create(href);
 
         if (!uri.isAbsolute() && base != null) {
-            uri = new ODataURIBuilder(base.toString()).appendEntityTypeSegment(href).build();
+            uri = URI.create(base.toASCIIString() + "/" + href);
         }
 
         return uri.normalize();
@@ -167,5 +172,24 @@ public final class URIUtils {
         }
 
         return value;
+    }
+
+    public static InputStreamEntity buildInputStreamEntity(final ODataClient client, final InputStream input) {
+        InputStreamEntity entity;
+        if (client.getConfiguration().isUseChuncked()) {
+            entity = new InputStreamEntity(input, -1);
+        } else {
+            byte[] bytes = new byte[0];
+            try {
+                bytes = IOUtils.toByteArray(input);
+            } catch (IOException e) {
+                LOG.error("While reading input for not chunked encoding", e);
+            }
+
+            entity = new InputStreamEntity(new ByteArrayInputStream(bytes), bytes.length);
+        }
+        entity.setChunked(client.getConfiguration().isUseChuncked());
+
+        return entity;
     }
 }

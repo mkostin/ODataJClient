@@ -19,8 +19,6 @@
  */
 package com.msopentech.odatajclient.engine.it;
 
-import static com.msopentech.odatajclient.engine.it.AbstractTest.testAuthServiceRootURL;
-import static com.msopentech.odatajclient.engine.it.AbstractTest.testDefaultServiceRootURL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -30,27 +28,24 @@ import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatch
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchResponseItem;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangeset;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangesetResponseItem;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataRetrieve;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataRetrieveResponseItem;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest.ODataEntityResponseImpl;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import org.junit.Test;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
@@ -89,7 +84,7 @@ public class BatchTestITCase extends AbstractTest {
     @Test
     public void emptyBatchRequest() {
         // create your request
-        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testDefaultServiceRootURL);
+        final ODataBatchRequest request = client.getBatchRequestFactory().getBatchRequest(testDefaultServiceRootURL);
 
         final BatchStreamManager payload = request.execute();
         final ODataBatchResponse response = payload.getResponse();
@@ -104,35 +99,35 @@ public class BatchTestITCase extends AbstractTest {
     @Test
     public void changesetWithError() {
         // create your request
-        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testDefaultServiceRootURL);
+        final ODataBatchRequest request = client.getBatchRequestFactory().getBatchRequest(testDefaultServiceRootURL);
 
         final BatchStreamManager payload = request.execute();
         final ODataChangeset changeset = payload.addChangeset();
 
-        ODataURIBuilder targetURI;
+        URIBuilder targetURI;
         ODataEntityCreateRequest create;
 
-        targetURI = new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Customer");
+        targetURI = client.getURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Customer");
         for (int i = 1; i <= 2; i++) {
             // Create Customer into the changeset
-            create = ODataCUDRequestFactory.getEntityCreateRequest(
+            create = client.getCUDRequestFactory().getEntityCreateRequest(
                     targetURI.build(),
                     getSampleCustomerProfile(100 + i, "Sample customer", false));
             create.setFormat(ODataPubFormat.JSON);
             changeset.addRequest(create);
         }
 
-        targetURI = new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("WrongEntitySet");
-        create = ODataCUDRequestFactory.getEntityCreateRequest(
+        targetURI = client.getURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("WrongEntitySet");
+        create = client.getCUDRequestFactory().getEntityCreateRequest(
                 targetURI.build(),
                 getSampleCustomerProfile(105, "Sample customer", false));
         create.setFormat(ODataPubFormat.JSON);
         changeset.addRequest(create);
 
-        targetURI = new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Customer");
+        targetURI = client.getURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Customer");
         for (int i = 3; i <= 4; i++) {
             // Create Customer into the changeset
-            create = ODataCUDRequestFactory.getEntityCreateRequest(
+            create = client.getCUDRequestFactory().getEntityCreateRequest(
                     targetURI.build(),
                     getSampleCustomerProfile(100 + i, "Sample customer", false));
             create.setFormat(ODataPubFormat.ATOM);
@@ -157,17 +152,17 @@ public class BatchTestITCase extends AbstractTest {
     @Test
     public void changesetWithReference() {
         // create your request
-        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testDefaultServiceRootURL);
+        final ODataBatchRequest request = client.getBatchRequestFactory().getBatchRequest(testDefaultServiceRootURL);
         final BatchStreamManager streamManager = request.execute();
 
         final ODataChangeset changeset = streamManager.addChangeset();
         ODataEntity customer = getSampleCustomerProfile(20, "sample customer", false);
 
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testAuthServiceRootURL).appendEntitySetSegment("Customer");
+        URIBuilder uriBuilder = client.getURIBuilder(testAuthServiceRootURL).appendEntitySetSegment("Customer");
 
         // add create request
         final ODataEntityCreateRequest createReq =
-                ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), customer);
+                client.getCUDRequestFactory().getEntityCreateRequest(uriBuilder.build(), customer);
 
         changeset.addRequest(createReq);
 
@@ -175,13 +170,13 @@ public class BatchTestITCase extends AbstractTest {
         int createRequestRef = changeset.getLastContentId();
 
         // add update request: link CustomerInfo(17) to the new customer
-        final ODataEntity customerChanges = ODataFactory.newEntity(customer.getName());
-        customerChanges.addLink(ODataFactory.newEntityNavigationLink(
+        final ODataEntity customerChanges = ODataObjectFactory.newEntity(customer.getName());
+        customerChanges.addLink(ODataObjectFactory.newEntityNavigationLink(
                 "Info",
-                new ODataURIBuilder(testAuthServiceRootURL).appendEntitySetSegment("CustomerInfo").
+                client.getURIBuilder(testAuthServiceRootURL).appendEntitySetSegment("CustomerInfo").
                 appendKeySegment(17).build()));
 
-        final ODataEntityUpdateRequest updateReq = ODataCUDRequestFactory.getEntityUpdateRequest(
+        final ODataEntityUpdateRequest updateReq = client.getCUDRequestFactory().getEntityUpdateRequest(
                 URI.create("$" + createRequestRef), UpdateType.PATCH, customerChanges);
 
         changeset.addRequest(updateReq);
@@ -191,7 +186,6 @@ public class BatchTestITCase extends AbstractTest {
         assertEquals("Accepted", response.getStatusMessage());
 
         // verify response payload ...
-
         final Iterator<ODataBatchResponseItem> iter = response.getBody();
 
         final ODataBatchResponseItem item = iter.next();
@@ -205,7 +199,7 @@ public class BatchTestITCase extends AbstractTest {
 
         customer = ((ODataEntityCreateResponse) res).getBody();
 
-        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(
+        ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(
                 URIUtils.getURI(testDefaultServiceRootURL, customer.getEditLink().toASCIIString() + "/Info"));
 
         assertEquals(Integer.valueOf(17),
@@ -216,12 +210,12 @@ public class BatchTestITCase extends AbstractTest {
         assertTrue(res instanceof ODataEntityUpdateResponse);
 
         // clean ...
-        assertEquals(204, ODataCUDRequestFactory.getDeleteRequest(
+        assertEquals(204, client.getCUDRequestFactory().getDeleteRequest(
                 URIUtils.getURI(testDefaultServiceRootURL, customer.getEditLink().toASCIIString())).execute().
                 getStatusCode());
 
         try {
-            ODataRetrieveRequestFactory.getEntityRequest(
+            client.getRetrieveRequestFactory().getEntityRequest(
                     URIUtils.getURI(testDefaultServiceRootURL, customer.getEditLink().toASCIIString())).
                     execute().getBody();
             fail();
@@ -233,7 +227,7 @@ public class BatchTestITCase extends AbstractTest {
     @Test
     public void batchRequest() {
         // create your request
-        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(testDefaultServiceRootURL);
+        final ODataBatchRequest request = client.getBatchRequestFactory().getBatchRequest(testDefaultServiceRootURL);
 
         final BatchStreamManager streamManager = request.execute();
 
@@ -243,12 +237,12 @@ public class BatchTestITCase extends AbstractTest {
         ODataRetrieve retrieve = streamManager.addRetrieve();
 
         // prepare URI
-        ODataURIBuilder targetURI = new ODataURIBuilder(testDefaultServiceRootURL);
+        URIBuilder targetURI = client.getURIBuilder(testDefaultServiceRootURL);
         targetURI.appendEntityTypeSegment("Customer").appendKeySegment(-10).
                 expand("Logins").select("CustomerId,Logins/Username");
 
         // create new request
-        ODataEntityRequest query = ODataRetrieveRequestFactory.getEntityRequest(targetURI.build());
+        ODataEntityRequest query = client.getRetrieveRequestFactory().getEntityRequest(targetURI.build());
         query.setFormat(ODataPubFormat.ATOM);
 
         retrieve.setRequest(query);
@@ -260,28 +254,28 @@ public class BatchTestITCase extends AbstractTest {
         final ODataChangeset changeset = streamManager.addChangeset();
 
         // Update Product into the changeset
-        targetURI = new ODataURIBuilder(testDefaultServiceRootURL).
+        targetURI = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-10);
         final URI editLink = targetURI.build();
 
-        final ODataEntity merge = ODataFactory.newEntity(TEST_PRODUCT_TYPE);
+        final ODataEntity merge = ODataObjectFactory.newEntity(TEST_PRODUCT_TYPE);
         merge.setEditLink(editLink);
 
-        merge.addProperty(ODataFactory.newPrimitiveProperty(
-                "Description", new ODataPrimitiveValue.Builder().setText("new description from batch").build()));
+        merge.addProperty(ODataObjectFactory.newPrimitiveProperty(
+                "Description", new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText("new description from batch").build()));
 
         final ODataEntityUpdateRequest changes =
-                ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.MERGE, merge);
+                client.getCUDRequestFactory().getEntityUpdateRequest(UpdateType.MERGE, merge);
         changes.setFormat(ODataPubFormat.JSON_FULL_METADATA);
         changes.setIfMatch(getETag(editLink));
 
         changeset.addRequest(changes);
 
         // Create Customer into the changeset
-        targetURI = new ODataURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Customer");
+        targetURI = client.getURIBuilder(testDefaultServiceRootURL).appendEntitySetSegment("Customer");
         final ODataEntity original = getSampleCustomerProfile(1000, "Sample customer", false);
         final ODataEntityCreateRequest create =
-                ODataCUDRequestFactory.getEntityCreateRequest(targetURI.build(), original);
+                client.getCUDRequestFactory().getEntityCreateRequest(targetURI.build(), original);
         create.setFormat(ODataPubFormat.ATOM);
         changeset.addRequest(create);
         // -------------------------------------------
@@ -292,11 +286,11 @@ public class BatchTestITCase extends AbstractTest {
         retrieve = streamManager.addRetrieve();
 
         // prepare URI
-        targetURI = new ODataURIBuilder(testDefaultServiceRootURL).
+        targetURI = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-10);
 
         // create new request
-        query = ODataRetrieveRequestFactory.getEntityRequest(targetURI.build());
+        query = client.getRetrieveRequestFactory().getEntityRequest(targetURI.build());
 
         retrieve.setRequest(query);
         // -------------------------------------------

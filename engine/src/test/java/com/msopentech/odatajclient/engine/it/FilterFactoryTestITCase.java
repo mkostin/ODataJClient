@@ -22,21 +22,19 @@ package com.msopentech.odatajclient.engine.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilterArgFactory;
-import com.msopentech.odatajclient.engine.uri.filter.ODataFilterFactory;
 import org.junit.Test;
 
 public class FilterFactoryTestITCase extends AbstractTest {
 
     private void match(final String entitySet, final ODataFilter filter, final int expected) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment(entitySet).filter(filter);
 
-        final ODataEntitySet feed = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build()).
+        final ODataEntitySet feed = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build()).
                 execute().getBody();
         assertNotNull(feed);
         assertEquals(expected, feed.getEntities().size());
@@ -44,15 +42,15 @@ public class FilterFactoryTestITCase extends AbstractTest {
 
     @Test
     public void simple() {
-        match("Car", ODataFilterFactory.lt("VIN", 16), 5);
+        match("Car", client.getFilterFactory().lt("VIN", 16), 5);
     }
 
     @Test
     public void and() {
         final ODataFilter filter =
-                ODataFilterFactory.and(
-                ODataFilterFactory.lt("VIN", 16),
-                ODataFilterFactory.gt("VIN", 12));
+                client.getFilterFactory().and(
+                        client.getFilterFactory().lt("VIN", 16),
+                        client.getFilterFactory().gt("VIN", 12));
 
         match("Car", filter, 3);
     }
@@ -60,10 +58,10 @@ public class FilterFactoryTestITCase extends AbstractTest {
     @Test
     public void not() {
         final ODataFilter filter =
-                ODataFilterFactory.not(
-                ODataFilterFactory.or(
-                ODataFilterFactory.ge("VIN", 16),
-                ODataFilterFactory.le("VIN", 12)));
+                client.getFilterFactory().not(
+                        client.getFilterFactory().or(
+                                client.getFilterFactory().ge("VIN", 16),
+                                client.getFilterFactory().le("VIN", 12)));
 
         match("Car", filter, 3);
     }
@@ -71,23 +69,26 @@ public class FilterFactoryTestITCase extends AbstractTest {
     @Test
     public void operator() {
         ODataFilter filter =
-                ODataFilterFactory.eq(
-                ODataFilterArgFactory.add(ODataFilterArgFactory.property("VIN"), ODataFilterArgFactory.literal(1)),
-                ODataFilterArgFactory.literal(16));
+                client.getFilterFactory().eq(
+                        ODataFilterArgFactory.add(ODataFilterArgFactory.property("VIN"), ODataFilterArgFactory.
+                                literal(1)),
+                        ODataFilterArgFactory.literal(16));
 
         match("Car", filter, 1);
 
         filter =
-                ODataFilterFactory.eq(
-                ODataFilterArgFactory.add(ODataFilterArgFactory.literal(1), ODataFilterArgFactory.property("VIN")),
-                ODataFilterArgFactory.literal(16));
+                client.getFilterFactory().eq(
+                        ODataFilterArgFactory.add(ODataFilterArgFactory.literal(1), ODataFilterArgFactory.
+                                property("VIN")),
+                        ODataFilterArgFactory.literal(16));
 
         match("Car", filter, 1);
 
         filter =
-                ODataFilterFactory.eq(
-                ODataFilterArgFactory.literal(16),
-                ODataFilterArgFactory.add(ODataFilterArgFactory.literal(1), ODataFilterArgFactory.property("VIN")));
+                client.getFilterFactory().eq(
+                        ODataFilterArgFactory.literal(16),
+                        ODataFilterArgFactory.add(ODataFilterArgFactory.literal(1), ODataFilterArgFactory.
+                                property("VIN")));
 
         match("Car", filter, 1);
     }
@@ -95,9 +96,9 @@ public class FilterFactoryTestITCase extends AbstractTest {
     @Test
     public void function() {
         final ODataFilter filter =
-                ODataFilterFactory.match(
-                ODataFilterArgFactory.startswith(
-                ODataFilterArgFactory.property("Description"), ODataFilterArgFactory.literal("cen")));
+                client.getFilterFactory().match(
+                        ODataFilterArgFactory.startswith(
+                                ODataFilterArgFactory.property("Description"), ODataFilterArgFactory.literal("cen")));
 
         match("Car", filter, 1);
     }
@@ -105,9 +106,10 @@ public class FilterFactoryTestITCase extends AbstractTest {
     @Test
     public void composed() {
         final ODataFilter filter =
-                ODataFilterFactory.gt(
-                ODataFilterArgFactory.length(ODataFilterArgFactory.property("Description")),
-                ODataFilterArgFactory.add(ODataFilterArgFactory.property("VIN"), ODataFilterArgFactory.literal(10)));
+                client.getFilterFactory().gt(
+                        ODataFilterArgFactory.length(ODataFilterArgFactory.property("Description")),
+                        ODataFilterArgFactory.add(ODataFilterArgFactory.property("VIN"), ODataFilterArgFactory.literal(
+                                        10)));
 
         match("Car", filter, 5);
     }
@@ -115,20 +117,20 @@ public class FilterFactoryTestITCase extends AbstractTest {
     @Test
     public void propertyPath() {
         ODataFilter filter =
-                ODataFilterFactory.eq(
-                ODataFilterArgFactory.indexof(
-                ODataFilterArgFactory.property("PrimaryContactInfo/HomePhone/PhoneNumber"),
-                ODataFilterArgFactory.literal("ODataJClient")),
-                ODataFilterArgFactory.literal(1));
+                client.getFilterFactory().eq(
+                        ODataFilterArgFactory.indexof(
+                                ODataFilterArgFactory.property("PrimaryContactInfo/HomePhone/PhoneNumber"),
+                                ODataFilterArgFactory.literal("ODataJClient")),
+                        ODataFilterArgFactory.literal(1));
 
         match("Customer", filter, 0);
 
         filter =
-                ODataFilterFactory.ne(
-                ODataFilterArgFactory.indexof(
-                ODataFilterArgFactory.property("PrimaryContactInfo/HomePhone/PhoneNumber"),
-                ODataFilterArgFactory.literal("lccvussrv")),
-                ODataFilterArgFactory.literal(-1));
+                client.getFilterFactory().ne(
+                        ODataFilterArgFactory.indexof(
+                                ODataFilterArgFactory.property("PrimaryContactInfo/HomePhone/PhoneNumber"),
+                                ODataFilterArgFactory.literal("lccvussrv")),
+                        ODataFilterArgFactory.literal(-1));
 
         match("Customer", filter, 2);
     }
@@ -136,10 +138,10 @@ public class FilterFactoryTestITCase extends AbstractTest {
     @Test
     public void datetime() {
         final ODataFilter filter =
-                ODataFilterFactory.eq(
-                ODataFilterArgFactory.month(
-                ODataFilterArgFactory.property("PurchaseDate")),
-                ODataFilterArgFactory.literal(12));
+                client.getFilterFactory().eq(
+                        ODataFilterArgFactory.month(
+                                ODataFilterArgFactory.property("PurchaseDate")),
+                        ODataFilterArgFactory.literal(12));
 
         match("ComputerDetail", filter, 1);
     }
@@ -147,9 +149,10 @@ public class FilterFactoryTestITCase extends AbstractTest {
     @Test
     public void isof() {
         final ODataFilter filter =
-                ODataFilterFactory.match(
-                ODataFilterArgFactory.isof(
-                ODataFilterArgFactory.literal("Microsoft.Test.OData.Services.AstoriaDefaultService.SpecialEmployee")));
+                client.getFilterFactory().match(
+                        ODataFilterArgFactory.isof(
+                                ODataFilterArgFactory.literal(
+                                        "Microsoft.Test.OData.Services.AstoriaDefaultService.SpecialEmployee")));
 
         match("Person", filter, 4);
     }

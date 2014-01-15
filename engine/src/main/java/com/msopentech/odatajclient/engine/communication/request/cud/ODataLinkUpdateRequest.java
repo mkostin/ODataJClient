@@ -19,32 +19,26 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.AbstractODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataLinkOperationResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataLink;
-import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an update link OData request.
- * <p>
- * Get instance by using ODataCUDRequestFactory.
- *
- * @see ODataCUDRequestFactory#getLinkUpdateRequest(java.net.URI,
- * com.msopentech.odatajclient.engine.communication.request.UpdateType,
- * com.msopentech.odatajclient.engine.data.ODataLink)
  */
-public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
+public class ODataLinkUpdateRequest extends AbstractODataBasicRequestImpl<ODataLinkOperationResponse, ODataFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -55,12 +49,15 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param method request method.
      * @param targetURI entity URI.
      * @param link entity to be linked.
      */
-    ODataLinkUpdateRequest(final HttpMethod method, final URI targetURI, final ODataLink link) {
-        super(ODataFormat.class, method, targetURI);
+    ODataLinkUpdateRequest(final ODataClient odataClient,
+            final HttpMethod method, final URI targetURI, final ODataLink link) {
+
+        super(odataClient, ODataFormat.class, method, targetURI);
         // set request body
         this.link = link;
     }
@@ -71,10 +68,10 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
     @Override
     public ODataLinkOperationResponse execute() {
         final InputStream input = getPayload();
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
+        ((HttpEntityEnclosingRequestBase) request).setEntity(URIUtils.buildInputStreamEntity(odataClient, input));
 
         try {
-            return new ODataLinkUpdateResponseImpl(client, doExecute());
+            return new ODataLinkUpdateResponseImpl(httpClient, doExecute());
         } finally {
             IOUtils.closeQuietly(input);
         }
@@ -85,7 +82,7 @@ public class ODataLinkUpdateRequest extends ODataBasicRequestImpl<ODataLinkOpera
      */
     @Override
     protected InputStream getPayload() {
-        return ODataWriter.writeLink(link, ODataFormat.fromString(getContentType()));
+        return odataClient.getODataWriter().writeLink(link, ODataFormat.fromString(getContentType()));
     }
 
     /**

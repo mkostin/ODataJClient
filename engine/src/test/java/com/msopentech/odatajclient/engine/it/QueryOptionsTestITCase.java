@@ -26,14 +26,13 @@ import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,11 +60,11 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void filterOrderby() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment("Car").filter("VIN lt 16");
 
         // 1. check that filtered entity set looks as expected
-        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         ODataEntitySet feed = req.execute().getBody();
         assertNotNull(feed);
         assertEquals(5, feed.getEntities().size());
@@ -79,7 +78,7 @@ public class QueryOptionsTestITCase extends AbstractTest {
         }
 
         // 3. add orderby clause to filter above
-        req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.orderBy("VIN desc").build());
+        req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.orderBy("VIN desc").build());
         feed = req.execute().getBody();
         assertNotNull(feed);
         assertEquals(5, feed.getEntities().size());
@@ -100,10 +99,10 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void format() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).format("json");
 
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
 
         final ODataRetrieveResponse<ODataEntity> res = req.execute();
@@ -134,10 +133,10 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void skiptoken() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Customer").skipToken("-10");
 
-        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         final ODataEntitySet feed = req.execute().getBody();
         assertNotNull(feed);
         assertEquals(2, feed.getEntities().size());
@@ -152,10 +151,10 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void inlinecount() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL);
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL);
         uriBuilder.appendEntityTypeSegment("Car").inlineCount();
 
-        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
         final ODataEntitySet feed = req.execute().getBody();
         assertNotNull(feed);
@@ -167,10 +166,10 @@ public class QueryOptionsTestITCase extends AbstractTest {
      */
     @Test
     public void select() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).select("CustomerId,Orders").expand("Orders");
 
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         final ODataEntity customer = req.execute().getBody();
         assertEquals(1, customer.getProperties().size());
         assertEquals(1, customer.getNavigationLinks().size());
@@ -179,16 +178,16 @@ public class QueryOptionsTestITCase extends AbstractTest {
 
     @Test
     public void issue131() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-7).select("Name");
 
-        ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
 
         final ODataEntity customer = req.execute().getBody();
         assertEquals(0, customer.getProperties().size());
 
-        req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(ODataPubFormat.ATOM);
 
         final AtomEntry atomEntry = Deserializer.toEntry(req.execute().getRawResponse(), AtomEntry.class);

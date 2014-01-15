@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.streamed;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
@@ -26,7 +27,6 @@ import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMe
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
@@ -36,11 +36,9 @@ import org.apache.http.client.HttpClient;
 /**
  * This class implements an OData Media Entity create request.
  * Get instance by using ODataStreamedRequestFactory.
- *
- * @see ODataStreamedRequestFactory#getMediaEntityCreateRequest(java.net.URI, java.io.InputStream)
  */
 public class ODataMediaEntityCreateRequest
-        extends ODataStreamedEntityRequestImpl<ODataMediaEntityCreateResponse, MediaEntityCreateStreamManager>
+        extends AbstractODataStreamedEntityRequestImpl<ODataMediaEntityCreateResponse, MediaEntityCreateStreamManager>
         implements ODataBatchableRequest {
 
     private final InputStream media;
@@ -48,11 +46,12 @@ public class ODataMediaEntityCreateRequest
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param targetURI target entity set.
      * @param media media entity blob to be created.
      */
-    ODataMediaEntityCreateRequest(final URI targetURI, final InputStream media) {
-        super(HttpMethod.POST, targetURI);
+    ODataMediaEntityCreateRequest(final ODataClient odataClient, final URI targetURI, final InputStream media) {
+        super(odataClient, HttpMethod.POST, targetURI);
         this.media = media;
     }
 
@@ -87,7 +86,7 @@ public class ODataMediaEntityCreateRequest
         @Override
         protected ODataMediaEntityCreateResponse getResponse(final long timeout, final TimeUnit unit) {
             finalizeBody();
-            return new ODataMediaEntityCreateResponseImpl(client, getHttpResponse(timeout, unit));
+            return new ODataMediaEntityCreateResponseImpl(httpClient, getHttpResponse(timeout, unit));
         }
     }
 
@@ -124,7 +123,7 @@ public class ODataMediaEntityCreateRequest
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = ODataReader.readEntity(getRawResponse(), getFormat());
+                    entity = odataClient.getODataReader().readEntity(getRawResponse(), getFormat());
                 } finally {
                     this.close();
                 }

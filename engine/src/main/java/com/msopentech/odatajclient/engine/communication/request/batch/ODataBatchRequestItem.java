@@ -24,9 +24,6 @@ import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
 
 /**
  * Abstract representation of a batch request item.
- * Get instance by using factory.
- *
- * @see ODataBatchRequestFactory
  */
 public abstract class ODataBatchRequestItem extends ODataStreamer {
 

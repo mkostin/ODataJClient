@@ -23,13 +23,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataGeospatialValue;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataTimestamp;
-import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
@@ -62,23 +60,23 @@ public class PrimitiveValueTest extends AbstractTest {
 
         final ODataPrimitiveValue newValue;
         if (EdmSimpleType.isGeospatial(value.getTypeName())) {
-            newValue = new ODataGeospatialValue.Builder().
+            newValue = new ODataGeospatialValue.Builder(client.getWorkingVersion()).
                     setType(EdmSimpleType.fromValue(value.getTypeName())).
                     setTree(((ODataGeospatialValue) value).toTree()).build();
         } else {
-            newValue = new ODataPrimitiveValue.Builder().
+            newValue = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
                     setType(EdmSimpleType.fromValue(value.getTypeName())).
                     setValue(value.toValue()).build();
         }
 
-        final InputStream written = ODataWriter.writeProperty(
-                ODataFactory.newPrimitiveProperty(ODataConstants.ELEM_PROPERTY, newValue),
+        final InputStream written = client.getODataWriter().writeProperty(
+                ODataObjectFactory.newPrimitiveProperty(ODataConstants.ELEM_PROPERTY, newValue),
                 format);
         return readPrimitiveValue(written, format);
     }
 
     private ODataPrimitiveValue readPrimitiveValue(final InputStream input, final ODataFormat format) {
-        final ODataProperty property = ODataReader.readProperty(input, format);
+        final ODataProperty property = client.getODataReader().readProperty(input, format);
         assertNotNull(property);
         assertTrue(property.hasPrimitiveValue());
         assertNotNull(property.getPrimitiveValue());

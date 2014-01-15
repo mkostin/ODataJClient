@@ -21,21 +21,19 @@ package com.msopentech.odatajclient.engine.it;
 
 import static org.junit.Assert.*;
 
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest;
+import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest.MediaEntityUpdateStreamManager;
 import java.io.InputStream;
 import java.net.URI;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest.MediaEntityUpdateStreamManager;
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.commons.lang3.ArrayUtils;
@@ -48,7 +46,7 @@ public class MediaEntityUpdateTestITCase extends AbstractTest {
             final String image,
             final int id) throws Exception {
 
-        ODataURIBuilder builder = new ODataURIBuilder(testDefaultServiceRootURL).
+        URIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
         // The sample service has an upload request size of 65k
@@ -60,10 +58,10 @@ public class MediaEntityUpdateTestITCase extends AbstractTest {
         input = new BoundedInputStream(getClass().getResourceAsStream(image), 65000);
 
         final ODataMediaEntityUpdateRequest updateReq =
-                ODataStreamedRequestFactory.getMediaEntityUpdateRequest(builder.build(), input);
+                client.getStreamedRequestFactory().getMediaEntityUpdateRequest(builder.build(), input);
         updateReq.setFormat(format);
         updateReq.setPrefer(prefer);
-        final URI uri = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URI uri = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(id).build();
         final String etag = getETag(uri);
         if (StringUtils.isNotBlank(etag)) {
@@ -73,10 +71,10 @@ public class MediaEntityUpdateTestITCase extends AbstractTest {
         final ODataMediaEntityUpdateResponse updateRes = streamManager.getResponse();
         assertEquals(204, updateRes.getStatusCode());
 
-        builder = new ODataURIBuilder(testDefaultServiceRootURL).
+        builder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Car").appendKeySegment(id).appendValueSegment();
 
-        final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(builder.build());
+        final ODataMediaRequest retrieveReq = client.getRetrieveRequestFactory().getMediaRequest(builder.build());
 
         final ODataRetrieveResponse<InputStream> retrieveRes = retrieveReq.execute();
         assertEquals(200, retrieveRes.getStatusCode());

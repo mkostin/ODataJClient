@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.atom.AtomSerializer;
-import com.msopentech.odatajclient.engine.data.json.JSONEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
 import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
@@ -97,7 +97,7 @@ public final class Serializer {
         if (obj instanceof AtomEntry) {
             atom((AtomEntry) obj, writer);
         } else {
-            json((JSONEntry) obj, writer);
+            json((JSONV3Entry) obj, writer);
         }
     }
 

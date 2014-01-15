@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.IOException;
 import java.util.Iterator;
@@ -153,10 +154,10 @@ final class DOMTreeUtils {
      * @param content content.
      * @throws IOException in case of write error.
      */
-    public static void writeSubtree(final JsonGenerator jgen, final Node content)
+    public static void writeSubtree(final Version workingVersion, final JsonGenerator jgen, final Node content)
             throws IOException {
 
-        writeSubtree(jgen, content, false);
+        writeSubtree(workingVersion, jgen, content, false);
     }
 
     /**
@@ -167,7 +168,8 @@ final class DOMTreeUtils {
      * @param propType whether to output type information in the way needed for property values or not.
      * @throws IOException in case of write error.
      */
-    public static void writeSubtree(final JsonGenerator jgen, final Node content, final boolean propType)
+    public static void writeSubtree(
+            final Version workingVersion, final JsonGenerator jgen, final Node content, final boolean propType)
             throws IOException {
 
         for (Node child : XMLUtils.getChildNodes(content, Node.ELEMENT_NODE)) {
@@ -188,7 +190,7 @@ final class DOMTreeUtils {
                         out = child.getChildNodes().item(0).getNodeValue();
                     } else {
                         final EdmSimpleType type = EdmSimpleType.fromValue(typeAttr.getTextContent());
-                        final ODataPrimitiveValue value = new ODataPrimitiveValue.Builder().setType(type).
+                        final ODataPrimitiveValue value = new ODataPrimitiveValue.Builder(workingVersion).setType(type).
                                 setText(child.getChildNodes().item(0).getNodeValue()).build();
                         out = value.toString();
 
@@ -217,7 +219,7 @@ final class DOMTreeUtils {
                             jgen.writeString(nephew.getChildNodes().item(0).getNodeValue());
                         } else {
                             jgen.writeStartObject();
-                            writeSubtree(jgen, nephew);
+                            writeSubtree(workingVersion, jgen, nephew);
                             jgen.writeEndObject();
                         }
                     }
@@ -229,7 +231,7 @@ final class DOMTreeUtils {
                         jgen.writeStringField(ODataConstants.JSON_TYPE, typeAttr.getTextContent());
                     }
 
-                    writeSubtree(jgen, child);
+                    writeSubtree(workingVersion, jgen, child);
 
                     jgen.writeEndObject();
                 }

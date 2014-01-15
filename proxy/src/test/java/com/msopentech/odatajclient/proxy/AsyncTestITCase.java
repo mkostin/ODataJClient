@@ -42,13 +42,14 @@ public class AsyncTestITCase extends AbstractTest {
 
     @Test
     public void retrieveEntitySet() throws InterruptedException, ExecutionException {
-        final Future<ProductCollection> futureProds = new AsyncCall<ProductCollection>() {
+        final Future<ProductCollection> futureProds =
+                new AsyncCall<ProductCollection>(containerFactory.getConfiguration()) {
 
-            @Override
-            public ProductCollection call() {
-                return container.getProduct().getAll();
-            }
-        };
+                    @Override
+                    public ProductCollection call() {
+                        return container.getProduct().getAll();
+                    }
+                };
         assertNotNull(futureProds);
 
         while (!futureProds.isDone()) {
@@ -69,7 +70,7 @@ public class AsyncTestITCase extends AbstractTest {
         final Product product = container.getProduct().get(-10);
         product.setDescription("AsyncTest#updateEntity " + random);
 
-        final Future<Void> futureFlush = new AsyncCall<Void>() {
+        final Future<Void> futureFlush = new AsyncCall<Void>(containerFactory.getConfiguration()) {
 
             @Override
             public Void call() {
@@ -82,7 +83,7 @@ public class AsyncTestITCase extends AbstractTest {
         while (!futureFlush.isDone()) {
         }
 
-        final Future<Product> futureProd = new AsyncCall<Product>() {
+        final Future<Product> futureProd = new AsyncCall<Product>(containerFactory.getConfiguration()) {
 
             @Override
             public Product call() {
@@ -96,23 +97,23 @@ public class AsyncTestITCase extends AbstractTest {
     @Test
     public void polymorphQuery() throws Exception {
         final Future<Query<Employee, EmployeeCollection>> queryEmployee =
-                new AsyncCall<Query<Employee, EmployeeCollection>>() {
+                new AsyncCall<Query<Employee, EmployeeCollection>>(containerFactory.getConfiguration()) {
 
-            @Override
-            public Query<Employee, EmployeeCollection> call() {
-                return container.getPerson().createQuery(EmployeeCollection.class);
-            }
-        };
+                    @Override
+                    public Query<Employee, EmployeeCollection> call() {
+                        return container.getPerson().createQuery(EmployeeCollection.class);
+                    }
+                };
         assertFalse(queryEmployee.get().getResult().isEmpty());
 
         final Future<Query<SpecialEmployee, SpecialEmployeeCollection>> querySpecialEmployee =
-                new AsyncCall<Query<SpecialEmployee, SpecialEmployeeCollection>>() {
+                new AsyncCall<Query<SpecialEmployee, SpecialEmployeeCollection>>(containerFactory.getConfiguration()) {
 
-            @Override
-            public Query<SpecialEmployee, SpecialEmployeeCollection> call() {
-                return container.getPerson().createQuery(SpecialEmployeeCollection.class);
-            }
-        };
+                    @Override
+                    public Query<SpecialEmployee, SpecialEmployeeCollection> call() {
+                        return container.getPerson().createQuery(SpecialEmployeeCollection.class);
+                    }
+                };
         assertFalse(querySpecialEmployee.get().getResult().isEmpty());
 
         assertTrue(container.getPerson().getAll().size()

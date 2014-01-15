@@ -19,10 +19,11 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.batch;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.request.ODataStreamManager;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest.BatchStreamManager;
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.streamed.AbstractODataStreamedRequestImpl;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.utils.ODataBatchConstants;
@@ -39,11 +40,8 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements a batch request.
- * Get instance by using ODataBatchRequestFactory.
- *
- * @see ODataBatchRequestFactory#getBatchRequest(java.lang.String)
  */
-public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchResponse, BatchStreamManager> {
+public class ODataBatchRequest extends AbstractODataStreamedRequestImpl<ODataBatchResponse, BatchStreamManager> {
 
     /**
      * Batch request boundary.
@@ -58,10 +56,11 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param uri batch request URI (http://serviceRoot/$batch)
      */
-    ODataBatchRequest(final URI uri) {
-        super(HttpMethod.POST, uri);
+    ODataBatchRequest(final ODataClient odataClient, final URI uri) {
+        super(odataClient, HttpMethod.POST, uri);
 
         // create a random UUID value for boundary
         boundary = "batch_" + UUID.randomUUID().toString();
@@ -198,7 +197,7 @@ public class ODataBatchRequest extends ODataStreamedRequestImpl<ODataBatchRespon
             closeCurrentItem();
             streamCloseDelimiter();
             finalizeBody();
-            return new ODataBatchResponseImpl(client, getHttpResponse(timeout, unit));
+            return new ODataBatchResponseImpl(httpClient, getHttpResponse(timeout, unit));
         }
 
         /**

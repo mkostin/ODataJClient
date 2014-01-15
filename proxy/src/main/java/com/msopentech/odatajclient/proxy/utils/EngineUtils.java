@@ -21,13 +21,15 @@ package com.msopentech.odatajclient.proxy.utils;
 
 import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_NAVIGATION;
 import static com.msopentech.odatajclient.engine.data.ODataLinkType.ENTITY_SET_NAVIGATION;
+
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataGeospatialValue;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
@@ -149,17 +151,18 @@ public final class EngineUtils {
     public static ODataLink getNavigationLink(final String name, final URI uri, final ODataLinkType type) {
         switch (type) {
             case ENTITY_NAVIGATION:
-                return ODataFactory.newEntityNavigationLink(name, uri);
+                return ODataObjectFactory.newEntityNavigationLink(name, uri);
 
             case ENTITY_SET_NAVIGATION:
-                return ODataFactory.newFeedNavigationLink(name, uri);
+                return ODataObjectFactory.newFeedNavigationLink(name, uri);
 
             default:
                 throw new IllegalArgumentException("Invalid link type " + type.name());
         }
     }
 
-    public static ODataValue getODataValue(final EdmMetadata metadata, final EdmType type, final Object obj) {
+    public static ODataValue getODataValue(
+            final ODataClient client, final EdmMetadata metadata, final EdmType type, final Object obj) {
         final ODataValue value;
 
         if (type.isCollection()) {
@@ -167,9 +170,11 @@ public final class EngineUtils {
             final EdmType intType = new EdmType(metadata, type.getBaseType());
             for (Object collectionItem : (Collection) obj) {
                 if (intType.isSimpleType()) {
-                    ((ODataCollectionValue) value).add(getODataValue(metadata, intType, collectionItem).asPrimitive());
+                    ((ODataCollectionValue) value).add(
+                            getODataValue(client, metadata, intType, collectionItem).asPrimitive());
                 } else if (intType.isComplexType()) {
-                    ((ODataCollectionValue) value).add(getODataValue(metadata, intType, collectionItem).asComplex());
+                    ((ODataCollectionValue) value).add(
+                            getODataValue(client, metadata, intType, collectionItem).asComplex());
                 } else if (intType.isEnumType()) {
                     // TODO: manage enum types
                     throw new UnsupportedOperationException("Usupported enum type " + intType.getTypeExpression());
@@ -185,7 +190,7 @@ public final class EngineUtils {
                     try {
                         if (complexPropertyAnn != null) {
                             value.asComplex().add(
-                                    getODataProperty(metadata, complexPropertyAnn.name(), method.invoke(obj)));
+                                    getODataProperty(client, metadata, complexPropertyAnn.name(), method.invoke(obj)));
                         }
                     } catch (Exception ignore) {
                         // ignore value
@@ -202,34 +207,37 @@ public final class EngineUtils {
         } else {
             final EdmSimpleType simpleType = EdmSimpleType.fromValue(type.getTypeExpression());
             if (simpleType.isGeospatial()) {
-                value = new ODataGeospatialValue.Builder().setValue((Geospatial) obj).setType(simpleType).build();
+                value = new ODataGeospatialValue.Builder(client.getWorkingVersion()).setValue((Geospatial) obj).
+                        setType(simpleType).build();
             } else {
-                value = new ODataPrimitiveValue.Builder().setValue(obj).setType(simpleType).build();
+                value = new ODataPrimitiveValue.Builder(
+                        client.getWorkingVersion()).setValue(obj).setType(simpleType).build();
             }
         }
 
         return value;
     }
 
-    private static ODataProperty getODataProperty(final EdmMetadata metadata, final String name, final Object obj) {
+    private static ODataProperty getODataProperty(
+            final ODataClient client, final EdmMetadata metadata, final String name, final Object obj) {
         final ODataProperty oprop;
 
-        final EdmType type = getEdmType(metadata, obj);
+        final EdmType type = getEdmType(client, metadata, obj);
         try {
             if (type == null || obj == null) {
-                oprop = ODataFactory.newPrimitiveProperty(name, null);
+                oprop = ODataObjectFactory.newPrimitiveProperty(name, null);
             } else if (type.isCollection()) {
                 // create collection property
-                oprop = ODataFactory.newCollectionProperty(
-                        name, getODataValue(metadata, type, obj).asCollection());
+                oprop = ODataObjectFactory.newCollectionProperty(
+                        name, getODataValue(client, metadata, type, obj).asCollection());
             } else if (type.isSimpleType()) {
                 // create a primitive property
-                oprop = ODataFactory.newPrimitiveProperty(
-                        name, getODataValue(metadata, type, obj).asPrimitive());
+                oprop = ODataObjectFactory.newPrimitiveProperty(
+                        name, getODataValue(client, metadata, type, obj).asPrimitive());
             } else if (type.isComplexType()) {
                 // create a complex property
-                oprop = ODataFactory.newComplexProperty(
-                        name, getODataValue(metadata, type, obj).asComplex());
+                oprop = ODataObjectFactory.newComplexProperty(
+                        name, getODataValue(client, metadata, type, obj).asComplex());
             } else if (type.isEnumType()) {
                 // TODO: manage enum types
                 throw new UnsupportedOperationException("Usupported enum type " + type.getTypeExpression());
@@ -244,7 +252,10 @@ public final class EngineUtils {
     }
 
     public static void addProperties(
-            final EdmMetadata metadata, final Map<String, Object> changes, final ODataEntity entity) {
+            final ODataClient client,
+            final EdmMetadata metadata,
+            final Map<String, Object> changes,
+            final ODataEntity entity) {
 
         for (Map.Entry<String, Object> property : changes.entrySet()) {
             // if the getter exists and it is annotated as expected then get value/value and add a new property
@@ -253,7 +264,7 @@ public final class EngineUtils {
                 entity.removeProperty(odataProperty);
             }
 
-            entity.addProperty(getODataProperty(metadata, property.getKey(), property.getValue()));
+            entity.addProperty(getODataProperty(client, metadata, property.getKey(), property.getValue()));
         }
     }
 
@@ -407,7 +418,7 @@ public final class EngineUtils {
         return null;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Object getValueFromProperty(
             final EdmMetadata metadata, final ODataProperty property, final Type type)
             throws InstantiationException, IllegalAccessException {
@@ -458,25 +469,24 @@ public final class EngineUtils {
         return null;
     }
 
-    private static EdmType getEdmType(final EdmMetadata metadata, final Object obj) {
+    private static EdmType getEdmType(final ODataClient client, final EdmMetadata metadata, final Object obj) {
         final EdmType res;
 
         if (obj == null) {
             res = null;
         } else if (Collection.class.isAssignableFrom(obj.getClass())) {
             if (((Collection) obj).isEmpty()) {
-                res = new EdmType(metadata, "Collection(" + getEdmType(metadata, "Edm.String"));
+                res = new EdmType(metadata, "Collection(" + getEdmType(client, metadata, "Edm.String"));
             } else {
                 res = new EdmType(metadata, "Collection("
-                        + getEdmType(metadata, ((Collection) obj).iterator().next()).getTypeExpression()
-                        + ")");
+                        + getEdmType(client, metadata, ((Collection) obj).iterator().next()).getTypeExpression() + ")");
             }
         } else if (obj.getClass().isAnnotationPresent(ComplexType.class)) {
             final String ns = ClassUtils.getNamespace(obj.getClass());
             final ComplexType ann = obj.getClass().getAnnotation(ComplexType.class);
             res = new EdmType(metadata, ns + "." + ann.value());
         } else {
-            final EdmSimpleType simpleType = EdmSimpleType.fromObject(obj);
+            final EdmSimpleType simpleType = EdmSimpleType.fromObject(client.getWorkingVersion(), obj);
             res = new EdmType(metadata, simpleType.toString());
         }
 

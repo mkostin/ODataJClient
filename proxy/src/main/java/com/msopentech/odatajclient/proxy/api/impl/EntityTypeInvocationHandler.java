@@ -20,7 +20,6 @@
 package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntity;
@@ -120,7 +119,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             final Class<?> typeRef,
             final EntityContainerInvocationHandler containerHandler) {
 
-        super(containerHandler);
+        super(containerHandler.getClient(), containerHandler);
         this.entityContainerName = entityContainerName;
         this.typeRef = typeRef;
 
@@ -340,12 +339,12 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                             collItemType,
                             type,
                             associationSet.getKey().getName(),
-                            ODataRetrieveRequestFactory.getEntitySetRequest(uri).execute().getBody(),
+                            client.getRetrieveRequestFactory().getEntitySetRequest(uri).execute().getBody(),
                             uri,
                             true);
                 } else {
                     final ODataRetrieveResponse<ODataEntity> res =
-                            ODataRetrieveRequestFactory.getEntityRequest(uri).execute();
+                            client.getRetrieveRequestFactory().getEntityRequest(uri).execute();
 
                     navPropValue = getEntityProxy(
                             res.getBody(),
@@ -377,9 +376,9 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
                 res = type == null
                         ? EngineUtils.getValueFromProperty(
-                        containerHandler.getFactory().getMetadata(), entity.getProperty(name))
+                                containerHandler.getFactory().getMetadata(), entity.getProperty(name))
                         : EngineUtils.getValueFromProperty(
-                        containerHandler.getFactory().getMetadata(), entity.getProperty(name), type);
+                                containerHandler.getFactory().getMetadata(), entity.getProperty(name), type);
 
                 if (res != null) {
                     int checkpoint = propertyChanges.hashCode();
@@ -520,7 +519,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
             final URI contentSourceURI = URIUtils.getURI(containerHandler.getFactory().getServiceRoot(), contentSource);
 
-            final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(contentSourceURI);
+            final ODataMediaRequest retrieveReq = client.getRetrieveRequestFactory().getMediaRequest(contentSourceURI);
             retrieveReq.setFormat(ODataMediaFormat.fromFormat(comntentType));
 
             this.stream = retrieveReq.execute().getBody();
@@ -539,7 +538,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         containerHandler.getFactory().getServiceRoot(),
                         EngineUtils.getEditMediaLink(property.name(), this.entity).toASCIIString());
 
-                final ODataMediaRequest req = ODataRetrieveRequestFactory.getMediaRequest(link);
+                final ODataMediaRequest req = client.getRetrieveRequestFactory().getMediaRequest(link);
                 res = req.execute().getBody();
 
             }

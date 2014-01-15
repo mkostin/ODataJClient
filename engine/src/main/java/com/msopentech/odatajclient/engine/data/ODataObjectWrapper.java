@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ODataObjectWrapper {
@@ -31,7 +32,9 @@ public class ODataObjectWrapper {
     /**
      * Logger.
      */
-    protected static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ODataObjectWrapper.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(ODataObjectWrapper.class);
+
+    private final ODataReader reader;
 
     private final byte[] obj;
 
@@ -44,7 +47,8 @@ public class ODataObjectWrapper {
      * @param format source format (<tt>ODataPubFormat</tt>, <tt>ODataFormat</tt>, <tt>ODataValueFormat</tt>,
      * <tt>ODataServiceDocumentFormat</tt>).
      */
-    public ODataObjectWrapper(final InputStream is, final String format) {
+    public ODataObjectWrapper(final ODataReader reader, final InputStream is, final String format) {
+        this.reader = reader;
         try {
             this.obj = IOUtils.toByteArray(is);
             this.format = format;
@@ -61,7 +65,7 @@ public class ODataObjectWrapper {
      * @return <tt>ODataEntitySetIterator</tt> if success; null otherwise.
      */
     public ODataEntitySetIterator getODataEntitySetIterator() {
-        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataEntitySetIterator.class);
+        return reader.read(new ByteArrayInputStream(obj), format, ODataEntitySetIterator.class);
     }
 
     /**
@@ -70,7 +74,7 @@ public class ODataObjectWrapper {
      * @return <tt>ODataEntitySet</tt> if success; null otherwise.
      */
     public ODataEntitySet getODataEntitySet() {
-        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataEntitySet.class);
+        return reader.read(new ByteArrayInputStream(obj), format, ODataEntitySet.class);
     }
 
     /**
@@ -79,7 +83,7 @@ public class ODataObjectWrapper {
      * @return <tt>ODataEntity</tt> if success; null otherwise.
      */
     public ODataEntity getODataEntity() {
-        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataEntity.class);
+        return reader.read(new ByteArrayInputStream(obj), format, ODataEntity.class);
     }
 
     /**
@@ -88,7 +92,7 @@ public class ODataObjectWrapper {
      * @return <tt>ODataProperty</tt> if success; null otherwise.
      */
     public ODataProperty getODataProperty() {
-        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataProperty.class);
+        return reader.read(new ByteArrayInputStream(obj), format, ODataProperty.class);
     }
 
     /**
@@ -97,7 +101,7 @@ public class ODataObjectWrapper {
      * @return <tt>ODataLinkCollection</tt> if success; null otherwise.
      */
     public ODataLinkCollection getODataLinkCollection() {
-        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataLinkCollection.class);
+        return reader.read(new ByteArrayInputStream(obj), format, ODataLinkCollection.class);
     }
 
     /**
@@ -106,7 +110,7 @@ public class ODataObjectWrapper {
      * @return <tt>ODataValue</tt> if success; null otherwise.
      */
     public ODataValue getODataValue() {
-        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataValue.class);
+        return reader.read(new ByteArrayInputStream(obj), format, ODataValue.class);
     }
 
     /**
@@ -115,7 +119,7 @@ public class ODataObjectWrapper {
      * @return <tt>EdmMetadata</tt> if success; null otherwise.
      */
     public EdmMetadata getEdmMetadata() {
-        return ODataReader.read(new ByteArrayInputStream(obj), null, EdmMetadata.class);
+        return reader.read(new ByteArrayInputStream(obj), null, EdmMetadata.class);
     }
 
     /**
@@ -124,7 +128,7 @@ public class ODataObjectWrapper {
      * @return <tt>ODataServiceDocument</tt> if success; null otherwise.
      */
     public ODataServiceDocument getODataServiceDocument() {
-        return ODataReader.read(new ByteArrayInputStream(obj), format, ODataServiceDocument.class);
+        return reader.read(new ByteArrayInputStream(obj), format, ODataServiceDocument.class);
     }
 
     /**
@@ -133,6 +137,6 @@ public class ODataObjectWrapper {
      * @return <tt>ODataError</tt> if success; null otherwise.
      */
     public ODataError getODataError() {
-        return ODataReader.read(new ByteArrayInputStream(obj), null, ODataError.class);
+        return reader.read(new ByteArrayInputStream(obj), null, ODataError.class);
     }
 }

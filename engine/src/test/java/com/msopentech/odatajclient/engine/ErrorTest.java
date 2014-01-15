@@ -21,13 +21,12 @@ package com.msopentech.odatajclient.engine;
 
 import static org.junit.Assert.assertNotNull;
 import com.msopentech.odatajclient.engine.data.ODataError;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import org.junit.Test;
 
 public class ErrorTest extends AbstractTest {
 
     private void xmlError(final String name) {
-        final ODataError error = ODataReader.readError(getClass().getResourceAsStream(name), true);
+        final ODataError error = client.getODataReader().readError(getClass().getResourceAsStream(name), true);
         assertNotNull(error);
     }
 

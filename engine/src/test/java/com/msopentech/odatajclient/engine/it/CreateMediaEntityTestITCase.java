@@ -27,27 +27,27 @@ import java.io.InputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMediaRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityCreateRequest.MediaEntityCreateStreamManager;
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.StreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataMediaEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import org.apache.commons.io.input.BoundedInputStream;
 
 public class CreateMediaEntityTestITCase extends AbstractTest {
@@ -176,14 +176,14 @@ public class CreateMediaEntityTestITCase extends AbstractTest {
             final String file) throws IOException {
 
         try {
-            final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+            final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                     appendEntitySetSegment("Car");
 
             // The sample service has an upload request size of 65k
             final InputStream inputStream = new BoundedInputStream(getClass().getResourceAsStream(file), 65000);
 
             final ODataMediaEntityCreateRequest createReq =
-                    ODataStreamedRequestFactory.getMediaEntityCreateRequest(uriBuilder.build(), inputStream);
+                    client.getStreamedRequestFactory().getMediaEntityCreateRequest(uriBuilder.build(), inputStream);
             createReq.setFormat(format);
             createReq.setContentType(contentType);
             createReq.setPrefer(prefer);
@@ -201,7 +201,7 @@ public class CreateMediaEntityTestITCase extends AbstractTest {
                         : createdEntity.getProperties().get(1).getPrimitiveValue().<Integer>toCastValue();
                 uriBuilder.appendKeySegment(id).appendValueSegment();
                 // get the stream value that got created  
-                final ODataMediaRequest retrieveReq = ODataRetrieveRequestFactory.getMediaRequest(uriBuilder.build());
+                final ODataMediaRequest retrieveReq = client.getRetrieveRequestFactory().getMediaRequest(uriBuilder.build());
                 retrieveReq.setFormat(ODataMediaFormat.WILDCARD);
                 final ODataRetrieveResponse<InputStream> retrieveRes = retrieveReq.execute();
                 assertEquals(200, retrieveRes.getStatusCode());
@@ -209,9 +209,9 @@ public class CreateMediaEntityTestITCase extends AbstractTest {
                 String etag = retrieveRes.getEtag();
                 // get the entity created 
                 final ODataEntity entity =
-                        ODataFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
+                        ODataObjectFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Car");
 
-                final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(new ODataURIBuilder(
+                final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(client.getURIBuilder(
                         testDefaultServiceRootURL).
                         appendEntityTypeSegment("Car").appendKeySegment(id).build());
                 req.setFormat(format);
@@ -228,12 +228,12 @@ public class CreateMediaEntityTestITCase extends AbstractTest {
                     entityToBeUpdated.removeProperty(propertyValue);
                 }
                 // add new value for the property
-                entityToBeUpdated.addProperty(ODataFactory.newPrimitiveProperty(propertyName,
-                        new ODataPrimitiveValue.Builder().setText(newValue).setType(EdmSimpleType.String).build()));
+                entityToBeUpdated.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
+                        new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(newValue).setType(EdmSimpleType.String).build()));
 
                 UpdateType type = UpdateType.REPLACE;
                 // update the entity in the server
-                ODataEntityUpdateRequest updateReq = ODataCUDRequestFactory.getEntityUpdateRequest(type,
+                ODataEntityUpdateRequest updateReq = client.getCUDRequestFactory().getEntityUpdateRequest(type,
                         entityToBeUpdated);
                 req.setFormat(format);
                 if (StringUtils.isNotBlank(etag)) {
@@ -242,8 +242,8 @@ public class CreateMediaEntityTestITCase extends AbstractTest {
                 ODataEntityUpdateResponse updateRes = updateReq.execute();
                 assertEquals(204, updateRes.getStatusCode());
 
-                final ODataEntityRequest afterUpdateReq = ODataRetrieveRequestFactory.getEntityRequest(
-                        new ODataURIBuilder(testDefaultServiceRootURL).
+                final ODataEntityRequest afterUpdateReq = client.getRetrieveRequestFactory().getEntityRequest(
+                        client.getURIBuilder(testDefaultServiceRootURL).
                         appendEntityTypeSegment("Car").appendKeySegment(id).build());
 
                 req.setFormat(format);
@@ -253,9 +253,9 @@ public class CreateMediaEntityTestITCase extends AbstractTest {
                 assertEquals(newValue, entityAfterUpdate.getProperty("Description").getValue().toString());
 
                 // delete the entity
-                ODataURIBuilder deleteUriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+                URIBuilder deleteUriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                         appendEntityTypeSegment("Car(" + id + ")");
-                ODataDeleteRequest deleteReq = ODataCUDRequestFactory.getDeleteRequest(deleteUriBuilder.build());
+                ODataDeleteRequest deleteReq = client.getCUDRequestFactory().getDeleteRequest(deleteUriBuilder.build());
                 deleteReq.setFormat(format);
                 deleteReq.setContentType(contentType);
                 ODataDeleteResponse deleteRes = deleteReq.execute();

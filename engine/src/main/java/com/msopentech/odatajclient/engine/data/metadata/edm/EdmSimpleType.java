@@ -29,6 +29,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
@@ -72,7 +73,11 @@ public enum EdmSimpleType {
     /**
      * A 64-bit value expressed as Coordinated Universal Time (UTC).
      */
-    DateTime(ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
+    DateTime(new Version[] { Version.V3 }, ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
+    /**
+     * Date without a time-zone offset.
+     */
+    Date(new Version[] { Version.V4 }, ODataTimestamp.class, "yyyy-MM-dd"),
     /**
      * Date and time as an Offset in minutes from GMT.
      */
@@ -80,7 +85,15 @@ public enum EdmSimpleType {
     /**
      * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
      */
-    Time(ODataDuration.class),
+    Time(new Version[] { Version.V3 }, ODataDuration.class),
+    /**
+     * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
+     */
+    TimeOfDay(new Version[] { Version.V4 }, ODataDuration.class),
+    /**
+     * Signed duration in days, hours, minutes, and (sub)seconds.
+     */
+    Duration(new Version[] { Version.V4 }, ODataDuration.class),
     /**
      * Numeric values with fixed precision and scale.
      */
@@ -140,27 +153,48 @@ public enum EdmSimpleType {
 
     private final String pattern;
 
+    private final Version[] versions;
+
     /**
-     * Constructor.
+     * Constructor (all OData versions).
      *
-     * @param value value.
      * @param clazz type.
      */
     EdmSimpleType(final Class<?> clazz) {
-        this.clazz = clazz;
-        this.pattern = null;
+        this(Version.values(), clazz, null);
     }
 
     /**
      * Constructor.
      *
-     * @param value value.
+     * @param versions supported OData versions.
+     * @param clazz type.
+     */
+    EdmSimpleType(final Version[] versions, final Class<?> clazz) {
+        this(versions, clazz, null);
+    }
+
+    /**
+     * Constructor (all OData versions).
+     *
      * @param clazz type.
      * @param pattern pattern.
      */
     EdmSimpleType(final Class<?> clazz, final String pattern) {
+        this(Version.values(), clazz, pattern);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param versions supported OData versions.
+     * @param clazz type.
+     * @param pattern pattern.
+     */
+    EdmSimpleType(final Version[] versions, final Class<?> clazz, final String pattern) {
         this.clazz = clazz;
         this.pattern = pattern;
+        this.versions = versions;
     }
 
     /**
@@ -230,11 +264,12 @@ public enum EdmSimpleType {
      * @param obj object.
      * @return <tt>EdmSimpleType</tt> object.
      */
-    public static EdmSimpleType fromObject(final Object obj) {
+    public static EdmSimpleType fromObject(final Version workingVersion, final Object obj) {
         for (EdmSimpleType edmSimpleType : EdmSimpleType.values()) {
             if (edmSimpleType.javaType().equals(obj.getClass())) {
-                return edmSimpleType == DateTimeOffset || edmSimpleType == DateTime
-                        ? ((ODataTimestamp) obj).isOffset() ? DateTimeOffset : DateTime
+                return edmSimpleType == DateTimeOffset || edmSimpleType == DateTime || edmSimpleType == Date
+                        ? ((ODataTimestamp) obj).isOffset()
+                        ? DateTimeOffset : workingVersion == Version.V3 ? DateTime : Date
                         : edmSimpleType;
             }
         }
@@ -248,5 +283,9 @@ public enum EdmSimpleType {
      */
     public static String namespace() {
         return "Edm";
+    }
+
+    public Version[] getSupportedVersions() {
+        return versions;
     }
 }

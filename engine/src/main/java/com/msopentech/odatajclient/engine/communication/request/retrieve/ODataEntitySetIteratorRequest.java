@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntitySetIterator;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -28,21 +29,19 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData EntitySet query request.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getEntitySetRequest(java.net.URI)
  */
-public class ODataEntitySetIteratorRequest extends ODataRetrieveRequest<ODataEntitySetIterator, ODataPubFormat> {
+public class ODataEntitySetIteratorRequest extends AbstractODataRetrieveRequest<ODataEntitySetIterator, ODataPubFormat> {
 
     private ODataEntitySetIterator feedIterator = null;
 
     /**
      * Private constructor.
      *
+     * @param odataClient client instance getting this request
      * @param query query to be executed.
      */
-    ODataEntitySetIteratorRequest(final URI query) {
-        super(ODataPubFormat.class, query);
+    ODataEntitySetIteratorRequest(final ODataClient odataClient, final URI query) {
+        super(odataClient, ODataPubFormat.class, query);
     }
 
     /**
@@ -51,7 +50,7 @@ public class ODataEntitySetIteratorRequest extends ODataRetrieveRequest<ODataEnt
     @Override
     public ODataRetrieveResponse<ODataEntitySetIterator> execute() {
         final HttpResponse res = doExecute();
-        return new ODataEntitySetIteratorResponseImpl(client, res);
+        return new ODataEntitySetIteratorResponseImpl(httpClient, res);
     }
 
     /**
@@ -77,7 +76,7 @@ public class ODataEntitySetIteratorRequest extends ODataRetrieveRequest<ODataEnt
         public ODataEntitySetIterator getBody() {
             if (feedIterator == null) {
                 feedIterator = new ODataEntitySetIterator(
-                        getRawResponse(), ODataPubFormat.fromString(getContentType()));
+                        odataClient, getRawResponse(), ODataPubFormat.fromString(getContentType()));
             }
             return feedIterator;
         }

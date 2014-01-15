@@ -29,21 +29,21 @@ import org.junit.Test;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 
 public class EntityTestITCase extends AbstractTest {
     //retrieve entity
 
     private void retreiveEntityTest(final ODataPubFormat reqFormat, final String acceptFormat) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-9);
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         try {
@@ -65,9 +65,9 @@ public class EntityTestITCase extends AbstractTest {
     //retrieve entity with full metadata
 
     private void retreiveFullMetadataEntityTest(final ODataPubFormat reqFormat, final String acceptFormat) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-9);
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         try {
@@ -91,9 +91,9 @@ public class EntityTestITCase extends AbstractTest {
     //retrieve entity with NO metadata
 
     private void retreiveNoMetadataEntityTest(final ODataPubFormat reqFormat, final String acceptFormat) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-9);
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         try {
@@ -114,9 +114,9 @@ public class EntityTestITCase extends AbstractTest {
     //retrieve entity with minimal metadata
 
     private void retreiveMinimalMetadataEntityTest(final ODataPubFormat reqFormat, final String acceptFormat) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(-9);
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         try {
@@ -136,9 +136,9 @@ public class EntityTestITCase extends AbstractTest {
     //retrieve entity with expand query
 
     private void retreiveEntityTestWithExpand(final ODataPubFormat reqFormat, final String acceptFormat) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).expand("Orders");
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         try {
@@ -159,9 +159,9 @@ public class EntityTestITCase extends AbstractTest {
 
     private void retreiveEntityTestWithSelect(final ODataPubFormat reqFormat, final String acceptFormat,
             final String selectFormat) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).select(selectFormat);
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         try {
@@ -182,9 +182,9 @@ public class EntityTestITCase extends AbstractTest {
 
     private void retreiveEntityTestWithSelectAndExpand(final ODataPubFormat reqFormat, final String acceptFormat,
             final String selectFormat, String expandFormat) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Customer").appendKeySegment(-10).select(selectFormat).expand(expandFormat);
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         try {
@@ -207,9 +207,9 @@ public class EntityTestITCase extends AbstractTest {
         final Map<String, Object> multiKey = new LinkedHashMap<String, Object>();
         multiKey.put("FromUsername", "1");
         multiKey.put("MessageId", -10);
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Message").appendKeySegment(multiKey);
-        final ODataEntityRequest req = ODataRetrieveRequestFactory.getEntityRequest(uriBuilder.build());
+        final ODataEntityRequest req = client.getRetrieveRequestFactory().getEntityRequest(uriBuilder.build());
         req.setFormat(format);
         req.setAccept(acceptFormat);
         try {
@@ -227,9 +227,9 @@ public class EntityTestITCase extends AbstractTest {
     //retrieve navigation link
 
     private void navigationLinks(final ODataPubFormat format, final String acceptFormat) {
-        ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment("Customer").appendKeySegment(-10).appendLinksSegment("Orders");
-        ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
         req.setAccept(acceptFormat);
         try {
@@ -254,9 +254,9 @@ public class EntityTestITCase extends AbstractTest {
 
     private void generalQuery(final ODataPubFormat format, String acceptFormat, final String navigationQuery,
             String links) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendNavigationLinkSegment(navigationQuery).appendKeySegment(-10).appendLinksSegment(links);
-        final ODataEntitySetRequest req = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build());
+        final ODataEntitySetRequest req = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build());
         req.setFormat(format);
         req.setAccept(acceptFormat);
         try {

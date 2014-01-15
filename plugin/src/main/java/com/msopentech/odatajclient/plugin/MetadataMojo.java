@@ -19,8 +19,8 @@
  */
 package com.msopentech.odatajclient.plugin;
 
+import com.msopentech.odatajclient.engine.client.ODataClientFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ComplexType;
@@ -97,7 +97,8 @@ public class MetadataMojo extends AbstractMojo {
             Velocity.addProperty(Velocity.RESOURCE_LOADER, "class");
             Velocity.addProperty("class.resource.loader.class", ClasspathResourceLoader.class.getName());
 
-            final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(serviceRootURL);
+            final ODataMetadataRequest req = ODataClientFactory.getV3().
+                    getRetrieveRequestFactory().getMetadataRequest(serviceRootURL);
 
             req.addCustomHeader("Authorization", AUTH_HEADER);
             

@@ -21,25 +21,17 @@ package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Collections;
-import org.apache.commons.io.IOUtils;
 
 /**
  * OData writer.
- * <p>
- * Use this class to serialize an OData request body.
- * <p>
- * This class provides method helpers to serialize a set of entities and a single entity as well.
+ * <br/>
+ * Use this interface to serialize an OData request body.
+ * <br/>
+ * This interface provides method helpers to serialize a set of entities and a single entity as well.
  */
-public final class ODataWriter {
-
-    private ODataWriter() {
-        // Empty private constructor for static utility classes
-    }
+public interface ODataWriter {
 
     /**
      * Writes a collection of OData entities.
@@ -48,9 +40,7 @@ public final class ODataWriter {
      * @param format serialization format.
      * @return stream of serialized objects.
      */
-    public static InputStream writeEntities(final Collection<ODataEntity> entities, final ODataPubFormat format) {
-        return writeEntities(entities, format, true);
-    }
+    InputStream writeEntities(Collection<ODataEntity> entities, ODataPubFormat format);
 
     /**
      * Writes a collection of OData entities.
@@ -60,21 +50,7 @@ public final class ODataWriter {
      * @param outputType whether to explicitly output type information.
      * @return stream of serialized objects.
      */
-    public static InputStream writeEntities(
-            final Collection<ODataEntity> entities, final ODataPubFormat format, final boolean outputType) {
-
-        final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            for (ODataEntity entity : entities) {
-                Serializer.entry(
-                        ODataBinder.getEntry(entity, ResourceFactory.entryClassForFormat(format), outputType), output);
-            }
-
-            return new ByteArrayInputStream(output.toByteArray());
-        } finally {
-            IOUtils.closeQuietly(output);
-        }
-    }
+    InputStream writeEntities(Collection<ODataEntity> entities, ODataPubFormat format, boolean outputType);
 
     /**
      * Serializes a single OData entity.
@@ -83,9 +59,7 @@ public final class ODataWriter {
      * @param format serialization format.
      * @return stream of serialized object.
      */
-    public static InputStream writeEntity(final ODataEntity entity, final ODataPubFormat format) {
-        return writeEntity(entity, format, true);
-    }
+    InputStream writeEntity(ODataEntity entity, ODataPubFormat format);
 
     /**
      * Serializes a single OData entity.
@@ -95,11 +69,7 @@ public final class ODataWriter {
      * @param outputType whether to explicitly output type information.
      * @return stream of serialized object.
      */
-    public static InputStream writeEntity(
-            final ODataEntity entity, final ODataPubFormat format, final boolean outputType) {
-
-        return writeEntities(Collections.<ODataEntity>singleton(entity), format, outputType);
-    }
+    InputStream writeEntity(ODataEntity entity, ODataPubFormat format, boolean outputType);
 
     /**
      * Writes a single OData entity property.
@@ -108,16 +78,7 @@ public final class ODataWriter {
      * @param format serialization format.
      * @return stream of serialized object.
      */
-    public static InputStream writeProperty(final ODataProperty property, final ODataFormat format) {
-        final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            Serializer.property(ODataBinder.toDOMElement(property), format, output);
-
-            return new ByteArrayInputStream(output.toByteArray());
-        } finally {
-            IOUtils.closeQuietly(output);
-        }
-    }
+    InputStream writeProperty(ODataProperty property, ODataFormat format);
 
     /**
      * Writes an OData link.
@@ -126,14 +87,5 @@ public final class ODataWriter {
      * @param format serialization format.
      * @return stream of serialized object.
      */
-    public static InputStream writeLink(final ODataLink link, final ODataFormat format) {
-        final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            Serializer.link(link, format, output);
-
-            return new ByteArrayInputStream(output.toByteArray());
-        } finally {
-            IOUtils.closeQuietly(output);
-        }
-    }
+    InputStream writeLink(ODataLink link, ODataFormat format);
 }

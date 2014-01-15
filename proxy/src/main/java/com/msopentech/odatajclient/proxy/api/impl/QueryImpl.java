@@ -19,7 +19,8 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.ODataFilter;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.NoResultException;
@@ -34,6 +35,8 @@ import org.apache.commons.lang3.StringUtils;
 public class QueryImpl<T extends Serializable, EC extends AbstractEntityCollection<T>> implements Query<T, EC> {
 
     private static final long serialVersionUID = -300830736753191114L;
+
+    private final ODataClient client;
 
     private final Class<T> typeRef;
 
@@ -52,7 +55,10 @@ public class QueryImpl<T extends Serializable, EC extends AbstractEntityCollecti
     private Integer firstResult;
 
     @SuppressWarnings("unchecked")
-    QueryImpl(final Class<EC> collTypeRef, final URI baseURI, final EntitySetInvocationHandler handler) {         
+    QueryImpl(final ODataClient client,
+            final Class<EC> collTypeRef, final URI baseURI, final EntitySetInvocationHandler handler) {
+
+        this.client = client;
         this.typeRef = (Class<T>) ClassUtils.extractTypeArg(collTypeRef);
         this.collTypeRef = collTypeRef;
         this.baseURI = baseURI;
@@ -145,7 +151,7 @@ public class QueryImpl<T extends Serializable, EC extends AbstractEntityCollecti
     @Override
     @SuppressWarnings("unchecked")
     public EC getResult() {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(this.baseURI.toASCIIString()).
+        final URIBuilder uriBuilder = client.getURIBuilder(this.baseURI.toASCIIString()).
                 appendStructuralSegment(ClassUtils.getNamespace(typeRef) + "." + ClassUtils.getEntityTypeName(typeRef));
 
         if (StringUtils.isNotBlank(filter)) {

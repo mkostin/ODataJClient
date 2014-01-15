@@ -19,23 +19,23 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.invoke;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.AbstractODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
 import com.msopentech.odatajclient.engine.data.ODataNoContent;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -48,18 +48,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData invoke operation request.
- * Get instance by using ODataRequestFactory.
- *
- * @see ODataInvokeRequestFactory#getInvokeRequest(java.net.URI,
- * com.msopentech.odatajclient.engine.data.metadata.EdmMetadata,
- * com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer.FunctionImport)
  */
 public class ODataInvokeRequest<T extends ODataInvokeResult>
-        extends ODataBasicRequestImpl<ODataInvokeResponse<T>, ODataPubFormat>
+        extends AbstractODataBasicRequestImpl<ODataInvokeResponse<T>, ODataPubFormat>
         implements ODataBatchableRequest {
 
     private final Class<T> reference;
@@ -72,16 +66,18 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param reference reference class for invoke result
      * @param method HTTP method of the request.
      * @param uri URI that identifies the operation.
      */
     ODataInvokeRequest(
+            final ODataClient odataClient,
             final Class<T> reference,
             final HttpMethod method,
             final URI uri) {
 
-        super(ODataPubFormat.class, method, uri);
+        super(odataClient, ODataPubFormat.class, method, uri);
 
         this.reference = reference;
         this.parameters = new LinkedHashMap<String, ODataValue>();
@@ -118,16 +114,16 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
     protected InputStream getPayload() {
         if (!this.parameters.isEmpty() && this.method == HttpMethod.POST) {
             // Additional, non-binding parameters MUST be sent as JSON
-            final ODataEntity tmp = ODataFactory.newEntity("");
+            final ODataEntity tmp = ODataObjectFactory.newEntity("");
             for (Map.Entry<String, ODataValue> param : parameters.entrySet()) {
                 ODataProperty property = null;
 
                 if (param.getValue().isPrimitive()) {
-                    property = ODataFactory.newPrimitiveProperty(param.getKey(), param.getValue().asPrimitive());
+                    property = ODataObjectFactory.newPrimitiveProperty(param.getKey(), param.getValue().asPrimitive());
                 } else if (param.getValue().isComplex()) {
-                    property = ODataFactory.newComplexProperty(param.getKey(), param.getValue().asComplex());
+                    property = ODataObjectFactory.newComplexProperty(param.getKey(), param.getValue().asComplex());
                 } else if (param.getValue().isCollection()) {
-                    property = ODataFactory.newCollectionProperty(param.getKey(), param.getValue().asCollection());
+                    property = ODataObjectFactory.newCollectionProperty(param.getKey(), param.getValue().asCollection());
                 }
 
                 if (property != null) {
@@ -135,7 +131,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
                 }
             }
 
-            return ODataWriter.writeEntity(tmp, ODataPubFormat.JSON, false);
+            return odataClient.getODataWriter().writeEntity(tmp, ODataPubFormat.JSON, false);
         }
 
         return null;
@@ -164,14 +160,14 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
                     throw new IllegalArgumentException("While adding GET parameters", e);
                 }
             } else if (this.method == HttpMethod.POST) {
-                ((HttpPost) request).setEntity(new InputStreamEntity(input, -1));
+                ((HttpPost) request).setEntity(URIUtils.buildInputStreamEntity(odataClient, input));
 
                 setContentType(ODataPubFormat.JSON.toString());
             }
         }
 
         try {
-            return new ODataInvokeResponseImpl(client, doExecute());
+            return new ODataInvokeResponseImpl(httpClient, doExecute());
         } finally {
             IOUtils.closeQuietly(input);
         }
@@ -215,15 +211,15 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
 
                 try {
                     if (reference.isAssignableFrom(ODataEntitySet.class)) {
-                        invokeResult = (T) ODataReader.readEntitySet(res.getEntity().getContent(),
+                        invokeResult = (T) odataClient.getODataReader().readEntitySet(res.getEntity().getContent(),
                                 ODataPubFormat.fromString(getContentType()));
                     }
                     if (reference.isAssignableFrom(ODataEntity.class)) {
-                        invokeResult = (T) ODataReader.readEntity(res.getEntity().getContent(),
+                        invokeResult = (T) odataClient.getODataReader().readEntity(res.getEntity().getContent(),
                                 ODataPubFormat.fromString(getContentType()));
                     }
                     if (reference.isAssignableFrom(ODataProperty.class)) {
-                        invokeResult = (T) ODataReader.readProperty(res.getEntity().getContent(),
+                        invokeResult = (T) odataClient.getODataReader().readProperty(res.getEntity().getContent(),
                                 ODataFormat.fromString(getContentType()));
                     }
                 } catch (IOException e) {

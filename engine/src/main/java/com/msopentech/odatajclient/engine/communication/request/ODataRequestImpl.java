@@ -19,27 +19,24 @@
  */
 package com.msopentech.odatajclient.engine.communication.request;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.ODataServerErrorException;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaders;
-import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.batch.BatchRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.invoke.InvokeRequestFactory;
+import com.msopentech.odatajclient.engine.communication.request.streamed.StreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataError;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.json.error.JSONODataError;
 import com.msopentech.odatajclient.engine.data.xml.XMLODataError;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
-import com.msopentech.odatajclient.engine.utils.Configuration;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,11 +59,12 @@ import org.slf4j.LoggerFactory;
  * Abstract representation of an OData request.
  * Get instance by using factories.
  *
- * @see ODataCUDRequestFactory
- * @see ODataRetrieveRequestFactory
- * @see ODataBatchRequestFactory
- * @see ODataInvokeRequestFactory
- * @see ODataStreamedRequestFactory
+ * @param <T> Accepted content-type formats by the request in object.
+ *
+ * @see CUDRequestFactory
+ * @see BatchRequestFactory
+ * @see InvokeRequestFactory
+ * @see StreamedRequestFactory
  */
 public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
 
@@ -74,6 +72,8 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
      * Logger.
      */
     protected static final Logger LOG = LoggerFactory.getLogger(ODataRequest.class);
+
+    protected final ODataClient odataClient;
 
     protected final Class<T> formatRef;
 
@@ -95,7 +95,7 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
     /**
      * HTTP client.
      */
-    protected final HttpClient client;
+    protected final HttpClient httpClient;
 
     /**
      * HTTP request.
@@ -105,29 +105,34 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
+     * @param formatRef reference class for the format being used
      * @param method HTTP request method. If configured X-HTTP-METHOD header will be used.
      * @param uri OData request URI.
      */
-    protected ODataRequestImpl(final Class<T> formatRef, final HttpMethod method, final URI uri) {
+    protected ODataRequestImpl(final ODataClient odataClient,
+            final Class<T> formatRef, final HttpMethod method, final URI uri) {
+
+        this.odataClient = odataClient;
+
         this.formatRef = formatRef;
         this.method = method;
 
         // initialize default headers
-        this.odataHeaders = new ODataHeaders();
-        this.odataHeaders.setHeader(ODataHeaders.HeaderName.minDataServiceVersion, ODataConstants.V30);
-        this.odataHeaders.setHeader(ODataHeaders.HeaderName.maxDataServiceVersion, ODataConstants.V30);
-        this.odataHeaders.setHeader(ODataHeaders.HeaderName.dataServiceVersion, ODataConstants.V30);
+        this.odataHeaders = odataClient.getVersionHeaders();
 
         // target uri
         this.uri = uri;
 
-        HttpClient _client = Configuration.getHttpClientFactory().createHttpClient(this.method, this.uri);
-        if (Configuration.isGzipCompression()) {
-            _client = new DecompressingHttpClient(_client);
+        HttpClient _httpClient = odataClient.getConfiguration().getHttpClientFactory().
+                createHttpClient(this.method, this.uri);
+        if (odataClient.getConfiguration().isGzipCompression()) {
+            _httpClient = new DecompressingHttpClient(_httpClient);
         }
-        this.client = _client;
+        this.httpClient = _httpClient;
 
-        this.request = Configuration.getHttpUriRequestFactory().createHttpUriRequest(this.method, this.uri);
+        this.request = odataClient.getConfiguration().getHttpUriRequestFactory().
+                createHttpUriRequest(this.method, this.uri);
     }
 
     /**
@@ -136,12 +141,12 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
     @SuppressWarnings("unchecked")
     public T getDefaultFormat() {
         return (T) (formatRef.equals(ODataPubFormat.class)
-                ? Configuration.getDefaultPubFormat()
+                ? odataClient.getConfiguration().getDefaultPubFormat()
                 : (formatRef.equals(ODataValueFormat.class)
-                ? Configuration.getDefaultValueFormat()
+                ? odataClient.getConfiguration().getDefaultValueFormat()
                 : (formatRef.equals(ODataMediaFormat.class)
-                ? Configuration.getDefaultMediaFormat()
-                : Configuration.getDefaultFormat())));
+                ? odataClient.getConfiguration().getDefaultMediaFormat()
+                : odataClient.getConfiguration().getDefaultFormat())));
     }
 
     /**
@@ -172,64 +177,72 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
      * {@inheritDoc}
      */
     @Override
-    public void setAccept(final String value) {
+    public ODataRequest setAccept(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.accept, value);
+        return this;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setIfMatch(final String value) {
+    public ODataRequest setIfMatch(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.ifMatch, value);
+        return this;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setIfNoneMatch(final String value) {
+    public ODataRequest setIfNoneMatch(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.ifNoneMatch, value);
+        return this;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setPrefer(final String value) {
+    public ODataRequest setPrefer(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.prefer, value);
+        return this;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setXHTTPMethod(final String value) {
+    public ODataRequest setXHTTPMethod(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.xHttpMethod, value);
+        return this;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setContentType(final String value) {
+    public ODataRequest setContentType(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.contentType, value);
+        return this;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setSlug(final String value) {
+    public ODataRequest setSlug(final String value) {
         odataHeaders.setHeader(ODataHeaders.HeaderName.slug, value);
+        return this;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void addCustomHeader(final String name, final String value) {
+    public ODataRequest addCustomHeader(final String name, final String value) {
         odataHeaders.setHeader(name, value);
+        return this;
     }
 
     /**
@@ -362,7 +375,7 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
         }
 
         // Add header for KeyAsSegment management
-        if (Configuration.isKeyAsSegment()) {
+        if (odataClient.getConfiguration().isKeyAsSegment()) {
             addCustomHeader(
                     ODataHeaders.HeaderName.dataServiceUrlConventions.toString(), ODataHeaderValues.keyAsSegment);
         }
@@ -380,7 +393,7 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
 
         final HttpResponse response;
         try {
-            response = this.client.execute(this.request);
+            response = this.httpClient.execute(this.request);
         } catch (IOException e) {
             throw new HttpClientException(e);
         } catch (RuntimeException e) {
@@ -400,7 +413,7 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
                     ODataError error;
 
                     try {
-                        error = ODataReader.readError(httpEntity.getContent(), isXML);
+                        error = odataClient.getODataReader().readError(httpEntity.getContent(), isXML);
                     } catch (IllegalArgumentException e) {
                         LOG.warn("Error deserializing error response", e);
                         error = getGenericError(

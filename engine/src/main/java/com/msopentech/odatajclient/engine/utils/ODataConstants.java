@@ -32,9 +32,25 @@ public class ODataConstants {
      */
     public static final DocumentBuilderFactory DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
-    // Other stuff
-    public static final String V30 = "3.0";
+    public enum Version {
 
+        V3("3.0"),
+        V4("4.0");
+
+        private final String version;
+
+        private Version(final String version) {
+            this.version = version;
+        }
+
+        @Override
+        public String toString() {
+            return version;
+        }
+
+    }
+
+    // Other stuff
     public final static String UTF8 = "UTF-8";
 
     public final static String NAME = "name";
@@ -160,7 +176,7 @@ public class ODataConstants {
     public final static String JSON_TYPE = "odata.type";
 
     public final static String JSON_ETAG = "odata.etag";
-    
+
     public final static String JSON_MEDIA_ETAG = "odata.mediaETag";
 
     public final static String JSON_ID = "odata.id";

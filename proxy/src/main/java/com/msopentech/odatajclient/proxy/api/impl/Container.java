@@ -19,29 +19,27 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.communication.header.ODataHeaderValues;
 import com.msopentech.odatajclient.engine.communication.request.UpdateType;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequest;
-import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchResponseItem;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangeset;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataChangesetResponseItem;
-import com.msopentech.odatajclient.engine.communication.request.cud.ODataCUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataMediaEntityUpdateRequest;
 import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamUpdateRequest;
-import com.msopentech.odatajclient.engine.communication.request.streamed.ODataStreamedRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataBatchResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityUpdateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponse;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.proxy.api.AbstractContainer;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
@@ -75,9 +73,12 @@ class Container implements AbstractContainer {
      */
     private static final Logger LOG = LoggerFactory.getLogger(Container.class);
 
+    private final ODataClient client;
+
     private final EntityContainerFactory factory;
 
-    Container(final EntityContainerFactory factory) {
+    Container(final ODataClient client, final EntityContainerFactory factory) {
+        this.client = client;
         this.factory = factory;
     }
 
@@ -86,7 +87,7 @@ class Container implements AbstractContainer {
      */
     @Override
     public void flush() {
-        final ODataBatchRequest request = ODataBatchRequestFactory.getBatchRequest(factory.getServiceRoot());
+        final ODataBatchRequest request = client.getBatchRequestFactory().getBatchRequest(factory.getServiceRoot());
         final ODataBatchRequest.BatchStreamManager streamManager = request.execute();
         final ODataChangeset changeset = streamManager.addChangeset();
 
@@ -179,9 +180,9 @@ class Container implements AbstractContainer {
 
         LOG.debug("Create '{}'", handler);
 
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(factory.getServiceRoot()).
+        final URIBuilder uriBuilder = client.getURIBuilder(factory.getServiceRoot()).
                 appendEntitySetSegment(handler.getEntitySetName());
-        changeset.addRequest(ODataCUDRequestFactory.getEntityCreateRequest(uriBuilder.build(), entity));
+        changeset.addRequest(client.getCUDRequestFactory().getEntityCreateRequest(uriBuilder.build(), entity));
     }
 
     private void batchUpdateMediaEntity(
@@ -193,7 +194,7 @@ class Container implements AbstractContainer {
         LOG.debug("Update media entity '{}'", uri);
 
         final ODataMediaEntityUpdateRequest req =
-                ODataStreamedRequestFactory.getMediaEntityUpdateRequest(uri, input);
+                client.getStreamedRequestFactory().getMediaEntityUpdateRequest(uri, input);
 
         req.setContentType(StringUtils.isBlank(handler.getEntity().getMediaContentType())
                 ? ODataMediaFormat.WILDCARD.toString()
@@ -214,7 +215,7 @@ class Container implements AbstractContainer {
 
         LOG.debug("Update media entity '{}'", uri);
 
-        final ODataStreamUpdateRequest req = ODataStreamedRequestFactory.getStreamUpdateRequest(uri, input);
+        final ODataStreamUpdateRequest req = client.getStreamedRequestFactory().getStreamUpdateRequest(uri, input);
 
         if (StringUtils.isNotBlank(handler.getETag())) {
             req.setIfMatch(handler.getETag());
@@ -231,7 +232,7 @@ class Container implements AbstractContainer {
         LOG.debug("Update '{}'", changes.getEditLink());
 
         final ODataEntityUpdateRequest req =
-                ODataCUDRequestFactory.getEntityUpdateRequest(UpdateType.PATCH, changes);
+                client.getCUDRequestFactory().getEntityUpdateRequest(UpdateType.PATCH, changes);
         req.setPrefer(ODataHeaderValues.preferReturnContent);
 
         if (StringUtils.isNotBlank(handler.getETag())) {
@@ -250,7 +251,7 @@ class Container implements AbstractContainer {
         LOG.debug("Update '{}'", uri);
 
         final ODataEntityUpdateRequest req =
-                ODataCUDRequestFactory.getEntityUpdateRequest(uri, UpdateType.PATCH, changes);
+                client.getCUDRequestFactory().getEntityUpdateRequest(uri, UpdateType.PATCH, changes);
         req.setPrefer(ODataHeaderValues.preferReturnContent);
 
         if (StringUtils.isNotBlank(handler.getETag())) {
@@ -265,7 +266,7 @@ class Container implements AbstractContainer {
 
         LOG.debug("Delete '{}'", entity.getEditLink());
 
-        final ODataDeleteRequest req = ODataCUDRequestFactory.getDeleteRequest(URIUtils.getURI(
+        final ODataDeleteRequest req = client.getCUDRequestFactory().getDeleteRequest(URIUtils.getURI(
                 factory.getServiceRoot(), entity.getEditLink().toASCIIString()));
 
         if (StringUtils.isNotBlank(handler.getETag())) {
@@ -294,7 +295,7 @@ class Container implements AbstractContainer {
 
         if (AttachedEntityStatus.DELETED != currentStatus) {
             entity.getProperties().clear();
-            EngineUtils.addProperties(factory.getMetadata(), handler.getPropertyChanges(), entity);
+            EngineUtils.addProperties(client, factory.getMetadata(), handler.getPropertyChanges(), entity);
         }
 
         for (Map.Entry<NavigationProperty, Object> property : handler.getLinkChanges().entrySet()) {
@@ -405,10 +406,10 @@ class Container implements AbstractContainer {
     private ODataLink buildNavigationLink(final String name, final URI uri, final ODataLinkType type) {
         switch (type) {
             case ENTITY_NAVIGATION:
-                return ODataFactory.newEntityNavigationLink(name, uri);
+                return ODataObjectFactory.newEntityNavigationLink(name, uri);
 
             case ENTITY_SET_NAVIGATION:
-                return ODataFactory.newFeedNavigationLink(name, uri);
+                return ODataObjectFactory.newFeedNavigationLink(name, uri);
 
             default:
                 throw new IllegalArgumentException("Invalid link type " + type.name());
@@ -425,7 +426,7 @@ class Container implements AbstractContainer {
             pos++;
             items.put(delayedUpdate.getSource(), pos);
 
-            final ODataEntity changes = ODataFactory.newEntity(delayedUpdate.getSource().getEntity().getName());
+            final ODataEntity changes = ODataObjectFactory.newEntity(delayedUpdate.getSource().getEntity().getName());
 
             AttachedEntityStatus status =
                     EntityContainerFactory.getContext().entityContext().getStatus(delayedUpdate.getSource());
@@ -440,7 +441,6 @@ class Container implements AbstractContainer {
                 sourceURI = URI.create("$" + sourcePos);
             }
 
-
             for (EntityTypeInvocationHandler target : delayedUpdate.getTargets()) {
                 status = EntityContainerFactory.getContext().entityContext().getStatus(target);
 
@@ -453,12 +453,12 @@ class Container implements AbstractContainer {
                     targetURI = URI.create("$" + targetPos);
                 }
 
-                changes.addLink(delayedUpdate.getType() == ODataLinkType.ENTITY_NAVIGATION ? ODataFactory.
-                        newEntityNavigationLink(delayedUpdate.getSourceName(), targetURI)
-                        : ODataFactory.newFeedNavigationLink(delayedUpdate.getSourceName(), targetURI));
+                changes.addLink(delayedUpdate.getType() == ODataLinkType.ENTITY_NAVIGATION
+                        ? ODataObjectFactory.newEntityNavigationLink(delayedUpdate.getSourceName(), targetURI)
+                        : ODataObjectFactory.newFeedNavigationLink(delayedUpdate.getSourceName(), targetURI));
 
                 LOG.debug("'{}' from {} to {}", new Object[] {
-                    delayedUpdate.getType().name(), sourceURI, targetURI});
+                    delayedUpdate.getType().name(), sourceURI, targetURI });
             }
 
             batchUpdate(delayedUpdate.getSource(), sourceURI, changes, changeset);

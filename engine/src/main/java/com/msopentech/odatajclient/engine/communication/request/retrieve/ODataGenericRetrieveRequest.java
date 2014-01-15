@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
@@ -28,24 +29,17 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements a generic OData retrieve query request.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getGenericRetrieveRequest(java.net.URI)
  */
 public class ODataGenericRetrieveRequest extends ODataRawRequest {
 
     /**
-     * Accepted format.
-     */
-    private String format;
-
-    /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param uri query request.
      */
-    public ODataGenericRetrieveRequest(final URI uri) {
-        super(uri);
+    public ODataGenericRetrieveRequest(final ODataClient odataClient, final URI uri) {
+        super(odataClient, uri);
     }
 
     /**
@@ -54,7 +48,6 @@ public class ODataGenericRetrieveRequest extends ODataRawRequest {
      * @param format format.
      */
     public void setFormat(final String format) {
-        this.format = format;
         setAccept(format);
         setContentType(format);
     }
@@ -65,7 +58,7 @@ public class ODataGenericRetrieveRequest extends ODataRawRequest {
      * @return query response.
      */
     public ODataRetrieveResponse<ODataObjectWrapper> execute() {
-        return new ODataGenericResponseImpl(client, doExecute());
+        return new ODataGenericResponseImpl(httpClient, doExecute());
     }
 
     /**
@@ -104,7 +97,7 @@ public class ODataGenericRetrieveRequest extends ODataRawRequest {
         public ODataObjectWrapper getBody() {
             if (obj == null) {
                 try {
-                    obj = new ODataObjectWrapper(getRawResponse(), getContentType());
+                    obj = new ODataObjectWrapper(odataClient.getODataReader(), getRawResponse(), getContentType());
                 } finally {
                     this.close();
                 }

@@ -19,11 +19,14 @@
  */
 package com.msopentech.odatajclient.proxy.api;
 
+import com.msopentech.odatajclient.engine.client.Configuration;
+import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.client.ODataClientFactory;
 import com.msopentech.odatajclient.proxy.api.context.Context;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.uri.filter.FilterFactory;
 import com.msopentech.odatajclient.proxy.api.impl.EntityContainerInvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Map;
@@ -45,7 +48,9 @@ public class EntityContainerFactory {
     private static final Map<Class<?>, Object> ENTITY_CONTAINERS =
             new ConcurrentHashMap<Class<?>, Object>();
 
-    private String serviceRoot;
+    private final ODataClient client;
+
+    private final String serviceRoot;
 
     private EdmMetadata metadata;
 
@@ -59,24 +64,33 @@ public class EntityContainerFactory {
         return context;
     }
 
-    public static EntityContainerFactory getInstance(final String serviceRoot) {
+    private static EntityContainerFactory getInstance(final ODataClient client, final String serviceRoot) {
         if (!FACTORY_PER_SERVICEROOT.containsKey(serviceRoot)) {
-            final EntityContainerFactory instance = new EntityContainerFactory(serviceRoot);
+            final EntityContainerFactory instance = new EntityContainerFactory(client, serviceRoot);
             FACTORY_PER_SERVICEROOT.put(serviceRoot, instance);
         }
         return FACTORY_PER_SERVICEROOT.get(serviceRoot);
     }
 
-    private EntityContainerFactory(final String serviceRoot) {
+    public static EntityContainerFactory getV3Instance(final String serviceRoot) {
+        return getInstance(ODataClientFactory.getV3(), serviceRoot);
+    }
+
+    public static EntityContainerFactory getV4Instance(final String serviceRoot) {
+        return getInstance(ODataClientFactory.getV4(), serviceRoot);
+    }
+
+    private EntityContainerFactory(final ODataClient client, final String serviceRoot) {
+        this.client = client;
         this.serviceRoot = serviceRoot;
-        final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(serviceRoot);
+    }
 
-        final ODataRetrieveResponse<EdmMetadata> res = req.execute();
-        metadata = res.getBody();
+    public Configuration getConfiguration() {
+        return client.getConfiguration();
+    }
 
-        if (metadata == null) {
-            throw new IllegalStateException("No metadata found at URI '" + serviceRoot + "'");
-        }
+    public FilterFactory getFilterFactory() {
+        return client.getFilterFactory();
     }
 
     public String getServiceRoot() {
@@ -84,6 +98,17 @@ public class EntityContainerFactory {
     }
 
     public EdmMetadata getMetadata() {
+        synchronized (this) {
+            if (metadata == null) {
+                final ODataMetadataRequest req = client.getRetrieveRequestFactory().getMetadataRequest(serviceRoot);
+                final ODataRetrieveResponse<EdmMetadata> res = req.execute();
+                metadata = res.getBody();
+                if (metadata == null) {
+                    throw new IllegalStateException("No metadata found at URI '" + serviceRoot + "'");
+                }
+            }
+        }
+
         return metadata;
     }
 
@@ -106,8 +131,8 @@ public class EntityContainerFactory {
         if (!ENTITY_CONTAINERS.containsKey(reference)) {
             final Object entityContainer = Proxy.newProxyInstance(
                     Thread.currentThread().getContextClassLoader(),
-                    new Class<?>[] {reference},
-                    EntityContainerInvocationHandler.getInstance(reference, this));
+                    new Class<?>[] { reference },
+                    EntityContainerInvocationHandler.getInstance(client, reference, this));
             ENTITY_CONTAINERS.put(reference, entityContainer);
         }
         return (T) ENTITY_CONTAINERS.get(reference);

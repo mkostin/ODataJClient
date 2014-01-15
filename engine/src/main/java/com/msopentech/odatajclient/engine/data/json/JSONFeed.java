@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * List of entries, represented via JSON.
  *
- * @see JSONEntry
+ * @see JSONV3Entry
  */
 public class JSONFeed extends AbstractPayloadObject implements FeedResource {
 
@@ -45,7 +45,7 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
     private Integer count;
 
     @JsonProperty("value")
-    private final List<JSONEntry> entries;
+    private final List<JSONV3Entry> entries;
 
     @JsonProperty(value = "odata.nextLink", required = false)
     private String next;
@@ -58,7 +58,7 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
      */
     public JSONFeed() {
         super();
-        entries = new ArrayList<JSONEntry>();
+        entries = new ArrayList<JSONV3Entry>();
     }
 
     @JsonIgnore
@@ -102,7 +102,7 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
      * {@inheritDoc }
      */
     @Override
-    public List<JSONEntry> getEntries() {
+    public List<JSONV3Entry> getEntries() {
         return entries;
     }
 
@@ -112,7 +112,7 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
      * @param entry entry.
      * @return 'TRUE' in case of success; 'FALSE' otherwise.
      */
-    public boolean addEntry(final JSONEntry entry) {
+    public boolean addEntry(final JSONV3Entry entry) {
         return this.entries.add(entry);
     }
 
@@ -124,8 +124,8 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
     public void setEntries(final List<EntryResource> entries) {
         this.entries.clear();
         for (EntryResource entry : entries) {
-            if (entry instanceof JSONEntry) {
-                this.entries.add((JSONEntry) entry);
+            if (entry instanceof JSONV3Entry) {
+                this.entries.add((JSONV3Entry) entry);
             }
         }
     }

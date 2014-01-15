@@ -19,9 +19,9 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
@@ -29,19 +29,17 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData service document request.
- * Get instance by using ODataRetrieveRequestFactory.
- *
- * @see ODataRetrieveRequestFactory#getServiceDocumentRequest(java.lang.String)
  */
-public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServiceDocument, ODataFormat> {
+public class ODataServiceDocumentRequest extends AbstractODataRetrieveRequest<ODataServiceDocument, ODataFormat> {
 
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param uri request URI.
      */
-    ODataServiceDocumentRequest(final URI uri) {
-        super(ODataFormat.class, uri);
+    ODataServiceDocumentRequest(final ODataClient odataClient, final URI uri) {
+        super(odataClient, ODataFormat.class, uri);
     }
 
     /**
@@ -50,7 +48,7 @@ public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServi
     @Override
     public ODataRetrieveResponse<ODataServiceDocument> execute() {
         final HttpResponse res = doExecute();
-        return new ODataServiceResponseImpl(client, res);
+        return new ODataServiceResponseImpl(httpClient, res);
     }
 
     /**
@@ -85,7 +83,7 @@ public class ODataServiceDocumentRequest extends ODataRetrieveRequest<ODataServi
         public ODataServiceDocument getBody() {
             if (serviceDocument == null) {
                 try {
-                    serviceDocument = ODataReader.readServiceDocument(
+                    serviceDocument = odataClient.getODataReader().readServiceDocument(
                             getRawResponse(), ODataFormat.fromString(getContentType()));
                 } finally {
                     this.close();

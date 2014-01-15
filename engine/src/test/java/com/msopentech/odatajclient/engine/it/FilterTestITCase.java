@@ -22,17 +22,16 @@ package com.msopentech.odatajclient.engine.it;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 
 public class FilterTestITCase extends AbstractTest {
     // filter test
 
     private void filterQueryTest(final String entity, final String filter, final int expected) {
-        final ODataURIBuilder uriBuilder = new ODataURIBuilder(testDefaultServiceRootURL).
+        final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntitySetSegment(entity).filter(filter);
-        final ODataEntitySet entitySet = ODataRetrieveRequestFactory.getEntitySetRequest(uriBuilder.build()).
+        final ODataEntitySet entitySet = client.getRetrieveRequestFactory().getEntitySetRequest(uriBuilder.build()).
                 execute().getBody();
         assertNotNull(entitySet);
         assertEquals(expected, entitySet.getEntities().size());

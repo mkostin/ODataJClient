@@ -19,9 +19,10 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.AbstractODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
@@ -32,21 +33,19 @@ import org.apache.http.client.HttpClient;
 
 /**
  * This class implements an OData delete request.
- * Get instance by using ODataCUDRequestFactory.
- *
- * @see ODataCUDRequestFactory#getDeleteRequest(java.net.URI)
  */
-public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteResponse, ODataPubFormat>
+public class ODataDeleteRequest extends AbstractODataBasicRequestImpl<ODataDeleteResponse, ODataPubFormat>
         implements ODataBatchableRequest {
 
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param method HTTP method to be used
      * @param uri URI of the entity to be deleted.
      */
-    ODataDeleteRequest(final HttpMethod method, final URI uri) {
-        super(ODataPubFormat.class, method, uri);
+    ODataDeleteRequest(final ODataClient odataClient, final HttpMethod method, final URI uri) {
+        super(odataClient, ODataPubFormat.class, method, uri);
     }
 
     /**
@@ -64,7 +63,7 @@ public class ODataDeleteRequest extends ODataBasicRequestImpl<ODataDeleteRespons
      */
     @Override
     public ODataDeleteResponse execute() {
-        return new ODataDeleteResponseImpl(client, doExecute());
+        return new ODataDeleteResponseImpl(httpClient, doExecute());
     }
 
     /**

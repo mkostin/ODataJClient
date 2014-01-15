@@ -34,7 +34,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.msopentech.odatajclient.engine.data.atom.AtomDeserializer;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
-import com.msopentech.odatajclient.engine.data.json.JSONEntry;
+import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
 import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONLinkCollection;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
@@ -124,7 +124,7 @@ public final class Deserializer {
      *
      * @param <T> reference class type
      * @param input stream to be de-serialized.
-     * @param reference reference class (AtomEntry.class, JSONEntry.class).
+     * @param reference reference class (AtomEntry.class, JSONV3Entry.class).
      * @return EntryResource instance.
      */
     @SuppressWarnings("unchecked")
@@ -235,11 +235,11 @@ public final class Deserializer {
         }
     }
 
-    private static JSONEntry toJSONEntry(final InputStream input) {
+    private static JSONV3Entry toJSONEntry(final InputStream input) {
         try {
             final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-            return mapper.readValue(input, JSONEntry.class);
+            return mapper.readValue(input, JSONV3Entry.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON entry", e);
         }

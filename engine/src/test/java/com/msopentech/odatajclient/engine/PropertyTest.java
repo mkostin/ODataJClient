@@ -25,12 +25,10 @@ import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
-import com.msopentech.odatajclient.engine.data.ODataFactory;
+import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.ODataWriter;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.IOException;
@@ -45,7 +43,7 @@ public class PropertyTest extends AbstractTest {
     public void readPropertyValue() throws IOException {
         final InputStream input = getClass().getResourceAsStream("Customer_-10_CustomerId_value.txt");
 
-        final ODataValue value = new ODataPrimitiveValue.Builder().
+        final ODataValue value = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
                 setType(EdmSimpleType.String).
                 setText(IOUtils.toString(input)).
                 build();
@@ -55,22 +53,23 @@ public class PropertyTest extends AbstractTest {
 
     private ODataProperty primitive(final ODataFormat format) throws IOException {
         final InputStream input = getClass().getResourceAsStream("Customer_-10_CustomerId." + getSuffix(format));
-        final ODataProperty property = ODataReader.readProperty(input, format);
+        final ODataProperty property = client.getODataReader().readProperty(input, format);
         assertNotNull(property);
         assertTrue(property.hasPrimitiveValue());
         assertTrue(-10 == property.getPrimitiveValue().<Integer>toCastValue());
 
         ODataProperty comparable;
-        final ODataProperty written = ODataReader.readProperty(ODataWriter.writeProperty(property, format), format);
+        final ODataProperty written = client.getODataReader().readProperty(
+                client.getODataWriter().writeProperty(property, format), format);
         if (format == ODataFormat.XML) {
             comparable = written;
         } else {
             // This is needed because type information gets lost with JSON serialization
-            final ODataPrimitiveValue typedValue = new ODataPrimitiveValue.Builder().
+            final ODataPrimitiveValue typedValue = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
                     setType(EdmSimpleType.fromValue(property.getPrimitiveValue().getTypeName())).
                     setText(written.getPrimitiveValue().toString()).
                     build();
-            comparable = ODataFactory.newPrimitiveProperty(written.getName(), typedValue);
+            comparable = ODataObjectFactory.newPrimitiveProperty(written.getName(), typedValue);
         }
 
         assertEquals(property, comparable);
@@ -91,13 +90,14 @@ public class PropertyTest extends AbstractTest {
     private ODataProperty complex(final ODataFormat format) throws IOException {
         final InputStream input = getClass().getResourceAsStream(
                 "Customer_-10_PrimaryContactInfo." + getSuffix(format));
-        final ODataProperty property = ODataReader.readProperty(input, format);
+        final ODataProperty property = client.getODataReader().readProperty(input, format);
         assertNotNull(property);
         assertTrue(property.hasComplexValue());
         assertEquals(6, property.getComplexValue().size());
 
         ODataProperty comparable;
-        final ODataProperty written = ODataReader.readProperty(ODataWriter.writeProperty(property, format), format);
+        final ODataProperty written = client.getODataReader().readProperty(
+                client.getODataWriter().writeProperty(property, format), format);
         if (format == ODataFormat.XML) {
             comparable = written;
         } else {
@@ -107,7 +107,7 @@ public class PropertyTest extends AbstractTest {
                 final ODataProperty prop = itor.next();
                 typedValue.add(prop);
             }
-            comparable = ODataFactory.newComplexProperty(written.getName(), typedValue);
+            comparable = ODataObjectFactory.newComplexProperty(written.getName(), typedValue);
         }
 
         assertEquals(property, comparable);
@@ -128,13 +128,14 @@ public class PropertyTest extends AbstractTest {
     private ODataProperty collection(final ODataFormat format) throws IOException {
         final InputStream input = getClass().getResourceAsStream(
                 "Customer_-10_BackupContactInfo." + getSuffix(format));
-        final ODataProperty property = ODataReader.readProperty(input, format);
+        final ODataProperty property = client.getODataReader().readProperty(input, format);
         assertNotNull(property);
         assertTrue(property.hasCollectionValue());
         assertEquals(9, property.getCollectionValue().size());
 
         ODataProperty comparable;
-        final ODataProperty written = ODataReader.readProperty(ODataWriter.writeProperty(property, format), format);
+        final ODataProperty written = client.getODataReader().readProperty(
+                client.getODataWriter().writeProperty(property, format), format);
         if (format == ODataFormat.XML) {
             comparable = written;
         } else {
@@ -156,7 +157,7 @@ public class PropertyTest extends AbstractTest {
                     typedValue.add(typedComplexValue);
                 }
             }
-            comparable = ODataFactory.newCollectionProperty(written.getName(), typedValue);
+            comparable = ODataObjectFactory.newCollectionProperty(written.getName(), typedValue);
         }
 
         assertEquals(property, comparable);

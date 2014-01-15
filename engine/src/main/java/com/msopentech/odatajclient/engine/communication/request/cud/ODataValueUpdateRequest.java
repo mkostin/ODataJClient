@@ -19,16 +19,18 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.cud;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.http.HttpClientException;
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.engine.communication.response.ODataResponseImpl;
-import com.msopentech.odatajclient.engine.communication.request.ODataBasicRequestImpl;
+import com.msopentech.odatajclient.engine.communication.request.AbstractODataBasicRequestImpl;
 import com.msopentech.odatajclient.engine.communication.request.batch.ODataBatchableRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataValueUpdateResponse;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -36,16 +38,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.entity.InputStreamEntity;
 
 /**
  * This class implements an OData update entity property value request.
- * Get instance by using ODataCUDRequestFactory.
- *
- * @see ODataCUDRequestFactory#getUpdateValueRequest(com.msopentech.odatajclient.engine.data.ODataURI,
- * com.msopentech.odatajclient.engine.data.ODataValue)
  */
-public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpdateResponse, ODataValueFormat>
+public class ODataValueUpdateRequest extends AbstractODataBasicRequestImpl<ODataValueUpdateResponse, ODataValueFormat>
         implements ODataBatchableRequest {
 
     /**
@@ -56,12 +53,15 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
     /**
      * Constructor.
      *
+     * @param odataClient client instance getting this request
      * @param method request method.
      * @param targetURI entity set or entity or entity property URI.
      * @param value value to be created.
      */
-    ODataValueUpdateRequest(final HttpMethod method, final URI targetURI, final ODataValue value) {
-        super(ODataValueFormat.class, method, targetURI);
+    ODataValueUpdateRequest(final ODataClient odataClient,
+            final HttpMethod method, final URI targetURI, final ODataValue value) {
+
+        super(odataClient, ODataValueFormat.class, method, targetURI);
         // set request body
         this.value = value;
     }
@@ -72,10 +72,10 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
     @Override
     public ODataValueUpdateResponseImpl execute() {
         final InputStream input = getPayload();
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new InputStreamEntity(input, -1));
+        ((HttpEntityEnclosingRequestBase) request).setEntity(URIUtils.buildInputStreamEntity(odataClient, input));
 
         try {
-            return new ODataValueUpdateResponseImpl(client, doExecute());
+            return new ODataValueUpdateResponseImpl(httpClient, doExecute());
         } finally {
             IOUtils.closeQuietly(input);
         }
@@ -123,7 +123,7 @@ public class ODataValueUpdateRequest extends ODataBasicRequestImpl<ODataValueUpd
                 final ODataValueFormat format = ODataValueFormat.fromString(getAccept());
 
                 try {
-                    value = new ODataPrimitiveValue.Builder().
+                    value = new ODataPrimitiveValue.Builder(odataClient.getWorkingVersion()).
                             setType(format == ODataValueFormat.TEXT ? EdmSimpleType.String : EdmSimpleType.Stream).
                             setText(IOUtils.toString(getRawResponse())).
                             build();

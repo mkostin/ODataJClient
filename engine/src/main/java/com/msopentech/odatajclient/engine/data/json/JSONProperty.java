@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 /**
  * A single property (primitive, complex or collection) represented via JSON.
  */
-@JsonSerialize(using = JSONPropertySerializer.class)
+@JsonSerialize(using = JSONV3PropertySerializer.class)
 @JsonDeserialize(using = JSONPropertyDeserializer.class)
 public class JSONProperty extends AbstractPayloadObject {
 

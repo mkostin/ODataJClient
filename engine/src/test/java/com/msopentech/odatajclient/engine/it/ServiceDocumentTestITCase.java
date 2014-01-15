@@ -22,7 +22,6 @@ package com.msopentech.odatajclient.engine.it;
 import static org.junit.Assert.assertEquals;
 
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataServiceDocumentRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
@@ -33,7 +32,7 @@ public class ServiceDocumentTestITCase extends AbstractTest {
 
     private void retrieveServiceDocument(final ODataFormat format) {
         final ODataServiceDocumentRequest req =
-                ODataRetrieveRequestFactory.getServiceDocumentRequest(testDefaultServiceRootURL);
+                client.getRetrieveRequestFactory().getServiceDocumentRequest(testDefaultServiceRootURL);
         req.setFormat(format);
 
         final ODataRetrieveResponse<ODataServiceDocument> res = req.execute();

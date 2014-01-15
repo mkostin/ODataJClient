@@ -27,7 +27,6 @@ import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataRetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
@@ -38,7 +37,8 @@ public class MetadataRetrieveTestITCase extends AbstractTest {
 
     private void retreiveMetadataTest(final ODataPubFormat reqFormat, final String acceptFormat) {
         // testing entity types which are not open
-        final ODataMetadataRequest req = ODataRetrieveRequestFactory.getMetadataRequest(testDefaultServiceRootURL);
+        final ODataMetadataRequest req = client.getRetrieveRequestFactory().
+                getMetadataRequest(testDefaultServiceRootURL);
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         try {
@@ -72,7 +72,8 @@ public class MetadataRetrieveTestITCase extends AbstractTest {
             assertEquals("Customer", customer.getName());
 
             //testing open types
-            final ODataMetadataRequest req1 = ODataRetrieveRequestFactory.getMetadataRequest(testOpenTypeServiceRootURL);
+            final ODataMetadataRequest req1 = client.getRetrieveRequestFactory().getMetadataRequest(
+                    testOpenTypeServiceRootURL);
             req.setFormat(reqFormat);
             req.setAccept(acceptFormat);
             final ODataRetrieveResponse<EdmMetadata> res1 = req1.execute();

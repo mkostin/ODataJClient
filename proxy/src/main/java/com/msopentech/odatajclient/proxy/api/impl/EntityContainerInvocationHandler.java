@@ -19,7 +19,8 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
-import com.msopentech.odatajclient.engine.uri.ODataURIBuilder;
+import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
@@ -43,15 +44,17 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
     private final boolean defaultEC;
 
     public static EntityContainerInvocationHandler getInstance(
-            final Class<?> ref, final EntityContainerFactory factory) {
+            final ODataClient client, final Class<?> ref, final EntityContainerFactory factory) {
 
-        final EntityContainerInvocationHandler instance = new EntityContainerInvocationHandler(ref, factory);
+        final EntityContainerInvocationHandler instance = new EntityContainerInvocationHandler(client, ref, factory);
         instance.containerHandler = instance;
         return instance;
     }
 
-    private EntityContainerInvocationHandler(final Class<?> ref, final EntityContainerFactory factory) {
-        super(null);
+    private EntityContainerInvocationHandler(
+            final ODataClient client, final Class<?> ref, final EntityContainerFactory factory) {
+
+        super(client, null);
 
         final Annotation annotation = ref.getAnnotation(EntityContainer.class);
         if (!(annotation instanceof EntityContainer)) {
@@ -87,7 +90,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
         if (isSelfMethod(method, args)) {
             return invokeSelfMethod(method, args);
         } else if ("flush".equals(method.getName()) && ArrayUtils.isEmpty(args)) {
-            new Container(factory).flush();
+            new Container(client, factory).flush();
             return ClassUtils.returnVoid();
         } else {
             final Annotation[] methodAnnots = method.getAnnotations();
@@ -97,7 +100,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
 
                 return Proxy.newProxyInstance(
                         Thread.currentThread().getContextClassLoader(),
-                        new Class<?>[] {returnType},
+                        new Class<?>[] { returnType },
                         EntitySetInvocationHandler.getInstance(returnType, this));
             } // 2. invoke function imports
             else if (methodAnnots[0] instanceof FunctionImport) {
@@ -106,7 +109,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
                 final com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport funcImp =
                         container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
 
-                final ODataURIBuilder uriBuilder = new ODataURIBuilder(factory.getServiceRoot()).
+                final URIBuilder uriBuilder = client.getURIBuilder(factory.getServiceRoot()).
                         appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
                 return functionImport((FunctionImport) methodAnnots[0], method, args, uriBuilder.build(), funcImp);

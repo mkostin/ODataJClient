@@ -29,6 +29,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoly
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -49,14 +50,15 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
     /**
      * Geospatial value builder.
      */
-    public static class Builder {
+    public static class Builder extends AbstractBuilder {
 
         private final ODataGeospatialValue ogv;
 
         /**
          * Constructor.
          */
-        public Builder() {
+        public Builder(final Version workingVersion) {
+            super(workingVersion);
             this.ogv = new ODataGeospatialValue();
         }
 
@@ -89,10 +91,13 @@ public class ODataGeospatialValue extends ODataPrimitiveValue {
          * @return the current builder.
          */
         public Builder setType(final EdmSimpleType type) {
+            isSupported(type);
+
             if (!type.isGeospatial()) {
                 throw new IllegalArgumentException(
                         "Use " + ODataPrimitiveValue.class.getSimpleName() + " for non-geospatial types");
             }
+
             if (type == EdmSimpleType.Geography || type == EdmSimpleType.Geometry) {
                 throw new IllegalArgumentException(
                         type + "is not an instantiable type. "
