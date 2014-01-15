@@ -222,7 +222,7 @@ public final class EngineUtils {
             final ODataClient client, final EdmMetadata metadata, final String name, final Object obj) {
         final ODataProperty oprop;
 
-        final EdmType type = getEdmType(metadata, obj);
+        final EdmType type = getEdmType(client, metadata, obj);
         try {
             if (type == null || obj == null) {
                 oprop = ODataObjectFactory.newPrimitiveProperty(name, null);
@@ -469,25 +469,24 @@ public final class EngineUtils {
         return null;
     }
 
-    private static EdmType getEdmType(final EdmMetadata metadata, final Object obj) {
+    private static EdmType getEdmType(final ODataClient client, final EdmMetadata metadata, final Object obj) {
         final EdmType res;
 
         if (obj == null) {
             res = null;
         } else if (Collection.class.isAssignableFrom(obj.getClass())) {
             if (((Collection) obj).isEmpty()) {
-                res = new EdmType(metadata, "Collection(" + getEdmType(metadata, "Edm.String"));
+                res = new EdmType(metadata, "Collection(" + getEdmType(client, metadata, "Edm.String"));
             } else {
                 res = new EdmType(metadata, "Collection("
-                        + getEdmType(metadata, ((Collection) obj).iterator().next()).getTypeExpression()
-                        + ")");
+                        + getEdmType(client, metadata, ((Collection) obj).iterator().next()).getTypeExpression() + ")");
             }
         } else if (obj.getClass().isAnnotationPresent(ComplexType.class)) {
             final String ns = ClassUtils.getNamespace(obj.getClass());
             final ComplexType ann = obj.getClass().getAnnotation(ComplexType.class);
             res = new EdmType(metadata, ns + "." + ann.value());
         } else {
-            final EdmSimpleType simpleType = EdmSimpleType.fromObject(obj);
+            final EdmSimpleType simpleType = EdmSimpleType.fromObject(client.getWorkingVersion(), obj);
             res = new EdmType(metadata, simpleType.toString());
         }
 

@@ -75,6 +75,10 @@ public enum EdmSimpleType {
      */
     DateTime(new Version[] { Version.V3 }, ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
     /**
+     * Date without a time-zone offset.
+     */
+    Date(new Version[] { Version.V4 }, ODataTimestamp.class, "yyyy-MM-dd"),
+    /**
      * Date and time as an Offset in minutes from GMT.
      */
     DateTimeOffset(ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
@@ -82,6 +86,14 @@ public enum EdmSimpleType {
      * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
      */
     Time(new Version[] { Version.V3 }, ODataDuration.class),
+    /**
+     * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
+     */
+    TimeOfDay(new Version[] { Version.V4 }, ODataDuration.class),
+    /**
+     * Signed duration in days, hours, minutes, and (sub)seconds.
+     */
+    Duration(new Version[] { Version.V4 }, ODataDuration.class),
     /**
      * Numeric values with fixed precision and scale.
      */
@@ -252,11 +264,12 @@ public enum EdmSimpleType {
      * @param obj object.
      * @return <tt>EdmSimpleType</tt> object.
      */
-    public static EdmSimpleType fromObject(final Object obj) {
+    public static EdmSimpleType fromObject(final Version workingVersion, final Object obj) {
         for (EdmSimpleType edmSimpleType : EdmSimpleType.values()) {
             if (edmSimpleType.javaType().equals(obj.getClass())) {
-                return edmSimpleType == DateTimeOffset || edmSimpleType == DateTime
-                        ? ((ODataTimestamp) obj).isOffset() ? DateTimeOffset : DateTime
+                return edmSimpleType == DateTimeOffset || edmSimpleType == DateTime || edmSimpleType == Date
+                        ? ((ODataTimestamp) obj).isOffset()
+                        ? DateTimeOffset : workingVersion == Version.V3 ? DateTime : Date
                         : edmSimpleType;
             }
         }
