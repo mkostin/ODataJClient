@@ -111,9 +111,9 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
 #end
 
 #foreach($property in $entityType.NavigationProperties)
-    #set( $toRoleType = $utility.getNavigationRoleType($property.Relationship, $property.ToRole) )
-    #* $toRoleType cant be null <NavigationProperty Name="Folders" Type="Collection(Microsoft.Exchange.Services.OData.Model.Folder)"/> *#
-    #if($toRoleType)
+#set( $toRoleType = $utility.getNavigationRoleType($property.Relationship, $property.ToRole) )
+#* $toRoleType cant be null <NavigationProperty Name="Folders" Type="Collection(Microsoft.Exchange.Services.OData.Model.Folder)"/> *#
+#if($toRoleType)
         @NavigationProperty(name = "$property.Name", 
                     relationship = "$property.Relationship", 
                     fromRole = "$property.FromRole", 
@@ -121,6 +121,17 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
         public $utility.getJavaType($toRoleType) get$utility.capitalize($property.Name)();
 
         public void set$utility.capitalize($property.Name)(final $utility.getJavaType($toRoleType) _$utility.uncapitalize($property.Name));
+
+#else
+## this case is for OData 4.0
+        @NavigationProperty(name = "$property.Name",
+            relationship = "",## unnamed since we have no such property
+
+            fromRole = "$utility.capitalize($entityType.Name)",
+            toRole = "$utility.getNameFromNS($property.Type)")
+        public $utility.getJavaType($property.Type) get$utility.capitalize($property.Name)();
+
+        public void set$utility.capitalize($property.Name)(final $utility.getJavaType($property.Type) _$utility.uncapitalize($property.Name));
     #end
 
 #end

@@ -337,6 +337,13 @@ class EntitySetInvocationHandler<
         return fetchWholeEntitySet(entitySetURI, typeRef, collTypeRef);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(String uri) {
+        final Class<S> typeRef = (Class<S>) ClassUtils.extractTypeArg(collTypeRef);
+        return fetchWholeEntitySet(URI.create(uri), typeRef, (Class<SEC>)collTypeRef);
+    }
+
     @Override
     public Query<T, EC> createQuery() {
         return new QueryImpl<T, EC>(this.client, this.collTypeRef, this.uri, this);

@@ -48,6 +48,8 @@ public class Schema extends AbstractEdm {
 
     private List<EntityContainer> entityContainers = new ArrayList<EntityContainer>();
 
+    private List<V4Action> odataActions = new ArrayList<V4Action>();
+
     public String getNamespace() {
         return namespace;
     }
@@ -199,5 +201,13 @@ public class Schema extends AbstractEdm {
             }
         }
         return result;
+    }
+
+    public List<V4Action> getOdataActions() {
+        return odataActions;
+    }
+
+    public void setOdataActions(List<V4Action> odataActions) {
+        this.odataActions = odataActions;
     }
 }

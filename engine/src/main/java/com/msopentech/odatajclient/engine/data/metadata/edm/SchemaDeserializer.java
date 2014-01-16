@@ -65,6 +65,9 @@ public class SchemaDeserializer extends JsonDeserializer<Schema> {
                 } else if ("Annotations".equals(jp.getCurrentName())) {
                     jp.nextToken();
                     schema.getAnnotations().add(jp.getCodec().readValue(jp, Annotations.class));
+                } else if ("Action".equals(jp.getCurrentName())) {
+                    jp.nextToken();
+                    schema.getOdataActions().add(jp.getCodec().readValue(jp, V4Action.class));
                 }
             }
         }

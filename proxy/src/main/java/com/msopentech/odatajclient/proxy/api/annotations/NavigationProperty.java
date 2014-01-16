@@ -38,4 +38,6 @@ public @interface NavigationProperty {
     String fromRole();
 
     String toRole();
+
+    String type() default "";
 }

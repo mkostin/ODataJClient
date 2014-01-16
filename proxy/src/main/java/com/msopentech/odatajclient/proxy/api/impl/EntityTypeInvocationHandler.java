@@ -34,6 +34,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
 import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
+import com.msopentech.odatajclient.proxy.api.AbstractOpenType;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
@@ -63,7 +64,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
+public class EntityTypeInvocationHandler extends AbstractInvocationHandler implements AbstractOpenType {
 
     private static final long serialVersionUID = 2629912294765040037L;
 
@@ -83,7 +84,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
 
     private EntityUUID uuid;
 
-    private final EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
+    private EntityContext entityContext = EntityContainerFactory.getContext().entityContext();
 
     private int propertiesTag;
 
@@ -577,6 +578,11 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
         } else {
             entityContext.attach(this, status);
         }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        entityContext = EntityContainerFactory.getContext().entityContext();
     }
 
     @Override

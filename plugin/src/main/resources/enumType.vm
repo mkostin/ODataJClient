@@ -74,9 +74,10 @@ import java.util.Collection;
 public enum $utility.capitalize($enumType.Name) implements Serializable {
 
 #foreach($member in $enumType.Members)
-    $member.Name#if($member.Value)($member.Value),#end
+    $member.Name#if($member.Value)($member.Value)#if($foreach.hasNext),#else;#end#end
+
 #end
-;
+
     private final int value;
 
     $utility.capitalize($enumType.Name)(int value) {

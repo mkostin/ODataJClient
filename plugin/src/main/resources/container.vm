@@ -18,11 +18,12 @@
  * governing permissions and limitations under the License.
  *#
 #set( $clsSuffix = ".class" )
+#set( $useFullEntityContainerClassName = $utility.capitalize($container.Name) == "EntityContainer")
 package ${package};
 
 import com.msopentech.odatajclient.engine.client.http.HttpMethod;
 import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
-import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
+#if(!$useFullEntityContainerClassName)import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;#end
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
@@ -50,7 +51,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Namespace("$namespace")
-@EntityContainer(name = "$container.Name",
+@#if($useFullEntityContainerClassName)com.msopentech.odatajclient.proxy.api.annotations.#end#**#EntityContainer(name = "$container.Name",
   isDefaultEntityContainer = $container.DefaultEntityContainer)
 public interface $utility.capitalize($container.Name) extends AbstractContainer {
 

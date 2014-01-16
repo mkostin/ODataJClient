@@ -71,4 +71,12 @@ public class NavigationProperty extends AbstractAnnotatedEdm {
     public void setFromRole(final String fromRole) {
         this.fromRole = fromRole;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String type) {
+        this.type = type;
+    }
 }

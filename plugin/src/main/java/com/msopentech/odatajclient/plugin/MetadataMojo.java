@@ -97,7 +97,7 @@ public class MetadataMojo extends AbstractMojo {
             Velocity.addProperty(Velocity.RESOURCE_LOADER, "class");
             Velocity.addProperty("class.resource.loader.class", ClasspathResourceLoader.class.getName());
 
-            final ODataMetadataRequest req = ODataClientFactory.getV3().
+            final ODataMetadataRequest req = ODataClientFactory.getV4().
                     getRetrieveRequestFactory().getMetadataRequest(serviceRootURL);
 
             req.addCustomHeader("Authorization", AUTH_HEADER);
@@ -218,7 +218,7 @@ public class MetadataMojo extends AbstractMojo {
             final PrintWriter printWriter = new PrintWriter(stringWriter);
             t.printStackTrace(printWriter);
             getLog().error(stringWriter.toString());
-
+            
             throw (t instanceof MojoExecutionException)
                     ? (MojoExecutionException) t
                     : new MojoExecutionException("While executin mojo", t);

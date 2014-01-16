@@ -20,6 +20,7 @@
 package com.msopentech.odatajclient.proxy.api;
 
 import java.io.Serializable;
+import java.net.URI;
 
 /**
  * Interface for synchronous CRUD operations on an EntitySet.
@@ -77,6 +78,14 @@ public abstract interface AbstractEntitySet<
      * @return all entities of the given subtype
      */
     <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(Class<SEC> reference);
+
+    /**
+     * Returns all instances by given link.
+     * 
+     * @param uri Uri to fetch instances.
+     * @return All entities by given link.
+     */
+    <S extends T, SEC extends AbstractEntityCollection<S>> SEC getAll(String uri);
 
     /**
      * Deletes the entity with the given key.

@@ -22,6 +22,7 @@ package com.msopentech.odatajclient.engine.data;
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.ODataProperty.PropertyType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
@@ -348,9 +349,39 @@ public abstract class AbstractODataBinder implements ODataBinder {
         final Node nullNode = property.getAttributes().getNamedItem(ODataConstants.ATTR_NULL);
 
         if (nullNode == null) {
-            final EdmType edmType = StringUtils.isBlank(property.getAttribute(ODataConstants.ATTR_M_TYPE))
+            EdmType edmType = StringUtils.isBlank(property.getAttribute(ODataConstants.ATTR_M_TYPE))
                     ? null
                     : new EdmType(property.getAttribute(ODataConstants.ATTR_M_TYPE));
+
+            if (edmType != null && edmType.isSimpleType() && edmType.getSimpleType() == EdmSimpleType.String) {
+                // possibly this is not string
+                // it is not string if no @odata.type annotation presented for this property and
+                // this simple type represented as string in JSON (DateTimeOffset, Int64 for example)
+                // See OData JSON format v4.0 section 4.5.3 for more information
+                boolean isTimeStamp = true;
+                try {
+                    ODataTimestamp.parse(EdmSimpleType.DateTime, property.getTextContent());
+                } catch (Exception e) {
+                    isTimeStamp = false;
+                }
+
+                if (isTimeStamp) {
+                    edmType = new EdmType("Edm.DateTime"); // TODO how to distinguish DateTime and DateTimeOffset here?
+                } else {
+                    boolean isInt64 = true;
+                    try {
+                        Long.parseLong(property.getTextContent());
+                    } catch (Exception e) {
+                        isInt64 = false;
+                    }
+
+                    if (isInt64) {
+                        edmType = new EdmType("Edm.Int64");
+                    } else {
+                        // TODO add other checks here
+                    }
+                }
+            }
 
             final PropertyType propType = edmType == null
                     ? guessPropertyType(property)

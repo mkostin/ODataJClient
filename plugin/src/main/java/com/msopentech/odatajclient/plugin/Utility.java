@@ -229,7 +229,11 @@ public class Utility {
             return null;
         }
         final int lastpt = ns.lastIndexOf('.');
-        final String res = ns.substring(lastpt < 0 ? 0 : lastpt + 1);
+        String res = ns.substring(lastpt < 0 ? 0 : lastpt + 1);
+        if (res.endsWith(")")) {
+            // if name like Collection(NameSpace.Type)
+            res = res.substring(0, res.length() - 1);
+        }
         return toLowerCase ? res.toLowerCase() : res;
     }
 
