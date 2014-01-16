@@ -37,6 +37,9 @@ public class NavigationProperty extends AbstractAnnotatedEdm {
     @JsonProperty(value = "FromRole", required = true)
     private String fromRole;
 
+    @JsonProperty(value = "Type", required = false)
+    private String type;
+
     public String getName() {
         return name;
     }
