@@ -181,7 +181,7 @@ public class PropertyTestITCase extends AbstractTest {
 
         assertNotEquals(newMsg, oldMsg);
 
-        final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(newMsg).build();
+        final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder(client).setText(newMsg).build();
 
         final ODataValueUpdateRequest updateReq =
                 client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
@@ -222,7 +222,7 @@ public class PropertyTestITCase extends AbstractTest {
 
         final int origSize = originalValue.size();
 
-        originalValue.add(new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(newItem).build());
+        originalValue.add(new ODataPrimitiveValue.Builder(client).setText(newItem).build());
         assertEquals(origSize + 1, originalValue.size());
 
         final ODataPropertyUpdateRequest updateReq = client.getCUDRequestFactory().getPropertyComplexValueUpdateRequest(
@@ -268,7 +268,7 @@ public class PropertyTestITCase extends AbstractTest {
 
         final int origSize = originalValue.size();
 
-        originalValue.add(new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(newItem).build());
+        originalValue.add(new ODataPrimitiveValue.Builder(client).setText(newItem).build());
         assertEquals(origSize + 1, originalValue.size());
 
         final ODataPropertyUpdateRequest updateReq =
@@ -315,7 +315,7 @@ public class PropertyTestITCase extends AbstractTest {
         assertNotEquals(newMsg, oldMsg);
 
         phoneNumber = ODataObjectFactory.newPrimitiveProperty("PhoneNumber",
-                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(newMsg).build());
+                new ODataPrimitiveValue.Builder(client).setText(newMsg).build());
 
         final ODataPropertyUpdateRequest updateReq =
                 client.getCUDRequestFactory().getPropertyPrimitiveValueUpdateRequest(uriBuilder.build(), phoneNumber);

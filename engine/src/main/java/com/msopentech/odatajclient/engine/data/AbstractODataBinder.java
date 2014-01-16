@@ -208,7 +208,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
     public ODataEntitySet getODataEntitySet(final FeedResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
-            Serializer.feed(resource, writer);
+            client.getSerializer().feed(resource, writer);
             writer.flush();
             LOG.debug("FeedResource -> ODataEntitySet:\n{}", writer.toString());
         }
@@ -241,7 +241,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
     public ODataEntity getODataEntity(final EntryResource resource, final URI defaultBaseURI) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
-            Serializer.entry(resource, writer);
+            client.getSerializer().entry(resource, writer);
             writer.flush();
             LOG.debug("EntryResource -> ODataEntity:\n{}", writer.toString());
         }
@@ -251,7 +251,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
         final ODataEntity entity = resource.getSelfLink() == null
                 ? ODataObjectFactory.newEntity(resource.getType())
                 : ODataObjectFactory.newEntity(resource.getType(),
-                URIUtils.getURI(base, resource.getSelfLink().getHref()));
+                        URIUtils.getURI(base, resource.getSelfLink().getHref()));
 
         if (StringUtils.isNotBlank(resource.getETag())) {
             entity.setETag(resource.getETag());
@@ -275,12 +275,12 @@ public abstract class AbstractODataBinder implements ODataBinder {
                 entity.addLink(ODataObjectFactory.newInlineEntity(
                         link.getTitle(), base, link.getHref(),
                         getODataEntity(inlineEntry,
-                        inlineEntry.getBaseURI() == null ? base : inlineEntry.getBaseURI())));
+                                inlineEntry.getBaseURI() == null ? base : inlineEntry.getBaseURI())));
             } else {
                 entity.addLink(ODataObjectFactory.newInlineEntitySet(
                         link.getTitle(), base, link.getHref(),
                         getODataEntitySet(inlineFeed,
-                        inlineFeed.getBaseURI() == null ? base : inlineFeed.getBaseURI())));
+                                inlineFeed.getBaseURI() == null ? base : inlineFeed.getBaseURI())));
             }
         }
 
@@ -519,10 +519,10 @@ public abstract class AbstractODataBinder implements ODataBinder {
         if (edmType != null && edmType.getSimpleType().isGeospatial()) {
             final Element geoProp = ODataConstants.PREFIX_GML.equals(prop.getPrefix())
                     ? prop : (Element) XMLUtils.getChildNodes(prop, Node.ELEMENT_NODE).get(0);
-            value = new ODataGeospatialValue.Builder(client.getWorkingVersion()).
+            value = new ODataGeospatialValue.Builder(client).
                     setType(edmType.getSimpleType()).setTree(geoProp).build();
         } else {
-            value = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+            value = new ODataPrimitiveValue.Builder(client).
                     setType(edmType == null ? null : edmType.getSimpleType()).setText(prop.getTextContent()).build();
         }
         return value;

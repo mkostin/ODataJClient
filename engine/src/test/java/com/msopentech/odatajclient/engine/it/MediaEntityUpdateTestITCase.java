@@ -36,7 +36,7 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BoundedInputStream;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class MediaEntityUpdateTestITCase extends AbstractTest {
 
@@ -81,7 +81,7 @@ public class MediaEntityUpdateTestITCase extends AbstractTest {
 
         final byte[] actual = new byte[65000];
         IOUtils.read(retrieveRes.getBody(), actual, 0, actual.length);
-        assertTrue(ArrayUtils.isEquals(expected, actual));
+        assertTrue(new EqualsBuilder().append(expected, actual).isEquals());
     }
     // update media with JSON full metadata
 

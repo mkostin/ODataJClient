@@ -123,7 +123,7 @@ public class ODataValueUpdateRequest extends AbstractODataBasicRequestImpl<OData
                 final ODataValueFormat format = ODataValueFormat.fromString(getAccept());
 
                 try {
-                    value = new ODataPrimitiveValue.Builder(odataClient.getWorkingVersion()).
+                    value = new ODataPrimitiveValue.Builder(odataClient).
                             setType(format == ODataValueFormat.TEXT ? EdmSimpleType.String : EdmSimpleType.Stream).
                             setText(IOUtils.toString(getRawResponse())).
                             build();

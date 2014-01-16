@@ -21,4 +21,6 @@ package com.msopentech.odatajclient.engine.uri.filter;
 
 public class V3FilterFactory extends AbstractFilterFactory {
 
+    private static final long serialVersionUID = 1092594961118334631L;
+
 }

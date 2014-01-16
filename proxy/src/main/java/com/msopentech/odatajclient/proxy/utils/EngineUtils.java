@@ -207,11 +207,10 @@ public final class EngineUtils {
         } else {
             final EdmSimpleType simpleType = EdmSimpleType.fromValue(type.getTypeExpression());
             if (simpleType.isGeospatial()) {
-                value = new ODataGeospatialValue.Builder(client.getWorkingVersion()).setValue((Geospatial) obj).
+                value = new ODataGeospatialValue.Builder(client).setValue((Geospatial) obj).
                         setType(simpleType).build();
             } else {
-                value = new ODataPrimitiveValue.Builder(
-                        client.getWorkingVersion()).setValue(obj).setType(simpleType).build();
+                value = new ODataPrimitiveValue.Builder(client).setValue(obj).setType(simpleType).build();
             }
         }
 

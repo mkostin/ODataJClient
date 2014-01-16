@@ -23,6 +23,8 @@ import com.msopentech.odatajclient.engine.client.ODataV3Client;
 
 public class V3CUDRequestFactory extends AbstractCUDRequestFactory {
 
+    private static final long serialVersionUID = 109196636064983035L;
+
     public V3CUDRequestFactory(final ODataV3Client client) {
         super(client);
     }

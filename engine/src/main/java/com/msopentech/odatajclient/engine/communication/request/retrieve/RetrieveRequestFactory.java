@@ -19,12 +19,13 @@
  */
 package com.msopentech.odatajclient.engine.communication.request.retrieve;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * OData request factory class.
  */
-public interface RetrieveRequestFactory {
+public interface RetrieveRequestFactory extends Serializable {
 
     /**
      * Gets a service document request instance.

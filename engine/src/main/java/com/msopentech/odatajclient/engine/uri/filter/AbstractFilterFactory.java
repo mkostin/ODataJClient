@@ -21,6 +21,8 @@ package com.msopentech.odatajclient.engine.uri.filter;
 
 public abstract class AbstractFilterFactory implements FilterFactory {
 
+    private static final long serialVersionUID = -6141317149802621836L;
+
     protected static final String NULL = "null";
 
     @Override

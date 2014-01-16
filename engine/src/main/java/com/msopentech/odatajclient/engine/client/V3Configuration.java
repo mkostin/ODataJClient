@@ -21,6 +21,8 @@ package com.msopentech.odatajclient.engine.client;
 
 public class V3Configuration extends AbstractConfiguration {
 
+    private static final long serialVersionUID = -8719958537946884777L;
+
     protected V3Configuration() {
         super();
     }

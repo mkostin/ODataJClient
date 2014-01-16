@@ -90,7 +90,7 @@ public class ODataValueRequest extends AbstractODataRetrieveRequest<ODataValue, 
                 final ODataValueFormat format = ODataValueFormat.fromString(getContentType());
 
                 try {
-                    value = new ODataPrimitiveValue.Builder(odataClient.getWorkingVersion()).
+                    value = new ODataPrimitiveValue.Builder(odataClient).
                             setType(format == ODataValueFormat.TEXT ? EdmSimpleType.String : EdmSimpleType.Stream).
                             setText(IOUtils.toString(getRawResponse())).
                             build();

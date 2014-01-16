@@ -21,11 +21,9 @@ package com.msopentech.odatajclient.engine.data.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,19 +32,16 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Writes out JSON string from <tt>JSONV3Entry</tt>.
+ * Writes out JSON string from <tt>JSONV3Entry</tt> and <tt>JSONV4Entry</tt>.
  *
  * @see JSONV3Entry
+ * @see JSONV4Entry
  */
-public abstract class AbstractJSONEntrySerializer extends JsonSerializer<JSONV3Entry> {
+public class JSONEntrySerializer extends ODataJsonSerializer<AbstractJSONEntry> {
 
-    protected abstract Version getWorkingVersion();
-
-    /**
-     * {@inheritDoc }
-     */
     @Override
-    public void serialize(final JSONV3Entry entry, final JsonGenerator jgen, final SerializerProvider provider)
+    protected void doSerialize(
+            final AbstractJSONEntry entry, final JsonGenerator jgen, final SerializerProvider provider)
             throws IOException, JsonProcessingException {
 
         jgen.writeStartObject();
@@ -127,9 +122,9 @@ public abstract class AbstractJSONEntrySerializer extends JsonSerializer<JSONV3E
         }
 
         if (entry.getMediaEntryProperties() == null) {
-            DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, entry.getContent());
+            DOMTreeUtils.writeSubtree(client, jgen, entry.getContent());
         } else {
-            DOMTreeUtils.writeSubtree(getWorkingVersion(), jgen, entry.getMediaEntryProperties());
+            DOMTreeUtils.writeSubtree(client, jgen, entry.getMediaEntryProperties());
         }
 
         jgen.writeEndObject();

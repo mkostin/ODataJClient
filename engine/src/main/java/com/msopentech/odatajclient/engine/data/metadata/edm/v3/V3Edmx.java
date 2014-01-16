@@ -17,19 +17,12 @@
  * See the Apache License, Version 2.0 for the specific language
  * governing permissions and limitations under the License.
  */
-package com.msopentech.odatajclient.engine.data.json;
+package com.msopentech.odatajclient.engine.data.metadata.edm.v3;
 
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEdmx;
 
-/**
- * Writes out JSON string from <tt>JSONV4Entry</tt>.
- *
- * @see JSONV4Entry
- */
-public class JSONV4EntrySerializer extends AbstractJSONEntrySerializer {
+public class V3Edmx extends AbstractEdmx {
 
-    @Override
-    protected Version getWorkingVersion() {
-        return Version.V4;
-    }
+    private static final long serialVersionUID = -8031883176876401375L;
+
 }

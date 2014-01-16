@@ -27,12 +27,13 @@ import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataValueFormat;
+import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 
 /**
  * Configuration wrapper.
  */
-public interface Configuration {
+public interface Configuration extends Serializable {
 
     /**
      * Gets the configured OData format for AtomPub exchanges.

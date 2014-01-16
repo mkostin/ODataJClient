@@ -19,10 +19,11 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
+import java.io.Serializable;
 import java.net.URI;
 import org.w3c.dom.Element;
 
-public interface ODataBinder {
+public interface ODataBinder extends Serializable {
 
     /**
      * Gets a <tt>FeedResource</tt> from the given OData entity set.

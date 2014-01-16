@@ -26,6 +26,8 @@ import java.net.URI;
 
 public abstract class AbstractStreamedRequestFactory implements StreamedRequestFactory {
 
+    private static final long serialVersionUID = -2438839640443961168L;
+
     protected final ODataClient client;
 
     protected AbstractStreamedRequestFactory(final ODataClient client) {

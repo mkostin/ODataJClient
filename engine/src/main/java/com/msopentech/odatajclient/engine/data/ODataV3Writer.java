@@ -23,6 +23,8 @@ import com.msopentech.odatajclient.engine.client.ODataV3Client;
 
 public class ODataV3Writer extends AbstractODataWriter {
 
+    private static final long serialVersionUID = 8116587589700150049L;
+
     public ODataV3Writer(final ODataV3Client client) {
         super(client);
     }

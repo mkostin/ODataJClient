@@ -34,6 +34,8 @@ public class AuthEntityRetrieveTestITCase extends EntityRetrieveTestITCase {
     public static void enableBasicAuth() {
         containerFactory.getConfiguration().setHttpClientFactory(new AbstractBasicAuthHttpClientFactory() {
 
+            private static final long serialVersionUID = 1325970029455062815L;
+
             @Override
             protected String getUsername() {
                 return "odatajclient";

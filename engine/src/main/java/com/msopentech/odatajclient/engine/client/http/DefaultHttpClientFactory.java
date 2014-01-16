@@ -19,6 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.client.http;
 
+import java.io.Serializable;
 import java.net.URI;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -26,7 +27,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 /**
  * Default implementation returning HttpClients with default parameters.
  */
-public class DefaultHttpClientFactory implements HttpClientFactory {
+public class DefaultHttpClientFactory implements HttpClientFactory, Serializable {
+
+    private static final long serialVersionUID = -2461355444507227332L;
 
     @Override
     public HttpClient createHttpClient(final HttpMethod method, final URI uri) {

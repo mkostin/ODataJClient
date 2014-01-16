@@ -26,6 +26,8 @@ import com.msopentech.odatajclient.engine.client.ODataClient;
  */
 public abstract class AbstractBatchRequestFactory implements BatchRequestFactory {
 
+    private static final long serialVersionUID = -3875283254713404483L;
+
     protected final ODataClient client;
 
     protected AbstractBatchRequestFactory(final ODataClient client) {

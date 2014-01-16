@@ -48,6 +48,8 @@ import com.msopentech.odatajclient.proxy.api.context.AttachedEntity;
 import com.msopentech.odatajclient.proxy.api.context.AttachedEntityStatus;
 import com.msopentech.odatajclient.proxy.api.context.EntityLinkDesc;
 import com.msopentech.odatajclient.proxy.utils.EngineUtils;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.URI;
@@ -59,7 +61,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,8 @@ class Container implements AbstractContainer {
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(Container.class);
+
+    private final XStream xstream = new XStream(new Xpp3Driver());
 
     private final ODataClient client;
 
@@ -287,7 +290,7 @@ class Container implements AbstractContainer {
 
         items.put(handler, null);
 
-        final ODataEntity entity = SerializationUtils.clone(handler.getEntity());
+        final ODataEntity entity = (ODataEntity) xstream.fromXML(xstream.toXML(handler.getEntity()));
         entity.getNavigationLinks().clear();
 
         final AttachedEntityStatus currentStatus = EntityContainerFactory.getContext().entityContext().
@@ -377,7 +380,7 @@ class Container implements AbstractContainer {
                 final URI targetURI = currentStatus == AttachedEntityStatus.NEW
                         ? URI.create("$" + startingPos + "/$value")
                         : URIUtils.getURI(
-                        factory.getServiceRoot(), handler.getEntity().getEditLink().toASCIIString() + "/$value");
+                                factory.getServiceRoot(), handler.getEntity().getEditLink().toASCIIString() + "/$value");
 
                 batchUpdateMediaEntity(handler, targetURI, handler.getStreamChanges(), changeset);
 
@@ -390,8 +393,8 @@ class Container implements AbstractContainer {
         for (Map.Entry<String, InputStream> streamedChanges : handler.getStreamedPropertyChanges().entrySet()) {
             final URI targetURI = currentStatus == AttachedEntityStatus.NEW
                     ? URI.create("$" + startingPos) : URIUtils.getURI(
-                    factory.getServiceRoot(),
-                    EngineUtils.getEditMediaLink(streamedChanges.getKey(), entity).toASCIIString());
+                            factory.getServiceRoot(),
+                            EngineUtils.getEditMediaLink(streamedChanges.getKey(), entity).toASCIIString());
 
             batchUpdateMediaResource(handler, targetURI, streamedChanges.getValue(), changeset);
 

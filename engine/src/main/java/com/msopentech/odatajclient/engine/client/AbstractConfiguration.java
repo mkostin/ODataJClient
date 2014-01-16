@@ -54,7 +54,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     private final Map<String, Object> CONF = new HashMap<String, Object>();
 
-    private ExecutorService executor = Executors.newFixedThreadPool(10);
+    private transient ExecutorService executor = Executors.newFixedThreadPool(10);
 
     /**
      * Gets given configuration property.

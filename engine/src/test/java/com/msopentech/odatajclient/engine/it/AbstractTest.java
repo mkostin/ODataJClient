@@ -59,7 +59,6 @@ import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
-import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.client.ODataClientFactory;
 import com.msopentech.odatajclient.engine.client.ODataV3Client;
@@ -267,7 +266,8 @@ public abstract class AbstractTest {
         entity.setMediaEntity(true);
 
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Information",
-                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(sampleinfo).setType(EdmSimpleType.String).build()));
+                new ODataPrimitiveValue.Builder(client).setText(sampleinfo).setType(
+                        EdmSimpleType.String).build()));
 
         return entity;
     }
@@ -280,11 +280,13 @@ public abstract class AbstractTest {
 
         // add name attribute
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Name",
-                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(sampleName).setType(EdmSimpleType.String).build()));
+                new ODataPrimitiveValue.Builder(client).setText(sampleName).setType(
+                        EdmSimpleType.String).build()));
 
         // add key attribute
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("CustomerId",
-                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(String.valueOf(id)).setType(EdmSimpleType.Int32).build()));
+                new ODataPrimitiveValue.Builder(client).setText(String.valueOf(id)).setType(
+                        EdmSimpleType.Int32).build()));
 
         // add BackupContactInfo attribute (collection)
         final ODataCollectionValue backupContactInfoValue = new ODataCollectionValue(
@@ -299,13 +301,13 @@ public abstract class AbstractTest {
 
         // add BackupContactInfo.ContactDetails.AlternativeNames attribute (collection)
         final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        altNamesValue.add(new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        altNamesValue.add(new ODataPrimitiveValue.Builder(client).
                 setText("myname").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", altNamesValue));
 
         // add BackupContactInfo.ContactDetails.EmailBag attribute (collection)
         final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
-        emailBagValue.add(new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        emailBagValue.add(new ODataPrimitiveValue.Builder(client).
                 setText("myname@mydomain.com").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataObjectFactory.newCollectionProperty("EmailBag", emailBagValue));
 
@@ -316,7 +318,7 @@ public abstract class AbstractTest {
 
         // add BackupContactInfo.ContactDetails.ContactAlias.AlternativeNames attribute (collection)
         final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        aliasAltNamesValue.add(new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+        aliasAltNamesValue.add(new ODataPrimitiveValue.Builder(client).
                 setText("myAlternativeName").setType(EdmSimpleType.String).build());
         contactAliasValue.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
 
@@ -335,7 +337,7 @@ public abstract class AbstractTest {
     protected void debugEntry(final EntryResource entry, final String message) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
-            Serializer.entry(entry, writer);
+            client.getSerializer().entry(entry, writer);
             writer.flush();
             LOG.debug(message + "\n{}", writer.toString());
         }
@@ -344,7 +346,7 @@ public abstract class AbstractTest {
     protected void debugFeed(final FeedResource feed, final String message) {
         if (LOG.isDebugEnabled()) {
             final StringWriter writer = new StringWriter();
-            Serializer.feed(feed, writer);
+            client.getSerializer().feed(feed, writer);
             writer.flush();
             LOG.debug(message + "\n{}", writer.toString());
         }
@@ -361,12 +363,12 @@ public abstract class AbstractTest {
     protected void debugODataEntity(final ODataEntity entity, final String message) {
         if (LOG.isDebugEnabled()) {
             StringWriter writer = new StringWriter();
-            Serializer.entry(client.getODataBinder().getEntry(entity, AtomEntry.class), writer);
+            client.getSerializer().entry(client.getODataBinder().getEntry(entity, AtomEntry.class), writer);
             writer.flush();
             LOG.debug(message + " (Atom)\n{}", writer.toString());
 
             writer = new StringWriter();
-            Serializer.entry(client.getODataBinder().getEntry(entity, JSONV3Entry.class), writer);
+            client.getSerializer().entry(client.getODataBinder().getEntry(entity, JSONV3Entry.class), writer);
             writer.flush();
             LOG.debug(message + " (JSON)\n{}", writer.toString());
         }
@@ -562,7 +564,7 @@ public abstract class AbstractTest {
         assertNotEquals(newm, oldm);
 
         changes.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
-                new ODataPrimitiveValue.Builder(client.getWorkingVersion()).setText(newm).build()));
+                new ODataPrimitiveValue.Builder(client).setText(newm).build()));
 
         update(type, changes, format, etag);
 

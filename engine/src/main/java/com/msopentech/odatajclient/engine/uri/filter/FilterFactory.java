@@ -19,10 +19,12 @@
  */
 package com.msopentech.odatajclient.engine.uri.filter;
 
+import java.io.Serializable;
+
 /**
  * OData filter factory.
  */
-public interface FilterFactory {
+public interface FilterFactory extends Serializable {
 
     ODataFilter match(ODataFilterArg arg);
 

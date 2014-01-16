@@ -25,14 +25,17 @@ import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFa
 import com.msopentech.odatajclient.engine.communication.request.invoke.InvokeRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.streamed.StreamedRequestFactory;
+import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
+import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.FilterFactory;
 import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
+import java.io.Serializable;
 
-public interface ODataClient {
+public interface ODataClient extends Serializable {
 
     Version getWorkingVersion();
 
@@ -43,6 +46,10 @@ public interface ODataClient {
     URIBuilder getURIBuilder(String serviceRoot);
 
     FilterFactory getFilterFactory();
+
+    Serializer getSerializer();
+
+    Deserializer getDeserializer();
 
     ODataReader getODataReader();
 

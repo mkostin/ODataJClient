@@ -60,11 +60,11 @@ public class PrimitiveValueTest extends AbstractTest {
 
         final ODataPrimitiveValue newValue;
         if (EdmSimpleType.isGeospatial(value.getTypeName())) {
-            newValue = new ODataGeospatialValue.Builder(client.getWorkingVersion()).
+            newValue = new ODataGeospatialValue.Builder(client).
                     setType(EdmSimpleType.fromValue(value.getTypeName())).
                     setTree(((ODataGeospatialValue) value).toTree()).build();
         } else {
-            newValue = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+            newValue = new ODataPrimitiveValue.Builder(client).
                     setType(EdmSimpleType.fromValue(value.getTypeName())).
                     setValue(value.toValue()).build();
         }

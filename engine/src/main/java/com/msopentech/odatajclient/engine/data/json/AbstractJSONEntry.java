@@ -20,6 +20,8 @@
 package com.msopentech.odatajclient.engine.data.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.msopentech.odatajclient.engine.data.AbstractEntryResource;
 import com.msopentech.odatajclient.engine.uri.SegmentType;
 import java.net.URI;
@@ -27,6 +29,8 @@ import java.net.URI;
 /**
  * A single entry, represented via JSON.
  */
+@JsonSerialize(using = JSONEntrySerializer.class)
+@JsonDeserialize(using = JSONEntryDeserializer.class)
 public abstract class AbstractJSONEntry extends AbstractEntryResource<JSONLink> {
 
     private static final long serialVersionUID = -5275365545400797758L;
@@ -49,6 +53,8 @@ public abstract class AbstractJSONEntry extends AbstractEntryResource<JSONLink> 
 
     /**
      * Gets the metadata URI.
+     *
+     * @return the metadata URI
      */
     public URI getMetadata() {
         return metadata;

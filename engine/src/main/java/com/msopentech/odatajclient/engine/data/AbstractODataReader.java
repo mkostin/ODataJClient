@@ -37,6 +37,8 @@ import org.w3c.dom.NodeList;
 
 public abstract class AbstractODataReader implements ODataReader {
 
+    private static final long serialVersionUID = -1988865870981207079L;
+
     /**
      * Logger.
      */
@@ -51,18 +53,18 @@ public abstract class AbstractODataReader implements ODataReader {
     @Override
     public ODataEntitySet readEntitySet(final InputStream input, final ODataPubFormat format) {
         return client.getODataBinder().getODataEntitySet(
-                Deserializer.toFeed(input, ResourceFactory.feedClassForFormat(format)));
+                client.getDeserializer().toFeed(input, ResourceFactory.feedClassForFormat(format)));
     }
 
     @Override
     public ODataEntity readEntity(final InputStream input, final ODataPubFormat format) {
         return client.getODataBinder().getODataEntity(
-                Deserializer.toEntry(input, ResourceFactory.entryClassForFormat(format)));
+                client.getDeserializer().toEntry(input, ResourceFactory.entryClassForFormat(format)));
     }
 
     @Override
     public ODataProperty readProperty(final InputStream input, final ODataFormat format) {
-        final Element property = Deserializer.toPropertyDOM(input, format);
+        final Element property = client.getDeserializer().toPropertyDOM(input, format);
 
         // The ODataProperty object is used either for actual entity properties and for invoke result (when return type
         // is neither an entity nor a collection of entities).
@@ -94,22 +96,24 @@ public abstract class AbstractODataReader implements ODataReader {
 
     @Override
     public ODataLinkCollection readLinks(final InputStream input, final ODataFormat format) {
-        return client.getODataBinder().getLinkCollection(Deserializer.toLinkCollection(input, format));
+        return client.getODataBinder().getLinkCollection(
+                client.getDeserializer().toLinkCollection(input, format));
     }
 
     @Override
     public ODataServiceDocument readServiceDocument(final InputStream input, final ODataFormat format) {
-        return client.getODataBinder().getODataServiceDocument(Deserializer.toServiceDocument(input, format));
+        return client.getODataBinder().getODataServiceDocument(
+                client.getDeserializer().toServiceDocument(input, format));
     }
 
     @Override
     public EdmMetadata readMetadata(final InputStream input) {
-        return new EdmMetadata(input);
+        return new EdmMetadata(client, input);
     }
 
     @Override
     public ODataError readError(final InputStream inputStream, final boolean isXML) {
-        return Deserializer.toODataError(inputStream, isXML);
+        return client.getDeserializer().toODataError(inputStream, isXML);
     }
 
     @Override
@@ -129,7 +133,7 @@ public abstract class AbstractODataReader implements ODataReader {
             } else if (ODataLinkCollection.class.isAssignableFrom(reference)) {
                 res = readLinks(src, ODataFormat.fromString(format));
             } else if (ODataValue.class.isAssignableFrom(reference)) {
-                res = new ODataPrimitiveValue.Builder(client.getWorkingVersion()).
+                res = new ODataPrimitiveValue.Builder(client).
                         setType(ODataValueFormat.fromString(format) == ODataValueFormat.TEXT
                                 ? EdmSimpleType.String : EdmSimpleType.Stream).
                         setText(IOUtils.toString(src)).

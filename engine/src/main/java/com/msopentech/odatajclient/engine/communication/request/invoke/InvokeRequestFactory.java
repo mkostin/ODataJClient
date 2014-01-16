@@ -23,13 +23,14 @@ import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Map;
 
 /**
  * OData request factory class.
  */
-public interface InvokeRequestFactory {
+public interface InvokeRequestFactory extends Serializable {
 
     /**
      * Gets an invoke request instance.

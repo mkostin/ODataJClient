@@ -71,7 +71,7 @@ public abstract class ODataItem implements Serializable {
     /**
      * Sets self link.
      *
-     * @param self link.
+     * @param link link.
      */
     public void setLink(final URI link) {
         this.link = link;
