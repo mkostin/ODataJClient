@@ -31,17 +31,25 @@ import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
+import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-public class PropertyTest extends AbstractTest {
+public abstract class PropertyTest extends AbstractTest {
+
+    protected abstract ODataFormat getFormat();
+
+    protected abstract Version getVersion();
 
     @Test
     public void readPropertyValue() throws IOException {
-        final InputStream input = getClass().getResourceAsStream("Customer_-10_CustomerId_value.txt");
+        final InputStream input = getClass().getResourceAsStream(
+                getVersion().name().toLowerCase() + File.separatorChar
+                + "Customer_-10_CustomerId_value.txt");
 
         final ODataValue value = new ODataPrimitiveValue.Builder(client).
                 setType(EdmSimpleType.String).
@@ -51,17 +59,19 @@ public class PropertyTest extends AbstractTest {
         assertEquals("-10", value.toString());
     }
 
-    private ODataProperty primitive(final ODataFormat format) throws IOException {
-        final InputStream input = getClass().getResourceAsStream("Customer_-10_CustomerId." + getSuffix(format));
-        final ODataProperty property = client.getODataReader().readProperty(input, format);
+    private ODataProperty primitive() throws IOException {
+        final InputStream input = getClass().getResourceAsStream(
+                getVersion().name().toLowerCase() + File.separatorChar
+                + "Customer_-10_CustomerId." + getSuffix(getFormat()));
+        final ODataProperty property = client.getODataReader().readProperty(input, getFormat());
         assertNotNull(property);
         assertTrue(property.hasPrimitiveValue());
         assertTrue(-10 == property.getPrimitiveValue().<Integer>toCastValue());
 
         ODataProperty comparable;
         final ODataProperty written = client.getODataReader().readProperty(
-                client.getODataWriter().writeProperty(property, format), format);
-        if (format == ODataFormat.XML) {
+                client.getODataWriter().writeProperty(property, getFormat()), getFormat());
+        if (getFormat() == ODataFormat.XML) {
             comparable = written;
         } else {
             // This is needed because type information gets lost with JSON serialization
@@ -78,27 +88,23 @@ public class PropertyTest extends AbstractTest {
     }
 
     @Test
-    public void primitiveFromXML() throws IOException {
-        primitive(ODataFormat.XML);
+    public void readPrimitiveProperty() throws IOException {
+        primitive();
     }
 
-    @Test
-    public void primitiveFromJSON() throws IOException {
-        primitive(ODataFormat.JSON);
-    }
-
-    private ODataProperty complex(final ODataFormat format) throws IOException {
+    private ODataProperty complex() throws IOException {
         final InputStream input = getClass().getResourceAsStream(
-                "Customer_-10_PrimaryContactInfo." + getSuffix(format));
-        final ODataProperty property = client.getODataReader().readProperty(input, format);
+                getVersion().name().toLowerCase() + File.separatorChar
+                + "Customer_-10_PrimaryContactInfo." + getSuffix(getFormat()));
+        final ODataProperty property = client.getODataReader().readProperty(input, getFormat());
         assertNotNull(property);
         assertTrue(property.hasComplexValue());
         assertEquals(6, property.getComplexValue().size());
 
         ODataProperty comparable;
         final ODataProperty written = client.getODataReader().readProperty(
-                client.getODataWriter().writeProperty(property, format), format);
-        if (format == ODataFormat.XML) {
+                client.getODataWriter().writeProperty(property, getFormat()), getFormat());
+        if (getFormat() == ODataFormat.XML) {
             comparable = written;
         } else {
             // This is needed because type information gets lost with JSON serialization
@@ -116,27 +122,23 @@ public class PropertyTest extends AbstractTest {
     }
 
     @Test
-    public void complexFromXML() throws IOException {
-        complex(ODataFormat.XML);
+    public void readComplexProperty() throws IOException {
+        complex();
     }
 
-    @Test
-    public void complexFromJSON() throws IOException {
-        complex(ODataFormat.JSON);
-    }
-
-    private ODataProperty collection(final ODataFormat format) throws IOException {
+    private ODataProperty collection() throws IOException {
         final InputStream input = getClass().getResourceAsStream(
-                "Customer_-10_BackupContactInfo." + getSuffix(format));
-        final ODataProperty property = client.getODataReader().readProperty(input, format);
+                getVersion().name().toLowerCase() + File.separatorChar
+                + "Customer_-10_BackupContactInfo." + getSuffix(getFormat()));
+        final ODataProperty property = client.getODataReader().readProperty(input, getFormat());
         assertNotNull(property);
         assertTrue(property.hasCollectionValue());
         assertEquals(9, property.getCollectionValue().size());
 
         ODataProperty comparable;
         final ODataProperty written = client.getODataReader().readProperty(
-                client.getODataWriter().writeProperty(property, format), format);
-        if (format == ODataFormat.XML) {
+                client.getODataWriter().writeProperty(property, getFormat()), getFormat());
+        if (getFormat() == ODataFormat.XML) {
             comparable = written;
         } else {
             // This is needed because type information gets lost with JSON serialization
@@ -166,12 +168,7 @@ public class PropertyTest extends AbstractTest {
     }
 
     @Test
-    public void collectionFromXML() throws IOException {
-        collection(ODataFormat.XML);
-    }
-
-    @Test
-    public void collectionFromJSON() throws IOException {
-        collection(ODataFormat.JSON);
+    public void readCollectionProperty() throws IOException {
+        collection();
     }
 }
