@@ -28,7 +28,9 @@ import com.msopentech.odatajclient.engine.communication.request.streamed.V4Strea
 import com.msopentech.odatajclient.engine.data.ODataV4Binder;
 import com.msopentech.odatajclient.engine.data.ODataV4Reader;
 import com.msopentech.odatajclient.engine.data.ODataV4Writer;
+import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.V4Deserializer;
+import com.msopentech.odatajclient.engine.data.V4ResourceFactory;
 import com.msopentech.odatajclient.engine.data.V4Serializer;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.V4URIBuilder;
@@ -64,6 +66,8 @@ public class ODataV4Client implements ODataClient {
 
     private final V4BatchRequestFactory batchReqFact = new V4BatchRequestFactory(this);
 
+    private final V4ResourceFactory resFact = new V4ResourceFactory();
+    
     @Override
     public Version getWorkingVersion() {
         return Version.V4;
@@ -140,5 +144,10 @@ public class ODataV4Client implements ODataClient {
     @Override
     public V4BatchRequestFactory getBatchRequestFactory() {
         return batchReqFact;
+    }
+
+    @Override
+    public ResourceFactory getResourceFactory() {
+        return resFact;
     }
 }

@@ -19,14 +19,8 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.format.ODataFormat;
-import com.msopentech.odatajclient.engine.format.ODataValueFormat;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import java.io.InputStream;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,6 +28,14 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
+import com.msopentech.odatajclient.engine.format.ODataValueFormat;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
 
 public abstract class AbstractODataReader implements ODataReader {
 
@@ -53,13 +55,13 @@ public abstract class AbstractODataReader implements ODataReader {
     @Override
     public ODataEntitySet readEntitySet(final InputStream input, final ODataPubFormat format) {
         return client.getODataBinder().getODataEntitySet(
-                client.getDeserializer().toFeed(input, ResourceFactory.feedClassForFormat(format)));
+                client.getDeserializer().toFeed(input, client.getResourceFactory().feedClassForFormat(format)));
     }
 
     @Override
     public ODataEntity readEntity(final InputStream input, final ODataPubFormat format) {
         return client.getODataBinder().getODataEntity(
-                client.getDeserializer().toEntry(input, ResourceFactory.entryClassForFormat(format)));
+                client.getDeserializer().toEntry(input, client.getResourceFactory().entryClassForFormat(format)));
     }
 
     @Override

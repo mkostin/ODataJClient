@@ -35,7 +35,7 @@ import com.msopentech.odatajclient.engine.data.atom.AtomDeserializer;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.json.AbstractJSONEntry;
-import com.msopentech.odatajclient.engine.data.json.JSONFeed;
+import com.msopentech.odatajclient.engine.data.json.AbstractJSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONLinkCollection;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.data.json.JSONServiceDocument;
@@ -49,11 +49,13 @@ import com.msopentech.odatajclient.engine.data.xml.XMLODataError;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -160,7 +162,6 @@ public abstract class AbstractDeserializer extends AbstractJacksonMarshaller imp
         return xmlMapper;
     }
 
-    @SuppressWarnings("unchecked")
     protected AtomFeed toAtomFeed(final InputStream input) {
         try {
             return AtomDeserializer.feed(toDOM(input));
@@ -169,7 +170,6 @@ public abstract class AbstractDeserializer extends AbstractJacksonMarshaller imp
         }
     }
 
-    @SuppressWarnings("unchecked")
     protected AtomEntry toAtomEntry(final InputStream input) {
         try {
             return AtomDeserializer.entry(toDOM(input));
@@ -178,13 +178,7 @@ public abstract class AbstractDeserializer extends AbstractJacksonMarshaller imp
         }
     }
 
-    protected JSONFeed toJSONFeed(final InputStream input) {
-        try {
-            return getObjectMapper().readValue(input, JSONFeed.class);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("While deserializing JSON feed", e);
-        }
-    }
+    protected abstract AbstractJSONFeed toJSONFeed(final InputStream input);
 
     protected abstract AbstractJSONEntry toJSONEntry(final InputStream input);
 

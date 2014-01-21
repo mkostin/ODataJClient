@@ -19,15 +19,17 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.format.ODataPubFormat;
-import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
+
 import org.apache.commons.io.IOUtils;
+
+import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.format.ODataFormat;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 
 public abstract class AbstractODataWriter implements ODataWriter {
 
@@ -52,7 +54,7 @@ public abstract class AbstractODataWriter implements ODataWriter {
         try {
             for (ODataEntity entity : entities) {
                 client.getSerializer().entry(client.getODataBinder().
-                        getEntry(entity, ResourceFactory.entryClassForFormat(format), outputType), output);
+                        getEntry(entity, client.getResourceFactory().entryClassForFormat(format), outputType), output);
             }
 
             return new ByteArrayInputStream(output.toByteArray());

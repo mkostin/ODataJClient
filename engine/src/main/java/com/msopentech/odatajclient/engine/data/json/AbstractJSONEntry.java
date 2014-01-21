@@ -19,19 +19,23 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
+import java.net.URI;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.msopentech.odatajclient.engine.data.AbstractEntryResource;
+import com.msopentech.odatajclient.engine.data.AbstractLinkResource;
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.uri.SegmentType;
-import java.net.URI;
 
 /**
  * A single entry, represented via JSON.
  */
-@JsonSerialize(using = JSONEntrySerializer.class)
 @JsonDeserialize(using = JSONEntryDeserializer.class)
-public abstract class AbstractJSONEntry extends AbstractEntryResource<JSONLink> {
+public abstract class AbstractJSONEntry extends
+        AbstractEntryResource<AbstractLinkResource> {
 
     private static final long serialVersionUID = -5275365545400797758L;
 
@@ -53,7 +57,7 @@ public abstract class AbstractJSONEntry extends AbstractEntryResource<JSONLink> 
 
     /**
      * Gets the metadata URI.
-     *
+     * 
      * @return the metadata URI
      */
     public URI getMetadata() {
@@ -62,7 +66,7 @@ public abstract class AbstractJSONEntry extends AbstractEntryResource<JSONLink> 
 
     /**
      * Sets the metadata URI.
-     *
+     * 
      * @param metadata metadata URI.
      */
     public void setMetadata(final URI metadata) {
@@ -70,9 +74,9 @@ public abstract class AbstractJSONEntry extends AbstractEntryResource<JSONLink> 
     }
 
     /**
-     * The odata.mediaEtag annotation MAY be included; its value MUST be the ETag of the binary stream represented by
-     * this media entity or named stream property.
-     *
+     * The odata.mediaEtag annotation MAY be included; its value MUST be the ETag of the binary stream represented by this media entity or
+     * named stream property.
+     * 
      * @return odata.mediaEtag annotation value.
      */
     public String getMediaETag() {
@@ -80,9 +84,9 @@ public abstract class AbstractJSONEntry extends AbstractEntryResource<JSONLink> 
     }
 
     /**
-     * The odata.mediaEtag annotation MAY be included; its value MUST be the ETag of the binary stream represented by
-     * this media entity or named stream property.
-     *
+     * The odata.mediaEtag annotation MAY be included; its value MUST be the ETag of the binary stream represented by this media entity or
+     * named stream property.
+     * 
      * @param eTag odata.mediaEtag annotation value.
      */
     public void setMediaETag(String eTag) {

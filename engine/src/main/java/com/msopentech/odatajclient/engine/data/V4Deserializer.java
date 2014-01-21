@@ -19,11 +19,14 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.data.json.JSONV4Entry;
-import com.msopentech.odatajclient.engine.data.metadata.edm.v4.V4Edmx;
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.data.json.AbstractJSONFeed;
+import com.msopentech.odatajclient.engine.data.json.JSONV4Entry;
+import com.msopentech.odatajclient.engine.data.json.JSONV4Feed;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.V4Edmx;
 
 public class V4Deserializer extends AbstractDeserializer {
 
@@ -48,6 +51,15 @@ public class V4Deserializer extends AbstractDeserializer {
             return getObjectMapper().readValue(input, JSONV4Entry.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON entry", e);
+        }
+    }
+    
+    @Override
+    protected AbstractJSONFeed toJSONFeed(InputStream input) {
+        try {
+            return getObjectMapper().readValue(input, JSONV4Feed.class);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("While deserializing JSON feed", e);
         }
     }
 

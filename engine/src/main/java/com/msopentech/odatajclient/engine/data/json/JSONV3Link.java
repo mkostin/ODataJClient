@@ -24,7 +24,7 @@ import com.msopentech.odatajclient.engine.data.AbstractLinkResource;
 /**
  * Link from an entry, represented via JSON.
  */
-public class JSONLink extends AbstractLinkResource<JSONV3Entry, JSONFeed> {
+public class JSONV3Link extends AbstractLinkResource<JSONV3Entry, JSONV3Feed> {
 
     private static final long serialVersionUID = 4662606817302869095L;
 

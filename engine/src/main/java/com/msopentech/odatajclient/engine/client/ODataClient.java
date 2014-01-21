@@ -29,6 +29,7 @@ import com.msopentech.odatajclient.engine.data.Deserializer;
 import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataReader;
 import com.msopentech.odatajclient.engine.data.ODataWriter;
+import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.Serializer;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.FilterFactory;
@@ -66,4 +67,6 @@ public interface ODataClient extends Serializable {
     InvokeRequestFactory getInvokeRequestFactory();
 
     BatchRequestFactory getBatchRequestFactory();
+    
+    ResourceFactory getResourceFactory();
 }

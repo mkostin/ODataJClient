@@ -19,9 +19,13 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 /**
  * A single entry, represented via JSON.
  */
+
+@JsonSerialize(using = JSONV3EntrySerializer.class)
 public class JSONV3Entry extends AbstractJSONEntry {
 
     private static final long serialVersionUID = -5275365545400797758L;

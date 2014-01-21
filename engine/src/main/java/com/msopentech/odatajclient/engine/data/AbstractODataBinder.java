@@ -19,20 +19,15 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.data.ODataProperty.PropertyType;
-import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.URIUtils;
-import com.msopentech.odatajclient.engine.utils.XMLUtils;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +36,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.data.ODataProperty.PropertyType;
+import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
+import com.msopentech.odatajclient.engine.utils.ODataConstants;
+import com.msopentech.odatajclient.engine.utils.URIUtils;
+import com.msopentech.odatajclient.engine.utils.XMLUtils;
+
 public abstract class AbstractODataBinder implements ODataBinder {
+
+    private static final long serialVersionUID = -2839973980476081737L;
 
     /**
      * Logger.
@@ -73,7 +78,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
 
     @Override
     public <T extends FeedResource> T getFeed(final ODataEntitySet feed, final Class<T> reference) {
-        final T feedResource = ResourceFactory.newFeed(reference);
+        final T feedResource = client.getResourceFactory().newFeed(reference);
 
         final List<EntryResource> entries = new ArrayList<EntryResource>();
         feedResource.setEntries(entries);
@@ -84,7 +89,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
         }
 
         for (ODataEntity entity : feed.getEntities()) {
-            entries.add(getEntry(entity, ResourceFactory.entryClassForFeed(reference)));
+            entries.add(getEntry(entity, client.getResourceFactory().entryClassForFeed(reference)));
         }
 
         feedResource.setEntries(entries);
@@ -98,11 +103,10 @@ public abstract class AbstractODataBinder implements ODataBinder {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends EntryResource> T getEntry(final ODataEntity entity, final Class<T> reference,
             final boolean setType) {
 
-        final T entry = ResourceFactory.newEntry(reference);
+        final T entry = client.getResourceFactory().newEntry(reference);
         entry.setType(entity.getName());
 
         // -------------------------------------------------------------
@@ -110,7 +114,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
         // -------------------------------------------------------------
         final URI editLink = entity.getEditLink();
         if (editLink != null) {
-            final LinkResource entryEditLink = ResourceFactory.newLinkForEntry(reference);
+            final LinkResource entryEditLink = client.getResourceFactory().newLinkForEntry(reference);
             entryEditLink.setTitle(entity.getName());
             entryEditLink.setHref(editLink.toASCIIString());
             entryEditLink.setRel(ODataConstants.EDIT_LINK_REL);
@@ -118,7 +122,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
         }
 
         if (entity.isReadOnly()) {
-            final LinkResource entrySelfLink = ResourceFactory.newLinkForEntry(reference);
+            final LinkResource entrySelfLink = client.getResourceFactory().newLinkForEntry(reference);
             entrySelfLink.setTitle(entity.getName());
             entrySelfLink.setHref(entity.getLink().toASCIIString());
             entrySelfLink.setRel(ODataConstants.SELF_LINK_REL);
@@ -133,7 +137,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
         for (ODataLink link : entity.getNavigationLinks()) {
             // append link 
             LOG.debug("Append navigation link\n{}", link);
-            entry.addNavigationLink(getLinkResource(link, ResourceFactory.linkClassForEntry(reference)));
+            entry.addNavigationLink(getLinkResource(link, client.getResourceFactory().linkClassForEntry(reference)));
         }
         // -------------------------------------------------------------
 
@@ -142,7 +146,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
         // -------------------------------------------------------------
         for (ODataLink link : entity.getEditMediaLinks()) {
             LOG.debug("Append edit-media link\n{}", link);
-            entry.addMediaEditLink(getLinkResource(link, ResourceFactory.linkClassForEntry(reference)));
+            entry.addMediaEditLink(getLinkResource(link, client.getResourceFactory().linkClassForEntry(reference)));
         }
         // -------------------------------------------------------------
 
@@ -151,7 +155,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
         // -------------------------------------------------------------
         for (ODataLink link : entity.getAssociationLinks()) {
             LOG.debug("Append association link\n{}", link);
-            entry.addAssociationLink(getLinkResource(link, ResourceFactory.linkClassForEntry(reference)));
+            entry.addAssociationLink(getLinkResource(link, client.getResourceFactory().linkClassForEntry(reference)));
         }
         // -------------------------------------------------------------
 
@@ -317,9 +321,8 @@ public abstract class AbstractODataBinder implements ODataBinder {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends LinkResource> T getLinkResource(final ODataLink link, final Class<T> reference) {
-        final T linkResource = ResourceFactory.newLink(reference);
+        final T linkResource = client.getResourceFactory().newLink(reference);
         linkResource.setRel(link.getRel());
         linkResource.setTitle(link.getName());
         linkResource.setHref(link.getLink() == null ? null : link.getLink().toASCIIString());
@@ -330,13 +333,13 @@ public abstract class AbstractODataBinder implements ODataBinder {
             final ODataEntity inlineEntity = ((ODataInlineEntity) link).getEntity();
             LOG.debug("Append in-line entity\n{}", inlineEntity);
 
-            linkResource.setInlineEntry(getEntry(inlineEntity, ResourceFactory.entryClassForLink(reference)));
+            linkResource.setInlineEntry(getEntry(inlineEntity, client.getResourceFactory().entryClassForLink(reference)));
         } else if (link instanceof ODataInlineEntitySet) {
             // append inline feed
             final ODataEntitySet inlineFeed = ((ODataInlineEntitySet) link).getEntitySet();
             LOG.debug("Append in-line feed\n{}", inlineFeed);
 
-            linkResource.setInlineFeed(getFeed(inlineFeed, ResourceFactory.feedClassForLink(reference)));
+            linkResource.setInlineFeed(getFeed(inlineFeed, client.getResourceFactory().feedClassForLink(reference)));
         }
 
         return linkResource;
