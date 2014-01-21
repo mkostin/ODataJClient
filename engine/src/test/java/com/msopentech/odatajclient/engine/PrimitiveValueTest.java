@@ -20,14 +20,15 @@
 package com.msopentech.odatajclient.engine;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
+import com.msopentech.odatajclient.engine.client.ODataClientFactory;
+import com.msopentech.odatajclient.engine.data.ODataDuration;
 import com.msopentech.odatajclient.engine.data.ODataGeospatialValue;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
-import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataTimestamp;
+import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.GeospatialCollection;
@@ -37,9 +38,6 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
-import com.msopentech.odatajclient.engine.format.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,510 +48,533 @@ import org.junit.Test;
 
 public class PrimitiveValueTest extends AbstractTest {
 
-    private String getFilename(final String entity, final String propertyName, final ODataFormat format) {
-        return entity.replace('(', '_').replace(")", "")
-                + "_" + propertyName.replaceAll("/", "_") + "." + getSuffix(format);
+    @Test
+    public void manageInt32() {
+        final int primitive = -10;
+        ODataValue value =
+                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Int32).setValue(primitive).build();
+        assertEquals(EdmSimpleType.Int32.toString(), value.asPrimitive().getTypeName());
+        assertEquals(Integer.valueOf(primitive), value.asPrimitive().<Integer>toCastValue());
+
+        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Int32).setText("9").build();
+        assertEquals("9", value.asPrimitive().<Integer>toCastValue().toString());
     }
 
-    private ODataPrimitiveValue writePrimitiveValue(
-            final ODataPrimitiveValue value, final ODataFormat format) {
+    @Test
+    public void manageString() {
+        final String primitive = UUID.randomUUID().toString();
+        ODataValue value =
+                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.String).setText(primitive).build();
+        assertEquals(EdmSimpleType.String.toString(), value.asPrimitive().getTypeName());
+        assertEquals(primitive, value.toString());
 
-        final ODataPrimitiveValue newValue;
-        if (EdmSimpleType.isGeospatial(value.getTypeName())) {
-            newValue = new ODataGeospatialValue.Builder(client).
-                    setType(EdmSimpleType.fromValue(value.getTypeName())).
-                    setTree(((ODataGeospatialValue) value).toTree()).build();
-        } else {
-            newValue = new ODataPrimitiveValue.Builder(client).
-                    setType(EdmSimpleType.fromValue(value.getTypeName())).
-                    setValue(value.toValue()).build();
+        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.String).
+                setText("1126a28b-a4af-4bbd-bf0a-2b2c22635565").build();
+        assertEquals("1126a28b-a4af-4bbd-bf0a-2b2c22635565", value.asPrimitive().<String>toCastValue().toString());
+    }
+
+    @Test
+    public void manageDecimal() {
+        final BigDecimal primitive = new BigDecimal("-79228162514264337593543950335");
+        ODataValue value =
+                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Decimal).setValue(primitive).build();
+        assertEquals(EdmSimpleType.Decimal.toString(), value.asPrimitive().getTypeName());
+        assertEquals(primitive, value.asPrimitive().<BigDecimal>toCastValue());
+
+        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Decimal).
+                setText("-79228162514264337593543950335").build();
+        assertEquals("-79228162514264337593543950335", value.asPrimitive().<BigDecimal>toCastValue().toString());
+    }
+
+    @Test
+    public void manageDateTime() {
+        // OData V3 only
+        final String primitive = "2013-01-10T06:27:51.1667673";
+        try {
+            new ODataPrimitiveValue.Builder(ODataClientFactory.getV4()).
+                    setType(EdmSimpleType.DateTime).setText(primitive).build();
+            fail();
+        } catch (IllegalArgumentException iae) {
+            // ignore
+        }
+        final ODataValue value =
+                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.DateTime).setText(primitive).build();
+        assertEquals(EdmSimpleType.DateTime.toString(), value.asPrimitive().getTypeName());
+        // performed cast to improve the check
+        assertEquals(primitive, value.asPrimitive().<ODataTimestamp>toCastValue().toString());
+    }
+
+    @Test
+    public void manageTime() {
+        // OData V3 only
+        final String primitive = "-P9DT51M10.5063807S";
+        try {
+            new ODataPrimitiveValue.Builder(ODataClientFactory.getV4()).
+                    setType(EdmSimpleType.Time).setText(primitive).build();
+            fail();
+        } catch (IllegalArgumentException iae) {
+            // ignore
         }
 
-        final InputStream written = client.getODataWriter().writeProperty(
-                ODataObjectFactory.newPrimitiveProperty(ODataConstants.ELEM_PROPERTY, newValue),
-                format);
-        return readPrimitiveValue(written, format);
+        final ODataValue value =
+                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Time).setText(primitive).build();
+        assertEquals(EdmSimpleType.Time.toString(), value.asPrimitive().getTypeName());
+        // performed cast to improve the check
+        assertEquals(primitive, value.asPrimitive().<ODataDuration>toCastValue().toString());
     }
 
-    private ODataPrimitiveValue readPrimitiveValue(final InputStream input, final ODataFormat format) {
-        final ODataProperty property = client.getODataReader().readProperty(input, format);
-        assertNotNull(property);
-        assertTrue(property.hasPrimitiveValue());
-        assertNotNull(property.getPrimitiveValue());
-
-        return property.getPrimitiveValue();
-    }
-
-    private ODataPrimitiveValue readPrimitiveValue(
-            final String entity, final String propertyName, final ODataFormat format) {
-
-        final ODataPrimitiveValue value = readPrimitiveValue(getClass().getResourceAsStream(
-                getFilename(entity, propertyName, format)), format);
-
-        if (EdmSimpleType.isGeospatial(value.getTypeName())) {
-            assertEquals(value.toValue(), writePrimitiveValue(value, format).toValue());
-        } else {
-            assertEquals(value.toString(), writePrimitiveValue(value, format).toString());
+    @Test
+    public void manageTimeOfDay() {
+        // OData V4 only
+        final String primitive = "-P9DT51M12.5063807S";
+        try {
+            new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.TimeOfDay).setText(primitive).build();
+            fail();
+        } catch (IllegalArgumentException iae) {
+            // ignore
         }
 
-        return value;
-    }
-
-    private void int32(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("Customer(-10)", "CustomerId", format);
-        assertEquals(EdmSimpleType.Int32.toString(), opv.getTypeName());
-
-        final Integer value = opv.<Integer>toCastValue();
-        assertNotNull(value);
-        assertTrue(-10 == value);
+        final ODataValue value = new ODataPrimitiveValue.Builder(ODataClientFactory.getV4()).
+                setType(EdmSimpleType.TimeOfDay).setText(primitive).build();
+        assertEquals(EdmSimpleType.TimeOfDay.toString(), value.asPrimitive().getTypeName());
+        // performed cast to improve the check
+        assertEquals(primitive, value.asPrimitive().<ODataDuration>toCastValue().toString());
     }
 
     @Test
-    public void int32fromXML() {
-        int32(ODataFormat.XML);
+    public void manageDate() {
+        // OData V4 only
+        final String primitive = "2013-01-10";
+        try {
+            new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Date).setText(primitive).build();
+            fail();
+        } catch (IllegalArgumentException iae) {
+            // ignore
+        }
+
+        final ODataValue value = new ODataPrimitiveValue.Builder(ODataClientFactory.getV4()).
+                setType(EdmSimpleType.Date).setText(primitive).build();
+        assertEquals(EdmSimpleType.Date.toString(), value.asPrimitive().getTypeName());
+        // performed cast to improve the check
+        assertEquals(primitive, value.asPrimitive().<ODataTimestamp>toCastValue().toString());
     }
 
     @Test
-    public void int32fromJSON() {
-        int32(ODataFormat.JSON);
-    }
-
-    private void string(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("Product(-9)", "Description", format);
-        assertEquals(EdmSimpleType.String.toString(), opv.getTypeName());
-
-        final String value = opv.<String>toCastValue();
-        assertNotNull(value);
-        assertEquals("kdcuklu", value);
-
-        assertEquals(opv, writePrimitiveValue(opv, format));
+    public void manageDateTimeOffset() {
+        final String primitive = "2013-01-10T02:00:00";
+        final ODataValue value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.DateTimeOffset).
+                setText(primitive).build();
+        assertEquals(EdmSimpleType.DateTimeOffset.toString(), value.asPrimitive().getTypeName());
+        // performed cast to improve the check
+        assertEquals(primitive, value.asPrimitive().<ODataTimestamp>toCastValue().toString());
     }
 
     @Test
-    public void stringfromXML() {
-        string(ODataFormat.XML);
+    public void manageGuid() {
+        final UUID primitive = UUID.fromString("1126a28b-a4af-4bbd-bf0a-2b2c22635565");
+        ODataValue value =
+                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Guid).setValue(primitive).build();
+        assertEquals(EdmSimpleType.Guid.toString(), value.asPrimitive().getTypeName());
+        assertEquals(primitive, value.asPrimitive().<UUID>toCastValue());
+
+        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Guid).
+                setText("1126a28b-a4af-4bbd-bf0a-2b2c22635565").build();
+        assertEquals("1126a28b-a4af-4bbd-bf0a-2b2c22635565", value.asPrimitive().<UUID>toCastValue().toString());
     }
 
     @Test
-    public void stringfromJSON() {
-        string(ODataFormat.JSON);
-    }
+    public void manageBinary() {
+        final byte[] primitive = UUID.randomUUID().toString().getBytes();
+        ODataValue value =
+                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Binary).setValue(primitive).build();
+        assertEquals(EdmSimpleType.Binary.toString(), value.asPrimitive().getTypeName());
+        assertEquals(
+                Base64.encodeBase64String(primitive),
+                Base64.encodeBase64String(value.asPrimitive().<byte[]>toCastValue()));
 
-    private void decimal(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("Product(-10)", "Dimensions/Width", format);
-        assertEquals(EdmSimpleType.Decimal.toString(), opv.getTypeName());
-
-        final BigDecimal value = opv.<BigDecimal>toCastValue();
-        assertNotNull(value);
-        assertTrue(new BigDecimal("-79228162514264337593543950335").equals(value));
-    }
-
-    @Test
-    public void decimalFromXML() {
-        decimal(ODataFormat.XML);
+        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Binary).
+                setText(Base64.encodeBase64String("primitive".getBytes())).build();
+        assertEquals("primitive", new String(value.asPrimitive().<byte[]>toCastValue()));
     }
 
     @Test
-    public void decimalFromJSON() {
-        decimal(ODataFormat.JSON);
-    }
+    public void managePoint() {
+        final Point primitive = new Point(Geospatial.Dimension.GEOGRAPHY);
+        primitive.setX(52.8606);
+        primitive.setY(173.334);
 
-    private void datetime(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue(
-                "Product(-10)", "ComplexConcurrency/QueriedDateTime", format);
-        assertEquals(EdmSimpleType.DateTime.toString(), opv.getTypeName());
+        try {
+            new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.GeographyPoint).setValue(primitive).build();
+            fail();
+        } catch (IllegalArgumentException iae) {
+            // nothing top do
+        }
 
-        final ODataTimestamp value = opv.<ODataTimestamp>toCastValue();
-        assertNotNull(value);
-        assertEquals("2013-01-10T06:27:51.1667673", opv.toString());
-    }
-
-    @Test
-    public void datetimeFromXML() {
-        datetime(ODataFormat.XML);
-    }
-
-    @Test
-    public void datetimeFromJSON() {
-        datetime(ODataFormat.JSON);
-    }
-
-    private void guid(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue(
-                "MessageAttachment(guid'1126a28b-a4af-4bbd-bf0a-2b2c22635565')", "AttachmentId", format);
-        assertEquals(EdmSimpleType.Guid.toString(), opv.getTypeName());
-
-        final UUID value = opv.<UUID>toCastValue();
-        assertNotNull(value);
-        assertEquals("1126a28b-a4af-4bbd-bf0a-2b2c22635565", opv.toString());
+        ODataValue value = new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyPoint).
+                setValue(primitive).build();
+        assertEquals(EdmSimpleType.GeographyPoint.toString(), value.asPrimitive().getTypeName());
+        assertEquals(Double.valueOf(primitive.getX()), Double.valueOf(value.asPrimitive().<Point>toCastValue().getX()));
+        assertEquals(Double.valueOf(primitive.getY()), Double.valueOf(value.asPrimitive().<Point>toCastValue().getY()));
     }
 
     @Test
-    public void guidFromXML() {
-        guid(ODataFormat.XML);
-    }
-
-    @Test
-    public void guidFromJSON() {
-        guid(ODataFormat.JSON);
-    }
-
-    private void binary(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue(
-                "MessageAttachment(guid'1126a28b-a4af-4bbd-bf0a-2b2c22635565')", "Attachment", format);
-        assertEquals(EdmSimpleType.Binary.toString(), opv.getTypeName());
-
-        final byte[] value = opv.<byte[]>toCastValue();
-        assertNotNull(value);
-        assertTrue(value.length > 0);
-        assertTrue(Base64.isBase64(opv.toString()));
-    }
-
-    @Test
-    public void binaryFromXML() {
-        binary(ODataFormat.XML);
-    }
-
-    @Test
-    public void binaryFromJSON() {
-        binary(ODataFormat.JSON);
-    }
-
-    private void point(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-10)", "GeogPoint", format);
-        assertEquals(EdmSimpleType.GeographyPoint.toString(), opv.getTypeName());
-
-        final Point point = opv.<Point>toCastValue();
-        assertNotNull(point);
-        assertEquals(Geospatial.Dimension.GEOGRAPHY, point.getDimension());
-
-        assertEquals(52.8606, point.getX(), 0);
-        assertEquals(173.334, point.getY(), 0);
-    }
-
-    @Test
-    public void pointFromXML() {
-        point(ODataFormat.XML);
-    }
-
-    @Test
-    public void pointFromJSON() {
-        point(ODataFormat.JSON);
-    }
-
-    private void lineString(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-10)", "GeogLine", format);
-        assertEquals(EdmSimpleType.GeographyLineString.toString(), opv.getTypeName());
-
-        final LineString lineString = opv.<LineString>toCastValue();
-        assertNotNull(lineString);
-        assertEquals(Geospatial.Dimension.GEOGRAPHY, lineString.getDimension());
-
+    public void manageLineString() {
         final List<Point> points = new ArrayList<Point>();
+        Point point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(40.5);
+        point.setY(40.5);
+        points.add(point);
 
-        for (Point point : lineString) {
-            points.add(point);
-        }
+        point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(30.5);
+        point.setY(30.5);
+        points.add(point);
 
-        assertEquals(4, points.size());
+        point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(20.5);
+        point.setY(40.5);
+        points.add(point);
 
-        assertEquals(40.5, points.get(0).getX(), 0);
-        assertEquals(40.5, points.get(0).getY(), 0);
+        point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(10.5);
+        point.setY(30.5);
+        points.add(point);
 
-        assertEquals(30.5, points.get(1).getX(), 0);
-        assertEquals(30.5, points.get(1).getY(), 0);
+        final LineString primitive = new LineString(Geospatial.Dimension.GEOGRAPHY, points);
 
-        assertEquals(20.5, points.get(2).getX(), 0);
-        assertEquals(40.5, points.get(2).getY(), 0);
+        final ODataValue value = new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyLineString).
+                setValue(primitive).build();
+        assertEquals(EdmSimpleType.GeographyLineString.toString(), value.asPrimitive().getTypeName());
 
-        assertEquals(10.5, points.get(3).getX(), 0);
-        assertEquals(30.5, points.get(3).getY(), 0);
+        final Iterator<Point> iter = value.asPrimitive().<LineString>toCastValue().iterator();
+
+        // take the third one and check the point value ...
+        iter.next();
+        iter.next();
+        point = iter.next();
+
+        assertEquals(Double.valueOf(points.get(2).getX()), Double.valueOf(point.getX()));
+        assertEquals(Double.valueOf(points.get(2).getY()), Double.valueOf(point.getY()));
     }
 
     @Test
-    public void lineStringFromXML() {
-        lineString(ODataFormat.XML);
-    }
-
-    @Test
-    public void lineStringFromJSON() {
-        lineString(ODataFormat.JSON);
-    }
-
-    private void multiPoint(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-7)", "GeomMultiPoint", format);
-        assertEquals(EdmSimpleType.GeometryMultiPoint.toString(), opv.getTypeName());
-
-        final MultiPoint multiPoint = opv.<MultiPoint>toCastValue();
-        assertNotNull(multiPoint);
-        assertEquals(Geospatial.Dimension.GEOMETRY, multiPoint.getDimension());
-
+    public void manageMultiPoint() {
         final List<Point> points = new ArrayList<Point>();
+        Point point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(0);
+        point.setY(0);
+        points.add(point);
 
-        for (Point point : multiPoint) {
-            points.add(point);
-        }
+        final MultiPoint primitive = new MultiPoint(Geospatial.Dimension.GEOMETRY, points);
 
-        assertEquals(1, points.size());
+        final ODataValue value = new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryMultiPoint).
+                setValue(primitive).build();
+        assertEquals(EdmSimpleType.GeometryMultiPoint.toString(), value.asPrimitive().getTypeName());
 
-        assertEquals(0, points.get(0).getX(), 0);
-        assertEquals(0, points.get(0).getY(), 0);
+        final Iterator<Point> iter = value.asPrimitive().<MultiPoint>toCastValue().iterator();
+        point = iter.next();
+
+        assertEquals(Double.valueOf(points.get(0).getX()), Double.valueOf(point.getX()));
+        assertEquals(Double.valueOf(points.get(0).getY()), Double.valueOf(point.getY()));
     }
 
     @Test
-    public void multiPointFromXML() {
-        multiPoint(ODataFormat.XML);
-    }
-
-    @Test
-    public void multiPointFromJSON() {
-        multiPoint(ODataFormat.JSON);
-    }
-
-    private void multiLine(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-6)", "GeomMultiLine", format);
-        assertEquals(EdmSimpleType.GeometryMultiLineString.toString(), opv.getTypeName());
-
-        final MultiLineString multiLine = opv.<MultiLineString>toCastValue();
-        assertNotNull(multiLine);
-        assertEquals(Geospatial.Dimension.GEOMETRY, multiLine.getDimension());
-
+    public void manageMultiLine() {
         final List<LineString> lines = new ArrayList<LineString>();
 
-        for (LineString point : multiLine) {
-            lines.add(point);
-        }
+        // line one ...
+        List<Point> points = new ArrayList<Point>();
+        Point point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(10);
+        point.setY(10);
+        points.add(point);
 
-        assertEquals(2, lines.size());
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(20);
+        point.setY(20);
+        points.add(point);
 
-        final List<Point> points = new ArrayList<Point>();
-        for (Point point : lines.get(0)) {
-            points.add(point);
-        }
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(10);
+        point.setY(40);
+        points.add(point);
 
-        assertEquals(3, points.size());
-        assertEquals(10, points.get(0).getX(), 0);
-        assertEquals(10, points.get(0).getY(), 0);
-        assertEquals(20, points.get(1).getX(), 0);
-        assertEquals(20, points.get(1).getY(), 0);
-        assertEquals(10, points.get(2).getX(), 0);
-        assertEquals(40, points.get(2).getY(), 0);
+        lines.add(new LineString(Geospatial.Dimension.GEOMETRY, points));
 
-        points.clear();
+        // line two ...
+        points = new ArrayList<Point>();
 
-        for (Point point : lines.get(1)) {
-            points.add(point);
-        }
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(40);
+        point.setY(40);
+        points.add(point);
 
-        assertEquals(4, points.size());
-        assertEquals(40, points.get(0).getX(), 0);
-        assertEquals(40, points.get(0).getY(), 0);
-        assertEquals(30, points.get(1).getX(), 0);
-        assertEquals(30, points.get(1).getY(), 0);
-        assertEquals(40, points.get(2).getX(), 0);
-        assertEquals(20, points.get(2).getY(), 0);
-        assertEquals(30, points.get(3).getX(), 0);
-        assertEquals(10, points.get(3).getY(), 0);
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(30);
+        point.setY(30);
+        points.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(40);
+        point.setY(20);
+        points.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(30);
+        point.setY(10);
+        points.add(point);
+        lines.add(new LineString(Geospatial.Dimension.GEOMETRY, points));
+
+        final MultiLineString primitive = new MultiLineString(Geospatial.Dimension.GEOMETRY, lines);
+
+        final ODataValue value =
+                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryMultiLineString).
+                setValue(primitive).build();
+        assertEquals(EdmSimpleType.GeometryMultiLineString.toString(), value.asPrimitive().getTypeName());
+
+        final Iterator<LineString> lineIter = value.asPrimitive().<MultiLineString>toCastValue().iterator();
+
+        // take the second line and check the third point value ...
+        lineIter.next();
+        final LineString line = lineIter.next();
+
+        final Iterator<Point> pointIter = line.iterator();
+        pointIter.next();
+        pointIter.next();
+        point = pointIter.next();
+
+        assertEquals(Double.valueOf(points.get(2).getX()), Double.valueOf(point.getX()));
+        assertEquals(Double.valueOf(points.get(2).getY()), Double.valueOf(point.getY()));
     }
 
     @Test
-    public void multiLineFromXML() {
-        multiLine(ODataFormat.XML);
+    public void managePolygon() {
+
+        final List<Point> interior = new ArrayList<Point>();
+        final List<Point> exterior = new ArrayList<Point>();
+
+        Point point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(5);
+        point.setY(15);
+        exterior.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(10);
+        point.setY(40);
+        exterior.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(20);
+        point.setY(10);
+        exterior.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(10);
+        point.setY(5);
+        exterior.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(5);
+        point.setY(15);
+        exterior.add(point);
+
+        final Polygon primitive = new Polygon(Geospatial.Dimension.GEOGRAPHY, interior, exterior);
+
+        final ODataValue value =
+                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyPolygon).
+                setValue(primitive).build();
+        assertEquals(EdmSimpleType.GeographyPolygon.toString(), value.asPrimitive().getTypeName());
+
+        assertTrue(value.asPrimitive().<Polygon>toCastValue().getInterior().isEmpty());
+        final Iterator<Point> iter = value.asPrimitive().<Polygon>toCastValue().getExterior().iterator();
+
+        // take the third one ...
+        iter.next();
+        iter.next();
+        point = iter.next();
+
+        assertEquals(Double.valueOf(exterior.get(2).getX()), Double.valueOf(point.getX()));
+        assertEquals(Double.valueOf(exterior.get(2).getY()), Double.valueOf(point.getY()));
     }
 
     @Test
-    public void multiLineFromJSON() {
-        multiLine(ODataFormat.JSON);
-    }
-
-    private void polygon(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-5)", "GeogPolygon", format);
-        assertEquals(EdmSimpleType.GeographyPolygon.toString(), opv.getTypeName());
-
-        final Polygon polygon = opv.<Polygon>toCastValue();
-        assertNotNull(polygon);
-        assertEquals(Geospatial.Dimension.GEOGRAPHY, polygon.getDimension());
-
-        final List<Point> points = new ArrayList<Point>();
-
-        assertTrue(polygon.getInterior().isEmpty());
-
-        for (Point point : polygon.getExterior()) {
-            points.add(point);
-        }
-
-        assertEquals(5, points.size());
-        assertEquals(5, points.get(0).getX(), 0);
-        assertEquals(15, points.get(0).getY(), 0);
-        assertEquals(10, points.get(1).getX(), 0);
-        assertEquals(40, points.get(1).getY(), 0);
-        assertEquals(20, points.get(2).getX(), 0);
-        assertEquals(10, points.get(2).getY(), 0);
-        assertEquals(10, points.get(3).getX(), 0);
-        assertEquals(5, points.get(3).getY(), 0);
-        assertEquals(5, points.get(4).getX(), 0);
-        assertEquals(15, points.get(4).getY(), 0);
-    }
-
-    @Test
-    public void polygonFromXML() {
-        polygon(ODataFormat.XML);
-    }
-
-    @Test
-    public void polygonFromJSON() {
-        polygon(ODataFormat.JSON);
-    }
-
-    private void multiPolygon(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-3)", "GeomMultiPolygon", format);
-        assertEquals(EdmSimpleType.GeometryMultiPolygon.toString(), opv.getTypeName());
-
-        final MultiPolygon multiPolygon = opv.<MultiPolygon>toCastValue();
-        assertNotNull(multiPolygon);
-        assertEquals(Geospatial.Dimension.GEOMETRY, multiPolygon.getDimension());
-
+    public void manageMultiPolygon() {
         final List<Polygon> polygons = new ArrayList<Polygon>();
 
-        for (Polygon polygon : multiPolygon) {
-            polygons.add(polygon);
-        }
+        List<Point> interior = new ArrayList<Point>();
+        List<Point> exterior = new ArrayList<Point>();
 
-        assertEquals(2, polygons.size());
+        // exterior one ...
+        Point point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(40);
+        point.setY(40);
+        exterior.add(point);
 
-        Polygon polygon = polygons.get(0);
-        assertTrue(polygon.getInterior().isEmpty());
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(20);
+        point.setY(45);
+        exterior.add(point);
 
-        final List<Point> points = new ArrayList<Point>();
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(45);
+        point.setY(30);
+        exterior.add(point);
 
-        for (Point point : polygon.getExterior()) {
-            points.add(point);
-        }
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(40);
+        point.setY(40);
+        exterior.add(point);
 
-        assertEquals(4, points.size());
-        assertEquals(40, points.get(0).getX(), 0);
-        assertEquals(40, points.get(0).getY(), 0);
-        assertEquals(20, points.get(1).getX(), 0);
-        assertEquals(45, points.get(1).getY(), 0);
-        assertEquals(45, points.get(2).getX(), 0);
-        assertEquals(30, points.get(2).getY(), 0);
-        assertEquals(40, points.get(3).getX(), 0);
-        assertEquals(40, points.get(3).getY(), 0);
+        polygons.add(new Polygon(Geospatial.Dimension.GEOMETRY, interior, exterior));
 
-        polygon = polygons.get(1);
+        // interior two ...
+        interior = new ArrayList<Point>();
+        exterior = new ArrayList<Point>();
 
-        points.clear();
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(30);
+        point.setY(20);
+        interior.add(point);
 
-        for (Point point : polygon.getExterior()) {
-            points.add(point);
-        }
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(20);
+        point.setY(25);
+        interior.add(point);
 
-        assertEquals(6, points.size());
-        assertEquals(20, points.get(0).getX(), 0);
-        assertEquals(35, points.get(0).getY(), 0);
-        assertEquals(45, points.get(1).getX(), 0);
-        assertEquals(20, points.get(1).getY(), 0);
-        assertEquals(30, points.get(2).getX(), 0);
-        assertEquals(5, points.get(2).getY(), 0);
-        assertEquals(10, points.get(3).getX(), 0);
-        assertEquals(10, points.get(3).getY(), 0);
-        assertEquals(10, points.get(4).getX(), 0);
-        assertEquals(30, points.get(4).getY(), 0);
-        assertEquals(20, points.get(5).getX(), 0);
-        assertEquals(35, points.get(5).getY(), 0);
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(20);
+        point.setY(15);
+        interior.add(point);
 
-        points.clear();
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(30);
+        point.setY(20);
+        interior.add(point);
 
-        for (Point point : polygon.getInterior()) {
-            points.add(point);
-        }
+        // exterior two ...
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(20);
+        point.setY(35);
+        exterior.add(point);
 
-        assertEquals(4, points.size());
-        assertEquals(30, points.get(0).getX(), 0);
-        assertEquals(20, points.get(0).getY(), 0);
-        assertEquals(20, points.get(1).getX(), 0);
-        assertEquals(25, points.get(1).getY(), 0);
-        assertEquals(20, points.get(2).getX(), 0);
-        assertEquals(15, points.get(2).getY(), 0);
-        assertEquals(30, points.get(3).getX(), 0);
-        assertEquals(20, points.get(3).getY(), 0);
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(45);
+        point.setY(20);
+        exterior.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(30);
+        point.setY(5);
+        exterior.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(10);
+        point.setY(10);
+        exterior.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(10);
+        point.setY(30);
+        exterior.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(20);
+        point.setY(35);
+        exterior.add(point);
+
+        polygons.add(new Polygon(Geospatial.Dimension.GEOMETRY, interior, exterior));
+
+        final MultiPolygon primitive = new MultiPolygon(Geospatial.Dimension.GEOMETRY, polygons);
+
+        final ODataValue value =
+                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryMultiPolygon).
+                setValue(primitive).build();
+        assertEquals(EdmSimpleType.GeometryMultiPolygon.toString(), value.asPrimitive().getTypeName());
+
+        final Iterator<Polygon> iter = value.asPrimitive().<MultiPolygon>toCastValue().iterator();
+
+        // second one polygon
+        iter.next();
+        final Polygon polygon = iter.next();
+        Iterator<Point> pointIter = polygon.getInterior().iterator();
+        pointIter.next();
+        point = pointIter.next();
+
+        // check the second point from interior
+        assertEquals(Double.valueOf(interior.get(1).getX()), Double.valueOf(point.getX()));
+        assertEquals(Double.valueOf(interior.get(1).getY()), Double.valueOf(point.getY()));
+
+        pointIter = polygon.getExterior().iterator();
+        pointIter.next();
+        pointIter.next();
+        point = pointIter.next();
+
+        // check the third point from exterior
+        assertEquals(Double.valueOf(exterior.get(2).getX()), Double.valueOf(point.getX()));
+        assertEquals(Double.valueOf(exterior.get(2).getY()), Double.valueOf(point.getY()));
     }
 
     @Test
-    public void multiPolygonFromXML() {
-        multiPolygon(ODataFormat.XML);
+    public void manageGeomCollection() {
+        final List<Geospatial> collection = new ArrayList<Geospatial>();
+
+        Point point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(1);
+        point.setY(2);
+        point.setZ(3);
+        collection.add(point);
+
+        point = new Point(Geospatial.Dimension.GEOMETRY);
+        point.setX(4);
+        point.setY(5);
+        point.setZ(6);
+        collection.add(point);
+
+        final GeospatialCollection primitive = new GeospatialCollection(Geospatial.Dimension.GEOMETRY, collection);
+
+        final ODataValue value =
+                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryCollection).
+                setValue(primitive).build();
+        assertEquals(EdmSimpleType.GeometryCollection.toString(), value.asPrimitive().getTypeName());
+
+        final Iterator<Geospatial> iter = value.asPrimitive().<GeospatialCollection>toCastValue().iterator();
+        iter.next();
+        final Point collectedPoint = (Point) iter.next();
+
+        assertTrue(point.getX() == collectedPoint.getX()
+                && point.getY() == collectedPoint.getY()
+                && point.getZ() == collectedPoint.getZ());
     }
 
     @Test
-    public void multiPolygonFromJSON() {
-        multiPolygon(ODataFormat.JSON);
-    }
+    public void manageGeogCollection() {
+        final List<Geospatial> collection = new ArrayList<Geospatial>();
 
-    private void geomCollection(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-8)", "GeomCollection", format);
-        assertEquals(EdmSimpleType.GeometryCollection.toString(), opv.getTypeName());
+        Point point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(1);
+        point.setY(2);
+        point.setZ(3);
+        collection.add(point);
 
-        final GeospatialCollection collection = opv.<GeospatialCollection>toCastValue();
-        assertNotNull(collection);
-        assertEquals(Geospatial.Dimension.GEOMETRY, collection.getDimension());
+        point = new Point(Geospatial.Dimension.GEOGRAPHY);
+        point.setX(4);
+        point.setY(5);
+        point.setZ(6);
+        collection.add(point);
 
-        final Iterator<Geospatial> itor = collection.iterator();
-        int count = 0;
-        while (itor.hasNext()) {
-            count++;
+        final GeospatialCollection primitive = new GeospatialCollection(Geospatial.Dimension.GEOGRAPHY, collection);
 
-            final Geospatial geospatial = itor.next();
-            if (count == 1) {
-                assertTrue(geospatial instanceof Point);
-            }
-            if (count == 2) {
-                assertTrue(geospatial instanceof LineString);
-            }
-        }
-        assertEquals(2, count);
-    }
+        final ODataValue value =
+                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyCollection).
+                setValue(primitive).build();
+        assertEquals(EdmSimpleType.GeographyCollection.toString(), value.asPrimitive().getTypeName());
 
-    @Test
-    public void geomCollectionFromXML() {
-        geomCollection(ODataFormat.XML);
-    }
+        final Iterator<Geospatial> iter = value.asPrimitive().<GeospatialCollection>toCastValue().iterator();
+        iter.next();
+        final Point collectedPoint = (Point) iter.next();
 
-    @Test
-    public void geomCollectionFromJSON() {
-        geomCollection(ODataFormat.JSON);
-    }
-
-    private void geogCollection(final ODataFormat format) {
-        final ODataPrimitiveValue opv = readPrimitiveValue("AllGeoTypesSet(-5)", "GeogCollection", format);
-        assertEquals(EdmSimpleType.GeographyCollection.toString(), opv.getTypeName());
-
-        final GeospatialCollection collection = opv.<GeospatialCollection>toCastValue();
-        assertNotNull(collection);
-        assertEquals(Geospatial.Dimension.GEOGRAPHY, collection.getDimension());
-
-        final Iterator<Geospatial> itor = collection.iterator();
-        int count = 0;
-        while (itor.hasNext()) {
-            count++;
-
-            final Geospatial geospatial = itor.next();
-            if (count == 1) {
-                assertTrue(geospatial instanceof GeospatialCollection);
-            }
-            if (count == 2) {
-                assertTrue(geospatial instanceof GeospatialCollection);
-            }
-        }
-        assertEquals(2, count);
-    }
-
-    @Test
-    public void geogCollectionFromXML() {
-        geogCollection(ODataFormat.XML);
-    }
-
-    @Test
-    public void geogCollectionFromJSON() {
-        geogCollection(ODataFormat.JSON);
+        assertTrue(point.getX() == collectedPoint.getX()
+                && point.getY() == collectedPoint.getY()
+                && point.getZ() == collectedPoint.getZ());
     }
 }

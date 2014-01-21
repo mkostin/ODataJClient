@@ -53,7 +53,7 @@ public class ODataPrimitiveValue extends ODataValue {
         public AbstractBuilder isSupported(final EdmSimpleType type) {
             if (type != null && !ArrayUtils.contains(type.getSupportedVersions(), client.getWorkingVersion())) {
                 throw new IllegalArgumentException(String.format(
-                        "Type %s not supported by the current OData working version", EdmSimpleType.Stream.toString()));
+                        "Type %s not supported by the current OData working version", type.toString()));
             }
 
             return this;
@@ -210,12 +210,14 @@ public class ODataPrimitiveValue extends ODataValue {
                 this.value = Boolean.parseBoolean(this.toString());
                 break;
 
+            case Date:
             case DateTime:
             case DateTimeOffset:
                 this.value = ODataTimestamp.parse(this.type, this.toString());
                 break;
 
             case Time:
+            case TimeOfDay:
                 this.value = new ODataDuration(this.toString());
                 break;
 
@@ -281,12 +283,14 @@ public class ODataPrimitiveValue extends ODataValue {
                 this.text = this.<Boolean>toCastValue().toString();
                 break;
 
+            case Date:
             case DateTime:
             case DateTimeOffset:
                 this.text = this.<ODataTimestamp>toCastValue().toString();
                 break;
 
             case Time:
+            case TimeOfDay:
                 this.text = this.<ODataDuration>toCastValue().toString();
                 break;
 
