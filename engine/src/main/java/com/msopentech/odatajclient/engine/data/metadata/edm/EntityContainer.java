@@ -41,6 +41,8 @@ public class EntityContainer extends AbstractAnnotatedEdm {
     private List<AssociationSet> associationSets = new ArrayList<AssociationSet>();
 
     private List<FunctionImport> functionImports = new ArrayList<FunctionImport>();
+    
+    private List<Singleton> singletons = new ArrayList<Singleton>();
 
     public String getName() {
         return name;
@@ -125,5 +127,13 @@ public class EntityContainer extends AbstractAnnotatedEdm {
 
     public void setFunctionImports(final List<FunctionImport> functionImports) {
         this.functionImports = functionImports;
+    }
+
+    public List<Singleton> getSingletons() {
+        return singletons;
+    }
+
+    public void setSingletons(List<Singleton> singletons) {
+        this.singletons = singletons;
     }
 }

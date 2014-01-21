@@ -54,6 +54,9 @@ public class EntityContainerDeserializer extends JsonDeserializer<EntityContaine
                 } else if ("FunctionImport".equals(jp.getCurrentName())) {
                     jp.nextToken();
                     entityContainer.getFunctionImports().add(jp.getCodec().readValue(jp, FunctionImport.class));
+                } else if ("Singleton".equals(jp.getCurrentName())) {
+                    jp.nextToken();
+                    entityContainer.getSingletons().add(jp.getCodec().readValue(jp, Singleton.class));
                 }
             }
         }

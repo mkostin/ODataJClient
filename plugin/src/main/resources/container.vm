@@ -26,6 +26,7 @@ import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
 #if(!$useFullEntityContainerClassName)import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;#end
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
+import com.msopentech.odatajclient.proxy.api.annotations.Singleton;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.AbstractContainer;
 #foreach($ns in $namespaces)
@@ -57,6 +58,13 @@ public interface $utility.capitalize($container.Name) extends AbstractContainer 
 
 #foreach($entitySet in $container.EntitySets)
     $utility.capitalize($entitySet.Name) get$utility.capitalize($entitySet.Name)();
+
+#end
+
+#foreach($singleton in $container.Singletons)
+    @Singleton(name = "$singleton.Name",
+               type = "$singleton.Type")
+    $utility.getJavaType($singleton.Type) $utility.uncapitalize($singleton.Name)();
 
 #end
 

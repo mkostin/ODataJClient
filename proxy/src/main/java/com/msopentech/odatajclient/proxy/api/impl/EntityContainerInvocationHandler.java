@@ -20,16 +20,20 @@
 package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.client.ODataClientFactory;
+import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
+import com.msopentech.odatajclient.proxy.api.annotations.Singleton;
 import com.msopentech.odatajclient.proxy.utils.ClassUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class EntityContainerInvocationHandler extends AbstractInvocationHandler {
 
@@ -113,6 +117,17 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
                         appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
                 return functionImport((FunctionImport) methodAnnots[0], method, args, uriBuilder.build(), funcImp);
+            } // 3. access singletons
+            else if (methodAnnots[0] instanceof Singleton) {
+                final Class<?> returnType = method.getReturnType();
+
+                final URIBuilder uri = client.getURIBuilder(getFactory().getServiceRoot()).appendEntitySetSegment(
+                        StringUtils.capitalize(method.getName()));
+
+                final ODataEntity entity = client.getRetrieveRequestFactory().getEntityRequest(uri.build()).execute().getBody();
+
+                return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class<?>[] { returnType },
+                        EntityTypeInvocationHandler.getInstance(entity, entityContainerName, null, returnType, this));
             } else {
                 throw new UnsupportedOperationException("Method not found: " + method);
             }
