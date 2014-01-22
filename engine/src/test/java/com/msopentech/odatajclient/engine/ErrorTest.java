@@ -19,14 +19,21 @@
  */
 package com.msopentech.odatajclient.engine;
 
+import static com.msopentech.odatajclient.engine.AbstractTest.v3Client;
 import static org.junit.Assert.assertNotNull;
+
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.data.ODataError;
 import org.junit.Test;
 
 public class ErrorTest extends AbstractTest {
 
+    private ODataV3Client getClient() {
+        return v3Client;
+    }
+
     private void xmlError(final String name) {
-        final ODataError error = client.getODataReader().readError(getClass().getResourceAsStream(name), true);
+        final ODataError error = getClient().getReader().readError(getClass().getResourceAsStream(name), true);
         assertNotNull(error);
     }
 

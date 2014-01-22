@@ -30,7 +30,7 @@ import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityKey;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.OnDeleteAction;
 import com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.*;
 import com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.*;
 

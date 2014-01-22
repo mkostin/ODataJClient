@@ -19,10 +19,10 @@
  */
 package com.msopentech.odatajclient.engine;
 
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 
-public class V3JSONPropertyTest extends PropertyTest {
+public class V3JSONPropertyTest extends AbstractPropertyTest {
 
     @Override
     protected ODataFormat getFormat() {
@@ -30,7 +30,8 @@ public class V3JSONPropertyTest extends PropertyTest {
     }
 
     @Override
-    protected Version getVersion() {
-        return Version.V3;
+    protected ODataV3Client getClient() {
+        return v3Client;
     }
+
 }

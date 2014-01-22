@@ -187,7 +187,7 @@ public class EntityUpdateTestITCase extends AbstractTest {
         final boolean before = message.getProperty("IsRead").getPrimitiveValue().<Boolean>toCastValue();
         message.getProperties().remove(message.getProperty("IsRead"));
         message.addProperty(ODataObjectFactory.newPrimitiveProperty("IsRead",
-                new ODataPrimitiveValue.Builder(client).setValue(!before).setType(EdmSimpleType.Boolean).build()));
+                client.getPrimitiveValueBuilder().setValue(!before).setType(EdmSimpleType.Boolean).build()));
 
         return client.getCUDRequestFactory().getEntityUpdateRequest(UpdateType.MERGE, message);
     }

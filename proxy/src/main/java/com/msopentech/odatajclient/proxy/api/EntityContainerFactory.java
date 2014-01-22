@@ -20,12 +20,12 @@
 package com.msopentech.odatajclient.proxy.api;
 
 import com.msopentech.odatajclient.engine.client.Configuration;
-import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.ODataClientFactory;
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataV3MetadataRequest;
 import com.msopentech.odatajclient.proxy.api.context.Context;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
 import com.msopentech.odatajclient.engine.uri.filter.FilterFactory;
 import com.msopentech.odatajclient.proxy.api.impl.EntityContainerInvocationHandler;
 import java.lang.reflect.Proxy;
@@ -48,11 +48,11 @@ public class EntityContainerFactory {
     private static final Map<Class<?>, Object> ENTITY_CONTAINERS =
             new ConcurrentHashMap<Class<?>, Object>();
 
-    private final ODataClient client;
+    private final ODataV3Client client;
 
     private final String serviceRoot;
 
-    private EdmMetadata metadata;
+    private EdmV3Metadata metadata;
 
     public static Context getContext() {
         synchronized (MONITOR) {
@@ -64,7 +64,7 @@ public class EntityContainerFactory {
         return context;
     }
 
-    private static EntityContainerFactory getInstance(final ODataClient client, final String serviceRoot) {
+    private static EntityContainerFactory getInstance(final ODataV3Client client, final String serviceRoot) {
         if (!FACTORY_PER_SERVICEROOT.containsKey(serviceRoot)) {
             final EntityContainerFactory instance = new EntityContainerFactory(client, serviceRoot);
             FACTORY_PER_SERVICEROOT.put(serviceRoot, instance);
@@ -76,11 +76,7 @@ public class EntityContainerFactory {
         return getInstance(ODataClientFactory.getV3(), serviceRoot);
     }
 
-    public static EntityContainerFactory getV4Instance(final String serviceRoot) {
-        return getInstance(ODataClientFactory.getV4(), serviceRoot);
-    }
-
-    private EntityContainerFactory(final ODataClient client, final String serviceRoot) {
+    private EntityContainerFactory(final ODataV3Client client, final String serviceRoot) {
         this.client = client;
         this.serviceRoot = serviceRoot;
     }
@@ -97,11 +93,11 @@ public class EntityContainerFactory {
         return serviceRoot;
     }
 
-    public EdmMetadata getMetadata() {
+    public EdmV3Metadata getMetadata() {
         synchronized (this) {
             if (metadata == null) {
-                final ODataMetadataRequest req = client.getRetrieveRequestFactory().getMetadataRequest(serviceRoot);
-                final ODataRetrieveResponse<EdmMetadata> res = req.execute();
+                final ODataV3MetadataRequest req = client.getRetrieveRequestFactory().getMetadataRequest(serviceRoot);
+                final ODataRetrieveResponse<EdmV3Metadata> res = req.execute();
                 metadata = res.getBody();
                 if (metadata == null) {
                     throw new IllegalStateException("No metadata found at URI '" + serviceRoot + "'");

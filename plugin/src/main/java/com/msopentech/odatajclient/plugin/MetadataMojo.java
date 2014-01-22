@@ -20,14 +20,14 @@
 package com.msopentech.odatajclient.plugin;
 
 import com.msopentech.odatajclient.engine.client.ODataClientFactory;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataV3MetadataRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.data.metadata.edm.ComplexType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntitySet;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.ComplexType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntitySet;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.Schema;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -91,11 +91,11 @@ public class MetadataMojo extends AbstractMojo {
             Velocity.addProperty(Velocity.RESOURCE_LOADER, "class");
             Velocity.addProperty("class.resource.loader.class", ClasspathResourceLoader.class.getName());
 
-            final ODataMetadataRequest req = ODataClientFactory.getV3().
+            final ODataV3MetadataRequest req = ODataClientFactory.getV3().
                     getRetrieveRequestFactory().getMetadataRequest(serviceRootURL);
 
-            final ODataRetrieveResponse<EdmMetadata> res = req.execute();
-            final EdmMetadata metadata = res.getBody();
+            final ODataRetrieveResponse<EdmV3Metadata> res = req.execute();
+            final EdmV3Metadata metadata = res.getBody();
 
             if (metadata == null) {
                 throw new IllegalStateException("Metadata not found");

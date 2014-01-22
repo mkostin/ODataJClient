@@ -19,11 +19,10 @@
  */
 package com.msopentech.odatajclient.engine;
 
+import com.msopentech.odatajclient.engine.client.ODataV4Client;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 
-public class V4JSONPrimitiveTest extends PrimitiveTest {
+public class V4JSONPrimitiveTest extends AbstractPrimitiveTest {
 
     @Override
     protected ODataFormat getFormat() {
@@ -31,7 +30,8 @@ public class V4JSONPrimitiveTest extends PrimitiveTest {
     }
 
     @Override
-    protected ODataConstants.Version getVersion() {
-        return Version.V4;
+    protected ODataV4Client getClient() {
+        return v4Client;
     }
+
 }

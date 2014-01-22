@@ -25,10 +25,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-/**
- *
- * @author ilgrosso
- */
 public abstract class AbstractEdm implements Serializable {
 
     private static final long serialVersionUID = -5980662430186543962L;

@@ -27,11 +27,11 @@ import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataLink;
 import com.msopentech.odatajclient.engine.data.ODataOperation;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
-import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationSet;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.Association;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.AssociationSet;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.Schema;
 import com.msopentech.odatajclient.engine.format.ODataMediaFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
@@ -221,10 +221,10 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
                         "Could not find any FunctionImport named " + ((FunctionImport) methodAnnots[0]).name());
             }
 
-            final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
+            final com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer container =
                     containerHandler.getFactory().getMetadata().getSchema(ClassUtils.getNamespace(typeRef)).
                     getEntityContainer(entityContainerName);
-            final com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport funcImp =
+            final com.msopentech.odatajclient.engine.data.metadata.edm.v3.FunctionImport funcImp =
                     container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
 
             return functionImport((FunctionImport) methodAnnots[0], method, args,
@@ -293,7 +293,7 @@ public class EntityTypeInvocationHandler extends AbstractInvocationHandler {
             collItemType = type;
         }
 
-        final EdmMetadata metadata = containerHandler.getFactory().getMetadata();
+        final EdmV3Metadata metadata = containerHandler.getFactory().getMetadata();
         final Schema schema = metadata.getSchema(ClassUtils.getNamespace(typeRef));
 
         // 1) get association

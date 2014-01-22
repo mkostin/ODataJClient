@@ -19,7 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.AbstractEdmMetadata;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -118,8 +118,8 @@ public class ODataObjectWrapper {
      *
      * @return <tt>EdmMetadata</tt> if success; null otherwise.
      */
-    public EdmMetadata getEdmMetadata() {
-        return reader.read(new ByteArrayInputStream(obj), null, EdmMetadata.class);
+    public AbstractEdmMetadata getEdmMetadata() {
+        return reader.read(new ByteArrayInputStream(obj), null, AbstractEdmMetadata.class);
     }
 
     /**

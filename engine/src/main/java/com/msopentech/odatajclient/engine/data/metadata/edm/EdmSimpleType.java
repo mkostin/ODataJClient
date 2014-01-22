@@ -29,7 +29,7 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPoin
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.MultiPolygon;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Polygon;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
+import com.msopentech.odatajclient.engine.utils.ODataVersion;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
@@ -73,11 +73,11 @@ public enum EdmSimpleType {
     /**
      * A 64-bit value expressed as Coordinated Universal Time (UTC).
      */
-    DateTime(new Version[] { Version.V3 }, ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
+    DateTime(new ODataVersion[] { ODataVersion.V3 }, ODataTimestamp.class, "yyyy-MM-dd'T'HH:mm:ss"),
     /**
      * Date without a time-zone offset.
      */
-    Date(new Version[] { Version.V4 }, ODataTimestamp.class, "yyyy-MM-dd"),
+    Date(new ODataVersion[] { ODataVersion.V4 }, ODataTimestamp.class, "yyyy-MM-dd"),
     /**
      * Date and time as an Offset in minutes from GMT.
      */
@@ -85,15 +85,15 @@ public enum EdmSimpleType {
     /**
      * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
      */
-    Time(new Version[] { Version.V3 }, ODataDuration.class),
+    Time(new ODataVersion[] { ODataVersion.V3 }, ODataDuration.class),
     /**
      * The time of day with values ranging from 0:00:00.x to 23:59:59.y, where x and y depend upon the precision.
      */
-    TimeOfDay(new Version[] { Version.V4 }, ODataDuration.class),
+    TimeOfDay(new ODataVersion[] { ODataVersion.V4 }, ODataDuration.class),
     /**
      * Signed duration in days, hours, minutes, and (sub)seconds.
      */
-    Duration(new Version[] { Version.V4 }, ODataDuration.class),
+    Duration(new ODataVersion[] { ODataVersion.V4 }, ODataDuration.class),
     /**
      * Numeric values with fixed precision and scale.
      */
@@ -153,7 +153,7 @@ public enum EdmSimpleType {
 
     private final String pattern;
 
-    private final Version[] versions;
+    private final ODataVersion[] versions;
 
     /**
      * Constructor (all OData versions).
@@ -161,7 +161,7 @@ public enum EdmSimpleType {
      * @param clazz type.
      */
     EdmSimpleType(final Class<?> clazz) {
-        this(Version.values(), clazz, null);
+        this(ODataVersion.values(), clazz, null);
     }
 
     /**
@@ -170,7 +170,7 @@ public enum EdmSimpleType {
      * @param versions supported OData versions.
      * @param clazz type.
      */
-    EdmSimpleType(final Version[] versions, final Class<?> clazz) {
+    EdmSimpleType(final ODataVersion[] versions, final Class<?> clazz) {
         this(versions, clazz, null);
     }
 
@@ -181,7 +181,7 @@ public enum EdmSimpleType {
      * @param pattern pattern.
      */
     EdmSimpleType(final Class<?> clazz, final String pattern) {
-        this(Version.values(), clazz, pattern);
+        this(ODataVersion.values(), clazz, pattern);
     }
 
     /**
@@ -191,10 +191,10 @@ public enum EdmSimpleType {
      * @param clazz type.
      * @param pattern pattern.
      */
-    EdmSimpleType(final Version[] versions, final Class<?> clazz, final String pattern) {
+    EdmSimpleType(final ODataVersion[] versions, final Class<?> clazz, final String pattern) {
         this.clazz = clazz;
         this.pattern = pattern;
-        this.versions = versions;
+        this.versions = versions.clone();
     }
 
     /**
@@ -261,15 +261,16 @@ public enum EdmSimpleType {
     /**
      * Gets <tt>EdmSimpleType</tt> from object instance.
      *
+     * @param workingVersion OData version.
      * @param obj object.
      * @return <tt>EdmSimpleType</tt> object.
      */
-    public static EdmSimpleType fromObject(final Version workingVersion, final Object obj) {
+    public static EdmSimpleType fromObject(final ODataVersion workingVersion, final Object obj) {
         for (EdmSimpleType edmSimpleType : EdmSimpleType.values()) {
             if (edmSimpleType.javaType().equals(obj.getClass())) {
                 return edmSimpleType == DateTimeOffset || edmSimpleType == DateTime || edmSimpleType == Date
                         ? ((ODataTimestamp) obj).isOffset()
-                        ? DateTimeOffset : workingVersion == Version.V3 ? DateTime : Date
+                        ? DateTimeOffset : workingVersion == ODataVersion.V3 ? DateTime : Date
                         : edmSimpleType;
             }
         }
@@ -285,7 +286,7 @@ public enum EdmSimpleType {
         return "Edm";
     }
 
-    public Version[] getSupportedVersions() {
-        return versions;
+    public ODataVersion[] getSupportedVersions() {
+        return versions.clone();
     }
 }

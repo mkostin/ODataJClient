@@ -23,7 +23,7 @@ package com.msopentech.odatajclient.proxy.opentypeservice.microsoft.test.odata.s
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.ParameterMode;
 import com.msopentech.odatajclient.proxy.opentypeservice.microsoft.test.odata.services.opentypesservice.*;
 import com.msopentech.odatajclient.proxy.opentypeservice.microsoft.test.odata.services.opentypesservice.types.*;
 

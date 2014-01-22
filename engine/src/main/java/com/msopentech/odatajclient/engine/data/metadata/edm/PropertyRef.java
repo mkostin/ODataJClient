@@ -28,6 +28,9 @@ public class PropertyRef extends AbstractEdm {
     @JsonProperty(value = "Name", required = true)
     private String name;
 
+    @JsonProperty(value = "Alias")
+    private String alias;
+
     public String getName() {
         return name;
     }
@@ -35,4 +38,13 @@ public class PropertyRef extends AbstractEdm {
     public void setName(final String name) {
         this.name = name;
     }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(final String alias) {
+        this.alias = alias;
+    }
+
 }

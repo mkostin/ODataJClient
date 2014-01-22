@@ -81,7 +81,7 @@ public class ODataEntityUpdateRequest extends AbstractODataBasicRequestImpl<ODat
      */
     @Override
     protected InputStream getPayload() {
-        return odataClient.getODataWriter().writeEntity(changes, ODataPubFormat.fromString(getContentType()));
+        return odataClient.getWriter().writeEntity(changes, ODataPubFormat.fromString(getContentType()));
     }
 
     /**
@@ -119,7 +119,7 @@ public class ODataEntityUpdateRequest extends AbstractODataBasicRequestImpl<ODat
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = odataClient.getODataReader().
+                    entity = odataClient.getReader().
                             readEntity(getRawResponse(), ODataPubFormat.fromString(getAccept()));
                 } finally {
                     this.close();

@@ -26,14 +26,13 @@ import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResp
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataNoContent;
-import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.FunctionImport;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,7 +42,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
 
     @Test
     public void retrieveProducts() {
-        final EdmMetadata metadata = client.getRetrieveRequestFactory().
+        final EdmV3Metadata metadata = client.getRetrieveRequestFactory().
                 getMetadataRequest(testActionOverloadingServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
@@ -98,7 +97,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
 
     @Test
     public void increaseSalaries() {
-        final EdmMetadata metadata =
+        final EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testActionOverloadingServiceRootURL).execute().
                 getBody();
         assertNotNull(metadata);
@@ -110,7 +109,7 @@ public class ActionOverloadingTestITCase extends AbstractTest {
         for (FunctionImport funcImp : container.getFunctionImports("IncreaseSalaries")) {
             final Map<String, ODataValue> parameters = new LinkedHashMap<String, ODataValue>(1);
             parameters.put("n",
-                    new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Int32).setValue(5).build());
+                    client.getPrimitiveValueBuilder().setType(EdmSimpleType.Int32).setValue(5).build());
 
             final ODataInvokeResponse<ODataNoContent> res;
             if ("Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Employee)".

@@ -29,4 +29,11 @@ public class V3RetrieveRequestFactory extends AbstractRetrieveRequestFactory {
         super(client);
     }
 
+    @Override
+    public ODataV3MetadataRequest getMetadataRequest(
+            final String serviceRoot) {
+
+        return new ODataV3MetadataRequest(client, client.getURIBuilder(serviceRoot).appendMetadataSegment().build());
+    }
+
 }

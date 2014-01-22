@@ -19,7 +19,7 @@
  */
 package com.msopentech.odatajclient.proxy.api.annotations;
 
-import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.ParameterMode;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

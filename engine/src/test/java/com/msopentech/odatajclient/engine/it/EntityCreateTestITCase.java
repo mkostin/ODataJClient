@@ -292,9 +292,9 @@ public class EntityCreateTestITCase extends AbstractTest {
                     ODataObjectFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Order");
 
             order.addProperty(ODataObjectFactory.newPrimitiveProperty("OrderId",
-                    new ODataPrimitiveValue.Builder(client).setValue(key).setType(EdmSimpleType.Int32).build()));
+                    client.getPrimitiveValueBuilder().setValue(key).setType(EdmSimpleType.Int32).build()));
             order.addProperty(ODataObjectFactory.newPrimitiveProperty("CustomerId",
-                    new ODataPrimitiveValue.Builder(client).setValue(id).setType(EdmSimpleType.Int32).build()));
+                    client.getPrimitiveValueBuilder().setValue(id).setType(EdmSimpleType.Int32).build()));
 
             final ODataEntityCreateRequest createReq = client.getCUDRequestFactory().getEntityCreateRequest(
                     client.getURIBuilder(getServiceRoot()).appendEntitySetSegment("Order").build(), order);
@@ -384,9 +384,9 @@ public class EntityCreateTestITCase extends AbstractTest {
 
         ODataEntity order = ODataObjectFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.Order");
         order.addProperty(ODataObjectFactory.newPrimitiveProperty("CustomerId",
-                new ODataPrimitiveValue.Builder(client).setValue(id).setType(EdmSimpleType.Int32).build()));
+                client.getPrimitiveValueBuilder().setValue(id).setType(EdmSimpleType.Int32).build()));
         order.addProperty(ODataObjectFactory.newPrimitiveProperty("OrderId",
-                new ODataPrimitiveValue.Builder(client).setValue(id).setType(EdmSimpleType.Int32).build()));
+                client.getPrimitiveValueBuilder().setValue(id).setType(EdmSimpleType.Int32).build()));
 
         order.addLink(ODataObjectFactory.newEntityNavigationLink(
                 "Customer", URIUtils.getURI(getServiceRoot(), customer.getEditLink().toASCIIString())));
@@ -441,21 +441,21 @@ public class EntityCreateTestITCase extends AbstractTest {
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Message");
 
         message.addProperty(ODataObjectFactory.newPrimitiveProperty("MessageId",
-                new ODataPrimitiveValue.Builder(client).setValue(1000).setType(EdmSimpleType.Int32).build()));
+                client.getPrimitiveValueBuilder().setValue(1000).setType(EdmSimpleType.Int32).build()));
         message.addProperty(ODataObjectFactory.newPrimitiveProperty("FromUsername",
-                new ODataPrimitiveValue.Builder(client).setValue("1").
+                client.getPrimitiveValueBuilder().setValue("1").
                 setType(EdmSimpleType.String).build()));
         message.addProperty(ODataObjectFactory.newPrimitiveProperty("ToUsername",
-                new ODataPrimitiveValue.Builder(client).setValue("xlodhxzzusxecbzptxlfxprneoxkn").
+                client.getPrimitiveValueBuilder().setValue("xlodhxzzusxecbzptxlfxprneoxkn").
                 setType(EdmSimpleType.String).build()));
         message.addProperty(ODataObjectFactory.newPrimitiveProperty("Subject",
-                new ODataPrimitiveValue.Builder(client).setValue("Test subject").
+                client.getPrimitiveValueBuilder().setValue("Test subject").
                 setType(EdmSimpleType.String).build()));
         message.addProperty(ODataObjectFactory.newPrimitiveProperty("Body",
-                new ODataPrimitiveValue.Builder(client).setValue("Test body").
+                client.getPrimitiveValueBuilder().setValue("Test body").
                 setType(EdmSimpleType.String).build()));
         message.addProperty(ODataObjectFactory.newPrimitiveProperty("IsRead",
-                new ODataPrimitiveValue.Builder(client).setValue(false).setType(EdmSimpleType.Boolean).build()));
+                client.getPrimitiveValueBuilder().setValue(false).setType(EdmSimpleType.Boolean).build()));
 
         final URIBuilder builder =
                 client.getURIBuilder(getServiceRoot()).appendEntitySetSegment("Message");

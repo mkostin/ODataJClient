@@ -33,15 +33,16 @@ import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
-import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationSet;
-import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationSetEnd;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Type;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.Association;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.AssociationSet;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.AssociationSetEnd;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.Schema;
 import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.proxy.api.annotations.ComplexType;
 import com.msopentech.odatajclient.proxy.api.annotations.CompoundKeyElement;
@@ -76,7 +77,7 @@ public final class EngineUtils {
     }
 
     public static Map.Entry<EntityContainer, AssociationSet> getAssociationSet(
-            final Association association, final String associationNamespace, final EdmMetadata metadata) {
+            final Association association, final String associationNamespace, final EdmV3Metadata metadata) {
 
         final StringBuilder associationName = new StringBuilder();
         associationName.append(associationNamespace).append('.').append(association.getName());
@@ -98,8 +99,7 @@ public final class EngineUtils {
         return schema.getAssociation(relationship.substring(relationship.lastIndexOf('.') + 1));
     }
 
-    public static AssociationSet getAssociationSet(final String association,
-            final EntityContainer container) {
+    public static AssociationSet getAssociationSet(final String association, final EntityContainer container) {
         LOG.debug("Search for association set {}", association);
 
         for (AssociationSet associationSet : container.getAssociationSets()) {
@@ -162,12 +162,13 @@ public final class EngineUtils {
     }
 
     public static ODataValue getODataValue(
-            final ODataClient client, final EdmMetadata metadata, final EdmType type, final Object obj) {
+            final ODataClient client, final EdmV3Metadata metadata, final EdmType type, final Object obj) {
+
         final ODataValue value;
 
         if (type.isCollection()) {
             value = new ODataCollectionValue(type.getTypeExpression());
-            final EdmType intType = new EdmType(metadata, type.getBaseType());
+            final EdmType intType = new EdmV3Type(metadata, type.getBaseType());
             for (Object collectionItem : (Collection) obj) {
                 if (intType.isSimpleType()) {
                     ((ODataCollectionValue) value).add(
@@ -218,7 +219,7 @@ public final class EngineUtils {
     }
 
     private static ODataProperty getODataProperty(
-            final ODataClient client, final EdmMetadata metadata, final String name, final Object obj) {
+            final ODataClient client, final EdmV3Metadata metadata, final String name, final Object obj) {
         final ODataProperty oprop;
 
         final EdmType type = getEdmType(client, metadata, obj);
@@ -252,7 +253,7 @@ public final class EngineUtils {
 
     public static void addProperties(
             final ODataClient client,
-            final EdmMetadata metadata,
+            final EdmV3Metadata metadata,
             final Map<String, Object> changes,
             final ODataEntity entity) {
 
@@ -277,7 +278,7 @@ public final class EngineUtils {
     }
 
     public static Object getKey(
-            final EdmMetadata metadata, final Class<?> entityTypeRef, final ODataEntity entity) {
+            final EdmV3Metadata metadata, final Class<?> entityTypeRef, final ODataEntity entity) {
         final Object res;
 
         if (entity.getProperties().isEmpty()) {
@@ -306,7 +307,7 @@ public final class EngineUtils {
 
     @SuppressWarnings("unchecked")
     public static void populate(
-            final EdmMetadata metadata,
+            final EdmV3Metadata metadata,
             final Object bean,
             final Class<? extends Annotation> getterAnn,
             final Iterator<ODataProperty> propItor) {
@@ -366,7 +367,7 @@ public final class EngineUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static Object getValueFromProperty(final EdmMetadata metadata, final ODataProperty property)
+    public static Object getValueFromProperty(final EdmV3Metadata metadata, final ODataProperty property)
             throws InstantiationException, IllegalAccessException {
 
         final Object value;
@@ -402,7 +403,7 @@ public final class EngineUtils {
 
     @SuppressWarnings("unchecked")
     private static <C extends AbstractComplexType> C buildComplexInstance(
-            final EdmMetadata metadata, final String name, final Iterator<ODataProperty> properties) {
+            final EdmV3Metadata metadata, final String name, final Iterator<ODataProperty> properties) {
 
         for (C complex : (Iterable<C>) ServiceLoader.load(AbstractComplexType.class)) {
             final ComplexType ann = complex.getClass().getAnnotation(ComplexType.class);
@@ -419,7 +420,7 @@ public final class EngineUtils {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Object getValueFromProperty(
-            final EdmMetadata metadata, final ODataProperty property, final Type type)
+            final EdmV3Metadata metadata, final ODataProperty property, final Type type)
             throws InstantiationException, IllegalAccessException {
 
         final Object value;
@@ -468,25 +469,25 @@ public final class EngineUtils {
         return null;
     }
 
-    private static EdmType getEdmType(final ODataClient client, final EdmMetadata metadata, final Object obj) {
+    private static EdmType getEdmType(final ODataClient client, final EdmV3Metadata metadata, final Object obj) {
         final EdmType res;
 
         if (obj == null) {
             res = null;
         } else if (Collection.class.isAssignableFrom(obj.getClass())) {
             if (((Collection) obj).isEmpty()) {
-                res = new EdmType(metadata, "Collection(" + getEdmType(client, metadata, "Edm.String"));
+                res = new EdmV3Type(metadata, "Collection(" + getEdmType(client, metadata, "Edm.String"));
             } else {
-                res = new EdmType(metadata, "Collection("
+                res = new EdmV3Type(metadata, "Collection("
                         + getEdmType(client, metadata, ((Collection) obj).iterator().next()).getTypeExpression() + ")");
             }
         } else if (obj.getClass().isAnnotationPresent(ComplexType.class)) {
             final String ns = ClassUtils.getNamespace(obj.getClass());
             final ComplexType ann = obj.getClass().getAnnotation(ComplexType.class);
-            res = new EdmType(metadata, ns + "." + ann.value());
+            res = new EdmV3Type(metadata, ns + "." + ann.value());
         } else {
             final EdmSimpleType simpleType = EdmSimpleType.fromObject(client.getWorkingVersion(), obj);
-            res = new EdmType(metadata, simpleType.toString());
+            res = new EdmV3Type(metadata, simpleType.toString());
         }
 
         return res;

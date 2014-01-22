@@ -126,7 +126,7 @@ public class ODataMediaEntityUpdateRequest
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = odataClient.getODataReader().readEntity(getRawResponse(), getFormat());
+                    entity = odataClient.getReader().readEntity(getRawResponse(), getFormat());
                 } finally {
                     this.close();
                 }

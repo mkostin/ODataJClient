@@ -23,16 +23,20 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.Annotation;
+import com.msopentech.odatajclient.engine.utils.ODataVersion;
 import java.io.IOException;
+import org.apache.commons.lang3.BooleanUtils;
 
-public class EnumTypeDeserializer extends JsonDeserializer<EnumType> {
+public class EnumTypeDeserializer extends AbstractEdmDeserializer<AbstractEnumType> {
 
     @Override
-    public EnumType deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    protected AbstractEnumType doDeserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
-        final EnumType enumType = new EnumType();
+        final AbstractEnumType enumType = ODataVersion.V3 == client.getWorkingVersion()
+                ? new com.msopentech.odatajclient.engine.data.metadata.edm.v3.EnumType()
+                : new com.msopentech.odatajclient.engine.data.metadata.edm.v4.EnumType();
 
         for (; jp.getCurrentToken() != JsonToken.END_OBJECT; jp.nextToken()) {
             final JsonToken token = jp.getCurrentToken();
@@ -42,10 +46,22 @@ public class EnumTypeDeserializer extends JsonDeserializer<EnumType> {
                 } else if ("UnderlyingType".equals(jp.getCurrentName())) {
                     enumType.setUnderlyingType(jp.nextTextValue());
                 } else if ("IsFlags".equals(jp.getCurrentName())) {
-                    enumType.setFlags(Boolean.valueOf(jp.nextTextValue()));
+                    enumType.setFlags(BooleanUtils.toBoolean(jp.nextTextValue()));
                 } else if ("Member".equals(jp.getCurrentName())) {
                     jp.nextToken();
-                    enumType.getMembers().add(jp.getCodec().readValue(jp, Member.class));
+                    if (enumType instanceof com.msopentech.odatajclient.engine.data.metadata.edm.v3.EnumType) {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v3.EnumType) enumType).
+                                getMembers().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v3.Member.class));
+                    } else {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.EnumType) enumType).
+                                getMembers().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v4.Member.class));
+                    }
+                } else if ("Annotation".equals(jp.getCurrentName())) {
+                    jp.nextToken();
+                    ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.EnumType) enumType).
+                            setAnnotation(jp.getCodec().readValue(jp, Annotation.class));
                 }
             }
         }

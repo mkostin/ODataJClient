@@ -23,7 +23,7 @@ package com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.se
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.ParameterMode;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.*;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.*;
 

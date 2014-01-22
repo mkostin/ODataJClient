@@ -82,7 +82,7 @@ public class ODataEntityRequest extends AbstractODataRetrieveRequest<ODataEntity
         public ODataEntity getBody() {
             if (entity == null) {
                 try {
-                    entity = odataClient.getODataReader().
+                    entity = odataClient.getReader().
                             readEntity(getRawResponse(), ODataPubFormat.fromString(getContentType()));
                 } finally {
                     this.close();

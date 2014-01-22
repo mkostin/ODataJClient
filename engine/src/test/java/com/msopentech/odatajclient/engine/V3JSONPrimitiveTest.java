@@ -19,20 +19,19 @@
  */
 package com.msopentech.odatajclient.engine;
 
+import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Geospatial.Dimension;
 import com.msopentech.odatajclient.engine.data.metadata.edm.geospatial.Point;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 
-public class V3JSONPrimitiveTest extends PrimitiveTest {
+public class V3JSONPrimitiveTest extends AbstractPrimitiveTest {
 
     @Override
     protected ODataFormat getFormat() {
@@ -40,8 +39,8 @@ public class V3JSONPrimitiveTest extends PrimitiveTest {
     }
 
     @Override
-    protected ODataConstants.Version getVersion() {
-        return Version.V3;
+    protected ODataClient getClient() {
+        return v3Client;
     }
 
     @Test
@@ -113,7 +112,6 @@ public class V3JSONPrimitiveTest extends PrimitiveTest {
                 expectedValues,
                 EdmSimpleType.GeographyLineString,
                 Dimension.GEOGRAPHY);
-
     }
 
     @Test

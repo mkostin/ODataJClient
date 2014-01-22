@@ -112,7 +112,7 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
 
             if (cached == null) {
                 available = false;
-                entitySet = odataClient.getODataReader().
+                entitySet = odataClient.getReader().
                         readEntitySet(new ByteArrayInputStream(osFeed.toByteArray()), format);
                 close();
             }
@@ -127,7 +127,7 @@ public class ODataEntitySetIterator implements Iterator<ODataEntity> {
     @Override
     public ODataEntity next() {
         if (hasNext()) {
-            final ODataEntity res = odataClient.getODataBinder().getODataEntity(cached);
+            final ODataEntity res = odataClient.getBinder().getODataEntity(cached);
             cached = null;
             return res;
         }

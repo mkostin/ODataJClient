@@ -22,7 +22,14 @@ package com.msopentech.odatajclient.engine.communication.request.retrieve;
 import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.communication.request.ODataRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.AbstractEdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractComplexType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractDataServices;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEdmx;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractFunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractSchema;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
@@ -32,7 +39,11 @@ import org.apache.http.entity.ContentType;
 /**
  * This class implements a metadata query request.
  */
-public class ODataMetadataRequest extends AbstractODataRetrieveRequest<EdmMetadata, ODataPubFormat> {
+class ODataMetadataRequest<META extends AbstractEdmMetadata<
+        EDMX, DS, S, EC, E, C, FI>, EDMX extends AbstractEdmx<DS, S, EC, E, C, FI>, DS extends AbstractDataServices<
+        S, EC, E, C, FI>, S extends AbstractSchema<EC, E, C, FI>, EC extends AbstractEntityContainer<
+        FI>, E extends AbstractEntityType, C extends AbstractComplexType, FI extends AbstractFunctionImport>
+        extends AbstractODataRetrieveRequest<META, ODataPubFormat> {
 
     /**
      * Constructor.
@@ -58,28 +69,25 @@ public class ODataMetadataRequest extends AbstractODataRetrieveRequest<EdmMetada
         return this;
     }
 
-    /**
-     * {@inheritDoc }
-     */
     @Override
-    public ODataRetrieveResponse<EdmMetadata> execute() {
+    public ODataRetrieveResponse<META> execute() {
         final HttpResponse res = doExecute();
-        return new ODataMetadataResponsImpl(httpClient, res);
+        return new ODataMetadataResponseImpl(httpClient, res);
     }
 
     /**
      * Response class about an ODataMetadataRequest.
      */
-    protected class ODataMetadataResponsImpl extends ODataRetrieveResponseImpl {
+    protected class ODataMetadataResponseImpl extends ODataRetrieveResponseImpl {
 
-        private EdmMetadata metadata = null;
+        private META metadata = null;
 
         /**
          * Constructor.
          * <p>
          * Just to create response templates to be initialized from batch.
          */
-        public ODataMetadataResponsImpl() {
+        public ODataMetadataResponseImpl() {
         }
 
         /**
@@ -88,7 +96,7 @@ public class ODataMetadataRequest extends AbstractODataRetrieveRequest<EdmMetada
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataMetadataResponsImpl(final HttpClient client, final HttpResponse res) {
+        private ODataMetadataResponseImpl(final HttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
@@ -96,10 +104,11 @@ public class ODataMetadataRequest extends AbstractODataRetrieveRequest<EdmMetada
          * {@inheritDoc }
          */
         @Override
-        public EdmMetadata getBody() {
+        @SuppressWarnings("unchecked")
+        public META getBody() {
             if (metadata == null) {
                 try {
-                    metadata = odataClient.getODataReader().readMetadata(getRawResponse());
+                    metadata = (META) odataClient.getReader().readMetadata(getRawResponse());
                 } finally {
                     this.close();
                 }

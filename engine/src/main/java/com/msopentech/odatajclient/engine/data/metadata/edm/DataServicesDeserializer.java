@@ -23,16 +23,18 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.msopentech.odatajclient.engine.utils.ODataVersion;
 import java.io.IOException;
 
-public class DataServicesDeserializer extends JsonDeserializer<DataServices> {
+public class DataServicesDeserializer extends AbstractEdmDeserializer<AbstractDataServices> {
 
     @Override
-    public DataServices deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    protected AbstractDataServices doDeserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
-        final DataServices dataServices = new DataServices();
+        final AbstractDataServices dataServices = ODataVersion.V3 == client.getWorkingVersion()
+                ? new com.msopentech.odatajclient.engine.data.metadata.edm.v3.DataServices()
+                : new com.msopentech.odatajclient.engine.data.metadata.edm.v4.DataServices();
 
         for (; jp.getCurrentToken() != JsonToken.END_OBJECT; jp.nextToken()) {
             final JsonToken token = jp.getCurrentToken();
@@ -43,7 +45,16 @@ public class DataServicesDeserializer extends JsonDeserializer<DataServices> {
                     dataServices.setMaxDataServiceVersion(jp.nextTextValue());
                 } else if ("Schema".equals(jp.getCurrentName())) {
                     jp.nextToken();
-                    dataServices.getSchemas().add(jp.getCodec().readValue(jp, Schema.class));
+                    if (dataServices instanceof com.msopentech.odatajclient.engine.data.metadata.edm.v3.DataServices) {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v3.DataServices) dataServices).
+                                getSchemas().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v3.Schema.class));
+
+                    } else {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.DataServices) dataServices).
+                                getSchemas().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v4.Schema.class));
+                    }
                 }
             }
         }

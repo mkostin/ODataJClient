@@ -23,16 +23,20 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.Annotation;
+import com.msopentech.odatajclient.engine.utils.ODataVersion;
 import java.io.IOException;
+import org.apache.commons.lang3.BooleanUtils;
 
-public class EntityTypeDeserializer extends JsonDeserializer<EntityType> {
+public class EntityTypeDeserializer extends AbstractEdmDeserializer<AbstractEntityType> {
 
     @Override
-    public EntityType deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    protected AbstractEntityType doDeserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
-        final EntityType entityType = new EntityType();
+        final AbstractEntityType entityType = ODataVersion.V3 == client.getWorkingVersion()
+                ? new com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityType()
+                : new com.msopentech.odatajclient.engine.data.metadata.edm.v4.EntityType();
 
         for (; jp.getCurrentToken() != JsonToken.END_OBJECT; jp.nextToken()) {
             final JsonToken token = jp.getCurrentToken();
@@ -40,22 +44,42 @@ public class EntityTypeDeserializer extends JsonDeserializer<EntityType> {
                 if ("Name".equals(jp.getCurrentName())) {
                     entityType.setName(jp.nextTextValue());
                 } else if ("Abstract".equals(jp.getCurrentName())) {
-                    entityType.setAbstractEntityType(Boolean.valueOf(jp.nextTextValue()));
+                    entityType.setAbstractEntityType(BooleanUtils.toBoolean(jp.nextTextValue()));
                 } else if ("BaseType".equals(jp.getCurrentName())) {
                     entityType.setBaseType(jp.nextTextValue());
                 } else if ("OpenType".equals(jp.getCurrentName())) {
-                    entityType.setOpenType(Boolean.valueOf(jp.nextTextValue()));
+                    entityType.setOpenType(BooleanUtils.toBoolean(jp.nextTextValue()));
                 } else if ("HasStream".equals(jp.getCurrentName())) {
-                    entityType.setHasStream(Boolean.valueOf(jp.nextTextValue()));
+                    entityType.setHasStream(BooleanUtils.toBoolean(jp.nextTextValue()));
                 } else if ("Key".equals(jp.getCurrentName())) {
                     jp.nextToken();
                     entityType.setKey(jp.getCodec().readValue(jp, EntityKey.class));
                 } else if ("Property".equals(jp.getCurrentName())) {
                     jp.nextToken();
-                    entityType.getProperties().add(jp.getCodec().readValue(jp, Property.class));
+                    if (entityType instanceof com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityType) {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityType) entityType).
+                                getProperties().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v3.Property.class));
+                    } else {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.EntityType) entityType).
+                                getProperties().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v4.Property.class));
+                    }
                 } else if ("NavigationProperty".equals(jp.getCurrentName())) {
                     jp.nextToken();
-                    entityType.getNavigationProperties().add(jp.getCodec().readValue(jp, NavigationProperty.class));
+                    if (entityType instanceof com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityType) {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityType) entityType).
+                                getNavigationProperties().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v3.NavigationProperty.class));
+                    } else {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.EntityType) entityType).
+                                getNavigationProperties().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v4.NavigationProperty.class));
+                    }
+                } else if ("Annotation".equals(jp.getCurrentName())) {
+                    jp.nextToken();
+                    ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.EntityType) entityType).
+                            setAnnotation(jp.getCodec().readValue(jp, Annotation.class));
                 }
             }
         }

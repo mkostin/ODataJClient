@@ -32,24 +32,6 @@ public class ODataConstants {
      */
     public static final DocumentBuilderFactory DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
-    public enum Version {
-
-        V3("3.0"),
-        V4("4.0");
-
-        private final String version;
-
-        private Version(final String version) {
-            this.version = version;
-        }
-
-        @Override
-        public String toString() {
-            return version;
-        }
-
-    }
-
     // Other stuff
     public final static String UTF8 = "UTF-8";
 

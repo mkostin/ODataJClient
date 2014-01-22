@@ -23,21 +23,20 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.v3.V3Edmx;
-import com.msopentech.odatajclient.engine.data.metadata.edm.v4.V4Edmx;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.Reference;
+import com.msopentech.odatajclient.engine.utils.ODataVersion;
 import java.io.IOException;
 
-public class EdmxDeserializer extends JsonDeserializer<AbstractEdmx> {
+@SuppressWarnings("rawtypes")
+public class EdmxDeserializer extends AbstractEdmDeserializer<AbstractEdmx> {
 
     @Override
-    public AbstractEdmx deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    protected AbstractEdmx doDeserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
-        final AbstractEdmx edmx = Version.V3 == ctxt.findInjectableValue(Version.class.getName(), null, null)
-                ? new V3Edmx()
-                : new V4Edmx();
+        final AbstractEdmx edmx = ODataVersion.V3 == client.getWorkingVersion()
+                ? new com.msopentech.odatajclient.engine.data.metadata.edm.v3.Edmx()
+                : new com.msopentech.odatajclient.engine.data.metadata.edm.v4.Edmx();
 
         for (; jp.getCurrentToken() != JsonToken.END_OBJECT; jp.nextToken()) {
             final JsonToken token = jp.getCurrentToken();
@@ -46,7 +45,19 @@ public class EdmxDeserializer extends JsonDeserializer<AbstractEdmx> {
                     edmx.setVersion(jp.nextTextValue());
                 } else if ("DataServices".equals(jp.getCurrentName())) {
                     jp.nextToken();
-                    edmx.setDataServices(jp.getCodec().readValue(jp, DataServices.class));
+                    if (edmx instanceof com.msopentech.odatajclient.engine.data.metadata.edm.v3.Edmx) {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v3.Edmx) edmx).
+                                setDataServices(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v3.DataServices.class));
+                    } else {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.Edmx) edmx).
+                                setDataServices(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v4.DataServices.class));
+                    }
+                } else if ("Reference".equals(jp.getCurrentName())) {
+                    jp.nextToken();
+                    ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.Edmx) edmx).getReferences().
+                            add(jp.getCodec().readValue(jp, Reference.class));
                 }
             }
         }

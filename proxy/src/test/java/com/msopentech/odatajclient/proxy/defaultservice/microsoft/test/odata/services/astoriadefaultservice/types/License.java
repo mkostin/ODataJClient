@@ -28,12 +28,12 @@ import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.proxy.api.AbstractOpenType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.OnDeleteAction;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.*;
 import com.msopentech.odatajclient.proxy.defaultservice.microsoft.test.odata.services.astoriadefaultservice.types.*;
 

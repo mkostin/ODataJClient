@@ -29,4 +29,9 @@ public class V4RetrieveRequestFactory extends AbstractRetrieveRequestFactory {
         super(client);
     }
 
+    @Override
+    public ODataV4MetadataRequest getMetadataRequest(final String serviceRoot) {
+
+        return new ODataV4MetadataRequest(client, client.getURIBuilder(serviceRoot).appendMetadataSegment().build());
+    }
 }

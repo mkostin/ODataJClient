@@ -28,14 +28,13 @@ import com.msopentech.odatajclient.engine.communication.request.streamed.V3Strea
 import com.msopentech.odatajclient.engine.data.ODataV3Binder;
 import com.msopentech.odatajclient.engine.data.ODataV3Reader;
 import com.msopentech.odatajclient.engine.data.ODataV3Writer;
-import com.msopentech.odatajclient.engine.data.V3Deserializer;
-import com.msopentech.odatajclient.engine.data.V3Serializer;
+import com.msopentech.odatajclient.engine.data.ODataV3Deserializer;
+import com.msopentech.odatajclient.engine.data.ODataV3Serializer;
 import com.msopentech.odatajclient.engine.uri.V3URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.V3FilterFactory;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
+import com.msopentech.odatajclient.engine.utils.ODataVersion;
 
-public class ODataV3Client implements ODataClient {
+public class ODataV3Client extends AbstractODataClient {
 
     private static final long serialVersionUID = -1655712193243609209L;
 
@@ -43,9 +42,9 @@ public class ODataV3Client implements ODataClient {
 
     private final V3FilterFactory filterFactory = new V3FilterFactory();
 
-    private final V3Deserializer deserializer = new V3Deserializer(this);
+    private final ODataV3Deserializer deserializer = new ODataV3Deserializer(this);
 
-    private final V3Serializer serializer = new V3Serializer(this);
+    private final ODataV3Serializer serializer = new ODataV3Serializer(this);
 
     private final ODataV3Reader reader = new ODataV3Reader(this);
 
@@ -64,16 +63,16 @@ public class ODataV3Client implements ODataClient {
     private final V3BatchRequestFactory batchReqFact = new V3BatchRequestFactory(this);
 
     @Override
-    public Version getWorkingVersion() {
-        return Version.V3;
+    public ODataVersion getWorkingVersion() {
+        return ODataVersion.V3;
     }
 
     @Override
     public ODataHeaders getVersionHeaders() {
         final ODataHeaders odataHeaders = new ODataHeaders();
-        odataHeaders.setHeader(ODataHeaders.HeaderName.minDataServiceVersion, ODataConstants.Version.V3.toString());
-        odataHeaders.setHeader(ODataHeaders.HeaderName.maxDataServiceVersion, ODataConstants.Version.V3.toString());
-        odataHeaders.setHeader(ODataHeaders.HeaderName.dataServiceVersion, ODataConstants.Version.V3.toString());
+        odataHeaders.setHeader(ODataHeaders.HeaderName.minDataServiceVersion, ODataVersion.V3.toString());
+        odataHeaders.setHeader(ODataHeaders.HeaderName.maxDataServiceVersion, ODataVersion.V3.toString());
+        odataHeaders.setHeader(ODataHeaders.HeaderName.dataServiceVersion, ODataVersion.V3.toString());
         return odataHeaders;
     }
 
@@ -93,27 +92,27 @@ public class ODataV3Client implements ODataClient {
     }
 
     @Override
-    public V3Deserializer getDeserializer() {
+    public ODataV3Deserializer getDeserializer() {
         return deserializer;
     }
 
     @Override
-    public V3Serializer getSerializer() {
+    public ODataV3Serializer getSerializer() {
         return serializer;
     }
 
     @Override
-    public ODataV3Reader getODataReader() {
+    public ODataV3Reader getReader() {
         return reader;
     }
 
     @Override
-    public ODataV3Writer getODataWriter() {
+    public ODataV3Writer getWriter() {
         return writer;
     }
 
     @Override
-    public ODataV3Binder getODataBinder() {
+    public ODataV3Binder getBinder() {
         return binder;
     }
 

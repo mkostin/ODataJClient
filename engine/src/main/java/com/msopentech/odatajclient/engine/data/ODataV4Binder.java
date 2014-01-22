@@ -20,6 +20,8 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.client.ODataV4Client;
+import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV4Type;
 
 public class ODataV4Binder extends AbstractODataBinder {
 
@@ -28,4 +30,10 @@ public class ODataV4Binder extends AbstractODataBinder {
     public ODataV4Binder(final ODataV4Client client) {
         super(client);
     }
+
+    @Override
+    protected EdmType newEdmType(final String expression) {
+        return new EdmV4Type(expression);
+    }
+
 }

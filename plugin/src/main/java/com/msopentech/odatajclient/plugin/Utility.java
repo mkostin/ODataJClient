@@ -19,21 +19,20 @@
  */
 package com.msopentech.odatajclient.plugin;
 
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Association;
-import com.msopentech.odatajclient.engine.data.metadata.edm.AssociationEnd;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Documentation;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntitySet;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Property;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Type;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEntitySet;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.Association;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.AssociationEnd;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractProperty;
 import com.msopentech.odatajclient.engine.data.metadata.edm.PropertyRef;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Schema;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.Schema;
 import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,7 +57,7 @@ public class Utility {
 
     private static final String TYPE_SUB_PKG = "types";
 
-    private final EdmMetadata metadata;
+    private final EdmV3Metadata metadata;
 
     private final Schema schema;
 
@@ -70,7 +69,7 @@ public class Utility {
 
     private final Map<String, List<EntityType>> allEntityTypes = new HashMap<String, List<EntityType>>();
 
-    public Utility(final EdmMetadata metadata, final Schema schema, final String basePackage) {
+    public Utility(final EdmV3Metadata metadata, final Schema schema, final String basePackage) {
         this.metadata = metadata;
         this.schema = schema;
         this.basePackage = basePackage;
@@ -108,7 +107,7 @@ public class Utility {
     public String getJavaType(final String typeExpression) {
         final StringBuilder res = new StringBuilder();
 
-        final EdmType edmType = new EdmType(metadata, typeExpression);
+        final EdmType edmType = new EdmV3Type(metadata, typeExpression);
 
         if (edmType.isCollection() && !edmType.isEntityType()) {
             res.append("Collection<");
@@ -142,7 +141,7 @@ public class Utility {
         return res.toString();
     }
 
-    public Map<String, String> getFcProperties(final Property property) {
+    public Map<String, String> getFcProperties(final AbstractProperty property) {
         final Map<String, String> fcProps = new HashMap<String, String>();
 
         if (StringUtils.isNotBlank(property.getFcTargetPath())) {
@@ -163,18 +162,18 @@ public class Utility {
         return fcProps;
     }
 
-    public EdmType getEdmType(final EntitySet entitySet) {
-        return new EdmType(metadata, entitySet.getEntityType());
+    public EdmType getEdmType(final AbstractEntitySet entitySet) {
+        return new EdmV3Type(metadata, entitySet.getEntityType());
     }
 
-    public Map<String, String> getEntityKeyType(final EntitySet entitySet) {
+    public Map<String, String> getEntityKeyType(final AbstractEntitySet entitySet) {
         return getEntityKeyType(getEdmType(entitySet).getEntityType());
     }
 
-    public Map<String, String> getEntityKeyType(final EntityType entityType) {
-        EntityType baseType = entityType;
+    public Map<String, String> getEntityKeyType(final AbstractEntityType entityType) {
+        AbstractEntityType baseType = entityType;
         while (baseType.getKey() == null && baseType.getBaseType() != null) {
-            baseType = new EdmType(metadata, baseType.getBaseType()).getEntityType();
+            baseType = new EdmV3Type(metadata, baseType.getBaseType()).getEntityType();
         }
 
         final List<String> properties = new ArrayList<String>();
@@ -184,7 +183,7 @@ public class Utility {
 
         final Map<String, String> res = new HashMap<String, String>();
 
-        for (Property prop : baseType.getProperties()) {
+        for (AbstractProperty prop : baseType.getProperties()) {
             if (properties.contains(prop.getName())) {
                 res.put(prop.getName(), getJavaType(prop.getType()));
             }
@@ -250,7 +249,7 @@ public class Utility {
                 if (StringUtils.isNotBlank(type.getBaseType())
                         && base.getEntityType().getName().equals(getNameFromNS(type.getBaseType()))) {
 
-                    final EdmType entityType = new EdmType(metadata, entry.getKey() + "." + type.getName());
+                    final EdmType entityType = new EdmV3Type(metadata, entry.getKey() + "." + type.getName());
 
                     descendants.add(getNameInNamespace(entityType));
                     populateDescendants(entityType, descendants);
@@ -286,28 +285,5 @@ public class Utility {
         }
 
         return result;
-    }
-
-    public static Map.Entry<String, String> getDocumentation(final Object obj) {
-        final String summary;
-        final String description;
-
-        try {
-            final Method method = obj.getClass().getMethod("getDocumentation");
-
-            if (method == null || method.getReturnType() != Documentation.class) {
-                throw new Exception("Documentation not found");
-            }
-
-            final Documentation doc = (Documentation) method.invoke(obj);
-
-            summary = doc.getSummary() == null ? "" : doc.getSummary();
-            description = doc.getLongDescription() == null ? "" : doc.getLongDescription();
-
-            return new AbstractMap.SimpleEntry<String, String>(summary, description);
-        } catch (Exception e) {
-            return null;
-        }
-
     }
 }

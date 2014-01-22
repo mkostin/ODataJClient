@@ -23,8 +23,8 @@ import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.data.ODataDuration;
 import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractFunctionImport;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -123,7 +123,7 @@ public final class URIUtils {
      * @return URI segment.
      */
     public static String rootFunctionImportURISegment(
-            final EntityContainer entityContainer, final FunctionImport functionImport) {
+            final AbstractEntityContainer entityContainer, final AbstractFunctionImport functionImport) {
 
         final StringBuilder result = new StringBuilder();
         if (!entityContainer.isDefaultEntityContainer()) {

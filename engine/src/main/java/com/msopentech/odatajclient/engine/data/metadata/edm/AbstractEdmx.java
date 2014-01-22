@@ -22,13 +22,16 @@ package com.msopentech.odatajclient.engine.data.metadata.edm;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize(using = EdmxDeserializer.class)
-public abstract class AbstractEdmx extends AbstractEdm {
+public abstract class AbstractEdmx<DS extends AbstractDataServices<S, EC, E, C, FI>, S extends AbstractSchema<
+        EC, E, C, FI>, EC extends AbstractEntityContainer<
+        FI>, E extends AbstractEntityType, C extends AbstractComplexType, FI extends AbstractFunctionImport>
+        extends AbstractEdm {
 
     private static final long serialVersionUID = -5480835122183091469L;
 
     private String version;
 
-    private DataServices dataServices;
+    private DS dataServices;
 
     public String getVersion() {
         return version;
@@ -38,11 +41,11 @@ public abstract class AbstractEdmx extends AbstractEdm {
         this.version = version;
     }
 
-    public DataServices getDataServices() {
+    public DS getDataServices() {
         return dataServices;
     }
 
-    public void setDataServices(final DataServices dataServices) {
+    public void setDataServices(final DS dataServices) {
         this.dataServices = dataServices;
     }
 }

@@ -20,12 +20,14 @@
 package com.msopentech.odatajclient.proxy.api.impl;
 
 import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Type;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
@@ -54,18 +56,18 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
     private static final long serialVersionUID = 358520026931462958L;
 
-    protected final ODataClient client;
+    protected final ODataV3Client client;
 
     protected EntityContainerInvocationHandler containerHandler;
 
     protected AbstractInvocationHandler(
-            final ODataClient client, final EntityContainerInvocationHandler containerHandler) {
+            final ODataV3Client client, final EntityContainerInvocationHandler containerHandler) {
 
         this.client = client;
         this.containerHandler = containerHandler;
     }
 
-    protected ODataClient getClient() {
+    protected ODataV3Client getClient() {
         return client;
     }
 
@@ -148,7 +150,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
 
     protected Object functionImport(
             final FunctionImport annotation, final Method method, final Object[] args, final URI target,
-            final com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport funcImp)
+            final com.msopentech.odatajclient.engine.data.metadata.edm.v3.FunctionImport funcImp)
             throws InstantiationException, IllegalAccessException, NoSuchMethodException,
             IllegalArgumentException, InvocationTargetException {
 
@@ -172,7 +174,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
                 final ODataValue paramValue = args[i] == null
                         ? null
                         : EngineUtils.getODataValue(client, containerHandler.getFactory().getMetadata(),
-                        new EdmType(containerHandler.getFactory().getMetadata(), parAnnot.type()), args[i]);
+                                new EdmV3Type(containerHandler.getFactory().getMetadata(), parAnnot.type()), args[i]);
 
                 parameters.put(parAnnot.name(), paramValue);
             }
@@ -192,7 +194,7 @@ abstract class AbstractInvocationHandler implements InvocationHandler {
             return ClassUtils.returnVoid();
         }
 
-        final EdmType edmType = new EdmType(containerHandler.getFactory().getMetadata(), annotation.returnType());
+        final EdmType edmType = new EdmV3Type(containerHandler.getFactory().getMetadata(), annotation.returnType());
         if (edmType.isEnumType()) {
             throw new UnsupportedOperationException("Usupported enum type " + edmType.getTypeExpression());
         }

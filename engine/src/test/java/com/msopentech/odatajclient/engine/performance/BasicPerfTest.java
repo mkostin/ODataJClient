@@ -29,11 +29,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msopentech.odatajclient.engine.AbstractTest;
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
-import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
@@ -82,6 +82,10 @@ public class BasicPerfTest extends AbstractTest {
         }
     }
 
+    private ODataV3Client getClient() {
+        return v3Client;
+    }
+
     @Test
     public void readAtomViaLowerlevelLibs() throws ParserConfigurationException, SAXException, IOException {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -101,8 +105,8 @@ public class BasicPerfTest extends AbstractTest {
     }
 
     private void readViaODataJClient(final ODataPubFormat format) {
-        final ODataEntity entity = client.getODataBinder().getODataEntity(
-                client.getDeserializer().toEntry(IOUtils.toInputStream(input.get(format)),
+        final ODataEntity entity = getClient().getBinder().getODataEntity(
+                getClient().getDeserializer().toEntry(IOUtils.toInputStream(input.get(format)),
                         ResourceFactory.entryClassForFormat(format)));
         assertNotNull(entity);
     }
@@ -257,12 +261,12 @@ public class BasicPerfTest extends AbstractTest {
 
         // add name attribute
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Name",
-                new ODataPrimitiveValue.Builder(client).setText("A name").setType(
+                getClient().getPrimitiveValueBuilder().setText("A name").setType(
                         EdmSimpleType.String).build()));
 
         // add key attribute
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("CustomerId",
-                new ODataPrimitiveValue.Builder(client).setText("0").setType(EdmSimpleType.Int32).
+                getClient().getPrimitiveValueBuilder().setText("0").setType(EdmSimpleType.Int32).
                 build()));
 
         // add BackupContactInfo attribute (collection)
@@ -277,13 +281,13 @@ public class BasicPerfTest extends AbstractTest {
 
         // add BackupContactInfo.ContactDetails.AlternativeNames attribute (collection)
         final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        altNamesValue.add(new ODataPrimitiveValue.Builder(client).
+        altNamesValue.add(getClient().getPrimitiveValueBuilder().
                 setText("myname").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", altNamesValue));
 
         // add BackupContactInfo.ContactDetails.EmailBag attribute (collection)
         final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
-        emailBagValue.add(new ODataPrimitiveValue.Builder(client).
+        emailBagValue.add(getClient().getPrimitiveValueBuilder().
                 setText("myname@mydomain.com").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataObjectFactory.newCollectionProperty("EmailBag", emailBagValue));
 
@@ -294,7 +298,7 @@ public class BasicPerfTest extends AbstractTest {
 
         // add BackupContactInfo.ContactDetails.ContactAlias.AlternativeNames attribute (collection)
         final ODataCollectionValue aanv = new ODataCollectionValue("Collection(Edm.String)");
-        aanv.add(new ODataPrimitiveValue.Builder(client).
+        aanv.add(getClient().getPrimitiveValueBuilder().
                 setText("myAlternativeName").setType(EdmSimpleType.String).build());
         contactAliasValue.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", aanv));
 
@@ -304,16 +308,16 @@ public class BasicPerfTest extends AbstractTest {
     @Test
     public void writeAtomViaOdataJClient() throws IOException {
         final StringWriter writer = new StringWriter();
-        client.getSerializer().entry(
-                client.getODataBinder().getEntry(sampleODataEntity(), AtomEntry.class, true), writer);
+        getClient().getSerializer().entry(
+                getClient().getBinder().getEntry(sampleODataEntity(), AtomEntry.class, true), writer);
         assertFalse(writer.toString().isEmpty());
     }
 
     @Test
     public void writeJSONViaOdataJClient() throws IOException {
         final StringWriter writer = new StringWriter();
-        client.getSerializer().entry(
-                client.getODataBinder().getEntry(sampleODataEntity(), JSONV3Entry.class, true), writer);
+        getClient().getSerializer().entry(
+                getClient().getBinder().getEntry(sampleODataEntity(), JSONV3Entry.class, true), writer);
         assertFalse(writer.toString().isEmpty());
     }
 }

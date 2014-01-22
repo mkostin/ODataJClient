@@ -73,11 +73,11 @@ public class PropertyUpdateTestITCase extends AbstractTest {
         final ODataComplexValue dimensions = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions");
         dimensions.add(ODataObjectFactory.newPrimitiveProperty("Width",
-                new ODataPrimitiveValue.Builder(client).setText("-1.12").setType(EdmSimpleType.Decimal).build()));
+                client.getPrimitiveValueBuilder().setText("-1.12").setType(EdmSimpleType.Decimal).build()));
         dimensions.add(ODataObjectFactory.newPrimitiveProperty("Height",
-                new ODataPrimitiveValue.Builder(client).setText("-1.12").setType(EdmSimpleType.Decimal).build()));
+                client.getPrimitiveValueBuilder().setText("-1.12").setType(EdmSimpleType.Decimal).build()));
         dimensions.add(ODataObjectFactory.newPrimitiveProperty("Depth",
-                new ODataPrimitiveValue.Builder(client).setText("-1.12").setType(EdmSimpleType.Decimal).build()));
+                client.getPrimitiveValueBuilder().setText("-1.12").setType(EdmSimpleType.Decimal).build()));
 
         ODataProperty dimensionToBeUpdated = ODataObjectFactory.newComplexProperty("Dimensions",
                 dimensions);
@@ -349,7 +349,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
 
         final int origSize = originalValue.size();
 
-        originalValue.add(new ODataPrimitiveValue.Builder(client).setText(newItem).build());
+        originalValue.add(client.getPrimitiveValueBuilder().setText(newItem).build());
         assertEquals(origSize + 1, originalValue.size());
         final ODataPropertyUpdateRequest updateReq =
                 client.getCUDRequestFactory().
@@ -402,7 +402,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
         assertNotEquals(oldItem, newItem);
 
         updateProperty = ODataObjectFactory.newPrimitiveProperty(propertyType,
-                new ODataPrimitiveValue.Builder(client).setText(newItem).build());
+                client.getPrimitiveValueBuilder().setText(newItem).build());
 
         final ODataPropertyUpdateRequest updateReq =
                 client.getCUDRequestFactory().getPropertyPrimitiveValueUpdateRequest(uriBuilder.build(), updateProperty);
@@ -453,7 +453,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
 
         assertNotEquals(oldItem, newItem);
 
-        final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder(client).setText(newItem).build();
+        final ODataPrimitiveValue newVal = client.getPrimitiveValueBuilder().setText(newItem).build();
         final ODataValueUpdateRequest updateReq =
                 client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
         updateReq.setFormat(ODataValueFormat.TEXT);
@@ -523,7 +523,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
             ODataValue date = retrieveRes.getBody();
             assertNotNull(date);
             final String newItem = "2005-02-09T23:59:59.9999999";
-            final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder(client).setText(newItem).build();
+            final ODataPrimitiveValue newVal = client.getPrimitiveValueBuilder().setText(newItem).build();
             final ODataValueUpdateRequest updateReq =
                     client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
             updateReq.setFormat(ODataValueFormat.TEXT);
@@ -601,7 +601,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
 
             final int newItem = 4444;
 
-            final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder(client).setValue(newItem).setType(
+            final ODataPrimitiveValue newVal = client.getPrimitiveValueBuilder().setValue(newItem).setType(
                     EdmSimpleType.Int32).build();
             final ODataValueUpdateRequest updateReq =
                     client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
@@ -679,7 +679,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
 
         assertNotEquals(oldItem, newItem);
 
-        final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder(client).setText(newItem).build();
+        final ODataPrimitiveValue newVal = client.getPrimitiveValueBuilder().setText(newItem).build();
         final ODataValueUpdateRequest updateReq =
                 client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
         updateReq.setFormat(ODataValueFormat.TEXT);
@@ -747,7 +747,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
         String etag = retrieveRes.getEtag();
         ODataValue booleanValue = retrieveRes.getBody();
         final boolean oldItem = Boolean.valueOf(booleanValue.toString());
-        final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder(client).setValue(!oldItem).setType(
+        final ODataPrimitiveValue newVal = client.getPrimitiveValueBuilder().setValue(!oldItem).setType(
                 EdmSimpleType.Boolean).build();
         final ODataValueUpdateRequest updateReq =
                 client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);
@@ -818,7 +818,7 @@ public class PropertyUpdateTestITCase extends AbstractTest {
 
             final int newItem = 32;
 
-            final ODataPrimitiveValue newVal = new ODataPrimitiveValue.Builder(client).setValue(newItem).setType(
+            final ODataPrimitiveValue newVal = client.getPrimitiveValueBuilder().setValue(newItem).setType(
                     EdmSimpleType.Int32).build();
             final ODataValueUpdateRequest updateReq =
                     client.getCUDRequestFactory().getValueUpdateRequest(uriBuilder.build(), type, newVal);

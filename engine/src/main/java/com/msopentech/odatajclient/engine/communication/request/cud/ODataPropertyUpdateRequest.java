@@ -83,7 +83,7 @@ public class ODataPropertyUpdateRequest extends AbstractODataBasicRequestImpl<OD
      */
     @Override
     protected InputStream getPayload() {
-        return odataClient.getODataWriter().writeProperty(property, ODataFormat.fromString(getContentType()));
+        return odataClient.getWriter().writeProperty(property, ODataFormat.fromString(getContentType()));
     }
 
     /**
@@ -118,7 +118,7 @@ public class ODataPropertyUpdateRequest extends AbstractODataBasicRequestImpl<OD
         public ODataProperty getBody() {
             if (property == null) {
                 try {
-                    property = odataClient.getODataReader().
+                    property = odataClient.getReader().
                             readProperty(getRawResponse(), ODataFormat.fromString(getAccept()));
                 } finally {
                     this.close();

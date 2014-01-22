@@ -27,13 +27,10 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
-import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequest;
-import com.msopentech.odatajclient.engine.communication.request.invoke.InvokeRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
@@ -47,11 +44,12 @@ import com.msopentech.odatajclient.engine.data.ODataOperation;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Type;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.FunctionImport;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
@@ -62,8 +60,9 @@ public class InvokeOperationTestITCase extends AbstractTest {
     private void invokeOperationWithNoParameters(final ODataPubFormat format,
             final String contentType,
             final String prefer) {
+
         ODataProperty property;
-        final EdmMetadata metadata =
+        final EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
@@ -206,7 +205,7 @@ public class InvokeOperationTestITCase extends AbstractTest {
             final String contentType,
             final String prefer) {
         // primitive result
-        EdmMetadata metadata =
+        EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
@@ -216,8 +215,8 @@ public class InvokeOperationTestITCase extends AbstractTest {
         URIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, imp));
 
-        EdmType type = new EdmType(imp.getParameters().get(0).getType());
-        ODataPrimitiveValue argument = new ODataPrimitiveValue.Builder(client).
+        EdmType type = new EdmV3Type(imp.getParameters().get(0).getType());
+        ODataPrimitiveValue argument = client.getPrimitiveValueBuilder().
                 setType(type.getSimpleType()).
                 setValue(33).
                 build();
@@ -226,7 +225,7 @@ public class InvokeOperationTestITCase extends AbstractTest {
 
         final ODataInvokeRequest<ODataProperty> primitiveReq =
                 client.getInvokeRequestFactory().getInvokeRequest(builder.build(), metadata, imp,
-                parameters);
+                        parameters);
         primitiveReq.setFormat(format);
         primitiveReq.setContentType(contentType);
         primitiveReq.setPrefer(prefer);
@@ -247,8 +246,8 @@ public class InvokeOperationTestITCase extends AbstractTest {
         builder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, imp));
 
-        type = new EdmType(imp.getParameters().get(0).getType());
-        argument = new ODataPrimitiveValue.Builder(client).
+        type = new EdmV3Type(imp.getParameters().get(0).getType());
+        argument = client.getPrimitiveValueBuilder().
                 setType(type.getSimpleType()).
                 setText(StringUtils.EMPTY).
                 build();
@@ -306,21 +305,22 @@ public class InvokeOperationTestITCase extends AbstractTest {
             final String contentType, final int id) {
         final ODataEntity product = ODataObjectFactory.newEntity(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Product");
-        product.addProperty(ODataObjectFactory.newPrimitiveProperty("ProductId", new ODataPrimitiveValue.Builder(client).
+        product.addProperty(ODataObjectFactory.newPrimitiveProperty("ProductId", client.getPrimitiveValueBuilder().
                 setValue(id).setType(EdmSimpleType.Int32).build()));
-        product.addProperty(ODataObjectFactory.newPrimitiveProperty("Description", new ODataPrimitiveValue.Builder(client).
+        product.addProperty(ODataObjectFactory.newPrimitiveProperty("Description", client.getPrimitiveValueBuilder().
                 setText("Test Product").build()));
-        product.addProperty(ODataObjectFactory.newPrimitiveProperty("BaseConcurrency", new ODataPrimitiveValue.Builder(client).
+        product.addProperty(ODataObjectFactory.newPrimitiveProperty("BaseConcurrency",
+                client.getPrimitiveValueBuilder().
                 setText("Test Base Concurrency").setType(EdmSimpleType.String).build()));
 
         final ODataComplexValue dimensions = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions");
         dimensions.add(ODataObjectFactory.newPrimitiveProperty("Width",
-                new ODataPrimitiveValue.Builder(client).setText("10.11").setType(EdmSimpleType.Decimal).build()));
+                client.getPrimitiveValueBuilder().setText("10.11").setType(EdmSimpleType.Decimal).build()));
         dimensions.add(ODataObjectFactory.newPrimitiveProperty("Height",
-                new ODataPrimitiveValue.Builder(client).setText("10.11").setType(EdmSimpleType.Decimal).build()));
+                client.getPrimitiveValueBuilder().setText("10.11").setType(EdmSimpleType.Decimal).build()));
         dimensions.add(ODataObjectFactory.newPrimitiveProperty("Depth",
-                new ODataPrimitiveValue.Builder(client).setText("10.11").setType(EdmSimpleType.Decimal).build()));
+                client.getPrimitiveValueBuilder().setText("10.11").setType(EdmSimpleType.Decimal).build()));
 
         product.addProperty(ODataObjectFactory.newComplexProperty("Dimensions",
                 dimensions));
@@ -332,7 +332,6 @@ public class InvokeOperationTestITCase extends AbstractTest {
                 client.getCUDRequestFactory().getEntityCreateRequest(uriBuilder.build(), product);
         createReq.setFormat(format);
         createReq.setContentType(contentType);
-
 
         final ODataEntityCreateResponse createRes = createReq.execute();
         assertEquals(201, createRes.getStatusCode());
@@ -367,7 +366,7 @@ public class InvokeOperationTestITCase extends AbstractTest {
         assertNotNull(createdId);
         final ODataOperation action = created.getOperations().get(0);
 
-        final EdmMetadata metadata =
+        final EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
@@ -375,11 +374,11 @@ public class InvokeOperationTestITCase extends AbstractTest {
         final ODataComplexValue dimensions = new ODataComplexValue(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions");
         dimensions.add(ODataObjectFactory.newPrimitiveProperty("Width",
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Decimal).setText("99.11").build()));
+                client.getPrimitiveValueBuilder().setType(EdmSimpleType.Decimal).setText("99.11").build()));
         dimensions.add(ODataObjectFactory.newPrimitiveProperty("Height",
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Decimal).setText("99.11").build()));
+                client.getPrimitiveValueBuilder().setType(EdmSimpleType.Decimal).setText("99.11").build()));
         dimensions.add(ODataObjectFactory.newPrimitiveProperty("Depth",
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Decimal).setText("99.11").build()));
+                client.getPrimitiveValueBuilder().setType(EdmSimpleType.Decimal).setText("99.11").build()));
 
         Map<String, ODataValue> parameters = new LinkedHashMap<String, ODataValue>();
         parameters.put(funcImp.getParameters().get(1).getName(), dimensions);
@@ -393,7 +392,6 @@ public class InvokeOperationTestITCase extends AbstractTest {
         final ODataInvokeResponse<ODataNoContent> res = req.execute();
         assertNotNull(res);
         assertEquals(204, res.getStatusCode());
-
 
         final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("Product").appendKeySegment(createdId);
@@ -445,15 +443,16 @@ public class InvokeOperationTestITCase extends AbstractTest {
             final int id) {
         final ODataEntity employee = ODataObjectFactory.newEntity(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Employee");
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("PersonId", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("PersonId", client.getPrimitiveValueBuilder().
                 setValue(id).setType(EdmSimpleType.Int32).build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Name", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Name", client.getPrimitiveValueBuilder().
                 setText("Test employee").build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("ManagersPersonId", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("ManagersPersonId", client.
+                getPrimitiveValueBuilder().
                 setText("1111").setType(EdmSimpleType.Int32).build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Salary", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Salary", client.getPrimitiveValueBuilder().
                 setText("5999").setType(EdmSimpleType.Int32).build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Title", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Title", client.getPrimitiveValueBuilder().
                 setText("Developer").build()));
 
         final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
@@ -482,7 +481,7 @@ public class InvokeOperationTestITCase extends AbstractTest {
 
         final ODataOperation action = created.getOperations().get(0);
 
-        final EdmMetadata metadata =
+        final EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
@@ -551,13 +550,13 @@ public class InvokeOperationTestITCase extends AbstractTest {
         final ODataEntity entity =
                 ODataObjectFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.ComputerDetail");
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Manufacturer",
-                new ODataPrimitiveValue.Builder(client).setText("manufacturer name").setType(EdmSimpleType.String).build()));
+                client.getPrimitiveValueBuilder().setText("manufacturer name").setType(EdmSimpleType.String).build()));
 
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("ComputerDetailId",
-                new ODataPrimitiveValue.Builder(client).setText(String.valueOf(id)).setType(EdmSimpleType.Int32).build()));
+                client.getPrimitiveValueBuilder().setText(String.valueOf(id)).setType(EdmSimpleType.Int32).build()));
 
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Model",
-                new ODataPrimitiveValue.Builder(client).setText("Model Name").setType(EdmSimpleType.String).build()));
+                client.getPrimitiveValueBuilder().setText("Model Name").setType(EdmSimpleType.String).build()));
 
         final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendEntityTypeSegment("ComputerDetail");
@@ -585,21 +584,21 @@ public class InvokeOperationTestITCase extends AbstractTest {
 
         final ODataOperation action = created.getOperations().get(0);
 
-        final EdmMetadata metadata =
+        final EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
         final EntityContainer container = metadata.getSchema(0).getEntityContainers().get(0);
         final FunctionImport funcImp = container.getFunctionImport(action.getTitle());
         final ODataCollectionValue specification = new ODataCollectionValue(("Collection(Edm.String)"));
-        specification.add(new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.String).setText("specification1").
+        specification.add(client.getPrimitiveValueBuilder().setType(EdmSimpleType.String).setText("specification1").
                 build());
-        specification.add(new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.String).setText("specification2").
+        specification.add(client.getPrimitiveValueBuilder().setType(EdmSimpleType.String).setText("specification2").
                 build());
-        specification.add(new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.String).setText("specification3").
+        specification.add(client.getPrimitiveValueBuilder().setType(EdmSimpleType.String).setText("specification3").
                 build());
 
-        ODataValue argument = new ODataPrimitiveValue.Builder(client).
+        ODataValue argument = client.getPrimitiveValueBuilder().
                 setType(EdmSimpleType.DateTime).
                 setText("2011-11-11T23:59:59.9999999").
                 build();

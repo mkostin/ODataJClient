@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.AbstractContainer;
 import com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.*;
 import com.msopentech.odatajclient.proxy.actionoverloadingservice.microsoft.test.odata.services.astoriadefaultservice.types.*;

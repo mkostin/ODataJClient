@@ -316,7 +316,6 @@ public abstract class AbstractODataBinder implements ODataBinder {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends LinkResource> T getLinkResource(final ODataLink link, final Class<T> reference) {
         final T linkResource = ResourceFactory.newLink(reference);
         linkResource.setRel(link.getRel());
@@ -350,7 +349,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
         if (nullNode == null) {
             final EdmType edmType = StringUtils.isBlank(property.getAttribute(ODataConstants.ATTR_M_TYPE))
                     ? null
-                    : new EdmType(property.getAttribute(ODataConstants.ATTR_M_TYPE));
+                    : newEdmType(property.getAttribute(ODataConstants.ATTR_M_TYPE));
 
             final PropertyType propType = edmType == null
                     ? guessPropertyType(property)
@@ -519,10 +518,10 @@ public abstract class AbstractODataBinder implements ODataBinder {
         if (edmType != null && edmType.getSimpleType().isGeospatial()) {
             final Element geoProp = ODataConstants.PREFIX_GML.equals(prop.getPrefix())
                     ? prop : (Element) XMLUtils.getChildNodes(prop, Node.ELEMENT_NODE).get(0);
-            value = new ODataGeospatialValue.Builder(client).
+            value = client.getGeospatialValueBuilder().
                     setType(edmType.getSimpleType()).setTree(geoProp).build();
         } else {
-            value = new ODataPrimitiveValue.Builder(client).
+            value = client.getPrimitiveValueBuilder().
                     setType(edmType == null ? null : edmType.getSimpleType()).setText(prop.getTextContent()).build();
         }
         return value;
@@ -552,7 +551,7 @@ public abstract class AbstractODataBinder implements ODataBinder {
         final ODataCollectionValue value =
                 new ODataCollectionValue(edmType == null ? null : edmType.getTypeExpression());
 
-        final EdmType type = edmType == null ? null : new EdmType(edmType.getBaseType());
+        final EdmType type = edmType == null ? null : newEdmType(edmType.getBaseType());
         final NodeList elements = prop.getChildNodes();
 
         for (int i = 0; i < elements.getLength(); i++) {
@@ -573,4 +572,6 @@ public abstract class AbstractODataBinder implements ODataBinder {
 
         return ODataObjectFactory.newCollectionProperty(XMLUtils.getSimpleName(prop), value);
     }
+
+    protected abstract EdmType newEdmType(String expression);
 }

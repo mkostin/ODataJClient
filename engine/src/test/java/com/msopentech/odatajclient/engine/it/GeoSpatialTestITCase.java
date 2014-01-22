@@ -108,7 +108,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             final ODataEntity entity =
                     ODataObjectFactory.newEntity("Microsoft.Test.OData.Services.AstoriaDefaultService.AllSpatialTypes");
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Id",
-                    new ODataPrimitiveValue.Builder(client).setText(String.valueOf(id)).setType(EdmSimpleType.Int32).
+                    client.getPrimitiveValueBuilder().setText(String.valueOf(id)).setType(EdmSimpleType.Int32).
                     build()));
 
             final Point point1 = new Point(Geospatial.Dimension.GEOGRAPHY);
@@ -120,7 +120,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
 
             // create a point
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogPoint",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyPoint).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyPoint).
                     setValue(point1).build()));
 
             // create  multiple point
@@ -129,7 +129,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             points.add(point2);
             final MultiPoint multipoint = new MultiPoint(Geospatial.Dimension.GEOGRAPHY, points);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogMultiPoint",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyMultiPoint).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyMultiPoint).
                     setValue(multipoint).build()));
 
             // create a line
@@ -139,7 +139,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             final LineString lineString = new LineString(Geospatial.Dimension.GEOGRAPHY, linePoints);
 
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogLine",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyLineString).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyLineString).
                     setValue(lineString).build()));
 
             // create a polygon
@@ -148,7 +148,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             linePoints.add(point1);
             final Polygon polygon = new Polygon(Geospatial.Dimension.GEOGRAPHY, linePoints, linePoints);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogPolygon",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyPolygon).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyPolygon).
                     setValue(polygon).build()));
 
             // create a multi line string
@@ -157,7 +157,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             multipleLines.add(lineString);
             final MultiLineString multiLine = new MultiLineString(Geospatial.Dimension.GEOGRAPHY, multipleLines);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogMultiLine",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyMultiLineString).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyMultiLineString).
                     setValue(multiLine).build()));
 
             // create a multi polygon        
@@ -166,7 +166,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             polygons.add(polygon);
             final MultiPolygon multiPolygon = new MultiPolygon(Geospatial.Dimension.GEOGRAPHY, polygons);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogMultiPolygon",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyMultiPolygon).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyMultiPolygon).
                     setValue(multiPolygon).build()));
 
             // create  acolletion of various shapes
@@ -177,7 +177,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             final GeospatialCollection collection = new GeospatialCollection(Geospatial.Dimension.GEOGRAPHY,
                     geospatialCollection);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogCollection",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyCollection).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyCollection).
                     setValue(collection).build()));
 
             // with geometry test
@@ -190,7 +190,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
 
             // create a point
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeomPoint",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryPoint).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeometryPoint).
                     setValue(goemPoint2).build()));
 
             // create  multiple point
@@ -199,7 +199,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             geomPoints.add(point2);
             final MultiPoint geomMultipoint = new MultiPoint(Geospatial.Dimension.GEOMETRY, geomPoints);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeomMultiPoint",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryMultiPoint).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeometryMultiPoint).
                     setValue(geomMultipoint).build()));
 
             // create a line
@@ -209,7 +209,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             final LineString geomLineString = new LineString(Geospatial.Dimension.GEOMETRY, geomLinePoints);
 
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeomLine",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryLineString).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeometryLineString).
                     setValue(geomLineString).build()));
 
             // create a polygon
@@ -218,7 +218,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             geomLinePoints.add(goemPoint1);
             final Polygon geomPolygon = new Polygon(Geospatial.Dimension.GEOMETRY, geomLinePoints, geomLinePoints);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeomPolygon",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryPolygon).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeometryPolygon).
                     setValue(geomPolygon).build()));
 
             // create a multi line string
@@ -227,7 +227,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             geomMultipleLines.add(geomLineString);
             final MultiLineString geomMultiLine = new MultiLineString(Geospatial.Dimension.GEOMETRY, geomMultipleLines);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeomMultiLine",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryMultiLineString).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeometryMultiLineString).
                     setValue(geomMultiLine).build()));
 
             // create a multi polygon        
@@ -236,7 +236,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             geomPolygons.add(geomPolygon);
             final MultiPolygon geomMultiPolygon = new MultiPolygon(Geospatial.Dimension.GEOMETRY, geomPolygons);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeomMultiPolygon",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyMultiPolygon).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyMultiPolygon).
                     setValue(geomMultiPolygon).build()));
 
             // create  a collection of various shapes
@@ -246,7 +246,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             final GeospatialCollection geomCollection = new GeospatialCollection(Geospatial.Dimension.GEOMETRY,
                     geomspatialCollection);
             entity.addProperty(ODataObjectFactory.newPrimitiveProperty("GeomCollection",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryCollection).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeometryCollection).
                     setValue(geomCollection).build()));
 
             // create request
@@ -292,7 +292,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             ODataProperty property = entityAfterCreate.getProperty("GeogPoint");
             entityAfterCreate.removeProperty(property);
             entityAfterCreate.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogPoint",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyPoint).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyPoint).
                     setValue(updatePoint1).build()));
             updateGeog(format, contentType, prefer, entityAfterCreate, UpdateType.REPLACE, entityAfterCreate.getETag());
 
@@ -304,7 +304,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             ODataProperty lineProperty = entityAfterCreate.getProperty("GeogLine");
             entityAfterCreate.removeProperty(lineProperty);
             entityAfterCreate.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogLine",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyLineString).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyLineString).
                     setValue(updateLineString).build()));
             //updateGeog(format,contentType, prefer, entityAfterCreate, UpdateType.REPLACE,entityAfterCreate.getETag());
 
@@ -317,7 +317,7 @@ public class GeoSpatialTestITCase extends AbstractTest {
             ODataProperty polygonProperty = entityAfterCreate.getProperty("GeogPolygon");
             entityAfterCreate.removeProperty(polygonProperty);
             entityAfterCreate.addProperty(ODataObjectFactory.newPrimitiveProperty("GeogPolygon",
-                    new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyPolygon).
+                    client.getGeospatialValueBuilder().setType(EdmSimpleType.GeographyPolygon).
                     setValue(updatePolygon).build()));
             //updateGeog(format,contentType, prefer, entityAfterCreate, UpdateType.REPLACE,entityAfterCreate.getETag());
 

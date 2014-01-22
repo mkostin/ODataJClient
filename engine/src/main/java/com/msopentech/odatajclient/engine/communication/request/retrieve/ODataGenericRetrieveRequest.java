@@ -97,7 +97,7 @@ public class ODataGenericRetrieveRequest extends ODataRawRequest {
         public ODataObjectWrapper getBody() {
             if (obj == null) {
                 try {
-                    obj = new ODataObjectWrapper(odataClient.getODataReader(), getRawResponse(), getContentType());
+                    obj = new ODataObjectWrapper(odataClient.getReader(), getRawResponse(), getContentType());
                 } finally {
                     this.close();
                 }

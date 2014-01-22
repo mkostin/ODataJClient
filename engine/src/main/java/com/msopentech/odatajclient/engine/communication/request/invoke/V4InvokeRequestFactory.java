@@ -20,13 +20,31 @@
 package com.msopentech.odatajclient.engine.communication.request.invoke;
 
 import com.msopentech.odatajclient.engine.client.ODataV4Client;
+import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV4Metadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.ComplexType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.EntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.DataServices;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.Edmx;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.Schema;
+import java.net.URI;
 
-public class V4InvokeRequestFactory extends AbstractInvokeRequestFactory {
+public class V4InvokeRequestFactory extends AbstractInvokeRequestFactory<
+        EdmV4Metadata, Edmx, DataServices, Schema, EntityContainer, EntityType, ComplexType, FunctionImport> {
 
     private static final long serialVersionUID = 8452737360003104372L;
 
     public V4InvokeRequestFactory(final ODataV4Client client) {
         super(client);
+    }
+
+    @Override
+    public <RES extends ODataInvokeResult> ODataInvokeRequest<RES> getInvokeRequest(
+            final URI uri, final EdmV4Metadata metadata, final FunctionImport functionImport) {
+
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

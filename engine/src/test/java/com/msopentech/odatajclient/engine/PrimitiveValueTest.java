@@ -19,13 +19,14 @@
  */
 package com.msopentech.odatajclient.engine;
 
+import static com.msopentech.odatajclient.engine.AbstractTest.v3Client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.msopentech.odatajclient.engine.client.ODataClientFactory;
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.data.ODataDuration;
-import com.msopentech.odatajclient.engine.data.ODataGeospatialValue;
 import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataTimestamp;
 import com.msopentech.odatajclient.engine.data.ODataValue;
@@ -48,27 +49,31 @@ import org.junit.Test;
 
 public class PrimitiveValueTest extends AbstractTest {
 
+    private ODataV3Client getClient() {
+        return v3Client;
+    }
+
     @Test
     public void manageInt32() {
         final int primitive = -10;
-        ODataValue value =
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Int32).setValue(primitive).build();
+        ODataValue value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Int32).setValue(primitive).
+                build();
         assertEquals(EdmSimpleType.Int32.toString(), value.asPrimitive().getTypeName());
         assertEquals(Integer.valueOf(primitive), value.asPrimitive().<Integer>toCastValue());
 
-        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Int32).setText("9").build();
+        value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Int32).setText("9").build();
         assertEquals("9", value.asPrimitive().<Integer>toCastValue().toString());
     }
 
     @Test
     public void manageString() {
         final String primitive = UUID.randomUUID().toString();
-        ODataValue value =
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.String).setText(primitive).build();
+        ODataValue value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.String).setText(primitive).
+                build();
         assertEquals(EdmSimpleType.String.toString(), value.asPrimitive().getTypeName());
         assertEquals(primitive, value.toString());
 
-        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.String).
+        value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.String).
                 setText("1126a28b-a4af-4bbd-bf0a-2b2c22635565").build();
         assertEquals("1126a28b-a4af-4bbd-bf0a-2b2c22635565", value.asPrimitive().<String>toCastValue().toString());
     }
@@ -76,12 +81,12 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void manageDecimal() {
         final BigDecimal primitive = new BigDecimal("-79228162514264337593543950335");
-        ODataValue value =
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Decimal).setValue(primitive).build();
+        ODataValue value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Decimal).setValue(primitive).
+                build();
         assertEquals(EdmSimpleType.Decimal.toString(), value.asPrimitive().getTypeName());
         assertEquals(primitive, value.asPrimitive().<BigDecimal>toCastValue());
 
-        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Decimal).
+        value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Decimal).
                 setText("-79228162514264337593543950335").build();
         assertEquals("-79228162514264337593543950335", value.asPrimitive().<BigDecimal>toCastValue().toString());
     }
@@ -98,7 +103,7 @@ public class PrimitiveValueTest extends AbstractTest {
             // ignore
         }
         final ODataValue value =
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.DateTime).setText(primitive).build();
+                getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.DateTime).setText(primitive).build();
         assertEquals(EdmSimpleType.DateTime.toString(), value.asPrimitive().getTypeName());
         // performed cast to improve the check
         assertEquals(primitive, value.asPrimitive().<ODataTimestamp>toCastValue().toString());
@@ -117,7 +122,7 @@ public class PrimitiveValueTest extends AbstractTest {
         }
 
         final ODataValue value =
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Time).setText(primitive).build();
+                getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Time).setText(primitive).build();
         assertEquals(EdmSimpleType.Time.toString(), value.asPrimitive().getTypeName());
         // performed cast to improve the check
         assertEquals(primitive, value.asPrimitive().<ODataDuration>toCastValue().toString());
@@ -128,7 +133,7 @@ public class PrimitiveValueTest extends AbstractTest {
         // OData V4 only
         final String primitive = "-P9DT51M12.5063807S";
         try {
-            new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.TimeOfDay).setText(primitive).build();
+            getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.TimeOfDay).setText(primitive).build();
             fail();
         } catch (IllegalArgumentException iae) {
             // ignore
@@ -146,7 +151,7 @@ public class PrimitiveValueTest extends AbstractTest {
         // OData V4 only
         final String primitive = "2013-01-10";
         try {
-            new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Date).setText(primitive).build();
+            getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Date).setText(primitive).build();
             fail();
         } catch (IllegalArgumentException iae) {
             // ignore
@@ -162,7 +167,7 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void manageDateTimeOffset() {
         final String primitive = "2013-01-10T02:00:00";
-        final ODataValue value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.DateTimeOffset).
+        final ODataValue value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.DateTimeOffset).
                 setText(primitive).build();
         assertEquals(EdmSimpleType.DateTimeOffset.toString(), value.asPrimitive().getTypeName());
         // performed cast to improve the check
@@ -172,12 +177,12 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void manageGuid() {
         final UUID primitive = UUID.fromString("1126a28b-a4af-4bbd-bf0a-2b2c22635565");
-        ODataValue value =
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Guid).setValue(primitive).build();
+        ODataValue value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Guid).setValue(primitive).
+                build();
         assertEquals(EdmSimpleType.Guid.toString(), value.asPrimitive().getTypeName());
         assertEquals(primitive, value.asPrimitive().<UUID>toCastValue());
 
-        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Guid).
+        value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Guid).
                 setText("1126a28b-a4af-4bbd-bf0a-2b2c22635565").build();
         assertEquals("1126a28b-a4af-4bbd-bf0a-2b2c22635565", value.asPrimitive().<UUID>toCastValue().toString());
     }
@@ -185,14 +190,14 @@ public class PrimitiveValueTest extends AbstractTest {
     @Test
     public void manageBinary() {
         final byte[] primitive = UUID.randomUUID().toString().getBytes();
-        ODataValue value =
-                new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Binary).setValue(primitive).build();
+        ODataValue value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Binary).setValue(primitive).
+                build();
         assertEquals(EdmSimpleType.Binary.toString(), value.asPrimitive().getTypeName());
         assertEquals(
                 Base64.encodeBase64String(primitive),
                 Base64.encodeBase64String(value.asPrimitive().<byte[]>toCastValue()));
 
-        value = new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.Binary).
+        value = getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.Binary).
                 setText(Base64.encodeBase64String("primitive".getBytes())).build();
         assertEquals("primitive", new String(value.asPrimitive().<byte[]>toCastValue()));
     }
@@ -204,14 +209,15 @@ public class PrimitiveValueTest extends AbstractTest {
         primitive.setY(173.334);
 
         try {
-            new ODataPrimitiveValue.Builder(client).setType(EdmSimpleType.GeographyPoint).setValue(primitive).build();
+            getClient().getPrimitiveValueBuilder().setType(EdmSimpleType.GeographyPoint).setValue(primitive).build();
             fail();
         } catch (IllegalArgumentException iae) {
             // nothing top do
         }
 
-        ODataValue value = new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyPoint).
-                setValue(primitive).build();
+        final ODataValue value =
+                getClient().getGeospatialValueBuilder().setType(EdmSimpleType.GeographyPoint).setValue(primitive).
+                build();
         assertEquals(EdmSimpleType.GeographyPoint.toString(), value.asPrimitive().getTypeName());
         assertEquals(Double.valueOf(primitive.getX()), Double.valueOf(value.asPrimitive().<Point>toCastValue().getX()));
         assertEquals(Double.valueOf(primitive.getY()), Double.valueOf(value.asPrimitive().<Point>toCastValue().getY()));
@@ -242,7 +248,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
         final LineString primitive = new LineString(Geospatial.Dimension.GEOGRAPHY, points);
 
-        final ODataValue value = new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyLineString).
+        final ODataValue value = getClient().getGeospatialValueBuilder().setType(EdmSimpleType.GeographyLineString).
                 setValue(primitive).build();
         assertEquals(EdmSimpleType.GeographyLineString.toString(), value.asPrimitive().getTypeName());
 
@@ -267,7 +273,7 @@ public class PrimitiveValueTest extends AbstractTest {
 
         final MultiPoint primitive = new MultiPoint(Geospatial.Dimension.GEOMETRY, points);
 
-        final ODataValue value = new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryMultiPoint).
+        final ODataValue value = getClient().getGeospatialValueBuilder().setType(EdmSimpleType.GeometryMultiPoint).
                 setValue(primitive).build();
         assertEquals(EdmSimpleType.GeometryMultiPoint.toString(), value.asPrimitive().getTypeName());
 
@@ -328,7 +334,7 @@ public class PrimitiveValueTest extends AbstractTest {
         final MultiLineString primitive = new MultiLineString(Geospatial.Dimension.GEOMETRY, lines);
 
         final ODataValue value =
-                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryMultiLineString).
+                getClient().getGeospatialValueBuilder().setType(EdmSimpleType.GeometryMultiLineString).
                 setValue(primitive).build();
         assertEquals(EdmSimpleType.GeometryMultiLineString.toString(), value.asPrimitive().getTypeName());
 
@@ -381,7 +387,7 @@ public class PrimitiveValueTest extends AbstractTest {
         final Polygon primitive = new Polygon(Geospatial.Dimension.GEOGRAPHY, interior, exterior);
 
         final ODataValue value =
-                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyPolygon).
+                getClient().getGeospatialValueBuilder().setType(EdmSimpleType.GeographyPolygon).
                 setValue(primitive).build();
         assertEquals(EdmSimpleType.GeographyPolygon.toString(), value.asPrimitive().getTypeName());
 
@@ -487,7 +493,7 @@ public class PrimitiveValueTest extends AbstractTest {
         final MultiPolygon primitive = new MultiPolygon(Geospatial.Dimension.GEOMETRY, polygons);
 
         final ODataValue value =
-                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryMultiPolygon).
+                getClient().getGeospatialValueBuilder().setType(EdmSimpleType.GeometryMultiPolygon).
                 setValue(primitive).build();
         assertEquals(EdmSimpleType.GeometryMultiPolygon.toString(), value.asPrimitive().getTypeName());
 
@@ -533,7 +539,7 @@ public class PrimitiveValueTest extends AbstractTest {
         final GeospatialCollection primitive = new GeospatialCollection(Geospatial.Dimension.GEOMETRY, collection);
 
         final ODataValue value =
-                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeometryCollection).
+                getClient().getGeospatialValueBuilder().setType(EdmSimpleType.GeometryCollection).
                 setValue(primitive).build();
         assertEquals(EdmSimpleType.GeometryCollection.toString(), value.asPrimitive().getTypeName());
 
@@ -565,7 +571,7 @@ public class PrimitiveValueTest extends AbstractTest {
         final GeospatialCollection primitive = new GeospatialCollection(Geospatial.Dimension.GEOGRAPHY, collection);
 
         final ODataValue value =
-                new ODataGeospatialValue.Builder(client).setType(EdmSimpleType.GeographyCollection).
+                getClient().getGeospatialValueBuilder().setType(EdmSimpleType.GeographyCollection).
                 setValue(primitive).build();
         assertEquals(EdmSimpleType.GeographyCollection.toString(), value.asPrimitive().getTypeName());
 

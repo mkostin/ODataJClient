@@ -22,14 +22,14 @@ package com.msopentech.odatajclient.engine.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
 import org.junit.Test;
 
 public class MetadataTestITCase extends AbstractTest {
 
     @Test
     public void large() {
-        final EdmMetadata metadata = client.getRetrieveRequestFactory().
+        final EdmV3Metadata metadata = client.getRetrieveRequestFactory().
                 getMetadataRequest(testLargeModelServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 

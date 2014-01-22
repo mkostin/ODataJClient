@@ -26,38 +26,40 @@ import java.util.List;
 import org.junit.Test;
 
 import com.msopentech.odatajclient.engine.communication.ODataClientErrorException;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataMetadataRequest;
+import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataV3MetadataRequest;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityType;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Type;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityType;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 
 public class MetadataRetrieveTestITCase extends AbstractTest {
 
     private void retreiveMetadataTest(final ODataPubFormat reqFormat, final String acceptFormat) {
         // testing entity types which are not open
-        final ODataMetadataRequest req = client.getRetrieveRequestFactory().
+        final ODataV3MetadataRequest req = client.getRetrieveRequestFactory().
                 getMetadataRequest(testDefaultServiceRootURL);
         req.setFormat(reqFormat);
         req.setAccept(acceptFormat);
         try {
-            final ODataRetrieveResponse<EdmMetadata> res = req.execute();
-            final EdmMetadata metadata = res.getBody();
+            final ODataRetrieveResponse<EdmV3Metadata> res = req.execute();
+            final EdmV3Metadata metadata = res.getBody();
             assertNotNull(metadata);
             assertEquals(24, metadata.getSchemas().get(0).getEntityContainers().get(0).getEntitySets().size());
             final EdmType productCollection =
-                    new EdmType(metadata, "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Product)");
+                    new EdmV3Type(metadata, "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Product)");
             assertTrue(productCollection.isCollection());
             assertFalse(productCollection.isSimpleType());
             assertFalse(productCollection.isEnumType());
             assertFalse(productCollection.isComplexType());
             assertTrue(productCollection.isEntityType());
-            final EntityType type = productCollection.getEntityType();
+            final AbstractEntityType type = productCollection.getEntityType();
             assertNotNull(type);
             assertFalse(type.isOpenType());
             assertEquals("Product", type.getName());
-            final EdmType stream = new EdmType(metadata, "Edm.Stream");
+            final EdmType stream = new EdmV3Type(metadata, "Edm.Stream");
             assertNotNull(stream);
             assertTrue(stream.isSimpleType());
             assertFalse(stream.isCollection());
@@ -65,19 +67,20 @@ public class MetadataRetrieveTestITCase extends AbstractTest {
             assertFalse(stream.isComplexType());
             assertFalse(stream.isEntityType());
             final EdmType customerCollection =
-                    new EdmType(metadata, "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Customer)");
-            final EntityType customer = customerCollection.getEntityType();
+                    new EdmV3Type(metadata, "Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Customer)");
+            final AbstractEntityType customer = customerCollection.getEntityType();
             assertNotNull(type);
             assertFalse(customer.isOpenType());
             assertEquals("Customer", customer.getName());
 
             //testing open types
-            final ODataMetadataRequest req1 = client.getRetrieveRequestFactory().getMetadataRequest(
-                    testOpenTypeServiceRootURL);
+            ODataV3MetadataRequest req1 =
+                    client.getRetrieveRequestFactory().getMetadataRequest(testOpenTypeServiceRootURL);
+
             req.setFormat(reqFormat);
             req.setAccept(acceptFormat);
-            final ODataRetrieveResponse<EdmMetadata> res1 = req1.execute();
-            final EdmMetadata metadata1 = res1.getBody();
+            final ODataRetrieveResponse<EdmV3Metadata> res1 = req1.execute();
+            final EdmV3Metadata metadata1 = res1.getBody();
             List<EntityType> types = metadata1.getSchema(0).getEntityTypes();
             for (int i = 0; i < types.size(); i++) {
                 assertTrue(types.get(0).isOpenType());

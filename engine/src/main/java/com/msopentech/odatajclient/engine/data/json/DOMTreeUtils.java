@@ -192,7 +192,7 @@ final class DOMTreeUtils {
                         out = child.getChildNodes().item(0).getNodeValue();
                     } else {
                         final EdmSimpleType type = EdmSimpleType.fromValue(typeAttr.getTextContent());
-                        final ODataPrimitiveValue value = new ODataPrimitiveValue.Builder(client).setType(type).
+                        final ODataPrimitiveValue value = client.getPrimitiveValueBuilder().setType(type).
                                 setText(child.getChildNodes().item(0).getNodeValue()).build();
                         out = value.toString();
 

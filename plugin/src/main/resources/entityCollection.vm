@@ -22,7 +22,7 @@ package ${package};
 import com.msopentech.odatajclient.proxy.api.AbstractEntityCollection;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.ParameterMode;
 #foreach($ns in $namespaces)
 import ${basePackage}.${ns}.*;
 import ${basePackage}.${ns}.types.*;
@@ -47,17 +47,6 @@ import java.util.Collection;
 
 public interface $utility.capitalize($entityType.Name)Collection extends AbstractEntityCollection<$utility.capitalize($entityType.Name)> {
 #foreach($operation in $utility.getFunctionImportsBoundTo($entityType.Name, true))
-#set ($doc = $utility.getDocumentation($operation))
-#if($doc && !$doc.getKey().isEmpty())
-    /**
-     * $doc.getKey()
-    #if(!$doc.getValue().isEmpty())
-     * <br />
-     * $doc.getValue()
-    #end
-     */
-#end
-#set ($doc = false)
     @FunctionImport(name = "$operation.Name" #if ($operation.EntitySet), 
                     entitySet = $operation.EntitySet$clsSuffix#end #if ($operation.EntitySetPath),
                     entitySetPath = $operation.EntitySetPath#end #if ($operation.isIsComposable),

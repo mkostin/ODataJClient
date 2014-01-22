@@ -19,8 +19,9 @@
  */
 package com.msopentech.odatajclient.engine;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
 import com.msopentech.odatajclient.engine.client.ODataClientFactory;
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
+import com.msopentech.odatajclient.engine.client.ODataV4Client;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.util.Locale;
@@ -28,7 +29,9 @@ import org.junit.BeforeClass;
 
 public abstract class AbstractTest {
 
-    protected static ODataClient client;
+    protected static ODataV3Client v3Client;
+
+    protected static ODataV4Client v4Client;
 
     /**
      * This is needed for correct number handling (Double, for example).
@@ -39,8 +42,9 @@ public abstract class AbstractTest {
     }
 
     @BeforeClass
-    public static void setClientInstance() {
-        client = ODataClientFactory.getV3();
+    public static void setClientInstances() {
+        v3Client = ODataClientFactory.getV3();
+        v4Client = ODataClientFactory.getV4();
     }
 
     protected String getSuffix(final ODataPubFormat format) {

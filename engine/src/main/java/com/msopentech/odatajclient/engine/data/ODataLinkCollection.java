@@ -86,7 +86,7 @@ public class ODataLinkCollection {
      *
      * @param next next page link.
      */
-    public ODataLinkCollection(URI next) {
+    public ODataLinkCollection(final URI next) {
         this.next = next;
     }
 

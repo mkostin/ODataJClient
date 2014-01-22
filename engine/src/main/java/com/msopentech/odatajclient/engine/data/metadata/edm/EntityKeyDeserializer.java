@@ -23,13 +23,12 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
-public class EntityKeyDeserializer extends JsonDeserializer<EntityKey> {
+public class EntityKeyDeserializer extends AbstractEdmDeserializer<EntityKey> {
 
     @Override
-    public EntityKey deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    protected EntityKey doDeserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
         final EntityKey entityKey = new EntityKey();

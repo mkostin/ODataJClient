@@ -20,17 +20,12 @@
 package com.msopentech.odatajclient.engine;
 
 import com.msopentech.odatajclient.engine.format.ODataFormat;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
 
-public class V3XMLPropertyTest extends PropertyTest {
+public class V3XMLPropertyTest extends V3JSONPropertyTest {
 
     @Override
     protected ODataFormat getFormat() {
         return ODataFormat.XML;
     }
 
-    @Override
-    protected Version getVersion() {
-        return Version.V3;
-    }
 }

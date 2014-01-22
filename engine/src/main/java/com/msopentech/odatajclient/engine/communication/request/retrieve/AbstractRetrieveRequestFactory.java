@@ -41,11 +41,6 @@ public abstract class AbstractRetrieveRequestFactory implements RetrieveRequestF
     }
 
     @Override
-    public ODataMetadataRequest getMetadataRequest(final String serviceRoot) {
-        return new ODataMetadataRequest(client, client.getURIBuilder(serviceRoot).appendMetadataSegment().build());
-    }
-
-    @Override
     public ODataEntitySetRequest getEntitySetRequest(final URI query) {
         return new ODataEntitySetRequest(client, query);
     }

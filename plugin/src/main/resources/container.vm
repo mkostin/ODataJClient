@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.proxy.api.annotations.Namespace;
 import com.msopentech.odatajclient.proxy.api.annotations.EntityContainer;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.AbstractContainer;
 #foreach($ns in $namespaces)
 import ${basePackage}.${ns}.*;
@@ -61,17 +61,6 @@ public interface $utility.capitalize($container.Name) extends AbstractContainer 
 
 #foreach($operation in $container.FunctionImports)
   #if( !$operation.isIsBindable() )
-#set ($doc = $utility.getDocumentation($operation))
-#if($doc && !$doc.getKey().isEmpty())
-    /**
-     * $doc.getKey()
-    #if(!$doc.getValue().isEmpty())
-     * <br />
-     * $doc.getValue()
-    #end
-     */
-#end
-#set ($doc = false)
     @FunctionImport(name = "$operation.Name" #if($operation.EntitySet), 
                     entitySet = $operation.EntitySet$clsSuffix#end #if($operation.EntitySetPath),
                     entitySetPath = $operation.EntitySetPath#end #if($operation.isIsComposable),

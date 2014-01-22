@@ -35,9 +35,9 @@ import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.FunctionImport;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.ByteArrayInputStream;
@@ -144,7 +144,7 @@ public class ErrorTestITCase extends AbstractTest {
     }
 
     private void instreamError(final ODataPubFormat format) {
-        final EdmMetadata metadata =
+        final EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 

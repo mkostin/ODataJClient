@@ -413,7 +413,7 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
                     ODataError error;
 
                     try {
-                        error = odataClient.getODataReader().readError(httpEntity.getContent(), isXML);
+                        error = odataClient.getReader().readError(httpEntity.getContent(), isXML);
                     } catch (IllegalArgumentException e) {
                         LOG.warn("Error deserializing error response", e);
                         error = getGenericError(

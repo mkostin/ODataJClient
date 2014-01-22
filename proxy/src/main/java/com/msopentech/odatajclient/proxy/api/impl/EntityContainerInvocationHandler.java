@@ -19,7 +19,7 @@
  */
 package com.msopentech.odatajclient.proxy.api.impl;
 
-import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import com.msopentech.odatajclient.proxy.api.EntityContainerFactory;
@@ -44,7 +44,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
     private final boolean defaultEC;
 
     public static EntityContainerInvocationHandler getInstance(
-            final ODataClient client, final Class<?> ref, final EntityContainerFactory factory) {
+            final ODataV3Client client, final Class<?> ref, final EntityContainerFactory factory) {
 
         final EntityContainerInvocationHandler instance = new EntityContainerInvocationHandler(client, ref, factory);
         instance.containerHandler = instance;
@@ -52,7 +52,7 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
     }
 
     private EntityContainerInvocationHandler(
-            final ODataClient client, final Class<?> ref, final EntityContainerFactory factory) {
+            final ODataV3Client client, final Class<?> ref, final EntityContainerFactory factory) {
 
         super(client, null);
 
@@ -104,9 +104,9 @@ public class EntityContainerInvocationHandler extends AbstractInvocationHandler 
                         EntitySetInvocationHandler.getInstance(returnType, this));
             } // 2. invoke function imports
             else if (methodAnnots[0] instanceof FunctionImport) {
-                final com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer container =
+                final com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer container =
                         getFactory().getMetadata().getSchema(schemaName).getEntityContainer(entityContainerName);
-                final com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport funcImp =
+                final com.msopentech.odatajclient.engine.data.metadata.edm.v3.FunctionImport funcImp =
                         container.getFunctionImport(((FunctionImport) methodAnnots[0]).name());
 
                 final URIBuilder uriBuilder = client.getURIBuilder(factory.getServiceRoot()).

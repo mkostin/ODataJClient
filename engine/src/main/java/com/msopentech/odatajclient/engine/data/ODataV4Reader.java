@@ -20,6 +20,8 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.client.ODataV4Client;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV4Metadata;
+import java.io.InputStream;
 
 public class ODataV4Reader extends AbstractODataReader {
 
@@ -27,6 +29,11 @@ public class ODataV4Reader extends AbstractODataReader {
 
     public ODataV4Reader(final ODataV4Client client) {
         super(client);
+    }
+
+    @Override
+    public EdmV4Metadata readMetadata(final InputStream input) {
+        return new EdmV4Metadata(client, input);
     }
 
 }

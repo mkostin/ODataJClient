@@ -28,12 +28,11 @@ import com.msopentech.odatajclient.proxy.api.annotations.NavigationProperty;
 import com.msopentech.odatajclient.proxy.api.annotations.Property;
 import com.msopentech.odatajclient.proxy.api.annotations.FunctionImport;
 import com.msopentech.odatajclient.proxy.api.annotations.Parameter;
-import com.msopentech.odatajclient.engine.data.metadata.edm.ParameterMode;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.ParameterMode;
 import com.msopentech.odatajclient.proxy.api.AbstractComplexType;
 import com.msopentech.odatajclient.proxy.api.AbstractOpenType;
 import com.msopentech.odatajclient.engine.data.metadata.EdmContentKind;
 import com.msopentech.odatajclient.engine.data.metadata.edm.ConcurrencyMode;
-import com.msopentech.odatajclient.engine.data.metadata.edm.Action;
 #foreach($ns in $namespaces)
 import ${basePackage}.${ns}.*;
 import ${basePackage}.${ns}.types.*;
@@ -56,16 +55,6 @@ import java.util.UUID;
 import java.io.Serializable;
 import java.util.Collection;
 
-#set ($doc = $utility.getDocumentation($entityType))
-#if($doc && !$doc.getKey().isEmpty())
-/**
- * $doc.getKey()
-#if(!$doc.getValue().isEmpty())
- * <br />
- * $doc.getValue()
-#end
- */
-#end
 #if( $keyRef )@KeyRef(${keyRef}.class)#end
 
 @Namespace("$namespace")
@@ -124,17 +113,6 @@ public interface $utility.capitalize($entityType.Name) extends #if( $baseType )$
 #end
 
 #foreach($operation in $utility.getFunctionImportsBoundTo($entityType.Name, false))
-#set ($doc = $utility.getDocumentation($operation))
-#if($doc && !$doc.getKey().isEmpty())
-    /**
-     * $doc.getKey()
-    #if(!$doc.getValue().isEmpty())
-     * <br />
-     * $doc.getValue()
-    #end
-     */
-#end
-#set ($doc = false)
     @FunctionImport(name = "$operation.Name" #if($operation.EntitySet), 
                     entitySet = $operation.EntitySet$clsSuffix#end #if($operation.EntitySetPath),
                     entitySetPath = $operation.EntitySetPath#end #if($operation.isIsComposable),

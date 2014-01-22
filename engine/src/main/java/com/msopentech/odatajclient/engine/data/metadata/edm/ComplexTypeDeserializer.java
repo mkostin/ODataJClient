@@ -23,25 +23,55 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v4.Annotation;
+import com.msopentech.odatajclient.engine.utils.ODataVersion;
 import java.io.IOException;
+import org.apache.commons.lang3.BooleanUtils;
 
-public class ComplexTypeDeserializer extends JsonDeserializer<ComplexType> {
+public class ComplexTypeDeserializer extends AbstractEdmDeserializer<AbstractComplexType> {
 
     @Override
-    public ComplexType deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    protected AbstractComplexType doDeserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
-        final ComplexType complexType = new ComplexType();
+        final AbstractComplexType complexType = ODataVersion.V3 == client.getWorkingVersion()
+                ? new com.msopentech.odatajclient.engine.data.metadata.edm.v3.ComplexType()
+                : new com.msopentech.odatajclient.engine.data.metadata.edm.v4.ComplexType();
 
         for (; jp.getCurrentToken() != JsonToken.END_OBJECT; jp.nextToken()) {
             final JsonToken token = jp.getCurrentToken();
             if (token == JsonToken.FIELD_NAME) {
                 if ("Name".equals(jp.getCurrentName())) {
                     complexType.setName(jp.nextTextValue());
+                } else if ("Abstract".equals(jp.getCurrentName())) {
+                    ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.ComplexType) complexType).
+                            setAbstractEntityType(BooleanUtils.toBoolean(jp.nextTextValue()));
+                } else if ("BaseType".equals(jp.getCurrentName())) {
+                    ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.ComplexType) complexType).
+                            setBaseType(jp.nextTextValue());
+                } else if ("OpenType".equals(jp.getCurrentName())) {
+                    ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.ComplexType) complexType).
+                            setOpenType(BooleanUtils.toBoolean(jp.nextTextValue()));
                 } else if ("Property".equals(jp.getCurrentName())) {
                     jp.nextToken();
-                    complexType.getProperties().add(jp.getCodec().readValue(jp, Property.class));
+                    if (complexType instanceof com.msopentech.odatajclient.engine.data.metadata.edm.v3.ComplexType) {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v3.ComplexType) complexType).
+                                getProperties().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v3.Property.class));
+                    } else {
+                        ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.ComplexType) complexType).
+                                getProperties().add(jp.getCodec().readValue(jp,
+                                                com.msopentech.odatajclient.engine.data.metadata.edm.v4.Property.class));
+                    }
+                } else if ("NavigationProperty".equals(jp.getCurrentName())) {
+                    jp.nextToken();
+                    ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.ComplexType) complexType).
+                            getNavigationProperties().add(jp.getCodec().readValue(jp,
+                                            com.msopentech.odatajclient.engine.data.metadata.edm.v4.NavigationProperty.class));
+                } else if ("Annotation".equals(jp.getCurrentName())) {
+                    jp.nextToken();
+                    ((com.msopentech.odatajclient.engine.data.metadata.edm.v4.ComplexType) complexType).
+                            setAnnotation(jp.getCodec().readValue(jp, Annotation.class));
                 }
             }
         }

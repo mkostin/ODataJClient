@@ -51,7 +51,7 @@ public abstract class AbstractODataWriter implements ODataWriter {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             for (ODataEntity entity : entities) {
-                client.getSerializer().entry(client.getODataBinder().
+                client.getSerializer().entry(client.getBinder().
                         getEntry(entity, ResourceFactory.entryClassForFormat(format), outputType), output);
             }
 
@@ -75,7 +75,7 @@ public abstract class AbstractODataWriter implements ODataWriter {
     public InputStream writeProperty(final ODataProperty property, final ODataFormat format) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
-            client.getSerializer().property(client.getODataBinder().toDOMElement(property), format, output);
+            client.getSerializer().property(client.getBinder().toDOMElement(property), format, output);
 
             return new ByteArrayInputStream(output.toByteArray());
         } finally {

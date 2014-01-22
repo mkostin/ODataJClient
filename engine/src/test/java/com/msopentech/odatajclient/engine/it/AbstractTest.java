@@ -266,7 +266,7 @@ public abstract class AbstractTest {
         entity.setMediaEntity(true);
 
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Information",
-                new ODataPrimitiveValue.Builder(client).setText(sampleinfo).setType(
+                client.getPrimitiveValueBuilder().setText(sampleinfo).setType(
                         EdmSimpleType.String).build()));
 
         return entity;
@@ -280,12 +280,12 @@ public abstract class AbstractTest {
 
         // add name attribute
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("Name",
-                new ODataPrimitiveValue.Builder(client).setText(sampleName).setType(
+                client.getPrimitiveValueBuilder().setText(sampleName).setType(
                         EdmSimpleType.String).build()));
 
         // add key attribute
         entity.addProperty(ODataObjectFactory.newPrimitiveProperty("CustomerId",
-                new ODataPrimitiveValue.Builder(client).setText(String.valueOf(id)).setType(
+                client.getPrimitiveValueBuilder().setText(String.valueOf(id)).setType(
                         EdmSimpleType.Int32).build()));
 
         // add BackupContactInfo attribute (collection)
@@ -301,13 +301,13 @@ public abstract class AbstractTest {
 
         // add BackupContactInfo.ContactDetails.AlternativeNames attribute (collection)
         final ODataCollectionValue altNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        altNamesValue.add(new ODataPrimitiveValue.Builder(client).
+        altNamesValue.add(client.getPrimitiveValueBuilder().
                 setText("myname").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", altNamesValue));
 
         // add BackupContactInfo.ContactDetails.EmailBag attribute (collection)
         final ODataCollectionValue emailBagValue = new ODataCollectionValue("Collection(Edm.String)");
-        emailBagValue.add(new ODataPrimitiveValue.Builder(client).
+        emailBagValue.add(client.getPrimitiveValueBuilder().
                 setText("myname@mydomain.com").setType(EdmSimpleType.String).build());
         contactDetails.add(ODataObjectFactory.newCollectionProperty("EmailBag", emailBagValue));
 
@@ -318,7 +318,7 @@ public abstract class AbstractTest {
 
         // add BackupContactInfo.ContactDetails.ContactAlias.AlternativeNames attribute (collection)
         final ODataCollectionValue aliasAltNamesValue = new ODataCollectionValue("Collection(Edm.String)");
-        aliasAltNamesValue.add(new ODataPrimitiveValue.Builder(client).
+        aliasAltNamesValue.add(client.getPrimitiveValueBuilder().
                 setText("myAlternativeName").setType(EdmSimpleType.String).build());
         contactAliasValue.add(ODataObjectFactory.newCollectionProperty("AlternativeNames", aliasAltNamesValue));
 
@@ -363,12 +363,12 @@ public abstract class AbstractTest {
     protected void debugODataEntity(final ODataEntity entity, final String message) {
         if (LOG.isDebugEnabled()) {
             StringWriter writer = new StringWriter();
-            client.getSerializer().entry(client.getODataBinder().getEntry(entity, AtomEntry.class), writer);
+            client.getSerializer().entry(client.getBinder().getEntry(entity, AtomEntry.class), writer);
             writer.flush();
             LOG.debug(message + " (Atom)\n{}", writer.toString());
 
             writer = new StringWriter();
-            client.getSerializer().entry(client.getODataBinder().getEntry(entity, JSONV3Entry.class), writer);
+            client.getSerializer().entry(client.getBinder().getEntry(entity, JSONV3Entry.class), writer);
             writer.flush();
             LOG.debug(message + " (JSON)\n{}", writer.toString());
         }
@@ -564,7 +564,7 @@ public abstract class AbstractTest {
         assertNotEquals(newm, oldm);
 
         changes.addProperty(ODataObjectFactory.newPrimitiveProperty(propertyName,
-                new ODataPrimitiveValue.Builder(client).setText(newm).build()));
+                client.getPrimitiveValueBuilder().setText(newm).build()));
 
         update(type, changes, format, etag);
 

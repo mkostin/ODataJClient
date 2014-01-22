@@ -24,13 +24,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.msopentech.odatajclient.engine.communication.request.cud.CUDRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataDeleteRequest;
 import com.msopentech.odatajclient.engine.communication.request.cud.ODataEntityCreateRequest;
 import com.msopentech.odatajclient.engine.communication.request.invoke.ODataInvokeRequest;
-import com.msopentech.odatajclient.engine.communication.request.invoke.InvokeRequestFactory;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntityRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataDeleteResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataEntityCreateResponse;
 import com.msopentech.odatajclient.engine.communication.response.ODataInvokeResponse;
@@ -43,11 +40,12 @@ import com.msopentech.odatajclient.engine.data.ODataPrimitiveValue;
 import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
 import com.msopentech.odatajclient.engine.data.metadata.EdmType;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Metadata;
+import com.msopentech.odatajclient.engine.data.metadata.EdmV3Type;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.EntityContainer;
-import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.EntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.v3.FunctionImport;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.net.URI;
@@ -63,7 +61,7 @@ import org.junit.Test;
 public class InvokeTestITCase extends AbstractTest {
 
     private void getWithNoParams(final ODataPubFormat format) {
-        final EdmMetadata metadata =
+        final EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
@@ -114,7 +112,7 @@ public class InvokeTestITCase extends AbstractTest {
 
     private void getWithParams(final ODataPubFormat format) {
         // 1. primitive result
-        EdmMetadata metadata =
+        EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
@@ -124,8 +122,8 @@ public class InvokeTestITCase extends AbstractTest {
         URIBuilder builder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
-        EdmType type = new EdmType(funcImp.getParameters().get(0).getType());
-        ODataPrimitiveValue argument = new ODataPrimitiveValue.Builder(client).
+        EdmType type = new EdmV3Type(funcImp.getParameters().get(0).getType());
+        ODataPrimitiveValue argument = client.getPrimitiveValueBuilder().
                 setType(type.getSimpleType()).
                 setValue(154).
                 build();
@@ -134,7 +132,7 @@ public class InvokeTestITCase extends AbstractTest {
 
         final ODataInvokeRequest<ODataProperty> primitiveReq =
                 client.getInvokeRequestFactory().getInvokeRequest(builder.build(), metadata, funcImp,
-                parameters);
+                        parameters);
         primitiveReq.setFormat(format);
 
         final ODataInvokeResponse<ODataProperty> primitiveRes = primitiveReq.execute();
@@ -154,8 +152,8 @@ public class InvokeTestITCase extends AbstractTest {
         builder = client.getURIBuilder(testDefaultServiceRootURL).
                 appendFunctionImportSegment(URIUtils.rootFunctionImportURISegment(container, funcImp));
 
-        type = new EdmType(funcImp.getParameters().get(0).getType());
-        argument = new ODataPrimitiveValue.Builder(client).
+        type = new EdmV3Type(funcImp.getParameters().get(0).getType());
+        argument = client.getPrimitiveValueBuilder().
                 setType(type.getSimpleType()).
                 setText(StringUtils.EMPTY).
                 build();
@@ -193,15 +191,16 @@ public class InvokeTestITCase extends AbstractTest {
         final ODataEntity employee = ODataObjectFactory.newEntity(
                 "Microsoft.Test.OData.Services.AstoriaDefaultService.Employee");
 
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("PersonId", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("PersonId", client.getPrimitiveValueBuilder().
                 setText("1244").setType(EdmSimpleType.Int32).build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Name", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Name", client.getPrimitiveValueBuilder().
                 setText("Test employee").build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("ManagersPersonId", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("ManagersPersonId", client.
+                getPrimitiveValueBuilder().
                 setText("3777").setType(EdmSimpleType.Int32).build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Salary", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Salary", client.getPrimitiveValueBuilder().
                 setText("1000").setType(EdmSimpleType.Int32).build()));
-        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Title", new ODataPrimitiveValue.Builder(client).
+        employee.addProperty(ODataObjectFactory.newPrimitiveProperty("Title", client.getPrimitiveValueBuilder().
                 setText("CEO").build()));
 
         final URIBuilder uriBuilder = client.getURIBuilder(testDefaultServiceRootURL).
@@ -237,7 +236,7 @@ public class InvokeTestITCase extends AbstractTest {
         // 1. invoke action bound with the employee just created
         final ODataOperation action = created.getOperations().get(0);
 
-        final EdmMetadata metadata =
+        final EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
@@ -271,7 +270,8 @@ public class InvokeTestITCase extends AbstractTest {
                 appendEntitySetSegment("Person").
                 appendEntityTypeSegment("Microsoft.Test.OData.Services.AstoriaDefaultService.Employee");
         final URI employeesURI = builder.build();
-        ODataEntitySet employees = client.getRetrieveRequestFactory().getEntitySetRequest(employeesURI).execute().getBody();
+        ODataEntitySet employees = client.getRetrieveRequestFactory().getEntitySetRequest(employeesURI).execute().
+                getBody();
         assertFalse(employees.getEntities().isEmpty());
         final Map<Integer, Integer> preSalaries = new HashMap<Integer, Integer>(employees.getCount());
         for (ODataEntity employee : employees.getEntities()) {
@@ -281,7 +281,7 @@ public class InvokeTestITCase extends AbstractTest {
         assertFalse(preSalaries.isEmpty());
 
         // 2. invoke action bound, with additional parameter
-        final EdmMetadata metadata =
+        final EdmV3Metadata metadata =
                 client.getRetrieveRequestFactory().getMetadataRequest(testDefaultServiceRootURL).execute().getBody();
         assertNotNull(metadata);
 
@@ -291,7 +291,7 @@ public class InvokeTestITCase extends AbstractTest {
         final ODataInvokeRequest<ODataNoContent> req = client.getInvokeRequestFactory().getInvokeRequest(
                 builder.appendStructuralSegment(funcImp.getName()).build(), metadata, funcImp,
                 Collections.<String, ODataValue>singletonMap(
-                "n", new ODataPrimitiveValue.Builder(client).setValue(1).setType(EdmSimpleType.Int32).build()));
+                        "n", client.getPrimitiveValueBuilder().setValue(1).setType(EdmSimpleType.Int32).build()));
         final ODataInvokeResponse<ODataNoContent> res = req.execute();
         assertNotNull(res);
         assertEquals(204, res.getStatusCode());

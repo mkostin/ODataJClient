@@ -75,7 +75,7 @@ public class EntityRetrieveTestITCase extends AbstractTest {
                 final ODataEntity inline = ((ODataInlineEntity) link).getEntity();
                 assertNotNull(inline);
 
-                debugEntry(client.getODataBinder().getEntry(
+                debugEntry(client.getBinder().getEntry(
                         inline, ResourceFactory.entryClassForFormat(format)), "Just read");
 
                 final List<ODataProperty> properties = inline.getProperties();
@@ -122,7 +122,7 @@ public class EntityRetrieveTestITCase extends AbstractTest {
                 final ODataEntitySet inline = ((ODataInlineEntitySet) link).getEntitySet();
                 assertNotNull(inline);
 
-                debugFeed(client.getODataBinder().getFeed(inline, ResourceFactory.feedClassForFormat(format)),
+                debugFeed(client.getBinder().getFeed(inline, ResourceFactory.feedClassForFormat(format)),
                         "Just read");
 
                 found = true;

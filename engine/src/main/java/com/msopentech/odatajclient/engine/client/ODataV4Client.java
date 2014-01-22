@@ -28,15 +28,14 @@ import com.msopentech.odatajclient.engine.communication.request.streamed.V4Strea
 import com.msopentech.odatajclient.engine.data.ODataV4Binder;
 import com.msopentech.odatajclient.engine.data.ODataV4Reader;
 import com.msopentech.odatajclient.engine.data.ODataV4Writer;
-import com.msopentech.odatajclient.engine.data.V4Deserializer;
-import com.msopentech.odatajclient.engine.data.V4Serializer;
+import com.msopentech.odatajclient.engine.data.ODataV4Deserializer;
+import com.msopentech.odatajclient.engine.data.ODataV4Serializer;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.V4URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.V4FilterFactory;
-import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import com.msopentech.odatajclient.engine.utils.ODataConstants.Version;
+import com.msopentech.odatajclient.engine.utils.ODataVersion;
 
-public class ODataV4Client implements ODataClient {
+public class ODataV4Client extends AbstractODataClient {
 
     private static final long serialVersionUID = -6653176125573631964L;
 
@@ -44,9 +43,9 @@ public class ODataV4Client implements ODataClient {
 
     private final V4FilterFactory filterFactory = new V4FilterFactory();
 
-    private final V4Deserializer deserializer = new V4Deserializer(this);
+    private final ODataV4Deserializer deserializer = new ODataV4Deserializer(this);
 
-    private final V4Serializer serializer = new V4Serializer(this);
+    private final ODataV4Serializer serializer = new ODataV4Serializer(this);
 
     private final ODataV4Reader reader = new ODataV4Reader(this);
 
@@ -65,15 +64,15 @@ public class ODataV4Client implements ODataClient {
     private final V4BatchRequestFactory batchReqFact = new V4BatchRequestFactory(this);
 
     @Override
-    public Version getWorkingVersion() {
-        return Version.V4;
+    public ODataVersion getWorkingVersion() {
+        return ODataVersion.V4;
     }
 
     @Override
     public ODataHeaders getVersionHeaders() {
         final ODataHeaders odataHeaders = new ODataHeaders();
-        odataHeaders.setHeader(ODataHeaders.HeaderName.maxDataServiceVersion, ODataConstants.Version.V4.toString());
-        odataHeaders.setHeader(ODataHeaders.HeaderName.dataServiceVersion, ODataConstants.Version.V4.toString());
+        odataHeaders.setHeader(ODataHeaders.HeaderName.maxDataServiceVersion, ODataVersion.V4.toString());
+        odataHeaders.setHeader(ODataHeaders.HeaderName.dataServiceVersion, ODataVersion.V4.toString());
         return odataHeaders;
     }
 
@@ -93,27 +92,27 @@ public class ODataV4Client implements ODataClient {
     }
 
     @Override
-    public V4Deserializer getDeserializer() {
+    public ODataV4Deserializer getDeserializer() {
         return deserializer;
     }
 
     @Override
-    public V4Serializer getSerializer() {
+    public ODataV4Serializer getSerializer() {
         return serializer;
     }
 
     @Override
-    public ODataV4Reader getODataReader() {
+    public ODataV4Reader getReader() {
         return reader;
     }
 
     @Override
-    public ODataV4Writer getODataWriter() {
+    public ODataV4Writer getWriter() {
         return writer;
     }
 
     @Override
-    public ODataV4Binder getODataBinder() {
+    public ODataV4Binder getBinder() {
         return binder;
     }
 

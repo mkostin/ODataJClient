@@ -20,24 +20,24 @@
 package com.msopentech.odatajclient.engine.communication.request.invoke;
 
 import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.client.http.HttpMethod;
-import com.msopentech.odatajclient.engine.data.ODataEntity;
-import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInvokeResult;
-import com.msopentech.odatajclient.engine.data.ODataNoContent;
-import com.msopentech.odatajclient.engine.data.ODataProperty;
 import com.msopentech.odatajclient.engine.data.ODataValue;
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
-import com.msopentech.odatajclient.engine.data.metadata.EdmType;
-import com.msopentech.odatajclient.engine.data.metadata.edm.FunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.AbstractEdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractComplexType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractDataServices;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEdmx;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEntityContainer;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractEntityType;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractFunctionImport;
+import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractSchema;
 import java.net.URI;
 import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
 
-/**
- * OData request factory class.
- */
-public abstract class AbstractInvokeRequestFactory implements InvokeRequestFactory {
+abstract class AbstractInvokeRequestFactory<META extends AbstractEdmMetadata<
+        EDMX, DS, S, EC, E, C, FI>, EDMX extends AbstractEdmx<DS, S, EC, E, C, FI>, DS extends AbstractDataServices<
+        S, EC, E, C, FI>, S extends AbstractSchema<EC, E, C, FI>, EC extends AbstractEntityContainer<
+        FI>, E extends AbstractEntityType, C extends AbstractComplexType, FI extends AbstractFunctionImport>
+        implements InvokeRequestFactory<META, EDMX, DS, S, EC, E, C, FI> {
 
     private static final long serialVersionUID = -906760270085197249L;
 
@@ -48,54 +48,12 @@ public abstract class AbstractInvokeRequestFactory implements InvokeRequestFacto
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
-            final URI uri, final EdmMetadata metadata, final FunctionImport functionImport) {
+    public <RES extends ODataInvokeResult> ODataInvokeRequest<RES> getInvokeRequest(
+            final URI uri, final META metadata, final FI functionImport, final Map<String, ODataValue> parameters) {
 
-        HttpMethod method = null;
-        if (HttpMethod.GET.name().equals(functionImport.getHttpMethod())) {
-            method = HttpMethod.GET;
-        } else if (HttpMethod.POST.name().equals(functionImport.getHttpMethod())) {
-            method = HttpMethod.POST;
-        } else if (functionImport.getHttpMethod() == null) {
-            if (functionImport.isSideEffecting()) {
-                method = HttpMethod.POST;
-            } else {
-                method = HttpMethod.GET;
-            }
-        }
-
-        ODataInvokeRequest<T> result;
-        if (StringUtils.isBlank(functionImport.getReturnType())) {
-            result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataNoContent>(
-                    client, ODataNoContent.class, method, uri);
-        } else {
-            final EdmType returnType = new EdmType(metadata, functionImport.getReturnType());
-
-            if (returnType.isCollection() && returnType.isEntityType()) {
-                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntitySet>(
-                        client, ODataEntitySet.class, method, uri);
-            } else if (!returnType.isCollection() && returnType.isEntityType()) {
-                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataEntity>(
-                        client, ODataEntity.class, method, uri);
-            } else {
-                result = (ODataInvokeRequest<T>) new ODataInvokeRequest<ODataProperty>(
-                        client, ODataProperty.class, method, uri);
-            }
-        }
-
-        return result;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends ODataInvokeResult> ODataInvokeRequest<T> getInvokeRequest(
-            final URI uri, final EdmMetadata metadata, final FunctionImport functionImport,
-            final Map<String, ODataValue> parameters) {
-
-        final ODataInvokeRequest<T> result = getInvokeRequest(uri, metadata, functionImport);
+        final ODataInvokeRequest<RES> result = getInvokeRequest(uri, metadata, functionImport);
         result.setParameters(parameters);
-
         return result;
     }
+
 }

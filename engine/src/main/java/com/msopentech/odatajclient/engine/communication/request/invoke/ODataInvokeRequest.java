@@ -131,7 +131,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
                 }
             }
 
-            return odataClient.getODataWriter().writeEntity(tmp, ODataPubFormat.JSON, false);
+            return odataClient.getWriter().writeEntity(tmp, ODataPubFormat.JSON, false);
         }
 
         return null;
@@ -211,15 +211,15 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
 
                 try {
                     if (reference.isAssignableFrom(ODataEntitySet.class)) {
-                        invokeResult = (T) odataClient.getODataReader().readEntitySet(res.getEntity().getContent(),
+                        invokeResult = (T) odataClient.getReader().readEntitySet(res.getEntity().getContent(),
                                 ODataPubFormat.fromString(getContentType()));
                     }
                     if (reference.isAssignableFrom(ODataEntity.class)) {
-                        invokeResult = (T) odataClient.getODataReader().readEntity(res.getEntity().getContent(),
+                        invokeResult = (T) odataClient.getReader().readEntity(res.getEntity().getContent(),
                                 ODataPubFormat.fromString(getContentType()));
                     }
                     if (reference.isAssignableFrom(ODataProperty.class)) {
-                        invokeResult = (T) odataClient.getODataReader().readProperty(res.getEntity().getContent(),
+                        invokeResult = (T) odataClient.getReader().readProperty(res.getEntity().getContent(),
                                 ODataFormat.fromString(getContentType()));
                     }
                 } catch (IOException e) {

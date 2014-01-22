@@ -79,7 +79,7 @@ public class ODataLinkCreateRequest extends AbstractODataBasicRequestImpl<ODataL
      */
     @Override
     protected InputStream getPayload() {
-        return odataClient.getODataWriter().writeLink(link, ODataFormat.fromString(getContentType()));
+        return odataClient.getWriter().writeLink(link, ODataFormat.fromString(getContentType()));
     }
 
     /**

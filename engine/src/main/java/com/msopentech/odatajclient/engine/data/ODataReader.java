@@ -19,7 +19,7 @@
  */
 package com.msopentech.odatajclient.engine.data;
 
-import com.msopentech.odatajclient.engine.data.metadata.EdmMetadata;
+import com.msopentech.odatajclient.engine.data.metadata.AbstractEdmMetadata;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.InputStream;
@@ -85,7 +85,7 @@ public interface ODataReader extends Serializable {
      * @param input stream to de-serialize.
      * @return metadata representation.
      */
-    EdmMetadata readMetadata(InputStream input);
+    AbstractEdmMetadata<?, ?, ?, ?, ?, ?, ?> readMetadata(InputStream input);
 
     /**
      * Parses a stream into an OData error.
@@ -105,6 +105,5 @@ public interface ODataReader extends Serializable {
      * @param reference reference.
      * @return read object.
      */
-    @SuppressWarnings("unchecked")
     <T> T read(InputStream src, String format, Class<T> reference);
 }
