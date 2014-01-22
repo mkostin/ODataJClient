@@ -20,12 +20,12 @@
 package com.msopentech.odatajclient.engine.client.http;
 
 import java.net.URI;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * Interface used by ODataRequest implementations to instantiate HttpClient.
  */
 public interface HttpClientFactory {
 
-    HttpClient createHttpClient(HttpMethod method, URI uri);
+    CloseableHttpClient createHttpClient(HttpMethod method, URI uri);
 }

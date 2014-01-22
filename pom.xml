@@ -80,7 +80,7 @@
     <targetJdk>1.6</targetJdk>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
-    <hc.client.version>4.2.6</hc.client.version>
+    <hc.client.version>4.3.2</hc.client.version>
     
     <commons.io.version>2.4</commons.io.version>
     <commons.lang3.version>3.2.1</commons.lang3.version>

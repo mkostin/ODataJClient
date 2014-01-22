@@ -145,7 +145,8 @@ public interface Configuration extends Serializable {
      * Example: http://services.odata.org/V4/OData/OData.svc/Products(0) or
      * http://services.odata.org/V4/OData/OData.svc/Products/0
      *
-     * @return
+     * @return whether URIs shall be built with entity key between parentheses (standard) or instead as additional
+     * segment.
      */
     boolean isKeyAsSegment();
 
@@ -154,27 +155,8 @@ public interface Configuration extends Serializable {
      * segment.
      * Example: http://services.odata.org/V4/OData/OData.svc/Products(0) or
      * http://services.odata.org/V4/OData/OData.svc/Products/0
-     *
-     * @return whether URIs shall be built with entity key between parentheses (standard) or instead as additional
-     * segment.
      */
     void setKeyAsSegment(boolean value);
-
-    /**
-     * Checks whether Gzip compression (e.g. support for <tt>Accept-Encoding: gzip</tt> and
-     * <tt>Content-Encoding: gzip</tt> HTTP headers) is enabled.
-     *
-     * @return whether HTTP Gzip compression is enabled
-     */
-    boolean isGzipCompression();
-
-    /**
-     * Sets Gzip compression (e.g. support for <tt>Accept-Encoding: gzip</tt> and
-     * <tt>Content-Encoding: gzip</tt> HTTP headers) enabled or disabled.
-     *
-     * @param value whether to use Gzip compression.
-     */
-    void setGzipCompression(boolean value);
 
     /**
      * Checks whether chunk HTTP encoding is being used.

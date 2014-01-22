@@ -36,8 +36,8 @@ import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData update entity property value request.
@@ -110,7 +110,7 @@ public class ODataValueUpdateRequest extends AbstractODataBasicRequestImpl<OData
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataValueUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataValueUpdateResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

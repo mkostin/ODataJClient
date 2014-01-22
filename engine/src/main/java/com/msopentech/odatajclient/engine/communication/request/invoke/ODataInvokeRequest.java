@@ -44,10 +44,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData invoke operation request.
@@ -194,7 +194,7 @@ public class ODataInvokeRequest<T extends ODataInvokeResult>
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataInvokeResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataInvokeResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

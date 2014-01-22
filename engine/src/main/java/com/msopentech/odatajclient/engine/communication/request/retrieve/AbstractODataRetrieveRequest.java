@@ -28,7 +28,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This is an abstract representation of an OData retrieve query request returning one or more result item.
@@ -85,7 +85,7 @@ abstract class AbstractODataRetrieveRequest<V, T extends Enum<T>>
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        protected ODataRetrieveResponseImpl(final HttpClient client, final HttpResponse res) {
+        protected ODataRetrieveResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

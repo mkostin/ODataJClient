@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements a batch request.
@@ -245,7 +245,7 @@ public class ODataBatchRequest extends AbstractODataStreamedRequestImpl<ODataBat
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataBatchResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataBatchResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

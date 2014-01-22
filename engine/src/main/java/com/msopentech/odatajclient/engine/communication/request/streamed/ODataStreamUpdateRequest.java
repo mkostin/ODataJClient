@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData stream create/update request.
@@ -111,7 +111,7 @@ public class ODataStreamUpdateRequest
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataStreamUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataStreamUpdateResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

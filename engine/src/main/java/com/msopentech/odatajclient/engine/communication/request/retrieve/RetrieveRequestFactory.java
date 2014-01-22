@@ -43,7 +43,7 @@ public interface RetrieveRequestFactory extends Serializable {
      * data service.
      * @return new ODataMetadataRequest instance.
      */
-    ODataMetadataRequest getMetadataRequest(String serviceRoot);
+    ODataMetadataRequest<?, ?, ?, ?, ?, ?, ?, ?> getMetadataRequest(String serviceRoot);
 
     /**
      * Gets a query request returning a set of one or more OData entities.

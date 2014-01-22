@@ -27,7 +27,7 @@ import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData link query request.
@@ -72,7 +72,7 @@ public class ODataLinkCollectionRequest extends AbstractODataRetrieveRequest<ODa
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataLinkCollectionResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataLinkCollectionResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

@@ -22,8 +22,10 @@ package com.msopentech.odatajclient.engine.client.http;
 import java.net.URI;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 /**
  * Base implementation for working with Basic Authentication: needs to be subclassed in order to provide actual username
@@ -38,13 +40,14 @@ public abstract class AbstractBasicAuthHttpClientFactory extends DefaultHttpClie
     protected abstract String getPassword();
 
     @Override
-    public HttpClient createHttpClient(final HttpMethod method, final URI uri) {
-        final DefaultHttpClient httpclient = (DefaultHttpClient) super.createHttpClient(method, uri);
-
-        httpclient.getCredentialsProvider().setCredentials(
+    public CloseableHttpClient createHttpClient(final HttpMethod method, final URI uri) {
+        final CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(
                 new AuthScope(uri.getHost(), uri.getPort()),
                 new UsernamePasswordCredentials(getUsername(), getPassword()));
 
-        return httpclient;
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(credsProvider)
+                .build();
     }
 }

@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveRe
 import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
 import java.net.URI;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements a generic OData retrieve query request.
@@ -86,7 +86,7 @@ public class ODataGenericRetrieveRequest extends ODataRawRequest {
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataGenericResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataGenericResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

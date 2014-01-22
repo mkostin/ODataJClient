@@ -29,7 +29,7 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData delete request.
@@ -85,7 +85,7 @@ public class ODataDeleteRequest extends AbstractODataBasicRequestImpl<ODataDelet
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataDeleteResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataDeleteResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
             this.close();
         }

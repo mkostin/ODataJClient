@@ -32,8 +32,8 @@ import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an insert link OData request.
@@ -101,7 +101,7 @@ public class ODataLinkCreateRequest extends AbstractODataBasicRequestImpl<ODataL
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataLinkCreateResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataLinkCreateResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
     }

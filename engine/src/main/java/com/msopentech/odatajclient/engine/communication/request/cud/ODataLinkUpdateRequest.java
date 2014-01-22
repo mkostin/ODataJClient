@@ -32,8 +32,8 @@ import java.io.InputStream;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an update link OData request.
@@ -104,7 +104,7 @@ public class ODataLinkUpdateRequest extends AbstractODataBasicRequestImpl<ODataL
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        public ODataLinkUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        public ODataLinkUpdateResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
     }

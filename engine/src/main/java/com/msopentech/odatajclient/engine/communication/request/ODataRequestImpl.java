@@ -51,7 +51,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DecompressingHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +95,7 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
     /**
      * HTTP client.
      */
-    protected final HttpClient httpClient;
+    protected final CloseableHttpClient httpClient;
 
     /**
      * HTTP request.
@@ -124,13 +124,8 @@ public class ODataRequestImpl<T extends Enum<T>> implements ODataRequest {
         // target uri
         this.uri = uri;
 
-        HttpClient _httpClient = odataClient.getConfiguration().getHttpClientFactory().
+        this.httpClient = odataClient.getConfiguration().getHttpClientFactory().
                 createHttpClient(this.method, this.uri);
-        if (odataClient.getConfiguration().isGzipCompression()) {
-            _httpClient = new DecompressingHttpClient(_httpClient);
-        }
-        this.httpClient = _httpClient;
-
         this.request = odataClient.getConfiguration().getHttpUriRequestFactory().
                 createHttpUriRequest(this.method, this.uri);
     }

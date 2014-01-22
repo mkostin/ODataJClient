@@ -48,8 +48,6 @@ public abstract class AbstractConfiguration implements Configuration {
 
     private static final String KEY_AS_SEGMENT = "keyAsSegment";
 
-    private static final String GZIP_COMPRESSION = "gzipCompression";
-
     private static final String CHUNKING = "chunking";
 
     private final Map<String, Object> CONF = new HashMap<String, Object>();
@@ -174,16 +172,6 @@ public abstract class AbstractConfiguration implements Configuration {
     @Override
     public void setKeyAsSegment(final boolean value) {
         setProperty(KEY_AS_SEGMENT, value);
-    }
-
-    @Override
-    public boolean isGzipCompression() {
-        return (Boolean) getProperty(GZIP_COMPRESSION, false);
-    }
-
-    @Override
-    public void setGzipCompression(final boolean value) {
-        setProperty(GZIP_COMPRESSION, value);
     }
 
     @Override

@@ -23,9 +23,9 @@ import java.net.URI;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 /**
  * Base implementation for working with NTLM Authentication via embedded HttpClient features: needs to be subclassed
@@ -39,6 +39,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public abstract class AbstractNTLMAuthHttpClientFactory extends DefaultHttpClientFactory {
 
+    private static final long serialVersionUID = -6891113979535294608L;
+
     protected abstract String getUsername();
 
     protected abstract String getPassword();
@@ -48,15 +50,13 @@ public abstract class AbstractNTLMAuthHttpClientFactory extends DefaultHttpClien
     protected abstract String getDomain();
 
     @Override
-    public HttpClient createHttpClient(final HttpMethod method, final URI uri) {
-        final DefaultHttpClient httpclient = (DefaultHttpClient) super.createHttpClient(method, uri);
-
+    public CloseableHttpClient createHttpClient(final HttpMethod method, final URI uri) {
         final CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(AuthScope.ANY,
                 new NTCredentials(getUsername(), getPassword(), getWorkstation(), getDomain()));
 
-        httpclient.setCredentialsProvider(credsProvider);
-
-        return httpclient;
+        return HttpClients.custom()
+                .setDefaultCredentialsProvider(credsProvider)
+                .build();
     }
 }

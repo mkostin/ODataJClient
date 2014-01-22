@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.data.ODataServiceDocument;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData service document request.
@@ -72,7 +72,7 @@ public class ODataServiceDocumentRequest extends AbstractODataRetrieveRequest<OD
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataServiceResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataServiceResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

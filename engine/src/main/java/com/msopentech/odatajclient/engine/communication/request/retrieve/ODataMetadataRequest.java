@@ -33,13 +33,13 @@ import com.msopentech.odatajclient.engine.data.metadata.edm.AbstractSchema;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements a metadata query request.
  */
-class ODataMetadataRequest<META extends AbstractEdmMetadata<
+public class ODataMetadataRequest<META extends AbstractEdmMetadata<
         EDMX, DS, S, EC, E, C, FI>, EDMX extends AbstractEdmx<DS, S, EC, E, C, FI>, DS extends AbstractDataServices<
         S, EC, E, C, FI>, S extends AbstractSchema<EC, E, C, FI>, EC extends AbstractEntityContainer<
         FI>, E extends AbstractEntityType, C extends AbstractComplexType, FI extends AbstractFunctionImport>
@@ -96,7 +96,7 @@ class ODataMetadataRequest<META extends AbstractEdmMetadata<
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataMetadataResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataMetadataResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

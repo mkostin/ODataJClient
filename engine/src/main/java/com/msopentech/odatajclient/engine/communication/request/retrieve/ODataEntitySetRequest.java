@@ -25,7 +25,7 @@ import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.net.URI;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData EntitySet query request.
@@ -72,7 +72,7 @@ public class ODataEntitySetRequest extends AbstractODataRetrieveRequest<ODataEnt
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataEntitySetResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataEntitySetResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData entity property value query request.
@@ -77,7 +77,7 @@ public class ODataValueRequest extends AbstractODataRetrieveRequest<ODataValue, 
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataValueResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataValueResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

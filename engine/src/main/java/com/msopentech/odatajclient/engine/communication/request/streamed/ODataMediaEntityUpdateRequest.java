@@ -31,7 +31,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData Media Entity create request.
@@ -115,7 +115,7 @@ public class ODataMediaEntityUpdateRequest
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataMediaEntityUpdateResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataMediaEntityUpdateResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

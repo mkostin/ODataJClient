@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData media query request.
@@ -82,7 +82,7 @@ public class ODataMediaRequest extends AbstractODataRetrieveRequest<InputStream,
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataMediaResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataMediaResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 

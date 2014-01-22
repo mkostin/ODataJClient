@@ -27,7 +27,7 @@ import com.msopentech.odatajclient.engine.format.ODataFormat;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * This class implements an OData entity property query request.
@@ -71,7 +71,7 @@ public class ODataPropertyRequest extends AbstractODataRetrieveRequest<ODataProp
          * @param client HTTP client.
          * @param res HTTP response.
          */
-        private ODataPropertyResponseImpl(final HttpClient client, final HttpResponse res) {
+        private ODataPropertyResponseImpl(final CloseableHttpClient client, final HttpResponse res) {
             super(client, res);
         }
 
