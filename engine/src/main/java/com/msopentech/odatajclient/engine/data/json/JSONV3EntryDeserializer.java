@@ -19,6 +19,19 @@
  */
 package com.msopentech.odatajclient.engine.data.json;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,17 +42,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.msopentech.odatajclient.engine.data.ODataLinkType;
 import com.msopentech.odatajclient.engine.data.ODataOperation;
+import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Parse JSON string into <tt>JSONV3Entry</tt> or <tt>JSONV4Entry</tt>.
@@ -48,14 +52,14 @@ import org.w3c.dom.Element;
  * @see JSONV3Entry
  * @see JSONV4Entry
  */
-public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEntry> {
+public class JSONV3EntryDeserializer extends ODataJsonDeserializer<JSONV3Entry> {
 
     private String getTitle(final Map.Entry<String, JsonNode> entry) {
         return entry.getKey().substring(0, entry.getKey().indexOf('@'));
     }
 
     private String setInline(final String name, final String suffix, final ObjectNode tree,
-            final ObjectCodec codec, final JSONLink link) throws IOException {
+            final ObjectCodec codec, final JSONV3Link link) throws IOException {
 
         final String entryNamePrefix = name.substring(0, name.indexOf(suffix));
         if (tree.has(entryNamePrefix)) {
@@ -64,16 +68,16 @@ public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEnt
             if (inline instanceof ObjectNode) {
                 final JsonParser inlineParser = inline.traverse();
                 inlineParser.setCodec(codec);
-                link.setInlineEntry(inlineParser.readValuesAs(JSONV3Entry.class).next());
+                link.setInlineEntry(inlineParser.readValuesAs(client.getResourceFactory().entryClassForFormat(ODataPubFormat.JSON)).next());
             }
 
             if (inline instanceof ArrayNode) {
-                final JSONFeed feed = new JSONFeed();
+                final JSONV3Feed feed = client.getResourceFactory().newFeed(JSONV3Feed.class);
                 final Iterator<JsonNode> entries = ((ArrayNode) inline).elements();
                 while (entries.hasNext()) {
                     final JsonParser inlineParser = entries.next().traverse();
                     inlineParser.setCodec(codec);
-                    feed.addEntry(inlineParser.readValuesAs(JSONV3Entry.class).next());
+                    feed.addEntry((JSONV3Entry) inlineParser.readValuesAs(client.getResourceFactory().entryClassForFeed(feed.getClass())));
                 }
 
                 link.setInlineFeed(feed);
@@ -83,7 +87,7 @@ public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEnt
     }
 
     @Override
-    protected AbstractJSONEntry doDeserialize(final JsonParser parser, final DeserializationContext ctxt)
+    protected JSONV3Entry doDeserialize(final JsonParser parser, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
         final ObjectNode tree = (ObjectNode) parser.getCodec().readTree(parser);
@@ -96,7 +100,12 @@ public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEnt
                 tree.hasNonNull(ODataConstants.JSON_MEDIAREAD_LINK)
                 && tree.hasNonNull(ODataConstants.JSON_MEDIA_CONTENT_TYPE);
 
-        final JSONV3Entry entry = new JSONV3Entry();
+        JSONV3Entry entry;
+        try {
+            entry = (JSONV3Entry) client.getResourceFactory().entryClassForFormat(ODataPubFormat.JSON).newInstance();
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
 
         if (tree.hasNonNull(ODataConstants.JSON_METADATA)) {
             entry.setMetadata(URI.create(tree.get(ODataConstants.JSON_METADATA).textValue()));
@@ -124,7 +133,7 @@ public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEnt
         }
 
         if (tree.hasNonNull(ODataConstants.JSON_READ_LINK)) {
-            final JSONLink link = new JSONLink();
+            final JSONV3Link link = new JSONV3Link();
             link.setRel(ODataConstants.SELF_LINK_REL);
             link.setHref(tree.get(ODataConstants.JSON_READ_LINK).textValue());
             entry.setSelfLink(link);
@@ -133,7 +142,7 @@ public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEnt
         }
 
         if (tree.hasNonNull(ODataConstants.JSON_EDIT_LINK)) {
-            final JSONLink link = new JSONLink();
+            final JSONV3Link link = new JSONV3Link();
             link.setRel(ODataConstants.EDIT_LINK_REL);
             link.setHref(tree.get(ODataConstants.JSON_EDIT_LINK).textValue());
             entry.setEditLink(link);
@@ -146,7 +155,7 @@ public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEnt
             tree.remove(ODataConstants.JSON_MEDIAREAD_LINK);
         }
         if (tree.hasNonNull(ODataConstants.JSON_MEDIAEDIT_LINK)) {
-            final JSONLink link = new JSONLink();
+            final JSONV3Link link = new JSONV3Link();
             link.setHref(tree.get(ODataConstants.JSON_MEDIAEDIT_LINK).textValue());
             entry.addMediaEditLink(link);
 
@@ -163,7 +172,7 @@ public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEnt
             final Map.Entry<String, JsonNode> field = itor.next();
 
             if (field.getKey().endsWith(ODataConstants.JSON_NAVIGATION_LINK_SUFFIX)) {
-                final JSONLink link = new JSONLink();
+                final JSONV3Link link = new JSONV3Link();
                 link.setTitle(getTitle(field));
                 link.setRel(ODataConstants.NAVIGATION_LINK_REL + getTitle(field));
                 if (field.getValue().isValueNode()) {
@@ -181,7 +190,7 @@ public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEnt
                 toRemove.add(setInline(field.getKey(),
                         ODataConstants.JSON_NAVIGATION_LINK_SUFFIX, tree, parser.getCodec(), link));
             } else if (field.getKey().endsWith(ODataConstants.JSON_ASSOCIATION_LINK_SUFFIX)) {
-                final JSONLink link = new JSONLink();
+                final JSONV3Link link = new JSONV3Link();
                 link.setTitle(getTitle(field));
                 link.setRel(ODataConstants.ASSOCIATION_LINK_REL + getTitle(field));
                 link.setHref(field.getValue().textValue());
@@ -190,7 +199,7 @@ public class JSONEntryDeserializer extends ODataJsonDeserializer<AbstractJSONEnt
 
                 toRemove.add(field.getKey());
             } else if (field.getKey().endsWith(ODataConstants.JSON_MEDIAEDIT_LINK_SUFFIX)) {
-                final JSONLink link = new JSONLink();
+                final JSONV3Link link = new JSONV3Link();
                 link.setTitle(getTitle(field));
                 link.setRel(ODataConstants.MEDIA_EDIT_LINK_REL + getTitle(field));
                 link.setHref(field.getValue().textValue());

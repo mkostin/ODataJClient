@@ -1,23 +1,8 @@
-/**
- * Copyright © Microsoft Open Technologies, Inc.
- *
- * All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
- * OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
- * ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
- * PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
- *
- * See the Apache License, Version 2.0 for the specific language
- * governing permissions and limitations under the License.
- */
 package com.msopentech.odatajclient.engine.data.json;
+
+import java.io.Serializable;
+import java.net.URI;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,37 +10,21 @@ import com.msopentech.odatajclient.engine.data.AbstractPayloadObject;
 import com.msopentech.odatajclient.engine.data.EntryResource;
 import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.uri.SegmentType;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * List of entries, represented via JSON.
- *
- * @see JSONV3Entry
- */
-public class JSONFeed extends AbstractPayloadObject implements FeedResource {
+public abstract class AbstractJSONFeed extends AbstractPayloadObject implements FeedResource, Serializable {
 
     private static final long serialVersionUID = -3576372289800799417L;
 
     @JsonProperty(value = "odata.metadata", required = false)
-    private URI metadata;
+    protected URI metadata;
 
     @JsonProperty(value = "odata.count", required = false)
-    private Integer count;
-
-    @JsonProperty("value")
-    private final List<JSONV3Entry> entries;
+    protected Integer count;
 
     @JsonProperty(value = "odata.nextLink", required = false)
-    private String next;
+    protected String next;
 
-    /**
-     * Constructor.
-     */
-    public JSONFeed() {
-        super();
-        entries = new ArrayList<JSONV3Entry>();
+    public AbstractJSONFeed() {
     }
 
     @JsonIgnore
@@ -99,9 +68,7 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
      * {@inheritDoc }
      */
     @Override
-    public List<JSONV3Entry> getEntries() {
-        return entries;
-    }
+    public abstract List<? extends EntryResource> getEntries();
 
     /**
      * Add entry.
@@ -109,23 +76,11 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
      * @param entry entry.
      * @return 'TRUE' in case of success; 'FALSE' otherwise.
      */
-    public boolean addEntry(final JSONV3Entry entry) {
-        return this.entries.add(entry);
-    }
+    public abstract boolean addEntry(final AbstractJSONEntry<?> entry);
 
-    /**
-     * {@inheritDoc }
-     */
-    @JsonIgnore
     @Override
-    public void setEntries(final List<EntryResource> entries) {
-        this.entries.clear();
-        for (EntryResource entry : entries) {
-            if (entry instanceof JSONV3Entry) {
-                this.entries.add((JSONV3Entry) entry);
-            }
-        }
-    }
+    public abstract void setEntries(List<EntryResource> entries);
+
 
     /**
      * {@inheritDoc }
@@ -144,4 +99,5 @@ public class JSONFeed extends AbstractPayloadObject implements FeedResource {
     public URI getNext() {
         return next == null ? null : URI.create(next);
     }
+
 }

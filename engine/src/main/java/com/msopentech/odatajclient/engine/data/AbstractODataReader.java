@@ -53,13 +53,13 @@ public abstract class AbstractODataReader implements ODataReader {
     @Override
     public ODataEntitySet readEntitySet(final InputStream input, final ODataPubFormat format) {
         return client.getBinder().getODataEntitySet(
-                client.getDeserializer().toFeed(input, ResourceFactory.feedClassForFormat(format)));
+                client.getDeserializer().toFeed(input, client.getResourceFactory().feedClassForFormat(format)));
     }
 
     @Override
     public ODataEntity readEntity(final InputStream input, final ODataPubFormat format) {
         return client.getBinder().getODataEntity(
-                client.getDeserializer().toEntry(input, ResourceFactory.entryClassForFormat(format)));
+                client.getDeserializer().toEntry(input, client.getResourceFactory().entryClassForFormat(format)));
     }
 
     @Override

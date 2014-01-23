@@ -20,18 +20,17 @@
 package com.msopentech.odatajclient.engine.data.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.msopentech.odatajclient.engine.data.AbstractEntryResource;
+import com.msopentech.odatajclient.engine.data.AbstractLinkResource;
+import com.msopentech.odatajclient.engine.data.EntryResource;
+import com.msopentech.odatajclient.engine.data.FeedResource;
 import com.msopentech.odatajclient.engine.uri.SegmentType;
 import java.net.URI;
 
 /**
  * A single entry, represented via JSON.
  */
-@JsonSerialize(using = JSONEntrySerializer.class)
-@JsonDeserialize(using = JSONEntryDeserializer.class)
-public abstract class AbstractJSONEntry extends AbstractEntryResource<JSONLink> {
+public abstract class AbstractJSONEntry<ALR extends AbstractLinkResource<? extends EntryResource, ? extends FeedResource>> extends AbstractEntryResource<ALR> {
 
     private static final long serialVersionUID = -5275365545400797758L;
 
@@ -40,7 +39,6 @@ public abstract class AbstractJSONEntry extends AbstractEntryResource<JSONLink> 
     private String mediaETag;
 
     @JsonIgnore
-    @Override
     public URI getBaseURI() {
         URI baseURI = null;
         if (metadata != null) {

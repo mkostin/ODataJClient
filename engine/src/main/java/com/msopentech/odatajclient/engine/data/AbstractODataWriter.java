@@ -52,7 +52,7 @@ public abstract class AbstractODataWriter implements ODataWriter {
         try {
             for (ODataEntity entity : entities) {
                 client.getSerializer().entry(client.getBinder().
-                        getEntry(entity, ResourceFactory.entryClassForFormat(format), outputType), output);
+                        getEntry(entity, client.getResourceFactory().entryClassForFormat(format), outputType), output);
             }
 
             return new ByteArrayInputStream(output.toByteArray());

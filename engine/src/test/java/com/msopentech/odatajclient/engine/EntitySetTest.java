@@ -24,7 +24,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
-import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,14 +38,14 @@ public class EntitySetTest extends AbstractTest {
     private void read(final ODataPubFormat format) throws IOException {
         final InputStream input = getClass().getResourceAsStream("Customer." + getSuffix(format));
         final ODataEntitySet entitySet = getClient().getBinder().getODataEntitySet(
-                getClient().getDeserializer().toFeed(input, ResourceFactory.feedClassForFormat(format)));
+                getClient().getDeserializer().toFeed(input, getClient().getResourceFactory().feedClassForFormat(format)));
         assertNotNull(entitySet);
 
         assertEquals(2, entitySet.getEntities().size());
         assertNotNull(entitySet.getNext());
 
         final ODataEntitySet written = getClient().getBinder().getODataEntitySet(
-                getClient().getBinder().getFeed(entitySet, ResourceFactory.feedClassForFormat(format)));
+                getClient().getBinder().getFeed(entitySet, getClient().getResourceFactory().feedClassForFormat(format)));
         assertEquals(entitySet, written);
     }
 

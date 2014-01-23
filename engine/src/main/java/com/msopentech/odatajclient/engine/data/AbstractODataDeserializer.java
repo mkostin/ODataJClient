@@ -35,7 +35,7 @@ import com.msopentech.odatajclient.engine.data.atom.AtomDeserializer;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.json.AbstractJSONEntry;
-import com.msopentech.odatajclient.engine.data.json.JSONFeed;
+import com.msopentech.odatajclient.engine.data.json.AbstractJSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONLinkCollection;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
 import com.msopentech.odatajclient.engine.data.json.JSONServiceDocument;
@@ -153,7 +153,6 @@ public abstract class AbstractODataDeserializer extends AbstractJacksonMarshalle
         return xmlMapper;
     }
 
-    @SuppressWarnings("unchecked")
     protected AtomFeed toAtomFeed(final InputStream input) {
         try {
             return AtomDeserializer.feed(toDOM(input));
@@ -162,7 +161,6 @@ public abstract class AbstractODataDeserializer extends AbstractJacksonMarshalle
         }
     }
 
-    @SuppressWarnings("unchecked")
     protected AtomEntry toAtomEntry(final InputStream input) {
         try {
             return AtomDeserializer.entry(toDOM(input));
@@ -171,15 +169,9 @@ public abstract class AbstractODataDeserializer extends AbstractJacksonMarshalle
         }
     }
 
-    protected JSONFeed toJSONFeed(final InputStream input) {
-        try {
-            return getObjectMapper().readValue(input, JSONFeed.class);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("While deserializing JSON feed", e);
-        }
-    }
+    protected abstract AbstractJSONFeed toJSONFeed(final InputStream input);
 
-    protected abstract AbstractJSONEntry toJSONEntry(final InputStream input);
+    protected abstract AbstractJSONEntry<?> toJSONEntry(final InputStream input);
 
     protected Element toPropertyDOMFromXML(final InputStream input) {
         return toDOM(input);

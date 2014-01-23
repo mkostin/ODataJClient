@@ -19,14 +19,12 @@
  */
 package com.msopentech.odatajclient.engine;
 
-import static com.msopentech.odatajclient.engine.AbstractTest.v3Client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.msopentech.odatajclient.engine.client.ODataV3Client;
 import com.msopentech.odatajclient.engine.data.EntryResource;
-import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
@@ -45,7 +43,7 @@ public class EntryReadTest extends AbstractTest {
     private void read(final ODataPubFormat format) throws IOException {
         InputStream input = getClass().getResourceAsStream("Car_16." + getSuffix(format));
 
-        EntryResource entry = getClient().getDeserializer().toEntry(input, ResourceFactory.entryClassForFormat(format));
+        EntryResource entry = getClient().getDeserializer().toEntry(input, getClient().getResourceFactory().entryClassForFormat(format));
         assertNotNull(entry);
 
         input.close();
@@ -53,7 +51,7 @@ public class EntryReadTest extends AbstractTest {
         // ---------------------------------------------
         input = getClass().getResourceAsStream("Customer_-10." + getSuffix(format));
 
-        entry = getClient().getDeserializer().toEntry(input, ResourceFactory.entryClassForFormat(format));
+        entry = getClient().getDeserializer().toEntry(input, getClient().getResourceFactory().entryClassForFormat(format));
         assertNotNull(entry);
 
         input.close();

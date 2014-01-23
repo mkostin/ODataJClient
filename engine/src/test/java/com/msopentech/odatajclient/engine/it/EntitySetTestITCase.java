@@ -26,14 +26,11 @@ import static org.junit.Assert.assertTrue;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetIteratorRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataEntitySetRequest;
 import com.msopentech.odatajclient.engine.communication.request.retrieve.ODataGenericRetrieveRequest;
-import com.msopentech.odatajclient.engine.communication.request.retrieve.RetrieveRequestFactory;
 import com.msopentech.odatajclient.engine.communication.response.ODataRetrieveResponse;
-import com.msopentech.odatajclient.engine.data.ODataBinder;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataEntitySetIterator;
 import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
 import com.msopentech.odatajclient.engine.uri.URIBuilder;
-import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.utils.URIUtils;
 import java.io.IOException;
@@ -101,7 +98,7 @@ public class EntitySetTestITCase extends AbstractTest {
 
         assertNotNull(feed);
 
-        debugFeed(client.getBinder().getFeed(feed, ResourceFactory.feedClassForFormat(format)), "Just retrieved feed");
+        debugFeed(client.getBinder().getFeed(feed, client.getResourceFactory().feedClassForFormat(format)), "Just retrieved feed");
 
         assertEquals(2, feed.getEntities().size());
         assertNotNull(feed.getNext());

@@ -34,7 +34,6 @@ import com.msopentech.odatajclient.engine.data.ODataCollectionValue;
 import com.msopentech.odatajclient.engine.data.ODataComplexValue;
 import com.msopentech.odatajclient.engine.data.ODataEntity;
 import com.msopentech.odatajclient.engine.data.ODataObjectFactory;
-import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
 import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
 import com.msopentech.odatajclient.engine.data.metadata.edm.EdmSimpleType;
@@ -107,7 +106,7 @@ public class BasicPerfTest extends AbstractTest {
     private void readViaODataJClient(final ODataPubFormat format) {
         final ODataEntity entity = getClient().getBinder().getODataEntity(
                 getClient().getDeserializer().toEntry(IOUtils.toInputStream(input.get(format)),
-                        ResourceFactory.entryClassForFormat(format)));
+                        getClient().getResourceFactory().entryClassForFormat(format)));
         assertNotNull(entity);
     }
 

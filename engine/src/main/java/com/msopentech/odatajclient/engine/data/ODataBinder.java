@@ -116,7 +116,6 @@ public interface ODataBinder extends Serializable {
      * @param reference reference class.
      * @return <tt>LinkResource</tt> object.
      */
-    @SuppressWarnings("unchecked")
     <T extends LinkResource> T getLinkResource(ODataLink link, Class<T> reference);
 
     /**

@@ -36,7 +36,6 @@ import com.msopentech.odatajclient.engine.format.ODataPubFormat;
 import com.msopentech.odatajclient.engine.data.ODataEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataInlineEntitySet;
 import com.msopentech.odatajclient.engine.data.ODataObjectWrapper;
-import com.msopentech.odatajclient.engine.data.ResourceFactory;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +75,7 @@ public class EntityRetrieveTestITCase extends AbstractTest {
                 assertNotNull(inline);
 
                 debugEntry(client.getBinder().getEntry(
-                        inline, ResourceFactory.entryClassForFormat(format)), "Just read");
+                        inline, client.getResourceFactory().entryClassForFormat(format)), "Just read");
 
                 final List<ODataProperty> properties = inline.getProperties();
                 assertEquals(2, properties.size());
@@ -122,7 +121,7 @@ public class EntityRetrieveTestITCase extends AbstractTest {
                 final ODataEntitySet inline = ((ODataInlineEntitySet) link).getEntitySet();
                 assertNotNull(inline);
 
-                debugFeed(client.getBinder().getFeed(inline, ResourceFactory.feedClassForFormat(format)),
+                debugFeed(client.getBinder().getFeed(inline, client.getResourceFactory().feedClassForFormat(format)),
                         "Just read");
 
                 found = true;

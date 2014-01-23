@@ -36,6 +36,7 @@ import com.msopentech.odatajclient.engine.uri.URIBuilder;
 import com.msopentech.odatajclient.engine.uri.filter.FilterFactory;
 import com.msopentech.odatajclient.engine.utils.ODataVersion;
 import java.io.Serializable;
+import com.msopentech.odatajclient.engine.data.ResourceFactory;
 
 public interface ODataClient extends Serializable {
 
@@ -72,4 +73,6 @@ public interface ODataClient extends Serializable {
     InvokeRequestFactory<?, ?, ?, ?, ?, ?, ?, ?> getInvokeRequestFactory();
 
     BatchRequestFactory getBatchRequestFactory();
+    
+    ResourceFactory getResourceFactory();
 }

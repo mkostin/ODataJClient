@@ -20,7 +20,9 @@
 package com.msopentech.odatajclient.engine.data;
 
 import com.msopentech.odatajclient.engine.client.ODataClient;
+import com.msopentech.odatajclient.engine.data.json.AbstractJSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
+import com.msopentech.odatajclient.engine.data.json.JSONV3Feed;
 import com.msopentech.odatajclient.engine.data.metadata.edm.v3.Edmx;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +50,15 @@ public class ODataV3Deserializer extends AbstractODataDeserializer {
             return getObjectMapper().readValue(input, JSONV3Entry.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("While deserializing JSON entry", e);
+        }
+    }
+
+    @Override
+    protected AbstractJSONFeed toJSONFeed(final InputStream input) {
+        try {
+            return getObjectMapper().readValue(input, JSONV3Feed.class);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("While deserializing JSON feed", e);
         }
     }
 

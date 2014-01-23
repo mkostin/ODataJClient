@@ -22,12 +22,8 @@ package com.msopentech.odatajclient.engine.data;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.msopentech.odatajclient.engine.client.ODataClient;
-import com.msopentech.odatajclient.engine.data.atom.AtomEntry;
-import com.msopentech.odatajclient.engine.data.atom.AtomFeed;
 import com.msopentech.odatajclient.engine.data.atom.AtomSerializer;
-import com.msopentech.odatajclient.engine.data.json.JSONFeed;
 import com.msopentech.odatajclient.engine.data.json.JSONProperty;
-import com.msopentech.odatajclient.engine.data.json.JSONV3Entry;
 import com.msopentech.odatajclient.engine.format.ODataFormat;
 import com.msopentech.odatajclient.engine.utils.ODataConstants;
 import com.msopentech.odatajclient.engine.utils.XMLUtils;
@@ -54,13 +50,7 @@ public abstract class AbstractODataSerializer extends AbstractJacksonMarshaller 
     }
 
     @Override
-    public <T extends FeedResource> void feed(final T obj, final Writer writer) {
-        if (obj instanceof AtomFeed) {
-            atom((AtomFeed) obj, writer);
-        } else {
-            json((JSONFeed) obj, writer);
-        }
-    }
+    public abstract <T extends FeedResource> void feed(final T obj, final Writer writer);
 
     @Override
     public <T extends EntryResource> void entry(final T obj, final OutputStream out) {
@@ -68,13 +58,7 @@ public abstract class AbstractODataSerializer extends AbstractJacksonMarshaller 
     }
 
     @Override
-    public <T extends EntryResource> void entry(final T obj, final Writer writer) {
-        if (obj instanceof AtomEntry) {
-            atom((AtomEntry) obj, writer);
-        } else {
-            json((JSONV3Entry) obj, writer);
-        }
-    }
+    public abstract <T extends EntryResource> void entry(final T obj, final Writer writer);
 
     @Override
     public void property(final Element element, final ODataFormat format, final OutputStream out) {
